@@ -1,0 +1,49 @@
+<h1>Страны</h1>
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('rb', ['action'=>'producer-add']); ?>">
+    Новый производитель
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Страна</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($producer as $row): ?>
+    <?
+        //var_dump($row->getCountry());
+    ?>
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('rb', ['action'=>'producer-view', 'id'=>$row->getId()]); ?>">
+                <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td><?= $row->getCountry()->getName(); ?></td>        
+        <td>
+            <a class="btn btn-info" href="<?= $this->url('rb', 
+                    ['action'=>'producer-edit', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('rb',
+                    ['action'=>'producer-delete', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($producer,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'rb', 'action' => 'producer')]); ?>
+

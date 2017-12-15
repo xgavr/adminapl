@@ -1,0 +1,88 @@
+<?php
+$form = $this->form;
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование'
+    ]);
+
+$form->get('code')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Артикул',
+    ]);
+
+$form->get('producer')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Производитель',
+    ]);
+
+$form->get('tax')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Налог',
+    ]);
+
+$form->get('description')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Описание',
+    ]);
+
+$form->get('available')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Доступность',
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Добавить новый товар</h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('code')); ?>
+            <?= $this->formElement($form->get('code')); ?>
+            <?= $this->formElementErrors($form->get('code')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('producer')); ?>
+            <?= $this->formElement($form->get('producer')); ?>
+            <?= $this->formElementErrors($form->get('producer')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('tax')); ?>
+            <?= $this->formElement($form->get('tax')); ?>
+            <?= $this->formElementErrors($form->get('tax')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('description')); ?>
+            <?= $this->formElement($form->get('description')); ?>
+            <?= $this->formElementErrors($form->get('description')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('available')); ?>
+            <?= $this->formElement($form->get('available')); ?>
+            <?= $this->formElementErrors($form->get('available')); ?>                  
+        </div>
+                
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   

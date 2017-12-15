@@ -1,0 +1,44 @@
+<h1>Заявки</h1>
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('order', ['action'=>'add']); ?>">
+    Новая заявка
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+    </tr>
+    
+    <?php foreach ($order as $row): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('order', ['action'=>'view', 'id'=>$row->getId()]); ?>">
+                <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td>
+            <a class="btn btn-info" href="<?= $this->url('order', 
+                    ['action'=>'edit', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('order',
+                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($order,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'order')]); ?>
+

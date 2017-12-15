@@ -1,0 +1,43 @@
+<h1>Налоги</h1>
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('rb', ['action'=>'tax-add']); ?>">
+    Новый налог
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Размер, %</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($tax as $row): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('rb', ['action'=>'tax-view', 'id'=>$row->getId()]); ?>">
+                <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td><?= $this->escapeHtml($row->getAmount()); ?></td>        
+        <td>
+            <a class="btn btn-info" href="<?= $this->url('rb', 
+                    ['action'=>'tax-edit', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('rb',
+                    ['action'=>'tax-delete', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+

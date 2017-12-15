@@ -1,0 +1,63 @@
+<?= $this->doctype() ?>
+
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <?= $this->headTitle('OVO.msk.ru')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?= $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'])
+            ->prependStylesheet($this->basePath('css/style.css'))
+            ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
+            ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
+        ?>
+
+        <!-- Scripts -->
+        <?= $this->headScript()
+            ->prependFile($this->basePath('js/bootstrap.min.js'))
+            ->prependFile($this->basePath('js/jquery-3.1.0.min.js'))
+        ?>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <!-- Page header -->
+                <div class="col-md-4">
+                    <div class="app-caption">OVO<sup>.msk.ru</sup></div>
+                </div>                
+            </div>            
+            <div class="col-md-12">
+                <!-- Navigation bar -->
+                <?php
+                // Check if the activeMenuItemId passed to layout view model
+                // and if so, use it for setting active navbar item.
+                if (isset($activeMenuItemId)) {
+                    $this->mainMenu()->setActiveItemId($activeMenuItemId);
+                }
+
+                // Render the navbar
+                echo $this->mainMenu()->render();
+                ?>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Breadcrumbs -->
+                    <?= $this->pageBreadcrumbs()->render(); ?>
+                </div>
+            </div>                
+            <div class="row">
+                <?= $this->content ?>
+                <hr>
+                <footer>
+                    <p>&copy; <?= date('Y') ?> OVO<sup>.msk.ru</sup></p>
+                </footer>
+            </div>
+        </div>
+        <?= $this->inlineScript() ?>
+    </body>
+</html>

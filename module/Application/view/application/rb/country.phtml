@@ -1,0 +1,57 @@
+<h1>Страны</h1>
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('rb', ['action'=>'country-add']); ?>">
+    Новая страна
+</a>
+<a class="btn btn-default" href="
+    <?= $this->url('rb', ['action'=>'country']); ?>">
+    Загрузить
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Наименование полное</th>
+        <th>Код</th>
+        <th>Код альфа2</th>
+        <th>Код альфа3</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($country as $row): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('rb', ['action'=>'country-view', 'id'=>$row->getId()]); ?>">
+                <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td><?= $this->escapeHtml($row->getFullName()); ?></td>        
+        <td><?= $this->escapeHtml($row->getCode()); ?></td>        
+        <td><?= $this->escapeHtml($row->getAlpha2()); ?></td>        
+        <td><?= $this->escapeHtml($row->getAlpha3()); ?></td>        
+        <td>
+            <a class="btn btn-info" href="<?= $this->url('rb', 
+                    ['action'=>'country-edit', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('rb',
+                    ['action'=>'country-delete', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($country,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'rb', 'action' => 'country')]); ?>
+

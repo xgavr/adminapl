@@ -1,0 +1,38 @@
+<?php
+$this->headTitle($goods->getName());
+//$this->mainMenu()->setActiveItemId('home');
+//$this->pageBreadcrumbs()->setItems([
+//            'Home'=>$this->url('home')
+//            ]);
+        
+?>
+
+<a href="
+    <?= $this->url('goods', []); ?>">
+    &lt;&lt; Назад в список товаров
+</a>
+
+<h1>
+    <?= $this->escapeHtml($goods->getName()); ?>    
+</h1>
+
+
+<p>    
+    <?= $this->escapeHtml($goods->getCode()); ?>
+</p>
+
+<p>    
+    <?= $this->escapeHtml($goods->getProducer()->getName()); ?>
+</p>
+
+<p>    
+    <?= $this->escapeHtml($goods->getTax()->getName()); ?>
+</p>
+
+<p>    
+    <?= $this->escapeHtml($goods->getAvailable()); ?>
+</p>
+
+<p>    
+    <?= $this->escapeHtml($goods->getDescription()); ?>
+</p>

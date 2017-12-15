@@ -1,0 +1,22 @@
+<?php
+$this->headTitle('Производитель - ' . $producer->getName());
+//$this->mainMenu()->setActiveItemId('home');
+//$this->pageBreadcrumbs()->setItems([
+//            'Home'=>$this->url('home')
+//            ]);
+        
+?>
+
+<a href="
+    <?= $this->url('rb', ['action'=>'producer']); ?>">
+    &lt;&lt; Назад в список производителей
+</a>
+
+<h1>
+    <?= $this->escapeHtml($producer->getName()); ?>    
+</h1>
+
+
+<p>    
+    Страна <?= $this->escapeHtml($producer->getCountry()->getName()); ?>
+</p>

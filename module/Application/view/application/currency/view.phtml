@@ -1,0 +1,72 @@
+<?php
+$this->headTitle('Валюта - ' . $currency->getName());
+//$this->mainMenu()->setActiveItemId('home');
+//$this->pageBreadcrumbs()->setItems([
+//            'Home'=>$this->url('home')
+//            ]);
+        
+$form = $this->form;
+$form->get('dateRate')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Дата'
+    ]);
+$form->get('rate')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Курс'
+    ]);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+?>
+
+<a href="
+    <?= $this->url('currency', []); ?>">
+    &lt;&lt; Назад в список валют
+</a>
+
+<h1>
+    <?= $this->escapeHtml($currency->getName()); ?>    
+</h1>
+
+
+<p>    
+    <?= $this->escapeHtml($currency->getDescription()); ?>
+</p>
+
+<h3>Добавить курс валюты</h3>
+
+<div class="row">
+    <div class="col-md-8">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('dateRate')); ?>
+            <?= $this->formElement($form->get('dateRate')); ?>
+            <?= $this->formElementErrors($form->get('dateRate')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rate')); ?>
+            <?= $this->formElement($form->get('rate')); ?>
+            <?= $this->formElementErrors($form->get('rate')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>  
+
+<?php foreach ($currency->getRate() as $rate): ?>
+
+<hr>
+
+<p>
+    <?= date('d-m-Y', strtotime($this->escapeHtml($rate->getDateRate()))) ?>  
+    <?= $this->escapeHtml($rate->getRate()); ?>
+    <a class="btn btn-danger" href="<?= $this->url('currency',
+            ['action'=>'rate-delete', 'id'=>$rate->getId()]); ?>">
+        <span class="glyphicon glyphicon-remove"></span> Удалить
+    </a>    
+</p>
+
+<?php endforeach; ?>

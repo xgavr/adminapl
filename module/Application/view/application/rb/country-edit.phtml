@@ -1,0 +1,77 @@
+<?php
+$form = $this->form;
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование'
+    ]);
+
+$form->get('fullname')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование полное',
+    ]);
+
+$form->get('code')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Код',
+    ]);
+
+$form->get('alpha2')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Код альфа2',
+    ]);
+
+$form->get('alpha3')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Код альфа3',
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Изменить страну</h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('fullname')); ?>
+            <?= $this->formElement($form->get('fullname')); ?>
+            <?= $this->formElementErrors($form->get('fullname')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('code')); ?>
+            <?= $this->formElement($form->get('code')); ?>
+            <?= $this->formElementErrors($form->get('code')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('alpha2')); ?>
+            <?= $this->formElement($form->get('alpha2')); ?>
+            <?= $this->formElementErrors($form->get('alpha2')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('alpha3')); ?>
+            <?= $this->formElement($form->get('alpha3')); ?>
+            <?= $this->formElementErrors($form->get('alpha3')); ?>                  
+        </div>
+                
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   

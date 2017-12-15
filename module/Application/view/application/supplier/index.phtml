@@ -1,0 +1,44 @@
+<h1>Поставщики</h1>
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('supplier', ['action'=>'add']); ?>">
+    Новый клиент
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+    </tr>
+    
+    <?php foreach ($supplier as $row): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('supplier', ['action'=>'view', 'id'=>$row->getId()]); ?>">
+                <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td>
+            <a class="btn btn-info" href="<?= $this->url('supplier', 
+                    ['action'=>'edit', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('supplier',
+                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($supplier,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'supplier')]); ?>
+

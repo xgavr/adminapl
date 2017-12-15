@@ -1,0 +1,49 @@
+<h1>Валюты</h1>
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('currency', ['action'=>'add']); ?>">
+    Новая валюта
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Код</th>
+        <th>Наименовани</th>
+        <th></th>
+    </tr>
+    
+    <?php foreach ($currency as $row): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('currency', ['action'=>'view', 'id'=>$row->getId()]); ?>">
+                <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td>
+                <?= $this->escapeHtml($row->getDescription()); ?>
+        </td>
+        <td>
+            <a class="btn btn-info" href="<?= $this->url('currency', 
+                    ['action'=>'edit', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('currency',
+                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($currency,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'currency')]); ?>
+

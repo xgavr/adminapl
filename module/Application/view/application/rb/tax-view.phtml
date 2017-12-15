@@ -1,0 +1,22 @@
+<?php
+$this->headTitle('Налог - ' . $tax->getName());
+//$this->mainMenu()->setActiveItemId('home');
+//$this->pageBreadcrumbs()->setItems([
+//            'Home'=>$this->url('home')
+//            ]);
+        
+?>
+
+<a href="
+    <?= $this->url('rb', ['action'=>'tax']); ?>">
+    &lt;&lt; Назад в список налогов
+</a>
+
+<h1>
+    <?= $this->escapeHtml($tax->getName()); ?>    
+</h1>
+
+
+<p>    
+    Размер <?= $this->escapeHtml($tax->getAmount()); ?>%
+</p>

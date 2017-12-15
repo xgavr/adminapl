@@ -1,0 +1,45 @@
+<?php
+$form = $this->form;
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование'
+    ]);
+
+$form->get('country')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Страна',
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->get('submit')->setValue('Сохранить');
+$form->prepare();
+
+?>
+
+<h1>Изменить производителя</h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('country')); ?>
+            <?= $this->formElement($form->get('country')); ?>
+            <?= $this->formElementErrors($form->get('country')); ?>                  
+        </div>
+                
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   
