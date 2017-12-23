@@ -29,7 +29,7 @@ return [
     'DoctrineModule',
     'DoctrineORMModule',
     'MvlabsPHPExcel',
-    'Application',
     'Admin',
     'User',
+    'Application',
 ];

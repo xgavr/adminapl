@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\SupplierController;
 use Application\Service\SupplierManager;
+use Application\Service\ContactManager;
 
 
 /**
@@ -25,8 +26,9 @@ class SupplierControllerFactory implements FactoryInterface {
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $supplierManager = $container->get(SupplierManager::class);
+        $contactManager = $container->get(ContactManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new SupplierController($entityManager, $supplierManager);
+        return new SupplierController($entityManager, $supplierManager, $contactManager);
     }
 }

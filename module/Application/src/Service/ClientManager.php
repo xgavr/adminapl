@@ -8,6 +8,8 @@
 namespace Application\Service;
 
 use Zend\ServiceManager\ServiceManager;
+use Application\Entity\Client;
+use Application\Entity\Contact;
 
 /**
  * Description of ClientService
@@ -22,41 +24,67 @@ class ClientManager
      * @var Doctrine\ORM\EntityManager
      */
     private $entityManager;
+    
+    /**
+     * Contact manager
+     * @var Application\Service\ContactManager
+     */
+    private $contactManager;
+
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $contactManager)
     {
         $this->entityManager = $entityManager;
+        $this->contactManager = $contactManager;
     }
     
     public function addNewClient($data) 
     {
         // Создаем новую сущность.
-        $customer = new Client();
+        $client = new Client();
         $client->setName($data['name']);
+        $client->setStatus($data['status']);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $client->setDateCreated($currentDate);        
+        
         
         
         // Добавляем сущность в менеджер сущностей.
-        $this->entityManager->persist($customer);
+        $this->entityManager->persist($client);
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
     }   
     
-    public function updateClient($customer, $data) 
+    public function updateClient($client, $data) 
     {
-        $customer->setName($data['name']);
+        $client->setName($data['name']);
+        $client->setStatus($data['status']);
 
-        $this->entityManager->persist($customer);
+        $this->entityManager->persist($client);
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
     }    
     
-    public function removeClient($customer) 
+    public function removeClient($client) 
     {   
-        $this->entityManager->remove($customer);
+        
+        $contacts = $client->getContacts();
+        foreach ($contacts as $contact) {
+            $this->contactManager->remove($contact);
+        }        
+        
+        $this->entityManager->remove($client);
         
         $this->entityManager->flush();
     }    
 
+     // Этот метод добавляет новый контакт.
+    public function addContactToClient($client, $data) 
+    {
+       $this->contactManager->addNewContact($client, $data);
+    }   
+    
 }

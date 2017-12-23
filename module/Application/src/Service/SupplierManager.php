@@ -8,6 +8,10 @@
 namespace Application\Service;
 
 use Zend\ServiceManager\ServiceManager;
+use Application\Entity\Supplier;
+use Application\Entity\Contact;
+use Application\Entity\Phone;
+use Application\Entity\Email;
 
 /**
  * Description of SupplierService
@@ -22,11 +26,18 @@ class SupplierManager
      * @var Doctrine\ORM\EntityManager
      */
     private $entityManager;
+    
+    /**
+     * Contact manager
+     * @var Application\Service\ContactManager
+     */
+    private $contactManager;
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $contactManager)
     {
         $this->entityManager = $entityManager;
+        $this->contactManager = $contactManager;
     }
     
     public function addNewSupplier($data) 
@@ -34,8 +45,13 @@ class SupplierManager
         // Создаем новую сущность.
         $supplier = new Supplier();
         $supplier->setName($data['name']);
-        $supplier->setName($data['info']);
-        $supplier->setName($data['address']);        
+        $supplier->setInfo($data['info']);
+        $supplier->setAddress($data['address']);  
+        $supplier->setStatus($data['status']);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $supplier->setDateCreated($currentDate);        
+        
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($supplier);
@@ -47,8 +63,9 @@ class SupplierManager
     public function updateSupplier($supplier, $data) 
     {
         $supplier->setName($data['name']);
-        $supplier->setName($data['info']);
-        $supplier->setName($data['address']);
+        $supplier->setInfo($data['info']);
+        $supplier->setAddress($data['address']);
+        $supplier->setStatus($data['status']);
 
         $this->entityManager->persist($supplier);
         // Применяем изменения к базе данных.
@@ -57,9 +74,20 @@ class SupplierManager
     
     public function removeSupplier($supplier) 
     {   
+        
+        $contacts = $supplier->getContacts();
+        foreach ($contacts as $contact) {
+            $this->contactManager->remove($contact);
+        }        
+        
         $this->entityManager->remove($supplier);
         
         $this->entityManager->flush();
     }    
 
+     // Этот метод добавляет новый контакт.
+    public function addContactToSupplier($supplier, $data) 
+    {
+       $this->contactManager->addNewContact($supplier, $data);
+    }   
 }

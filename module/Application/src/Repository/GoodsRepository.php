@@ -29,5 +29,26 @@ class GoodsRepository extends EntityRepository{
                 ;
 
         return $queryBuilder->getQuery();
+    }
+    
+    public function searchByName($search){
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.name like :search')    
+            ->orderBy('g.name')
+            ->setParameter('search', '%' . $search . '%')
+                ;
+        return $queryBuilder->getQuery();
+    }
+    
+    public function searchNameForSearchAssistant($search)
+    {        
+        return $this->searchByName($search)->getResult();
     }        
+    
 }

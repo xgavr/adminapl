@@ -9,13 +9,12 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
-use Application\Entity\FlatRole;
 /**
- * Description of role
+ * Description of Phone
  *
  * @author Daddy
  */
-class RoleForm extends Form
+class PhoneForm extends Form
 {
     /**
      * Конструктор.     
@@ -23,7 +22,7 @@ class RoleForm extends Form
     public function __construct()
     {
         // Определяем имя формы.
-        parent::__construct('role-form');
+        parent::__construct('phone-form');
      
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -43,20 +42,20 @@ class RoleForm extends Form
             'type'  => 'text',
             'name' => 'name',
             'attributes' => [
-                'id' => 'role_name'
+                'id' => 'phone_name'
             ],
             'options' => [
-                'label' => 'Наименование',
+                'label' => 'Телефон',
             ],
         ]);
-                
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Сохранить',
-                'id' => 'role_submitbutton',
+                'id' => 'phone_submitbutton',
             ],
         ]);        
     }
@@ -80,14 +79,11 @@ class RoleForm extends Form
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'StringLength',
+                        'name'    => 'PhoneNumber',
                         'options' => [
-                            'min' => 1,
-                            'max' => 1024
                         ],
                     ],
                 ],
-            ]);
-        
+            ]);        
     }    
 }

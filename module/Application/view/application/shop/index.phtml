@@ -1,0 +1,75 @@
+<?php
+    $this->headScript()->appendFile('/js/typeahead.js/typeahead.jquery.min.js', 'text/javascript');
+?>    
+<form method="GET" action="">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div id="imaginary_container"> 
+                    <div class="input-group stylish-input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Поиск" value="<?= $search?>">
+                        <span class="input-group-addon">
+                            <? if ($search): ?>
+                                <button>
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>  
+                           <? endif; ?>
+                            <button type="submit">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>  
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Артикул</th>
+        <th>Производитель</th>
+        <th>Цена</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($goods as $row): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('goods', ['action'=>'view', 'id'=>$row->getId()]); ?>">
+                <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td><?= $this->escapeHtml($row->getCode()); ?></td>        
+        <td><?= $this->escapeHtml($row->getProducer()->getName()); ?></td>        
+        <td></td>        
+        <td>
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+            </button>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($goods,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'goods')]); ?>
+
+
+<script type="text/javascript">
+    $(document).ready(function() { 
+        $('input.typehead').typeahead({
+           name: 'search_assistent',
+            remote: '<?= $this->url('shop', ['action'=>'search-assistant'], ['query' => ['q' => '']]); ?>%QUERY',
+            limit : 10
+        });
+    });
+</script>

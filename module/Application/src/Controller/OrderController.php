@@ -178,5 +178,6 @@ class OrderController extends AbstractActionController
         return new ViewModel([
             'order' => $order,
         ]);
-    }      
+    } 
+    
 }

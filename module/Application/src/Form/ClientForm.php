@@ -9,22 +9,29 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
-use Application\Entity\Permission;
+use Application\Entity\Client;
+
 /**
- * Description of permission
+ * Description of Supplier
  *
  * @author Daddy
  */
-class PermissionForm extends Form
+class ClientForm extends Form
 {
+    
+    protected $objectManager;
+
+    protected $entityManager;
+        
     /**
      * Конструктор.     
      */
-    public function __construct()
+    public function __construct($entityManager)
     {
         // Определяем имя формы.
-        parent::__construct('permission-form');
+        parent::__construct('client-form');
      
+        $this->entityManager = $entityManager;
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
                 
@@ -43,12 +50,38 @@ class PermissionForm extends Form
             'type'  => 'text',
             'name' => 'name',
             'attributes' => [
-                'id' => 'permission_name'
+                'id' => 'client_name'
             ],
             'options' => [
                 'label' => 'Наименование',
             ],
         ]);
+        
+        // Добавляем поле "address"
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'address',
+            'attributes' => [
+                'id' => 'client_address'
+            ],
+            'options' => [
+                'label' => 'Адрес',
+            ],
+        ]);
+        
+        // Add "status" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'status',
+            'options' => [
+                'label' => 'Status',
+                'value_options' => [
+                    1 => 'Active',
+                    2 => 'Retired',                    
+                ]
+            ],
+        ]);
+        
                 
         // Добавляем кнопку отправки формы
         $this->add([
@@ -56,7 +89,7 @@ class PermissionForm extends Form
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Сохранить',
-                'id' => 'permission_submitbutton',
+                'id' => 'client_submitbutton',
             ],
         ]);        
     }
@@ -89,5 +122,32 @@ class PermissionForm extends Form
                 ],
             ]);
         
+        
+        // Add input for "status" field
+        $inputFilter->add([
+                'name'     => 'status',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        
     }    
+    
+    
+    public function setObjectManager(ObjectManager $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
+
+    public function getObjectManager()
+    {
+        return $this->objectManager;
+    }    
+
+    
 }

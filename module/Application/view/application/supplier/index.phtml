@@ -2,7 +2,7 @@
 <p>
 <a class="btn btn-default" href="
     <?= $this->url('supplier', ['action'=>'add']); ?>">
-    Новый клиент
+    Новый поставщик
 </a>
 </p>
 
@@ -11,6 +11,7 @@
    <tr>
         <th>ID</th>
         <th>Наименование</th>
+        <th>Действие</th>
     </tr>
     
     <?php foreach ($supplier as $row): ?>

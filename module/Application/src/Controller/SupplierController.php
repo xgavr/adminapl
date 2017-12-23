@@ -10,6 +10,9 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Supplier;
+use Application\Entity\Contact;
+use Application\Form\SupplierForm;
+use Application\Form\ContactForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -25,16 +28,23 @@ class SupplierController extends AbstractActionController
     private $entityManager;
     
     /**
-     * Менеджер товаров.
+     * Менеджер.
      * @var Application\Service\SupplierManager 
      */
     private $supplierManager;    
     
+    /**
+     * Менеджер.
+     * @var Application\Service\ContactManager 
+     */
+    private $contactManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $supplierManager) 
+    public function __construct($entityManager, $supplierManager, $contactManager) 
     {
         $this->entityManager = $entityManager;
         $this->supplierManager = $supplierManager;
+        $this->contactManager = $contactManager;
     }    
     
     public function indexAction()
@@ -95,7 +105,7 @@ class SupplierController extends AbstractActionController
         // Получаем ID tax.    
         $supplierId = $this->params()->fromRoute('id', -1);
     
-        // Находим существующий пост в базе данных.    
+        // Находим существующий supplier в базе данных.    
         $supplier = $this->entityManager->getRepository(Supplier::class)
                 ->findOneById($supplierId);  
         	
@@ -126,6 +136,9 @@ class SupplierController extends AbstractActionController
         } else {
             $data = [
                'name' => $supplier->getName(),
+               'address' => $supplier->getAddress(),
+               'info' => $supplier->getInfo(),
+               'status' => $supplier->getStatus(),
             ];
             
             $form->setData($data);
@@ -155,6 +168,26 @@ class SupplierController extends AbstractActionController
         return $this->redirect()->toRoute('supplier', []);
     }    
 
+    public function deleteContactAction()
+    {
+        $contactId = $this->params()->fromRoute('id', -1);
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $supplierId = $contact->getSupplier()->getId();
+        
+        $this->contactManager->removeContact($contact);
+        
+        // Перенаправляем пользователя на страницу "supplier/view".
+        return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplierId]);
+    }    
+
     public function viewAction() 
     {       
         $supplierId = (int)$this->params()->fromRoute('id', -1);
@@ -174,9 +207,33 @@ class SupplierController extends AbstractActionController
             return;                        
         }        
         
+        $form = new ContactForm();
+        // Проверяем, является ли пост POST-запросом.
+        if($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if($form->isValid()) {
+                                
+                // Получаем валадированные данные формы.
+                $data = $form->getData();
+              
+                // Используем менеджер постов для добавления нового комментарий к посту.
+                $this->supplierManager->addContactToSupplier($supplier, $data);
+                
+                // Снова перенаправляем пользователя на страницу "view".
+                return $this->redirect()->toRoute('supplier', ['action'=>'view', 'id'=>$supplierId]);
+            }
+        }
+        
         // Render the view template.
         return new ViewModel([
             'supplier' => $supplier,
+            'form' => $form,
+            'supplierManager' => $this->supplierManager,
         ]);
     }      
 }

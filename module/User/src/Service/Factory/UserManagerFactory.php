@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use User\Service\UserManager;
 use User\Service\RoleManager;
 use User\Service\PermissionManager;
+use Application\Service\ContactManager;
 
 /**
  * This is the factory class for UserManager service. The purpose of the factory
@@ -20,7 +21,8 @@ class UserManagerFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $roleManager = $container->get(RoleManager::class);
         $permissionManager = $container->get(PermissionManager::class);
+        $contactManager = $container->get(ContactManager::class);
         
-        return new UserManager($entityManager, $roleManager, $permissionManager);
+        return new UserManager($entityManager, $roleManager, $permissionManager, $contactManager);
     }
 }

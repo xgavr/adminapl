@@ -10,6 +10,9 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Client;
+use Application\Entity\Contact;
+use Application\Form\ClientForm;
+use Application\Form\ContactForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -30,11 +33,19 @@ class ClientController extends AbstractActionController
      */
     private $clientManager;    
     
+    /**
+     * Менеджер.
+     * @var Application\Service\ContactManager 
+     */
+    private $contactManager;    
+    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $clientManager) 
+    public function __construct($entityManager, $clientManager, $contactManager) 
     {
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
+        $this->contactManager = $contactManager;        
     }    
     
     public function indexAction()
@@ -126,6 +137,7 @@ class ClientController extends AbstractActionController
         } else {
             $data = [
                'name' => $client->getName(),
+               'status' => $client->getStatus(),
             ];
             
             $form->setData($data);
@@ -155,6 +167,26 @@ class ClientController extends AbstractActionController
         return $this->redirect()->toRoute('client', []);
     }    
 
+    public function deleteContactAction()
+    {
+        $contactId = $this->params()->fromRoute('id', -1);
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $clientId = $contact->getClient()->getId();
+        
+        $this->contactManager->removeContact($contact);
+        
+        // Перенаправляем пользователя на страницу "supplier/view".
+        return $this->redirect()->toRoute('client', ['action' => 'view', 'id' => $clientId]);
+    }    
+    
     public function viewAction() 
     {       
         $clientId = (int)$this->params()->fromRoute('id', -1);
@@ -172,11 +204,34 @@ class ClientController extends AbstractActionController
         if ($client == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
-        }        
+        }      
+        
+        $form = new ContactForm();
+        // Проверяем, является ли пост POST-запросом.
+        if($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if($form->isValid()) {
+                                
+                // Получаем валадированные данные формы.
+                $data = $form->getData();
+              
+                // Используем менеджер постов для добавления нового комментарий к посту.
+                $this->clientManager->addContactToClient($client, $data);
+                
+                // Снова перенаправляем пользователя на страницу "view".
+                return $this->redirect()->toRoute('client', ['action'=>'view', 'id'=>$clientId]);
+            }
+        }
         
         // Render the view template.
         return new ViewModel([
             'client' => $client,
+            'form' => $form,
         ]);
     }      
 }

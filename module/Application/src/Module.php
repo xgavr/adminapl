@@ -9,7 +9,6 @@ namespace Application;
 
 use Zend\Mvc\MvcEvent;
 use Zend\Session\SessionManager;
-//use ZfcRbac\View\Strategy\RedirectStrategy;
 
 class Module
 {
@@ -34,14 +33,5 @@ class Module
         // делает его выбираемым 'по умолчанию'.
         $sessionManager = $serviceManager->get(SessionManager::class);
         
-//        rbac
-//        $listener = $serviceManager->get(RedirectStrategy::class);
-//        $listener->attach($eventManager);    
-        
-//        $t = $$event->getTarget();
-//
-//        $t->getEventManager()->attach(
-//            $t->getServiceManager()->get('UserRbac\View\Strategy\SmartRedirectStrategy')
-//        );        
     }    
 }

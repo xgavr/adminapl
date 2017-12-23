@@ -3,6 +3,7 @@ namespace User\Service;
 
 use User\Entity\User;
 use User\Entity\Role;
+use Application\Entity\Contact;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Math\Rand;
 
@@ -31,13 +32,20 @@ class UserManager
     private $permissionManager;
     
     /**
+     * Contact manager.
+     * @var Application\Service\ContactManager
+     */
+    private $contactManager;
+    
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $roleManager, $permissionManager) 
+    public function __construct($entityManager, $roleManager, $permissionManager, $contactManager) 
     {
         $this->entityManager = $entityManager;
         $this->roleManager = $roleManager;
         $this->permissionManager = $permissionManager;
+        $this->contactManager = $contactManager;
     }
     
     /**
@@ -70,6 +78,8 @@ class UserManager
         
         // Add the entity to the entity manager.
         $this->entityManager->persist($user);
+        
+        $this->contactManager->addNewContact($user, $data);
                        
         // Apply changes to database.
         $this->entityManager->flush();
@@ -294,5 +304,12 @@ class UserManager
 
         return true;
     }
+    
+     // Этот метод добавляет новый контакт.
+    public function addContactToUser($user, $data) 
+    {
+       $this->contactManager->addNewContact($user, $data);
+    }   
+    
 }
 

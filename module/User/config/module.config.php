@@ -128,6 +128,10 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
+            \Application\Controller\ContactController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
             \Application\Controller\IndexController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
@@ -145,6 +149,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             \Application\Controller\SupplierController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\ShopController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

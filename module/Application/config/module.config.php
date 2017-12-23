@@ -49,6 +49,20 @@ return [
                     ],
                 ],
             ],        
+            'shop' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/shop[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ShopController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'order' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -105,6 +119,20 @@ return [
                     ],
                 ],
             ],        
+            'contact' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/contact[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ContactController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'rb' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -137,19 +165,23 @@ return [
     'controllers' => [
         'factories' => [
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
+            Controller\ContactController::class => Controller\Factory\ContactControllerFactory::class,
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
             Controller\IndexController::class => InvokableFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
             Controller\OrderController::class => Controller\Factory\OrderControllerFactory::class,
             Controller\RbController::class => Controller\Factory\RbControllerFactory::class,
             Controller\SupplierController::class => Controller\Factory\SupplierControllerFactory::class,
+            Controller\ShopController::class => Controller\Factory\ShopControllerFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
+            Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
             Service\SupplierManager::class => Service\Factory\SupplierManagerFactory::class,
+            Service\ShopManager::class => Service\Factory\ShopManagerFactory::class,
             Service\RbManager::class => Service\Factory\RbManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
             Service\OrderManager::class => Service\Factory\OrderManagerFactory::class,
@@ -185,6 +217,9 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'strategies' => [
+            'ViewJsonStrategy',
+        ],        
     ],
     'doctrine' => [
         'driver' => [
