@@ -123,3 +123,43 @@ $form->prepare();
         <?= $this->form()->closeTag(); ?>
     </div>    
 </div>
+
+<h3 class="contact-header">Настройки загрузки прайса</h3>
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('pricesettings', ['action'=>'add'], ['query' => ['supplier' => $supplier->getId()]]); ?>">
+    Добавить
+</a>
+</p>
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($supplier->getPricesettings() as $row): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('pricesettings', ['action'=>'view', 'id'=>$row->getId()]); ?>">
+                <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td>
+            <a class="btn btn-info" href="<?= $this->url('pricesettings', 
+                    ['action'=>'edit', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('pricesettings',
+                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>

@@ -64,10 +64,10 @@ class Producer extends \Application\Entity\Producer implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'name', 'country', '' . "\0" . 'Application\\Entity\\Producer' . "\0" . 'goods'];
+            return ['__isInitialized__', 'id', 'name', 'country', '' . "\0" . 'Application\\Entity\\Producer' . "\0" . 'goods', '' . "\0" . 'Application\\Entity\\Producer' . "\0" . 'unknownProducer'];
         }
 
-        return ['__isInitialized__', 'id', 'name', 'country', '' . "\0" . 'Application\\Entity\\Producer' . "\0" . 'goods'];
+        return ['__isInitialized__', 'id', 'name', 'country', '' . "\0" . 'Application\\Entity\\Producer' . "\0" . 'goods', '' . "\0" . 'Application\\Entity\\Producer' . "\0" . 'unknownProducer'];
     }
 
     /**
@@ -263,6 +263,28 @@ class Producer extends \Application\Entity\Producer implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addGoods', [$goods]);
 
         return parent::addGoods($goods);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUnknownProducer()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUnknownProducer', []);
+
+        return parent::getUnknownProducer();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addUnknownProducer($unknownProducer)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addUnknownProducer', [$unknownProducer]);
+
+        return parent::addUnknownProducer($unknownProducer);
     }
 
 }

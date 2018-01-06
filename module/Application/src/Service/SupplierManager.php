@@ -12,6 +12,7 @@ use Application\Entity\Supplier;
 use Application\Entity\Contact;
 use Application\Entity\Phone;
 use Application\Entity\Email;
+use Application\Entity\Pricesettings;
 
 /**
  * Description of SupplierService
@@ -33,12 +34,50 @@ class SupplierManager
      */
     private $contactManager;
   
+    /**
+     * Price manager
+     * @var Application\Service\PriceManager
+     */
+    private $priceManager;
+  
+    /**
+     * Raw manager
+     * @var Application\Service\RawManager
+     */
+    private $rawManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $contactManager)
+    public function __construct($entityManager, $contactManager, $priceManager, $rawManager)
     {
         $this->entityManager = $entityManager;
         $this->contactManager = $contactManager;
+        $this->priceManager = $priceManager;
+        $this->rawManager = $rawManager;
     }
+    
+    public function addPriceFolder($supplier)
+    {
+        //Создать папк для прайсов
+        $price_data_folder_name = $this->priceManager->getPriceFolder();
+        if (!is_dir($price_data_folder_name)){
+            mkdir($price_data_folder_name);
+        }
+        
+        $price_supplier_folder_name = $price_data_folder_name.'/'.$supplier->getId();
+        if (!is_dir($price_supplier_folder_name)){
+            mkdir($price_supplier_folder_name);
+        }
+
+        $arx_price_data_folder_name = $this->priceManager->getPriceArxFolder();
+        if (!is_dir($arx_price_data_folder_name)){
+            mkdir($arx_price_data_folder_name);
+        }
+        
+        $arx_price_supplier_folder_name = $arx_price_data_folder_name.'/'.$supplier->getId();
+        if (!is_dir($arx_price_supplier_folder_name)){
+            mkdir($arx_price_supplier_folder_name);
+        }
+    }        
     
     public function addNewSupplier($data) 
     {
@@ -58,6 +97,8 @@ class SupplierManager
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+
+        $this->addPriceFolder($supplier);
     }   
     
     public function updateSupplier($supplier, $data) 
@@ -70,6 +111,8 @@ class SupplierManager
         $this->entityManager->persist($supplier);
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+        
+        $this->addPriceFolder($supplier);
     }    
     
     public function removeSupplier($supplier) 
@@ -79,6 +122,16 @@ class SupplierManager
         foreach ($contacts as $contact) {
             $this->contactManager->remove($contact);
         }        
+        
+        $pricesettings = $supplier->getPricwsettings();
+        foreach ($pricesettings as $pricesetting) {
+            $this->removePricesettings($pricesetting);
+        }
+
+        $raws = $supplier->getRaw();
+        foreach ($raws as $raw) {
+            $this->rawManager->removeRaw($raw);
+        }
         
         $this->entityManager->remove($supplier);
         
@@ -90,4 +143,52 @@ class SupplierManager
     {
        $this->contactManager->addNewContact($supplier, $data);
     }   
+    
+    public function addNewPricesettings($supplier, $data)
+    {
+        $pricesettings = new Pricesettings();
+        $pricesettings->setArtice($data['article']);
+        $pricesettings->setIid($data['iid']);
+        $pricesettings->setName($data['name']);
+        $pricesettings->setPrice($data['price']);
+        $pricesettings->setProducer($data['producer']);
+        $pricesettings->setRest($data['rest']);
+        $pricesettings->setStatus($data['status']);
+        $pricesettings->setSupplier($supplier);
+        $pricesettings->setTitle($data['title']);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $pricesettings->setDateCreated($currentDate);        
+        
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($pricesettings);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function updatePricesettings($pricesettings, $data)
+    {
+        $pricesettings->setArtice($data['article']);
+        $pricesettings->setIid($data['iid']);
+        $pricesettings->setName($data['name']);
+        $pricesettings->setPrice($data['price']);
+        $pricesettings->setProducer($data['producer']);
+        $pricesettings->setRest($data['rest']);
+        $pricesettings->setStatus($data['status']);
+        $pricesettings->setTitle($data['title']);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($pricesettings);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function removePricesettings($pricesettings)
+    {
+        $this->entityManager->remove($pricesettings);
+        $this->entityManager->flush();
+    }
 }

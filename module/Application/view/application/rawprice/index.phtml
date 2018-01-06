@@ -1,0 +1,48 @@
+<h1>Прайсы поставщиков</h1>
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('raw', ['action'=>'check']); ?>">
+    Проверить
+</a>
+</p>
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Поставщик</th>
+        <th>Файл</th>
+        <th>Статус</th>
+        <th>Дата</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($raws as $row): ?>
+    
+    <tr>
+        <td>
+                <?= $this->escapeHtml($row->getId()); ?>
+        </td>
+        <td><?= $this->escapeHtml($row->getSupplier()->getName()); ?></td>
+        <td>
+            <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$row->getId()]); ?>">            
+                <?= $this->escapeHtml($row->getFilename()); ?>
+            </a>    
+        </td>
+        <td><?= $this->escapeHtml($row->getStatusAsString()); ?></td>
+        <td><?= $this->escapeHtml($row->getDateCreated()); ?></td>
+        <td>
+            <button type="button" class="btn btn-default" aria-label="Left Align">
+                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+            </button>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($raws,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'raw')]); ?>
+
+

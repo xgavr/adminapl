@@ -27,8 +27,9 @@ class ClientControllerFactory implements FactoryInterface {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $clientManager = $container->get(ClientManager::class);
         $contactManager = $container->get(ContactManager::class);
+        $sessionContainer = $container->get('ContainerNamespace');
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ClientController($entityManager, $clientManager, $contactManager);
+        return new ClientController($entityManager, $clientManager, $contactManager, $sessionContainer);
     }
 }

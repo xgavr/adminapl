@@ -86,58 +86,7 @@ class OrderController extends AbstractActionController
             'form' => $form
         ]);
     }   
-    
-   public function editAction()
-   {
-        // Создаем форму.
-        $form = new OrderForm($this->entityManager);
-    
-        // Получаем ID tax.    
-        $orderId = $this->params()->fromRoute('id', -1);
-    
-        // Находим существующий пост в базе данных.    
-        $order = $this->entityManager->getRepository(Order::class)
-                ->findOneById($orderId);  
-        	
-        if ($order == null) {
-            $this->getResponse()->setStatusCode(401);
-            return;                        
-        } 
         
-        // Проверяем, является ли пост POST-запросом.
-        if ($this->getRequest()->isPost()) {
-            
-            // Получаем POST-данные.
-            $data = $this->params()->fromPost();
-            
-            // Заполняем форму данными.
-            $form->setData($data);
-            if ($form->isValid()) {
-                                
-                // Получаем валидированные данные формы.
-                $data = $form->getData();
-                
-                // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
-                $this->orderManager->updateOrder($order, $data);
-                
-                // Перенаправляем пользователя на страницу "order".
-                return $this->redirect()->toRoute('order', []);
-            }
-        } else {
-            $data = [
-               'name' => $order->getName(),
-            ];
-            
-            $form->setData($data);
-        }
-        
-        // Визуализируем шаблон представления.
-        return new ViewModel([
-            'form' => $form,
-            'order' => $order
-        ]);  
-    }    
-    
     public function deleteAction()
     {
         $orderId = $this->params()->fromRoute('id', -1);
@@ -151,7 +100,7 @@ class OrderController extends AbstractActionController
         
         $this->orderManager->removeOrder($order);
         
-        // Перенаправляем пользователя на страницу "rb/tax".
+        // Перенаправляем пользователя на страницу "order".
         return $this->redirect()->toRoute('order', []);
     }    
 
@@ -173,10 +122,14 @@ class OrderController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
+      
+        $bids = $this->entityManager->getRepository(Order::class)
+                    ->findBidOrder($order)->getResult();
         
         // Render the view template.
         return new ViewModel([
             'order' => $order,
+            'bids' => $bids,
         ]);
     } 
     

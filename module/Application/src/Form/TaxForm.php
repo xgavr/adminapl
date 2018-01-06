@@ -61,6 +61,7 @@ class TaxForm extends Form
                 'label' => 'Размер',
             ],
        ]);
+                
         
         // Добавляем кнопку отправки формы
         $this->add([

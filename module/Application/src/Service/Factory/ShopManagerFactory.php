@@ -11,6 +11,8 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ShopManager;
+use Application\Service\OrderManager;
+
 /**
  * Description of ShopManagerFactory
  *
@@ -23,8 +25,10 @@ class ShopManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
+        $orderManager = $container->get(OrderManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ShopManager($entityManager);
+        return new ShopManager($entityManager, $authService, $orderManager);
     }
 }

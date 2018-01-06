@@ -64,10 +64,10 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts'];
+            return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'order'];
         }
 
-        return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts'];
+        return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'order'];
     }
 
     /**
@@ -296,6 +296,50 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addContact', [$contact]);
 
         return parent::addContact($contact);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCart()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCart', []);
+
+        return parent::getCart();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addCart($cart)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addCart', [$cart]);
+
+        return parent::addCart($cart);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getOrder()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getOrder', []);
+
+        return parent::getOrder();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addOrder($order)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addOrder', [$order]);
+
+        return parent::addOrder($order);
     }
 
 }

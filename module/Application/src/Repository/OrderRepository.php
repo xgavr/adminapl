@@ -10,6 +10,7 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Order;
+use Application\Entity\Bid;
 /**
  * Description of OrderRepository
  *
@@ -29,5 +30,66 @@ class OrderRepository extends EntityRepository{
                 ;
 
         return $queryBuilder->getQuery();
+    }       
+    
+    /*
+     * @var Apllication\Entity\Client
+     */
+    public function findClientOrder($client)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Order::class, 'c')
+            ->where('c.client = ?1')    
+            ->orderBy('c.id')
+            ->setParameter('1', $client->getId())    
+                ;
+
+        return $queryBuilder->getQuery();
+    }       
+    
+
+    /*
+     * @var Apllication\Entity\Order
+     */
+    public function getOrderNum($order)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+            ->from(Bid::class, 'r')
+            ->select('SUM(r.num) as num, SUM(r.num*r.price) as total')
+            ->where('r.order = ?1')    
+            ->groupBy('r.order')
+            ->setParameter('1', $order->getId())
+                ;
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
+    /*
+     * @var Apllication\Entity\Order
+     */
+    public function findBidOrder($order)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Bid::class, 'c')
+            ->where('c.order = ?1')    
+            ->orderBy('c.id')
+            ->setParameter('1', $order->getId())    
+                ;
+
+        return $queryBuilder->getQuery();
     }        
+    
+    
 }

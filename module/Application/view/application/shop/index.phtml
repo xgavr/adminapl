@@ -1,6 +1,7 @@
 <?php
     $this->headScript()->appendFile('/js/typeahead.js/typeahead.jquery.min.js', 'text/javascript');
 ?>    
+
 <form method="GET" action="">
     <div class="container">
         <div class="row">
@@ -25,6 +26,22 @@
     </div>
 </form>
 
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <?php if ($currentClient): ?>
+               <span class="label label-success">
+                    Текущий покупатель: <?= $currentClient->getName(); ?>
+               </span>    
+            <?php else: ?>
+               <span class="alert alert-warning">
+                    Текущий клиент для работы в каталоге не установлен
+               </span>    
+            <?php endif; ?>    
+        </div>    
+    </div>
+</div>    
+
 <table class="table table-striped">
 
    <tr>
@@ -33,11 +50,12 @@
         <th>Артикул</th>
         <th>Производитель</th>
         <th>Цена</th>
-        <th>Действие</th>
+        <th>Количество</th>
+        <th>Купить</th>
     </tr>
     
     <?php foreach ($goods as $row): ?>
-    
+    <?php $price = $this->goodsManager->getMaxPrice($row); ?>
     <tr>
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
@@ -47,12 +65,20 @@
         </td>
         <td><?= $this->escapeHtml($row->getCode()); ?></td>        
         <td><?= $this->escapeHtml($row->getProducer()->getName()); ?></td>        
-        <td></td>        
+        <td><?= $price; ?></td>        
         <td>
-            <button type="button" class="btn btn-default" aria-label="Left Align">
+            <input type="text" id="num<?= $row->getId()?>" value="1" class="form-control"/>
+        </td>
+        <td>
+            <button type="button" class="btn btn-default" aria-label="Left Align" 
+                    onclick="addCart({
+                                good: <?= $row->getId()?>, 
+                                price: <?= $price; ?>
+                    })"
+             >
                 <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
             </button>
-        </td>    
+        </td>            
     </tr>
         
     <?php endforeach; ?>   
@@ -61,10 +87,24 @@
 <?= $this->paginationControl($goods,
             'Sliding',
             'application/partial/paginator', 
-            ['route' => array('route' => 'goods')]); ?>
+            ['route' => array('route' => 'shop')]); ?>
 
 
 <script type="text/javascript">
+    var addCart = function(data){
+        data.num = $('#num'+data.good).val();
+        $.post(
+            '/shop/add-cart',
+            data,
+            addCartSuccess
+        );
+    };
+    
+    function addCartSuccess(data)
+    {
+      //alert(data);
+    }
+        
     $(document).ready(function() { 
         $('input.typehead').typeahead({
            name: 'search_assistent',

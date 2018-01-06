@@ -14,7 +14,7 @@ use Application\Entity\Country;
 
 /**
  * Description of Producer
- * @ORM\Entity(repositoryClass="\Application\Repository\RbRepository")
+ * @ORM\Entity(repositoryClass="\Application\Repository\ProducerRepository")
  * @ORM\Table(name="producer")
  * @author Daddy
  */
@@ -83,8 +83,15 @@ class Producer {
    */
    private $goods;
 
+   /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\UnknownProducer", mappedBy="producer")
+    * @ORM\JoinColumn(name="id", referencedColumnName="producer_id")
+   */
+   private $unknownProducer;
+
    public function __construct() {
       $this->goods = new ArrayCollection();
+      $this->unknownProducer = new ArrayCollection();
    }
 
     /**
@@ -102,6 +109,23 @@ class Producer {
     public function addGoods($goods) 
     {
         $this->goods[] = $goods;
+    }   
+
+    /**
+     * Возвращает unknownProducer для этого producer.
+     * @return array
+     */   
+   public function getUnknownProducer() {
+      return $this->unknownProducer;
+   }    
+   
+    /**
+     * Добавляет новый unknownProducer к этому producer.
+     * @param $unknownProducer
+     */   
+    public function addUnknownProducer($unknownProducer) 
+    {
+        $this->unknownProducer[] = $unknownProducer;
     }   
     
 }

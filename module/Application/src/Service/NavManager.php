@@ -68,6 +68,18 @@ class NavManager
             ];
             
             $items[] = [
+                'id' => 'shop',
+                'label' => 'Каталог',
+                'link'  => $url('shop')
+            ];
+            
+            $items[] = [
+                'id' => 'cart',
+                'label' => 'Корзина',
+                'link'  => $url('shop', ['action' => 'cart'])
+            ];
+            
+            $items[] = [
                 'id' => 'goods',
                 'label' => 'Товары',
                 'link'  => $url('goods')
@@ -84,6 +96,12 @@ class NavManager
                 'label' => 'Поставщики',
                 'link'  => $url('supplier')
             ];
+
+            $items[] = [
+                'id' => 'raw',
+                'label' => 'Прайсы',
+                'link'  => $url('raw')
+            ];
             
             //Справочники
             $rbDropdownItems = [];
@@ -91,7 +109,12 @@ class NavManager
                 $rbDropdownItems[] = [
                             'id' => 'producer',
                             'label' => 'Производители',
-                            'link' => $url('rb', ['action'=>'producer'])
+                            'link' => $url('producer', [])
+                        ];
+                $rbDropdownItems[] = [
+                            'id' => 'unknown_producer',
+                            'label' => 'Неизвестные производители',
+                            'link' => $url('producer', ['action'=>'unknown'])
                         ];
                 
                 $rbDropdownItems[] = [

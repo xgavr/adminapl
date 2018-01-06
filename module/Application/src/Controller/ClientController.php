@@ -39,17 +39,38 @@ class ClientController extends AbstractActionController
      */
     private $contactManager;    
     
+    /*
+     * Менеджер сессий
+     * @var Zend\Seesion
+     */
+    private $sessionContainer;
+
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $clientManager, $contactManager) 
+    public function __construct($entityManager, $clientManager, $contactManager, $sessionContainer) 
     {
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
-        $this->contactManager = $contactManager;        
-    }    
+        $this->contactManager = $contactManager; 
+        $this->sessionContainer = $sessionContainer;
+    }   
+    
+    public function setCurrentClientAction()
+    {
+        $clientId = $this->params()->fromRoute('id', -1);
+        $this->sessionContainer->currentClient = $clientId;
+        return $this->redirect()->toRoute('client', []);        
+    }
     
     public function indexAction()
     {
+        
+        $currentClientId = $this->sessionContainer->currentClient;
+        if ($currentClientId){
+            $currentClient = $this->entityManager->getRepository(Client::class)
+                    ->findOneById($currentClientId);  
+        }    
+        	        
         $page = $this->params()->fromQuery('page', 1);
         
         $query = $this->entityManager->getRepository(Client::class)
@@ -62,7 +83,8 @@ class ClientController extends AbstractActionController
         // Визуализируем шаблон представления.
         return new ViewModel([
             'client' => $paginator,
-            'clientManager' => $this->clientManager
+            'clientManager' => $this->clientManager,
+            'currentClient' => $currentClient
         ]);  
     }
     

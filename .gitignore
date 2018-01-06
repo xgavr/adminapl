@@ -5,3 +5,5 @@ data/cache/*
 !data/cache/.gitkeep
 phpunit.xml
 /data/upload/oksm.xls
+/data/prices/
+/data/DoctrineORMModule/Proxy/

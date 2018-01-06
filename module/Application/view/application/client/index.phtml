@@ -1,9 +1,18 @@
 <h1>Клиенты</h1>
 <p>
-<a class="btn btn-default" href="
-    <?= $this->url('client', ['action'=>'add']); ?>">
-    Новый клиент
-</a>
+    <a class="btn btn-default" href="
+        <?= $this->url('client', ['action'=>'add']); ?>">
+        Новый клиент
+    </a>         
+    <?php if ($currentClient): ?>
+       <span class="alert alert-success">
+            Текущий клиент для работы в каталоге: <?= $currentClient->getName(); ?>
+       </span>    
+    <?php else: ?>
+       <span class="alert alert-warning">
+            Текущий клиент для работы в каталоге не установлен
+       </span>    
+    <?php endif; ?>    
 </p>
 
 <table class="table table-striped">
@@ -31,6 +40,10 @@
             <a class="btn btn-danger" href="<?= $this->url('client',
                     ['action'=>'delete', 'id'=>$row->getId()]); ?>">
                 <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+            <a class="btn btn-info" href="<?= $this->url('client',
+                    ['action'=>'set-current-client', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-set"></span> Текущий
             </a>
         </td>    
     </tr>

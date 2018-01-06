@@ -1,16 +1,22 @@
 <h1>Заявки</h1>
 <p>
+    <!--
 <a class="btn btn-default" href="
     <?= $this->url('order', ['action'=>'add']); ?>">
     Новая заявка
 </a>
+    -->
 </p>
 
 <table class="table table-striped">
 
    <tr>
         <th>ID</th>
-        <th>Наименование</th>
+        <th>Дата</th>
+        <th>Покупатель</th>
+        <th>Сумма</th>
+        <th>Комментарий</th>
+        <th>Действие</th>
     </tr>
     
     <?php foreach ($order as $row): ?>
@@ -18,13 +24,22 @@
     <tr>
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
-            <a href="<?= $this->url('order', ['action'=>'view', 'id'=>$row->getId()]); ?>">
-                <?= $this->escapeHtml($row->getName()); ?>
+            <?= $this->escapeHtml(date('d-m-Y', strtotime($row->getDateCreated()))); ?>
+        </td>
+        <td>
+            <a href="<?= $this->url('client', ['action'=>'view', 'id'=>$row->getClient()->getId()]); ?>">
+                <?= $this->escapeHtml($row->getClient()->getName()); ?>
             </a> 
         </td>
         <td>
+           <?= $this->escapeHtml(round($row->getTotal(), 2)); ?>
+        </td>
+        <td>
+           <?= $this->escapeHtml($row->getComment()); ?>
+        </td>
+        <td>
             <a class="btn btn-info" href="<?= $this->url('order', 
-                    ['action'=>'edit', 'id'=>$row->getId()]); ?>">
+                    ['action'=>'view', 'id'=>$row->getId()]); ?>">
                 <span class="glyphicon glyphicon-pencil" ></span> Изменить
             </a>
             <a class="btn btn-danger" href="<?= $this->url('order',

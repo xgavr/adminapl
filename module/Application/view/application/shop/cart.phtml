@@ -1,0 +1,123 @@
+<?php
+?>    
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <?php if ($currentClient): ?>
+               <span class="label label-success">
+                    Текущий покупатель: <?= $currentClient->getName(); ?>
+               </span>    
+            <?php else: ?>
+               <span class="alert alert-warning">
+                    Текущий клиент для работы в каталоге не установлен
+               </span>    
+            <?php endif; ?>    
+        </div>
+        <div class="col-sm-1">
+        Всего 
+        </div>
+        <div class="col-sm-1" id="headerNum">
+            <?= $num ?>
+        </div>
+        <div class="col-sm-1">
+        на сумму 
+        </div>
+        <div class="col-sm-1" id="headerTotal">
+            <?= round($total,2) ?>
+        </div>    
+    </div>
+</div>    
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Артикул</th>
+        <th>Производитель</th>
+        <th>Цена</th>
+        <th>Количество</th>
+        <th>Всего</th>
+        <th></th>
+    </tr>
+    
+    <?php foreach ($cart as $row): ?>
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('goods', ['action'=>'view', 'id'=>$row->getGood()->getId()]); ?>">
+                <?= $this->escapeHtml($row->getGood()->getName()); ?>
+            </a> 
+        </td>
+        <td><?= $this->escapeHtml($row->getGood()->getCode()); ?></td>        
+        <td><?= $this->escapeHtml($row->getGood()->getProducer()->getName()); ?></td>        
+        <td><?= $this->escapeHtml($row->getPrice()); ?></td>        
+        <td>        
+            <input type="text" id="num<?= $row->getId()?>" value="<?= $this->escapeHtml($row->getNum()); ?>" 
+                   class="form-control"
+                   onchange="editCart({
+                        id: <?= $row->getId()?>, 
+                       
+                   })"
+                   />
+        </td>    
+        <td id="rowTotal<?= $row->getId()?>"><?= $this->escapeHtml(round($row->getNum()*$row->getPrice(), 2)); ?></td>        
+        <td>
+            <a class="btn btn-danger" href="<?= $this->url('shop',
+                    ['action'=>'delete-cart', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>            
+        </td>            
+    </tr>
+        
+    <?php endforeach; ?>   
+    <tr>
+        <td colspan="5" align="right">Итого:</td>
+        <td id="footerNum"><?= $this->escapeHtml($num); ?></td>
+        <td id="footerTotal"><?= $this->escapeHtml(round($total, 2)); ?></td>
+        <td>
+            <a class="btn btn-default" href="<?= $this->url('shop',
+                    ['action'=>'cart']); ?>">
+                <span class="glyphicon glyphicon-refresh"></span> Пересчитать
+            </a>            
+            
+        </td>
+    </tr>
+</table>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-5">
+            <?php if(count($cart)): ?>
+
+                <a class="btn btn-default" href="<?= $this->url('shop',
+                        ['action'=>'checkout']); ?>">
+                    <span class="glyphicon"></span> Оформить заказ
+                </a>            
+            <?php endif; ?>
+        </div>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    var editCart = function(data){
+        data.num = $('#num'+data.id).val();
+        $.post(
+            '/shop/edit-cart/'+data.id,
+            data,
+            editCartSuccess
+        );
+    };
+    
+    function editCartSuccess(data)
+    {
+      console.log(data);  
+      $('#rowTotal'+data.id).html(data.rowtotal);
+      $('#footerNum').html(data.num);
+      $('#headerNum').html(data.num);
+      $('#footerTotal').html(data.total);
+      $('#headerTotal').html(data.total);      
+    }
+        
+</script>

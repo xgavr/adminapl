@@ -65,6 +65,29 @@ class Goods {
      * @ORM\Column(name="description")   
      */
     protected $description;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Rawprice", mappedBy="goods")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+     */
+    private $rawprice;
+ 
+    /**
+     * @ORM\OneToMany(targetEntity="\Application\Entity\Images", mappedBy="goods")
+     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+     */
+    protected $images;
+    
+    /**
+     * Конструктор.
+     */
+    public function __construct() 
+    {
+      $this->images = new ArrayCollection();   
+      $this->rawprice = new ArrayCollection();      
+      $this->cart = new ArrayCollection();      
+    }
+    
   
     public function getId() 
     {
@@ -131,7 +154,6 @@ class Goods {
     public function setTax($tax) 
     {
         $this->tax = $tax;
-        $tax->addGoods($this);
     }     
 
     public function getAvailable() 
@@ -155,20 +177,6 @@ class Goods {
     }     
 
     /**
-     * @ORM\OneToMany(targetEntity="\Application\Entity\Images", mappedBy="goods")
-     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
-     */
-    protected $images;
-    
-    /**
-     * Конструктор.
-     */
-    public function __construct() 
-    {
-      $this->images = new ArrayCollection();               
-    }
-    
-    /**
      * Возвращает картинки для этого товара.
      * @return array
      */
@@ -186,4 +194,21 @@ class Goods {
         $this->images[] = $image;
     }
     
+    /**
+     * Returns the array of contacts assigned to this.
+     * @return array
+     */
+    public function getRawprice()
+    {
+        return $this->rawprice;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addRawprice($rawprice)
+    {
+        $this->rawprice[] = $rawprice;
+    }
+            
 }

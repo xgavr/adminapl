@@ -6,7 +6,7 @@
 <!-- Previous page link -->
 <?php if (isset($this->previous)): ?>
     <li>
-      <a href="<?= $this->url($this->route['route'], ['action' => $this->route['action']], ['query'=>['action' => $this->route['action'], 'page'=>$this->previous]]); ?>" aria-label="Previous">
+      <a href="<?= $this->url($this->route['route'], ['action' => $this->route['action'], 'id' => $this->route['id']], ['query'=> ['page'=>$this->previous]]); ?>" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>  
@@ -20,7 +20,7 @@
 <?php foreach ($this->pagesInRange as $page): ?>
   <?php if ($page != $this->current): ?>
     <li>
-        <a href="<?= $this->url($this->route['route'], ['action' => $this->route['action']], ['query'=>['action' => $this->route['action'],'page'=>$page]]); ?>"><?= $this->escapeHtml($page); ?></a>
+        <a href="<?= $this->url($this->route['route'], ['action' => $this->route['action'], 'id' => $this->route['id']], ['query'=>['page'=>$page]]); ?>"><?= $this->escapeHtml($page); ?></a>
     </li>    
   <?php else: ?>
     <li>
@@ -32,7 +32,7 @@
 <!-- Next page link -->
 <?php if (isset($this->next)): ?>
     <li>
-      <a href="<?php echo $this->url($this->route['route'], ['action' => $this->route['action']], ['query'=>['action' => $this->route['action'],'page'=>$this->next]]); ?>" aria-label="Next">
+      <a href="<?php echo $this->url($this->route['route'], ['action' => $this->route['action'], 'id' => $this->route['id']], ['query'=>['page'=>$this->next]]); ?>" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>  

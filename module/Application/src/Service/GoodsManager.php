@@ -12,6 +12,8 @@ use Application\Entity\Goods;
 use Application\Entity\Producer;
 use Application\Entity\Tax;
 use MvlabsPHPExcel\Service;
+use Zend\Config\Config;
+use Zend\Config\Writer\PhpArray;
 
 /**
  * Description of GoodsService
@@ -21,6 +23,9 @@ use MvlabsPHPExcel\Service;
 class GoodsManager
 {
     
+    const SETTINGS_DIR       = './data/settings/'; // папка с настройками
+    const SETTINGS_FILE       = './data/settings/config.php'; // файл с настройками
+
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -31,6 +36,36 @@ class GoodsManager
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+    
+    public function getSettings()
+    {
+        if (file_exists(self::SETTINGS_FILE)){
+            $config = new Config(include self::SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->good = [];
+        }   
+        return $config->good;
+    }
+    
+    public function setSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::SETTINGS_FILE)){
+            $config = new Config(include self::SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->good = [];
+        }
+        
+        $config->good->defaultTax = $data['defaultTax'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::SETTINGS_FILE, $config);
     }
     
     public function addNewGoods($data) 
@@ -50,6 +85,8 @@ class GoodsManager
         
         $goods->setProducer($producer);
         
+        if (!$data['tax']) $data['tax'] = $this->getSettings()->defaultTax;
+        
         $tax = $this->entityManager->getRepository(Tax::class)
                     ->findOneById($data['tax']);
         if ($tax == null){
@@ -63,6 +100,8 @@ class GoodsManager
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+        
+        return $goods;
     }   
     
     public function updateGoods($goods, $data) 
@@ -87,6 +126,8 @@ class GoodsManager
         }
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+        
+        return $goods;
     }    
     
     public function removeGoods($goods) 
@@ -96,4 +137,12 @@ class GoodsManager
         $this->entityManager->flush();
     }    
 
+    public function getMaxPrice($good)
+    {
+        $result = $this->entityManager->getRepository(Goods::class)
+                ->getMaxPrice($good);
+//        var_dump($result);
+        
+        return $result[0]['price'];
+    } 
 }

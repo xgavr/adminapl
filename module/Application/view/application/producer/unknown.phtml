@@ -1,0 +1,44 @@
+<h1>Неизвестные производители</h1>
+<p>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Известный</th>
+        <th>Неизвестный</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($producer as $row): ?>
+    <tr>
+        <td><?= $this->escapeHtml($row->getId()); ?></td>
+        <td>
+            <?php if ($row->getProducer()): ?>    
+                <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$row->getProducer()->getId()]); ?>">
+                    <?= $this->escapeHtml($row->getProducer()->getName()); ?>
+                </a> 
+            <?php endif; ?>
+        </td>
+        <td><?= $row->getName(); ?></td>        
+        <td>
+            <a class="btn btn-info" href="<?= $this->url('producer', 
+                    ['action'=>'from-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page]]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span>Добавить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('producer',
+                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($producer,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'producer', 'action' => 'unknown')]); ?>
+

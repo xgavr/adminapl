@@ -1,0 +1,113 @@
+<?php
+$form = $this->form;
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование'
+    ]);
+
+$form->get('article')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Колонка артикула',
+    ]);
+
+$form->get('iid')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Колонка внутреннего артикула',
+    ]);
+
+$form->get('producer')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Колонка производитель',
+    ]);
+
+$form->get('title')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Колонка нименование товара',
+    ]);
+
+$form->get('price')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Колонка цена',
+    ]);
+
+$form->get('rest')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Колонка количество',
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control'
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>
+    Изменить настройку прайса    
+    <br/>для <?= $this->escapeHtml($supplier->getName()); ?>
+</h1>
+
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('article')); ?>
+            <?= $this->formElement($form->get('article')); ?>
+            <?= $this->formElementErrors($form->get('article')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('iid')); ?>
+            <?= $this->formElement($form->get('iid')); ?>
+            <?= $this->formElementErrors($form->get('iid')); ?>                  
+        </div>
+                                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('producer')); ?>
+            <?= $this->formElement($form->get('producer')); ?>
+            <?= $this->formElementErrors($form->get('producer')); ?>                  
+        </div>
+                                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('title')); ?>
+            <?= $this->formElement($form->get('title')); ?>
+            <?= $this->formElementErrors($form->get('title')); ?>                  
+        </div>
+                                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('price')); ?>
+            <?= $this->formElement($form->get('price')); ?>
+            <?= $this->formElementErrors($form->get('price')); ?>                  
+        </div>
+                                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rest')); ?>
+            <?= $this->formElement($form->get('rest')); ?>
+            <?= $this->formElementErrors($form->get('rest')); ?>                  
+        </div>
+                                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('status')); ?>
+            <?= $this->formElement($form->get('status')); ?>
+            <?= $this->formElementErrors($form->get('status')); ?>                  
+        </div>
+                
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   

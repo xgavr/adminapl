@@ -10,6 +10,8 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Goods;
+use Application\Entity\Cart;
+use Application\Entity\Client;
 use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -29,7 +31,13 @@ class ShopController extends AbstractActionController
      * Менеджер товаров.
      * @var Application\Service\GoodsManager 
      */
-    private $goodsManager;    
+    private $goodsManager;   
+    
+    /*
+     * Менеджер сессий
+     * @var Zend\Seesion
+     */
+    private $sessionContainer;
     
     /**
      * Менеджер товаров.
@@ -37,16 +45,32 @@ class ShopController extends AbstractActionController
      */
     private $shopManager;    
     
+    /**
+     * Doctrine entity manager.
+     * @var Application\Service\OrderManager
+     */
+    private $orderManager;
+    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $shopManager, $goodsManager) 
+    public function __construct($entityManager, $shopManager, $goodsManager, $sessionContainer, $orderManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
         $this->shopManager = $shopManager;
+        $this->sessionContainer = $sessionContainer;
+        $this->orderManager = $orderManager;
     }    
     
     public function indexAction()
     {
+        if (!isset($this->sessionContainer->currentClient)){
+            return $this->redirect()->toRoute('client', []);
+        }
+        $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient);  
+        
+        
         $page = $this->params()->fromQuery('page', 1);
         $q = $this->params()->fromQuery('q', '');
         
@@ -66,7 +90,8 @@ class ShopController extends AbstractActionController
         return new ViewModel([
             'goods' => $paginator,
             'goodsManager' => $this->goodsManager,
-            'search' => $q,    
+            'search' => $q,
+            'currentClient' => $currentClient
         ]);  
     }
     
@@ -81,9 +106,148 @@ class ShopController extends AbstractActionController
         );        
     }
     
-    public function addToBagAction()
+    public function cartAction()
     {
+        if (!isset($this->sessionContainer->currentClient)){
+            return $this->redirect()->toRoute('client', []);
+        }
+        $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient);  
+        
+        
+        $cart = $this->entityManager->getRepository(Cart::class)
+                    ->findClientCart($currentClient)->getResult();
+                        
+        $result = $this->entityManager->getRepository(Cart::class)
+            ->getClientNum($currentClient);
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'cart' => $cart,
+            'currentClient' => $currentClient,
+            'num' => $result[0]['num'],
+            'total' => $result[0]['total'],
+        ]);  
         
     }
     
+    public function addCartAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            if(!$data['client']) {
+                $data['client'] = $this->sessionContainer->currentClient; 
+            }    
+            
+            $this->shopManager->addCart($data);            
+            
+            $client = $this->entityManager->getRepository(Client::class)
+                    ->findOneById($data['client']); 
+
+            $result = $this->entityManager->getRepository(Cart::class)
+                ->getClientNum($client);
+        }
+                        
+        return new JsonModel(
+           ['num' => $result[0]['num']]
+        );        
+    }
+    
+    public function editCartAction()
+    {
+        $cartId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $cart = $this->entityManager->getRepository(Cart::class)
+                ->findOneById($cartId);  
+        	
+        if ($cart == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            $this->shopManager->updateCart($cart, $data); 
+            
+            $rowTotal = $cart->getPrice()*$data['num'];
+            
+        }
+        
+        $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient);  
+        
+        if ($currentClient == null) {
+            return;                        
+        } 
+        
+        $result = $this->entityManager->getRepository(Cart::class)
+            ->getClientNum($currentClient);
+                        
+        return new JsonModel([
+            'id' => $cartId,
+            'rowtotal' => round($rowTotal, 2),
+            'num' => round($result[0]['num'], 2),
+            'total' => round($result[0]['total'], 2)
+        ]);        
+    }
+    
+    public function deleteCartAction()
+    {
+        $cartId = $this->params()->fromRoute('id', -1);
+        
+        $cart = $this->entityManager->getRepository(Cart::class)
+                ->findOneById($cartId);
+        
+        if ($cart == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->shopManager->removeCart($cart);
+        
+        // Перенаправляем пользователя на страницу "cart".
+        return $this->redirect()->toRoute('shop', ['action' => 'cart']);        
+    }
+    
+    public function checkoutAction()
+    {
+        if (!isset($this->sessionContainer->currentClient)){
+            return $this->redirect()->toRoute('client', []);
+        }
+        $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient);  
+        
+        if ($currentClient == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->orderManager->checkoutClient($currentClient);
+        
+        return $this->redirect()->toRoute('shop', ['action' => 'cart']);        
+    }
+    
+    public function numAction()
+    {
+        $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient);  
+        
+        if ($currentClient == null) {
+            return;                        
+        } 
+        
+        $result = $this->entityManager->getRepository(Cart::class)
+            ->getClientNum($currentClient);
+                        
+        return new JsonModel(
+           $result[0]['num']
+        );        
+    }
 }

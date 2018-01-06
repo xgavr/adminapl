@@ -221,7 +221,6 @@ class SupplierController extends AbstractActionController
                 // Получаем валадированные данные формы.
                 $data = $form->getData();
               
-                // Используем менеджер постов для добавления нового комментарий к посту.
                 $this->supplierManager->addContactToSupplier($supplier, $data);
                 
                 // Снова перенаправляем пользователя на страницу "view".

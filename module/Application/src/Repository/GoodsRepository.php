@@ -10,6 +10,7 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Goods;
+use Application\Entity\Rawprice;
 /**
  * Description of GoodsRepository
  *
@@ -49,6 +50,23 @@ class GoodsRepository extends EntityRepository{
     public function searchNameForSearchAssistant($search)
     {        
         return $this->searchByName($search)->getResult();
-    }        
+    }  
+    
+    public function getMaxPrice($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+            ->from(Rawprice::class, 'r')
+            ->select('MAX(r.price) as price')
+            ->where('r.good = ?1')    
+            ->groupBy('r.good')
+            ->setParameter('1', $good->getId())
+                ;
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
     
 }

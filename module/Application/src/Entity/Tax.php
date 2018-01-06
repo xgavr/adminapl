@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Daddy
  */
 class Tax {
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -34,7 +35,7 @@ class Tax {
      * @ORM\Column(name="amount")   
      */
     protected $amount;
-
+    
     public function getId() 
     {
         return $this->id;
@@ -63,33 +64,6 @@ class Tax {
     public function setAmount($amount) 
     {
         $this->amount = $amount;
-    }     
-    
-   /**
-    * @ORM\OneToMany(targetEntity="\Application\Entity\Goods", mappedBy="tax")
-    * @ORM\JoinColumn(name="id", referencedColumnName="tax_id")
-   */
-   private $goods;
-
-   public function __construct() {
-      $this->goods = new ArrayCollection();
-   }
-
-    /**
-     * Возвращает goods для этого tax.
-     * @return array
-     */   
-   public function getGoods() {
-      return $this->goods;
-   }    
-   
-    /**
-     * Добавляет новый goods к этому tax.
-     * @param $goods
-     */   
-    public function addGoods($goods) 
-    {
-        $this->goods[] = $goods;
-    }   
+    }
     
 }

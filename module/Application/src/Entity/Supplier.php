@@ -63,11 +63,25 @@ class Supplier {
     private $contacts;
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Raw", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $raw;
+
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Pricesettings", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $pricesettings;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->contacts = new ArrayCollection();
+        $this->raw = new ArrayCollection();
+        $this->pricesettings = new ArrayCollection();
     }
     
     
@@ -111,7 +125,7 @@ class Supplier {
         $this->address = $address;
     }     
 
-        /**
+    /**
      * Returns status.
      * @return int     
      */
@@ -144,6 +158,16 @@ class Supplier {
         
         return 'Unknown';
     }    
+    
+    public function getStatusActive()
+    {
+        return self::STATUS_ACTIVE;
+    }        
+    
+    public function getStatusRetired()
+    {
+        return self::STATUS_RETIRED;
+    }        
     
     /**
      * Sets status.
@@ -187,6 +211,40 @@ class Supplier {
     public function addContact($contact)
     {
         $this->contacts[] = $contact;
+    }
+    
+    /**
+     * Returns the array of contacts assigned to this.
+     * @return array
+     */
+    public function getRaw()
+    {
+        return $this->raw;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addRaw($raw)
+    {
+        $this->raw[] = $raw;
+    }
+    
+    /**
+     * Returns the array of contacts assigned to this.
+     * @return array
+     */
+    public function getPricesettings()
+    {
+        return $this->pricesettings;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addPricesettings($pricesettings)
+    {
+        $this->pricesettings[] = $pricesettings;
     }
     
 }

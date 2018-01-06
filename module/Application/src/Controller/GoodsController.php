@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Goods;
 use Application\Form\GoodsForm;
+use Application\Form\GoodSettingsForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -37,6 +38,42 @@ class GoodsController extends AbstractActionController
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
     }    
+    
+    public function settingsAction()
+    {
+        $form = new GoodSettingsForm($this->entityManager);
+    
+        $settings = $this->goodsManager->getSettings();
+        
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
+                $this->goodsManager->setSettings($data);
+                
+                // Перенаправляем пользователя на страницу "goods".
+                return $this->redirect()->toRoute('goods', []);
+            }
+        } else {
+            $form->setData($settings);
+        }
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
     
     public function indexAction()
     {

@@ -64,10 +64,10 @@ class Tax extends \Application\Entity\Tax implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'name', 'amount', '' . "\0" . 'Application\\Entity\\Tax' . "\0" . 'goods'];
+            return ['__isInitialized__', 'id', 'name', 'amount'];
         }
 
-        return ['__isInitialized__', 'id', 'name', 'amount', '' . "\0" . 'Application\\Entity\\Tax' . "\0" . 'goods'];
+        return ['__isInitialized__', 'id', 'name', 'amount'];
     }
 
     /**
@@ -241,28 +241,6 @@ class Tax extends \Application\Entity\Tax implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAmount', [$amount]);
 
         return parent::setAmount($amount);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getGoods()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getGoods', []);
-
-        return parent::getGoods();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addGoods($goods)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addGoods', [$goods]);
-
-        return parent::addGoods($goods);
     }
 
 }

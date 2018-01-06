@@ -64,10 +64,10 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts'];
+            return ['__isInitialized__', 'id', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'pricesettings'];
         }
 
-        return ['__isInitialized__', 'id', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts'];
+        return ['__isInitialized__', 'id', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'pricesettings'];
     }
 
     /**
@@ -290,6 +290,28 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     /**
      * {@inheritDoc}
      */
+    public function getStatusActive()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStatusActive', []);
+
+        return parent::getStatusActive();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStatusRetired()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStatusRetired', []);
+
+        return parent::getStatusRetired();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setStatus($status)
     {
 
@@ -340,6 +362,50 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addContact', [$contact]);
 
         return parent::addContact($contact);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRaw()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRaw', []);
+
+        return parent::getRaw();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addRaw($raw)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addRaw', [$raw]);
+
+        return parent::addRaw($raw);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPricesettings()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPricesettings', []);
+
+        return parent::getPricesettings();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addPricesettings($pricesettings)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPricesettings', [$pricesettings]);
+
+        return parent::addPricesettings($pricesettings);
     }
 
 }

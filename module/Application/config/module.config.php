@@ -119,6 +119,76 @@ return [
                     ],
                 ],
             ],        
+            'price' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/price[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\PriceController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
+            'pricesettings' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/pricesettings[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\PricesettingsController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
+            'producer' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/producer[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ProducerController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
+            'raw' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/raw[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\RawController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
+            'rawprice' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/rawprice[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\RawpriceController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'contact' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -170,6 +240,11 @@ return [
             Controller\IndexController::class => InvokableFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
             Controller\OrderController::class => Controller\Factory\OrderControllerFactory::class,
+            Controller\PriceController::class => Controller\Factory\PriceControllerFactory::class,
+            Controller\PricesettingsController::class => Controller\Factory\PricesettingsControllerFactory::class,
+            Controller\ProducerController::class => Controller\Factory\ProducerControllerFactory::class,
+            Controller\RawController::class => Controller\Factory\RawControllerFactory::class,
+            Controller\RawpriceController::class => Controller\Factory\RawpriceControllerFactory::class,
             Controller\RbController::class => Controller\Factory\RbControllerFactory::class,
             Controller\SupplierController::class => Controller\Factory\SupplierControllerFactory::class,
             Controller\ShopController::class => Controller\Factory\ShopControllerFactory::class,
@@ -182,9 +257,12 @@ return [
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
             Service\SupplierManager::class => Service\Factory\SupplierManagerFactory::class,
             Service\ShopManager::class => Service\Factory\ShopManagerFactory::class,
+            Service\ProducerManager::class => Service\Factory\ProducerManagerFactory::class,
             Service\RbManager::class => Service\Factory\RbManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
             Service\OrderManager::class => Service\Factory\OrderManagerFactory::class,
+            Service\PriceManager::class => Service\Factory\PriceManagerFactory::class,
+            Service\RawManager::class => Service\Factory\RawManagerFactory::class,
             Service\NavManager::class => Service\Factory\NavManagerFactory::class,
             Service\RbacAssertionManager::class => Service\Factory\RbacAssertionManagerFactory::class,            
         ],

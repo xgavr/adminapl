@@ -1,0 +1,52 @@
+<?php
+$this->headTitle('Заявка №'. $order->getId());
+  
+?>
+
+<a href="
+    <?= $this->url('order', []); ?>">
+    &lt;&lt; Назад в заявки
+</a>
+
+<h1>
+    <?= $this->escapeHtml($order->getClient()->getName()); ?>
+    <br/>
+    <?= $this->escapeHtml('Заявка №'.$order->getId().' от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated()))); ?>    
+</h1>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Товар</th>
+        <th>Количество</th>
+        <th>Цена</th>
+        <th>Сумма</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($bids as $row): ?>
+    
+    <tr>
+        <td>
+            <?= $this->escapeHtml($row->getId()); ?>
+        </td>
+        <td>
+            <?= $this->escapeHtml($row->getGood()->getName()); ?>
+        </td>
+        <td>
+            <?= $this->escapeHtml($row->getNum()); ?>
+        </td>
+        <td>
+            <?= $this->escapeHtml($row->getPrice()); ?>
+        </td>
+        <td>
+            <?= $this->escapeHtml(round($row->getNum()*$row->getPrice(), 2)); ?>
+        </td>
+        <td>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>

@@ -1,0 +1,35 @@
+<?php
+$form = $this->form;
+
+$form->get('defaultTax')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Налог по умолчанию',
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Настройки товаров</h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('defaultTax')); ?>
+            <?= $this->formElement($form->get('defaultTax')); ?>
+            <?= $this->formElementErrors($form->get('defaultTax')); ?>                  
+        </div>
+                
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   

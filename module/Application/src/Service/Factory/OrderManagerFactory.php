@@ -23,8 +23,9 @@ class OrderManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $authService = $container->get(\Zend\Authentication\AuthenticationService::class);        
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new OrderManager($entityManager);
+        return new OrderManager($entityManager, $authService);
     }
 }

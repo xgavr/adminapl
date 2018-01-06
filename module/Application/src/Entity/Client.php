@@ -55,11 +55,25 @@ class Client {
     private $contacts;
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Cart", mappedBy="client")
+    * @ORM\JoinColumn(name="id", referencedColumnName="client_id")
+     */
+    private $cart;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Order", mappedBy="client")
+    * @ORM\JoinColumn(name="id", referencedColumnName="client_id")
+     */
+    private $order;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->contacts = new ArrayCollection();
+        $this->cart = new ArrayCollection();
+        $this->order = new ArrayCollection();
     }
     
     public function getId() 
@@ -158,6 +172,40 @@ class Client {
     public function addContact($contact)
     {
         $this->contacts[] = $contact;
+    }
+        
+    /**
+     * Returns the array of cart assigned to this.
+     * @return array
+     */
+    public function getCart()
+    {
+        return $this->cart;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addCart($cart)
+    {
+        $this->cart[] = $cart;
+    }
+        
+    /**
+     * Returns the array of order assigned to this.
+     * @return array
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addOrder($order)
+    {
+        $this->order[] = $order;
     }
         
 }

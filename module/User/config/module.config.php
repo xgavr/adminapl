@@ -136,6 +136,14 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
+            \Application\Controller\RawController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\RawpriceController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
             \Application\Controller\RbController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
@@ -145,6 +153,22 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             \Application\Controller\GoodsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\OrderController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\PriceController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\PricesettingsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\ProducerController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

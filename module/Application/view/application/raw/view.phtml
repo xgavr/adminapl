@@ -1,0 +1,68 @@
+<?php
+$this->headTitle($raw->getSupplier()->getName().' прайс '. $raw->getFilename());
+  
+?>
+
+<a href="
+    <?= $this->url('raw', ['action' => 'view', 'id' => $raw->getId()]); ?>">
+    &lt;&lt; Назад в <?= $raw->getFilename() ?>
+</a>
+
+<h1>
+    <?= $this->escapeHtml($raw->getSupplier()->getName().' прайс '. $raw->getFilename()); ?>    
+</h1>
+
+
+<h3 class="contact-header">Данные</h3>
+<a class="btn btn-default" href="
+    <?= $this->url('raw', ['action'=>'parse', 'id' => $raw->getId()]); ?>">
+    1.Парсить все записи
+</a>
+<a class="btn btn-default" href="
+    <?= $this->url('raw', ['action'=>'unknown-producer', 'id' => $raw->getId()]); ?>">
+    2.Производители
+</a>
+<a class="btn btn-default" href="
+    <?= $this->url('raw', ['action'=>'goods', 'id' => $raw->getId()]); ?>">
+    3.Товары
+</a>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Данные</th>
+        <th>Действие</th>
+    </tr>
+    
+    <?php foreach ($rawprice as $row): ?>
+    
+    <tr>
+        <td>
+            <a href="<?= $this->url('rawprice', ['action'=>'view', 'id'=>$row->getId()]); ?>">            
+                <?= $this->escapeHtml($row->getId()); ?>
+            </a>    
+        </td>
+        <td>
+        <?php 
+            $rawdates = $row->getRawdataAsArray();
+            $i = 0;
+        ?>
+        <?php foreach ($rawdates as $rawdata): ?>
+            <?php $i++ ?>
+            <div>
+                <b><?= $i?>:</b><?= $this->escapeHtml($rawdata); ?>
+            </div>
+        <?php endforeach; ?>    
+        </td>    
+        <td>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+<?= $this->paginationControl($rawprice,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId())]); ?>

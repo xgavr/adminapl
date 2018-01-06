@@ -34,6 +34,29 @@ class Bid {
      */
     protected $num;
 
+    /**
+     * @ORM\Column(name="date_created")  
+     */
+    protected $dateCreated;    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="bid") 
+     * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
+     */
+    private $good;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="bid") 
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="bid") 
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     */
+    private $order;
+    
     
     public function getId() 
     {
@@ -64,5 +87,81 @@ class Bid {
     {
         $this->num = $num;
     }     
+    
+    /**
+     * Returns the date of user creation.
+     * @return string     
+     */
+    public function getDateCreated() 
+    {
+        return $this->dateCreated;
+    }
+    
+    /**
+     * Sets the date when this user was created.
+     * @param string $dateCreated     
+     */
+    public function setDateCreated($dateCreated) 
+    {
+        $this->dateCreated = $dateCreated;
+    }    
+        
+    /*
+     * Возвращает связанный good.
+     * @return \Application\Entity\Goods
+     */
+    
+    public function getGood() 
+    {
+        return $this->good;
+    }
 
+    /**
+     * Задает связанный good.
+     * @param \Application\Entity\Goods $good
+     */    
+    public function setGood($good) 
+    {
+        $this->good = $good;
+    }     
+    
+    /*
+     * Возвращает связанный user.
+     * @return \User\Entity\User
+     */
+    
+    public function getUser() 
+    {
+        return $this->user;
+    }
+
+    /**
+     * Задает связанный user.
+     * @param \User\Entity\User $user
+     */    
+    public function setUser($user) 
+    {
+        $this->user = $user;
+    }     
+    
+    /*
+     * Возвращает связанный order.
+     * @return \Application\Entity\Order
+     */
+    
+    public function getOrder() 
+    {
+        return $this->order;
+    }
+
+    /**
+     * Задает связанный order.
+     * @param \Application\Entity\Order $order
+     */    
+    public function setOrder($order) 
+    {
+        $this->order = $order;
+        $order->addBid($this);
+    }     
+        
 }
