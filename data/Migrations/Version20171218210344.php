@@ -27,9 +27,13 @@ class Version20171218210344 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         // this up() migration is auto-generated, please modify it to your needs
-        $table = $schema->getTable('client');
+        $table = $schema->createTable('client');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>128]);        
         $table->addColumn('status', 'integer', ['notnull'=>true]);
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);
+        $table->setPrimaryKey(['id']);
+        $table->addOption('engine' , 'InnoDB');
     }
 
     /**
@@ -39,8 +43,6 @@ class Version20171218210344 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         // this down() migration is auto-generated, please modify it to your needs
-        $table = $schema->getTable('client');
-        $table->dropColumn('status');
-        $table->dropColumn('date_created');
+        $schema->dropTable('client');
     }
 }

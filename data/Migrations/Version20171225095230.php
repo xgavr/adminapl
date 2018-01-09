@@ -25,7 +25,72 @@ class Version20171225095230 extends AbstractMigration
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
+        // 
+        // 
         // Create 'raw' table
+        $table = $schema->createTable('currency');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>256]);        
+        $table->addColumn('description', 'string', ['notnull'=>true, 'length'=>1024]);        
+        $table->setPrimaryKey(['id']);
+        $table->addOption('engine' , 'InnoDB');
+        
+        $table = $schema->createTable('currency_rate');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('date_rate', 'string', ['notnull'=>true, 'length'=>256]);        
+        $table->addColumn('currency_id', 'integer', ['notnull'=>false]);                
+        $table->addColumn('amount', 'float', ['precision'=>2]);
+        $table->setPrimaryKey(['id']);
+        $table->addForeignKeyConstraint('currency', ['currency_id'], ['id'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'currency_id_currency_rate_currency_id_fk');
+        $table->addOption('engine' , 'InnoDB');
+        
+        $table = $schema->createTable('tax');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>256]);        
+        $table->addColumn('amount', 'float', ['precision'=>2]);
+        $table->setPrimaryKey(['id']);
+        $table->addOption('engine' , 'InnoDB');
+        
+        $table = $schema->createTable('goods');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>256]);        
+        $table->addColumn('code', 'string', ['notnull'=>true, 'length'=>128]);        
+        $table->addColumn('producer_id', 'integer', ['notnull'=>false]);                
+        $table->addColumn('tax_id', 'integer', ['notnull'=>false]);                
+        $table->addColumn('status', 'integer', ['notnull'=>true]);
+        $table->addColumn('description', 'string', ['notnull'=>true, 'length'=>1024]);        
+        $table->setPrimaryKey(['id']);
+        $table->addOption('engine' , 'InnoDB');
+
+        $table = $schema->createTable('images');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('good_id', 'integer', ['notnull'=>false, 'default' => 0]);  
+        $table->addColumn('path', 'string', ['notnull'=>true, 'length'=>1024]);        
+        $table->setPrimaryKey(['id']);
+        $table->addForeignKeyConstraint('goods', ['good_id'], ['id'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'goods_id_images_good_id_fk');
+        $table->addOption('engine' , 'InnoDB');
+        
+        $table = $schema->createTable('country');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>128]);        
+        $table->addColumn('fullname', 'string', ['notnull'=>true, 'length'=>512]);        
+        $table->addColumn('code', 'string', ['notnull'=>true, 'length'=>128]);        
+        $table->addColumn('alpha2', 'string', ['notnull'=>true, 'length'=>2]);        
+        $table->addColumn('alpha3', 'string', ['notnull'=>true, 'length'=>3]);        
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['code'], 'code_idx');
+        $table->addOption('engine' , 'InnoDB');
+        
+        
+        $table = $schema->createTable('producer');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>128]);        
+        $table->addColumn('country_id', 'integer', ['notnull'=>true]);
+        $table->setPrimaryKey(['id']);
+        $table->addOption('engine' , 'InnoDB');
+        
         $table = $schema->createTable('raw');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('supplier_id', 'integer', ['notnull'=>true]);        
@@ -80,5 +145,12 @@ class Version20171225095230 extends AbstractMigration
         $schema->dropTable('rawprice');
         $schema->dropTable('unknown_producer');
         $schema->dropTable('raw');
+        $schema->dropTable('producer');
+        $schema->dropTable('country');
+        $schema->dropTable('tax');
+        $schema->dropTable('goods');
+        $schema->dropTable('currency');
+        $schema->dropTable('currency_rate');
+        $schema->dropTable('images');
     }
 }
