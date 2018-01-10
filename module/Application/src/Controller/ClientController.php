@@ -69,7 +69,9 @@ class ClientController extends AbstractActionController
         if ($currentClientId){
             $currentClient = $this->entityManager->getRepository(Client::class)
                     ->findOneById($currentClientId);  
-        }    
+        } else {
+            $currentClient = null;
+        }   
         	        
         $page = $this->params()->fromQuery('page', 1);
         
@@ -84,7 +86,7 @@ class ClientController extends AbstractActionController
         return new ViewModel([
             'client' => $paginator,
             'clientManager' => $this->clientManager,
-            'currentClient' => $currentClient
+            'currentClient' => $currentClient 
         ]);  
     }
     

@@ -23,34 +23,35 @@
         <th>Действие</th>
     </tr>
     
-    <?php foreach ($goods as $row): ?>
-    
-    <tr>
-        <td><?= $this->escapeHtml($row->getId()); ?></td>
-        <td>
-            <a href="<?= $this->url('goods', ['action'=>'view', 'id'=>$row->getId()]); ?>">
-                <?= $this->escapeHtml($row->getName()); ?>
-            </a> 
-        </td>
-        <td><?= $this->escapeHtml($row->getCode()); ?></td>        
-        <td><?= $this->escapeHtml($row->getProducer()->getName()); ?></td>        
-        <td><?= $this->escapeHtml($row->getDescription()); ?></td>        
-        <td><?= $this->escapeHtml($row->getTax()->getName()); ?></td>        
-        <td><?= $this->escapeHtml($row->getAvailable()); ?></td>        
-        <td>
-            <a class="btn btn-info" href="<?= $this->url('goods', 
-                    ['action'=>'edit', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-            </a>
-            <a class="btn btn-danger" href="<?= $this->url('goods',
-                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>   
-    
+    <?php if (count($goods)): ?>
+        <?php foreach ($goods as $row): ?>
+
+        <tr>
+            <td><?= $this->escapeHtml($row->getId()); ?></td>
+            <td>
+                <a href="<?= $this->url('goods', ['action'=>'view', 'id'=>$row->getId()]); ?>">
+                    <?= $this->escapeHtml($row->getName()); ?>
+                </a> 
+            </td>
+            <td><?= $this->escapeHtml($row->getCode()); ?></td>        
+            <td><?= $this->escapeHtml($row->getProducer()->getName()); ?></td>        
+            <td><?= $this->escapeHtml($row->getDescription()); ?></td>        
+            <td><?= $this->escapeHtml($row->getTax()->getName()); ?></td>        
+            <td><?= $this->escapeHtml($row->getAvailable()); ?></td>        
+            <td>
+                <a class="btn btn-info" href="<?= $this->url('goods', 
+                        ['action'=>'edit', 'id'=>$row->getId()]); ?>">
+                    <span class="glyphicon glyphicon-pencil" ></span> Изменить
+                </a>
+                <a class="btn btn-danger" href="<?= $this->url('goods',
+                        ['action'=>'delete', 'id'=>$row->getId()]); ?>">
+                    <span class="glyphicon glyphicon-remove"></span> Удалить
+                </a>
+            </td>    
+        </tr>
+
+        <?php endforeach; ?>   
+    <?php endif;?>
 </table>
 <?= $this->paginationControl($goods,
             'Sliding',

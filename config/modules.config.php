@@ -29,6 +29,7 @@ return [
     'DoctrineModule',
     'DoctrineORMModule',
     'MvlabsPHPExcel',
+    'ZendDeveloperTools',
     'Admin',
     'User',
     'Application',
