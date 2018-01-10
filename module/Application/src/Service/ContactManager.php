@@ -40,7 +40,10 @@ class ContactManager
         // Создаем новую сущность.
         $contact = new Contact();
         $contact->setName($data['name']);
-        $contact->setDescription($data['description']);
+        
+        $description = $data['description'];
+        if (!$description) $description = "";
+        $contact->setDescription($description);
         $contact->setStatus($data['status']);
         
         $currentDate = date('Y-m-d H:i:s');

@@ -147,7 +147,7 @@ class UserController extends AbstractActionController
         }
         
         // Create user form
-        $form = new UserForm($scenario, $this->entityManager, $user);
+        $form = new UserForm('update', $this->entityManager, $user);
         
         // Get the list of all available roles (sorted by name).
         $allRoles = $this->entityManager->getRepository(Role::class)
