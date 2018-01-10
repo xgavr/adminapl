@@ -92,9 +92,16 @@ class UserManager
      */
     public function updateUser($user, $data) 
     {
+        $flag = true;
+        
         // Do not allow to change user email if another user with such email already exits.
         if($user->getEmail()!=$data['email'] && $this->checkUserExists($data['email'])) {
             throw new \Exception("Another user with email address " . $data['email'] . " already exists");
+        }
+
+        // Если изменилась идентификация надо будет перелогинится.
+        if($user->getEmail() != $data['email']) {
+//            $flag = 'logout';
         }
         
         $user->setEmail($data['email']);
@@ -107,7 +114,7 @@ class UserManager
         // Apply changes to database.
         $this->entityManager->flush();
 
-        return true;
+        return $flag;
     }
     
     /**

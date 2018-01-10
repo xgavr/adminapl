@@ -61,9 +61,13 @@ class UserForm extends Form
         $this->add([            
             'type'  => 'text',
             'name' => 'email',
+            'disabled' => 'disabled',
             'options' => [
                 'label' => 'E-mail',
             ],
+//            'attributes' => [
+//                'disabled' => ($this->scenario == 'update') ? 'disabled':null,
+//            ]
         ]);
         
         // Add "full_name" field

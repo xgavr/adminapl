@@ -147,7 +147,7 @@ class UserController extends AbstractActionController
         }
         
         // Create user form
-        $form = new UserForm('update', $this->entityManager, $user);
+        $form = new UserForm($scenario, $this->entityManager, $user);
         
         // Get the list of all available roles (sorted by name).
         $allRoles = $this->entityManager->getRepository(Role::class)
@@ -163,22 +163,33 @@ class UserController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             
             // Fill in the form with POST data
-            $data = $this->params()->fromPost();            
+            $data = $this->params()->fromPost();
             
             $form->setData($data);
             
             // Validate form
             if($form->isValid()) {
                 
+                if ($user->getEmail() == $this->identity() && $user->getEmail() != $data['email']){
+                    $logout = true;
+                } else {
+                    $logout = false;
+                } 
+                    
                 // Get filtered and validated data
                 $data = $form->getData();
-                
                 // Update the user.
-                $this->userManager->updateUser($user, $data);
-                
-                // Redirect to "view" page
-                return $this->redirect()->toRoute('users', 
-                        ['action'=>'view', 'id'=>$user->getId()]);                
+                $result = $this->userManager->updateUser($user, $data);
+
+                if ($logout){
+                    return $this->redirect()->toRoute('logout');
+                    
+                } else {
+                    // Redirect to "view" page
+                    return $this->redirect()->toRoute('users', 
+                        ['action'=>'view', 'id'=>$user->getId()]);
+                    
+                }
             }               
         } else {
             
