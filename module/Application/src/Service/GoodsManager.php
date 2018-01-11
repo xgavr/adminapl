@@ -147,7 +147,7 @@ class GoodsManager
         $result = $this->entityManager->getRepository(Goods::class)
                 ->getMaxPrice($good);
 //        var_dump($result);
-        if (array_key_exists('price', $result[0])){
+        if (is_array($result)){
             return $result[0]['price'];
         } else {
             return 0;
