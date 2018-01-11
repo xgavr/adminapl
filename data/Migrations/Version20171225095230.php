@@ -87,7 +87,7 @@ class Version20171225095230 extends AbstractMigration
         $table = $schema->createTable('producer');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>128]);        
-        $table->addColumn('country_id', 'integer', ['notnull'=>true]);
+        $table->addColumn('country_id', 'integer', ['notnull'=>false]);
         $table->setPrimaryKey(['id']);
         $table->addOption('engine' , 'InnoDB');
         

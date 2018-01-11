@@ -144,9 +144,9 @@ class ProducerManager
             $this->entityManager->persist($unknownProducer);
 
             // Применяем изменения к базе данных.
-//            if ($flushnow){
+            if ($flushnow){
                 $this->entityManager->flush();
-//            }    
+            }    
         }  
         
         return $unknownProducer;

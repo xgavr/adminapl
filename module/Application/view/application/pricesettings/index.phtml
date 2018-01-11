@@ -19,9 +19,7 @@
     <tr>
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
-            <a href="<?= $this->url('supplier', ['action'=>'view', 'id'=>$row->getId()]); ?>">
                 <?= $this->escapeHtml($row->getName()); ?>
-            </a> 
         </td>
         <td>
             <a class="btn btn-info" href="<?= $this->url('supplier', 

@@ -49,5 +49,24 @@ class RawRepository extends EntityRepository{
                 ;
 
         return $queryBuilder->getQuery();
+    }
+    
+    /*
+     * @var Apllication\Entity\Raw
+     */
+    public function findProduerRawprice($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c.producer')
+            ->from(Rawprice::class, 'c')
+            ->where('c.raw = ?1')    
+            ->distinct()    
+            ->setParameter('1', $raw->getId())    
+                ;
+
+        return $queryBuilder->getQuery()->getResult();
     }        
 }

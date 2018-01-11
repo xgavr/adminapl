@@ -97,8 +97,10 @@ class RawManager {
      * @var string $filename
      */
     
-    public function uploadRawprice($supplier, $filename){
-                
+    public function uploadRawprice($supplier, $filename)
+    {
+        ini_set('memory_limit', '512M');
+        
         if (file_exists($filename)){
             $mvexcel = new Service\PhpExcelService();    
             $excel = $mvexcel->createPHPExcelObject($filename);
@@ -220,14 +222,35 @@ class RawManager {
     public function parseRawdata($rawprice, $pricesetting)
     {
         $rawdata = Json::decode($rawprice->getRawdata());
+        $result = [
+            'article' => '',
+            'producer' => '',
+            'goodname' => '',
+            'price' => 0,
+            'rest' => 0,
+        ];
         
-        $result['article'] = $rawdata[$pricesetting->getArticle() - 1];
-        $result['producer'] = $rawdata[$pricesetting->getProducer() - 1];
-        $result['goodname'] = $rawdata[$pricesetting->getTitle() - 1];
-        $result['price'] = $rawdata[$pricesetting->getPrice() - 1];
-        $result['rest'] = $rawdata[$pricesetting->getRest() - 1];
+        if ($pricesetting->getArticle() && count($rawdata) >= $pricesetting->getArticle()){
+            $result['article'] = $rawdata[$pricesetting->getArticle() - 1];
+        }    
+        if ($pricesetting->getProducer() && count($rawdata) >= $pricesetting->getProducer()){
+            $result['producer'] = $rawdata[$pricesetting->getProducer() - 1];
+        }    
+        if ($pricesetting->getTitle() && count($rawdata) >= $pricesetting->getTitle()){
+            $result['goodname'] = $rawdata[$pricesetting->getTitle() - 1];
+        }    
+        if ($pricesetting->getPrice() && count($rawdata) >= $pricesetting->getPrice()){
+            $result['price'] = $rawdata[$pricesetting->getPrice() - 1];
+        }   
+        if ($pricesetting->getRest() && count($rawdata) >= $pricesetting->getRest()){
+            $result['rest'] = $rawdata[$pricesetting->getRest() - 1];
+        }    
         
-        return $result;
+        if ($result['producer'] && $result['goodname'] && $result['price']){        
+            return $result;
+        }    
+        
+        return;
     }
     
     /*
@@ -276,17 +299,24 @@ class RawManager {
      */
     public function parseRawprice($rawprice, $flushnow = true)
     {
+        ini_set('memory_limit', '512M');
+        
         $raw = $rawprice->getRaw();
         $pricesettings = $raw->getSupplier()->getPricesettings();
         
         $data = [];
         foreach ($pricesettings as $pricesetting){
             if ($pricesetting->getStatus() == $pricesetting->getStatusActive()){
-                $data[] = $this->parseRawdata($rawprice,$pricesetting);
+                $parceData = $this->parseRawdata($rawprice,$pricesetting);
+                if (is_array($parceData)){
+                    $data[] = $parceData; 
+                }            
             }            
         }
         
-        $this->updateParsedata($rawprice, $this->selectBestParsedata($data), $flushnow);
+        if (count($data)){
+            $this->updateParsedata($rawprice, $this->selectBestParsedata($data), $flushnow);
+        }    
         
         return;
     }
@@ -321,6 +351,23 @@ class RawManager {
         }    
     }
 
+    /*
+     * Выбрать и добавить уникальных производителей
+     * @var Application\Entity\Raw @raw
+     * 
+     */    
+    public function addNewUnknownProducerRaw($raw)
+    {
+        $producers = $this->entityManager->getRepository(Raw::class)
+                ->findProduerRawprice($raw);
+        foreach ($producers as $producer){
+            if (is_string($producer['producer']) && $producer['producer']){
+                $this->producerManager->addUnknownProducer($producer['producer'], false);
+            }    
+        }
+        $this->entityManager->flush();
+    }
+    
     /*
      * Парсить все записи
      * @var Application\Entity\Raw @raw

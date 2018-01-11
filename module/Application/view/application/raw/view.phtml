@@ -16,11 +16,15 @@ $this->headTitle($raw->getSupplier()->getName().' прайс '. $raw->getFilenam
 <h3 class="contact-header">Данные</h3>
 <a class="btn btn-default" href="
     <?= $this->url('raw', ['action'=>'parse', 'id' => $raw->getId()]); ?>">
-    1.Парсить все записи
+    1. Парсить все записи
+</a>
+<a class="btn btn-default" href="
+    <?= $this->url('raw', ['action'=>'new-unknown-producer', 'id' => $raw->getId()]); ?>">
+    2.1. Производители - найти новых
 </a>
 <a class="btn btn-default" href="
     <?= $this->url('raw', ['action'=>'unknown-producer', 'id' => $raw->getId()]); ?>">
-    2.Производители
+    2.2. Производители - привязать
 </a>
 <a class="btn btn-default" href="
     <?= $this->url('raw', ['action'=>'goods', 'id' => $raw->getId()]); ?>">
