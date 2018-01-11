@@ -342,10 +342,11 @@ class RawManager {
      */
     public function unknownProducerRawprice($rawprice, $flushnow = true)
     {
-        $unknownProducer = $this->producerManager->addUnknownProducer($rawprice->getProducer(), false);
-        $rawprice->setUnknownProducer($unknownProducer);
-        $this->entityManager->persist($rawprice);        
-        
+        if ($rawprice->getProducer()){
+            $unknownProducer = $this->producerManager->addUnknownProducer($rawprice->getProducer(), false);
+            $rawprice->setUnknownProducer($unknownProducer);
+            $this->entityManager->persist($rawprice);        
+        }
         if ($flushnow){        
             $this->entityManager->flush();
         }    
