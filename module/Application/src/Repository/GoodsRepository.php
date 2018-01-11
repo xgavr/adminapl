@@ -52,6 +52,26 @@ class GoodsRepository extends EntityRepository{
         return $this->searchByName($search)->getResult();
     }  
     
+    /*
+     * @var Apllication\Entity\Goods $good
+     */
+    public function findGoodRawprice($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Rawprice::class, 'c')
+            ->where('c.good = ?1')    
+            ->orderBy('c.id')
+            ->setParameter('1', $good->getId())    
+                ;
+
+        return $queryBuilder->getQuery();
+    }
+    
+    
     public function getMaxPrice($good)
     {
         $entityManager = $this->getEntityManager();

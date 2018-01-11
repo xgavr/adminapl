@@ -55,7 +55,10 @@
     </tr>
     
     <?php foreach ($goods as $row): ?>
-    <?php $price = $this->goodsManager->getMaxPrice($row); ?>
+    <?php 
+        $price = $this->goodsManager->getMaxPrice($row); 
+        $avialable = $price>0;
+    ?>
     <tr>
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
@@ -67,7 +70,7 @@
         <td><?= $this->escapeHtml($row->getProducer()->getName()); ?></td>        
         <td><?= $price; ?></td>        
         <td>
-            <input type="text" id="num<?= $row->getId()?>" value="1" class="form-control"/>
+            <input type="text" id="num<?= $row->getId()?>" value="1" class="form-control" <?= ($avialable) ? '':'disabled' ?>/>
         </td>
         <td>
             <button type="button" class="btn btn-default" aria-label="Left Align" 
@@ -75,6 +78,7 @@
                                 good: <?= $row->getId()?>, 
                                 price: <?= $price; ?>
                     })"
+                     <?= ($avialable) ? '':'disabled' ?>
              >
                 <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
             </button>
@@ -87,7 +91,7 @@
 <?= $this->paginationControl($goods,
             'Sliding',
             'application/partial/paginator', 
-            ['route' => array('route' => 'shop')]); ?>
+            ['route' => array('route' => 'shop', 'q' => $search)]); ?>
 
 
 <script type="text/javascript">

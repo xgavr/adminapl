@@ -417,7 +417,7 @@ class RawManager {
                             'name' => $rawprice['goodname'],
                             'code' => $rawprice['article'],
                             'available' => Goods::AVAILABLE_TRUE,
-                            'description' => '',
+                            'description' => $rawprice['goodname'],
                             'producer' => $unknownProducer->getProducer(),
                         ], false);
                     }                
@@ -438,16 +438,22 @@ class RawManager {
             if ($rawprice->getUnknownProducer()->getProducer() && $rawprice->getGoodname()){
                 $good = $this->entityManager->getRepository(Goods::class)
                             ->findOneBy([
-                                'producer' => $rawprice->getUnknownProducer()->getProducer(), 
+                                'producer' => $rawprice->getUnknownProducer()->getProducer()->getId(), 
                                 'code' => $rawprice->getArticle(),
                                 'name' => $rawprice->getGoodname(),
                             ]);
                 if ($good == NULL){
+                    
+                    var_dump($rawprice->getUnknownProducer()->getProducer()->getId());
+                    var_dump($rawprice->getArticle());
+                    var_dump($rawprice->getGoodname());
+                    exit;
+                    
                     $good = $this->goodManager->addNewGoods([
                         'name' => $rawprice->getGoodname(),
                         'code' =>$rawprice->getArticle(),
                         'available' => Goods::AVAILABLE_TRUE,
-                        'description' => '',
+                        'description' => $rawprice->getGoodname(),
                         'producer' => $rawprice->getUnknownProducer()->getProducer(),
                     ]);
                 }
@@ -476,7 +482,7 @@ class RawManager {
                         'name' => $rawprice->getGoodname(),
                         'code' =>$rawprice->getArticle(),
                         'available' => Goods::AVAILABLE_TRUE,
-                        'description' => '',
+                        'description' => $rawprice->getGoodname(),
                         'producer' => $rawprice->getUnknownProducer()->getProducer(),
                     ]);
                 }

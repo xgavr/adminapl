@@ -36,11 +36,11 @@ class Version20180104161235 extends AbstractMigration
         $table->addColumn('user_id', 'integer', ['notnull'=>true]);        
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint('goods', ['good_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'goods_id_cart_good_id_fk');
+                ['onUpdate'=>'CASCADE'], 'goods_id_cart_good_id_fk');
         $table->addForeignKeyConstraint('client', ['client_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'client_id_cart_client_id_fk');
+                ['onUpdate'=>'CASCADE'], 'client_id_cart_client_id_fk');
         $table->addForeignKeyConstraint('user', ['user_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'user_id_cart_user_id_fk');
+                ['onUpdate'=>'CASCADE'], 'user_id_cart_user_id_fk');
         $table->addOption('engine' , 'InnoDB');
         
     }

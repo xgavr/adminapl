@@ -135,9 +135,17 @@ class GoodsManager
         return $goods;
     }    
     
-    public function removeGoods($goods) 
+    public function removeGoods($good) 
     {   
-        $this->entityManager->remove($goods);
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                    ->findGoodRawprice($good);
+        
+        foreach ($rawprices as $rawprice){
+            $rawprice->setGood(null);
+            $this->entityManager->persist($rawprice);
+        }
+        
+        $this->entityManager->remove($good);
         
         $this->entityManager->flush();
     }    

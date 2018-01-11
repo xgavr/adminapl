@@ -36,9 +36,9 @@ class Version20180105180008 extends AbstractMigration
         $table->addColumn('user_id', 'integer', ['notnull'=>true]);        
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint('client', ['client_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'client_id_orders_client_id_fk');
+                ['onUpdate'=>'CASCADE'], 'client_id_orders_client_id_fk');
         $table->addForeignKeyConstraint('user', ['user_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'user_id_orders_user_id_fk');
+                ['onUpdate'=>'CASCADE'], 'user_id_orders_user_id_fk');
         $table->addOption('engine' , 'InnoDB');
                 
         $table = $schema->createTable('bid');
@@ -53,9 +53,9 @@ class Version20180105180008 extends AbstractMigration
         $table->addForeignKeyConstraint('orders', ['order_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'orders_id_bid_orders_id_fk');
         $table->addForeignKeyConstraint('user', ['user_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'user_id_bid_user_id_fk');
+                ['onUpdate'=>'CASCADE'], 'user_id_bid_user_id_fk');
         $table->addForeignKeyConstraint('goods', ['good_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'goods_id_bid_good_id_fk');
+                ['onUpdate'=>'CASCADE'], 'goods_id_bid_good_id_fk');
         $table->addOption('engine' , 'InnoDB');
     }
 

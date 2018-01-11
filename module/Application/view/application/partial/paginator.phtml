@@ -4,18 +4,21 @@
 <ul class="pagination">
 
 <?php
-    $action = $id = null; 
+    $action = $id = $query = null; 
     if (array_key_exists('id', $this->route)){
         $id = $this->route['id'];
     }
     if (array_key_exists('action', $this->route)){
         $action = $this->route['action'];
     }
+    if (array_key_exists('q', $this->route)){
+        $querystr = $this->route['q'];
+    }
 ?>    
 <!-- Previous page link -->
 <?php if (isset($this->previous)): ?>
     <li>
-      <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=> ['page'=>$this->previous]]); ?>" aria-label="Previous">
+      <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=> ['q' => $querystr, 'page'=>$this->previous]]); ?>" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>  
@@ -29,7 +32,7 @@
 <?php foreach ($this->pagesInRange as $page): ?>
   <?php if ($page != $this->current): ?>
     <li>
-        <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['page'=>$page]]); ?>"><?= $this->escapeHtml($page); ?></a>
+        <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['q' => $querystr, 'page'=>$page]]); ?>"><?= $this->escapeHtml($page); ?></a>
     </li>    
   <?php else: ?>
     <li>
@@ -41,7 +44,7 @@
 <!-- Next page link -->
 <?php if (isset($this->next)): ?>
     <li>
-      <a href="<?php echo $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['page'=>$this->next]]); ?>" aria-label="Next">
+      <a href="<?php echo $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['q' => $querystr, 'page'=>$this->next]]); ?>" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>  

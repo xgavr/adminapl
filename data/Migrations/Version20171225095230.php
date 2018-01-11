@@ -129,9 +129,9 @@ class Version20171225095230 extends AbstractMigration
         $table->addForeignKeyConstraint('raw', ['raw_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'raw_raw_id_fk');
         $table->addForeignKeyConstraint('goods', ['good_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'goods_id_rawprice_good_id_fk');
+                [], 'goods_id_rawprice_good_id_fk');
         $table->addForeignKeyConstraint('unknown_producer', ['unknown_producer_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'unknownn_producer_id_rawprice_unknown_producer_id_fk');
+                [], 'unknownn_producer_id_rawprice_unknown_producer_id_fk');
         $table->addOption('engine' , 'InnoDB');
         
     }
