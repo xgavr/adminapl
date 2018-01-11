@@ -68,7 +68,7 @@ class GoodsManager
         $writer->toFile(self::SETTINGS_FILE, $config);
     }
     
-    public function addNewGoods($data) 
+    public function addNewGoods($data, $flushnow=true) 
     {
         // Создаем новую сущность Goods.
         $goods = new Goods();
@@ -98,8 +98,10 @@ class GoodsManager
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($goods);
         
-        // Применяем изменения к базе данных.
-        $this->entityManager->flush();
+        if ($flushnow){
+            // Применяем изменения к базе данных.
+            $this->entityManager->flush();
+        }
         
         return $goods;
     }   

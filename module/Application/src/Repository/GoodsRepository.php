@@ -68,5 +68,5 @@ class GoodsRepository extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();
         
     }
-    
+       
 }

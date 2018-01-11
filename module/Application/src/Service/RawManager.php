@@ -360,7 +360,7 @@ class RawManager {
     public function addNewUnknownProducerRaw($raw)
     {
         $producers = $this->entityManager->getRepository(Raw::class)
-                ->findProduerRawprice($raw);
+                ->findProducerRawprice($raw);
         foreach ($producers as $producer){
             if (is_string($producer['producer']) && $producer['producer']){
                 $this->producerManager->addUnknownProducer($producer['producer'], false);
@@ -383,8 +383,51 @@ class RawManager {
         $this->entityManager->flush();
     }
     
+    
     /*
-     * Создать товар
+     * Выбрать и добавить уникальные товары
+     * @var Application\Entity\Raw @raw
+     * 
+     */    
+    public function addNewGoodsRaw($raw)
+    {
+        $rawprices = $this->entityManager->getRepository(Raw::class)
+                ->findGoodRawprice($raw);
+
+        foreach ($rawprices as $rawprice){
+
+            if (is_string($rawprice['article']) && $rawprice['goodname'] && $rawprice['unknownProducer']){
+                
+                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                        ->findOneById($rawprice['unknownProducer']);
+                
+                if ($unknownProducer && $unknownProducer->getProducer()){
+                    
+                    $good = $this->entityManager->getRepository(Goods::class)
+                                ->findOneBy([
+                                    'producer' => $unknownProducer->getProducer(), 
+                                    'code' => $rawprice['article'],
+                                    'name' => $rawprice['goodname'],
+                                ]);
+                    
+                    if ($good == NULL){
+                        $good = $this->goodManager->addNewGoods([
+                            'name' => $rawprice['goodname'],
+                            'code' => $rawprice['article'],
+                            'available' => Goods::AVAILABLE_TRUE,
+                            'description' => '',
+                            'producer' => $unknownProducer->getProducer(),
+                        ], false);
+                    }                
+                }    
+            }    
+        }
+        $this->entityManager->flush();
+    }
+    
+    
+    /*
+     * Привязать товар к прайсу
      * @var Application\Entity\Raawprice
      */
     public function addGoodRawprice($rawprice, $flushnow = true)
@@ -401,7 +444,7 @@ class RawManager {
                     $good = $this->goodManager->addNewGoods([
                         'name' => $rawprice->getGoodname(),
                         'code' =>$rawprice->getArticle(),
-                        'available' => 1,
+                        'available' => Goods::AVAILABLE_TRUE,
                         'description' => '',
                         'producer' => $rawprice->getUnknownProducer()->getProducer(),
                     ]);
@@ -430,7 +473,7 @@ class RawManager {
                     $good = $this->goodManager->updateGoods($rawprice->getGood(), [
                         'name' => $rawprice->getGoodname(),
                         'code' =>$rawprice->getArticle(),
-                        'available' => 1,
+                        'available' => Goods::AVAILABLE_TRUE,
                         'description' => '',
                         'producer' => $rawprice->getUnknownProducer()->getProducer(),
                     ]);

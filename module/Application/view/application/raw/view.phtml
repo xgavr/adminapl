@@ -27,8 +27,12 @@ $this->headTitle($raw->getSupplier()->getName().' прайс '. $raw->getFilenam
     2.2. Производители - привязать
 </a>
 <a class="btn btn-default" href="
+    <?= $this->url('raw', ['action'=>'new-goods', 'id' => $raw->getId()]); ?>">
+    3.1. Товары - найти новые
+</a>
+<a class="btn btn-default" href="
     <?= $this->url('raw', ['action'=>'goods', 'id' => $raw->getId()]); ?>">
-    3.Товары
+    3.2. Товары - привязать
 </a>
 
 <table class="table table-striped">

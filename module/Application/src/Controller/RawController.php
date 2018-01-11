@@ -145,6 +145,25 @@ class RawController extends AbstractActionController
         
     }        
     
+    public function newGoodsAction()
+    {
+        $rawId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $raw = $this->entityManager->getRepository(Raw::class)
+                ->findOneById($rawId);
+        
+        $this->rawManager->addNewGoodsRaw($raw);
+        
+        return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
+        
+    }        
+    
     public function goodsAction()
     {
         $rawId = (int)$this->params()->fromRoute('id', -1);

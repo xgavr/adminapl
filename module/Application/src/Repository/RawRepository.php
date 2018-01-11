@@ -52,9 +52,10 @@ class RawRepository extends EntityRepository{
     }
     
     /*
+     * Выбрать уникальных производителей из прайса
      * @var Apllication\Entity\Raw
      */
-    public function findProduerRawprice($raw)
+    public function findProducerRawprice($raw)
     {
         $entityManager = $this->getEntityManager();
 
@@ -69,4 +70,25 @@ class RawRepository extends EntityRepository{
 
         return $queryBuilder->getQuery()->getResult();
     }        
+    
+    /*
+     * Выбрать уникальные товары из прайса
+     * @var Apllication\Entity\Raw
+     */
+    public function findGoodRawprice($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c.article, IDENTITY(c.unknownProducer) as unknownProducer, c.goodname')
+            ->from(Rawprice::class, 'c')
+            ->where('c.raw = ?1')    
+            ->distinct()    
+            ->setParameter('1', $raw->getId())    
+                ;
+
+        return $queryBuilder->getQuery()->getResult();
+    }        
+        
 }
