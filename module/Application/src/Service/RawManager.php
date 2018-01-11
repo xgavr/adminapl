@@ -391,6 +391,8 @@ class RawManager {
      */    
     public function addNewGoodsRaw($raw)
     {
+        ini_set('memory_limit', '512M');
+        
         $rawprices = $this->entityManager->getRepository(Raw::class)
                 ->findGoodRawprice($raw);
 
