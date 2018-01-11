@@ -497,6 +497,8 @@ class RawManager {
      */
     public function addGoodRaw($raw)
     {
+        set_time_limit(180);
+        
         foreach ($raw->getRawprice() as $rawprice){
             $this->addGoodRawprice($rawprice, false);
         }
