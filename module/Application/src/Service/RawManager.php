@@ -409,7 +409,7 @@ class RawManager {
                                 ->findOneBy([
                                     'producer' => $unknownProducer->getProducer(), 
                                     'code' => $rawprice['article'],
-                                    'name' => $rawprice['goodname'],
+                                    'name' => mb_substr($rawprice['goodname'], 0, 249, 'UTF-8'),
                                 ]);
                     
                     if ($good == NULL){
@@ -440,7 +440,7 @@ class RawManager {
                             ->findOneBy([
                                 'producer' => $rawprice->getUnknownProducer()->getProducer()->getId(), 
                                 'code' => $rawprice->getArticle(),
-                                'name' => $rawprice->getGoodname(),
+                                'name' => mb_substr($rawprice->getGoodname(), 0, 249, 'UTF-8'),
                             ]);
                 if ($good == NULL){
                     
