@@ -430,7 +430,7 @@ class RawManager {
     
     /*
      * Привязать товар к прайсу
-     * @var Application\Entity\Raawprice
+     * @var Application\Entity\Rawprice
      */
     public function addGoodRawprice($rawprice, $flushnow = true)
     {
