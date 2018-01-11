@@ -84,8 +84,11 @@ class GoodsManager
         }
         
         $goods->setProducer($producer);
-        
-        if (!$data['tax']) $data['tax'] = $this->getSettings()->defaultTax;
+        if (array_key_exists('tax', $data)){
+            if (!$data['tax']) $data['tax'] = $this->getSettings()->defaultTax;
+        } else {
+            $data['tax'] = $this->getSettings()->defaultTax;
+        }    
         
         $tax = $this->entityManager->getRepository(Tax::class)
                     ->findOneById($data['tax']);
