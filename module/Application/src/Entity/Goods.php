@@ -106,7 +106,7 @@ class Goods {
 
     public function setName($name) 
     {
-        $this->name = mb_substr($name, 0, 249, 'UTF-8');
+        $this->name = $name;
     }     
 
     public function getCode() 

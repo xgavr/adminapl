@@ -119,9 +119,9 @@ class Version20171225095230 extends AbstractMigration
         $table->addColumn('good_id', 'integer', ['notnull'=>false, 'default' => 0]);  
         $table->addColumn('unknown_producer_id', 'integer', ['notnull'=>false, 'default' => 0]);                
         $table->addColumn('rawdata', 'string', ['notnull'=>true, 'length'=>4096]);
-        $table->addColumn('article', 'string', ['length'=>64]);
+        $table->addColumn('article', 'string', ['length'=>128]);
         $table->addColumn('producer', 'string', ['length'=>128]);
-        $table->addColumn('goodname', 'string', ['length'=>512]);
+        $table->addColumn('goodname', 'string', ['length'=>256]);
         $table->addColumn('price', 'float', ['precision'=>2]);
         $table->addColumn('rest', 'float', ['precision'=>512]);        
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);

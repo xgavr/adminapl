@@ -409,7 +409,7 @@ class RawManager {
                                 ->findOneBy([
                                     'producer' => $unknownProducer->getProducer(), 
                                     'code' => $rawprice['article'],
-                                    'name' => mb_substr($rawprice['goodname'], 0, 249, 'UTF-8'),
+                                    'name' => $rawprice['goodname'],
                                 ]);
                     
                     if ($good == NULL){
@@ -440,15 +440,9 @@ class RawManager {
                             ->findOneBy([
                                 'producer' => $rawprice->getUnknownProducer()->getProducer()->getId(), 
                                 'code' => $rawprice->getArticle(),
-                                'name' => mb_substr($rawprice->getGoodname(), 0, 249, 'UTF-8'),
+                                'name' => $rawprice->getGoodname(),
                             ]);
-                if ($good == NULL){
-                    
-                    var_dump($rawprice->getUnknownProducer()->getProducer()->getId());
-                    var_dump($rawprice->getArticle());
-                    var_dump($rawprice->getGoodname());
-                    exit;
-                    
+                if ($good == NULL){                    
                     $good = $this->goodManager->addNewGoods([
                         'name' => $rawprice->getGoodname(),
                         'code' =>$rawprice->getArticle(),
