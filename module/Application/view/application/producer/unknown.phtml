@@ -28,7 +28,7 @@
                 <span class="glyphicon glyphicon-pencil" ></span>Добавить
             </a>
             <a class="btn btn-danger" href="<?= $this->url('producer',
-                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
+                    ['action'=>'delete-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page]]); ?>">
                 <span class="glyphicon glyphicon-remove"></span> Удалить
             </a>
         </td>    

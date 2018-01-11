@@ -225,4 +225,25 @@ class ProducerController extends AbstractActionController
         return $this->redirect()->toRoute('producer', ['action' => 'unknown'], ['query' => ['page' => $page]]);
         
     }
+    
+    public function deleteUnknownAction()
+    {
+        $page = $this->params()->fromQuery('page', 1);
+
+        $unknownProducerId = $this->params()->fromRoute('id', -1);
+        
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findOneById($unknownProducerId);        
+        if ($unknownProducer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->producerManager->removeUnknownProducer($unknownProducer);
+        
+        // Перенаправляем пользователя на страницу "producer".
+        return $this->redirect()->toRoute('producer', ['action' => 'unknown'], ['query' => ['page' => $page]]);
+    }    
+
+    
 }
