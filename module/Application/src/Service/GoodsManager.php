@@ -148,9 +148,11 @@ class GoodsManager
                 ->getMaxPrice($good);
 //        var_dump($result);
         if (is_array($result)){
-            if (array_key_exists('price', $result[0])){    
-                return $result[0]['price'];
-            }   
+            if (is_array($result[0])){
+                if (array_key_exists('price', $result[0])){    
+                    return $result[0]['price'];
+                }
+            }    
         }    
         return 0;
     } 
