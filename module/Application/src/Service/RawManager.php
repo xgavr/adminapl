@@ -498,6 +498,7 @@ class RawManager {
     public function addGoodRaw($raw)
     {
         set_time_limit(180);
+        ini_set('memory_limit', '512M');
         
         foreach ($raw->getRawprice() as $rawprice){
             $this->addGoodRawprice($rawprice, false);

@@ -121,12 +121,21 @@ class ShopController extends AbstractActionController
         $result = $this->entityManager->getRepository(Cart::class)
             ->getClientNum($currentClient);
         
+        $num = $total = 0;
+        if (is_array($result) && count($result)){
+            if (array_key_exists('num', $result[0])){
+                $num = $result[0]['num'];
+            }
+            if (array_key_exists('total', $result[0])){
+                $total = $result[0]['total'];
+            }
+        }
         // Визуализируем шаблон представления.
         return new ViewModel([
             'cart' => $cart,
             'currentClient' => $currentClient,
-            'num' => $result[0]['num'],
-            'total' => $result[0]['total'],
+            'num' => $num,
+            'total' => $total,
         ]);  
         
     }
@@ -138,7 +147,7 @@ class ShopController extends AbstractActionController
             // Получаем POST-данные.
             $data = $this->params()->fromPost();
             
-            if(!$data['client']) {
+            if(!array_key_exists('client', $data) || !$data['client']) {
                 $data['client'] = $this->sessionContainer->currentClient; 
             }    
             
@@ -150,10 +159,20 @@ class ShopController extends AbstractActionController
             $result = $this->entityManager->getRepository(Cart::class)
                 ->getClientNum($client);
         }
+        
+        $num = $total = 0;
+        if (is_array($result) && count($result)){
+            if (array_key_exists('num', $result[0])){
+                $num = $result[0]['num'];
+            }
+            if (array_key_exists('total', $result[0])){
+                $total = $result[0]['total'];
+            }
+        }
                         
-        return new JsonModel(
-           ['num' => $result[0]['num']]
-        );        
+        return new JsonModel([
+            'num' => $num,
+        ]);        
     }
     
     public function editCartAction()
@@ -168,6 +187,8 @@ class ShopController extends AbstractActionController
             $this->getResponse()->setStatusCode(401);
             return;                        
         } 
+        
+        $rowTotal = 0;
         
         if ($this->getRequest()->isPost()) {
             
@@ -189,12 +210,22 @@ class ShopController extends AbstractActionController
         
         $result = $this->entityManager->getRepository(Cart::class)
             ->getClientNum($currentClient);
+        
+        $num = $total = 0;
+        if (is_array($result) && count($result)){
+            if (array_key_exists('num', $result[0])){
+                $num = $result[0]['num'];
+            }
+            if (array_key_exists('total', $result[0])){
+                $total = $result[0]['total'];
+            }
+        }
                         
         return new JsonModel([
             'id' => $cartId,
             'rowtotal' => round($rowTotal, 2),
-            'num' => round($result[0]['num'], 2),
-            'total' => round($result[0]['total'], 2)
+            'num' => round($num, 2),
+            'total' => round($total, 2)
         ]);        
     }
     
@@ -246,8 +277,18 @@ class ShopController extends AbstractActionController
         $result = $this->entityManager->getRepository(Cart::class)
             ->getClientNum($currentClient);
                         
-        return new JsonModel(
-           $result[0]['num']
-        );        
+        $num = $total = 0;
+        if (is_array($result) && count($result)){
+            if (array_key_exists('num', $result[0])){
+                $num = $result[0]['num'];
+            }
+            if (array_key_exists('total', $result[0])){
+                $total = $result[0]['total'];
+            }
+        }
+        
+        return new JsonModel([
+           'num' => $num,
+        ]);        
     }
 }
