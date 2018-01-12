@@ -19,8 +19,8 @@ use Zend\Cache\Storage\Adapter\Filesystem;
 return [
     // Настройка сессии.
     'session_config' => [
-        // Срок действия cookie сессии истечет через 1 час.
-        'cookie_lifetime' => 60*60*1,     
+        // Срок действия cookie сессии истечет через 1 мес.
+        'cookie_lifetime' => 60*60*1*24*30,     
         // Данные сессии будут храниться на сервере до 30 дней.
         'gc_maxlifetime'     => 60*60*24*30, 
     ],
