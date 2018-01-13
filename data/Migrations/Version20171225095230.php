@@ -39,7 +39,7 @@ class Version20171225095230 extends AbstractMigration
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('date_rate', 'string', ['notnull'=>true, 'length'=>256]);        
         $table->addColumn('currency_id', 'integer', ['notnull'=>false]);                
-        $table->addColumn('amount', 'float', ['precision'=>2]);
+        $table->addColumn('rate', 'float', ['precision'=>2]);
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint('currency', ['currency_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'currency_id_currency_rate_currency_id_fk');
@@ -58,7 +58,7 @@ class Version20171225095230 extends AbstractMigration
         $table->addColumn('code', 'string', ['notnull'=>true, 'length'=>128]);        
         $table->addColumn('producer_id', 'integer', ['notnull'=>false]);                
         $table->addColumn('tax_id', 'integer', ['notnull'=>false]);                
-        $table->addColumn('status', 'integer', ['notnull'=>true]);
+        $table->addColumn('available', 'integer', ['notnull'=>true]);
         $table->addColumn('description', 'string', ['notnull'=>true, 'length'=>1024]);        
         $table->setPrimaryKey(['id']);
         $table->addOption('engine' , 'InnoDB');

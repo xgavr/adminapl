@@ -48,6 +48,20 @@ return [
                     ],
                 ],
             ],
+            'members' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/members[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\MemberController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
             'users' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -95,6 +109,7 @@ return [
     'controllers' => [
         'factories' => [
             Controller\AuthController::class => Controller\Factory\AuthControllerFactory::class,
+            Controller\MemberController::class => Controller\Factory\MemberControllerFactory::class, 
             Controller\PermissionController::class => Controller\Factory\PermissionControllerFactory::class,
             Controller\RoleController::class => Controller\Factory\RoleControllerFactory::class,    
             Controller\UserController::class => Controller\Factory\UserControllerFactory::class, 
@@ -189,7 +204,14 @@ return [
                 // to anyone.
                 ['actions' => ['resetPassword', 'message', 'setPassword'], 'allow' => '*'],
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
-                ['actions' => ['index', 'add', 'edit', 'view', 'changePassword'], 'allow' => '+user.manage']
+                ['actions' => ['index', 'add', 'edit', 'view', 'changePassword'], 'allow' => '+user.manage'],
+            ],
+            Controller\MemberController::class => [
+                // Give access to "resetPassword", "message" and "setPassword" actions
+                // to anyone.
+                ['actions' => ['resetPassword', 'message', 'setPassword'], 'allow' => '*'],
+                // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
+                ['actions' => ['index', 'add', 'edit', 'view', 'changePassword'], 'allow' => '+member.manage'],
             ],
             Controller\RoleController::class => [
                 // Allow access to authenticated users having the "role.manage" permission.

@@ -179,6 +179,15 @@ class NavManager
                 ];
             }
             
+            if ($this->rbacManager->isGranted(null, 'member.manage')) {
+                $items[] = [
+                    'id' => 'admin',
+                    'label' => 'Пользователи',
+                    'link'  => $url('members')
+                ];
+            }
+            
+
             $items[] = [
                 'id' => 'logout',
                 'label' => $this->authService->getIdentity(),

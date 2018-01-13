@@ -75,7 +75,7 @@ class UserForm extends Form
             'type'  => 'text',
             'name' => 'full_name',            
             'options' => [
-                'label' => 'Full Name',
+                'label' => 'ФИО',
             ],
         ]);
         
@@ -86,7 +86,7 @@ class UserForm extends Form
                 'type'  => 'password',
                 'name' => 'password',
                 'options' => [
-                    'label' => 'Password',
+                    'label' => 'Пароль',
                 ],
             ]);
             
@@ -95,7 +95,7 @@ class UserForm extends Form
                 'type'  => 'password',
                 'name' => 'confirm_password',
                 'options' => [
-                    'label' => 'Confirm password',
+                    'label' => 'Подтвердить пароль',
                 ],
             ]);
         }
@@ -105,7 +105,7 @@ class UserForm extends Form
             'type'  => 'select',
             'name' => 'status',
             'options' => [
-                'label' => 'Status',
+                'label' => 'Статус',
                 'value_options' => [
                     1 => 'Active',
                     2 => 'Retired',                    
@@ -130,7 +130,7 @@ class UserForm extends Form
             'type'  => 'submit',
             'name' => 'submit',
             'attributes' => [                
-                'value' => 'Create'
+                'value' => 'Сохранить'
             ],
         ]);
     }

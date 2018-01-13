@@ -34,7 +34,7 @@ class PasswordResetForm extends Form
             'type'  => 'email',
             'name' => 'email',
             'options' => [
-                'label' => 'Your E-mail',
+                'label' => 'Ваш E-mail',
             ],
         ]);
         
@@ -43,7 +43,7 @@ class PasswordResetForm extends Form
             'type' => 'captcha',
             'name' => 'captcha',
             'options' => [
-                'label' => 'Human check',
+                'label' => 'Проверка на человека',
                 'captcha' => [
                     'class' => 'Image',
                     'imgDir' => 'public/img/captcha',
@@ -77,7 +77,7 @@ class PasswordResetForm extends Form
             'type'  => 'submit',
             'name' => 'submit',
             'attributes' => [                
-                'value' => 'Reset Password',
+                'value' => 'Сбросить пароль',
                 'id' => 'submit',
             ],
         ]);       

@@ -1,0 +1,55 @@
+<?php
+$this->headTitle('Просмотр данных пользователя');
+
+$this->mainMenu()->setActiveItemId('users');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Упарвление пользователями'=>$this->url('members'),
+            'Промотр пользователя'=>$this->url('members', ['action'=>'view', 'id'=>$user->getId()])
+            ]);
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<h1>View User <?= $this->escapeHtml($user->getEmail()) ?></h1>
+
+<p>
+    <a class="btn btn-default" href="<?= $this->url('members', 
+            ['action'=>'edit', 'id'=>$user->getId()]); ?>">
+        <span class="glyphicon glyphicon-pencil" ></span> Редактировать
+    </a>
+    <a class="btn btn-default" href="<?= $this->url('members',
+            ['action'=>'change-password', 'id'=>$user->getId()]); ?>">
+        <span class="glyphicon glyphicon-asterisk"></span> Сменить пароль
+    </a>    
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-striped table-bordered">
+             <tr>
+                <th>ID:</th>
+                <td><?= $this->escapeHtml($user->getId()) ?></th>
+            </tr>
+            <tr>
+                <th>E-mail:</th>
+                <td><?= $this->escapeHtml($user->getEmail()) ?></th>
+            </tr>
+            <tr>
+                <th>ФИО:</th>
+                <td><?= $this->escapeHtml($user->getFullName()) ?></th>
+            </tr>
+            <tr>
+                <th>Дата регистрации:</th>
+                <td><?= $this->escapeHtml($user->getDateCreated()) ?></th>
+            </tr>
+            <tr>
+                <th>Статус:</th>
+                <td><?= $this->escapeHtml($user->getStatusAsString()) ?></th>
+            </tr>
+        </table>
+    </div>
+</div>

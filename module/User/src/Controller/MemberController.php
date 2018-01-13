@@ -13,8 +13,13 @@ use User\Form\PasswordResetForm;
  * This controller is responsible for user management (adding, editing, 
  * viewing users and changing user's password).
  */
-class UserController extends AbstractActionController 
+class MemberController extends AbstractActionController 
 {
+    /*
+     * Id роли пердставителя
+     */
+    const MEMBER_ROLE_ID = 4;
+    
     /**
      * Entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -43,7 +48,7 @@ class UserController extends AbstractActionController
     public function indexAction() 
     {
         // Access control.
-        if (!$this->access('user.manage')) {
+        if (!$this->access('member.manage')) {
             $this->getResponse()->setStatusCode(401);
             return;
         }
@@ -52,7 +57,7 @@ class UserController extends AbstractActionController
             ->findOneByEmail($this->identity());
         
         $users = $this->entityManager->getRepository(User::class)
-                ->findBy([], ['id'=>'ASC']);
+                ->findUsersByRole(self::MEMBER_ROLE_ID);
         
         return new ViewModel([
             'users' => $users,
@@ -69,19 +74,20 @@ class UserController extends AbstractActionController
         
         // Get the list of all available roles (sorted by name).
         $allRoles = $this->entityManager->getRepository(Role::class)
-                ->findBy([], ['name'=>'ASC']);
+                ->findBy(['id' => self::MEMBER_ROLE_ID], ['name'=>'ASC']);
         $roleList = [];
         foreach ($allRoles as $role) {
             $roleList[$role->getId()] = $role->getName();
         }
         
-        $form->get('roles')->setValueOptions($roleList);
-        
+        $form->get('roles')->setValueOptions($roleList);                
         // Check if user has submitted the form
+        
         if ($this->getRequest()->isPost()) {
             
             // Fill in the form with POST data
-            $data = $this->params()->fromPost();            
+            $data = $this->params()->fromPost(); 
+            $data['roles'][] = self::MEMBER_ROLE_ID;
             
             $form->setData($data);
             
@@ -95,7 +101,7 @@ class UserController extends AbstractActionController
                 $user = $this->userManager->addUser($data);
                 
                 // Redirect to "view" page
-                return $this->redirect()->toRoute('users', 
+                return $this->redirect()->toRoute('members', 
                         ['action'=>'view', 'id'=>$user->getId()]);                
             }               
         } 
@@ -154,7 +160,8 @@ class UserController extends AbstractActionController
         
         // Get the list of all available roles (sorted by name).
         $allRoles = $this->entityManager->getRepository(Role::class)
-                ->findBy([], ['name'=>'ASC']);
+                ->findBy(['id' => self::MEMBER_ROLE_ID], ['name'=>'ASC']);
+        
         $roleList = [];
         foreach ($allRoles as $role) {
             $roleList[$role->getId()] = $role->getName();
@@ -168,6 +175,7 @@ class UserController extends AbstractActionController
             // Fill in the form with POST data
             $data = $this->params()->fromPost();
             
+            $data['roles'][] = self::MEMBER_ROLE_ID;
             $form->setData($data);
             
             // Validate form
@@ -189,7 +197,7 @@ class UserController extends AbstractActionController
                     
                 } else {
                     // Redirect to "view" page
-                    return $this->redirect()->toRoute('users', 
+                    return $this->redirect()->toRoute('members', 
                         ['action'=>'view', 'id'=>$user->getId()]);
                     
                 }
@@ -254,14 +262,14 @@ class UserController extends AbstractActionController
                 // Try to change password.
                 if (!$this->userManager->changePassword($user, $data)) {
                     $this->flashMessenger()->addErrorMessage(
-                            'Sorry, the old password is incorrect. Could not set the new password.');
+                            'Извините, старый пароль неверен. Не удалось установить новый пароль.');
                 } else {
                     $this->flashMessenger()->addSuccessMessage(
-                            'Changed the password successfully.');
+                            'Пароль успешно изменен.');
                 }
                 
                 // Redirect to "view" page
-                return $this->redirect()->toRoute('users', 
+                return $this->redirect()->toRoute('members', 
                         ['action'=>'view', 'id'=>$user->getId()]);                
             }               
         } 
@@ -300,10 +308,10 @@ class UserController extends AbstractActionController
                     $this->userManager->generatePasswordResetToken($user);
                     
                     // Redirect to "message" page
-                    return $this->redirect()->toRoute('users', 
+                    return $this->redirect()->toRoute('members', 
                             ['action'=>'message', 'id'=>'sent']);                 
                 } else {
-                    return $this->redirect()->toRoute('users', 
+                    return $this->redirect()->toRoute('members', 
                             ['action'=>'message', 'id'=>'invalid-email']);                 
                 }
             }               
@@ -327,7 +335,7 @@ class UserController extends AbstractActionController
         
         // Validate input argument.
         if($id!='invalid-email' && $id!='sent' && $id!='set' && $id!='failed') {
-            throw new \Exception('Invalid message ID specified');
+            throw new \Exception('Указан неверный идентификатор сообщения');
         }
         
         return new ViewModel([
@@ -344,12 +352,12 @@ class UserController extends AbstractActionController
         
         // Validate token length
         if ($token!=null && (!is_string($token) || strlen($token)!=32)) {
-            throw new \Exception('Invalid token type or length');
+            throw new \Exception('Недопустимый тип или длина токена');
         }
         
         if($token===null || 
            !$this->userManager->validatePasswordResetToken($token)) {
-            return $this->redirect()->toRoute('users', 
+            return $this->redirect()->toRoute('members', 
                     ['action'=>'message', 'id'=>'failed']);
         }
                 
@@ -373,11 +381,11 @@ class UserController extends AbstractActionController
                 if ($this->userManager->setNewPasswordByToken($token, $data['new_password'])) {
                     
                     // Redirect to "message" page
-                    return $this->redirect()->toRoute('users', 
+                    return $this->redirect()->toRoute('members', 
                             ['action'=>'message', 'id'=>'set']);                 
                 } else {
                     // Redirect to "message" page
-                    return $this->redirect()->toRoute('users', 
+                    return $this->redirect()->toRoute('members', 
                             ['action'=>'message', 'id'=>'failed']);                 
                 }
             }               

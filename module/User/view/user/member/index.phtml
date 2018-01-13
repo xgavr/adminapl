@@ -1,0 +1,62 @@
+<?php
+$this->headTitle('Пользователи');
+
+$this->mainMenu()->setActiveItemId('users');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Управление пользователями'=>$this->url('members'),
+            ]);
+?>
+
+<h1>Пользователи</h1>
+
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('members', ['action'=>'add']); ?>">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить пользователя
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>E-mail</th>
+        <th>Полное имя</th>       
+        <th>Дата регистрации</th>
+        <th>Статус</th>        
+        <th>Действия</th>        
+    </tr>
+    
+    <?php if (count($users)): ?>
+        <?php foreach ($users as $user): ?>
+
+        <tr>
+            <td><?= $this->escapeHtml($user->getId()); ?></td>
+            <td>
+                <a href="<?= $this->url('members', ['action'=>'view', 'id'=>$user->getId()]); ?>">
+                    <?= $this->escapeHtml($user->getEmail()); ?>
+                </a> 
+            </td>
+            <td>
+                <?= $this->escapeHtml($user->getFullName()); ?></a> 
+            </td>
+            <td><nobr><?= $this->escapeHtml($user->getDateCreated()); ?></nobr></td>        
+            <td><?= $this->escapeHtml($user->getStatusAsString()); ?></td>
+            <td>
+                <a class="btn btn-info" href="<?= $this->url('members', 
+                        ['action'=>'edit', 'id'=>$user->getId()]); ?>">
+                    <span class="glyphicon glyphicon-pencil" ></span> Редактировать
+                </a>
+                <a class="btn btn-default" href="<?= $this->url('members',
+                        ['action'=>'change-password', 'id'=>$user->getId()]); ?>">
+                    <span class="glyphicon glyphicon-asterisk"></span> Сменить пароль
+                </a>
+            </td>    
+        </tr>
+
+        <?php endforeach; ?>   
+    <?php endif; ?>
+</table>
+
