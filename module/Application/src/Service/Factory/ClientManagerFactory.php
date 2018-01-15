@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ClientManager;
 use Application\Service\ContactManager;
+use User\Service\UserManager;
 /**
  * Description of ClientManagerFactory
  *
@@ -25,8 +26,9 @@ class ClientManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $contactManager = $container->get(ContactManager::class);        
+        $userManager = $container->get(UserManager::class);        
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ClientManager($entityManager, $contactManager);
+        return new ClientManager($entityManager, $contactManager, $userManager);
     }
 }

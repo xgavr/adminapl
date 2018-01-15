@@ -19,6 +19,12 @@ use Application\Entity\Contact;
 class ClientManager
 {
     
+    /*
+     * Id роли представителя клиента
+     */
+    const USER_ROLE_ID = 2;
+    
+    
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -31,12 +37,18 @@ class ClientManager
      */
     private $contactManager;
 
-  
+    /**
+     * User manager
+     * @var Application\Service\UserManager
+     */
+    private $userManager;
+
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $contactManager)
+    public function __construct($entityManager, $contactManager, $userManager)
     {
         $this->entityManager = $entityManager;
         $this->contactManager = $contactManager;
+        $this->userManager = $userManager;
     }
     
     public function addNewClient($data) 
@@ -56,6 +68,8 @@ class ClientManager
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+        
+        return $client;
     }   
     
     public function updateClient($client, $data) 
@@ -84,7 +98,18 @@ class ClientManager
      // Этот метод добавляет новый контакт.
     public function addContactToClient($client, $data) 
     {
-       $this->contactManager->addNewContact($client, $data);
+       if ($data['email'] && $data['password']){
+           $data['full_name'] = $data['name'];
+           $data['roles'][] = self::USER_ROLE_ID;
+           $user = $this->userManager->addUser($data);
+           foreach ($user->getContacts() as $contact){
+               $contact->setClient($client);
+               $this->entityManager->persist($contact);               
+           }
+            $this->entityManager->flush();           
+       } else {
+           $this->contactManager->addNewContact($client, $data);
+       }    
     }   
     
 }

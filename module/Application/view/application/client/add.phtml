@@ -1,4 +1,14 @@
 <?php
+$this->headTitle('Добавить покупателя');
+
+$this->mainMenu()->setActiveItemId('client');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Управление покупателями'=>$this->url('client'),
+            'Добавить покупателя'=>$this->url('client', ['action'=>'add'])
+            ]);
+
 $form = $this->form;
 $form->get('name')->setAttributes([
     'class'=>'form-control', 
@@ -14,7 +24,7 @@ $form->prepare();
 
 ?>
 
-<h1>Добавить нового клиента</h1>
+<h1>Добавить нового покупателя (организацию)</h1>
 
 <p>
     Заполните форму и нажмите <i>Сохранить</i>.

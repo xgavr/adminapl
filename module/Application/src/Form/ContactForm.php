@@ -10,6 +10,7 @@ namespace Application\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use Application\Entity\Contact;
+use User\Validator\UserExistsValidator;
 
 /**
  * Description of contact
@@ -20,17 +21,25 @@ class ContactForm extends Form
 {
     
     protected $objectManager;
+    
+    /**
+     * Entity manager.
+     * @var Doctrine\ORM\EntityManager 
+     */
+    private $entityManager = null;    
         
     /**
      * Конструктор.     
      */
-    public function __construct()
+    public function __construct($entityManager = null)
     {
         // Определяем имя формы.
         parent::__construct('contact-form');
      
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
+        
+        $this->entityManager = $entityManager;        
                 
         $this->addElements();
         $this->addInputFilter();         
@@ -78,12 +87,41 @@ class ContactForm extends Form
             ],
         ]);
                 
+        // Add "email" field
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'email',
+            'disabled' => 'disabled',
+            'options' => [
+                'label' => 'E-mail',
+            ],
+        ]);
+
+        // Add "password" field
+        $this->add([            
+            'type'  => 'password',
+            'name' => 'password',
+            'options' => [
+                'label' => 'Пароль',
+            ],
+        ]);
+
+        // Add "confirm_password" field
+        $this->add([            
+            'type'  => 'password',
+            'name' => 'confirm_password',
+            'options' => [
+                'label' => 'Подтвердить пароль',
+            ],
+        ]);
+        
+        
         // Add "status" field
         $this->add([            
             'type'  => 'select',
             'name' => 'status',
             'options' => [
-                'label' => 'Status',
+                'label' => 'Статус',
                 'value_options' => [
                     1 => 'Active',
                     2 => 'Retired',                    
@@ -167,6 +205,70 @@ class ContactForm extends Form
                 ],
             ]);        
         
+        // Add input for "email" field
+        $inputFilter->add([
+                'name'     => 'email',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                    [
+                        'name' => UserExistsValidator::class,
+                        'options' => [
+                            'entityManager' => $this->entityManager,
+                            'user' => $this->user
+                        ],
+                    ],                    
+                ],
+            ]);     
+        
+        // Add input for "password" field
+        $inputFilter->add([
+                'name'     => 'password',
+                'required' => false,
+                'filters'  => [                        
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 6,
+                            'max' => 64
+                        ],
+                    ],
+                ],
+            ]);
+
+        // Add input for "confirm_password" field
+        $inputFilter->add([
+                'name'     => 'confirm_password',
+                'required' => false,
+                'filters'  => [                        
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'Identical',
+                        'options' => [
+                            'token' => 'password',                            
+                        ],
+                    ],
+                ],
+            ]);
         
         // Add input for "status" field
         $inputFilter->add([

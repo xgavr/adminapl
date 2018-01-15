@@ -6,6 +6,7 @@ use User\Entity\Role;
 use Application\Entity\Contact;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Math\Rand;
+use Application\Entity\Email;
 
 /**
  * This service is responsible for adding/editing users
@@ -79,10 +80,19 @@ class UserManager
         // Add the entity to the entity manager.
         $this->entityManager->persist($user);
         
-        $this->contactManager->addNewContact($user, $data);
+        $contact = $this->entityManager->getRepository(Email::class)
+                ->findOneByName($data['email']);
+        
+        if ($contact == null){
+            $this->contactManager->addNewContact($user, $data);
+        } else {
+            $contact->setUser($user); 
+            $this->entityManager->persist($contact);
+        }    
                        
         // Apply changes to database.
         $this->entityManager->flush();
+
         
         return $user;
     }
@@ -310,13 +320,7 @@ class UserManager
         $this->entityManager->flush();
 
         return true;
-    }
-    
-     // Этот метод добавляет новый контакт.
-    public function addContactToUser($user, $data) 
-    {
-       $this->contactManager->addNewContact($user, $data);
-    }   
+    } 
     
 }
 

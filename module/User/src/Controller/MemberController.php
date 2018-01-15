@@ -16,7 +16,7 @@ use User\Form\PasswordResetForm;
 class MemberController extends AbstractActionController 
 {
     /*
-     * Id роли пердставителя
+     * Id роли представителя
      */
     const MEMBER_ROLE_ID = 4;
     

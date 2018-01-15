@@ -13,7 +13,7 @@ use Application\Entity\Phone;
 use Application\Entity\Email;
 use Application\Entity\Supplier;
 use Application\Entity\Client;
-use Application\Entity\User;
+use User\Entity\User;
 
 /**
  * Description of ContactService
@@ -23,6 +23,12 @@ use Application\Entity\User;
 class ContactManager
 {
     
+     /*
+     * Id роли клиента
+     */
+    const USER_ROLE_ID = 2;
+    
+   
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager

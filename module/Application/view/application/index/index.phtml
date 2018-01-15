@@ -1,54 +1,214 @@
-<div class="row">
+<div class="panel panel-success">
+    <div class="panel-heading">Управление пользователями</div>
+    <div class="panel-body">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Добавить представителя</h3>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <ol>
+                            <li>
+                                Перейти на страницу <a href="/members" target="_blank">Пользователи</a>
+                            </li>
+                            <li>Нажать кнопку Добавить пользователя</li>
+                            <li>Заполнить все поля и нажать кнопку Сохранить</li>
+                            <li>Сообщить логин и пароль представителю</li>
+                        </ol>
+                    </p>
+                    <p><a class="btn btn-success pull-right" href="/members">Перейти в пользователи&raquo;</a></p>
 
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Добавить представителя</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    <ol>
-                        <li>
-                            Перейти на страницу <a href="/members" target="_blank">пользователи</a>
-                        </li>
-                        <li>Нажать кнопку Добавить пользователя</li>
-                        <li>Заполнить все поля и нажать кнопку Сохранить</li>
-                        <li>Сообщить логин и пароль представителю</li>
-                        <p><a class="btn btn-success pull-right" href="/members">Перейти в пользователи&raquo;</a></p>
-                    </ol>
-                </p>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Что-то еще</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    
-                </p>
-
-                <p><a class="btn btn-success pull-right" href="#">Перейти &raquo;</a></p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Техподдержка</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    
-                </p>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Добавить клиента</h3>
 
-                <p><a class="btn btn-success pull-right" href="#">Написать &raquo;</a></p>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <ol>
+                            <li>
+                                Перейти на страницу <a href="/client" target="_blank">Покупатели</a>
+                            </li>
+                            <li>Нажать кнопку Добавить покупателя</li>
+                            <li>Заполнить все поля и нажать кнопку Сохранить</li>
+                            <li>Сообщить логин и пароль представителю</li>
+                        </ol>
+
+                    </p>
+
+                    <p><a class="btn btn-success pull-right" href="/client">Перейти в справочник покупателей&raquo;</a></p>
+                </div>
             </div>
         </div>
-    </div>
+
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Добавить контакт клиента</h3>
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <ol>
+                            <li>
+                                Перейти на страницу <a href="/client" target="_blank">Покупатели</a>
+                            </li>
+                            <li>Выбрать нужную организацию - покупателя</li>
+                            <li>Перейти в просомотр покупателя по ссылке на названии покупателя</li>
+                            <li>На странице просмотра заполнить форму Добавить контакт</li>
+                            <li>Обязательно заполнить ФИО, Email и пароли, если представителю клиента 
+                                необходим будет доступ на сайт для самостоятельного оформления заказов.
+                                Нажать кнопку Сохранить.
+                            </li>
+                            <li>Сообщить логин и пароль для доступа на сайт представителю покупателя</li>
+                        </ol>
+
+                    </p>
+
+                    <p><a class="btn btn-success pull-right" href="/client">Перейти в справочник покупателей&raquo;</a></p>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<div class="panel panel-success">
+    <div class="panel-heading">Заказ товара</div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Добавление товара в корзину</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/shop" target="_blank">Каталог</a>
+                                </li>
+                                <li>Выбрать необходимый товар, указать необходимое количество и нажать кнопку Купить
+                                    <button type="button" class="btn btn-default" aria-label="Left Align">
+                                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                                    </button>                        
+                                </li>
+                            </ol>
+                        </p>
+                        <p><a class="btn btn-success pull-right" href="/shop">Перейти в каталог&raquo;</a></p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Оформление заказа покупателя</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/cart" target="_blank">Корзина</a>
+                                </li>
+                                <li>Проверить состав корзины. Уточнить необходимое количество. 
+                                </li>
+                                <li>Если все устраивает, то нажать кнопку Оформить заказ</li>
+                                <li>Оформленные заказы и их статус можно увидеть на странице
+                                    <a href="/order" target="_blank">Заказы</a>
+                                </li>
+                            </ol>
+                        </p>
+                        <p><a class="btn btn-success pull-right" href="/cart">Перейти в корзину&raquo;</a></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<div class="panel panel-success">
+    <div class="panel-heading">Управление поставщиками и загрузка прайсов</div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Добавить поставщика</h3>
+
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/supplier" target="_blank">Поставщики</a>
+                                </li>
+                                <li>Нажать кнопку Добавить поставщика</li>
+                                <li>Заполнить все поля и нажать кнопку Сохранить</li>
+                            </ol>
+
+                        </p>
+
+                        <p><a class="btn btn-success pull-right" href="/supplier">Перейти в справочник поставщиков&raquo;</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Загрузка прайсов поставщиков</h3>
+
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/raw" target="_blank">Прайсы</a>
+                                </li>
+                                <li>Нажать кнопку Проверить</li>
+                                <li>При наличии новых прайсов - они появятся в списке на странице</li>
+                            </ol>
+
+                        </p>
+
+                        <p><a class="btn btn-success pull-right" href="/raw">Перейти в прайсы постащиков&raquo;</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Настройки загрузки прайсов</h3>
+
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/supplier" target="_blank">Поставщки</a>
+                                </li>
+                                <li>Перейти в просмотр выбранного поставщика по ссылке на наименовании</li>
+                                <li>В разделе на странице Настройка загрузки прайса нажать кнопку Добавить</li>
+                                <li>Заполнить значения формы - номера колонок в прайсе соответсвующие данным из прайсов поставщика. 
+                                    Нажать кнопку Сохранить</li> 
+                            </ol>
+
+                        </p>
+
+                        <p><a class="btn btn-success pull-right" href="/supplier">Перейти в справочник постащиков&raquo;</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
 </div>

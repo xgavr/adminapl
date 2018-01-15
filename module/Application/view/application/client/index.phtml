@@ -1,9 +1,20 @@
+<?php
+$this->headTitle('Покупатели');
+
+$this->mainMenu()->setActiveItemId('client');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Управление покупателями'=>$this->url('client'),
+            ]);
+?>
 <h1>Клиенты</h1>
 <p>
     <a class="btn btn-default" href="
         <?= $this->url('client', ['action'=>'add']); ?>">
-        Новый клиент
-    </a>         
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Новый покупатель
+    </a>      
+    
     <?php if ($currentClient): ?>
        <span class="alert alert-success">
             Текущий клиент для работы в каталоге: <?= $currentClient->getName(); ?>

@@ -44,7 +44,7 @@ class ClientController extends AbstractActionController
      * @var Zend\Seesion
      */
     private $sessionContainer;
-
+    
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $clientManager, $contactManager, $sessionContainer) 
@@ -95,6 +95,7 @@ class ClientController extends AbstractActionController
         // Создаем форму.
         $form = new ClientForm($this->entityManager);
         
+        
         // Проверяем, является ли пост POST-запросом.
         if ($this->getRequest()->isPost()) {
             
@@ -109,16 +110,16 @@ class ClientController extends AbstractActionController
                 $data = $form->getData();
                 
                 // Используем менеджер client для добавления нового good в базу данных.                
-                $this->clientManager->addNewClient($data);
+                $client = $this->clientManager->addNewClient($data);
                 
                 // Перенаправляем пользователя на страницу "client".
-                return $this->redirect()->toRoute('client', []);
+                return $this->redirect()->toRoute('client', ['action' => 'view', 'id' => $client->getId()]);
             }
         }
         
         // Визуализируем шаблон представления.
         return new ViewModel([
-            'form' => $form
+            'form' => $form,
         ]);
     }   
     
@@ -230,7 +231,7 @@ class ClientController extends AbstractActionController
             return;                        
         }      
         
-        $form = new ContactForm();
+        $form = new ContactForm($this->entityManager);
         // Проверяем, является ли пост POST-запросом.
         if($this->getRequest()->isPost()) {
             
