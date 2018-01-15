@@ -31,6 +31,7 @@ class PostManager {
     public function send($options)
     {
         $message = new Message();
+        $message->setEncoding('UTF-8');
         $message->addTo($options['to']);
         $message->addFrom($options['from']);
         $message->setSubject($options['subject']);
