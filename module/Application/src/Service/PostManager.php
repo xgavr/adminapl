@@ -9,6 +9,9 @@
 namespace Application\Service;
 
 use Zend\Mail\Message;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Mime;
+use Zend\Mime\Part as MimePart;
 use Zend\Mail\Transport\Sendmail as SendmailTransport;
 /**
  * Description of PostManager
@@ -30,12 +33,24 @@ class PostManager {
     
     public function send($options)
     {
+        $html = new MimePart($options['body']);
+        $html->type = Mime::TYPE_HTML;
+        $html->charset = 'utf-8';
+        $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;        
+        
         $message = new Message();
         $message->setEncoding('UTF-8');
         $message->addTo($options['to']);
         $message->addFrom($options['from']);
         $message->setSubject($options['subject']);
-        $message->setBody($options['body']);
+        
+        $body = new MimeMessage();
+        $body->setParts([$html]);
+        
+        $message->setBody($body);
+        
+        $contentTypeHeader = $message->getHeaders()->get('Content-Type');
+        $contentTypeHeader->setType('multipart/related');
 
         $transport = new SendmailTransport();
         $transport->send($message);
