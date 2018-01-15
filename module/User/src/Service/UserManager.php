@@ -14,6 +14,9 @@ use Application\Entity\Email;
  */
 class UserManager
 {
+    
+    const EMAIL_SENDER = 'noreply@ovo.msk.ru';
+    
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -39,14 +42,21 @@ class UserManager
     private $contactManager;
     
     /**
+     * Post manager.
+     * @var Application\Service\PostManager
+     */
+    private $postManager;
+    
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $roleManager, $permissionManager, $contactManager) 
+    public function __construct($entityManager, $roleManager, $permissionManager, $contactManager, $postManager) 
     {
         $this->entityManager = $entityManager;
         $this->roleManager = $roleManager;
         $this->permissionManager = $permissionManager;
         $this->contactManager = $contactManager;
+        $this->postManager = $postManager;
     }
     
     /**
@@ -93,6 +103,13 @@ class UserManager
         // Apply changes to database.
         $this->entityManager->flush();
 
+        $post = [
+            'to' => $data['email'],
+            'from' => self::EMAIL_SENDER,
+            'subject' => 'Регистрация на сайте OVO.msk.ru',
+            'body' => "Здравствуйте, {$data['full_name']}!<br/>Вы зарегистрированы на сайте <a href='ovo.msk.ru'>OVO.msk.ru</a>!<br/>Логин: {$data['email']}<br/>Пароль: {$data['password']}.<br/><br/><br/>С уважением,<br/>OVO",
+        ];
+        $this->postManager->send($post);    
         
         return $user;
     }
@@ -318,6 +335,14 @@ class UserManager
         
         // Apply changes
         $this->entityManager->flush();
+        
+        $post = [
+            'to' => $user->getEmail(),
+            'from' => self::EMAIL_SENDER,
+            'subject' => 'Смена пароля на сайте OVO.msk.ru',
+            'body' => "Здравствуйте, {$user->getFullName()}!<br/>Вам был сменен пароль для входа на сайт <a href='ovo.msk.ru'>OVO.msk.ru</a>!<br/>Логин: {$user->getEmail()}<br/>Новый пароль: {$data['new_password']}.<br/><br/><br/>С уважением,<br/>OVO",
+        ];
+        $this->postManager->send($post);    
 
         return true;
     } 

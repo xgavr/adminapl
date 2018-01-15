@@ -261,6 +261,7 @@ return [
             Service\RbManager::class => Service\Factory\RbManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
             Service\OrderManager::class => Service\Factory\OrderManagerFactory::class,
+            Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\PriceManager::class => Service\Factory\PriceManagerFactory::class,
             Service\RawManager::class => Service\Factory\RawManagerFactory::class,
             Service\NavManager::class => Service\Factory\NavManagerFactory::class,

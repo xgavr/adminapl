@@ -1,9 +1,20 @@
+<?php
+$this->headTitle('Добавить поставщика');
+
+$this->mainMenu()->setActiveItemId('supplier');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Управление поставщиками'=>$this->url('supplier'),
+            ]);
+?>
+
 <h1>Поставщики</h1>
 <p>
-<a class="btn btn-default" href="
-    <?= $this->url('supplier', ['action'=>'add']); ?>">
-    Новый поставщик
-</a>
+    <a class="btn btn-default" href="
+        <?= $this->url('supplier', ['action'=>'add']); ?>">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Новый поставщик
+    </a>     
 </p>
 
 <table class="table table-striped">

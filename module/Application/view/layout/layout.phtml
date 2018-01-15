@@ -25,26 +25,16 @@
     </head>
     <body>
         <div class="container">
-            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-                <div class="container">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="<?= $this->url('home') ?>">
-                           OVO<sup>.msk.ru</sup>
-                        </a>
-                    </div>
-                </div>
-            </nav>           
             <div class="col-md-12">
-                <!-- Navigation bar -->
                 <?php
-                // Check if the activeMenuItemId passed to layout view model
-                // and if so, use it for setting active navbar item.
-                if (isset($activeMenuItemId)) {
-                    $this->mainMenu()->setActiveItemId($activeMenuItemId);
-                }
+                    // Check if the activeMenuItemId passed to layout view model
+                    // and if so, use it for setting active navbar item.
+                    if (isset($activeMenuItemId)) {
+                        $this->mainMenu()->setActiveItemId($activeMenuItemId);
+                    }
 
-                // Render the navbar
-                echo $this->mainMenu()->render();
+                    // Render the navbar
+                    echo $this->mainMenu()->render(); 
                 ?>
             </div>
             <div class="row">

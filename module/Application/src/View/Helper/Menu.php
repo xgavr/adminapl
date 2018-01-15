@@ -56,7 +56,8 @@ class Menu extends AbstractHelper
         if (count($this->items)==0)
             return ''; // Do nothing if there are no items.
         
-        $result = '<nav class="navbar navbar-default" role="navigation">';
+        $result = '<nav class="navbar navbar-default navbar-fixed-top" role="navigation">';
+        $result .= '<div class="container-fluid">';
         $result .= '<div class="navbar-header">';
         $result .= '<button type="button" class="navbar-toggle" data-toggle="collapse"';
         $result .= 'data-target=".navbar-ex1-collapse">';
@@ -100,30 +101,32 @@ class Menu extends AbstractHelper
      */
     protected function renderItem($item) 
     {
+        $escapeHtml = $this->getView()->plugin('escapeHtml');
+
         $id = isset($item['id']) ? $item['id'] : '';
         $isActive = ($id==$this->activeItemId);
         $label = isset($item['label']) ? $item['label'] : '';
+        $labelHTML = isset($item['labelHTML']) ? $item['labelHTML'] : $escapeHtml($label);
              
         $result = ''; 
      
-        $escapeHtml = $this->getView()->plugin('escapeHtml');
         
         if (isset($item['dropdown'])) {
             
             $dropdownItems = $item['dropdown'];
             
-            $result .= '<li class="dropdown ' . ($isActive?'active':'') . '">';
+            $result .= '<li class="dropdown ' . ($isActive?'active':'') .'">';
             $result .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">';
-            $result .= $escapeHtml($label) . ' <b class="caret"></b>';
+            $result .= $labelHTML . '<b class="caret"></b>';
             $result .= '</a>';
            
             $result .= '<ul class="dropdown-menu">';
             foreach ($dropdownItems as $item) {
                 $link = isset($item['link']) ? $item['link'] : '#';
-                $label = isset($item['label']) ? $item['label'] : '';
+                $label = isset($item['label']) ? $escapeHtml($item['label']) : '';
                 
                 $result .= '<li>';
-                $result .= '<a href="'.$escapeHtml($link).'">'.$escapeHtml($label).'</a>';
+                $result .= '<a href="'.$escapeHtml($link).'">'.$label.'</a>';
                 $result .= '</li>';
             }
             $result .= '</ul>';
@@ -133,7 +136,7 @@ class Menu extends AbstractHelper
             $link = isset($item['link']) ? $item['link'] : '#';
             
             $result .= $isActive?'<li class="active">':'<li>';
-            $result .= '<a href="'.$escapeHtml($link).'">'.$escapeHtml($label).'</a>';
+            $result .= '<a href="'.$escapeHtml($link).'">'.$labelHTML.'</a>';
             $result .= '</li>';
         }
     

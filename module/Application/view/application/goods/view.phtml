@@ -1,16 +1,11 @@
 <?php
 $this->headTitle($goods->getName());
-//$this->mainMenu()->setActiveItemId('home');
-//$this->pageBreadcrumbs()->setItems([
-//            'Home'=>$this->url('home')
-//            ]);
-        
+$this->mainMenu()->setActiveItemId('goods');
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Товары'=>$this->url('goods'),
+                ]);        
 ?>
-
-<a href="
-    <?= $this->url('goods', []); ?>">
-    &lt;&lt; Назад в список товаров
-</a>
 
 <h1>
     <?= $this->escapeHtml($goods->getName()); ?>    

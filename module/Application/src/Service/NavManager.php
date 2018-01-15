@@ -26,13 +26,20 @@ class NavManager
     private $rbacManager;
     
     /**
+     * Shop manager.
+     * @var Application\Service\ShopManager
+     */
+    private $shopManager;
+    
+    /**
      * Constructs the service.
      */
-    public function __construct($authService, $urlHelper, $rbacManager) 
+    public function __construct($authService, $urlHelper, $rbacManager, $shopManager) 
     {
         $this->authService = $authService;
         $this->urlHelper = $urlHelper;
         $this->rbacManager = $rbacManager;
+        $this->shopManager = $shopManager;
     }
     
     /**
@@ -63,7 +70,8 @@ class NavManager
             
             $items[] = [
                 'id' => 'home',
-                'label' => 'Главная',
+                'label' => 'OVO.msk.ru',
+                'labelHTML' => '<strong>OVO</strong><sup>.msk.ru</sup>',
                 'link'  => $url('home')
             ];
             
@@ -71,12 +79,6 @@ class NavManager
                 'id' => 'shop',
                 'label' => 'Каталог',
                 'link'  => $url('shop')
-            ];
-            
-            $items[] = [
-                'id' => 'cart',
-                'label' => 'Корзина',
-                'link'  => $url('shop', ['action' => 'cart'])
             ];
             
             $items[] = [
@@ -187,10 +189,25 @@ class NavManager
                 ];
             }
             
-
+            if ($this->shopManager->currentClient()){
+                $items[] = [
+                    'id' => 'currentClient',
+                    'float' => 'right',
+                    'labelHTML' => '<span class="btn btn-success btn-xs">'.$this->shopManager->currentClient()->getName().'</span>',
+                    'link'  => $url('client',['action' => 'view', 'id' => $this->shopManager->currentClient()->getId()])
+                ];
+            }    
+            
+            $items[] = [
+                'id' => 'cart',
+                'float' => 'right',
+                'labelHTML' => '<span class="btn btn-success btn-xs">Корзина <span class="badge" id="nav_cart_badge">'.$this->shopManager->currentClientNum().'</span></span>',
+                'link'  => $url('shop', ['action' => 'cart'])
+            ];
+            
             $items[] = [
                 'id' => 'logout',
-                'label' => $this->authService->getIdentity(),
+                'labelHTML' => '<span class="glyphicon glyphicon-user"></span>',
                 'float' => 'right',
                 'dropdown' => [
                     [

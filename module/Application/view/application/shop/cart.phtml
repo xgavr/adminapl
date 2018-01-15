@@ -1,19 +1,18 @@
 <?php
+$this->headTitle('Корзина покупателя '.$currentClient->getName());
+
+$this->mainMenu()->setActiveItemId('cart');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Каталог'=>$this->url('shop'),
+            'Корзина покупателя'=>$this->url('shop', ['action'=>'cart'])
+            ]);
 ?>    
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-8">
-            <?php if ($currentClient): ?>
-               <span class="label label-success">
-                    Текущий покупатель: <?= $currentClient->getName(); ?>
-               </span>    
-            <?php else: ?>
-               <span class="alert alert-warning">
-                    Текущий клиент для работы в каталоге не установлен
-               </span>    
-            <?php endif; ?>    
-        </div>
+
         <div class="col-sm-1">
         Всего 
         </div>
@@ -112,12 +111,13 @@
     
     function editCartSuccess(data)
     {
-      console.log(data);  
+//      console.log(data);  
       $('#rowTotal'+data.id).html(data.rowtotal);
+      $('#nav_cart_badge').html(data.num);
       $('#footerNum').html(data.num);
       $('#headerNum').html(data.num);
       $('#footerTotal').html(data.total);
-      $('#headerTotal').html(data.total);      
+      $('#headerTotal').html(data.total);  
     }
         
 </script>

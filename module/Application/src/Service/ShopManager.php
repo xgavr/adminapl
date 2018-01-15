@@ -28,12 +28,19 @@ class ShopManager
     private $entityManager;
     
     private $authService;
+    
+    /*
+     * Менеджер сессий
+     * @var Zend\Seesion
+     */
+    private $sessionContainer;        
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $authService)
+    public function __construct($entityManager, $authService, $sessionContainer)
     {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
+        $this->sessionContainer = $sessionContainer;
     }
     
     public function searchGoodNameAssistant($search)
@@ -92,14 +99,70 @@ class ShopManager
         
     }
     
-    public function clientNum($client)
+    public function currentClient()
     {
+        if (!isset($this->sessionContainer->currentClient)){
+            return null;
+        }
         
+        $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient);  
+        
+        return $currentClient;        
     }
     
-    public function isGoodInCart($client, $good)
+    public function currentClientNum()
     {
+        if (!isset($this->sessionContainer->currentClient)){
+            return 0;
+        }
         
+        $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient);  
+        
+        $result = $this->entityManager->getRepository(Cart::class)
+            ->getClientNum($currentClient);
+        
+        $num = $total = 0;
+        if (is_array($result) && count($result)){
+            if (array_key_exists('num', $result[0])){
+                $num = $result[0]['num'];
+            }
+            if (array_key_exists('total', $result[0])){
+                $total = $result[0]['total'];
+            }
+        }
+        
+        return $num;
+    }
+    
+    public function getGoodInCart($goodId)
+    {
+        if (!isset($this->sessionContainer->currentClient)){
+            return 0;
+        }
+        
+        if (!$goodId) return 0;
+        
+        if (!is_numeric($goodId)) return 0;
+        
+        $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient);  
+        
+        $result = $this->entityManager->getRepository(Cart::class)
+                    ->getGoodInClientCart($currentClient, $goodId);
+                        
+        $num = $total = 0;
+        if (is_array($result) && count($result)){
+            if (array_key_exists('num', $result[0])){
+                $num = $result[0]['num'];
+            }
+            if (array_key_exists('total', $result[0])){
+                $total = $result[0]['total'];
+            }
+        }
+        
+        return $num;        
     }
 
     public function removeCart($cart)

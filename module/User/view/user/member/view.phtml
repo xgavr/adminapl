@@ -1,7 +1,7 @@
 <?php
 $this->headTitle('Просмотр данных пользователя');
 
-$this->mainMenu()->setActiveItemId('users');
+$this->mainMenu()->setActiveItemId('members');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
@@ -14,7 +14,7 @@ $this->pageBreadcrumbs()->setItems([
 <?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
 <?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
 
-<h1>View User <?= $this->escapeHtml($user->getEmail()) ?></h1>
+<h1>Просмотр пользователя <?= $this->escapeHtml($user->getEmail()) ?></h1>
 
 <p>
     <a class="btn btn-default" href="<?= $this->url('members', 

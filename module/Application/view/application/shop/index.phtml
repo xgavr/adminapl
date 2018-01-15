@@ -1,4 +1,10 @@
 <?php
+    $this->headTitle('Каталог');
+    $this->mainMenu()->setActiveItemId('shop');
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Каталог'=>$this->url('shop'),
+                ]);
     $this->headScript()->appendFile('/js/typeahead.js/typeahead.jquery.min.js', 'text/javascript');
 ?>    
 
@@ -26,22 +32,6 @@
     </div>
 </form>
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12">
-            <?php if ($currentClient): ?>
-               <span class="label label-success">
-                    Текущий покупатель: <?= $currentClient->getName(); ?>
-               </span>    
-            <?php else: ?>
-               <span class="alert alert-warning">
-                    Текущий клиент для работы в каталоге не установлен
-               </span>    
-            <?php endif; ?>    
-        </div>    
-    </div>
-</div>    
-
 <table class="table table-striped">
 
    <tr>
@@ -52,11 +42,13 @@
         <th>Цена</th>
         <th>Количество</th>
         <th>Купить</th>
+        <th></th>
     </tr>
     
     <?php foreach ($goods as $row): ?>
     <?php 
-        $price = $this->goodsManager->getMaxPrice($row); 
+        $price = $this->goodsManager->getMaxPrice($row);
+        $inCart = $this->shopManager->getGoodInCart($row->getId());
         $avialable = $price>0;
     ?>
     <tr>
@@ -73,16 +65,22 @@
             <input type="text" id="num<?= $row->getId()?>" value="1" class="form-control" <?= ($avialable) ? '':'disabled' ?>/>
         </td>
         <td>
-            <button type="button" class="btn btn-default" aria-label="Left Align" 
+            <button type="button" class="btn <?= ($inCart ? 'btn-success':'btn-default') ?> btn-default" aria-label="Left Align" id="shop_index_add_cart_<?= $row->getId()?>" 
                     onclick="addCart({
                                 good: <?= $row->getId()?>, 
                                 price: <?= $price; ?>
                     })"
                      <?= ($avialable) ? '':'disabled' ?>
              >
-                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">
+                </span>
             </button>
-        </td>            
+        </td>
+        <td>
+<!--            <span class="<?= ($inCart ? 'badge':'') ?> btn-success" id="shop_index_add_cart_badge<?= $row->getId()?>">
+                <?= ($inCart ? $inCart:'') ?>
+            </span>-->
+        </td>
     </tr>
         
     <?php endforeach; ?>   
@@ -106,7 +104,13 @@
     
     function addCartSuccess(data)
     {
-      //alert(data);
+        if (data.num){  
+            $('#nav_cart_badge').html(data.num);
+        }  
+        if (data.good){
+            $('#shop_index_add_cart_'+data.good).removeClass('btn-default');
+            $('#shop_index_add_cart_'+data.good).addClass('btn-success');
+        }
     }
         
     $(document).ready(function() { 

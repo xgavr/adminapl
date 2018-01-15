@@ -71,4 +71,25 @@ class CartRepository extends EntityRepository{
         
     }
     
+    /*
+     * @var Application\Entity\Client @client
+     * @var int $goodId
+     */
+    public function getGoodInClientCart($client, $goodId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+            ->from(Cart::class, 'r')
+            ->select('SUM(r.num) as num, SUM(r.num*r.price) as total')
+            ->where('r.client = :clientId and r.good = :goodId')    
+            ->groupBy('r.client')
+            ->setParameters(['clientId' => $client->getId(), 'goodId' => $goodId])
+                ;
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
 }

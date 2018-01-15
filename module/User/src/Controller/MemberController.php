@@ -160,7 +160,7 @@ class MemberController extends AbstractActionController
         
         // Get the list of all available roles (sorted by name).
         $allRoles = $this->entityManager->getRepository(Role::class)
-                ->findBy(['id' => self::MEMBER_ROLE_ID], ['name'=>'ASC']);
+                ->findBy([], ['name'=>'ASC']);
         
         $roleList = [];
         foreach ($allRoles as $role) {
@@ -169,13 +169,17 @@ class MemberController extends AbstractActionController
         
         $form->get('roles')->setValueOptions($roleList);
         
+        $userRoles = $user->getRoles();
         // Check if user has submitted the form
         if ($this->getRequest()->isPost()) {
             
             // Fill in the form with POST data
             $data = $this->params()->fromPost();
             
-            $data['roles'][] = self::MEMBER_ROLE_ID;
+            foreach ($userRoles as $role){
+                $data['roles'][] = $role->getId();
+            }    
+
             $form->setData($data);
             
             // Validate form

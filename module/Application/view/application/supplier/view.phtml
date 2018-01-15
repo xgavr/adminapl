@@ -1,6 +1,14 @@
 <?php
-$this->headTitle($supplier->getName());
-  
+$this->headTitle('Просмотр данных поставщика '.$supplier->getName());
+
+$this->mainMenu()->setActiveItemId('supplier');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Управление поставщиками'=>$this->url('supplier'),
+            'Просмотр данных поставщика'=>$this->url('supplier', ['action'=>'view', 'id' => $supplier->getId()])
+            ]);  
+
 $form = $this->form;
 
 $form->get('name')->setAttributes([
@@ -26,11 +34,6 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
 ?>
-
-<a href="
-    <?= $this->url('supplier', []); ?>">
-    &lt;&lt; Назад в список поставщиков
-</a>
 
 <h1>
     <?= $this->escapeHtml($supplier->getName()); ?>    

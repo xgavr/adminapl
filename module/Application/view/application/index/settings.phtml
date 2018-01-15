@@ -1,21 +1,21 @@
 <?php
-$this->headTitle('Settings');
+$this->headTitle('Настройки');
 $this->mainMenu()->setActiveItemId('settings');
 $this->pageBreadcrumbs()->setItems([
-            'Home'=>$this->url('home'),
-            'Settings'=>$this->url('application', ['action'=>'settings']),
+            'Главная'=>$this->url('home'),
+            'Настройки пользователя'=>$this->url('application', ['action'=>'settings']),
             ]);
 ?>
 
-<h2>Settings</h2>
+<h2>Настройки пользователя</h2>
 <p>
-    <a class="btn btn-default" href="<?= $this->url('users', 
+    <a class="btn btn-default" href="<?= $this->url('members', 
             ['action'=>'edit', 'id'=>$user->getId()]); ?>">
-        <span class="glyphicon glyphicon-pencil" ></span> Edit
+        <span class="glyphicon glyphicon-pencil" ></span> Редактировать
     </a>
-    <a class="btn btn-default" href="<?= $this->url('users',
+    <a class="btn btn-default" href="<?= $this->url('members',
             ['action'=>'change-password', 'id'=>$user->getId()]); ?>">
-        <span class="glyphicon glyphicon-asterisk"></span> Change Password
+        <span class="glyphicon glyphicon-asterisk"></span> Изменить пароль
     </a>    
 </p>
 
@@ -31,11 +31,11 @@ $this->pageBreadcrumbs()->setItems([
                 <td><?= $this->escapeHtml($user->getEmail()) ?></td>
             </tr>
             <tr>
-                <th>Full Name:</th>
+                <th>ФИО:</th>
                 <td><?= $this->escapeHtml($user->getFullName()) ?></td>
             </tr>
             <tr>
-                <th>Date Created:</th>
+                <th>Дата регистрации:</th>
                 <td><?= $this->escapeHtml($user->getDateCreated()) ?></td>
             </tr>
         </table>

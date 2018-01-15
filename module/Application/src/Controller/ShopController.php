@@ -90,6 +90,7 @@ class ShopController extends AbstractActionController
         return new ViewModel([
             'goods' => $paginator,
             'goodsManager' => $this->goodsManager,
+            'shopManager' => $this->shopManager,
             'search' => $q,
             'currentClient' => $currentClient
         ]);  
@@ -172,6 +173,7 @@ class ShopController extends AbstractActionController
                         
         return new JsonModel([
             'num' => $num,
+            'good' => $data['good'],
         ]);        
     }
     
@@ -264,7 +266,7 @@ class ShopController extends AbstractActionController
         
         return $this->redirect()->toRoute('shop', ['action' => 'cart']);        
     }
-    
+
     public function numAction()
     {
         $currentClient = $this->entityManager->getRepository(Client::class)
