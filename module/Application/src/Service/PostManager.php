@@ -36,7 +36,7 @@ class PostManager {
         $html = new MimePart($options['body']);
         $html->type = Mime::TYPE_HTML;
         $html->charset = 'utf-8';
-        $html->encoding = Mime::ENCODING_BASE64;        
+        $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;        
         
         $message = new Message();
         $message->setEncoding('UTF-8');
@@ -51,6 +51,7 @@ class PostManager {
         
         $contentTypeHeader = $message->getHeaders()->get('Content-Type');
         $contentTypeHeader->setType('multipart/related');
+        $message->setHeaders($contentTypeHeader);
 
         $transport = new SendmailTransport();
         $transport->send($message);
