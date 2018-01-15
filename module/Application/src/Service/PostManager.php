@@ -36,7 +36,7 @@ class PostManager {
         $html = new MimePart($options['body']);
         $html->type = Mime::TYPE_HTML;
         $html->charset = 'utf-8';
-        $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;        
+        $html->encoding = Mime::ENCODING_BASE64;        
         
         $message = new Message();
         $message->setEncoding('UTF-8');
