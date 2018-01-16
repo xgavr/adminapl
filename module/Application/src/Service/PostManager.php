@@ -34,7 +34,9 @@ class PostManager {
     
     public function send($options)
     {
-        
+//        if (!isset($_SERVER['HTTP_HOST'])) return;
+        var_dump($_SERVER); exit;
+
         $breaks = array("<br />","<br>","<br/>");  
         $text = strip_tags(str_ireplace($breaks, PHP_EOL, $options['body']));
         
@@ -73,6 +75,7 @@ class PostManager {
 //                'password' => 'pass',
 //            ],
         ]);
+        
         $transport->setOptions($options);
         $transport->send($message);
 
