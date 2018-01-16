@@ -34,8 +34,7 @@ class PostManager {
     
     public function send($options)
     {
-//        if (!isset($_SERVER['HTTP_HOST'])) return;
-        var_dump($_SERVER); exit;
+        if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') return; //если отладка на локальной машине, либо использовать sendmail
 
         $breaks = array("<br />","<br>","<br/>");  
         $text = strip_tags(str_ireplace($breaks, PHP_EOL, $options['body']));
