@@ -29,9 +29,15 @@ class ContactForm extends Form
     private $entityManager = null;    
         
     /**
+     * Current user.
+     * @var User\Entity\User 
+     */
+    private $user = null;
+    
+    /**
      * Конструктор.     
      */
-    public function __construct($entityManager = null)
+    public function __construct($entityManager = null, $user = null)
     {
         // Определяем имя формы.
         parent::__construct('contact-form');
@@ -39,7 +45,8 @@ class ContactForm extends Form
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
         
-        $this->entityManager = $entityManager;        
+        $this->entityManager = $entityManager;    
+        $this->user = $user;
                 
         $this->addElements();
         $this->addInputFilter();         
