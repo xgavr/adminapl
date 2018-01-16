@@ -50,7 +50,7 @@ class PostManager {
         $message->setBody($body);
         
         $contentTypeHeader = $message->getHeaders()->get('Content-Type');
-        $contentTypeHeader->setType('multipart/related');
+        $contentTypeHeader->setType('multipart/alternative');
 
         $transport = new SendmailTransport();
         $transport->send($message);
