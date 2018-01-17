@@ -67,6 +67,12 @@ class Client {
     private $order;
     
     /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="client") 
+     * @ORM\JoinColumn(name="manager_id", referencedColumnName="id")
+     */
+    private $manager;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -199,6 +205,26 @@ class Client {
     {
         return $this->order;
     }
+        
+    /*
+     * Возвращает связанный manager.
+     * @return \User\Entity\User
+     */
+    
+    public function getManager() 
+    {
+        return $this->manager;
+    }
+
+    /**
+     * Задает связанный mdndger.
+     * @param \User\Entity\User $user
+     */    
+    public function setManager($user) 
+    {
+        $this->manager = $user;
+        $user->addClient($this);
+    }     
         
     /**
      * Assigns.

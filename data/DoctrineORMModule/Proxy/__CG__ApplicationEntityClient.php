@@ -64,10 +64,10 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'order'];
+            return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'order', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'manager'];
         }
 
-        return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'order'];
+        return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'order', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'manager'];
     }
 
     /**

@@ -1,4 +1,13 @@
-<h1>Заявки</h1>
+<?php
+    $this->headTitle('Заказы');
+    $this->mainMenu()->setActiveItemId('order');
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Заказы'=>$this->url('order'),
+                ]);
+?>    
+
+<h1>Заказы</h1>
 <p>
     <!--
 <a class="btn btn-default" href="
@@ -15,6 +24,7 @@
         <th>Дата</th>
         <th>Покупатель</th>
         <th>Сумма</th>
+        <th>Статус</th>
         <th>Комментарий</th>
         <th>Действие</th>
     </tr>
@@ -33,6 +43,9 @@
         </td>
         <td>
            <?= $this->escapeHtml(round($row->getTotal(), 2)); ?>
+        </td>
+        <td>
+           <?= $this->escapeHtml($row->getStatusAsString()); ?>
         </td>
         <td>
            <?= $this->escapeHtml($row->getComment()); ?>

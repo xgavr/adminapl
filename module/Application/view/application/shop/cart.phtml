@@ -1,5 +1,5 @@
 <?php
-$this->headTitle('Корзина покупателя '.$currentClient->getName());
+$this->headTitle('Корзина покупателя '.($currentClient ? $currentClient->getName():''));
 
 $this->mainMenu()->setActiveItemId('cart');
 
@@ -41,36 +41,38 @@ $this->pageBreadcrumbs()->setItems([
         <th></th>
     </tr>
     
-    <?php foreach ($cart as $row): ?>
-    <tr>
-        <td><?= $this->escapeHtml($row->getId()); ?></td>
-        <td>
-            <a href="<?= $this->url('goods', ['action'=>'view', 'id'=>$row->getGood()->getId()]); ?>">
-                <?= $this->escapeHtml($row->getGood()->getName()); ?>
-            </a> 
-        </td>
-        <td><?= $this->escapeHtml($row->getGood()->getCode()); ?></td>        
-        <td><?= $this->escapeHtml($row->getGood()->getProducer()->getName()); ?></td>        
-        <td><?= $this->escapeHtml($row->getPrice()); ?></td>        
-        <td>        
-            <input type="text" id="num<?= $row->getId()?>" value="<?= $this->escapeHtml($row->getNum()); ?>" 
-                   class="form-control"
-                   onchange="editCart({
-                        id: <?= $row->getId()?>, 
-                       
-                   })"
-                   />
-        </td>    
-        <td id="rowTotal<?= $row->getId()?>"><?= $this->escapeHtml(round($row->getNum()*$row->getPrice(), 2)); ?></td>        
-        <td>
-            <a class="btn btn-danger" href="<?= $this->url('shop',
-                    ['action'=>'delete-cart', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>            
-        </td>            
-    </tr>
-        
-    <?php endforeach; ?>   
+    <?php if (count($cart)): ?>
+        <?php foreach ($cart as $row): ?>
+        <tr>
+            <td><?= $this->escapeHtml($row->getId()); ?></td>
+            <td>
+                <a href="<?= $this->url('goods', ['action'=>'view', 'id'=>$row->getGood()->getId()]); ?>">
+                    <?= $this->escapeHtml($row->getGood()->getName()); ?>
+                </a> 
+            </td>
+            <td><?= $this->escapeHtml($row->getGood()->getCode()); ?></td>        
+            <td><?= $this->escapeHtml($row->getGood()->getProducer()->getName()); ?></td>        
+            <td><?= $this->escapeHtml($row->getPrice()); ?></td>        
+            <td>        
+                <input type="text" id="num<?= $row->getId()?>" value="<?= $this->escapeHtml($row->getNum()); ?>" 
+                       class="form-control"
+                       onchange="editCart({
+                            id: <?= $row->getId()?>, 
+
+                       })"
+                       />
+            </td>    
+            <td id="rowTotal<?= $row->getId()?>"><?= $this->escapeHtml(round($row->getNum()*$row->getPrice(), 2)); ?></td>        
+            <td>
+                <a class="btn btn-danger" href="<?= $this->url('shop',
+                        ['action'=>'delete-cart', 'id'=>$row->getId()]); ?>">
+                    <span class="glyphicon glyphicon-remove"></span> Удалить
+                </a>            
+            </td>            
+        </tr>
+
+        <?php endforeach; ?>   
+    <?php endif; ?>    
     <tr>
         <td colspan="5" align="right">Итого:</td>
         <td id="footerNum"><?= $this->escapeHtml($num); ?></td>

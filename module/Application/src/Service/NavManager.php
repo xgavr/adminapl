@@ -94,16 +94,26 @@ class NavManager
             ];
             
             $items[] = [
-                'id' => 'supplier',
-                'label' => 'Поставщики',
-                'link'  => $url('supplier')
+                'id' => 'order',
+                'label' => 'Заказы',
+                'link'  => $url('order')
             ];
-
-            $items[] = [
-                'id' => 'raw',
-                'label' => 'Прайсы',
-                'link'  => $url('raw')
-            ];
+            
+            if ($this->rbacManager->isGranted(null, 'supplier.manage')) {
+                $items[] = [
+                    'id' => 'supplier',
+                    'label' => 'Поставщики',
+                    'link'  => $url('supplier')
+                ];
+            }
+            
+            if ($this->rbacManager->isGranted(null, 'supplier.manage')) {
+                $items[] = [
+                    'id' => 'raw',
+                    'label' => 'Прайсы',
+                    'link'  => $url('raw')
+                ];
+            }
             
             //Справочники
             $rbDropdownItems = [];

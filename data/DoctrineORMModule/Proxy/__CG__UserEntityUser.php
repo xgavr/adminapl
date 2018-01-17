@@ -64,10 +64,10 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts'];
+            return ['__isInitialized__', 'id', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
         }
 
-        return ['__isInitialized__', 'id', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts'];
+        return ['__isInitialized__', 'id', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
     }
 
     /**
@@ -417,6 +417,28 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addContact', [$contact]);
 
         return parent::addContact($contact);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getClients()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getClients', []);
+
+        return parent::getClients();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addClient($client)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addClient', [$client]);
+
+        return parent::addClient($client);
     }
 
 }

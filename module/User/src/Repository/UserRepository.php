@@ -30,5 +30,22 @@ class UserRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }    
     
+    public function findOneByEmail($email)
+    {
+        $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where('u.email = ?1')    
+            ->setParameter('1', $email)
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }    
+    
     
 }

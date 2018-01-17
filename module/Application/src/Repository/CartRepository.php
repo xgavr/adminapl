@@ -40,35 +40,43 @@ class CartRepository extends EntityRepository{
      */
     public function findClientCart($client)
     {
-        $entityManager = $this->getEntityManager();
+        if ($client){
+            $entityManager = $this->getEntityManager();
 
-        $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(Cart::class, 'c')
-            ->where('c.client = ?1')    
-            ->orderBy('c.id')
-            ->setParameter('1', $client->getId())    
-                ;
+            $queryBuilder->select('c')
+                ->from(Cart::class, 'c')
+                ->where('c.client = ?1')    
+                ->orderBy('c.id')
+                ->setParameter('1', $client->getId())    
+                    ;
 
-        return $queryBuilder->getQuery();
+            return $queryBuilder->getQuery();
+        }
+        
+        return;
     }   
     
     public function getClientNum($client)
     {
-        $entityManager = $this->getEntityManager();
+        if ($client){
+            
+            $entityManager = $this->getEntityManager();
 
-        $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('r')
-            ->from(Cart::class, 'r')
-            ->select('SUM(r.num) as num, SUM(r.num*r.price) as total')
-            ->where('r.client = ?1')    
-            ->groupBy('r.client')
-            ->setParameter('1', $client->getId())
-                ;
-        return $queryBuilder->getQuery()->getResult();
+            $queryBuilder->select('r')
+                ->from(Cart::class, 'r')
+                ->select('SUM(r.num) as num, SUM(r.num*r.price) as total')
+                ->where('r.client = ?1')    
+                ->groupBy('r.client')
+                ->setParameter('1', $client->getId())
+                    ;
+            return $queryBuilder->getQuery()->getResult();
+        }
         
+        return;
     }
     
     /*
@@ -77,19 +85,22 @@ class CartRepository extends EntityRepository{
      */
     public function getGoodInClientCart($client, $goodId)
     {
-        $entityManager = $this->getEntityManager();
+        if ($client){
+            $entityManager = $this->getEntityManager();
 
-        $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('r')
-            ->from(Cart::class, 'r')
-            ->select('SUM(r.num) as num, SUM(r.num*r.price) as total')
-            ->where('r.client = :clientId and r.good = :goodId')    
-            ->groupBy('r.client')
-            ->setParameters(['clientId' => $client->getId(), 'goodId' => $goodId])
-                ;
-        return $queryBuilder->getQuery()->getResult();
+            $queryBuilder->select('r')
+                ->from(Cart::class, 'r')
+                ->select('SUM(r.num) as num, SUM(r.num*r.price) as total')
+                ->where('r.client = :clientId and r.good = :goodId')    
+                ->groupBy('r.client')
+                ->setParameters(['clientId' => $client->getId(), 'goodId' => $goodId])
+                    ;
+            return $queryBuilder->getQuery()->getResult();
+        }
         
+        return;
     }
     
 }

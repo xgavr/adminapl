@@ -10,6 +10,7 @@ namespace Application\Service;
 use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Client;
 use Application\Entity\Contact;
+use User\Entity\User;
 
 /**
  * Description of ClientService
@@ -43,12 +44,15 @@ class ClientManager
      */
     private $userManager;
 
+    private $authService;
+    
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $contactManager, $userManager)
+    public function __construct($entityManager, $contactManager, $userManager, $authService)
     {
         $this->entityManager = $entityManager;
         $this->contactManager = $contactManager;
         $this->userManager = $userManager;
+        $this->authService = $authService;
     }
     
     public function addNewClient($data) 
@@ -61,6 +65,10 @@ class ClientManager
         $currentDate = date('Y-m-d H:i:s');
         $client->setDateCreated($currentDate);        
         
+        $currentUser = $this->entityManager->getRepository(User::class)
+                ->findOneByEmail($this->authService->getIdentity());
+        
+        $client->setManager($currentUser);
         
         
         // Добавляем сущность в менеджер сущностей.
@@ -87,7 +95,17 @@ class ClientManager
         
         $contacts = $client->getContacts();
         foreach ($contacts as $contact) {
-            $this->contactManager->remove($contact);
+            $this->entityManager->remove($contact);
+        }        
+        
+        $carts = $client->getCart();
+        foreach ($carts as $cart) {
+            $this->entityManager->remove($cart);
+        }        
+        
+        $orders = $client->getOrder();
+        foreach ($orders as $order) {
+            $this->entityManager->remove($order);
         }        
         
         $this->entityManager->remove($client);

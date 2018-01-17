@@ -147,27 +147,19 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\IndexController::class => [
-                // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@']
-            ],
-            \Application\Controller\RawController::class => [
-                // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@']
-            ],
-            \Application\Controller\RawpriceController::class => [
-                // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@']
-            ],
-            \Application\Controller\RbController::class => [
-                // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@']
-            ],
             \Application\Controller\CurrencyController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
             \Application\Controller\GoodsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Admin\Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\IndexController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
@@ -187,24 +179,25 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\SupplierController::class => [
+            \Application\Controller\RawController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+raw.manage']
+            ],
+            \Application\Controller\RawpriceController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+raw.manage']
+            ],
+            \Application\Controller\RbController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\SupplierController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+supplier.manage']
             ],
             \Application\Controller\ShopController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
-            ],
-            \Admin\Controller\IndexController::class => [
-                // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@']
-            ],
-            Controller\UserController::class => [
-                // Give access to "resetPassword", "message" and "setPassword" actions
-                // to anyone.
-                ['actions' => ['resetPassword', 'message', 'setPassword'], 'allow' => '*'],
-                // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
-                ['actions' => ['index', 'add', 'edit', 'view', 'changePassword'], 'allow' => '+user.manage'],
             ],
             Controller\MemberController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions
@@ -220,6 +213,13 @@ return [
             Controller\PermissionController::class => [
                 // Allow access to authenticated users having "permission.manage" permission.
                 ['actions' => '*', 'allow' => '+permission.manage']
+            ],
+            Controller\UserController::class => [
+                // Give access to "resetPassword", "message" and "setPassword" actions
+                // to anyone.
+                ['actions' => ['resetPassword', 'message', 'setPassword'], 'allow' => '*'],
+                // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
+                ['actions' => ['index', 'add', 'edit', 'view', 'changePassword'], 'allow' => '+user.manage'],
             ],
         ]
     ],

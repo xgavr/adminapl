@@ -24,6 +24,7 @@ $this->pageBreadcrumbs()->setItems([
         <th>ID</th>
         <th>E-mail</th>
         <th>Полное имя</th>       
+         <th>Права</th>
         <th>Дата регистрации</th>
         <th>Статус</th>        
         <th>Действия</th>        
@@ -41,6 +42,9 @@ $this->pageBreadcrumbs()->setItems([
             </td>
             <td>
                 <?= $this->escapeHtml($user->getFullName()); ?></a> 
+            </td>
+            <td>
+                <?= $this->escapeHtml($user->getRolesAsString()); ?></a> 
             </td>
             <td><nobr><?= $this->escapeHtml($user->getDateCreated()); ?></nobr></td>        
             <td><?= $this->escapeHtml($user->getStatusAsString()); ?></td>

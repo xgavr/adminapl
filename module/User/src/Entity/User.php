@@ -73,12 +73,19 @@ class User
     private $contacts;
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Client", mappedBy="user")
+    * @ORM\JoinColumn(name="id", referencedColumnName="manager_id")
+     */
+    private $clients;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->roles = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->clients = new ArrayCollection();
     }
     
     /**
@@ -301,6 +308,23 @@ class User
     public function addContact($contact)
     {
         $this->contacts[] = $contact;
+    }
+        
+    /**
+     * Returns clients.
+     * @return array
+     */
+    public function getClients()
+    {
+        return $this->clients;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addClient($client)
+    {
+        $this->clients[] = $client;
     }
         
 }

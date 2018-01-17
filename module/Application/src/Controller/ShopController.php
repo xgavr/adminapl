@@ -115,22 +115,25 @@ class ShopController extends AbstractActionController
         $currentClient = $this->entityManager->getRepository(Client::class)
                 ->findOneById($this->sessionContainer->currentClient);  
         
-        
-        $cart = $this->entityManager->getRepository(Cart::class)
-                    ->findClientCart($currentClient)->getResult();
-                        
-        $result = $this->entityManager->getRepository(Cart::class)
-            ->getClientNum($currentClient);
-        
         $num = $total = 0;
-        if (is_array($result) && count($result)){
-            if (array_key_exists('num', $result[0])){
-                $num = $result[0]['num'];
+        $cart = null;
+        
+        if ($currentClient){
+            $cart = $this->entityManager->getRepository(Cart::class)
+                        ->findClientCart($currentClient)->getResult();
+
+            $result = $this->entityManager->getRepository(Cart::class)
+                ->getClientNum($currentClient);
+
+            if (is_array($result) && count($result)){
+                if (array_key_exists('num', $result[0])){
+                    $num = $result[0]['num'];
+                }
+                if (array_key_exists('total', $result[0])){
+                    $total = $result[0]['total'];
+                }
             }
-            if (array_key_exists('total', $result[0])){
-                $total = $result[0]['total'];
-            }
-        }
+        }    
         // Визуализируем шаблон представления.
         return new ViewModel([
             'cart' => $cart,

@@ -30,8 +30,8 @@ $form->get('password')->setAttributes([
                 <h2 class="form-signin-heading">Вход</h2>
                 <?php if ($isLoginError): ?>
                 <div class="alert alert-warning" role="alert">
-                    Incorrect login and/or password. 
-                    <a href="<?= $this->url('reset-password') ?>">Забыл пароль?</a>
+                    Неверный логин и / или пароль. 
+                    <a href="<?= $this->url('reset-password') ?>">Забыли пароль?</a>
                 </div>
                 <?php endif; ?>
                 <?= $this->formLabel($form->get('email')); ?>

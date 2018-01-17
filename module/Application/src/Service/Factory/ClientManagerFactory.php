@@ -26,9 +26,10 @@ class ClientManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $contactManager = $container->get(ContactManager::class);        
-        $userManager = $container->get(UserManager::class);        
+        $userManager = $container->get(UserManager::class);  
+        $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ClientManager($entityManager, $contactManager, $userManager);
+        return new ClientManager($entityManager, $contactManager, $userManager, $authService);
     }
 }
