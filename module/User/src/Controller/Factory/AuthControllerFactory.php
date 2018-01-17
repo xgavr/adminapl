@@ -18,7 +18,8 @@ class AuthControllerFactory implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $authManager = $container->get(AuthManager::class);
         $userManager = $container->get(UserManager::class);
+        $sessionContainer = $container->get('ContainerNamespace');        
 
-        return new AuthController($entityManager, $authManager, $userManager);
+        return new AuthController($entityManager, $authManager, $userManager, $sessionContainer);
     }
 }

@@ -17,7 +17,7 @@ use Application\Entity\Client;
  */
 class ClientRepository extends EntityRepository{
 
-    public function findAllClient()
+    public function findAllClient($user = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -27,7 +27,14 @@ class ClientRepository extends EntityRepository{
             ->from(Client::class, 'c')
             ->orderBy('c.id')
                 ;
+        
+        if ($user){
+            $queryBuilder->where('c.manager = ?1')
+                    ->setParameter('1', $user)
+                    ;
+        }
 
         return $queryBuilder->getQuery();
     }        
+    
 }

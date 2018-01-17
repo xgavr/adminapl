@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Client;
 use Application\Entity\Contact;
+use User\Entity\User;
 use Application\Form\ClientForm;
 use Application\Form\ContactForm;
 
@@ -46,13 +47,17 @@ class ClientController extends AbstractActionController
     private $sessionContainer;
     
     
+    private $authService;
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $clientManager, $contactManager, $sessionContainer) 
+    public function __construct($entityManager, $clientManager, $contactManager, $sessionContainer, $authService) 
     {
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
         $this->contactManager = $contactManager; 
         $this->sessionContainer = $sessionContainer;
+        $this->authService = $authService;
+        
     }   
     
     public function setCurrentClientAction()
@@ -75,8 +80,16 @@ class ClientController extends AbstractActionController
         	        
         $page = $this->params()->fromQuery('page', 1);
         
-        $query = $this->entityManager->getRepository(Client::class)
-                    ->findAllClient();
+        $currentUser = $this->entityManager->getRepository(User::class)
+                ->findOneByEmail($this->authService->getIdentity());
+        
+        if (!$this->access('client.any.manage', ['user'=>$currentUser])) {
+            $query = $this->entityManager->getRepository(Client::class)
+                        ->findAllClient($currentUser);
+        } else {
+            $query = $this->entityManager->getRepository(Client::class)
+                        ->findAllClient();            
+        }    
                 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);

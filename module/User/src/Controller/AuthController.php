@@ -32,14 +32,21 @@ class AuthController extends AbstractActionController
      */
     private $userManager;
 
+    /*
+     * Менеджер сессий
+     * @var Zend\Seesion
+     */
+    private $sessionContainer;
+    
     /**
      * Constructor.
      */
-    public function __construct($entityManager, $authManager, $userManager)
+    public function __construct($entityManager, $authManager, $userManager, $sessionContainer)
     {
         $this->entityManager = $entityManager;
         $this->authManager = $authManager;
         $this->userManager = $userManager;
+        $this->sessionContainer = $sessionContainer;
     }
 
     /**
@@ -85,7 +92,9 @@ class AuthController extends AbstractActionController
 
                 // Check result.
                 if ($result->getCode() == Result::SUCCESS) {
-
+                    
+                    unset($this->sessionContainer->currentClient);
+                    
                     // Get redirect URL.
                     $redirectUrl = $this->params()->fromPost('redirect_url', '');
 

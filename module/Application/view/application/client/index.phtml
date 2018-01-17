@@ -31,6 +31,8 @@ $this->pageBreadcrumbs()->setItems([
    <tr>
         <th>ID</th>
         <th>Наименование</th>
+        <th>Статус</th>
+        <th>Ответственный</th>
         <th>Действие</th>
     </tr>
     
@@ -41,6 +43,14 @@ $this->pageBreadcrumbs()->setItems([
         <td>
             <a href="<?= $this->url('client', ['action'=>'view', 'id'=>$row->getId()]); ?>">
                 <?= $this->escapeHtml($row->getName()); ?>
+            </a> 
+        </td>
+        <td>
+            <?= $this->escapeHtml($row->getStatusAsString()); ?>
+        </td>
+        <td>
+            <a href="<?= $this->url('members', ['action'=>'view', 'id'=>$row->getManager()->getId()]); ?>">
+                <?= $this->escapeHtml($row->getManager()->getFullName()); ?>
             </a> 
         </td>
         <td>

@@ -28,8 +28,9 @@ class ClientControllerFactory implements FactoryInterface {
         $clientManager = $container->get(ClientManager::class);
         $contactManager = $container->get(ContactManager::class);
         $sessionContainer = $container->get('ContainerNamespace');
+        $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ClientController($entityManager, $clientManager, $contactManager, $sessionContainer);
+        return new ClientController($entityManager, $clientManager, $contactManager, $sessionContainer, $authService);
     }
 }
