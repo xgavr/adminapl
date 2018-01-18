@@ -1,4 +1,28 @@
 <?php
+$this->headTitle('Редактировние контактных данных '.$contact->getName());
+
+$this->mainMenu()->setActiveItemId('contact');
+
+$breadcrumbs_items = ['Главная'=>$this->url('home')];
+
+if ($client){
+    $breadcrumbs_items['Покупатели'] = $this->url('client'); 
+    $breadcrumbs_items[$client->getName()] = $this->url('client', ['action' => 'view', 'id' => $client->getId()]); 
+    $breadcrumbs_items[$contact->getName()] = $this->url('contact', ['action' => 'edit', 'id' => $contact->getId()]); 
+}
+if ($supplier){
+    $breadcrumbs_items['Поставщики'] = $this->url('supplier'); 
+    $breadcrumbs_items[$supplier->getName()] = $this->url('supplier', ['action' => 'view', 'id' => $supplier->getId()]); 
+    $breadcrumbs_items[$contact->getName()] = $this->url('contact', ['action' => 'edit', 'id' => $contact->getId()]); 
+}
+if ($user){
+    $breadcrumbs_items['Поставщики'] = $this->url('users'); 
+    $breadcrumbs_items[$user->getFullName()] = $this->url('users', ['action' => 'view', 'id' => $user->getId()]); 
+    $breadcrumbs_items[$contact->getName()] = $this->url('contact', ['action' => 'edit', 'id' => $contact->getId()]); 
+}
+
+$this->pageBreadcrumbs()->setItems($breadcrumbs_items);
+
 $form = $this->form;
 $form->get('name')->setAttributes([
     'class'=>'form-control', 
@@ -9,6 +33,24 @@ $form->get('description')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'Должность и т.п.'
     ]);
+
+$form->get('email')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Email'
+    ]);    
+    
+$form->get('phone')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Телефон'
+    ]);    
+    
+if ($client && !$user){
+    
+    $form->get('password')->setAttributes([
+        'class'=>'form-control', 
+        'placeholder'=>'Пароль'
+        ]);    
+}
 
 $form->get('status')->setAttributes([
     'class'=>'form-control'
@@ -40,6 +82,26 @@ $form->prepare();
             <?= $this->formElement($form->get('description')); ?>
             <?= $this->formElementErrors($form->get('description')); ?>                  
         </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('phone')); ?>
+            <?= $this->formElement($form->get('phone')); ?>
+            <?= $this->formElementErrors($form->get('phone')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('email')); ?>
+            <?= $this->formElement($form->get('email')); ?>
+            <?= $this->formElementErrors($form->get('email')); ?>                  
+        </div>
+        
+        <?php if ($client && !$user): ?>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('password')); ?>
+                <?= $this->formElement($form->get('password')); ?>
+                <?= $this->formElementErrors($form->get('password')); ?>                  
+            </div>
+        <?php endif ?>
         
         <div class="form-group">
             <?= $this->formLabel($form->get('status')); ?>

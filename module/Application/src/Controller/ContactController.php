@@ -10,6 +10,9 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Contact;
+use Application\Entity\Client;
+use Application\Entity\Supplier;
+use User\Entity\User;
 use Application\Form\ContactForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -96,19 +99,29 @@ class ContactController extends AbstractActionController
         // Получаем ID tax.    
         $contactId = $this->params()->fromRoute('id', -1);
         
-        $supplierId = $this->params()->fromQuery('supplier', -1);
-        $clientId = $this->params()->fromQuery('client', -1);
-        $userId = $this->params()->fromQuery('user', -1);
-    
-        // Находим существующий пост в базе данных.    
+        // Находим существующий contact в базе данных.    
         $contact = $this->entityManager->getRepository(Contact::class)
                 ->findOneById($contactId);  
-        	
+        
         if ($contact == null) {
             $this->getResponse()->setStatusCode(401);
             return;                        
         } 
         
+        $client = $supplier = $user = null;
+        if ($contact->getClient()){
+            $client = $this->entityManager->getRepository(Client::class)
+                    ->findOneById($contact->getClient()->getId());
+        }
+        if ($contact->getSupplier()){
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->findOneById($contact->getSupplier()->getId());
+        }
+        if ($contact->getUser()){
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneById($contact->getUser()->getId());
+        }
+            	
         // Проверяем, является ли пост POST-запросом.
         if ($this->getRequest()->isPost()) {
             
@@ -126,12 +139,12 @@ class ContactController extends AbstractActionController
                 $this->contactManager->updateContact($contact, $data);
                 
                 // Перенаправляем пользователя на страницу "contact".
-                if ($supplierId > 0){
-                    return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplierId]);
-                } elseif ($clientId > 0){
-                    return $this->redirect()->toRoute('client', ['action' => 'view', 'id' => $clientId]);
-                } elseif ($userId > 0){
-                    return $this->redirect()->toRoute('user', ['action' => 'view', 'id' => $userId]);
+                if ($client){
+                    return $this->redirect()->toRoute('client', ['action' => 'view', 'id' => $client->getId()]);
+                } elseif ($supplier){
+                    return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
+                } elseif ($user){
+                    return $this->redirect()->toRoute('user', ['action' => 'view', 'id' => $user->getId()]);
                 } else {
                     return $this->redirect()->toRoute('contact', []);
                 }    
@@ -141,6 +154,8 @@ class ContactController extends AbstractActionController
                'name' => $contact->getName(),
                'description' => $contact->getDescription(),
                'status' => $contact->getStatus(),
+                'email' => $contact->getEmail()->getName(),
+                'phone' => $contact->getPhone()->getName(),
             ];
             
             $form->setData($data);
@@ -149,7 +164,10 @@ class ContactController extends AbstractActionController
         // Визуализируем шаблон представления.
         return new ViewModel([
             'form' => $form,
-            'contact' => $contact
+            'contact' => $contact,
+            'client' => $client,
+            'supplier'  => $supplier,
+            'user' => $user,
         ]);  
     }    
     

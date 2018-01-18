@@ -5,7 +5,7 @@ $this->mainMenu()->setActiveItemId('client');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Управление покупателями'=>$this->url('client'),
+            'Покупатели'=>$this->url('client'),
             $client->getName()=>$this->url('client', ['action'=>'view', 'id'=>$client->getId()])
             ]);
 ?>
@@ -44,11 +44,6 @@ $form->get('password')->setAttributes([
     'placeholder'=>'Пароль'
     ]);
 
-$form->get('confirm_password')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'Подтверждение пароля'
-    ]);
-
 $form->get('status')->setAttributes([
     'class'=>'form-control'
     ]);
@@ -75,6 +70,7 @@ $form->prepare();
         <th>Имя</th>
         <th>Телефон</th>
         <th>Описание</th>
+        <th>Доступ</th>
         <th>Действие</th>
     </tr>
     
@@ -88,6 +84,9 @@ $form->prepare();
         <td><?= $this->escapeHtml($row->getPhonesAsString()); ?></td>
         <td>
                 <?= $this->escapeHtml($row->getDescription()); ?>
+        </td>
+        <td>
+                <?= ($row->getUser() ? 'есть':'нет') ?>
         </td>
         <td>
             <a class="btn btn-info" href="<?= $this->url('contact', 
@@ -139,12 +138,6 @@ $form->prepare();
             <?= $this->formLabel($form->get('password')); ?>
             <?= $this->formElement($form->get('password')); ?>
             <?= $this->formElementErrors($form->get('password')); ?>                  
-        </div>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('confirm_password')); ?>
-            <?= $this->formElement($form->get('confirm_password')); ?>
-            <?= $this->formElementErrors($form->get('confirm_password')); ?>                  
         </div>
         
         <div class="form-group">

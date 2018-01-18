@@ -35,12 +35,25 @@ class ContactManager
      */
     private $entityManager;
   
+    /**
+     * User manager.
+     * @var User\Service\User
+     */
+    private $userManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $userManager)
     {
         $this->entityManager = $entityManager;
+        $this->userManager = $userManager;
     }
     
+    public function getClientUserRoleId()
+    {
+        return self::USER_ROLE_ID;
+    }
+
+
     public function addNewContact($parent, $data) 
     {
         // Создаем новую сущность.
@@ -67,28 +80,48 @@ class ContactManager
         }
 
         if ($data['phone']){
-            $phone = new Phone();            
-            $phone->setContact($contact);
-            $phone->setName($data['phone']);            
-            $phone->setDateCreated($currentDate);
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneByName($data['phone']);
+            
+            if ($phone == null){
+                $phone = new Phone();            
+                $phone->setContact($contact);
+                $phone->setName($data['phone']);            
+                $phone->setDateCreated($currentDate);
 
-            $this->entityManager->persist($phone);
+                $this->entityManager->persist($phone);
 
-            $contact->addPhone($phone);
+                $contact->addPhone($phone);
+            }    
         }
 
         if ($data['email']){
-            $email = new Email();            
-            $email->setContact($contact);
-            $email->setName($data['email']);            
-            $email->setDateCreated($currentDate);
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneByName($data['email']);
+            if ($email == null){
+                $email = new Email();            
+                $email->setContact($contact);
+                $email->setName($data['email']);            
+                $email->setDateCreated($currentDate);
 
-            $this->entityManager->persist($email);
+                $this->entityManager->persist($email);
 
-            $contact->addEmail($email);
+                $contact->addEmail($email);
+            }    
         }
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($contact);
         
-        
+       if ($data['email'] && $data['password']){
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneByEmail($data['email']);
+            if ($user == null){
+                $data['full_name'] = $data['name'];
+                $data['roles'][] = self::USER_ROLE_ID;
+                $user = $this->userManager->addUser($data);
+                $contact->setUser($user);
+            }   
+       }
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($contact);
         
@@ -101,7 +134,48 @@ class ContactManager
         $contact->setName($data['name']);
         $contact->setDescription($data['description']);
         $contact->setStatus($data['status']);
+        
+        if ($data['phone']){
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneByName($data['phone']);
+            if ($phone == null){
+                $phone = new Phone();            
+                $phone->setContact($contact);
+                $phone->setName($data['phone']);            
+                $phone->setDateCreated($currentDate);
 
+                $this->entityManager->persist($phone);
+
+                $contact->addPhone($phone);                
+            }
+        }
+        
+        if ($data['email']){
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneByName($data['email']);
+            if ($email == null){
+                $email = new Email();            
+                $email->setContact($contact);
+                $email->setName($data['email']);            
+                $email->setDateCreated($currentDate);
+
+                $this->entityManager->persist($email);
+
+                $contact->addEmail($email);
+            }
+        }
+        
+       if ($data['email'] && $data['password']){
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneByEmail($data['email']);
+            if ($user == null){
+                $data['full_name'] = $data['name'];
+                $data['roles'][] = self::USER_ROLE_ID;
+                $user = $this->userManager->addUser($data);
+            }    
+            $contact->setUser($user);
+       }
+        
         $this->entityManager->persist($contact);
         // Применяем изменения к базе данных.
         $this->entityManager->flush();

@@ -227,6 +227,14 @@ class Contact {
     }     
     
     /**
+     * Возвращает 1 phone для этого contact.
+     * @return array
+     */   
+   public function getPhone() {
+      return $this->phones[0];
+   }    
+   
+    /**
      * Возвращает phone для этого contact.
      * @return array
      */   
@@ -262,6 +270,14 @@ class Contact {
         $this->phones[] = $phone;
     }       
     
+    /**
+     * Возвращает 1 email для этого contact.
+     * @return array
+     */   
+    public function getEmail() {
+      return $this->emails[0];
+   }    
+   
     /**
      * Возвращает email для этого contact.
      * @return array

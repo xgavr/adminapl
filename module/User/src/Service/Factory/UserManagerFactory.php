@@ -5,7 +5,6 @@ use Interop\Container\ContainerInterface;
 use User\Service\UserManager;
 use User\Service\RoleManager;
 use User\Service\PermissionManager;
-use Application\Service\ContactManager;
 use Application\Service\PostManager;
 
 /**
@@ -22,9 +21,8 @@ class UserManagerFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $roleManager = $container->get(RoleManager::class);
         $permissionManager = $container->get(PermissionManager::class);
-        $contactManager = $container->get(ContactManager::class);
         $postManager = $container->get(PostManager::class);
         
-        return new UserManager($entityManager, $roleManager, $permissionManager, $contactManager, $postManager);
+        return new UserManager($entityManager, $roleManager, $permissionManager, $postManager);
     }
 }

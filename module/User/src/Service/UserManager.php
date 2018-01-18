@@ -36,12 +36,6 @@ class UserManager
     private $permissionManager;
     
     /**
-     * Contact manager.
-     * @var Application\Service\ContactManager
-     */
-    private $contactManager;
-    
-    /**
      * Post manager.
      * @var Application\Service\PostManager
      */
@@ -50,12 +44,11 @@ class UserManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $roleManager, $permissionManager, $contactManager, $postManager) 
+    public function __construct($entityManager, $roleManager, $permissionManager, $postManager) 
     {
         $this->entityManager = $entityManager;
         $this->roleManager = $roleManager;
         $this->permissionManager = $permissionManager;
-        $this->contactManager = $contactManager;
         $this->postManager = $postManager;
     }
     
@@ -90,16 +83,6 @@ class UserManager
         // Add the entity to the entity manager.
         $this->entityManager->persist($user);
         
-        $contact = $this->entityManager->getRepository(Email::class)
-                ->findOneByName($data['email']);
-        
-        if ($contact == null){
-            $this->contactManager->addNewContact($user, $data);
-        } else {
-            $contact->setUser($user); 
-            $this->entityManager->persist($contact);
-        }    
-                       
         // Apply changes to database.
         $this->entityManager->flush();
 

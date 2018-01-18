@@ -19,13 +19,7 @@ use User\Entity\User;
  */
 class ClientManager
 {
-    
-    /*
-     * Id роли представителя клиента
-     */
-    const USER_ROLE_ID = 2;
-    
-    
+        
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -116,18 +110,7 @@ class ClientManager
      // Этот метод добавляет новый контакт.
     public function addContactToClient($client, $data) 
     {
-       if ($data['email'] && $data['password']){
-           $data['full_name'] = $data['name'];
-           $data['roles'][] = self::USER_ROLE_ID;
-           $user = $this->userManager->addUser($data);
-           foreach ($user->getContacts() as $contact){
-               $contact->setClient($client);
-               $this->entityManager->persist($contact);               
-           }
-            $this->entityManager->flush();           
-       } else {
-           $this->contactManager->addNewContact($client, $data);
-       }    
+        $this->contactManager->addNewContact($client, $data);
     }   
     
     /**

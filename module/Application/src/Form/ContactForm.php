@@ -100,28 +100,18 @@ class ContactForm extends Form
             'name' => 'email',
             'disabled' => 'disabled',
             'options' => [
-                'label' => 'E-mail',
+                'label' => 'E-mail (обязательно, если нужен доступ на сайт)',
             ],
         ]);
 
         // Add "password" field
         $this->add([            
-            'type'  => 'password',
+            'type'  => 'text',
             'name' => 'password',
             'options' => [
-                'label' => 'Пароль',
+                'label' => 'Пароль (если нужен доступ на сайт - минимум 6 символов)',
             ],
         ]);
-
-        // Add "confirm_password" field
-        $this->add([            
-            'type'  => 'password',
-            'name' => 'confirm_password',
-            'options' => [
-                'label' => 'Подтвердить пароль',
-            ],
-        ]);
-        
         
         // Add "status" field
         $this->add([            
