@@ -93,8 +93,6 @@ class AuthController extends AbstractActionController
                 // Check result.
                 if ($result->getCode() == Result::SUCCESS) {
                     
-                    unset($this->sessionContainer->currentClient);
-                    
                     // Get redirect URL.
                     $redirectUrl = $this->params()->fromPost('redirect_url', '');
 

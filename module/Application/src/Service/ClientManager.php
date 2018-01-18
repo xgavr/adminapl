@@ -130,4 +130,21 @@ class ClientManager
        }    
     }   
     
+    /**
+     * Передаем клиента/ов другому менеджеру
+     * @array of Application\Entitty\Client $clients
+     * @var Application\Entity\User $manager
+     */
+    
+    public function transferToManager($clients, $manager)
+    {
+        if (count($clients)){
+            foreach ($clients as $client){
+                $client->setManager($manager);
+                 $this->entityManager->persist($client);
+            }
+            $this->entityManager->flush();
+        }
+        
+    }
 }

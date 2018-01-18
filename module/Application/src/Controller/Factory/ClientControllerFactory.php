@@ -12,6 +12,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\ClientController;
 use Application\Service\ClientManager;
 use Application\Service\ContactManager;
+use User\Service\RbacManager;
 
 
 /**
@@ -29,8 +30,9 @@ class ClientControllerFactory implements FactoryInterface {
         $contactManager = $container->get(ContactManager::class);
         $sessionContainer = $container->get('ContainerNamespace');
         $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
+        $rbacManager = $container->get(RbacManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ClientController($entityManager, $clientManager, $contactManager, $sessionContainer, $authService);
+        return new ClientController($entityManager, $clientManager, $contactManager, $sessionContainer, $authService, $rbacManager);
     }
 }

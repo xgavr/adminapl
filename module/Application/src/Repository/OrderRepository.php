@@ -18,17 +18,24 @@ use Application\Entity\Bid;
  */
 class OrderRepository extends EntityRepository{
 
-    public function findAllOrder()
+    public function findAllOrder($user=null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(Order::class, 'c')
-            ->orderBy('c.id')
+        $queryBuilder->select('o')
+            ->from(Order::class, 'o')
+            ->orderBy('o.id')
                 ;
-
+        
+        if ($user){
+            $queryBuilder->join("o.client", 'c', 'WITH')
+                    ->where('c.manager = ?1')
+                    ->setParameter('1', $user)
+                    ;
+        }
+        
         return $queryBuilder->getQuery();
     }       
     

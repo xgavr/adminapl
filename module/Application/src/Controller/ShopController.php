@@ -64,11 +64,10 @@ class ShopController extends AbstractActionController
     
     public function indexAction()
     {
-        if (!isset($this->sessionContainer->currentClient)){
+        $currentClient = $this->shopManager->currentClient();
+        if ($currentClient == null){
             return $this->redirect()->toRoute('client', []);
-        }
-        $currentClient = $this->entityManager->getRepository(Client::class)
-                ->findOneById($this->sessionContainer->currentClient);  
+        }        
         
         
         $page = $this->params()->fromQuery('page', 1);
@@ -109,11 +108,10 @@ class ShopController extends AbstractActionController
     
     public function cartAction()
     {
-        if (!isset($this->sessionContainer->currentClient)){
+        $currentClient = $this->shopManager->currentClient();
+        if ($currentClient == null){
             return $this->redirect()->toRoute('client', []);
-        }
-        $currentClient = $this->entityManager->getRepository(Client::class)
-                ->findOneById($this->sessionContainer->currentClient);  
+        }        
         
         $num = $total = 0;
         $cart = null;
@@ -254,11 +252,10 @@ class ShopController extends AbstractActionController
     
     public function checkoutAction()
     {
-        if (!isset($this->sessionContainer->currentClient)){
+        $currentClient = $this->shopManager->currentClient();
+        if ($currentClient == null){
             return $this->redirect()->toRoute('client', []);
-        }
-        $currentClient = $this->entityManager->getRepository(Client::class)
-                ->findOneById($this->sessionContainer->currentClient);  
+        }        
         
         if ($currentClient == null) {
             $this->getResponse()->setStatusCode(401);

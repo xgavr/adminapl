@@ -34,14 +34,59 @@ class ShopManager
      * @var Zend\Seesion
      */
     private $sessionContainer;        
+    
+    /**
+     * RBAC manager.
+     * @var User\Service\RbacManager
+     */
+    private $rbacManager;        
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $authService, $sessionContainer)
+    public function __construct($entityManager, $authService, $sessionContainer, $rbacManager)
     {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
         $this->sessionContainer = $sessionContainer;
+        $this->rbacManager = $rbacManager;
     }
+    
+    public function currentClient()
+    {
+        $currentUser = $this->entityManager->getRepository(User::class)
+                        ->findOneByEmail($this->authService->getIdentity());
+
+        if (!isset($this->sessionContainer->currentClient)){
+            if (!$this->rbacManager->isGranted(null, 'client.any.manage')) {
+                
+                $clients = $this->entityManager->getRepository(Client::class)
+                            ->findAllClient($currentUser)->getResult();
+                
+                if (count($clients) == 1){
+                    foreach ($clients as $client){
+                        $this->sessionContainer->currentClient = $client;
+                        return $client;
+                    }
+                }
+            }    
+        } else {
+            
+            $currentClient = $this->entityManager->getRepository(Client::class)
+                ->findOneById($this->sessionContainer->currentClient); 
+            
+            if (!$this->rbacManager->isGranted(null, 'client.any.manage')) {
+                if ($currentClient->getManager()->getId() == $currentUser->getId()){
+                    return $currentClient;
+                } else {    
+                    unset($this->sessionContainer->currentClient);
+                    return $this->currentClient();
+                }
+            } else {
+                return $currentClient;
+            }
+        }
+        
+        return;
+    }        
     
     public function searchGoodNameAssistant($search)
     {
@@ -97,18 +142,6 @@ class ShopManager
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
         
-    }
-    
-    public function currentClient()
-    {
-        if (!isset($this->sessionContainer->currentClient)){
-            return null;
-        }
-        
-        $currentClient = $this->entityManager->getRepository(Client::class)
-                ->findOneById($this->sessionContainer->currentClient);  
-        
-        return $currentClient;        
     }
     
     public function currentClientNum()

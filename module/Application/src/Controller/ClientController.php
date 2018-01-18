@@ -49,14 +49,21 @@ class ClientController extends AbstractActionController
     
     private $authService;
     
+    /**
+     * RBAC manager.
+     * @var User\Service\RbacManager
+     */
+    private $rbacManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $clientManager, $contactManager, $sessionContainer, $authService) 
+    public function __construct($entityManager, $clientManager, $contactManager, $sessionContainer, $authService, $rbacManger) 
     {
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
         $this->contactManager = $contactManager; 
         $this->sessionContainer = $sessionContainer;
         $this->authService = $authService;
+        $this->rbacManager = $rbacManger;
         
     }   
     
@@ -83,7 +90,7 @@ class ClientController extends AbstractActionController
         $currentUser = $this->entityManager->getRepository(User::class)
                 ->findOneByEmail($this->authService->getIdentity());
         
-        if (!$this->access('client.any.manage', ['user'=>$currentUser])) {
+        if (!$this->rbacManager->isGranted(null, 'client.any.manage')) {
             $query = $this->entityManager->getRepository(Client::class)
                         ->findAllClient($currentUser);
         } else {

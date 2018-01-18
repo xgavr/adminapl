@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ShopManager;
+use User\Service\RbacManager;
 
 /**
  * Description of ShopManagerFactory
@@ -26,8 +27,9 @@ class ShopManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
         $sessionContainer = $container->get('ContainerNamespace');
+        $rbacManager = $container->get(RbacManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ShopManager($entityManager, $authService, $sessionContainer);
+        return new ShopManager($entityManager, $authService, $sessionContainer, $rbacManager);
     }
 }

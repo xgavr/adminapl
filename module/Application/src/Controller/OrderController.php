@@ -10,6 +10,7 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Order;
+use User\Entity\User;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -30,20 +31,39 @@ class OrderController extends AbstractActionController
      */
     private $orderManager;    
     
+    
+    private $authService; 
+    
+    /**
+     * RBAC manager.
+     * @var User\Service\RbacManager
+     */
+    private $rbacManager; 
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $orderManager) 
+    public function __construct($entityManager, $orderManager, $authService, $rbacManager) 
     {
         $this->entityManager = $entityManager;
         $this->orderManager = $orderManager;
+        $this->authService = $authService;
+        $this->rbacManager = $rbacManager;
     }    
     
     public function indexAction()
     {
         $page = $this->params()->fromQuery('page', 1);
         
-        $query = $this->entityManager->getRepository(Order::class)
-                    ->findAllOrder();
-                
+        $currentUser = $this->entityManager->getRepository(User::class)
+                ->findOneByEmail($this->authService->getIdentity());
+        
+        if (!$this->rbacManager->isGranted(null, 'client.any.manage')) {
+            $query = $this->entityManager->getRepository(Order::class)
+                        ->findAllOrder($currentUser);
+        } else {
+            $query = $this->entityManager->getRepository(Order::class)
+                        ->findAllOrder();
+        }    
+                        
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
         $paginator->setDefaultItemCountPerPage(10);        
