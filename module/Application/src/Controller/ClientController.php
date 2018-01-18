@@ -242,7 +242,7 @@ class ClientController extends AbstractActionController
             return;
         }
         
-        // Find the tax client ID
+        // Find the client ID
         $client = $this->entityManager->getRepository(Client::class)
                 ->findOneById($clientId);
         
@@ -279,4 +279,5 @@ class ClientController extends AbstractActionController
             'form' => $form,
         ]);
     }      
+    
 }

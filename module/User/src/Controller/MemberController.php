@@ -64,6 +64,32 @@ class MemberController extends AbstractActionController
         ]);
     } 
     
+    public function clientManagerTransferAction()
+    {
+        $clientId = (int) $this->params()->fromRoute('id', -1);
+        
+        if ($clientId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Access control.
+        if (!$this->access('member.transfer.manage')) {
+            $this->getResponse()->setStatusCode(401);
+            return;
+        }
+        
+        $users = $this->entityManager->getRepository(User::class)
+                ->findUsersByRole(self::MEMBER_ROLE_ID);
+        
+        return new ViewModel([
+            'users' => $users,
+            'clientId' => $clientId,
+        ]);
+        
+    }
+    
+    
     /**
      * This action displays a page allowing to add a new user.
      */
