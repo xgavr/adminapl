@@ -9,8 +9,8 @@ $this->pageBreadcrumbs()->setItems([
             ]);
 ?>
 
-<h1>Передать покупателя</h1>
-
+<h1>Передать покупателя <?= $client->getName()?></h1>
+<p>Выберете сотруднника и нажмите Передать</p>
 <table class="table table-striped">
 
    <tr>
@@ -43,7 +43,7 @@ $this->pageBreadcrumbs()->setItems([
             <td><?= $this->escapeHtml($user->getStatusAsString()); ?></td>
             <td>
                 <a class="btn btn-info" href="<?= $this->url('client', 
-                        ['action'=>'index']); ?>">
+                        ['action'=>'manager-transfer', 'id' => $user->getId()], ['query' => ['clientId' => $client->getId()]]); ?>">
                     <span class="glyphicon glyphicon-pencil" ></span> Передать
                 </a>
             </td>    

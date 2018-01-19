@@ -280,4 +280,49 @@ class ClientController extends AbstractActionController
         ]);
     }      
     
+    public function managerTransferAction()
+    {
+        $clientId = (int) $this->params()->fromQuery('clientId', -1);
+        $userId = (int) $this->params()->fromRoute('id', -1);
+        
+        if ($clientId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        if ($userId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Access control.
+        if (!$this->access('member.transfer.manage')) {
+            $this->getResponse()->setStatusCode(401);
+            return;
+        }
+        
+        $client = $this->entityManager->getRepository(Client::class)
+                ->findOneById($clientId);
+        
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $user = $this->entityManager->getRepository(User::class)
+                ->findOneById($userId);
+        
+        if ($user == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $this->clientManager->transferToManager([$client], $user);
+        
+        // Снова перенаправляем пользователя на страницу "index".
+        return $this->redirect()->toRoute('client');
+                
+        return new ViewModel([]);
+                
+    }
 }

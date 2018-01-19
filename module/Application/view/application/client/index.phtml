@@ -54,6 +54,16 @@ $this->pageBreadcrumbs()->setItems([
             </a> 
         </td>
         <td>
+            <a class="btn btn-info" href="<?= $this->url('client',
+                    ['action'=>'set-current-client', 'id'=>$row->getId()]); ?>">
+                <span class="glyphicon glyphicon-set"></span> Текущий
+            </a>
+            <?php if($this->access('member.transfer.manage')): ?>
+                <a class="btn btn-info" href="<?= $this->url('members',
+                        ['action'=>'client-manager-transfer', 'id'=>$row->getId()]); ?>">
+                    <span class="glyphicon glyphicon-set"></span> Передать
+                </a>
+            <?php endif ?>
             <a class="btn btn-info" href="<?= $this->url('client', 
                     ['action'=>'edit', 'id'=>$row->getId()]); ?>">
                 <span class="glyphicon glyphicon-pencil" ></span> Изменить
@@ -61,10 +71,6 @@ $this->pageBreadcrumbs()->setItems([
             <a class="btn btn-danger" href="<?= $this->url('client',
                     ['action'=>'delete', 'id'=>$row->getId()]); ?>">
                 <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
-            <a class="btn btn-info" href="<?= $this->url('client',
-                    ['action'=>'set-current-client', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-set"></span> Текущий
             </a>
         </td>    
     </tr>

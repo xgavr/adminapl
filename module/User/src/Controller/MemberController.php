@@ -5,6 +5,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Entity\User;
 use User\Entity\Role;
+use Application\Entity\Client;
 use User\Form\UserForm;
 use User\Form\PasswordChangeForm;
 use User\Form\PasswordResetForm;
@@ -79,12 +80,20 @@ class MemberController extends AbstractActionController
             return;
         }
         
+        $client = $this->entityManager->getRepository(Client::class)
+                ->findOneById($clientId);
+        
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
         $users = $this->entityManager->getRepository(User::class)
                 ->findUsersByRole(self::MEMBER_ROLE_ID);
         
         return new ViewModel([
             'users' => $users,
-            'clientId' => $clientId,
+            'client' => $client,
         ]);
         
     }
