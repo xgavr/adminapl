@@ -204,7 +204,8 @@ return [
                 // to anyone.
                 ['actions' => ['resetPassword', 'message', 'setPassword'], 'allow' => '*'],
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
-                ['actions' => ['index', 'add', 'edit', 'view', 'changePassword'], 'allow' => '+member.manage'],
+                ['actions' => ['edit', 'changePassword'], 'allow' => '@'],
+                ['actions' => ['index', 'add', 'view'], 'allow' => '+member.manage'],
                 ['actions' => ['clientManagerTransfer'], 'allow' => '+member.transfer.manage'],
             ],
             Controller\RoleController::class => [

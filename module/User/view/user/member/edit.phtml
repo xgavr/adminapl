@@ -4,8 +4,8 @@ $this->headTitle('Редактирование пользователя');
 $this->mainMenu()->setActiveItemId('users');
 
 $this->pageBreadcrumbs()->setItems([
-            'Home'=>$this->url('home'),
-            'Управление пользователями'=>$this->url('members'),
+            'Главная'=>$this->url('home'),
+            'Пользователи'=>$this->url('members'),
             'Редактирование пользователя'=>$this->url('members', ['action'=>'edit', 'id'=>$user->getId()])
             ]);
 

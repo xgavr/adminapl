@@ -190,6 +190,12 @@ class MemberController extends AbstractActionController
             return;
         }
         
+        if (!$this->access('member.manage')) {
+            if (!$this->access('member.own.manage', ['user'=>$user])) {
+                return $this->redirect()->toRoute('not-authorized');
+            }    
+        }
+                
         // Create user form
         $form = new UserForm('update', $this->entityManager, $user);
         
@@ -280,6 +286,12 @@ class MemberController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }
+        
+        if (!$this->access('member.manage')) {
+            if (!$this->access('member.own.manage', ['user'=>$user])) {
+                return $this->redirect()->toRoute('not-authorized');
+            }    
+        }                
         
         // Create "change password" form
         $form = new PasswordChangeForm('change');

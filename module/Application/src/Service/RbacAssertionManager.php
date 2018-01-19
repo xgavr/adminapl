@@ -41,6 +41,9 @@ class RbacAssertionManager
         if ($permission=='profile.own.view' && $params['user']->getId()==$currentUser->getId())
             return true;
 
+        if ($permission=='member.own.manage' && $params['user']->getId()==$currentUser->getId())
+            return true;
+
         if ($permission=='post.own.publish' && $params['post']->getUser()->getId()==$currentUser->getId())
             return true;          
 
