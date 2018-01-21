@@ -262,9 +262,13 @@ class ShopController extends AbstractActionController
             return;                        
         } 
         
-        $this->orderManager->checkoutClient($currentClient);
+        $order = $this->orderManager->checkoutClient($currentClient);
         
-        return $this->redirect()->toRoute('shop', ['action' => 'cart']);        
+        if ($order == null){
+            return $this->redirect()->toRoute('shop', ['action' => 'cart']);                    
+        }
+        
+        return $this->redirect()->toRoute('order', ['action' => 'view', 'id' => $order->getId()]);        
     }
 
     public function numAction()

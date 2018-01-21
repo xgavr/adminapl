@@ -149,6 +149,7 @@ class OrderManager
         $carts = $this->entityManager->getRepository(Cart::class)
                     ->findClientCart($client)->getResult();
         
+        $order = null;
         if (count($carts)){         
             $orderData = ['client' => $client];
             $order = $this->addNewOrder($orderData);
@@ -169,6 +170,8 @@ class OrderManager
             
             $this->updateOrderTotal($order);
         }
+        
+        return $order;
     }
     
 }

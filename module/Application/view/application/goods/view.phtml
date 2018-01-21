@@ -1,10 +1,16 @@
 <?php
 $this->headTitle($goods->getName());
 $this->mainMenu()->setActiveItemId('goods');
-    $this->pageBreadcrumbs()->setItems([
-                'Главная'=>$this->url('home'),
-                'Товары'=>$this->url('goods'),
-                ]);        
+
+$breadcrumbs_items = ['Главная' => $this->url('home')];
+if ($this->access('good.manage')){
+    $breadcrumbs_items['Товары'] = $this->url('goods');
+} else {
+    $breadcrumbs_items['Каталог'] = $this->url('shop');    
+}
+$breadcrumbs_items[$goods->getName()] = $this->url('goods', ['action' => 'view', 'id' => $goods->getId()]);
+
+$this->pageBreadcrumbs()->setItems($breadcrumbs_items);        
 ?>
 
 <h1>

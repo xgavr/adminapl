@@ -3,11 +3,13 @@ $this->headTitle($client->getName());
 
 $this->mainMenu()->setActiveItemId('client');
 
-$this->pageBreadcrumbs()->setItems([
-            'Главная'=>$this->url('home'),
-            'Покупатели'=>$this->url('client'),
-            $client->getName()=>$this->url('client', ['action'=>'view', 'id'=>$client->getId()])
-            ]);
+$breadcrumbs_items = ['Главная' => $this->url('home')];
+if ($this->access('client.any.manage') || $this->access('client.own.manage')){
+    $breadcrumbs_items['Покупатели'] = $this->url('client'); 
+}
+$breadcrumbs_items[$client->getName()] = $this->url('client', ['action'=>'view', 'id'=>$client->getId()]); 
+
+$this->pageBreadcrumbs()->setItems($breadcrumbs_items);
 ?>
 
 <?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>

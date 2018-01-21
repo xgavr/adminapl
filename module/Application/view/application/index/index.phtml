@@ -2,84 +2,93 @@
 //    $this->headTitle('');
     $this->mainMenu()->setActiveItemId('home');
 ?>
-<div class="panel panel-success">
-    <div class="panel-heading">Управление пользователями</div>
-    <div class="panel-body">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Добавить представителя</h3>
-                </div>
-                <div class="panel-body">
-                    <p>
-                        <ol>
-                            <li>
-                                Перейти на страницу <a href="/members" target="_blank">Пользователи</a>
-                            </li>
-                            <li>Нажать кнопку Добавить пользователя</li>
-                            <li>Заполнить все поля и нажать кнопку Сохранить</li>
-                            <li>Сообщить логин и пароль представителю</li>
-                        </ol>
-                    </p>
-                    <p><a class="btn btn-success pull-right" href="/members">Перейти в пользователи&raquo;</a></p>
+<?php if ($this->access('member.manage') || $this->access('user.manage')): ?>
+    <div class="panel panel-success">
+        <div class="panel-heading">Пользователи</div>
+        <div class="panel-body">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Добавить менеджера</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/members" target="_blank">Пользователи</a>
+                                </li>
+                                <li>Нажать кнопку Добавить пользователя</li>
+                                <li>Заполнить все поля и нажать кнопку Сохранить</li>
+                                <li>Сообщить логин и пароль представителю</li>
+                            </ol>
+                        </p>
+                        <p><a class="btn btn-success pull-right" href="/members">Перейти в пользователи&raquo;</a></p>
 
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Добавить клиента</h3>
-
-                </div>
-                <div class="panel-body">
-                    <p>
-                        <ol>
-                            <li>
-                                Перейти на страницу <a href="/client" target="_blank">Покупатели</a>
-                            </li>
-                            <li>Нажать кнопку Добавить покупателя</li>
-                            <li>Заполнить все поля и нажать кнопку Сохранить</li>
-                            <li>Сообщить логин и пароль представителю</li>
-                        </ol>
-
-                    </p>
-
-                    <p><a class="btn btn-success pull-right" href="/client">Перейти в справочник покупателей&raquo;</a></p>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+<?php endif; ?>
 
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Добавить контакт клиента</h3>
-                </div>
-                <div class="panel-body">
-                    <p>
-                        <ol>
-                            <li>
-                                Перейти на страницу <a href="/client" target="_blank">Покупатели</a>
-                            </li>
-                            <li>Выбрать нужную организацию - покупателя</li>
-                            <li>Перейти в просомотр покупателя по ссылке на названии покупателя</li>
-                            <li>На странице просмотра заполнить форму Добавить контакт</li>
-                            <li>Обязательно заполнить ФИО, Email и пароли, если представителю клиента 
-                                необходим будет доступ на сайт для самостоятельного оформления заказов.
-                                Нажать кнопку Сохранить.
-                            </li>
-                            <li>Сообщить логин и пароль для доступа на сайт представителю покупателя</li>
-                        </ol>
+<?php if ($this->access('client.manage')): ?>
+    <div class="panel panel-success">
+        <div class="panel-heading">Покупатели</div>
+        <div class="panel-body">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Добавить клиента</h3>
 
-                    </p>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/client" target="_blank">Покупатели</a>
+                                </li>
+                                <li>Нажать кнопку Добавить покупателя</li>
+                                <li>Заполнить все поля и нажать кнопку Сохранить</li>
+                                <li>Сообщить логин и пароль представителю</li>
+                            </ol>
 
-                    <p><a class="btn btn-success pull-right" href="/client">Перейти в справочник покупателей&raquo;</a></p>
+                        </p>
+
+                        <p><a class="btn btn-success pull-right" href="/client">Перейти в справочник покупателей&raquo;</a></p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>    
-</div>
+
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Добавить контакт клиента</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/client" target="_blank">Покупатели</a>
+                                </li>
+                                <li>Выбрать нужную организацию - покупателя</li>
+                                <li>Перейти в просомотр покупателя по ссылке на названии покупателя</li>
+                                <li>На странице просмотра заполнить форму Добавить контакт</li>
+                                <li>Обязательно заполнить ФИО, Email и пароли, если представителю клиента 
+                                    необходим будет доступ на сайт для самостоятельного оформления заказов.
+                                    Нажать кнопку Сохранить.
+                                </li>
+                                <li>Сообщить логин и пароль для доступа на сайт представителю покупателя</li>
+                            </ol>
+
+                        </p>
+
+                        <p><a class="btn btn-success pull-right" href="/client">Перейти в справочник покупателей&raquo;</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+<?php endif; ?>
 
 <div class="panel panel-success">
     <div class="panel-heading">Заказ товара</div>
@@ -138,81 +147,83 @@
     </div>    
 </div>
 
-<div class="panel panel-success">
-    <div class="panel-heading">Управление поставщиками и загрузка прайсов</div>
-    <div class="panel-body">
+<?php if ($this->access('supplier.manage')): ?>
+    <div class="panel panel-success">
+        <div class="panel-heading">Управление поставщиками и загрузка прайсов</div>
+        <div class="panel-body">
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Добавить поставщика</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Добавить поставщика</h3>
 
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <ol>
+                                    <li>
+                                        Перейти на страницу <a href="/supplier" target="_blank">Поставщики</a>
+                                    </li>
+                                    <li>Нажать кнопку Добавить поставщика</li>
+                                    <li>Заполнить все поля и нажать кнопку Сохранить</li>
+                                </ol>
+
+                            </p>
+
+                            <p><a class="btn btn-success pull-right" href="/supplier">Перейти в справочник поставщиков&raquo;</a></p>
+                        </div>
                     </div>
-                    <div class="panel-body">
-                        <p>
-                            <ol>
-                                <li>
-                                    Перейти на страницу <a href="/supplier" target="_blank">Поставщики</a>
-                                </li>
-                                <li>Нажать кнопку Добавить поставщика</li>
-                                <li>Заполнить все поля и нажать кнопку Сохранить</li>
-                            </ol>
+                </div>
 
-                        </p>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Загрузка прайсов поставщиков</h3>
 
-                        <p><a class="btn btn-success pull-right" href="/supplier">Перейти в справочник поставщиков&raquo;</a></p>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <ol>
+                                    <li>
+                                        Перейти на страницу <a href="/raw" target="_blank">Прайсы</a>
+                                    </li>
+                                    <li>Нажать кнопку Проверить</li>
+                                    <li>При наличии новых прайсов - они появятся в списке на странице</li>
+                                </ol>
+
+                            </p>
+
+                            <p><a class="btn btn-success pull-right" href="/raw">Перейти в прайсы постащиков&raquo;</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Настройки загрузки прайсов</h3>
+
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <ol>
+                                    <li>
+                                        Перейти на страницу <a href="/supplier" target="_blank">Поставщки</a>
+                                    </li>
+                                    <li>Перейти в просмотр выбранного поставщика по ссылке на наименовании</li>
+                                    <li>В разделе на странице Настройка загрузки прайса нажать кнопку Добавить</li>
+                                    <li>Заполнить значения формы - номера колонок в прайсе соответсвующие данным из прайсов поставщика. 
+                                        Нажать кнопку Сохранить</li> 
+                                </ol>
+
+                            </p>
+
+                            <p><a class="btn btn-success pull-right" href="/supplier">Перейти в справочник постащиков&raquo;</a></p>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Загрузка прайсов поставщиков</h3>
-
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            <ol>
-                                <li>
-                                    Перейти на страницу <a href="/raw" target="_blank">Прайсы</a>
-                                </li>
-                                <li>Нажать кнопку Проверить</li>
-                                <li>При наличии новых прайсов - они появятся в списке на странице</li>
-                            </ol>
-
-                        </p>
-
-                        <p><a class="btn btn-success pull-right" href="/raw">Перейти в прайсы постащиков&raquo;</a></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Настройки загрузки прайсов</h3>
-
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            <ol>
-                                <li>
-                                    Перейти на страницу <a href="/supplier" target="_blank">Поставщки</a>
-                                </li>
-                                <li>Перейти в просмотр выбранного поставщика по ссылке на наименовании</li>
-                                <li>В разделе на странице Настройка загрузки прайса нажать кнопку Добавить</li>
-                                <li>Заполнить значения формы - номера колонок в прайсе соответсвующие данным из прайсов поставщика. 
-                                    Нажать кнопку Сохранить</li> 
-                            </ol>
-
-                        </p>
-
-                        <p><a class="btn btn-success pull-right" href="/supplier">Перейти в справочник постащиков&raquo;</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>    
-</div>
+        </div>    
+    </div>
+<?php endif;
