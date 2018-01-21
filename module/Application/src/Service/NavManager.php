@@ -160,10 +160,10 @@ class NavManager
             }
             
             // Determine which items must be displayed in Admin dropdown.
-            $adminDropdownItems = [];
+            $useradminDropdownItems = [];
             
             if ($this->rbacManager->isGranted(null, 'user.manage')) {
-                $adminDropdownItems[] = [
+                $useradminDropdownItems[] = [
                             'id' => 'users',
                             'label' => 'Пользователи',
                             'link' => $url('users')
@@ -171,7 +171,7 @@ class NavManager
             }
             
             if ($this->rbacManager->isGranted(null, 'permission.manage')) {
-                $adminDropdownItems[] = [
+                $useradminDropdownItems[] = [
                             'id' => 'permissions',
                             'label' => 'Права',
                             'link' => $url('permissions')
@@ -179,28 +179,46 @@ class NavManager
             }
             
             if ($this->rbacManager->isGranted(null, 'role.manage')) {
-                $adminDropdownItems[] = [
+                $useradminDropdownItems[] = [
                             'id' => 'roles',
                             'label' => 'Роли',
                             'link' => $url('roles')
                         ];
             }
             
-            if (count($adminDropdownItems)!=0) {
+            if (count($useradminDropdownItems)!=0) {
                 $items[] = [
-                    'id' => 'admin',
+                    'id' => 'users',
                     'label' => 'Пользователи',
-                    'dropdown' => $adminDropdownItems
+                    'dropdown' => $useradminDropdownItems
                 ];
             }
             
             if ($this->rbacManager->isGranted(null, 'member.manage')) {
                 $items[] = [
-                    'id' => 'admin',
+                    'id' => 'users',
                     'label' => 'Пользователи',
                     'link'  => $url('members')
                 ];
             }
+            
+            if ($this->rbacManager->isGranted(null, 'admin.manage')) {
+                
+                $adminDropdownItems[] = [
+                    'id' => 'phpinfo',
+                    'label' => 'phpinfo()',
+                    'link'  => $url('admin', ['action' => 'phpinfo'])
+                ];
+                
+                if (count($adminDropdownItems)!=0) {
+                    $items[] = [
+                        'id' => 'admin',
+                        'label' => 'Адмнистрирование',
+                        'dropdown' => $adminDropdownItems
+                    ];
+                }            
+            }
+            
             
             if ($this->shopManager->currentClient()){
                 $items[] = [

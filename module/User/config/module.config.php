@@ -139,6 +139,10 @@ return [
             'mode' => 'restrictive'
         ],
         'controllers' => [
+            \Admin\Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+admin.manage']
+            ],
             \Application\Controller\ClientController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']

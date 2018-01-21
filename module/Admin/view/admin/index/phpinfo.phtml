@@ -1,0 +1,14 @@
+<?php
+$this->headTitle('Администрирование');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Администрирование'=>$this->url('admin'),
+                'phpinfo()' => $this->url('admin', ['action' => 'phpinfo']),
+                ]);
+  
+?>
+
+<?php phpinfo() ?>

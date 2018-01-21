@@ -15,4 +15,9 @@ class IndexController extends AbstractActionController
     {
         return [];
     }
+    
+    public function phpinfoAction()
+    {
+        return [];
+    }
 }

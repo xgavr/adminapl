@@ -1,17 +1,20 @@
 <?php
-$this->headTitle('Заявка №'. $order->getId());
+$this->headTitle('Заказ №'. $order->getId());
+
+$this->mainMenu()->setActiveItemId('order');
+
+$this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Заказы'=>$this->url('order'),
+                'Заказ №'. $order->getId() => $this->url('order', ['action' => 'view', 'id' => $order->getId()]),
+                ]);
   
 ?>
-
-<a href="
-    <?= $this->url('order', []); ?>">
-    &lt;&lt; Назад в заявки
-</a>
 
 <h1>
     <?= $this->escapeHtml($order->getClient()->getName()); ?>
     <br/>
-    <?= $this->escapeHtml('Заявка №'.$order->getId().' от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated()))); ?>    
+    <?= $this->escapeHtml('Заказ №'.$order->getId().' от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated()))); ?>    
 </h1>
 
 <table class="table table-striped">
