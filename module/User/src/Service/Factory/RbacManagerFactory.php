@@ -18,7 +18,11 @@ class RbacManagerFactory
     {        
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
-        $cache = $container->get('FilesystemCache');
+        if ($_SERVER['SERVER_ADDR'] == '127.0.0.1'){ //если отладка на локальной машине, либо использовать sendmail
+            $cache = $container->get('FilesystemCache');
+        } else {    
+            $cache  = $container->get('memcached');
+        }    
         
         $assertionManagers = [];
         $config = $container->get('Config');

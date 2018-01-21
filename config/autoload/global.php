@@ -15,6 +15,7 @@ use Zend\Session\Storage\SessionArrayStorage;
 use Zend\Session\Validator\RemoteAddr;
 use Zend\Session\Validator\HttpUserAgent;
 use Zend\Cache\Storage\Adapter\Filesystem;
+use Zend\Cache\Storage\Adapter\Memcached;
 
 return [
     // Настройка сессии.
@@ -37,6 +38,32 @@ return [
         'type' => SessionArrayStorage::class
     ],
     'caches' => [
+        'memcached' => [
+            'adapter' =>[
+                'name' => Memcached::class,
+                'options' => [
+                    'ttl' => 60*60*1,
+                    'servers' => [
+                        [
+                            '127.0.0.1', 11211
+                        ]
+                    ],
+                    'namespace' => 'ASB2',
+                    'liboptions' => [
+                        'COMPRESSION' => true,
+                        'binary_protocol' => true,
+                        'no_block' => true,
+                        'connect_timeout' => 100,
+                    ],
+                ],
+            ],
+            'plugins' => [
+                'exception_handler' => [
+                    'throw_exceptions' => false,
+                ],
+            ],
+            'serializer',
+        ],
         'FilesystemCache' => [
             'adapter' => [
                 'name'    => Filesystem::class,
