@@ -54,6 +54,16 @@ class ShopManager
     {
         $currentUser = $this->entityManager->getRepository(User::class)
                         ->findOneByEmail($this->authService->getIdentity());
+                
+        if ($currentUser->getContacts()){
+            foreach ($currentUser->getContacts() as $contact){
+                $client = $contact->getClient();
+                if ($client){
+                    $this->sessionContainer->currentClient = $client->getId();
+                    return $client;                    
+                }
+            }
+        }
 
         if (!isset($this->sessionContainer->currentClient)){
             if (!$this->rbacManager->isGranted(null, 'client.any.manage')) {
@@ -63,16 +73,15 @@ class ShopManager
                 
                 if (count($clients) == 1){
                     foreach ($clients as $client){
-                        $this->sessionContainer->currentClient = $client;
+                        $this->sessionContainer->currentClient = $client->getId();
                         return $client;
                     }
                 }
             }    
         } else {
-            
             $currentClient = $this->entityManager->getRepository(Client::class)
                 ->findOneById($this->sessionContainer->currentClient); 
-            
+
             if (!$this->rbacManager->isGranted(null, 'client.any.manage')) {
                 if ($currentClient->getManager()->getId() == $currentUser->getId()){
                     return $currentClient;

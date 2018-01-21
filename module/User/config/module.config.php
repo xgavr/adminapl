@@ -153,7 +153,7 @@ return [
             ],
             \Application\Controller\GoodsController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@']
+                ['actions' => '*', 'allow' => '+goods.manage']
             ],
             \Admin\Controller\IndexController::class => [
                 // Allow access to authenticated users.

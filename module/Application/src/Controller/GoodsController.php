@@ -37,6 +37,7 @@ class GoodsController extends AbstractActionController
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
+
     }    
     
     public function settingsAction()

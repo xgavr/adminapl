@@ -82,22 +82,18 @@ class NavManager
             ];
             
             $items[] = [
-                'id' => 'goods',
-                'label' => 'Товары',
-                'link'  => $url('goods')
-            ];
-            
-            $items[] = [
-                'id' => 'client',
-                'label' => 'Покупатели',
-                'link'  => $url('client')
-            ];
-            
-            $items[] = [
                 'id' => 'order',
                 'label' => 'Заказы',
                 'link'  => $url('order')
             ];
+            
+            if ($this->rbacManager->isGranted(null, 'client.any.manage') || $this->rbacManager->isGranted(null, 'client.own.manage')) {
+                $items[] = [
+                    'id' => 'client',
+                    'label' => 'Покупатели',
+                    'link'  => $url('client')
+                ];
+            }
             
             if ($this->rbacManager->isGranted(null, 'supplier.manage')) {
                 $items[] = [
@@ -118,6 +114,13 @@ class NavManager
             //Справочники
             $rbDropdownItems = [];
             if ($this->rbacManager->isGranted(null, 'rb.manage')) {
+                
+                $rbDropdownItems[] = [
+                    'id' => 'goods',
+                    'label' => 'Товары',
+                    'link'  => $url('goods')
+                ];
+            
                 $rbDropdownItems[] = [
                             'id' => 'producer',
                             'label' => 'Производители',

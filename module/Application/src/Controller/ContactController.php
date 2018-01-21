@@ -93,9 +93,7 @@ class ContactController extends AbstractActionController
     
    public function editAction()
    {
-        // Создаем форму.
-        $form = new ContactForm($this->entityManager);
-    
+
         // Получаем ID tax.    
         $contactId = $this->params()->fromRoute('id', -1);
         
@@ -121,6 +119,10 @@ class ContactController extends AbstractActionController
             $user = $this->entityManager->getRepository(User::class)
                     ->findOneById($contact->getUser()->getId());
         }
+
+        // Создаем форму.
+        $form = new ContactForm($this->entityManager, $user);
+    
             	
         // Проверяем, является ли пост POST-запросом.
         if ($this->getRequest()->isPost()) {

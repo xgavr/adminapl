@@ -53,12 +53,28 @@ class OrderController extends AbstractActionController
     {
         $page = $this->params()->fromQuery('page', 1);
         
-        $currentUser = $this->entityManager->getRepository(User::class)
-                ->findOneByEmail($this->authService->getIdentity());
-        
-        if (!$this->rbacManager->isGranted(null, 'client.any.manage')) {
-            $query = $this->entityManager->getRepository(Order::class)
-                        ->findAllOrder($currentUser);
+        if (!$this->rbacManager->isGranted(null, 'order.any.manage')) {
+            if (!$this->rbacManager->isGranted(null, 'order.own.manage')){
+                if (!$this->rbacManager->isGranted(null, 'order.client.manage')){
+                    return $this->redirect()->toRoute('not-authorized');
+                } else {
+                    $client = null;
+                    $contacts = $this->currentUser()->getContacts();
+                    foreach ($contacts as $contact){
+                        $client = $contact->getClient();
+                        if ($client) break;
+                    }
+                    if ($client){
+                        $query = $this->entityManager->getRepository(Order::class)
+                                    ->findClientOrder($client);
+                    } else {
+                        throw new \Exception('Не определен покупатель у пользователя ');
+                    }   
+                }
+            } else {
+                $query = $this->entityManager->getRepository(Order::class)
+                            ->findAllOrder($this->currentUser());                
+            }
         } else {
             $query = $this->entityManager->getRepository(Order::class)
                         ->findAllOrder();

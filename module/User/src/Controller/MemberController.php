@@ -241,6 +241,11 @@ class MemberController extends AbstractActionController
                     return $this->redirect()->toRoute('logout');
                     
                 } else {
+                    if (!$this->access('member.manage')) {
+                        if ($this->access('member.own.manage', ['user'=>$user])) {
+                            return $this->redirect()->toRoute('application', ['action' => 'settings']);
+                        }    
+                    }
                     // Redirect to "view" page
                     return $this->redirect()->toRoute('members', 
                         ['action'=>'view', 'id'=>$user->getId()]);
@@ -317,6 +322,12 @@ class MemberController extends AbstractActionController
                 } else {
                     $this->flashMessenger()->addSuccessMessage(
                             'Пароль успешно изменен.');
+                }
+                
+                if (!$this->access('member.manage')) {
+                    if ($this->access('member.own.manage', ['user'=>$user])) {
+                        return $this->redirect()->toRoute('application', ['action' => 'settings']);
+                    }    
                 }
                 
                 // Redirect to "view" page
