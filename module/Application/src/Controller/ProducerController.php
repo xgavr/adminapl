@@ -188,9 +188,10 @@ class ProducerController extends AbstractActionController
     public function unknownAction()
     {
         $page = $this->params()->fromQuery('page', 1);
+        $unattached = $this->params()->fromQuery('ua', 0);
         
         $query = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findAllUnknownProducer();
+                    ->findAllUnknownProducer(['unattached' => $unattached]);
                 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
@@ -202,6 +203,7 @@ class ProducerController extends AbstractActionController
             'producer' => $paginator,
             'page' => $page,
             'producerManager' => $this->producerManager,
+            'ua' => $unattached,
         ]);  
     }
     

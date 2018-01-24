@@ -47,7 +47,7 @@ class ProducerRepository  extends EntityRepository{
         return $queryBuilder->getQuery();
     }    
     
-    public function findAllUnknownProducer()
+    public function findAllUnknownProducer($params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -57,6 +57,12 @@ class ProducerRepository  extends EntityRepository{
             ->from(UnknownProducer::class, 'c')
             ->orderBy('c.name')
                 ;
+        
+        if (is_array($params)){
+            if ($params['unattached']){
+                $queryBuilder->where('c.producer is null');
+            }
+        }
 
         return $queryBuilder->getQuery();
     }    

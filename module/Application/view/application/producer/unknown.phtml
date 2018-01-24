@@ -1,6 +1,35 @@
+<?php
+$this->headTitle('Неизвестные производители');
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Производители'=>$this->url('producer'),
+            'Неизвестные производители'=>$this->url('producer', ['action'=>'unknown'])
+            ]);
+
+?>
+
 <h1>Неизвестные производители</h1>
-<p>
-</p>
+<div class="row">
+  <div class="col-lg-12">
+    <a class="btn btn-default <?= ($ua ? 'active':'')?>" href="
+        <?= $this->url('producer', ['action'=>'unknown'], ['query' => ['ua' => 1]]); ?>">
+        Не привязанные
+    </a>
+    <a class="btn btn-default <?= ($ua ? '':'active')?>" href="
+        <?= $this->url('producer', ['action'=>'unknown']); ?>">
+        Все
+    </a>
+    <div class="input-group">
+        <input type="text" class="form-control" aria-label="...">
+        <div class="input-group-btn">
+            <!-- Buttons -->
+        </div>
+    </div>
+  </div>  
+</div>
 
 <table class="table table-striped">
 
@@ -23,10 +52,13 @@
         </td>
         <td><?= $row->getName(); ?></td>        
         <td>
-            <a class="btn btn-info" href="<?= $this->url('producer', 
-                    ['action'=>'from-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page]]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span>Добавить
-            </a>
+            <?php if ($row->getProducer()): ?>
+            <?php else: ?>
+                <a class="btn btn-info" href="<?= $this->url('producer', 
+                        ['action'=>'from-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page]]); ?>">
+                    <span class="glyphicon glyphicon-pencil" ></span>Добавить
+                </a>
+            <?php endif; ?>
             <a class="btn btn-danger" href="<?= $this->url('producer',
                     ['action'=>'delete-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page]]); ?>">
                 <span class="glyphicon glyphicon-remove"></span> Удалить
@@ -40,5 +72,5 @@
 <?= $this->paginationControl($producer,
             'Sliding',
             'application/partial/paginator', 
-            ['route' => array('route' => 'producer', 'action' => 'unknown')]); ?>
+            ['route' => array('route' => 'producer', 'action' => 'unknown', 'query' => $ua)]); ?>
 

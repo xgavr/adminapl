@@ -1,17 +1,15 @@
 <?php
-$this->headTitle('Производитель - ' . $producer->getName());
-//$this->mainMenu()->setActiveItemId('home');
-//$this->pageBreadcrumbs()->setItems([
-//            'Home'=>$this->url('home')
-//            ]);
-        
+$this->headTitle($producer->getName());
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Производители'=>$this->url('producer'),
+            $producer->getName()=>$this->url('producer', ['action'=>'view', 'id'=>$producer->getId()])
+            ]);
+
 ?>
-
-<a href="
-    <?= $this->url('producer', []); ?>">
-    &lt;&lt; Назад в список производителей
-</a>
-
 <h1>
     <?= $this->escapeHtml($producer->getName()); ?>    
 </h1>

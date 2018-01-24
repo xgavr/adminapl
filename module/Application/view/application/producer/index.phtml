@@ -1,3 +1,15 @@
+<?php
+$this->headTitle('Производители');
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Производители'=>$this->url('producer'),
+            ]);
+
+?>
+
 <h1>Производители</h1>
 <p>
 <a class="btn btn-default" href="
