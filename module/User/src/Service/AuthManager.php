@@ -86,7 +86,8 @@ class AuthManager
     {
         // Allow to log out only when user is logged in.
         if ($this->authService->getIdentity()==null) {
-            throw new \Exception('The user is not logged in');
+            return;
+//            throw new \Exception('The user is not logged in');
         }
         
         // Remove identity from session.
