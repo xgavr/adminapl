@@ -294,6 +294,14 @@ class UserManager
         $user->setPasswordResetTokenCreationDate(null);
         
         $this->entityManager->flush();
+
+        $post = [
+            'to' => $user->getEmail(),
+            'from' => self::EMAIL_SENDER,
+            'subject' => 'Изменение пароля для входа на сайт OVO.msk.ru',
+            'body' => "Здравствуйте, {$user->getFullName()}!<br/>Вами был изменен пароль для входа на сайт <a href='http://ovo.msk.ru'>OVO.msk.ru</a>!<br/>Логин: {$user->getEmail()}<br/>Пароль: $newPassword<br/><br/><br/>С уважением,<br/>OVO",
+        ];
+        $this->postManager->send($post);    
         
         return true;
     }
