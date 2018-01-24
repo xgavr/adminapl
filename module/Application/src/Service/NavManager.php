@@ -51,29 +51,23 @@ class NavManager
         $items = [];
         
         
-//        $items[] = [
-//            'id' => 'about',
-//            'label' => 'About',
-//            'link'  => $url('about')
-//        ];
-        
+        $items[] = [
+            'id' => 'home',
+            'label' => 'OVO.msk.ru',
+            'labelHTML' => '<strong>OVO</strong><sup>.msk.ru</sup>',
+            'link'  => $url('home')
+        ];
+            
         // Display "Login" menu item for not authorized user only. On the other hand,
         // display "Admin" and "Logout" menu items only for authorized users.
         if (!$this->authService->hasIdentity()) {
             $items[] = [
                 'id' => 'login',
-                'label' => 'Sign in',
+                'label' => 'Вход',
                 'link'  => $url('login'),
                 'float' => 'right'
             ];
         } else {
-            
-            $items[] = [
-                'id' => 'home',
-                'label' => 'OVO.msk.ru',
-                'labelHTML' => '<strong>OVO</strong><sup>.msk.ru</sup>',
-                'link'  => $url('home')
-            ];
             
             $items[] = [
                 'id' => 'shop',

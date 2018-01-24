@@ -229,13 +229,19 @@ class UserManager
         $httpHost = isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'localhost';
         $passwordResetUrl = 'http://' . $httpHost . '/set-password?token=' . $token;
         
-        $body = 'Перейдите по приведенной ниже ссылке, чтобы сбросить пароль:\n';
-        $body .= "$passwordResetUrl\n";
-        $body .= "Если вы не попросили сбросить пароль, пожалуйста, проигнорируйте это сообщение.\n";
+        $body = 'Перейдите по приведенной ниже ссылке, чтобы сбросить пароль:<br/>';
+        $body .= "$passwordResetUrl<br/>";
+        $body .= "Если вы не попросили сбросить пароль, пожалуйста, проигнорируйте это сообщение.<br/>";
         
         // Send email to user.
         mail($user->getEmail(), $subject, $body);
-            
+        $post = [
+            'to' => $user->getEmail(),
+            'from' => self::EMAIL_SENDER,
+            'subject' => $subject,
+            'body' => $body,
+        ];
+        $this->postManager->send($post);             
     }
     
     /**
