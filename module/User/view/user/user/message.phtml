@@ -1,30 +1,30 @@
 <?php
-$this->headTitle('Thank You');
+$this->headTitle('Спасибо');
 ?>
 
 <div class="row">
 <div class="col-md-offset-4 col-md-5">
-<h1>Reset Password</h1>
+<h1>Сброс пароля</h1>
 
 <?php if ($id=='sent'): ?>
 <p>
-    A password reset link has been sent to your email address.
+    На ваш адрес электронной почты была отправлена ссылка для сброса пароля.
 </p>
 <?php elseif ($id=='invalid-email'): ?>
 <p>
-    There is no user with such an email.
+    Нет такого пользователя с таким адресом электронной почты.
 </p>
 <?php elseif ($id=='set'): ?>
 <p>
-    Your new password has been set successfully.
+    Ваш новый пароль был успешно установлен.
 </p>
 <p>
     Return to <a href="<?= $this->url('login'); ?>">login page</a>.
 </p>
 <?php elseif ($id=='failed'): ?>
 
-    Invalid reset key or it may have expired. Please return 
-    <a href="<?= $this->url('reset-password') ?>">here</a> and try reset your password again.
+    Неверный ключ сброса или он может истек. Пожалуйста, вернитесь 
+    <a href="<?= $this->url('reset-password') ?>">here</a> и попробуйте снова сбросить пароль.
 </p>
 <?php endif; ?>
 </div>

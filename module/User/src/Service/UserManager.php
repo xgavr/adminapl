@@ -224,14 +224,14 @@ class UserManager
         
         $this->entityManager->flush();
         
-        $subject = 'Password Reset';
+        $subject = 'Восстановление пароля';
             
         $httpHost = isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'localhost';
         $passwordResetUrl = 'http://' . $httpHost . '/set-password?token=' . $token;
         
-        $body = 'Please follow the link below to reset your password:\n';
+        $body = 'Перейдите по приведенной ниже ссылке, чтобы сбросить пароль:\n';
         $body .= "$passwordResetUrl\n";
-        $body .= "If you haven't asked to reset your password, please ignore this message.\n";
+        $body .= "Если вы не попросили сбросить пароль, пожалуйста, проигнорируйте это сообщение.\n";
         
         // Send email to user.
         mail($user->getEmail(), $subject, $body);
