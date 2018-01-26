@@ -13,22 +13,24 @@ $this->pageBreadcrumbs()->setItems([
 
 <h1>Неизвестные производители</h1>
 <div class="row">
-  <div class="col-lg-12">
-    <a class="btn btn-default <?= ($ua ? 'active':'')?>" href="
-        <?= $this->url('producer', ['action'=>'unknown'], ['query' => ['ua' => 1]]); ?>">
-        Не привязанные
-    </a>
-    <a class="btn btn-default <?= ($ua ? '':'active')?>" href="
-        <?= $this->url('producer', ['action'=>'unknown']); ?>">
-        Все
-    </a>
-    <div class="input-group">
-        <input type="text" class="form-control" aria-label="...">
-        <div class="input-group-btn">
-            <!-- Buttons -->
-        </div>
-    </div>
-  </div>  
+    <div class="col-lg-12">
+        <div class="input-group">
+            <span class="input-group-btn">
+                <a class="btn btn-default <?= ($ua ? 'active':'')?>" href="
+                    <?= $this->url('producer', ['action'=>'unknown'], ['query' => ['ua' => 1]]); ?>">
+                    Не привязанные
+                </a>
+                <a class="btn btn-default <?= ($ua ? '':'active')?>" href="
+                    <?= $this->url('producer', ['action'=>'unknown']); ?>">
+                    Все
+                </a>
+            </span>    
+            <input type="text" class="form-control" aria-label="...">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">Найти</button>
+            </span>
+        </div>    
+    </div>  
 </div>
 
 <table class="table table-striped">
