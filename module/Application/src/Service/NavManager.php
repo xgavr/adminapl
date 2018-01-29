@@ -204,6 +204,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'phpinfo'])
                 ];
                 
+                $adminDropdownItems[] = [
+                    'id' => 'mem',
+                    'label' => 'memcache(d)',
+                    'link'  => $url('admin', ['action' => 'mem'])
+                ];
+                
                 if (count($adminDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'admin',

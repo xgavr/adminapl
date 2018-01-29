@@ -8,6 +8,7 @@
 namespace Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
@@ -19,5 +20,49 @@ class IndexController extends AbstractActionController
     public function phpinfoAction()
     {
         return [];
+    }
+    
+    public function memAction()
+    {
+        
+        if (extension_loaded('memcached')){
+
+            $title = Memcached;
+
+            $cache  = new \Zend\Cache\Storage\Adapter\Memcached();
+            $cache->getOptions()
+                    ->setTtl(3600)
+                    ->setServers(
+                        array(
+                            array('localhost', 11211)
+                        )
+                    );
+
+            $plugin = new \Zend\Cache\Storage\Plugin\ExceptionHandler();
+            $plugin->getOptions()->setThrowExceptions(false);
+            $cache->addPlugin($plugin);
+
+        } elseif (extension_loaded('memcache')){
+                
+            $title = Memcache;
+
+            $cache  = new \Zend\Cache\Storage\Adapter\Memcache();
+            $cache->getOptions()
+                    ->setTtl(3600)
+                    ->setServers(
+                        array(
+                            array('localhost', 11211)
+                        )
+                    );
+
+            $plugin = new \Zend\Cache\Storage\Plugin\ExceptionHandler();
+            $plugin->getOptions()->setThrowExceptions(false);
+            $cache->addPlugin($plugin);
+        }	
+
+        return new ViewModel([
+            'title' => $title,
+            'mem' => $cache,
+        ]);
     }
 }

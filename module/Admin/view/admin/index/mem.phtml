@@ -1,0 +1,29 @@
+<?php
+$this->headTitle('Администрирование');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Администрирование'=>$this->url('admin'),
+                'Memcache(d)' => $this->url('admin', ['action' =>'mem']),
+                ]);
+  
+?>
+
+<h1><?= $title ?></h1>
+
+<table width="50%">
+    <tr>
+        <td width="50%">Caching</td>
+        <td><?= $mem->getCaching() ?></td>
+    </tr>
+    <tr>
+        <td>Total space</td>
+        <td><?= $mem->getTotalSpace() ?></td>
+    </tr>
+    <tr>
+        <td>Avialable space</td>
+        <td><?= $mem->getAvailableSpace() ?></td>
+    </tr>
+</table>
