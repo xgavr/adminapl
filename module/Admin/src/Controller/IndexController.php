@@ -27,7 +27,7 @@ class IndexController extends AbstractActionController
         
         if (extension_loaded('memcached')){
 
-            $title = Memcached;
+            $title = 'Memcached';
 
             $cache  = new \Zend\Cache\Storage\Adapter\Memcached();
             $cache->getOptions()
@@ -44,7 +44,7 @@ class IndexController extends AbstractActionController
 
         } elseif (extension_loaded('memcache')){
                 
-            $title = Memcache;
+            $title = 'Memcache';
 
             $cache  = new \Zend\Cache\Storage\Adapter\Memcache();
             $cache->getOptions()
