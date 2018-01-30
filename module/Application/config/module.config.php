@@ -265,7 +265,8 @@ return [
             Service\PriceManager::class => Service\Factory\PriceManagerFactory::class,
             Service\RawManager::class => Service\Factory\RawManagerFactory::class,
             Service\NavManager::class => Service\Factory\NavManagerFactory::class,
-            Service\RbacAssertionManager::class => Service\Factory\RbacAssertionManagerFactory::class,            
+            Service\RbacAssertionManager::class => Service\Factory\RbacAssertionManagerFactory::class,  
+            'doctrine.cache.doctrine_cache' => Service\Factory\DoctrineCacheFactory::class,
         ],
     ],    
     'session_containers' => [

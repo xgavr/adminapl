@@ -16,6 +16,7 @@ use Zend\Session\Validator\RemoteAddr;
 use Zend\Session\Validator\HttpUserAgent;
 use Zend\Cache\Storage\Adapter\Filesystem;
 use Zend\Cache\Storage\Adapter\Memcached;
+use Zend\Cache\Storage\Adapter\Memcache;
 
 return [
     // Настройка сессии.
@@ -38,6 +39,32 @@ return [
         'type' => SessionArrayStorage::class
     ],
     'caches' => [
+        'memcache' => [
+            'adapter' =>[
+                'name' => Memcache::class,
+                'options' => [
+                    'ttl' => 60*60*1,
+                    'servers' => [
+                        [
+                            '127.0.0.1', 11211
+                        ]
+                    ],
+                    'namespace' => 'OVO',
+//                    'liboptions' => [
+//                        'COMPRESSION' => true,
+//                        'binary_protocol' => true,
+//                        'no_block' => true,
+//                        'connect_timeout' => 100,
+//                    ],
+                ],
+            ],
+            'plugins' => [
+                'exception_handler' => [
+                    'throw_exceptions' => false,
+                ],
+            ],
+            'serializer',
+        ],
         'memcached' => [
             'adapter' =>[
                 'name' => Memcached::class,
@@ -48,7 +75,7 @@ return [
                             '127.0.0.1', 11211
                         ]
                     ],
-                    'namespace' => 'ASB2',
+                    'namespace' => 'OVO',
                     'liboptions' => [
                         'COMPRESSION' => true,
                         'binary_protocol' => true,
