@@ -62,6 +62,11 @@ class ProducerRepository  extends EntityRepository{
             if ($params['unattached']){
                 $queryBuilder->where('c.producer is null');
             }
+            if ($params['q']){
+                $queryBuilder->where('c.name like :search')
+                    ->setParameter('search', '%' . $params['q'] . '%')
+                        ;
+            }
         }
 
         return $queryBuilder->getQuery();

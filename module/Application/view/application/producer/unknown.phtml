@@ -9,6 +9,15 @@ $this->pageBreadcrumbs()->setItems([
             'Неизвестные производители'=>$this->url('producer', ['action'=>'unknown'])
             ]);
 
+$this->headLink()
+    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.min.css')
+    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css');
+
+$this->headScript()
+    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
+    ->prependFile($this->basePath('/js/typeahead.js/typeahead.jquery.min.js'))
+            ;
+        
 ?>
 
 <h1>Неизвестные производители</h1>
@@ -26,7 +35,7 @@ $this->pageBreadcrumbs()->setItems([
                         Все
                     </a>
                 </span>    
-                <input type="text" class="form-control" aria-label="..." name="q">
+                <input type="text" class="form-control" aria-label="..." name="q" value="<?= $q ?>">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="submit">Найти</button>
                 </span>
@@ -34,6 +43,8 @@ $this->pageBreadcrumbs()->setItems([
         </div>  
     </div>
 </form>
+            <a href="#" id="username" data-type="text" data-placement="right" data-title="Enter username">superuser</a>
+            <a href="#" id="producer" data-type="typeaheadjs" data-pk="1" data-url="/post" data-title="Производитель">Russia</a>
 
 <table class="table table-striped">
 
@@ -48,10 +59,14 @@ $this->pageBreadcrumbs()->setItems([
     <tr>
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
-            <?php if ($row->getProducer()): ?>    
-                <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$row->getProducer()->getId()]); ?>">
+                <?php if ($row->getProducer()): ?>    
                     <?= $this->escapeHtml($row->getProducer()->getName()); ?>
-                </a> 
+                <?php endif; ?>
+            </a>
+            <?php if ($row->getProducer()): ?>    
+<!--                <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$row->getProducer()->getId()]); ?>">
+                    <?= $this->escapeHtml($row->getProducer()->getName()); ?>
+                </a> -->
             <?php endif; ?>
         </td>
         <td><?= $row->getName(); ?></td>        
@@ -76,8 +91,29 @@ $this->pageBreadcrumbs()->setItems([
 <?= $this->paginationControl($producer,
             'Sliding',
             'application/partial/paginator', 
-            ['route' => array('route' => 'producer', 'action' => 'unknown', 'query' => $ua)]); ?>
+            ['route' => array('route' => 'producer', 'action' => 'unknown', 'query' => $q)]); ?>
 
 <script type="text/javascript">
-
+    $(document).ready(function() {
+        $.fn.editable.defaults.mode = 'popup';
+        
+        $('#username').editable();
+        
+        $(function(){
+            $('#producer').editable({
+                value: 'ru',
+                typeahead: {
+                    name: 'country',
+                    local: [
+                        {value: 'ru', tokens: ['Russia']}, 
+                        {value: 'gb', tokens: ['Great Britain']}, 
+                        {value: 'us', tokens: ['United States']}
+                    ],
+                    template: function(item) {
+                        return item.tokens[0] + ' (' + item.value + ')'; 
+                    } 
+                }
+            });
+        });        
+    });    
 </script>
