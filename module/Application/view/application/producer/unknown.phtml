@@ -59,11 +59,10 @@ $this->headScript()
     <tr>
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
-            <a href="#" class="editable" data-type="select2" data-pk="<?= $row->getId() ?>" data-value="<?= $row->getProducer()->getId() ?>" data-title="Производитель"><?= $row->getProducer()->getName() ?></a>
             <?php if ($row->getProducer()): ?>    
-<!--                <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$row->getProducer()->getId()]); ?>">
-                    <?= $this->escapeHtml($row->getProducer()->getName()); ?>
-                </a> -->
+                <a href="#" class="editable" data-type="select2" data-pk="<?= $row->getId() ?>" data-value="<?= $row->getProducer()->getId() ?>" data-title="Производитель"><?= $row->getProducer()->getName() ?></a>
+            <?php else: ?>    
+                <a href="#" class="editable" data-type="select2" data-pk="<?= $row->getId() ?>" data-value="" data-title="Производитель"></a>
             <?php endif; ?>
         </td>
         <td><?= $row->getName(); ?></td>        
