@@ -10,12 +10,14 @@ $this->pageBreadcrumbs()->setItems([
             ]);
 
 $this->headLink()
-    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/typeahead.js-bootstrap-css/1.2.1/typeaheadjs.min.css')
-    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css');
+    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css')
+    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.min.css')
+    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css')
+        ;
 
 $this->headScript()
-    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
-    ->prependFile($this->basePath('/js/typeahead.js/typeahead.jquery.min.js'))
+    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js')
+    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js')
             ;
         
 ?>
@@ -43,8 +45,6 @@ $this->headScript()
         </div>  
     </div>
 </form>
-            <a href="#" id="username" data-type="text" data-placement="right" data-title="Enter username">superuser</a>
-            <a href="#" id="producer" data-type="typeaheadjs" data-pk="1" data-url="/post" data-title="Производитель">Russia</a>
 
 <table class="table table-striped">
 
@@ -59,10 +59,7 @@ $this->headScript()
     <tr>
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
-                <?php if ($row->getProducer()): ?>    
-                    <?= $this->escapeHtml($row->getProducer()->getName()); ?>
-                <?php endif; ?>
-            </a>
+            <a href="#" class="editable" data-type="select2" data-pk="<?= $row->getId() ?>" data-value="<?= $row->getProducer()->getId() ?>" data-title="Производитель"><?= $row->getProducer()->getName() ?></a>
             <?php if ($row->getProducer()): ?>    
 <!--                <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$row->getProducer()->getId()]); ?>">
                     <?= $this->escapeHtml($row->getProducer()->getName()); ?>
@@ -96,24 +93,13 @@ $this->headScript()
 <script type="text/javascript">
     $(document).ready(function() {
         $.fn.editable.defaults.mode = 'popup';
-        
-        $('#username').editable();
-        
-        $(function(){
-            $('#producer').editable({
-                value: 'ru',
-                typeahead: {
-                    name: 'country',
-                    local: [
-                        {value: 'ru', tokens: ['Russia']}, 
-                        {value: 'gb', tokens: ['Great Britain']}, 
-                        {value: 'us', tokens: ['United States']}
-                    ],
-                    template: function(item) {
-                        return item.tokens[0] + ' (' + item.value + ')'; 
-                    } 
-                }
-            });
+
+        $('.editable').editable({
+            source: '/getCountries',
+            select2: {
+                placeholder: 'Select Country',
+                minimumInputLength: 1
+            }
         });        
     });    
 </script>
