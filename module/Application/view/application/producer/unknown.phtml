@@ -12,12 +12,13 @@ $this->pageBreadcrumbs()->setItems([
 $this->headLink()
     ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css')
     ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.min.css')
-    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css')
+    ->appendStylesheet($this->basePath('js/x-editable/bootstrap3-editable/css/bootstrap-editable.css'))        
         ;
 
 $this->headScript()
-    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js')
-    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js')
+    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.js')
+    ->appendFile('http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js')
+    ->appendFile($this->basePath('js/x-editable/bootstrap3-editable/js/bootstrap-editable.js'))        
             ;
         
 ?>
@@ -45,7 +46,8 @@ $this->headScript()
         </div>  
     </div>
 </form>
-
+<p><a href="#" id="country" data-type="typeaheadjs" data-pk="1" data-url="/post" data-title="Input country">...</a></p>
+<a href="#" id="tags" data-type="select2" data-pk="1" data-title="Enter tags">html, javascript</a>
 <table class="table table-striped">
 
    <tr>
@@ -90,15 +92,20 @@ $this->headScript()
             ['route' => array('route' => 'producer', 'action' => 'unknown', 'query' => $q)]); ?>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $.fn.editable.defaults.mode = 'popup';
-
-        $('.editable').editable({
-            source: '/getCountries',
-            select2: {
-                placeholder: 'Select Country',
-                minimumInputLength: 1
-            }
-        });        
-    });    
+$(function(){
+    $('#country').editable({
+        value: 'ru',
+        typeahead: {
+            name: 'country',
+            local: [
+                {value: 'ru', tokens: ['Russia']}, 
+                {value: 'gb', tokens: ['Great Britain']}, 
+                {value: 'us', tokens: ['United States']}
+            ],
+            template: function(item) {
+                return item.tokens[0] + ' (' + item.value + ')'; 
+            } 
+        }
+    });
+});
 </script>
