@@ -209,4 +209,22 @@ class ProducerManager
         $this->entityManager->flush();
     }    
     
+    public function searchProducerNameAssistant($search)
+    {
+        $result = [];    
+        if (strlen($search) >= 1){
+            $names = $this->entityManager->getRepository(Producer::class)
+                    ->searchNameForSearchAssistant($search);
+
+            foreach ($names as $name){
+                $result[] = [
+                    'id' => $name->getId(),
+                    'value' => $name->getName(),
+                ];
+            }
+        }
+        
+        return $result;
+    }  
+        
 }

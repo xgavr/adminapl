@@ -10,15 +10,14 @@ $this->pageBreadcrumbs()->setItems([
             ]);
 
 $this->headLink()
-    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css')
-    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.min.css')
     ->appendStylesheet($this->basePath('js/x-editable/bootstrap3-editable/css/bootstrap-editable.css'))        
+    ->appendStylesheet($this->basePath('js/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css'))        
         ;
 
 $this->headScript()
-    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.js')
-    ->appendFile('http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js')
-    ->appendFile($this->basePath('js/x-editable/bootstrap3-editable/js/bootstrap-editable.js'))        
+    ->appendFile($this->basePath('js/x-editable/bootstrap3-editable/js/bootstrap-editable.js'))
+    ->appendFile($this->basePath('js/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js'))
+    ->appendFile($this->basePath('js/x-editable/inputs-ext/typeaheadjs/typeaheadjs.js'))
             ;
         
 ?>
@@ -46,8 +45,7 @@ $this->headScript()
         </div>  
     </div>
 </form>
-<p><a href="#" id="country" data-type="typeaheadjs" data-pk="1" data-url="/post" data-title="Input country">...</a></p>
-<a href="#" id="tags" data-type="select2" data-pk="1" data-title="Enter tags">html, javascript</a>
+
 <table class="table table-striped">
 
    <tr>
@@ -62,9 +60,9 @@ $this->headScript()
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
             <?php if ($row->getProducer()): ?>    
-                <a href="#" class="editable" data-type="select2" data-pk="<?= $row->getId() ?>" data-value="<?= $row->getProducer()->getId() ?>" data-title="Производитель"><?= $row->getProducer()->getName() ?></a>
+                <a href="#" class="editable" data-type="typeaheadjs" data-pk="<?= $row->getId() ?>" data-url="<?= $this->url('producer', ['action' => 'editable-unknown'])?>" data-title="Производитель"><?= $row->getProducer()->getName() ?></a>
             <?php else: ?>    
-                <a href="#" class="editable" data-type="select2" data-pk="<?= $row->getId() ?>" data-value="" data-title="Производитель"></a>
+                <a href="#" class="editable" data-type="typeaheadjs" data-pk="<?= $row->getId() ?>" data-title="Производитель"></a>
             <?php endif; ?>
         </td>
         <td><?= $row->getName(); ?></td>        
@@ -92,20 +90,18 @@ $this->headScript()
             ['route' => array('route' => 'producer', 'action' => 'unknown', 'query' => $q)]); ?>
 
 <script type="text/javascript">
-$(function(){
-    $('#country').editable({
-        value: 'ru',
-        typeahead: {
-            name: 'country',
-            local: [
-                {value: 'ru', tokens: ['Russia']}, 
-                {value: 'gb', tokens: ['Great Britain']}, 
-                {value: 'us', tokens: ['United States']}
-            ],
-            template: function(item) {
-                return item.tokens[0] + ' (' + item.value + ')'; 
-            } 
-        }
+    $(function(){
+        $('.editable').editable({
+            emptytext: 'Не привязан',
+            typeahead: {
+                name: 'Производитель',
+                remote: {
+                    url: '/producer/search-assistant/?q=%QUERY'
+                },
+                template: function(item) {
+                    return item.value + ' (' + item.id + ')'; 
+                }             
+            }    
+        });
     });
-});
 </script>

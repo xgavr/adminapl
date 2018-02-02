@@ -14,6 +14,7 @@ use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Form\ProducerForm;
 use Zend\Session\Container;
+use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -209,6 +210,17 @@ class ProducerController extends AbstractActionController
         ]);  
     }
     
+    public function searchAssistantAction()
+    {
+        $q = $this->params()->fromQuery('q', '');
+
+        $data = $this->producerManager->searchProducerNameAssistant($q);
+        
+        return new JsonModel(
+           $data
+        );        
+    }    
+    
     public function fromUnknownAction()
     {
         $page = $this->params()->fromQuery('page', 1);
@@ -228,6 +240,11 @@ class ProducerController extends AbstractActionController
         // Перенаправляем пользователя на страницу "producer".
         return $this->redirect()->toRoute('producer', ['action' => 'unknown'], ['query' => ['page' => $page]]);
         
+    }
+    
+    public function editableUnknownAction()
+    {
+        exit;
     }
     
     public function deleteUnknownAction()
