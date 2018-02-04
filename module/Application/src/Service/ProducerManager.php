@@ -189,12 +189,13 @@ class ProducerManager
     
     public function updateUnknownProducer($unknownProducer, $data) 
     {
-
-        $producer = $this->entityManager->getRepository(Producer::class)
-                    ->findOneById($data['producer']);
-        if ($producer == null){
-            $producer = new Producer();
-        }
+        if ($data['producer']){    
+            $producer = $this->entityManager->getRepository(Producer::class)
+                        ->findOneById($data['producer']);
+        } elseif ($data['producer_name']){
+            $producer = $this->entityManager->getRepository(Producer::class)
+                        ->findOneByName($data['producer_name']);            
+        }    
         
         $unknownProducer->setProducer($producer);
                
@@ -218,8 +219,8 @@ class ProducerManager
 
             foreach ($names as $name){
                 $result[] = [
-                    'id' => $name->getId(),
                     'value' => $name->getName(),
+                    'text' => $name->getId(),
                 ];
             }
         }

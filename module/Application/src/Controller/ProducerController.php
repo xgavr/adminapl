@@ -244,6 +244,22 @@ class ProducerController extends AbstractActionController
     
     public function editableUnknownAction()
     {
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneById($data['pk']);
+
+            if ($unknownProducer == null) {
+                $this->getResponse()->setStatusCode(404);
+                exit;                        
+            }        
+            
+            $this->producerManager->updateUnknownProducer($unknownProducer, ['producer_name' => $data['value']]);
+
+        }  
         exit;
     }
     

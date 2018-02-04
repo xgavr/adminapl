@@ -60,9 +60,9 @@ $this->headScript()
         <td><?= $this->escapeHtml($row->getId()); ?></td>
         <td>
             <?php if ($row->getProducer()): ?>    
-                <a href="#" class="editable" data-type="typeaheadjs" data-pk="<?= $row->getId() ?>" data-url="<?= $this->url('producer', ['action' => 'editable-unknown'])?>" data-title="Производитель"><?= $row->getProducer()->getName() ?></a>
+                <a href="#" class="editable" data-type="typeaheadjs" data-pk="<?= $row->getId() ?>" data-url="<?= $this->url('producer', ['action' => 'editable-unknown'])?>"><?= $row->getProducer()->getName(); ?></a>
             <?php else: ?>    
-                <a href="#" class="editable" data-type="typeaheadjs" data-pk="<?= $row->getId() ?>" data-title="Производитель"></a>
+                <a href="#" class="editable" data-type="typeaheadjs" data-pk="<?= $row->getId() ?>" data-url="<?= $this->url('producer', ['action' => 'editable-unknown'])?>"></a>
             <?php endif; ?>
         </td>
         <td><?= $row->getName(); ?></td>        
@@ -70,12 +70,12 @@ $this->headScript()
             <?php if ($row->getProducer()): ?>
             <?php else: ?>
                 <a class="btn btn-info" href="<?= $this->url('producer', 
-                        ['action'=>'from-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page]]); ?>">
+                        ['action'=>'from-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page, 'ua' => $ua, 'q' => $q]]); ?>">
                     <span class="glyphicon glyphicon-pencil" ></span>Добавить
                 </a>
             <?php endif; ?>
             <a class="btn btn-danger" href="<?= $this->url('producer',
-                    ['action'=>'delete-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page]]); ?>">
+                    ['action'=>'delete-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page, 'ua' => $ua, 'q' => $q]]); ?>">
                 <span class="glyphicon glyphicon-remove"></span> Удалить
             </a>
         </td>    
@@ -92,16 +92,16 @@ $this->headScript()
 <script type="text/javascript">
     $(function(){
         $('.editable').editable({
+            title: 'Выбрать производителя',
             emptytext: 'Не привязан',
             typeahead: {
-                name: 'Производитель',
                 remote: {
                     url: '/producer/search-assistant/?q=%QUERY'
                 },
-                template: function(item) {
-                    return item.value + ' (' + item.id + ')'; 
+                template: function(item) {                        
+                    return item.value + ' (' + item.text + ')'; 
                 }             
             }    
-        });
+        });        
     });
 </script>

@@ -102,7 +102,9 @@ class UnknownProducer {
     public function setProducer($producer) 
     {
         $this->producer = $producer;
-        $producer->addUnknownProducer($this);
+        if ($producer){
+            $producer->addUnknownProducer($this);
+        }    
     }     
     
     /**
