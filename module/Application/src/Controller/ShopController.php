@@ -95,6 +95,46 @@ class ShopController extends AbstractActionController
         ]);  
     }
     
+    public function shopContentAction()
+    {
+        
+        $currentClient = $this->shopManager->currentClient();
+        
+        $q = $this->params()->fromQuery('q', '');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        if (strlen($q) > 1){
+            $query = $this->entityManager->getRepository(Goods::class)
+                        ->searchByName($q);            
+        } else {
+            $query = $this->entityManager->getRepository(Goods::class)
+                        ->findAllGoods();
+        }    
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'data' => $result,
+        ]);          
+    }
+    
+    public function shopAction()
+    {
+        $currentClient = $this->shopManager->currentClient();
+        if ($currentClient == null){
+            return $this->redirect()->toRoute('client', []);
+        }        
+        
+        return new ViewModel([
+            'currentClient' => $currentClient,
+        ]);          
+    }
+    
+    
     public function searchAssistantAction()
     {
         $q = $this->params()->fromQuery('q', '');

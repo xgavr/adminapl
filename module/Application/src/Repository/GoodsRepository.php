@@ -11,6 +11,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Goods;
 use Application\Entity\Rawprice;
+use Application\Entity\Producer;
 /**
  * Description of GoodsRepository
  *
@@ -24,8 +25,9 @@ class GoodsRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('g')
-            ->from(Goods::class, 'g')
+        $queryBuilder->select('g, p')
+            ->from(Goods::class, 'g')            
+            ->join("g.producer", 'p', 'WITH') 
             ->orderBy('g.id')
                 ;
 
@@ -41,6 +43,7 @@ class GoodsRepository extends EntityRepository{
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
             ->where('g.name like :search')    
+            ->join("g.producer", 'p', 'WITH') 
             ->orderBy('g.name')
             ->setParameter('search', '%' . $search . '%')
                 ;
