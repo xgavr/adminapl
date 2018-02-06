@@ -44,6 +44,11 @@ class Goods {
     protected $code;
     
     /**
+     * @ORM\Column(name="price")   
+     */
+    protected $price;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
      * 
@@ -117,6 +122,16 @@ class Goods {
     public function setCode($code) 
     {
         $this->code = $code;
+    }     
+
+    public function getPrice() 
+    {
+        return $this->price;
+    }
+
+    public function setPrice($price) 
+    {
+        $this->price = $price;
     }     
 
     /*

@@ -144,6 +144,25 @@ class RawpriceController extends AbstractActionController
         
     }        
 
+    public function priceAction()
+    {
+        $rawpriceId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($rawpriceId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $rawprice = $this->entityManager->getRepository(Rawprice::class)
+                ->findOneById($rawpriceId);
+        
+        $this->rawManager->setPriceRawprice($rawprice);
+        
+        return $this->redirect()->toRoute('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);
+        
+    }        
+
     public function viewAction() 
     {       
         $rawpriceId = (int)$this->params()->fromRoute('id', -1);

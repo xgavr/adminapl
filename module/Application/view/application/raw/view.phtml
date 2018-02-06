@@ -34,6 +34,10 @@ $this->headTitle($raw->getSupplier()->getName().' прайс '. $raw->getFilenam
     <?= $this->url('raw', ['action'=>'goods', 'id' => $raw->getId()]); ?>">
     3.2. Товары - привязать
 </a>
+<a class="btn btn-default" href="
+    <?= $this->url('raw', ['action'=>'price', 'id' => $raw->getId()]); ?>">
+    4. Установить цены
+</a>
 
 <table class="table table-striped">
 

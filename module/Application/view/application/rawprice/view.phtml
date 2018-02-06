@@ -42,6 +42,12 @@ $this->headTitle('Строка '.$rawprice->getId().' '.$rawprice->getRaw()->get
             3.Товар
         </a>
     <? endif; ?>
+    <?php if ($rawprice->getGood()): ?>
+        <a class="btn btn-default" href="
+            <?= $this->url('rawprice', ['action'=>'price', 'id' => $rawprice->getId()]); ?>">
+            4.Цена
+        </a>
+    <? endif; ?>
 <? endif; ?>
 <h3 class="contact-header">Прочитанные данные</h3>
 <table class="table table-striped">

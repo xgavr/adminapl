@@ -112,8 +112,8 @@ class ShopController extends AbstractActionController
                         ->findAllGoods();
         }    
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+//        if ($offset) $query->setFirstResult( $offset );
+//        if ($limit) $query->setMaxResults( $limit );
         
         $result = $query->getResult(2);
         

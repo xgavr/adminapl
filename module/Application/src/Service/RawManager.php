@@ -491,6 +491,26 @@ class RawManager {
     }
     
     /*
+     * Установить цену товара
+     * @var Application\Entity\Rawprice $rawprice
+     */
+    public function setPriceRawprice($rawprice, $flushnow = true)
+    {
+        if ($rawprice->getGood()){
+            
+            $good = $rawprice->getGood();
+            $price = $this->goodManager->getMaxPrice($good);
+            
+            $good->setPrice($price);
+            $this->entityManager->persist($good);        
+            if ($flushnow){
+                $this->entityManager->flush();    
+            }
+        }        
+    }
+
+
+    /*
      * Парсить все записи
      * @var Application\Entity\Raw @raw
      * 
@@ -521,7 +541,20 @@ class RawManager {
         $this->entityManager->flush();
     }
     
-    
+    /*
+     * Установить цену в товарах прайса
+     * @var Application\Entity\Raw @raw
+     * 
+     */
+    public function setPriceRaw($raw)
+    {
+        foreach ($raw->getRawprice() as $rawprice){
+            $this->setPriceRawprice($rawprice, false);
+        }
+        
+        $this->entityManager->flush();
+    }
+        
     public function removeRawprice($rawprice)
     {
         $this->entityManager->remove($rawprice);

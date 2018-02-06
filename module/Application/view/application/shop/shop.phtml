@@ -25,6 +25,7 @@ $this->headScript()
              <th data-field="name">Наименование</th>
              <th data-field="code">Артикул</th>
              <th data-field="producer" data-formatter="producerFormatter">Производитель</th>
+             <th data-field="price" data-align="right" data-formatter="priceFormatter">Цена</th>
              <th data-field="num" data-input="1"></th>
          </tr>                
     </thead>
@@ -33,6 +34,10 @@ $this->headScript()
 <script type="text/javascript">
     function producerFormatter(value, row) {
         return value.name;
+    }
+    
+    function priceFormatter(value, row) {
+        return parseFloat(value).toFixed(2);
     }
     
     var addCart = function(data){
