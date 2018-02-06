@@ -64,7 +64,7 @@
             <input type="text" id="num<?= $row->getId()?>" value="1" class="form-control" <?= ($avialable) ? '':'disabled' ?>/>
         </td>
         <td>
-            <button type="button" class="btn <?= ($inCart ? 'btn-success':'btn-default') ?> btn-default" aria-label="Left Align" id="shop_index_add_cart_<?= $row->getId()?>" 
+            <button type="button" class="btn <?= ($inCart ? 'btn-success':'btn-default') ?>" aria-label="Left Align" id="shop_index_add_cart_<?= $row->getId()?>" 
                     onclick="addCart({
                                 good: <?= $row->getId()?>, 
                                 price: <?= $price; ?>

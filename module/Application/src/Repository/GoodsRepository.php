@@ -28,7 +28,7 @@ class GoodsRepository extends EntityRepository{
         $queryBuilder->select('g, p')
             ->from(Goods::class, 'g')            
             ->join("g.producer", 'p', 'WITH') 
-            ->orderBy('g.id')
+            ->orderBy('g.name')
                 ;
 
         return $queryBuilder->getQuery();
@@ -40,10 +40,10 @@ class GoodsRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('g')
+        $queryBuilder->select('g, p')
             ->from(Goods::class, 'g')
-            ->where('g.name like :search')    
             ->join("g.producer", 'p', 'WITH') 
+            ->where('g.name like :search')    
             ->orderBy('g.name')
             ->setParameter('search', '%' . $search . '%')
                 ;

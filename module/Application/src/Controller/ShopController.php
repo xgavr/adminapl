@@ -100,7 +100,7 @@ class ShopController extends AbstractActionController
         
         $currentClient = $this->shopManager->currentClient();
         
-        $q = $this->params()->fromQuery('q', '');
+        $q = $this->params()->fromQuery('search', '');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         
@@ -112,13 +112,20 @@ class ShopController extends AbstractActionController
                         ->findAllGoods();
         }    
         
-//        if ($offset) $query->setFirstResult( $offset );
-//        if ($limit) $query->setMaxResults( $limit );
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
         
         $result = $query->getResult(2);
         
+        foreach ($result as $key => $row){
+            $result[$key]['incart'] = $this->shopManager->getGoodInCart($row['id']);
+        }
+
         return new JsonModel([
-            'data' => $result,
+            'total' => $total,
+            'rows' => $result,
         ]);          
     }
     
