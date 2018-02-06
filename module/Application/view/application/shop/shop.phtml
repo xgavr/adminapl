@@ -26,12 +26,16 @@ $this->headScript()
              <th data-field="code">Артикул</th>
              <th data-field="producer" data-formatter="producerFormatter">Производитель</th>
              <th data-field="price" data-align="right" data-formatter="priceFormatter">Цена</th>
-             <th data-field="num" data-input="1"></th>
+             <th data-field="num" data-formatter="numFormatter" data-align='rigth'></th>
          </tr>                
     </thead>
 </table>
 
 <script type="text/javascript">
+    function numFormatter(value, row){
+       return '<input class="form-control input-sm" style="width: 50px" min="1" type="number" value="1"/>'; 
+    }
+    
     function producerFormatter(value, row) {
         return value.name;
     }
