@@ -30,6 +30,15 @@ class LoginForm extends Form
      */
     protected function addElements() 
     {
+        // Add "ident" field
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'ident',
+            'options' => [
+                'label' => 'Ваш E-mail',
+            ],
+        ]);
+        
         // Add "email" field
         $this->add([            
             'type'  => 'text',
@@ -38,6 +47,17 @@ class LoginForm extends Form
                 'label' => 'Ваш E-mail',
             ],
         ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'phone',
+            'attributes' => [
+                'id' => 'phone'
+            ],
+            'options' => [
+                'label' => 'Телефон',
+            ],
+        ]);        
         
         // Add "password" field
         $this->add([            
@@ -112,6 +132,23 @@ class LoginForm extends Form
                 ],
             ]);     
         
+        $inputFilter->add([
+                'name'     => 'phone',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'PhoneNumber',
+                        'options' => [
+                        ],
+                    ],
+                ],
+            ]);        
+        
         // Add input for "password" field
         $inputFilter->add([
                 'name'     => 'password',
@@ -122,7 +159,7 @@ class LoginForm extends Form
                     [
                         'name'    => 'StringLength',
                         'options' => [
-                            'min' => 6,
+                            'min' => 4,
                             'max' => 64
                         ],
                     ],

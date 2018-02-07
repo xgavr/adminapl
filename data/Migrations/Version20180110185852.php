@@ -17,7 +17,7 @@ class Version20180110185852 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('currency_rate');
-        $table->addColumn('rate', 'float', ['precision'=>2]);
+//        $table->addColumn('rate', 'float', ['precision'=>2]);
     }
 
     /**
@@ -27,7 +27,7 @@ class Version20180110185852 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('currency_rate');
-        $table->dropColumn('rate');
+//        $table->dropColumn('rate');
 
     }
 }

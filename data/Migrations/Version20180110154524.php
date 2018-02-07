@@ -17,7 +17,7 @@ class Version20180110154524 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('goods');
-        $table->addColumn('available', 'integer', ['notnull'=>true]);
+//        $table->addColumn('available', 'integer', ['notnull'=>true]);
     }
 
     /**
@@ -27,7 +27,7 @@ class Version20180110154524 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('goods');
-        $table->dropColumn('available');
+//        $table->dropColumn('available');
 
     }
 }
