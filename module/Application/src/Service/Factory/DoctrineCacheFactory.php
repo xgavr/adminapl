@@ -4,6 +4,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Doctrine\Common\Cache\MemcacheCache;
 use Doctrine\Common\Cache\MemcachedCache;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * This is the factory class for RbacManager service. The purpose of the factory
@@ -29,7 +30,9 @@ class DoctrineCacheFactory
 
             $cache = new MemcacheCache();
             $cache->setMemcache($memcache);
-        }    
+        } else {
+            $cache = new ArrayCache();
+        }   
                 
         return $cache;
     }
