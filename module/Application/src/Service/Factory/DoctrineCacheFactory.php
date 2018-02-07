@@ -23,7 +23,7 @@ class DoctrineCacheFactory
            $cache = new MemcachedCache();
            $cache->setMemcached($memcached);
            
-        } else {    
+        } elseif(extension_loaded('memcache')) {    
             $memcache = new \Memcache();
             $memcache->connect('127.0.0.1', 11211);
 
