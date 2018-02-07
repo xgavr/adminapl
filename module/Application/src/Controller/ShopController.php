@@ -62,7 +62,8 @@ class ShopController extends AbstractActionController
         $this->orderManager = $orderManager;
     }    
     
-    public function indexAction()
+    
+    public function shopAction()
     {
         $currentClient = $this->shopManager->currentClient();
         if ($currentClient == null){
@@ -93,6 +94,18 @@ class ShopController extends AbstractActionController
             'search' => $q,
             'currentClient' => $currentClient
         ]);  
+    }
+    
+    public function indexAction()
+    {
+        $currentClient = $this->shopManager->currentClient();
+        if ($currentClient == null){
+            return $this->redirect()->toRoute('client', []);
+        }        
+        
+        return new ViewModel([
+            'currentClient' => $currentClient,
+        ]);          
     }
     
     public function shopContentAction()
@@ -128,19 +141,6 @@ class ShopController extends AbstractActionController
             'rows' => $result,
         ]);          
     }
-    
-    public function shopAction()
-    {
-        $currentClient = $this->shopManager->currentClient();
-        if ($currentClient == null){
-            return $this->redirect()->toRoute('client', []);
-        }        
-        
-        return new ViewModel([
-            'currentClient' => $currentClient,
-        ]);          
-    }
-    
     
     public function searchAssistantAction()
     {
