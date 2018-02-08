@@ -9,6 +9,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of Phone
@@ -59,7 +60,9 @@ class Phone {
 
     public function setName($name) 
     {
-        $this->name = $name;
+        $filter = new PhoneFilter();
+        $filter->setFormat(PhoneFilter::PHONE_FORMAT_DB);
+        $this->name = $filter->filter($name);
     }     
 
     /**

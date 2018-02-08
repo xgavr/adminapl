@@ -11,6 +11,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use Application\Entity\Contact;
 use User\Validator\UserExistsValidator;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of contact
@@ -189,9 +190,12 @@ class ContactForm extends Form
                 'name'     => 'phone',
                 'required' => false,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    [
+                        'name' => PhoneFilter::class,
+                        'options' => [
+                            'format' => PhoneFilter::PHONE_FORMAT_RU,
+                        ]
+                    ],
                 ],                
                 'validators' => [
                     [

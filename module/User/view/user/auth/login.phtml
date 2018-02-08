@@ -3,9 +3,9 @@ $this->headTitle('Вход');
 
 $this->mainMenu()->setActiveItemId('login');
 
-$form->get('email')->setAttributes([
+$form->get('ident')->setAttributes([
     'class'=>'form-control', 
-    'placeholder'=>'Email address',
+    'placeholder'=>'Email или телефон',
     'required' => true,
     'autofocus' => true
     ])
@@ -34,8 +34,8 @@ $form->get('password')->setAttributes([
                     <a href="<?= $this->url('reset-password') ?>">Забыли пароль?</a>
                 </div>
                 <?php endif; ?>
-                <?= $this->formLabel($form->get('email')); ?>
-                <?= $this->formElement($form->get('email')); ?>
+                <?= $this->formLabel($form->get('ident')); ?>
+                <?= $this->formElement($form->get('ident')); ?>
                 <?= $this->formLabel($form->get('password')); ?>
                 <?= $this->formElement($form->get('password')); ?>
                 <div class="checkbox">

@@ -5,6 +5,10 @@ use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
 use Zend\Crypt\Password\Bcrypt;
 use User\Entity\User;
+use Application\Entity\Phone;
+use Application\Entity\Email;
+use User\Filter\PhoneFilter;
+
 
 /**
  * Adapter used for authenticating user. It takes login and password on input
@@ -20,6 +24,12 @@ class AuthAdapter implements AdapterInterface
      * @var string 
      */
     private $email;
+    
+    /**
+     * User phone.
+     * @var string 
+     */
+    private $phone;
     
     /**
      * Password
@@ -50,6 +60,14 @@ class AuthAdapter implements AdapterInterface
     }
     
     /**
+     * Sets user phone.     
+     */
+    public function setPhone($phone) 
+    {
+        $this->phone = $phone;        
+    }
+    
+    /**
      * Sets password.     
      */
     public function setPassword($password) 
@@ -61,10 +79,35 @@ class AuthAdapter implements AdapterInterface
      * Performs an authentication attempt.
      */
     public function authenticate()
-    {                
-        // Check the database if there is a user with such email.
-        $user = $this->entityManager->getRepository(User::class)
-                ->findOneByEmail($this->email);
+    {            
+        $user = null;
+        
+        if ($this->phone){
+            
+            $filter = new PhoneFilter();
+            $filter->setFormat(PhoneFilter::PHONE_FORMAT_DB);
+            
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneByName($filter->filter($this->phone));
+            
+            if ($phone){
+                $user = $phone->getContact()->getUser();
+            }    
+        }
+        
+        if ($this->email){
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneByName($this->email);
+            if ($email){
+                $user = $email->getContact()->getUser();
+            }    
+        }
+
+        if ($user == null && $this->email){
+            // Check the database if there is a user with such email.
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneByEmail($this->email);
+        }    
         
         // If there is no such user, return 'Identity Not Found' status.
         if ($user == null) {

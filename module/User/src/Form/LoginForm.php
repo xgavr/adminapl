@@ -4,6 +4,7 @@ namespace User\Form;
 use Zend\Form\Form;
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilter;
+use User\Filter\PhoneFilter;
 
 /**
  * This form is used to collect user's login, password and 'Remember Me' flag.
@@ -35,7 +36,7 @@ class LoginForm extends Form
             'type'  => 'text',
             'name' => 'ident',
             'options' => [
-                'label' => 'Ваш E-mail',
+                'label' => 'Ваш E-mail или телефон',
             ],
         ]);
         
@@ -114,10 +115,19 @@ class LoginForm extends Form
         $inputFilter = new InputFilter();        
         $this->setInputFilter($inputFilter);
                 
+        // Add input for "ident" field
+        $inputFilter->add([
+                'name'     => 'ident',
+                'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+            ]);     
+        
         // Add input for "email" field
         $inputFilter->add([
                 'name'     => 'email',
-                'required' => true,
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    
                 ],                
@@ -136,9 +146,12 @@ class LoginForm extends Form
                 'name'     => 'phone',
                 'required' => false,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    [
+                        'name' => PhoneFilter::class,
+                        'options' => [
+                            'format' => PhoneFilter::PHONE_FORMAT_RU,
+                        ]
+                    ],
                 ],                
                 'validators' => [
                     [

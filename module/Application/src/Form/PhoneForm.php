@@ -9,6 +9,7 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
+use User\Filter\PhoneFilter;
 /**
  * Description of Phone
  *
@@ -73,9 +74,12 @@ class PhoneForm extends Form
                 'name'     => 'name',
                 'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    [
+                        'name' => PhoneFilter::class,
+                        'options' => [
+                            'format' => PhoneFilter::PHONE_FORMAT_RU,
+                        ]
+                    ],
                 ],                
                 'validators' => [
                     [
