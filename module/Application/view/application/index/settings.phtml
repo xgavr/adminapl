@@ -5,22 +5,42 @@ $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Настройки пользователя'=>$this->url('application', ['action'=>'settings']),
             ]);
-?>
 
-<h2>Настройки пользователя</h2>
-<p>
-    <a class="btn btn-default" href="<?= $this->url('members', 
-            ['action'=>'edit', 'id'=>$user->getId()]); ?>">
-        <span class="glyphicon glyphicon-pencil" ></span> Редактировать
-    </a>
-    <a class="btn btn-default" href="<?= $this->url('members',
-            ['action'=>'change-password', 'id'=>$user->getId()]); ?>">
-        <span class="glyphicon glyphicon-asterisk"></span> Изменить пароль
-    </a>    
-</p>
+$phoneForm = $this->phoneForm;
+$phoneForm->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'8 (000) 000-0000',
+    'aria-describedby' => "basic-addon2",
+    ]);
+
+$phoneForm->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Добавить']);
+$phoneForm->prepare();
+
+$this->headLink()
+//        ->appendStylesheet($this->basePath('js/winmarkltd-BootstrapFormHelpers-d4201db/dist/css/bootstrap-formhelpers.css'))
+        ;
+
+$this->headScript()
+//            ->appendFile($this->basePath('js/winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.js'))
+//            ->appendFile($this->basePath('js/winmarkltd-BootstrapFormHelpers-d4201db/js/bootstrap-formhelpers-phone.js'))
+            ->appendFile($this->basePath('js/jquery.mask.min.js'))
+        ;
+
+?>
 
 <div class="row">
     <div class="col-md-6">
+        <h2>Настройки пользователя</h2>
+        <p>
+            <a class="btn btn-default" href="<?= $this->url('members', 
+                    ['action'=>'edit', 'id'=>$user->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Редактировать
+            </a>
+            <a class="btn btn-default" href="<?= $this->url('members',
+                    ['action'=>'change-password', 'id'=>$user->getId()]); ?>">
+                <span class="glyphicon glyphicon-asterisk"></span> Изменить пароль
+            </a>    
+        </p>
         <table class="table table-striped table-bordered">
              <tr>
                 <th>ID:</th>
@@ -40,4 +60,50 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
         </table>
     </div>
+    <div class="col-md-6">
+        <h2>Контактные телефоны</h2>
+        <p>
+            <?= $this->form()->openTag($phoneForm); ?>
+            <div class="input-group">
+                <?= $this->formElement($phoneForm->get('name')); ?>
+                <div class="input-group-btn">
+                    <?= $this->formElement($phoneForm->get('submit')); ?>
+                </div>    
+            </div>    
+            <div class="input-group">
+                <?= $this->formElementErrors($phoneForm->get('name')); ?>                  
+            </div>    
+
+            <?= $this->form()->closeTag(); ?>                        
+        </p>
+        
+        <table class="table table-striped table-bordered">
+            <?php foreach ($user->getContacts() as $contact):?>
+                <?php foreach ($contact->getPhones() as $phone): ?>
+                    <tr>
+                       <th class="phone_name"><?= $phone->getName() ?></th>
+                       <td>
+                            <a class="btn btn-danger" href="<?= $this->url('application',
+                                    ['action'=>'delete-phone'], ['query' => ['id' => $phone->getId()]]); ?>">
+                                <span class="glyphicon glyphicon-remove"></span> Удалить
+                            </a>                           
+                       </td>
+                   </tr>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </table>
+    </div>
 </div>
+
+<script>
+//    var options =  {
+//        onKeyPress: function(cep, e, field, options) {
+////          var masks = ['+7 (000) 000-0000', '8 (000) 000-0000'];
+////          var mask = masks[0];
+////          console.log(cep.charAt(0));
+//////          if (cep.charAt(0) == 8){ mask = masks[1];}
+////          var mask = (cep.charAt(0) == 8) ? masks[1] : masks[0];
+////          $('.phone_with_ddd').mask(mask, options);
+//    }};
+    $('#phone_name').mask('8 (000) 000-0000', {selectOnFocus: false});
+</script>    

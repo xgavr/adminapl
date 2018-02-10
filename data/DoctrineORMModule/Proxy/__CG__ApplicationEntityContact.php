@@ -64,10 +64,10 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'name', 'status', 'dateCreated', 'supplier', 'client', 'user', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
+            return ['__isInitialized__', 'id', 'name', 'description', 'status', 'dateCreated', 'supplier', 'client', 'user', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
         }
 
-        return ['__isInitialized__', 'id', 'name', 'status', 'dateCreated', 'supplier', 'client', 'user', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
+        return ['__isInitialized__', 'id', 'name', 'description', 'status', 'dateCreated', 'supplier', 'client', 'user', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
     }
 
     /**
@@ -224,6 +224,28 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
+    public function getDescription()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDescription', []);
+
+        return parent::getDescription();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDescription($description)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDescription', [$description]);
+
+        return parent::setDescription($description);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getStatus()
     {
 
@@ -345,6 +367,17 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
+    public function getPhone()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPhone', []);
+
+        return parent::getPhone();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getPhones()
     {
 
@@ -373,6 +406,17 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPhone', [$phone]);
 
         return parent::addPhone($phone);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEmail()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEmail', []);
+
+        return parent::getEmail();
     }
 
     /**

@@ -53,9 +53,15 @@ class Phone {
         $this->id = $id;
     }     
 
-    public function getName() 
+    public function getName($format = PhoneFilter::PHONE_FORMAT_RU) 
     {
-        return $this->name;
+        $filter = new PhoneFilter();
+        
+        if ($format){
+            $filter->setFormat($format);
+        }
+        
+        return $filter->filter($this->name);
     }
 
     public function setName($name) 

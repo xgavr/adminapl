@@ -15,7 +15,7 @@ use Application\Entity\Email;
 class UserManager
 {
     
-    const EMAIL_SENDER = 'noreply@ovo.msk.ru';
+    const EMAIL_SENDER = 'noreply@adminapl.ru';
     
     /**
      * Doctrine entity manager.
@@ -89,8 +89,8 @@ class UserManager
         $post = [
             'to' => $data['email'],
             'from' => self::EMAIL_SENDER,
-            'subject' => 'Регистрация на сайте OVO.msk.ru',
-            'body' => "Здравствуйте, {$data['full_name']}!<br/>Вы зарегистрированы на сайте <a href='http://ovo.msk.ru'>OVO.msk.ru</a>!<br/>Логин: {$data['email']}<br/>Пароль: {$data['password']}.<br/><br/><br/>С уважением,<br/>OVO",
+            'subject' => 'Регистрация на сайте adminapl.ru',
+            'body' => "Здравствуйте, {$data['full_name']}!<br/>Вы зарегистрированы на сайте <a href='http://adminapl.ru'>adminapl.ru</a>!<br/>Логин: {$data['email']}<br/>Пароль: {$data['password']}.<br/><br/><br/>С уважением,<br/>AdminAPL",
         ];
         $this->postManager->send($post);    
         
@@ -298,8 +298,8 @@ class UserManager
         $post = [
             'to' => $user->getEmail(),
             'from' => self::EMAIL_SENDER,
-            'subject' => 'Изменение пароля для входа на сайт OVO.msk.ru',
-            'body' => "Здравствуйте, {$user->getFullName()}!<br/>Вами был изменен пароль для входа на сайт <a href='http://ovo.msk.ru'>OVO.msk.ru</a>!<br/>Логин: {$user->getEmail()}<br/>Пароль: $newPassword<br/><br/><br/>С уважением,<br/>OVO",
+            'subject' => 'Изменение пароля для входа на сайт adminapl.ru',
+            'body' => "Здравствуйте, {$user->getFullName()}!<br/>Вами был изменен пароль для входа на сайт <a href='http://adminapl.ru'>adminapl.ru</a>!<br/>Логин: {$user->getEmail()}<br/>Пароль: $newPassword<br/><br/><br/>С уважением,<br/>AdminAPL",
         ];
         $this->postManager->send($post);    
         
@@ -337,8 +337,8 @@ class UserManager
         $post = [
             'to' => $user->getEmail(),
             'from' => self::EMAIL_SENDER,
-            'subject' => 'Смена пароля на сайте OVO.msk.ru',
-            'body' => "Здравствуйте, {$user->getFullName()}!<br/>Вам был сменен пароль для входа на сайт <a href='http://ovo.msk.ru'>OVO.msk.ru</a>!<br/>Логин: {$user->getEmail()}<br/>Новый пароль: {$data['new_password']}.<br/><br/><br/>С уважением,<br/>OVO",
+            'subject' => 'Смена пароля на сайте adminapl.ru',
+            'body' => "Здравствуйте, {$user->getFullName()}!<br/>Вам был сменен пароль для входа на сайт <a href='http://adminapl.ru'>adminapl.ru</a>!<br/>Логин: {$user->getEmail()}<br/>Новый пароль: {$data['new_password']}.<br/><br/><br/>С уважением,<br/>AdminAPL",
         ];
         $this->postManager->send($post);    
 

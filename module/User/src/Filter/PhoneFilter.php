@@ -15,7 +15,7 @@ class PhoneFilter extends AbstractFilter
     
   // Доступные опции фильтра.
   protected $options = [
-    'format' => self::PHONE_FORMAT_INTL
+    'format' => self::PHONE_FORMAT_DB
   ];
     
   // Конструктор.

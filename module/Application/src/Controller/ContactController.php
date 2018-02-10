@@ -213,5 +213,10 @@ class ContactController extends AbstractActionController
         return new ViewModel([
             'contact' => $contact,
         ]);
-    }      
+    }    
+    
+    public function addPhoneAction()
+    {
+        
+    }
 }

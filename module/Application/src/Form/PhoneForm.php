@@ -10,6 +10,7 @@ namespace Application\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use User\Filter\PhoneFilter;
+use Application\Validator\PhoneExistsValidator;
 /**
  * Description of Phone
  *
@@ -17,11 +18,20 @@ use User\Filter\PhoneFilter;
  */
 class PhoneForm extends Form
 {
+    
+    private $entityManager;
+    
+    private $phone;
+    
     /**
      * Конструктор.     
      */
-    public function __construct()
+    public function __construct($entityManager = null, $phone = null)
     {
+        
+        $this->entityManager = $entityManager;
+        $this->phone = $phone;
+        
         // Определяем имя формы.
         parent::__construct('phone-form');
      
@@ -77,7 +87,7 @@ class PhoneForm extends Form
                     [
                         'name' => PhoneFilter::class,
                         'options' => [
-                            'format' => PhoneFilter::PHONE_FORMAT_RU,
+                            'format' => PhoneFilter::PHONE_FORMAT_DB,
                         ]
                     ],
                 ],                
@@ -85,6 +95,13 @@ class PhoneForm extends Form
                     [
                         'name'    => 'PhoneNumber',
                         'options' => [
+                        ],
+                    ],
+                    [
+                        'name' => PhoneExistsValidator::class,
+                        'options' => [
+                            'entityManager' => $this->entityManager,
+                            'phone' => $this->phone
                         ],
                     ],
                 ],

@@ -53,8 +53,8 @@ class NavManager
         
         $items[] = [
             'id' => 'home',
-            'label' => 'OVO.msk.ru',
-            'labelHTML' => '<strong>OVO</strong><sup>.msk.ru</sup>',
+            'label' => 'adminapl.ru',
+            'labelHTML' => '<strong>АдминАПЛ</strong><sup>.ru</sup>',
             'link'  => $url('home')
         ];
             

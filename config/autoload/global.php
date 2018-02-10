@@ -49,7 +49,7 @@ return [
                             '127.0.0.1', 11211
                         ]
                     ],
-                    'namespace' => 'OVO',
+                    'namespace' => 'AdmAPL',
 //                    'liboptions' => [
 //                        'COMPRESSION' => true,
 //                        'binary_protocol' => true,
@@ -75,7 +75,7 @@ return [
                             '127.0.0.1', 11211
                         ]
                     ],
-                    'namespace' => 'OVO',
+                    'namespace' => 'AdmAPL',
                     'liboptions' => [
                         'COMPRESSION' => true,
                         'binary_protocol' => true,

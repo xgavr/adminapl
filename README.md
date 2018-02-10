@@ -1,4 +1,4 @@
-# OVO project
+# AdminAPL project
 
 ## Introduction
 
@@ -76,4 +76,4 @@ Restart the nginx, now you should be ready to go!
 
 ## QA Tools
 
-"# ovo" 
+"# adminAPL" 

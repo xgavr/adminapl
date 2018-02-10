@@ -54,6 +54,31 @@ class ContactManager
     }
 
 
+    public function addPhone($contact, $phonestr, $flushnow = false)
+    {
+                
+        $phone = $this->entityManager->getRepository(Phone::class)
+                ->findOneByName($phonestr);
+
+        if ($phone == null){
+            $phone = new Phone();            
+            $phone->setContact($contact);
+            $phone->setName($phonestr);            
+    
+            $currentDate = date('Y-m-d H:i:s');
+            $phone->setDateCreated($currentDate);
+
+            $this->entityManager->persist($phone);
+
+            $contact->addPhone($phone);
+            
+            if ($flushnow){
+                $this->entityManager->flush();                
+            }
+        }    
+        
+    }
+    
     public function addNewContact($parent, $data) 
     {
         // Создаем новую сущность.
@@ -79,22 +104,8 @@ class ContactManager
             throw ('Неверный тип родительской сущности');
         }
 
-        if ($data['phone']){
-            $phone = $this->entityManager->getRepository(Phone::class)
-                    ->findOneByName($data['phone']);
-            
-            if ($phone == null){
-                $phone = new Phone();            
-                $phone->setContact($contact);
-                $phone->setName($data['phone']);            
-                $phone->setDateCreated($currentDate);
-
-                $this->entityManager->persist($phone);
-
-                $contact->addPhone($phone);
-            }    
-        }
-
+        $this->addPhone($contact, $data['phone']);
+        
         if ($data['email']){
             $email = $this->entityManager->getRepository(Email::class)
                     ->findOneByName($data['email']);
@@ -135,20 +146,7 @@ class ContactManager
         $contact->setDescription($data['description']);
         $contact->setStatus($data['status']);
         
-        if ($data['phone']){
-            $phone = $this->entityManager->getRepository(Phone::class)
-                    ->findOneByName($data['phone']);
-            if ($phone == null){
-                $phone = new Phone();            
-                $phone->setContact($contact);
-                $phone->setName($data['phone']);            
-                $phone->setDateCreated($currentDate);
-
-                $this->entityManager->persist($phone);
-
-                $contact->addPhone($phone);                
-            }
-        }
+        $this->addPhone($contact, $data['phone']);
         
         if ($data['email']){
             $email = $this->entityManager->getRepository(Email::class)
@@ -180,6 +178,14 @@ class ContactManager
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
     }    
+    
+    
+    public function removePhone($phone)
+    {
+        $this->entityManager->remove($phone);
+        $this->entityManager->flush();
+        
+    }
     
     public function removeContact($contact) 
     {   
