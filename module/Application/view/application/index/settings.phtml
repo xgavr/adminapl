@@ -16,13 +16,7 @@ $phoneForm->get('name')->setAttributes([
 $phoneForm->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Добавить']);
 $phoneForm->prepare();
 
-$this->headLink()
-//        ->appendStylesheet($this->basePath('js/winmarkltd-BootstrapFormHelpers-d4201db/dist/css/bootstrap-formhelpers.css'))
-        ;
-
 $this->headScript()
-//            ->appendFile($this->basePath('js/winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.js'))
-//            ->appendFile($this->basePath('js/winmarkltd-BootstrapFormHelpers-d4201db/js/bootstrap-formhelpers-phone.js'))
             ->appendFile($this->basePath('js/jquery.mask.min.js'))
         ;
 

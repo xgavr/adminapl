@@ -7,6 +7,7 @@ use Application\Entity\Contact;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Math\Rand;
 use Application\Entity\Email;
+use User\Validator\TokenNoExistsValidator;
 
 /**
  * This service is responsible for adding/editing users
@@ -42,14 +43,21 @@ class UserManager
     private $postManager;
     
     /**
+     * Sms manager.
+     * @var Application\Service\SmsManager
+     */
+    private $smsManager;
+    
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $roleManager, $permissionManager, $postManager) 
+    public function __construct($entityManager, $roleManager, $permissionManager, $postManager, $smsManager) 
     {
         $this->entityManager = $entityManager;
         $this->roleManager = $roleManager;
         $this->permissionManager = $permissionManager;
         $this->postManager = $postManager;
+        $this->smsManager = $smsManager;
     }
     
     /**
@@ -244,28 +252,39 @@ class UserManager
         $this->postManager->send($post);             
     }
     
+    /*
+     * @var $phone Application\Entity\Phone
+     */
+    public function generatePasswordSMSResetToken($phone)
+    {
+        
+        $user = $phone->getContact()->getUser();
+        
+        // Generate a token.
+        $token = Rand::getInteger(1000, 9999);
+        $user->setPasswordResetToken($token);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $user->setPasswordResetTokenCreationDate($currentDate);  
+        
+        $this->entityManager->flush();
+        
+        $sms = [
+            'phone' => $phone->getName(),
+            'text' => $token,
+        ];
+        
+        $this->smsManager->send($sms);             
+    }
+    
     /**
      * Checks whether the given password reset token is a valid one.
      */
     public function validatePasswordResetToken($passwordResetToken)
     {
-        $user = $this->entityManager->getRepository(User::class)
-                ->findOneByPasswordResetToken($passwordResetToken);
+        $validator =  new TokenNoExistsValidator(['entityManager' => $this->entityManager]);
         
-        if($user==null) {
-            return false;
-        }
-        
-        $tokenCreationDate = $user->getPasswordResetTokenCreationDate();
-        $tokenCreationDate = strtotime($tokenCreationDate);
-        
-        $currentDate = strtotime('now');
-        
-        if ($currentDate - $tokenCreationDate > 24*60*60) {
-            return false; // expired
-        }
-        
-        return true;
+        return  $validator->isValid($passwordResetToken);
     }
     
     /**
@@ -322,7 +341,7 @@ class UserManager
         $newPassword = $data['new_password'];
         
         // Check password length
-        if (strlen($newPassword)<6 || strlen($newPassword)>64) {
+        if (strlen($newPassword)<4 || strlen($newPassword)>64) {
             return false;
         }
         

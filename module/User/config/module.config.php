@@ -48,6 +48,26 @@ return [
                     ],
                 ],
             ],
+            'reset-password-by-phone' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/reset-password-by-phone',
+                    'defaults' => [
+                        'controller' => Controller\UserController::class,
+                        'action'     => 'resetPasswordByPhone',
+                    ],
+                ],
+            ],
+            'sms-token' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/sms-token',
+                    'defaults' => [
+                        'controller' => Controller\UserController::class,
+                        'action'     => 'smsToken',
+                    ],
+                ],
+            ],
             'set-password' => [
                 'type' => Literal::class,
                 'options' => [
@@ -216,7 +236,7 @@ return [
             Controller\MemberController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions
                 // to anyone.
-                ['actions' => ['resetPassword', 'message', 'setPassword'], 'allow' => '*'],
+                ['actions' => ['resetPassword', 'resetPasswordByPhone', 'smsToken', 'message', 'setPassword'], 'allow' => '*'],
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
                 ['actions' => ['edit', 'changePassword'], 'allow' => '@'],
                 ['actions' => ['index', 'add', 'view'], 'allow' => '+member.manage'],
@@ -233,7 +253,7 @@ return [
             Controller\UserController::class => [
                 // Give access to "resetPassword", "message" and "setPassword" actions
                 // to anyone.
-                ['actions' => ['resetPassword', 'message', 'setPassword'], 'allow' => '*'],
+                ['actions' => ['resetPassword', 'resetPasswordByPhone', 'smsToken', 'message', 'setPassword'], 'allow' => '*'],
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
                 ['actions' => ['index', 'add', 'edit', 'view', 'changePassword'], 'allow' => '+user.manage'],
             ],

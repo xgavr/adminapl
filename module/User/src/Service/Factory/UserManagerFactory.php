@@ -6,6 +6,7 @@ use User\Service\UserManager;
 use User\Service\RoleManager;
 use User\Service\PermissionManager;
 use Application\Service\PostManager;
+use Application\Service\SmsManager;
 
 /**
  * This is the factory class for UserManager service. The purpose of the factory
@@ -22,7 +23,8 @@ class UserManagerFactory
         $roleManager = $container->get(RoleManager::class);
         $permissionManager = $container->get(PermissionManager::class);
         $postManager = $container->get(PostManager::class);
+        $smsManager = $container->get(SmsManager::class);
         
-        return new UserManager($entityManager, $roleManager, $permissionManager, $postManager);
+        return new UserManager($entityManager, $roleManager, $permissionManager, $postManager, $smsManager);
     }
 }

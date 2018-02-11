@@ -1,35 +1,37 @@
 <?php
-namespace Application\Validator;
+namespace User\Validator;
 
 use Zend\Validator\AbstractValidator;
-use Application\Entity\Phone;
-use User\Filter\PhoneFilter;
+use User\Entity\User;
 /**
  * This validator class is designed for checking if there is an existing role 
  * with such a name.
  */
-class PhoneExistsValidator extends AbstractValidator 
+class TokenNoExistsValidator extends AbstractValidator 
 {
+    
+    
     /**
      * Available validator options.
      * @var array
      */
     protected $options = array(
         'entityManager' => null,
-        'phone' => null
     );
     
     // Validation failure message IDs.
     const NOT_DIGIT  = 'notDigit';
-    const PHONE_EXISTS = 'phoneExists';
+    const TOKEN_NO_EXISTS = 'tokenNoExists';
+    const TOKEN_EXPIRED = 'tokenExpired';
         
     /**
      * Validation failure messages.
      * @var array
      */
     protected $messageTemplates = array(
-        self::NOT_DIGIT  => "Телефонный номер должен содержать только цифры",
-        self::PHONE_EXISTS  => "Такой номер уже используется"        
+        self::NOT_DIGIT  => "Не верный код",
+        self::TOKEN_NO_EXISTS  => "Не верный код",        
+        self::TOKEN_EXPIRED  => "Время вышло",        
     );
     
     /**
@@ -41,8 +43,6 @@ class PhoneExistsValidator extends AbstractValidator
         if(is_array($options)) {            
             if(isset($options['entityManager']))
                 $this->options['entityManager'] = $options['entityManager'];
-            if(isset($options['phone']))
-                $this->options['phone'] = $options['phone'];
         }
         
         // Call the parent class constructor
@@ -62,22 +62,27 @@ class PhoneExistsValidator extends AbstractValidator
         // Get Doctrine entity manager.
         $entityManager = $this->options['entityManager'];
         
-        $phoneFilter = new PhoneFilter();
-        $phone = $entityManager->getRepository(Phone::class)
-                ->findOneByName($phoneFilter->filter($value));
+        $user = $entityManager->getRepository(User::class)
+                ->findOneByPasswordResetToken($value);
         
-        if($this->options['phone']==null) {
-            $isValid = ($phone==null);
-        } else {
-            if($this->options['phone']->getName()!=$phoneFilter->filter($value) && $phone!=null) 
-                $isValid = false;
-            else 
-                $isValid = true;
+        $isValid = ($user!=null);
+        
+        if ($isValid){
+            $tokenCreationDate = $user->getPasswordResetTokenCreationDate();
+            $tokenCreationDate = strtotime($tokenCreationDate);
+
+            $currentDate = strtotime('now');
+
+            if ($currentDate - $tokenCreationDate > 24*60*60) {
+                $isValid = false; // expired
+                $this->error(self::TOKEN_EXPIRED);
+                return $isValid;
+            }
+        
         }
-        
         // If there were an error, set error message.
         if(!$isValid) {            
-            $this->error(self::PHONE_EXISTS);            
+            $this->error(self::TOKEN_NO_EXISTS);            
         }
         
         // Return validation result.

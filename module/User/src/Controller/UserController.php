@@ -5,9 +5,13 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Entity\User;
 use User\Entity\Role;
+use Application\Entity\Phone;
 use User\Form\UserForm;
 use User\Form\PasswordChangeForm;
 use User\Form\PasswordResetForm;
+use User\Form\PasswordResetPhoneForm;
+use User\Filter\PhoneFilter;
+use Zend\View\Model\JsonModel;
 
 /**
  * This controller is responsible for user management (adding, editing, 
@@ -316,6 +320,65 @@ class UserController extends AbstractActionController
         ]);
     }
     
+    /*
+     * sms token
+     */
+    public function smsTokenAction()
+    {
+        $msg = 'SMS не отправлено';
+        
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();            
+
+            $filter = new PhoneFilter();
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneByName($filter->filter($data['phone']));                
+            
+            if ($phone){            
+                $this->userManager->generatePasswordSMSResetToken($phone);
+                $msg = 'SMS с кодом отправлено на номер '.$data['phone'];
+            } else {
+                $msg = 'Такой номер телефона не зарегистрирован';
+            }  
+            
+        }
+        
+        return new JsonModel([
+            'msg' => $msg,
+        ]);          
+    }
+    
+    /**
+     * This action displays the "Reset Password" page.
+     */
+    public function resetPasswordByPhoneAction()
+    {
+        // Create form
+        $form = new PasswordResetPhoneForm($this->entityManager);
+        
+        // Check if user has submitted the form
+        if ($this->getRequest()->isPost()) {
+            
+            // Fill in the form with POST data
+            $data = $this->params()->fromPost();            
+            
+            $form->setData($data);
+            
+            // Validate form
+            if($form->isValid()) {
+                                
+                return $this->redirect()->toRoute('users', 
+                        ['action'=>'set-password'], ['query' => ['token' => $data['token']]]);                 
+            }               
+        } 
+        
+        $this->layout()->setTemplate('layout/layout_no_auth');
+
+        return new ViewModel([                    
+            'form' => $form
+        ]);
+    }
+    
     /**
      * This action displays an informational message page. 
      * For example "Your password has been resetted" and so on.
@@ -326,7 +389,7 @@ class UserController extends AbstractActionController
         $id = (string)$this->params()->fromRoute('id');
         
         // Validate input argument.
-        if($id!='invalid-email' && $id!='sent' && $id!='set' && $id!='failed') {
+        if($id!='invalid-email' && $id!='invalid-phone' && $id!='sent' && $id!='sms' && $id!='set' && $id!='failed') {
             throw new \Exception('Invalid message ID specified');
         }
         
@@ -344,7 +407,10 @@ class UserController extends AbstractActionController
         
         // Validate token length
         if ($token!=null && (!is_string($token) || strlen($token)!=32)) {
-            throw new \Exception('Invalid token type or length');
+            // Validate sms token length
+            if ($token!=null && (!is_numeric($token) || strlen($token)!=4)) {
+                throw new \Exception('Invalid token type or length');
+            }
         }
         
         if($token===null || 

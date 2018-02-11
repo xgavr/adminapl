@@ -10,7 +10,7 @@ namespace Application\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use User\Filter\PhoneFilter;
-use Application\Validator\PhoneExistsValidator;
+use User\Validator\PhoneExistsValidator;
 /**
  * Description of Phone
  *
