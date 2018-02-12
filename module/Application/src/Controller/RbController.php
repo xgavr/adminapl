@@ -16,6 +16,8 @@ use Application\Form\TaxForm;
 use Application\Form\CountryForm;
 use Application\Form\ProducerForm;
 use Zend\Session\Container;
+use Zend\View\Model\JsonModel;
+use Application\Filter\BikFilter;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -511,5 +513,17 @@ class RbController extends AbstractActionController
         return new ViewModel([
             'producer' => $producer,
         ]);
-    }      
+    }   
+    
+    public function bikAction()
+    {
+        $bik = $this->params()->fromRoute('id', -1);
+        
+        $filter = new BikFilter();
+        
+        return new JsonModel([
+            'data' => $filter->filter($bik),
+        ]);
+        
+    }
 }
