@@ -513,17 +513,5 @@ class RbController extends AbstractActionController
         return new ViewModel([
             'producer' => $producer,
         ]);
-    }   
-    
-    public function bikAction()
-    {
-        $bik = $this->params()->fromRoute('id', -1);
-        
-        $filter = new BikFilter();
-        
-        return new JsonModel([
-            'data' => $filter->filter($bik),
-        ]);
-        
-    }
+    }       
 }

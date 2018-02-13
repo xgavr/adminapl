@@ -26,20 +26,13 @@ class NavManager
     private $rbacManager;
     
     /**
-     * Shop manager.
-     * @var Application\Service\ShopManager
-     */
-    private $shopManager;
-    
-    /**
      * Constructs the service.
      */
-    public function __construct($authService, $urlHelper, $rbacManager, $shopManager) 
+    public function __construct($authService, $urlHelper, $rbacManager) 
     {
         $this->authService = $authService;
         $this->urlHelper = $urlHelper;
         $this->rbacManager = $rbacManager;
-        $this->shopManager = $shopManager;
     }
     
     /**
@@ -153,6 +146,21 @@ class NavManager
                 ];
             }
             
+            //Предприятие
+            $companyDropdownItems = [];
+            if ($this->rbacManager->isGranted(null, 'company.manage')) {
+                $companyDropdownItems[] = [
+                            'id' => 'regions',
+                            'label' => 'Регионы',
+                            'link' => $url('regions')
+                        ];
+                
+                $companyDropdownItems[] = [
+                            'id' => 'offices',
+                            'label' => 'Офисы',
+                            'link' => $url('offices')
+                        ];
+            }
             // Determine which items must be displayed in Admin dropdown.
             $useradminDropdownItems = [];
             
@@ -219,22 +227,6 @@ class NavManager
                 }            
             }
             
-            
-            if ($this->shopManager->currentClient()){
-                $items[] = [
-                    'id' => 'currentClient',
-                    'float' => 'right',
-                    'labelHTML' => '<span class="btn btn-success btn-xs">'.$this->shopManager->currentClient()->getName().'</span>',
-                    'link'  => $url('client',['action' => 'view', 'id' => $this->shopManager->currentClient()->getId()])
-                ];
-            }    
-            
-            $items[] = [
-                'id' => 'cart',
-                'float' => 'right',
-                'labelHTML' => '<span class="btn btn-success btn-xs">Корзина <span class="badge" id="nav_cart_badge">'.$this->shopManager->currentClientNum().'</span></span>',
-                'link'  => $url('shop', ['action' => 'cart'])
-            ];
             
             $items[] = [
                 'id' => 'logout',

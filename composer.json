@@ -40,6 +40,7 @@
         "psr-4": {
             "Application\\": "module/Application/src/",
             "Admin\\":"module/Admin/src/",
+            "Company\\":"module/Company/src/",
             "User\\":"module/User/src/"
         }
     },
@@ -47,6 +48,7 @@
         "psr-4": {
             "ApplicationTest\\": "module/Application/test/",
             "AdminTest\\":"module/Admin/test/",
+            "CompanyTest\\":"module/Company/test/",
             "UserTest\\":"module/User/test/"
         }
     },

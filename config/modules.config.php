@@ -34,4 +34,5 @@ return [
     'Admin',
     'User',
     'Application',
+    'Company',
 ];

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Application\Entity;
+namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;

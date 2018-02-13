@@ -6,15 +6,15 @@
  * and open the template in the editor.
  */
 
-namespace Application\Entity;
+namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Application\Entity\Currencyrate;
+use Company\Entity\Currencyrate;
 
 /**
  * Description of Currency
- * @ORM\Entity(repositoryClass="\Application\Repository\CurrencyRepository")
+ * @ORM\Entity(repositoryClass="\Company\Repository\CurrencyRepository")
  * @ORM\Table(name="currency")
  * @author Daddy
  */

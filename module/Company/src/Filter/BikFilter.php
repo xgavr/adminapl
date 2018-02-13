@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Application\Filter;
+namespace Company\Filter;
 
 use Zend\Filter\AbstractFilter;
 use Zend\Json\Json;
