@@ -98,9 +98,9 @@ class ContactManager
                 $currentDate = date('Y-m-d H:i:s');
                 $phone->setDateCreated($currentDate);
 
-                $this->entityManager->persist($phone);
-
                 $contact->addPhone($phone);
+
+                $this->entityManager->persist($phone);
 
                 if ($flushnow){
                     $this->entityManager->flush();                
@@ -124,9 +124,9 @@ class ContactManager
                 $currentDate = date('Y-m-d H:i:s');
                 $email->setDateCreated($currentDate);
 
-                $this->entityManager->persist($email);
-
                 $contact->addEmail($email);
+
+                $this->entityManager->persist($email);
 
                 if ($flushnow){
                     $this->entityManager->flush();                
@@ -166,9 +166,6 @@ class ContactManager
         
         $this->addEmail($contact, $data['email']);
         
-        // Добавляем сущность в менеджер сущностей.
-        $this->entityManager->persist($contact);
-        
        if ($data['email'] && $data['password']){
             $user = $this->entityManager->getRepository(User::class)
                     ->findOneByEmail($data['email']);
@@ -179,6 +176,7 @@ class ContactManager
                 $contact->setUser($user);
             }   
        }
+        
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($contact);
         
@@ -194,20 +192,7 @@ class ContactManager
         
         $this->addPhone($contact, $data['phone']);
         
-        if ($data['email']){
-            $email = $this->entityManager->getRepository(Email::class)
-                    ->findOneByName($data['email']);
-            if ($email == null){
-                $email = new Email();            
-                $email->setContact($contact);
-                $email->setName($data['email']);            
-                $email->setDateCreated($currentDate);
-
-                $this->entityManager->persist($email);
-
-                $contact->addEmail($email);
-            }
-        }
+        $this->addEmail($contact, $data['email']);
         
        if ($data['email'] && $data['password']){
             $user = $this->entityManager->getRepository(User::class)
@@ -225,6 +210,25 @@ class ContactManager
         $this->entityManager->flush();
     }    
     
+    public function updateMessengers($contact, $data) 
+    {
+        $contact->setIcq($data['icq']);
+        $contact->setTelegramm($data['telegramm']);
+                
+        $this->entityManager->persist($contact);
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }    
+    
+    public function updateAddress($contact, $data) 
+    {
+        $contact->setAddress($data['address']);
+        $contact->setAddressSms($data['addressSms']);
+                
+        $this->entityManager->persist($contact);
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }    
     
     public function removePhone($phone)
     {

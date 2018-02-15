@@ -360,5 +360,118 @@ class ContactController extends AbstractActionController
         
         
     }
+
+    public function messengersAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $contactform = new ContactForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $data['name'] = $contact->getName();
+            $data['status'] = $contact->getStatus();
+            $contactform->setData($data);
+            
+            if ($contactform->isValid()) {
+
+                $this->contactManager->updateMessengers($contact, $data, true);
+
+                $this->flashMessenger()->addSuccessMessage('Контакты сохранены.');
+                
+                $parent = $this->contactManager->getParent($contact);
+                
+                return $this->redirect()->toRoute($parent['route'], ['action' => 'view', 'id' => $parent['id']]);
+                
+            } else {
+                $this->flashMessenger()->addInfoMessage('Не удалось сохранить контакты.');                
+            }
+        } else {
+            $data = [
+               'icq' => $contact->getIcq(),
+               'telegramm' => $contact->getTelegramm(),
+            ];
+            
+            $contactform->setData($data);
+        }            
+        
+        // Render the view template.
+        return new ViewModel([
+            'contactForm' => $contactform,
+            'contact' => $contact,
+            'parent' => $this->contactManager->getParent($contact),
+        ]);
+    }
     
+    public function addressAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $contactform = new ContactForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $data['name'] = $contact->getName();
+            $data['status'] = $contact->getStatus();
+            $contactform->setData($data);
+            
+            if ($contactform->isValid()) {
+
+                $this->contactManager->updateAddress($contact, $data, true);
+
+                $this->flashMessenger()->addSuccessMessage('Контакты сохранены.');
+                
+                $parent = $this->contactManager->getParent($contact);
+                
+                return $this->redirect()->toRoute($parent['route'], ['action' => 'view', 'id' => $parent['id']]);
+                
+            } else {
+                $this->flashMessenger()->addInfoMessage('Не удалось сохранить контакты.');                
+            }
+        } else {
+            $data = [
+               'icq' => $contact->getIcq(),
+               'telegramm' => $contact->getTelegramm(),
+            ];
+            
+            $contactform->setData($data);
+        }            
+        
+        // Render the view template.
+        return new ViewModel([
+            'contactForm' => $contactform,
+            'contact' => $contact,
+            'parent' => $this->contactManager->getParent($contact),
+        ]);
+    }
 }

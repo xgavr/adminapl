@@ -37,9 +37,9 @@ class Legal {
     protected $inn;
 
     /**
-     * @ORM\Column(name="knn")   
+     * @ORM\Column(name="kpp")   
      */
-    protected $knn;
+    protected $kpp;
 
     /**
      * @ORM\Column(name="ogrn")   
@@ -104,7 +104,7 @@ class Legal {
     private $contracts;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="legal") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="legals") 
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
      */
     private $contact;

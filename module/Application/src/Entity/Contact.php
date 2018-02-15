@@ -41,6 +41,16 @@ class Contact {
     protected $description;
     
     /**
+     * @ORM\Column(name="address")   
+     */
+    protected $address;
+    
+    /**
+     * @ORM\Column(name="address_sms")   
+     */
+    protected $addressSms;
+    
+    /**
      * @ORM\Column(name="status")   
      */
     protected $status;   
@@ -96,9 +106,16 @@ class Contact {
    */
    private $emails;
 
+   /**
+    * @ORM\OneToMany(targetEntity="\Company\Entity\Legal", mappedBy="contact")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
+   */
+   private $legals;
+
    public function __construct() {
       $this->phones = new ArrayCollection();
       $this->emails = new ArrayCollection();
+      $this->legals = new ArrayCollection();
    }
    
     public function getId() 
@@ -146,14 +163,34 @@ class Contact {
         $this->icq = $icq;
     }
     
+    public function getAddress()
+    {
+        return $this->address;
+    }
+    
+    public function setAddress($address)
+    {
+        $this->address = $address;
+    }
+    
+    public function getAddressSms()
+    {
+        return $this->addressSms;
+    }
+    
+    public function setAddressSms($addressSms)
+    {
+        $this->addressSms = $addressSms;
+    }
+    
     public function getTelegramm()
     {
         return $this->telegramm;
     }
     
-    public function setTelegram($telegramm)
+    public function setTelegramm($telegramm)
     {
-        $this->telegram = $telegramm;
+        $this->telegramm = $telegramm;
     }
     
     /**
@@ -348,5 +385,22 @@ class Contact {
     public function addEmail($email) 
     {
         $this->emails[] = $email;
+    }       
+    /**
+     * Возвращает email для этого contact.
+     * @return array
+     */   
+
+    public function getLegals() {
+      return $this->legals;
+   }    
+   
+    /**
+     * Добавляет новый email к этому contact.
+     * @param $email
+     */   
+    public function addLegal($legal) 
+    {
+        $this->legals[] = $legal;
     }       
 }

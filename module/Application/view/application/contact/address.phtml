@@ -1,0 +1,52 @@
+<?php
+$this->headTitle($parent['headTitle']);
+
+$this->mainMenu()->setActiveItemId('');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            $parent['headTitle']=>$this->url($parent['route']),
+            $parent['pageTitle']=>$this->url($parent['route'], ['action'=>'view', 'id'=>$parent['id']]),
+            'Адреса' => $this->url('contact', ['action'=>'phone', 'id'=>$contact->getId()]),
+            ]);
+
+$form = $this->contactForm;
+
+$form->get('address')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('addressSms')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Сохранить']);
+$form->prepare();
+
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('address')); ?>
+            <?= $this->formElement($form->get('address')); ?>
+            <?= $this->formElementErrors($form->get('address')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('addressSms')); ?>
+            <?= $this->formElement($form->get('addressSms')); ?>
+            <?= $this->formElementErrors($form->get('addressSms')); ?>                  
+        </div>
+                        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   

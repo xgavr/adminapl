@@ -53,7 +53,7 @@ class Version20180213183801 extends AbstractMigration
         $table->addColumn('head', 'string', ['notnull'=>false, 'length'=>512]);
         $table->addColumn('address', 'string', ['notnull'=>false, 'length'=>512]);
         $table->addColumn('info', 'string', ['notnull'=>false, 'length'=>512]);
-        $table->addColumn('chiefAccount', 'string', ['notnull'=>false, 'length'=>512]);
+        $table->addColumn('chief_account', 'string', ['notnull'=>false, 'length'=>512]);
         $table->addColumn('status', 'integer', ['notnull'=>true]);
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);
         $table->addColumn('date_start', 'date', ['notnull'=>false]);

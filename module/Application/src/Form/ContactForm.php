@@ -125,6 +125,30 @@ class ContactForm extends Form
             ],
         ]);
 
+        // Add "address" field
+        $this->add([            
+            'type'  => 'textarea',
+            'name' => 'address',
+            'attributes' => [
+                'id' => 'address'
+            ],
+            'options' => [
+                'label' => 'Адрес для документов',
+            ],
+        ]);
+        
+        // Add "addressSMS" field
+        $this->add([            
+            'type'  => 'textarea',
+            'name' => 'addressSms',
+            'attributes' => [
+                'id' => 'addressSms'
+            ],
+            'options' => [
+                'label' => 'Адрес для СМС',
+            ],
+        ]);
+        
         // Add "password" field
         $this->add([            
             'type'  => 'text',
@@ -307,25 +331,61 @@ class ContactForm extends Form
         $inputFilter->add([
                 'name'     => 'icq',
                 'required' => false,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    ['name'=>'Digits'],
-                ],
+//                'filters'  => [                    
+//                    ['name' => 'ToInt'],
+//                ],                
+//                'validators' => [
+//                    ['name'=>'Digits'],
+//                ],
             ]); 
         
         // Add input for "icq" field
         $inputFilter->add([
                 'name'     => 'telegramm',
                 'required' => false,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
+//                'filters'  => [                    
+//                    ['name' => 'ToInt'],
+//                ],                
+//                'validators' => [
+//                    ['name'=>'IsFloat'],
+//                ],
+            ]);         
+        
+        $inputFilter->add([
+                'name'     => 'address',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
                 ],                
                 'validators' => [
-                    ['name'=>'Digits'],
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 0,
+                            'max' => 1024
+                        ],
+                    ],
                 ],
-            ]);         
+            ]);                  
+        
+        $inputFilter->add([
+                'name'     => 'addressSms',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 0,
+                            'max' => 256
+                        ],
+                    ],
+                ],
+            ]);                  
+        
+        
     }    
     
     

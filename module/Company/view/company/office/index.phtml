@@ -49,14 +49,14 @@ $this->pageBreadcrumbs()->setItems([
         </td>
         <td>
             </nobr>
-            <a class="btn btn-info" href="<?= $this->url('offices', 
-                    ['action'=>'edit', 'id'=>$office->getId()]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-            </a>
-            <a class="btn btn-danger" href="<?= $this->url('offices',
-                    ['action'=>'delete', 'id'=>$office->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
+                <a class="btn btn-info" href="<?= $this->url('offices', 
+                        ['action'=>'view', 'id'=>$office->getId()]); ?>">
+                    <span class="glyphicon glyphicon-pencil" ></span> Изменить
+                </a>
+                <a class="btn btn-danger" href="<?= $this->url('offices',
+                        ['action'=>'delete', 'id'=>$office->getId()]); ?>">
+                    <span class="glyphicon glyphicon-remove"></span> Удалить
+                </a>
             </nobr>
         </td>    
     </tr>

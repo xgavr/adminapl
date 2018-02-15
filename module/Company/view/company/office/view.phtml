@@ -85,21 +85,67 @@ $this->pageBreadcrumbs()->setItems([
             </table>
         <?php endforeach; ?>
             
+    </div>    
+    <div class="col-md-4">
         <h2>Мессенджеры</h2>
         <?php foreach ($office->getContacts() as $contact):?>
             <p>
                 <a class="btn btn-default" href="<?= $this->url('contact', 
                                     ['action'=>'messengers', 'id'=>$contact->getId()]); ?>">
-                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getEmails())) ? 'Изменить':'Добавить'; ?>
+                                <span class="glyphicon glyphicon-pencil" ></span> Изменить
                 </a>
             </p>
             <table class="table table-striped table-bordered">
-                <?php foreach ($contact->getEmails() as $email): ?>
-                    <tr>
-                       <th class="email_name"><?= $email->getName() ?></th>
-                   </tr>
-                <?php endforeach; ?>
+                <tr>
+                   <td class="">ICQ</td>
+                   <th class=""><?= $contact->getIcq() ?></th>
+               </tr>
+                <tr>
+                   <td class="">Telegramm</td>
+                   <th class=""><?= $contact->getTelegramm() ?></th>
+               </tr>
             </table>
         <?php endforeach; ?>
     </div>    
 </div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Адреса</h2>
+        <?php foreach ($office->getContacts() as $contact):?>
+            <p>
+                <a class="btn btn-default" href="<?= $this->url('contact', 
+                                    ['action'=>'address', 'id'=>$contact->getId()]); ?>">
+                                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+                </a>
+            </p>
+            <table class="table table-striped table-bordered">
+                <tr>
+                   <td class="">Адрес для документов</td>
+                   <th class=""><?= $contact->getAddress() ?></th>
+               </tr>
+                <tr>
+                   <td class="">Адрес для SMS</td>
+                   <th class=""><?= $contact->getAddressSms() ?></th>
+               </tr>
+            </table>
+        <?php endforeach; ?>
+    </div>
+    <div class="col-md-6">
+        <h2>Юридические лица</h2>
+        <?php foreach ($office->getContacts() as $contact):?>
+            <p>
+                <a class="btn btn-default" href="<?= $this->url('contact', 
+                                    ['action'=>'legal', 'id'=>$contact->getId()]); ?>">
+                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getLegals())) ? 'Изменить':'Добавить'; ?>
+                </a>
+            </p>
+            <table class="table table-striped table-bordered">
+                <?php foreach ($contact->getLegals() as $legal): ?>
+                    <tr>
+                       <th class=""><?= $legal->getName() ?></th>
+                   </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php endforeach; ?>
+    </div>
+</div>    
