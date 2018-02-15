@@ -1,0 +1,70 @@
+<?php
+$this->headTitle($parent['headTitle']);
+
+$this->mainMenu()->setActiveItemId('');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            $parent['headTitle']=>$this->url($parent['route']),
+            $parent['pageTitle']=>$this->url($parent['route'], ['action'=>'view', 'id'=>$parent['id']]),
+            'Телефоны' => $this->url('contact', ['action'=>'phone', 'id'=>$contact->getId()]),
+            ]);
+
+$phoneForm = $this->phoneForm;
+$phoneForm->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'8 (000) 000-0000',
+    'aria-describedby' => "basic-addon2",
+    ]);
+
+$phoneForm->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Добавить']);
+$phoneForm->prepare();
+
+$this->headScript()
+            ->appendFile($this->basePath('js/jquery.mask.min.js'))
+        ;
+
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Контактные телефоны</h2>
+        <p>
+            <?= $this->form()->openTag($phoneForm); ?>
+            <div class="input-group">
+                <?= $this->formElement($phoneForm->get('name')); ?>
+                <div class="input-group-btn">
+                    <?= $this->formElement($phoneForm->get('submit')); ?>
+                </div>    
+            </div>    
+            <div class="input-group">
+                <?= $this->formElementErrors($phoneForm->get('name')); ?>                  
+            </div>    
+
+            <?= $this->form()->closeTag(); ?>                        
+        </p>
+        
+        <table class="table table-striped table-bordered">
+            <?php foreach ($contact->getPhones() as $phone): ?>
+                <tr>
+                   <th class="phone_name"><?= $phone->getName() ?></th>
+                   <td>
+                        <a class="btn btn-danger" href="<?= $this->url('contact',
+                                ['action'=>'delete-phone'], ['query' => ['id' => $phone->getId()]]); ?>">
+                            <span class="glyphicon glyphicon-remove"></span> Удалить
+                        </a>                           
+                   </td>
+               </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    
+</div>
+
+<script>
+    $('#phone_name').mask('8 (000) 000-0000', {selectOnFocus: false});
+</script>    

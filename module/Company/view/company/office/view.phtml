@@ -1,0 +1,105 @@
+<?php
+$this->headTitle('Офис');
+
+$this->mainMenu()->setActiveItemId('offices');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Офисы'=>$this->url('offices'),
+            $office->getName()=>$this->url('offices', ['action'=>'view', 'id'=>$office->getId()])
+            ]);
+
+?>
+
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Офис</h2>
+
+        <p>
+            <a class="btn btn-default" href="<?= $this->url('offices', 
+                                ['action'=>'edit', 'id'=>$office->getId()]); ?>">
+                            <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+        </p>
+    
+        <table class="table table-striped table-bordered">
+             <tr>
+                <th>ID:</th>
+                <td><?= $this->escapeHtml($office->getId()) ?></th>
+            </tr>
+             <tr>
+                <th>APL Id:</th>
+                <td><?= $this->escapeHtml($office->getAplId()) ?></th>
+            </tr>
+            <tr>
+                <th>Наименование:</th>
+                <td><?= $this->escapeHtml($office->getName()) ?></th>
+            </tr>
+            <tr>
+                <th>Регион:</th>
+                <td><?= $this->escapeHtml($office->getRegion()->getFullName()) ?></th>
+            </tr>
+            <tr>
+                <th>Статус:</th>
+                <td><?= $this->escapeHtml($office->getStatusAsString()) ?></th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h2>Контактные телефоны</h2>
+        <?php foreach ($office->getContacts() as $contact):?>
+            <p>
+                <a class="btn btn-default" href="<?= $this->url('contact', 
+                                    ['action'=>'phone', 'id'=>$contact->getId()]); ?>">
+                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getPhones())) ? 'Изменить':'Добавить'; ?>
+                </a>
+            </p>
+            <table class="table table-striped table-bordered">
+                <?php foreach ($contact->getPhones() as $phone): ?>
+                    <tr>
+                       <th class="phone_name"><?= $phone->getName() ?></th>
+                   </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php endforeach; ?>
+        
+        <h2>Электронная почта</h2>
+        <?php foreach ($office->getContacts() as $contact):?>
+            <p>
+                <a class="btn btn-default" href="<?= $this->url('contact', 
+                                    ['action'=>'email', 'id'=>$contact->getId()]); ?>">
+                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getEmails())) ? 'Изменить':'Добавить'; ?>
+                </a>
+            </p>
+            <table class="table table-striped table-bordered">
+                <?php foreach ($contact->getEmails() as $email): ?>
+                    <tr>
+                       <th class="email_name"><?= $email->getName() ?></th>
+                   </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php endforeach; ?>
+            
+        <h2>Мессенджеры</h2>
+        <?php foreach ($office->getContacts() as $contact):?>
+            <p>
+                <a class="btn btn-default" href="<?= $this->url('contact', 
+                                    ['action'=>'messengers', 'id'=>$contact->getId()]); ?>">
+                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getEmails())) ? 'Изменить':'Добавить'; ?>
+                </a>
+            </p>
+            <table class="table table-striped table-bordered">
+                <?php foreach ($contact->getEmails() as $email): ?>
+                    <tr>
+                       <th class="email_name"><?= $email->getName() ?></th>
+                   </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php endforeach; ?>
+    </div>    
+</div>

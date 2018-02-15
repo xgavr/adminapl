@@ -12,12 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Description of Client
- * @ORM\Entity(repositoryClass="\Application\Repository\LegalRepository")
+ * Description of Office
+ * @ORM\Entity(repositoryClass="\Company\Repository\OfficeRepository")
  * @ORM\Table(name="office")
  * @author Daddy
  */
-class Client {
+class Office {
         
      // Status constants.
     const STATUS_ACTIVE       = 1; // Active user.
@@ -32,8 +32,6 @@ class Client {
     protected $id;
     
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(name="apl_id")   
      */
     protected $aplId;
@@ -61,37 +59,23 @@ class Client {
 
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Contact", mappedBy="office")
+    * @ORM\OneToMany(targetEntity="\Application\Entity\Contact", mappedBy="office")
     * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
      */
     private $contacts;
-        
+                
     /**
-    * @ORM\OneToMany(targetEntity="Company\Entity\Legal", mappedBy="office")
-    * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
-     */
-    private $legals;
-        
-    /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Region", inversedBy="office") 
+     * @ORM\ManyToOne(targetEntity="\Company\Entity\Region", inversedBy="offices") 
      * @ORM\JoinColumn(name="region_id", referencedColumnName="id")
      */
     private $region;
     
-    /**
-    * @ORM\OneToMany(targetEntity="User\Entity\User", mappedBy="office")
-    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
-     */
-    private $staffs;
-        
     /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->contacts = new ArrayCollection();
-        $this->staffs = new ArrayCollection();
-        $this->legals = new ArrayCollection();
     }
     
     public function getId() 
@@ -150,8 +134,8 @@ class Client {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_RETIRED => 'Retired'
+            self::STATUS_ACTIVE => 'Действующий',
+            self::STATUS_RETIRED => 'Закрыт'
         ];
     }    
     
@@ -212,39 +196,6 @@ class Client {
         $this->contacts[] = $contact;
     }
         
-    /**
-     * Returns the array of cart assigned to this.
-     * @return array
-     */
-    public function getStaffs()
-    {
-        return $this->staffs;
-    }
-        
-    /**
-     * Assigns.
-     */
-    public function addStaff($staff)
-    {
-        $this->staffs[] = $staff;
-    }
-        
-    /**
-     * Returns the array of order assigned to this.
-     * @return array
-     */
-    public function getLegals()
-    {
-        return $this->legals;
-    }
-        
-    /**
-     * Assigns.
-     */
-    public function addLegal($legal)
-    {
-        $this->legals[] = $legal;
-    }
     /*
      * Возвращает связанный region.
      * @return \Company\Entity\Region
@@ -262,7 +213,7 @@ class Client {
     public function setRegion($region) 
     {
         $this->region = $region;
-        $user->addRegion($region);
+        $region->addOffice($this);
     }     
         
 }

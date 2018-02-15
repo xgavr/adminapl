@@ -105,6 +105,26 @@ class ContactForm extends Form
             ],
         ]);
 
+        // Add "icq" field
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'icq',
+            'disabled' => 'disabled',
+            'options' => [
+                'label' => 'Icq номер',
+            ],
+        ]);
+
+        // Add "telegramm" field
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'telegramm',
+            'disabled' => 'disabled',
+            'options' => [
+                'label' => 'Telegramm номер',
+            ],
+        ]);
+
         // Add "password" field
         $this->add([            
             'type'  => 'text',
@@ -283,7 +303,29 @@ class ContactForm extends Form
                 ],
             ]); 
         
+        // Add input for "icq" field
+        $inputFilter->add([
+                'name'     => 'icq',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'Digits'],
+                ],
+            ]); 
         
+        // Add input for "icq" field
+        $inputFilter->add([
+                'name'     => 'telegramm',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'Digits'],
+                ],
+            ]);         
     }    
     
     

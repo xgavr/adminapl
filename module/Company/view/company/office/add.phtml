@@ -1,0 +1,77 @@
+<?php
+$this->headTitle('Добавить офис');
+
+$this->mainMenu()->setActiveItemId('regions');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Офисы'=>$this->url('regions'),
+            'Добавить офис'=>$this->url('regions', ['action'=>'add'])
+            ]);
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование'
+    ]);
+
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'APL Id'
+    ]);
+
+$form->get('region')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Регион'
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Статус'
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+
+$form->prepare();
+?>
+
+<h1>Добавить офис</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('aplId')); ?>
+            <?= $this->formElement($form->get('aplId')); ?>
+            <?= $this->formElementErrors($form->get('aplId')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('region')); ?>
+            <?= $this->formElement($form->get('region')); ?>
+            <?= $this->formElementErrors($form->get('region')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('status')); ?>
+            <?= $this->formElement($form->get('status')); ?>
+            <?= $this->formElementErrors($form->get('status')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('csrf')); ?>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   
+
+
+
+

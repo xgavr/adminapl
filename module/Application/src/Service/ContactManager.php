@@ -53,30 +53,86 @@ class ContactManager
         return self::USER_ROLE_ID;
     }
 
+    public function getParent($contact)
+    {
+        $result = [];
+        
+        if ($user = $contact->getUser()){
+            $result['headTitle'] = 'Пользователи'; 
+            $result['pageTitle'] = $user->getName();
+            $result['route'] = 'users';
+            $result['id'] = $user->getId();
+        } elseIf($client = $contact->getUser()){
+            $result['headTitle'] = 'Покупатели'; 
+            $result['pageTitle'] = $client->getName();
+            $result['route'] = 'clients';
+            $result['id'] = $client->getId();            
+        } elseif($supplier = $contact->getSupplier()){
+            $result['headTitle'] = 'Поставщики'; 
+            $result['pageTitle'] = $supplier->getName();
+            $result['route'] = 'suppliers';
+            $result['id'] = $supplier->getId();                        
+        } elseIf($office = $contact->getOffice()){
+            $result['headTitle'] = 'Офисы'; 
+            $result['pageTitle'] = $office->getName();
+            $result['route'] = 'offices';
+            $result['id'] = $office->getId();            
+        }
+        
+        return $result;
+        
+    }
 
     public function addPhone($contact, $phonestr, $flushnow = false)
-    {
-                
-        $phone = $this->entityManager->getRepository(Phone::class)
-                ->findOneByName($phonestr);
-
-        if ($phone == null){
-            $phone = new Phone();            
-            $phone->setContact($contact);
-            $phone->setName($phonestr);            
-    
-            $currentDate = date('Y-m-d H:i:s');
-            $phone->setDateCreated($currentDate);
-
-            $this->entityManager->persist($phone);
-
-            $contact->addPhone($phone);
+    {                
+        if ($phonestr){
             
-            if ($flushnow){
-                $this->entityManager->flush();                
-            }
-        }    
-        
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneByName($phonestr);
+
+            if ($phone == null){
+                $phone = new Phone();            
+                $phone->setContact($contact);
+                $phone->setName($phonestr);            
+
+                $currentDate = date('Y-m-d H:i:s');
+                $phone->setDateCreated($currentDate);
+
+                $this->entityManager->persist($phone);
+
+                $contact->addPhone($phone);
+
+                if ($flushnow){
+                    $this->entityManager->flush();                
+                }
+            }    
+        } 
+    }
+    
+    public function addEmail($contact, $emailstr, $flushnow = false)
+    {                
+        if ($emailstr){
+            
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneByName($emailstr);
+
+            if ($email == null){
+                $email = new Email();            
+                $email->setContact($contact);
+                $email->setName($emailstr);            
+
+                $currentDate = date('Y-m-d H:i:s');
+                $email->setDateCreated($currentDate);
+
+                $this->entityManager->persist($email);
+
+                $contact->addEmail($email);
+
+                if ($flushnow){
+                    $this->entityManager->flush();                
+                }
+            }    
+        } 
     }
     
     public function addNewContact($parent, $data) 
@@ -97,29 +153,19 @@ class ContactManager
             $contact->setSupplier($parent);
         } elseif ($parent instanceof \Application\Entity\Client){
             $contact->setClient($parent);
+        } elseif ($parent instanceof \Company\Entity\Office){
+            $contact->setOffice($parent);
         } elseif ($parent instanceof \User\Entity\User) {
             $contact->setUser($parent);            
             $contact->setName($data['full_name']);
         } else {
-            throw ('Неверный тип родительской сущности');
+            throw new \Exception('Неверный тип родительской сущности');
         }
 
         $this->addPhone($contact, $data['phone']);
         
-        if ($data['email']){
-            $email = $this->entityManager->getRepository(Email::class)
-                    ->findOneByName($data['email']);
-            if ($email == null){
-                $email = new Email();            
-                $email->setContact($contact);
-                $email->setName($data['email']);            
-                $email->setDateCreated($currentDate);
-
-                $this->entityManager->persist($email);
-
-                $contact->addEmail($email);
-            }    
-        }
+        $this->addEmail($contact, $data['email']);
+        
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($contact);
         
@@ -183,6 +229,13 @@ class ContactManager
     public function removePhone($phone)
     {
         $this->entityManager->remove($phone);
+        $this->entityManager->flush();
+        
+    }
+    
+    public function removeEmail($email)
+    {
+        $this->entityManager->remove($email);
         $this->entityManager->flush();
         
     }

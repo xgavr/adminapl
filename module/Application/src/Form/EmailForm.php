@@ -9,6 +9,7 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
+use User\Validator\EmailExistsValidator;
 /**
  * Description of Email
  *
@@ -16,11 +17,20 @@ use Zend\InputFilter\InputFilter;
  */
 class EmailForm extends Form
 {
+    
+    private $entityManager;
+    
+    private $email;
+    
     /**
      * Конструктор.     
      */
-    public function __construct()
+    public function __construct($entityManager = null, $email = null)
     {
+        
+        $this->entityManager = $entityManager;
+        $this->email = $email;
+        
         // Определяем имя формы.
         parent::__construct('email-form');
      
@@ -45,7 +55,7 @@ class EmailForm extends Form
                 'id' => 'email_name'
             ],
             'options' => [
-                'label' => 'Телефон',
+                'label' => 'Email',
             ],
         ]);
         
@@ -73,16 +83,30 @@ class EmailForm extends Form
                 'name'     => 'name',
                 'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    ['name' => 'StringTrim'],                    
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'Email',
+                        'name'    => 'StringLength',
                         'options' => [
+                            'min' => 1,
+                            'max' => 128
                         ],
                     ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                    [
+                        'name' => EmailExistsValidator::class,
+                        'options' => [
+                            'entityManager' => $this->entityManager,
+                            'email' => $this->email
+                        ],
+                    ],                    
                 ],
             ]);        
     }    

@@ -1,0 +1,65 @@
+<?php
+$this->headTitle('Регионы');
+
+$this->mainMenu()->setActiveItemId('regions');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Регионы'=>$this->url('regions'),
+            ]);
+?>
+
+<h1>Регионы</h1>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('regions', ['action'=>'add']); ?>">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Новый регион
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Сокращение</th>
+        <th>Полное наименование</th>
+        <th>Действие</th>        
+    </tr>
+    
+    <?php foreach ($regions as $region): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($region->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('regions', ['action'=>'view', 'id'=>$region->getId()]); ?>">
+                <?= $this->escapeHtml($region->getName()); ?>
+            </a> 
+        </td>
+        <td><?= $this->escapeHtml($region->getFullName()); ?></a> 
+        </td>
+        <td>
+            </nobr>
+            <a class="btn btn-info" href="<?= $this->url('regions', 
+                    ['action'=>'edit', 'id'=>$region->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('regions',
+                    ['action'=>'delete', 'id'=>$region->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+            </nobr>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+
+
+
+

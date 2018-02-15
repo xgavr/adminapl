@@ -45,6 +45,16 @@ class Contact {
      */
     protected $status;   
     
+    /**
+     * @ORM\Column(name="icq")   
+     */
+    protected $icq;   
+
+    /**
+     * @ORM\Column(name="telegramm")   
+     */
+    protected $telegramm;   
+
     /** 
      * @ORM\Column(name="date_created")  
      */
@@ -67,6 +77,12 @@ class Contact {
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\Company\Entity\Office", inversedBy="contacts") 
+     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     */
+    protected $office;
 
    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Phone", mappedBy="contact")
@@ -118,6 +134,26 @@ class Contact {
     public function getStatus() 
     {
         return $this->status;
+    }
+    
+    public function getIcq()
+    {
+        return $this->icq;
+    }
+    
+    public function setIcq($icq)
+    {
+        $this->icq = $icq;
+    }
+    
+    public function getTelegramm()
+    {
+        return $this->telegramm;
+    }
+    
+    public function setTelegram($telegramm)
+    {
+        $this->telegram = $telegramm;
     }
     
     /**
@@ -224,6 +260,25 @@ class Contact {
     {
         $this->user = $user;
         $user->addContact($this);
+    }     
+    
+    /*
+     * Возвращает связанный office.
+     * @return \Company\Entity\Office
+     */    
+    public function getOffice() 
+    {
+        return $this->office;
+    }
+
+    /**
+     * Задает связанный office.
+     * @param \Company\Entity\Office $office
+     */    
+    public function setOffice($office) 
+    {
+        $this->office = $office;
+        $office->addContact($this);
     }     
     
     /**

@@ -32,7 +32,7 @@ return [
     'MvlabsPHPExcel',
     'ZendDeveloperTools',
     'Admin',
+    'Company',
     'User',
     'Application',
-    'Company',
 ];

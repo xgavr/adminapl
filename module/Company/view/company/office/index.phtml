@@ -1,0 +1,70 @@
+<?php
+$this->headTitle('Офисы');
+
+$this->mainMenu()->setActiveItemId('offices');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Офисы'=>$this->url('offices'),
+            ]);
+?>
+
+<h1>Офисы</h1>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('offices', ['action'=>'add']); ?>">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Новый офис
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>APL Id</th>
+        <th>Наименование</th>
+        <th>Регион</th>
+        <th>Статус</th>
+        <th>Действие</th>        
+    </tr>
+    
+    <?php foreach ($offices as $office): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($office->getId()); ?></td>
+        <td><?= $this->escapeHtml($office->getAplId()); ?></td>
+        <td>
+            <a href="<?= $this->url('offices', ['action'=>'view', 'id'=>$office->getId()]); ?>">
+                <?= $this->escapeHtml($office->getName()); ?>
+            </a> 
+        </td>
+        <td><?= $this->escapeHtml($office->getRegion()->getFullName()); ?></a> 
+        </td>
+        <td><?= $this->escapeHtml($office->getStatusAsString()); ?></a> 
+        </td>
+        <td>
+            </nobr>
+            <a class="btn btn-info" href="<?= $this->url('offices', 
+                    ['action'=>'edit', 'id'=>$office->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('offices',
+                    ['action'=>'delete', 'id'=>$office->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+            </nobr>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+
+
+
+

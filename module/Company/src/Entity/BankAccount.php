@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Description of BankAccount
- * @ORM\Entity(repositoryClass="\Application\Repository\LegalRepository")
+ * @ORM\Entity(repositoryClass="\Company\Repository\LegalRepository")
  * @ORM\Table(name="bank_account")
  * @author Daddy
  */
@@ -66,7 +66,7 @@ class BankAccount {
     protected $rs;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Legal", inversedBy="bank_account") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="bank_account") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
      */
     private $legal;
@@ -201,7 +201,7 @@ class BankAccount {
             
         
     /*
-     * @return \Application\Entity\Legal
+     * @return \Company\Entity\Legal
      */
     
     public function getLegal() 
@@ -210,7 +210,7 @@ class BankAccount {
     }
 
     /**
-     * @param \Application\Entity\Legal $legal
+     * @param \Company\Entity\Legal $legal
      */    
     public function setLegal($legal) 
     {

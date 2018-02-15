@@ -13,7 +13,11 @@ use Application\Entity\Contact;
 use Application\Entity\Client;
 use Application\Entity\Supplier;
 use User\Entity\User;
+use Application\Entity\Phone;
+use Application\Entity\Email;
 use Application\Form\ContactForm;
+use Application\Form\PhoneForm;
+use Application\Form\EmailForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -215,8 +219,146 @@ class ContactController extends AbstractActionController
         ]);
     }    
     
-    public function addPhoneAction()
+    public function phoneAction()
     {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $phoneform = new PhoneForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $phoneform->setData($data);
+            
+            if ($phoneform->isValid()) {
+
+                $data['phone'] = $data['name'];
+                unset($data['name']);
+
+                $this->contactManager->addPhone($contact, $data['phone'], true);
+                
+                $phoneform->setData(['name' => null]);
+            }
+        }            
+        
+        // Render the view template.
+        return new ViewModel([
+            'phoneForm' => $phoneform,
+            'contact' => $contact,
+            'parent' => $this->contactManager->getParent($contact),
+        ]);
+    }
+    
+    public function deletePhoneAction()
+    {
+        $phoneId = $this->params()->fromQuery('id', -1);
+        
+        $phone = $this->entityManager->getRepository(Phone::class)
+                ->findOneById($phoneId);
+        
+        if ($phone == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $contact = $phone->getContact();
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->contactManager->removePhone($phone);
+        
+        // Перенаправляем пользователя на страницу "phone".
+        return $this->redirect()->toRoute('contact', ['action' => 'phone', 'id' => $contact->getId()]);
+        
         
     }
+    
+    public function emailAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $emailform = new EmailForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $emailform->setData($data);
+            
+            if ($emailform->isValid()) {
+
+                $data['email'] = $data['name'];
+                unset($data['name']);
+
+                $this->contactManager->addEmail($contact, $data['email'], true);
+                
+                $emailform->setData(['name' => null]);
+            }
+        }            
+        
+        // Render the view template.
+        return new ViewModel([
+            'emailForm' => $emailform,
+            'contact' => $contact,
+            'parent' => $this->contactManager->getParent($contact),
+        ]);
+    }
+    
+    public function deleteEmailAction()
+    {
+        $emailId = $this->params()->fromQuery('id', -1);
+        
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findOneById($emailId);
+        
+        if ($email == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $contact = $email->getContact();
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->contactManager->removeEmail($email);
+        
+        // Перенаправляем пользователя на страницу "phone".
+        return $this->redirect()->toRoute('contact', ['action' => 'email', 'id' => $contact->getId()]);
+        
+        
+    }
+    
 }

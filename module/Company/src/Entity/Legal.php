@@ -92,17 +92,23 @@ class Legal {
     protected $dateStart;
     
     /**
-    * @ORM\OneToMany(targetEntity="Acoounting\Entity\BankAccount", mappedBy="legal")
+    * @ORM\OneToMany(targetEntity="Company\Entity\BankAccount", mappedBy="legal")
     * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
      */
     private $bankAccounts;
     
     /**
-    * @ORM\OneToMany(targetEntity="Acoounting\Entity\Contract", mappedBy="legal")
+    * @ORM\OneToMany(targetEntity="Company\Entity\Contract", mappedBy="legal")
     * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
      */
     private $contracts;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="legal") 
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
+     */
+    private $contact;
+
     /**
      * Constructor.
      */
@@ -313,7 +319,7 @@ class Legal {
     /**
      * Assigns.
      */
-    public function addBankAccounts($bankAccount)
+    public function addBankAccount($bankAccount)
     {
         $this->bankAccounts[] = $bankAccount;
     }    
@@ -333,4 +339,25 @@ class Legal {
     {
         $this->contracts[] = $contract;
     }    
+    
+    /*
+     * Возвращает связанный contact.
+     * @return \Application\Entity\Contact
+     */
+    
+    public function getContact() 
+    {
+        return $this->contact;
+    }
+
+    /**
+     * Задает связанный contact.
+     * @param \Application\Entity\Contact $contact
+     */    
+    public function setContact($contact) 
+    {
+        $this->contact = $contact;
+        $contact->addLegal($this);
+    }     
+    
 }

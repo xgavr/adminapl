@@ -1,0 +1,64 @@
+<?php
+$this->headTitle($parent['headTitle']);
+
+$this->mainMenu()->setActiveItemId('');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            $parent['headTitle']=>$this->url($parent['route']),
+            $parent['pageTitle']=>$this->url($parent['route'], ['action'=>'view', 'id'=>$parent['id']]),
+            'Телефоны' => $this->url('contact', ['action'=>'phone', 'id'=>$contact->getId()]),
+            ]);
+
+$emailForm = $this->emailForm;
+$emailForm->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$emailForm->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Добавить']);
+$emailForm->prepare();
+
+$this->headScript()
+            ->appendFile($this->basePath('js/jquery.mask.min.js'))
+        ;
+
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Контактные Email</h2>
+        <p>
+            <?= $this->form()->openTag($emailForm); ?>
+            <div class="input-group">
+                <?= $this->formElement($emailForm->get('name')); ?>
+                <div class="input-group-btn">
+                    <?= $this->formElement($emailForm->get('submit')); ?>
+                </div>    
+            </div>    
+            <div class="input-group">
+                <?= $this->formElementErrors($emailForm->get('name')); ?>                  
+            </div>    
+
+            <?= $this->form()->closeTag(); ?>                        
+        </p>
+        
+        <table class="table table-striped table-bordered">
+            <?php foreach ($contact->getEmails() as $email): ?>
+                <tr>
+                   <th class="phone_name"><?= $email->getName() ?></th>
+                   <td>
+                        <a class="btn btn-danger" href="<?= $this->url('contact',
+                                ['action'=>'delete-email'], ['query' => ['id' => $email->getId()]]); ?>">
+                            <span class="glyphicon glyphicon-remove"></span> Удалить
+                        </a>                           
+                   </td>
+               </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    
+</div>

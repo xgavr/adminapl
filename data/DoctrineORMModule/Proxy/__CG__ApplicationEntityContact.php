@@ -64,10 +64,10 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'name', 'description', 'status', 'dateCreated', 'supplier', 'client', 'user', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
+            return ['__isInitialized__', 'id', 'name', 'description', 'status', 'dateCreated', 'supplier', 'client', 'user', 'office', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
         }
 
-        return ['__isInitialized__', 'id', 'name', 'description', 'status', 'dateCreated', 'supplier', 'client', 'user', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
+        return ['__isInitialized__', 'id', 'name', 'description', 'status', 'dateCreated', 'supplier', 'client', 'user', 'office', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
     }
 
     /**
@@ -362,6 +362,28 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUser', [$user]);
 
         return parent::setUser($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getOffice()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getOffice', []);
+
+        return parent::getOffice();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setOffice($office)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setOffice', [$office]);
+
+        return parent::setOffice($office);
     }
 
     /**

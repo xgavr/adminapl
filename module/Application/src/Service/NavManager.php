@@ -147,20 +147,30 @@ class NavManager
             }
             
             //Предприятие
-            $companyDropdownItems = [];
             if ($this->rbacManager->isGranted(null, 'company.manage')) {
+                $companyDropdownItems = [];
+    
+                $companyDropdownItems[] = [
+                            'id' => 'offices',
+                            'label' => 'Офисы',
+                            'link' => $url('offices')
+                        ];
+                
                 $companyDropdownItems[] = [
                             'id' => 'regions',
                             'label' => 'Регионы',
                             'link' => $url('regions')
                         ];
                 
-                $companyDropdownItems[] = [
-                            'id' => 'offices',
-                            'label' => 'Офисы',
-                            'link' => $url('offices')
-                        ];
+                if (count($companyDropdownItems)!=0) {
+                    $items[] = [
+                        'id' => 'users',
+                        'label' => 'Предприятие',
+                        'dropdown' => $companyDropdownItems
+                    ];
+                }
             }
+            
             // Determine which items must be displayed in Admin dropdown.
             $useradminDropdownItems = [];
             

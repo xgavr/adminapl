@@ -10,9 +10,10 @@ namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Company\Entity\Office;
 
 /**
- * Description of Tax
+ * Description of Region
  * @ORM\Entity
  * @ORM\Table(name="region")
  * @author Daddy
@@ -67,7 +68,7 @@ class Region {
     }     
 
     /**
-    * @ORM\OneToMany(targetEntity="Company\Entity\BankAccount", mappedBy="region")
+    * @ORM\OneToMany(targetEntity="\Company\Entity\Office", mappedBy="region")
     * @ORM\JoinColumn(name="id", referencedColumnName="region_id")
      */
     private $offices;
@@ -89,8 +90,9 @@ class Region {
     }
         
     /**
-     * Assigns.
-     */
+     * Добавляет новый office к этому region.
+     * @param $office
+     */   
     public function addOffice($office)
     {
         $this->offices[] = $office;

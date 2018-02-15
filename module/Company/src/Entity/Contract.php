@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Description of Contract
- * @ORM\Entity(repositoryClass="\Application\Repository\LegalRepository")
+ * @ORM\Entity(repositoryClass="\Company\Repository\LegalRepository")
  * @ORM\Table(name="contract")
  *
  * @author Daddy
@@ -44,6 +44,12 @@ class Contract {
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;    
+    
+    /** 
+     * @ORM\Column(name="date_start")  
+     */
+    protected $dateStart;    
+    
     
     public function getId() 
     {
@@ -136,9 +142,27 @@ class Contract {
         $this->dateCreated = $dateCreated;
     }    
         
+    /**
+     * Returns the date start of contract.
+     * @return string     
+     */
+    public function getDateStart() 
+    {
+        return $this->dateStart;
+    }
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Legal", inversedBy="contract") 
+     * Sets the date start when this contract was start.
+     * @param string $dateStart     
+     */
+    public function setDateStart($dateStart) 
+    {
+        $this->dateStart = $dateStart;
+    }    
+        
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contract") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
      */
     private $legal;
@@ -151,7 +175,7 @@ class Contract {
     }
 
     /*
-     * @return \Application\Entity\Legal
+     * @return \Company\Entity\Legal
      */
     
     public function getLegal() 
@@ -160,7 +184,7 @@ class Contract {
     }
 
     /**
-     * @param \Application\Entity\Legal $legal
+     * @param \Company\Entity\Legal $legal
      */    
     public function setLegal($legal) 
     {
