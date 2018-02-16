@@ -106,10 +106,13 @@ class Contact {
    */
    private $emails;
 
-   /**
-    * @ORM\OneToMany(targetEntity="\Company\Entity\Legal", mappedBy="contact")
-    * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
-   */
+    /**
+     * @ORM\ManyToMany(targetEntity="\Company\Entity\Legal", inversedBy="contacts")
+     * @ORM\JoinTable(name="contact_legal",
+     *      joinColumns={@ORM\JoinColumn(name="contact_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="legal_id", referencedColumnName="id")}
+     *      )
+     */
    private $legals;
 
    public function __construct() {
@@ -403,4 +406,10 @@ class Contact {
     {
         $this->legals[] = $legal;
     }       
+    
+    // Удаляет связь между этим контактом и заданным юрлицом.
+    public function removeLegalAssociation($legal) 
+    {
+        $this->legals->removeElement($legal);
+    }    
 }

@@ -14,6 +14,7 @@ use Application\Entity\Email;
 use Application\Entity\Supplier;
 use Application\Entity\Client;
 use User\Entity\User;
+use Company\Entity\Legal;
 
 /**
  * Description of ContactService
@@ -244,6 +245,76 @@ class ContactManager
         
     }
     
+    public function addNewLegal($contact, $data, $flushnow = false)
+    {                
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->findOneByInnKpp($data['inn'], $data['kpp']);
+
+        if ($legal == null){
+            $legal = new Legal();            
+            $legal->setContact($contact);
+            $legal->setName($data['name']);            
+            $legal->setInn($data['inn']);            
+            $legal->setKpp($data['kpp']);            
+            $legal->setOgrn($data['ogrn']);            
+            $legal->setOkpo($data['okpo']);            
+            $legal->setHead($data['head']);            
+            $legal->setChiefAccount($data['chiefAccount']);            
+            $legal->setInfo($data['info']);            
+            $legal->setAddress($data['address']);            
+            $legal->setStatus($data['status']);            
+
+            $currentDate = date('Y-m-d H:i:s');
+            $legal->setDateCreated($currentDate);
+            
+            if ($data['dateStart']){
+                $legal->setDateStart($data['dateStart']);
+            } else {
+                $legal->setDateStart($currentDate);
+            }
+
+            $this->entityManager->persist($legal);
+
+            if ($flushnow){
+                $this->entityManager->flush();                
+            }
+        } else {
+            $this->updateLegal($legal, $data, $flushnow);
+        }   
+    }
+    
+    public function updateLegal($legal, $data, $flushnow = false)
+    {                
+        $legal->setName($data['name']);            
+        $legal->setInn($data['inn']);            
+        $legal->setKpp($data['kpp']);            
+        $legal->setOgrn($data['ogrn']);            
+        $legal->setOkpo($data['okpo']);            
+        $legal->setHead($data['head']);            
+        $legal->setChiefAccount($data['chiefAccount']);            
+        $legal->setInfo($data['info']);            
+        $legal->setAddress($data['address']);            
+        $legal->setStatus($data['status']);            
+        $legal->setDateStart($data['dateStart']);
+
+        $this->entityManager->persist($legal);
+
+        if ($flushnow){
+            $this->entityManager->flush();                
+        }
+    }
+    
+    public function removeLegal($legal)
+    {
+        $contacts = $legal->getContacts();
+        foreach ($contacts as $contact){
+            $contact->removeLegalAssociation($legal);
+        }
+        $this->entityManager->remove($legal);
+
+        $this->entityManager->flush();
+    }
+    
     public function removeContact($contact) 
     {   
         
@@ -256,6 +327,12 @@ class ContactManager
         foreach ($emails as $email) {
             $this->entityManager->remove($email);
         }        
+        
+        $legals = $contact->getLegals();
+        foreach ($legals as $legal) {
+            $this->entityManager->removeLegalAssociation($legal);
+        }        
+        
         $this->entityManager->remove($contact);
         
         $this->entityManager->flush();

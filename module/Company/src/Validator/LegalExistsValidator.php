@@ -1,14 +1,14 @@
 <?php
-namespace User\Validator;
+namespace Company\Validator;
 
 use Zend\Validator\AbstractValidator;
-use Application\Entity\Email;
-use Zend\Validator\EmailAddress;
+use Company\Entity\Legal;
+
 /**
  * This validator class is designed for checking if there is an existing role 
  * with such a name.
  */
-class EmailExistsValidator extends AbstractValidator 
+class LegalExistsValidator extends AbstractValidator 
 {
     /**
      * Available validator options.
@@ -16,20 +16,18 @@ class EmailExistsValidator extends AbstractValidator
      */
     protected $options = array(
         'entityManager' => null,
-        'email' => null
+        'legal' => null
     );
     
     // Validation failure message IDs.
-    const NOT_EMAIL  = 'notEmail';
-    const EMAIL_EXISTS = 'emailExists';
+    const LEGAL_EXISTS = 'legalExists';
         
     /**
      * Validation failure messages.
      * @var array
      */
     protected $messageTemplates = array(
-        self::NOT_EMAIL  => "Неверный формат email адреса",
-        self::EMAIL_EXISTS  => "Такой email уже используется"        
+        self::LEGAL_EXISTS  => "Такая организация уже существует"        
     );
     
     /**
@@ -41,8 +39,6 @@ class EmailExistsValidator extends AbstractValidator
         if(is_array($options)) {            
             if(isset($options['entityManager']))
                 $this->options['entityManager'] = $options['entityManager'];
-            if(isset($options['email']))
-                $this->options['email'] = $options['email'];
         }
         
         // Call the parent class constructor
@@ -50,26 +46,20 @@ class EmailExistsValidator extends AbstractValidator
     }
         
     /**
-     * Check if user exists.
+     * Check if legal exists.
      */
-    public function isValid($value) 
+    public function isValid($inn, $kpp = null) 
     {
-        $validator = new EmailAddress();
-        if(!$validator->isValid($value)) {
-            $this->error(self::NOT_EMAIL);
-            return $false; 
-        }
-        
         // Get Doctrine entity manager.
         $entityManager = $this->options['entityManager'];
         
-        $email = $entityManager->getRepository(Email::class)
-                ->findOneByName($value);
+        $legal = $entityManager->getRepository(Legal::class)
+                ->findOneByInnKpp($inn, $kpp);
         
-        if($this->options['email']==null) {
-            $isValid = ($email==null);
+        if($this->options['legal']==null) {
+            $isValid = ($legal==null);
         } else {
-            if($this->options['email']->getName()!=$value && $email!=null) 
+            if($this->options['legal']->getInn()!=$inn && $this->options['legal']->getKpp()!=$kpp && $legal!=null) 
                 $isValid = false;
             else 
                 $isValid = true;
@@ -77,7 +67,7 @@ class EmailExistsValidator extends AbstractValidator
         
         // If there were an error, set error message.
         if(!$isValid) {            
-            $this->error(self::EMAIL_EXISTS);            
+            $this->error(self::LEGAL_EXISTS);            
         }
         
         // Return validation result.

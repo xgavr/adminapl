@@ -1,0 +1,206 @@
+<?php
+$this->headTitle($parent['headTitle']);
+
+$this->mainMenu()->setActiveItemId('');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            $parent['headTitle']=>$this->url($parent['route']),
+            $parent['pageTitle']=>$this->url($parent['route'], ['action'=>'view', 'id'=>$parent['id']]),
+            'Юридические лица' => $this->url('contact', ['action'=>'legal', 'id'=>$contact->getId()]),
+            ]);
+
+$form = $this->legalForm;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('inn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('kpp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ogrn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('okpo')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ogrn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('head')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('chiefAccount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('address')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('info')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('dateStart')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Сохранить']);
+$form->prepare();
+
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<div class="row">
+    <?php if (count($contact->getLegals())): ?>
+        <div class="col-md-6">
+            <h2>Юридические лица</h2>
+            <p>
+                <a class="btn btn-default" href="<?= $this->url('contact', 
+                                    ['action'=>'legal', 'id'=>$contact->getId()]); ?>">
+                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getLegals())) ? 'Изменить':'Добавить'; ?>
+                </a>
+            </p>
+            <table class="table table-striped table-bordered">
+                <?php foreach ($contact->getLegals() as $legal): ?>
+                    <tr>     
+                        <td>Наименование</td>
+                        <th class=""><?= $legal->getName() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>ИНН</td>
+                        <th class=""><?= $legal->getInn() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>КПП</td>
+                        <th class=""><?= $legal->getKpp() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>ОГРН</td>
+                        <th class=""><?= $legal->getOgrn() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>ОКПО</td>
+                        <th class=""><?= $legal->getOkpo() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>Местонахождение</td>
+                        <th class=""><?= $legal->getAddress() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>Руководитель</td>
+                        <th class=""><?= $legal->getHead() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>Главный бухгалтер</td>
+                        <th class=""><?= $legal->getChiefAccount() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>Дата начала деятельности</td>
+                        <th class=""><?= $legal->getDateStart() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>Статус</td>
+                        <th class=""><?= $legal->getStatusAsString() ?></th>
+                   </tr>
+                    <tr>     
+                        <td>Дополнительная информация</td>
+                        <th class=""><?= $legal->getInfo() ?></th>
+                   </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+    <?php endif;?>    
+    
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('inn')); ?>
+            <?= $this->formElement($form->get('inn')); ?>
+            <?= $this->formElementErrors($form->get('inn')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('kpp')); ?>
+            <?= $this->formElement($form->get('kpp')); ?>
+            <?= $this->formElementErrors($form->get('kpp')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ogrn')); ?>
+            <?= $this->formElement($form->get('ogrn')); ?>
+            <?= $this->formElementErrors($form->get('ogrn')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('okpo')); ?>
+            <?= $this->formElement($form->get('okpo')); ?>
+            <?= $this->formElementErrors($form->get('okpo')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('head')); ?>
+            <?= $this->formElement($form->get('head')); ?>
+            <?= $this->formElementErrors($form->get('head')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('chiefAccount')); ?>
+            <?= $this->formElement($form->get('chiefAccount')); ?>
+            <?= $this->formElementErrors($form->get('chiefAccount')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('dateStart')); ?>
+            <?= $this->formElement($form->get('dateStart')); ?>
+            <?= $this->formElementErrors($form->get('dateStart')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('status')); ?>
+            <?= $this->formElement($form->get('status')); ?>
+            <?= $this->formElementErrors($form->get('status')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('address')); ?>
+            <?= $this->formElement($form->get('address')); ?>
+            <?= $this->formElementErrors($form->get('address')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('info')); ?>
+            <?= $this->formElement($form->get('info')); ?>
+            <?= $this->formElementErrors($form->get('info')); ?>                  
+        </div>
+                        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   

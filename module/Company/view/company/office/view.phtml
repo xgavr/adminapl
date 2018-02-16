@@ -143,6 +143,13 @@ $this->pageBreadcrumbs()->setItems([
                 <?php foreach ($contact->getLegals() as $legal): ?>
                     <tr>
                        <th class=""><?= $legal->getName() ?></th>
+                       <th class=""><?= $legal->getInn() ?></th>
+                       <th class=""><?= $legal->getKpp() ?></th>
+                   </tr>
+                   <tr>
+                       <td colspan="3">
+                           <?= $legal->getAddress() ?>
+                       </td>
                    </tr>
                 <?php endforeach; ?>
             </table>

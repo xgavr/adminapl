@@ -13,11 +13,13 @@ use Application\Entity\Contact;
 use Application\Entity\Client;
 use Application\Entity\Supplier;
 use User\Entity\User;
+use Company\Entity\Legal;
 use Application\Entity\Phone;
 use Application\Entity\Email;
 use Application\Form\ContactForm;
 use Application\Form\PhoneForm;
 use Application\Form\EmailForm;
+use Company\Form\LegalForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -357,6 +359,75 @@ class ContactController extends AbstractActionController
         
         // Перенаправляем пользователя на страницу "phone".
         return $this->redirect()->toRoute('contact', ['action' => 'email', 'id' => $contact->getId()]);
+        
+        
+    }
+
+    public function legalAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $legalform = new LegalForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $legalform->setData($data);
+
+            if ($legalform->isValid()) {
+
+                $this->contactManager->addLegal($contact, $data, true);
+                $this->flashMessenger()->addSuccessMessage('Юридическое лицо сохранено');
+            
+                
+            }
+        }            
+        
+        // Render the view template.
+        return new ViewModel([
+            'legalForm' => $legalform,
+            'contact' => $contact,
+            'parent' => $this->contactManager->getParent($contact),
+        ]);
+    }
+    
+    public function deleteLegalAction()
+    {
+        $legalId = $this->params()->fromQuery('id', -1);
+        
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->findOneById($emailId);
+        
+        if ($legal == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $contacts = $legal->getContacts();
+        
+        if (count($contacts) == 0) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->contactManager->removeLegal($legal);
+        
+        // Перенаправляем пользователя на страницу "legal".
+        return $this->redirect()->toRoute('contact', ['action' => 'legal', 'id' => $contact->getId()]);
         
         
     }

@@ -104,10 +104,9 @@ class Legal {
     private $contracts;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="legals") 
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="\Application\Entity\Contact", mappedBy="legals")
      */
-    private $contact;
+    private $contacts;
 
     /**
      * Constructor.
@@ -116,6 +115,7 @@ class Legal {
     {
         $this->bankAccounts = new ArrayCollection();
         $this->contracts = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
     
     
@@ -345,19 +345,18 @@ class Legal {
      * @return \Application\Entity\Contact
      */
     
-    public function getContact() 
+    public function getContacts() 
     {
-        return $this->contact;
+        return $this->contacts;
     }
 
     /**
      * Задает связанный contact.
      * @param \Application\Entity\Contact $contact
      */    
-    public function setContact($contact) 
+    public function addContact($contact) 
     {
-        $this->contact = $contact;
-        $contact->addLegal($this);
+        $this->contacts[] = $contact;
     }     
     
 }

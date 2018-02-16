@@ -15,6 +15,29 @@ use Company\Entity\Legal;
  *
  * @author Daddy
  */
-class LegalRepository extends EntityRepository{
+class LegalRepository extends EntityRepository
+{
 
+    public function findOneByInnKpp($inn, $kpp = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+            ->from(Legal::class, 'r')
+            ->where('r.inn = ?1')    
+            ->setParameter('1', $inn)
+                ;
+        if ($kpp){
+        $queryBuilder
+            ->andWhere('r.kpp = ?2')    
+            ->setParameter('2', $kpp)
+                ;
+            
+        }        
+                ;
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
 }
