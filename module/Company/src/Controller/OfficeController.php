@@ -78,13 +78,13 @@ class OfficeController extends AbstractActionController
                 $data = $form->getData();
                 
                 // Add role.
-                $this->officeManager->addOffice($data);
+                $newOffice = $this->officeManager->addOffice($data);
                 
                 // Add a flash message.
                 $this->flashMessenger()->addSuccessMessage('Добавлен новй офис.');
                 
                 // Redirect to "index" page
-                return $this->redirect()->toRoute('offices', ['action'=>'index']);                
+                return $this->redirect()->toRoute('offices', ['action'=>'view', 'id' => $newOffice->getId()]);                
             }               
         } 
         

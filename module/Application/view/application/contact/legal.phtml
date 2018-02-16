@@ -60,20 +60,31 @@ $form->get('dateStart')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Сохранить']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить']);
 
 $form->prepare();
 
+?>
+
+<?= $this->headScript()
+    ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js')
+        ;
 ?>
 
 <?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
 <?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
 <?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
 
+<h2>Юридические лица</h2>
+<p>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#legalModal">
+      Добавить
+    </button>    
+</p>
+
 <div class="row">
     <?php if (count($contact->getLegals())): ?>
         <div class="col-md-6">
-            <h2>Юридические лица</h2>
             <p>
                 <a class="btn btn-default" href="<?= $this->url('contact', 
                                     ['action'=>'legal', 'id'=>$contact->getId()]); ?>">
@@ -129,81 +140,113 @@ $form->prepare();
                 <?php endforeach; ?>
             </table>
         </div>
-    <?php endif;?>    
-    
-    <div class="col-md-6">
-        <?= $this->form()->openTag($form); ?>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('name')); ?>
-            <?= $this->formElement($form->get('name')); ?>
-            <?= $this->formElementErrors($form->get('name')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('inn')); ?>
-            <?= $this->formElement($form->get('inn')); ?>
-            <?= $this->formElementErrors($form->get('inn')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('kpp')); ?>
-            <?= $this->formElement($form->get('kpp')); ?>
-            <?= $this->formElementErrors($form->get('kpp')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('ogrn')); ?>
-            <?= $this->formElement($form->get('ogrn')); ?>
-            <?= $this->formElementErrors($form->get('ogrn')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('okpo')); ?>
-            <?= $this->formElement($form->get('okpo')); ?>
-            <?= $this->formElementErrors($form->get('okpo')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('head')); ?>
-            <?= $this->formElement($form->get('head')); ?>
-            <?= $this->formElementErrors($form->get('head')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('chiefAccount')); ?>
-            <?= $this->formElement($form->get('chiefAccount')); ?>
-            <?= $this->formElementErrors($form->get('chiefAccount')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('dateStart')); ?>
-            <?= $this->formElement($form->get('dateStart')); ?>
-            <?= $this->formElementErrors($form->get('dateStart')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('status')); ?>
-            <?= $this->formElement($form->get('status')); ?>
-            <?= $this->formElementErrors($form->get('status')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('address')); ?>
-            <?= $this->formElement($form->get('address')); ?>
-            <?= $this->formElementErrors($form->get('address')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('info')); ?>
-            <?= $this->formElement($form->get('info')); ?>
-            <?= $this->formElementErrors($form->get('info')); ?>                  
-        </div>
-                        
-        <?= $this->formElement($form->get('csrf')); ?>
+    <?php endif;?>        
+</div>
 
-        <?= $this->formElement($form->get('submit')); ?>
-        
-        <?= $this->form()->closeTag(); ?>
-    </div>    
-</div>   
+<div class="modal fade" id="legalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Организация</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('name')); ?>
+                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('inn')); ?>
+                            <?= $this->formElement($form->get('inn')); ?>
+                            <?= $this->formElementErrors($form->get('inn')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('kpp')); ?>
+                            <?= $this->formElement($form->get('kpp')); ?>
+                            <?= $this->formElementErrors($form->get('kpp')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ogrn')); ?>
+                            <?= $this->formElement($form->get('ogrn')); ?>
+                            <?= $this->formElementErrors($form->get('ogrn')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('okpo')); ?>
+                            <?= $this->formElement($form->get('okpo')); ?>
+                            <?= $this->formElementErrors($form->get('okpo')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('dateStart')); ?>
+                            <?= $this->formElement($form->get('dateStart')); ?>
+                            <?= $this->formElementErrors($form->get('dateStart')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+                    </div>                
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('address')); ?>
+                            <?= $this->formElement($form->get('address')); ?>
+                            <?= $this->formElementErrors($form->get('address')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('head')); ?>
+                            <?= $this->formElement($form->get('head')); ?>
+                            <?= $this->formElementErrors($form->get('head')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('chiefAccount')); ?>
+                            <?= $this->formElement($form->get('chiefAccount')); ?>
+                            <?= $this->formElementErrors($form->get('chiefAccount')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('info')); ?>
+                            <?= $this->formElement($form->get('info')); ?>
+                            <?= $this->formElementErrors($form->get('info')); ?>                  
+                        </div>
+
+                        <?= $this->formElement($form->get('csrf')); ?>
+
+                    </div>
+                </div>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+        </div>
+    </div>
+</div>        
+
+<script>
+bootbox.alert({
+    message: "This is an alert with an additional class!",
+    className: 'bb-alternate-modal'
+});   
+</script>

@@ -57,6 +57,7 @@ class OfficeManager
         // Apply changes to database.
         $this->entityManager->flush();
         
+        return $office;
     }
     
     /**
