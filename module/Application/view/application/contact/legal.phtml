@@ -61,6 +61,7 @@ $form->get('dateStart')->setAttributes([
     ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Сохранить']);
+
 $form->prepare();
 
 ?>
@@ -199,6 +200,8 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('info')); ?>                  
         </div>
                         
+        <?= $this->formElement($form->get('csrf')); ?>
+
         <?= $this->formElement($form->get('submit')); ?>
         
         <?= $this->form()->closeTag(); ?>

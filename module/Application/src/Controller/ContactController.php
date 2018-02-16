@@ -390,10 +390,12 @@ class ContactController extends AbstractActionController
 
             if ($legalform->isValid()) {
 
-                $this->contactManager->addLegal($contact, $data, true);
+                $this->contactManager->addNewLegal($contact, $data, true);
                 $this->flashMessenger()->addSuccessMessage('Юридическое лицо сохранено');
             
                 
+            } else {
+                var_dump($legalform->getMessages());
             }
         }            
         

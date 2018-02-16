@@ -252,7 +252,7 @@ class ContactManager
 
         if ($legal == null){
             $legal = new Legal();            
-            $legal->setContact($contact);
+            $legal->addContact($contact);
             $legal->setName($data['name']);            
             $legal->setInn($data['inn']);            
             $legal->setKpp($data['kpp']);            

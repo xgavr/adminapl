@@ -58,8 +58,8 @@ class Version20180213183801 extends AbstractMigration
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);
         $table->addColumn('date_start', 'date', ['notnull'=>false]);
         $table->setPrimaryKey(['id']);
-        $table->addForeignKeyConstraint('contact', ['contact_id'], ['id'], 
-                ['onUpdate'=>'CASCADE'], 'legal_contact_id_contact_id_fk');
+//        $table->addForeignKeyConstraint('contact', ['contact_id'], ['id'], 
+//                ['onUpdate'=>'CASCADE'], 'legal_contact_id_contact_id_fk');
         $table->addOption('engine' , 'InnoDB');        
 
         $table = $schema->createTable('bank_account');
