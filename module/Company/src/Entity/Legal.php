@@ -357,6 +357,8 @@ class Legal {
     public function addContact($contact) 
     {
         $this->contacts[] = $contact;
+        $contact->removeLegalAssociation($legal);
+        $contact->addLegal($this);
     }     
     
 }

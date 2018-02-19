@@ -20,6 +20,7 @@ use Application\Form\ContactForm;
 use Application\Form\PhoneForm;
 use Application\Form\EmailForm;
 use Company\Form\LegalForm;
+use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -407,12 +408,76 @@ class ContactController extends AbstractActionController
         ]);
     }
     
+    public function legalFormAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $legalform = new LegalForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $legalform->setData($data);
+
+            if ($legalform->isValid()) {
+
+                $this->contactManager->addLegal($contact, $data, true);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }            
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'legalForm' => $legalform,
+            'contact' => $contact,
+        ]);
+    }
+    
+    public function findLegalAction()
+    {
+        $inn = $this->params()->fromRoute('id', null);
+        $kpp = $this->params()->fromQuery('kpp', null);
+        
+        $result = [];
+        
+        if ($inn){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                ->findOneByInnKpp($inn, $kpp, 2);            
+            
+            if ($legal){
+                $result = $legal;
+            }
+        }
+        
+        return new JsonModel(
+           $result
+        );           
+    }
+    
     public function deleteLegalAction()
     {
         $legalId = $this->params()->fromQuery('id', -1);
         
         $legal = $this->entityManager->getRepository(Legal::class)
-                ->findOneById($emailId);
+                ->findOneById($legalId);
         
         if ($legal == null) {
             $this->getResponse()->setStatusCode(404);

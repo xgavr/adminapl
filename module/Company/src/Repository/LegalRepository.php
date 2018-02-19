@@ -18,7 +18,13 @@ use Company\Entity\Legal;
 class LegalRepository extends EntityRepository
 {
 
-    public function findOneByInnKpp($inn, $kpp = null)
+    /*
+     * Поиск юрлийа по инн и кпп
+     * $inn string
+     * $kpp string
+     * $resultMode null or 2 - array
+     */
+    public function findOneByInnKpp($inn, $kpp = null, $resultMode = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -36,8 +42,9 @@ class LegalRepository extends EntityRepository
                 ;
             
         }        
-                ;
-        return $queryBuilder->getQuery()->getResult();
         
+        $query = $queryBuilder->getQuery();
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult($resultMode);        
     }
 }

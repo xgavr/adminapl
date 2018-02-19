@@ -245,14 +245,14 @@ class ContactManager
         
     }
     
-    public function addNewLegal($contact, $data, $flushnow = false)
+
+    public function addLegal($contact, $data, $flushnow = false)
     {                
         $legal = $this->entityManager->getRepository(Legal::class)
                 ->findOneByInnKpp($data['inn'], $data['kpp']);
 
         if ($legal == null){
             $legal = new Legal();            
-            $legal->addContact($contact);
             $legal->setName($data['name']);            
             $legal->setInn($data['inn']);            
             $legal->setKpp($data['kpp']);            
@@ -272,36 +272,29 @@ class ContactManager
             } else {
                 $legal->setDateStart($currentDate);
             }
-
-            $this->entityManager->persist($legal);
-
-            if ($flushnow){
-                $this->entityManager->flush();                
-            }
+            
         } else {
-            $this->updateLegal($legal, $data, $flushnow);
+            $legal->setName($data['name']);            
+            $legal->setInn($data['inn']);            
+            $legal->setKpp($data['kpp']);            
+            $legal->setOgrn($data['ogrn']);            
+            $legal->setOkpo($data['okpo']);            
+            $legal->setHead($data['head']);            
+            $legal->setChiefAccount($data['chiefAccount']);            
+            $legal->setInfo($data['info']);            
+            $legal->setAddress($data['address']);            
+            $legal->setStatus($data['status']);            
+            $legal->setDateStart($data['dateStart']);
         }   
-    }
-    
-    public function updateLegal($legal, $data, $flushnow = false)
-    {                
-        $legal->setName($data['name']);            
-        $legal->setInn($data['inn']);            
-        $legal->setKpp($data['kpp']);            
-        $legal->setOgrn($data['ogrn']);            
-        $legal->setOkpo($data['okpo']);            
-        $legal->setHead($data['head']);            
-        $legal->setChiefAccount($data['chiefAccount']);            
-        $legal->setInfo($data['info']);            
-        $legal->setAddress($data['address']);            
-        $legal->setStatus($data['status']);            
-        $legal->setDateStart($data['dateStart']);
 
         $this->entityManager->persist($legal);
 
+        $legal->addContact($contact);
+            
         if ($flushnow){
             $this->entityManager->flush();                
         }
+
     }
     
     public function removeLegal($legal)
