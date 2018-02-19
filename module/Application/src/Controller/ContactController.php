@@ -441,7 +441,33 @@ class ContactController extends AbstractActionController
                    ['ok']
                 );           
             }
-        }            
+        } else {           
+
+            $legalId = $this->params()->fromQuery('legal', null);
+
+            if ($legalId){
+                $legal = $this->entityManager->getRepository(Legal::class)
+                        ->findOneById($legalId);
+                
+                if ($legal){
+                    $data = [
+                        'name' => $legal->getName(),  
+                        'inn' => $legal->getInn(),  
+                        'kpp' => $legal->getKpp(),  
+                        'ogrn' => $legal->getOgrn(),  
+                        'okpo' => $legal->getOkpo(),  
+                        'head' => $legal->getHead(),  
+                        'chiefAccount' => $legal->getChiefAccount(),  
+                        'info' => $legal->getInfo(),  
+                        'address' => $legal->getAddress(),  
+                        'status' => $legal->getStatus(),  
+                        'dateStart' => $legal->getDateStart(),  
+                    ];
+                    $legalform->setData($data);
+                }    
+            }
+        }
+        
         
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
@@ -457,13 +483,13 @@ class ContactController extends AbstractActionController
         $kpp = $this->params()->fromQuery('kpp', null);
         
         $result = [];
-        
+
         if ($inn){
             $legal = $this->entityManager->getRepository(Legal::class)
                 ->findOneByInnKpp($inn, $kpp, 2);            
             
             if ($legal){
-                $result = $legal;
+                $result = $legal[0];
             }
         }
         
@@ -474,7 +500,22 @@ class ContactController extends AbstractActionController
     
     public function deleteLegalAction()
     {
-        $legalId = $this->params()->fromQuery('id', -1);
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        $legalId = $this->params()->fromQuery('legal', -1);
         
         $legal = $this->entityManager->getRepository(Legal::class)
                 ->findOneById($legalId);
@@ -484,14 +525,7 @@ class ContactController extends AbstractActionController
             return;                        
         }        
         
-        $contacts = $legal->getContacts();
-        
-        if (count($contacts) == 0) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        $this->contactManager->removeLegal($legal);
+        $this->contactManager->removeLegalAssociation($legal);
         
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('contact', ['action' => 'legal', 'id' => $contact->getId()]);

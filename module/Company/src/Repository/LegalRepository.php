@@ -34,17 +34,23 @@ class LegalRepository extends EntityRepository
             ->from(Legal::class, 'r')
             ->where('r.inn = ?1')    
             ->setParameter('1', $inn)
+//            ->orderBy(['id DESC'])    
                 ;
+
         if ($kpp){
-        $queryBuilder
-            ->andWhere('r.kpp = ?2')    
-            ->setParameter('2', $kpp)
+            $queryBuilder
+                ->andWhere('r.kpp = ?2')    
+                ->setParameter('2', $kpp)
                 ;
             
         }        
         
         $query = $queryBuilder->getQuery();
         
-        return $queryBuilder->getQuery()->getOneOrNullResult($resultMode);        
+        if ($resultMode){
+            return $queryBuilder->getQuery()->getResult($resultMode);        
+        } else {
+            return $queryBuilder->getQuery()->getOneOrNullResult();                    
+        }    
     }
 }

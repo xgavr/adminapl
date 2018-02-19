@@ -305,7 +305,7 @@ class Legal {
      */
     public function setDateStart($dateStart) 
     {
-        $this->dateCreated = $dateStart;
+        $this->dateStart = $dateStart;
     }    
         
     /**
@@ -357,7 +357,7 @@ class Legal {
     public function addContact($contact) 
     {
         $this->contacts[] = $contact;
-        $contact->removeLegalAssociation($legal);
+//        $contact->removeLegalAssociation($legal);
         $contact->addLegal($this);
     }     
     

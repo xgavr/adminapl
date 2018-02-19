@@ -161,6 +161,7 @@ $form->prepare();
             .done(function (data) {
                 if (data == 'ok'){
                     $('#legal-modal').modal('hide');
+                    window.location.reload();
                 } else {
                     $('#legal-modal-content').html(data);
                 }    

@@ -288,7 +288,8 @@ class ContactManager
         }   
 
         $this->entityManager->persist($legal);
-
+        
+        $contact->removeLegalAssociation($legal);
         $legal->addContact($contact);
             
         if ($flushnow){
@@ -297,12 +298,33 @@ class ContactManager
 
     }
     
+    public function removeLegalAssociation($legal)
+    {
+        $contacts = $legal->getContacts();
+        foreach ($contacts as $contact){
+            $contact->removeLegalAssociation($legal);
+        }        
+        
+        $this->entityManager->flush();
+    }
+    
     public function removeLegal($legal)
     {
         $contacts = $legal->getContacts();
         foreach ($contacts as $contact){
             $contact->removeLegalAssociation($legal);
         }
+        
+        $contracts = $legal->getContracts();
+        foreach ($contracts as $contract){
+            $this->entityManager->remove($contract);
+        }
+        
+        $bankAccounts = $legal->getBankAccounts();
+        foreach ($bankAccounts as $bankAccount){
+            $this->entityManager->remove($bankAccount);
+        }
+        
         $this->entityManager->remove($legal);
 
         $this->entityManager->flush();
