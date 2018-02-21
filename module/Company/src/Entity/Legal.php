@@ -235,8 +235,8 @@ class Legal {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_RETIRED => 'Retired'
+            self::STATUS_ACTIVE => 'Действующее',
+            self::STATUS_RETIRED => 'Не используется'
         ];
     }    
     

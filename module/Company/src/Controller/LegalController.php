@@ -11,7 +11,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Company\Entity\Office;
 use Company\Entity\Legal;
+use Company\Entity\BankAccount;
 use Company\Form\LegalForm;
+use Company\Form\BankAccountForm;
 use Application\Entity\Contact;
 use Zend\View\Model\JsonModel;
 
@@ -361,4 +363,133 @@ class LegalController extends AbstractActionController
         return $this->redirect()->toRoute('legals', ['action' => 'legal', 'id' => $contact->getId()]);
     }
         
+    public function addBankAccountFormAction()
+    {
+        $legalId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($legalId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->findOneById($legalId);
+        
+        if ($legal == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+                
+        $form = new BankAccountForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                $this->legalManager->addBankAccount($legal, $data, true);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'legal' => $legal,
+        ]);        
+    }
+    
+    public function editBankAccountFormAction()
+    {
+        $bankAccountId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($bankAccountId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                ->findOneById($bankAccountId);
+        
+        if ($bankAccount == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+                
+        $form = new BankAccountForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                $this->legalManager->updatBankAccount($bankAccount, $data, true);                    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {           
+            $data = [
+                'name' => $bankAccount->getName(),  
+                'city' => $bankAccount->getCity(),  
+                'bik' => $bankAccount->getBik(),  
+                'rs' => $bankAccount->getRs(),  
+                'ks' => $bankAccount->getKs(),  
+                'status' => $bankAccount->getStatus(),  
+            ];
+            $form->setData($data);
+        }
+        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'bankAccount' => $bankAccount,
+        ]);        
+    }
+    
+    public function deleteBankAccountAction()
+    {
+        $bankAccountId = (int) $this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($bankAccountId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                ->findOneById($bankAccountId);
+        
+        if ($bankAccount == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $legal = $bankAccount->getLegal();
+
+        $contacts = $legal->getContacts();
+
+        $this->legalManager->removeBankAccount($bankAccount);
+        
+        // Перенаправляем пользователя на страницу "legal".
+        foreach ($contacts as $contact){
+            return $this->redirect()->toRoute('legals', ['action' => 'legal', 'id' => $contact->getId()]);
+        }
+        
+        return;
+    }
+    
 }

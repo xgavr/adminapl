@@ -2,6 +2,7 @@
 namespace Company\Service;
 
 use Company\Entity\Legal;
+use Company\Entity\BankAccount;
 
 /**
  * This service is responsible for adding/editing roles.
@@ -105,5 +106,51 @@ class LegalManager
         $this->entityManager->flush();
     }    
         
+    public function addBankAccount($legal, $data, $flushnow = false)
+    {                
+        $bankAccount = new BankAccount();            
+        $bankAccount->setName($data['name']);            
+        $bankAccount->setCity($data['city']);            
+        $bankAccount->setBik($data['bik']);            
+        $bankAccount->setKs($data['ks']);            
+        $bankAccount->setRs($data['rs']);            
+        $bankAccount->setStatus($data['status']);            
+
+        $currentDate = date('Y-m-d H:i:s');
+        $bankAccount->setDateCreated($currentDate);
+            
+        $this->entityManager->persist($bankAccount);
+        
+        $bankAccount->setLegal($legal);
+        
+        if ($flushnow){
+            $this->entityManager->flush();                
+        }
+    }
+   
+    public function updateBankAccount($bankAccount, $data, $flushnow = false)
+    {                
+        $bankAccount->setName($data['name']);            
+        $bankAccount->setCity($data['city']);            
+        $bankAccount->setBik($data['bik']);            
+        $bankAccount->setKs($data['ks']);            
+        $bankAccount->setRs($data['rs']);            
+        $bankAccount->setStatus($data['status']);            
+
+        $this->entityManager->persist($bankAccount);
+
+        if ($flushnow){
+            $this->entityManager->flush();                
+        }
+    }
+    
+    public function removeBankAccount($bankAccount)
+    {
+        $this->entityManager->remove($bankAccount);
+
+        $this->entityManager->flush();
+        
+    }
+   
 }
 

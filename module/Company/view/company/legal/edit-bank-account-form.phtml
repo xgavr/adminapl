@@ -1,0 +1,117 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('city')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('bik')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('rs')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ks')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить']);
+
+$form->prepare();
+
+?>
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Банковский счет</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('rs')); ?>
+                            <?= $this->formElement($form->get('rs')); ?>
+                            <?= $this->formElementErrors($form->get('rs')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('bik')); ?>
+                            <?= $this->formElement($form->get('bik')); ?>
+                            <?= $this->formElementErrors($form->get('bik')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('name')); ?>
+                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('city')); ?>
+                            <?= $this->formElement($form->get('city')); ?>
+                            <?= $this->formElementErrors($form->get('city')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ks')); ?>
+                            <?= $this->formElement($form->get('ks')); ?>
+                            <?= $this->formElementErrors($form->get('ks')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+
+                        <?= $this->formElement($form->get('csrf')); ?>
+                    </div>
+                </div>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="bank-account-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#edit-bank-account-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/legals/edit-bank-account-form/<?= $bankAccount->getId() ?>',
+            data: $('#edit-bank-account-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#edit-bank-account-modal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#edit-bank-account-modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    })
+</script>
