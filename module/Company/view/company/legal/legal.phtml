@@ -150,7 +150,7 @@ $form->prepare();
                     <tr>
                         <th>Банковские счета</th>
                         <td align="right">
-                            <button type="button" value="<?= $legal->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#bank-account-modal">
+                            <button type="button" legal-id="<?= $legal->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#bank-account-modal">
                                 Добавить
                             </button>                                
                         </td>
@@ -159,7 +159,7 @@ $form->prepare();
                     <?php foreach ($legal->getBankAccounts() as $bankAccount): ?>
                         <tr>
                             <td colspan="2" align="right">
-                                <button type="button" value="<?= $bankAccount->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#bank-account-modal">
+                                <button type="button" legal-id="<?= $legal->getId() ?>" value="<?= $bankAccount->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#bank-account-modal">
                                     Изменить
                                 </button>                            
                                 <a class="btn btn-danger" href="<?= $this->url('legals',
@@ -184,6 +184,46 @@ $form->prepare();
                             <td>Корр. счет</td>
                             <th class=""><?= $bankAccount->getKs() ?></th>
                        </tr>
+                        <tr>     
+                            <td>Статус</td>
+                            <th class=""><?= $bankAccount->getStatusAsString() ?></th>
+                       </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>    
+            <div class="col-md-2">
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th>Договоры</th>
+                        <td align="right">
+                            <button type="button" legal-id="<?= $legal->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#contract-modal">
+                                Добавить
+                            </button>                                
+                        </td>
+                    </tr>    
+                    
+                    <?php foreach ($legal->getContracts() as $contract): ?>
+                        <tr>
+                            <td colspan="2" align="right">
+                                <button type="button" legal-id="<?= $legal->getId() ?>" value="<?= $contract->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#contract-modal">
+                                    Изменить
+                                </button>                            
+                                <a class="btn btn-danger" href="<?= $this->url('legals',
+                                        ['action'=>'delete-contract', 'id' => $contract->getId()]); ?>">
+                                    <span class="glyphicon glyphicon-remove"></span> Удалить
+                                </a>                           
+                            </td>
+                        </tr>
+                        <tr>     
+                            <td class="" colspan="2"><?= $contract->getName() ?></td>
+                       </tr>
+                        <tr>     
+                            <th class="" colspan="2">№ <?= $contract->getAct() ?> от <?= date('d.m.Y', strtotime($contract->getDateStart())) ?></th>
+                       </tr>
+                        <tr>     
+                            <td>Статус</td>
+                            <th class=""><?= $contract->getStatusAsString() ?></th>
+                       </tr>
                     <?php endforeach; ?>
                 </table>
             </div>    
@@ -198,16 +238,16 @@ $form->prepare();
     </div>
 </div>
 
-<div class="modal fade" id="add-bank-account-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="bank-account-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" id="add-bank-account-modal-content">
+        <div class="modal-content" id="bank-account-modal-content">
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="edit-bank-account-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="contract-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" id="edit-bank-account-modal-content">
+        <div class="modal-content" id="contract-modal-content">
         </div>
     </div>
 </div>
@@ -231,20 +271,50 @@ $form->prepare();
             });    
     })    
     
-    $('#add-bank-account-modal').on('show.bs.modal', function (e) {        
-        var url = '/legals/add-bank-account-form/';
-        var legal_id = e.relatedTarget.value;
+    $('#bank-account-modal').on('show.bs.modal', function (e) {        
+        var url = '/legals/bank-account-form/';
+        var legal_id = $(e.relatedTarget).attr('legal-id');
         if (legal_id){
             url += legal_id;
+            
+            var bankAccount = e.relatedTarget.value;
+            if (bankAccount){
+                url += '?bankAccount=' + bankAccount;
+            }    
             
             $.ajax({
                 type: 'GET',
                 url: url
             })
                 .done(function (data) {
-                   $('#add-bank-account-modal-content').html(data);
+                   $('#bank-account-modal-content').html(data);
                 })
                 .fail(function () {
+                    alert("Ошибка открытия формы.");
+                });    
+            }
+        })
+        
+    $('#contract-modal').on('show.bs.modal', function (e) {        
+        var url = '/legals/contract-form/';
+        var legal_id = $(e.relatedTarget).attr('legal-id');
+        if (legal_id){
+            url += legal_id;
+            
+            var contract = e.relatedTarget.value;
+            if (contract){
+                url += '?contract=' + contract;
+            }    
+            
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                   $('#contract-modal-content').html(data);
+                })
+                .fail(function (e) {
+                    console.log(e);
                     alert("Ошибка открытия формы.");
                 });    
             }

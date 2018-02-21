@@ -50,6 +50,11 @@ class Contract {
      */
     protected $dateStart;    
     
+    /** 
+     * @ORM\Column(name="status")  
+     */
+    protected $status;    
+    
     
     public function getId() 
     {
@@ -97,8 +102,8 @@ class Contract {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_RETIRED => 'Retired'
+            self::STATUS_ACTIVE => 'Действующий',
+            self::STATUS_RETIRED => 'Закрыт'
         ];
     }    
     

@@ -3,6 +3,8 @@ namespace Company\Service;
 
 use Company\Entity\Legal;
 use Company\Entity\BankAccount;
+use Company\Entity\Contract;
+use Zend\Json\Json;
 
 /**
  * This service is responsible for adding/editing roles.
@@ -151,6 +153,66 @@ class LegalManager
         $this->entityManager->flush();
         
     }
+    
+    /*
+     * Получение информации из Справочник БИК РФ http://www.bik-info.ru/
+     * @var $bik string
+     * return json 
+     */
+    public function bikInfo($bik)
+    {
+        $bikInfoUrl =  'http://www.bik-info.ru/api.html?type=json&bik='.$bik; 
+
+        $data = file_get_contents($bikInfoUrl);
+        
+        if (is_string($data)){
+            return (array) Json::decode($data);            
+        }
+        
+        return;
+    }
    
+    public function addContract($legal, $data, $flushnow = false)
+    {                
+        $contract = new Contract();            
+        $contract->setName($data['name']);            
+        $contract->setAct($data['act']);            
+        $contract->setDateStart($data['dateStart']);            
+        $contract->setStatus($data['status']);            
+
+        $currentDate = date('Y-m-d H:i:s');
+        $contract->setDateCreated($currentDate);
+            
+        $this->entityManager->persist($contract);
+        
+        $contract->setLegal($legal);
+        
+        if ($flushnow){
+            $this->entityManager->flush();                
+        }
+    }
+   
+    public function updateContract($contract, $data, $flushnow = false)
+    {                
+        $contract->setName($data['name']);            
+        $contract->setAct($data['act']);            
+        $contract->setDateStart($data['dateStart']);            
+        $contract->setStatus($data['status']);            
+
+        $this->entityManager->persist($contract);
+
+        if ($flushnow){
+            $this->entityManager->flush();                
+        }
+    }
+    
+    public function removeContract($contract)
+    {
+        $this->entityManager->remove($contract);
+
+        $this->entityManager->flush();
+        
+    }
+    
 }
 

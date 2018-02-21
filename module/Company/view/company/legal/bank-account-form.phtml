@@ -26,7 +26,7 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'add-bank-account-submit']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'bank-account-submit']);
 
 $form->prepare();
 
@@ -54,7 +54,12 @@ $form->prepare();
 
                         <div class="form-group">
                             <?= $this->formLabel($form->get('bik')); ?>
-                            <?= $this->formElement($form->get('bik')); ?>
+                            <div class="input-group">
+                                <?= $this->formElement($form->get('bik')); ?>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" id="bik-info" type="button" data-toggle="tooltip" data-placement="top" title="Заполнить из справочника БИК">БИК</button>
+                                </span>                                                            
+                            </div>
                             <?= $this->formElementErrors($form->get('bik')); ?>                  
                         </div>
 
@@ -95,18 +100,18 @@ $form->prepare();
             <?= $this->form()->closeTag(); ?>
             
 <script>
-    $('#add-bank-account-submit').on('click', function() {
+    $('#bank-account-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/legals/add-bank-account-form/<?= $legal->getId() ?>',
-            data: $('#add-bank-account-form').serialize()
+            url: '/legals/bank-account-form/<?= $legal->getId() ?>?bankAccount=<?= ($bankAccount ? $bankAccount->getId():'') ?>',
+            data: $('#bank-account-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#add-bank-account-modal').modal('hide');
+                    $('#bank-account-modal').modal('hide');
                     window.location.reload();
                 } else {
-                    $('#add-bank-account-modal-content').html(data);
+                    $('#bank-account-modal-content').html(data);
                 }    
             })
             .fail(function () {
@@ -114,4 +119,24 @@ $form->prepare();
 
             });
     })    
+    
+    $('#bik-info').on('click', function() {
+        var bik = $('#bik').val();
+        if (bik){
+            $.ajax({
+                type: 'GET',
+                url: '/legals/bik-info/'+bik
+            })
+                .done(function (data) {
+                    if (data){
+                        $('#name').val($('<div/>').html(data.name).text());
+                        $('#city').val('г. '+data.city);
+                        $('#ks').val(data.ks);
+                    }
+                })
+                .fail(function (e) {
+                    console.log(e);
+                });    
+            }        
+    });    
 </script>

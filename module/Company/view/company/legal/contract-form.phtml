@@ -6,19 +6,11 @@ $form->get('name')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('city')->setAttributes([
+$form->get('act')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('bik')->setAttributes([
-    'class'=>'form-control', 
-    ]);
-
-$form->get('rs')->setAttributes([
-    'class'=>'form-control', 
-    ]);
-
-$form->get('ks')->setAttributes([
+$form->get('dateStart')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -26,7 +18,7 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'contract-submit']);
 
 $form->prepare();
 
@@ -37,7 +29,7 @@ $form->prepare();
             <?= $this->form()->openTag($form); ?>
             
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Банковский счет</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Договор</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -47,33 +39,21 @@ $form->prepare();
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('rs')); ?>
-                            <?= $this->formElement($form->get('rs')); ?>
-                            <?= $this->formElementErrors($form->get('rs')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('bik')); ?>
-                            <?= $this->formElement($form->get('bik')); ?>
-                            <?= $this->formElementErrors($form->get('bik')); ?>                  
-                        </div>
-
-                        <div class="form-group">
                             <?= $this->formLabel($form->get('name')); ?>
                             <?= $this->formElement($form->get('name')); ?>
                             <?= $this->formElementErrors($form->get('name')); ?>                  
                         </div>
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('city')); ?>
-                            <?= $this->formElement($form->get('city')); ?>
-                            <?= $this->formElementErrors($form->get('city')); ?>                  
+                            <?= $this->formLabel($form->get('act')); ?>
+                            <?= $this->formElement($form->get('act')); ?>
+                            <?= $this->formElementErrors($form->get('act')); ?>                  
                         </div>
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('ks')); ?>
-                            <?= $this->formElement($form->get('ks')); ?>
-                            <?= $this->formElementErrors($form->get('ks')); ?>                  
+                            <?= $this->formLabel($form->get('dateStart')); ?>
+                            <?= $this->formElement($form->get('dateStart')); ?>
+                            <?= $this->formElementErrors($form->get('dateStart')); ?>                  
                         </div>
 
                         <div class="form-group">
@@ -89,29 +69,29 @@ $form->prepare();
                 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="bank-account-submit">Сохранить</button>
+                <button type="button" class="btn btn-primary" id="contract-submit">Сохранить</button>
             </div>
             
             <?= $this->form()->closeTag(); ?>
             
 <script>
-    $('#edit-bank-account-submit').on('click', function() {
+    $('#contract-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/legals/edit-bank-account-form/<?= $bankAccount->getId() ?>',
-            data: $('#edit-bank-account-form').serialize()
+            url: '/legals/contract-form/<?= $legal->getId() ?>?contract=<?= ($contract ? $contract->getId():'') ?>',
+            data: $('#contract-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#edit-bank-account-modal').modal('hide');
+                    $('#contract-modal').modal('hide');
                     window.location.reload();
                 } else {
-                    $('#edit-bank-account-modal-content').html(data);
+                    $('#contract-modal-content').html(data);
                 }    
             })
             .fail(function () {
                 alert("Ошибка при открытии формы.");
 
             });
-    })
+    })        
 </script>
