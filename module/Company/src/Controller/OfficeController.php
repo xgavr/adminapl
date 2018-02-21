@@ -11,7 +11,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Company\Entity\Office;
 use Company\Form\OfficeForm;
-use Application\Form\PhoneForm;
 use Application\Entity\Contact;
 
 class OfficeController extends AbstractActionController
@@ -213,6 +212,5 @@ class OfficeController extends AbstractActionController
 
         // Redirect to "index" region
         return $this->redirect()->toRoute('offices', ['action'=>'index']); 
-    }
-    
+    } 
 }

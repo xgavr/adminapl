@@ -152,10 +152,12 @@ $form->prepare();
             <?= $this->form()->closeTag(); ?>
             
 <script>
+    var _inn = $('#inn').val();
+    
     $('#legal-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/contact/legal-form/<?= $contact->getId() ?>',
+            url: '/legals/form/<?= $contact->getId() ?>',
             data: $('#legal-form').serialize()
         })
             .done(function (data) {
@@ -172,12 +174,12 @@ $form->prepare();
             });
     })
     
-    $('#inn').on('blur', function() {
+    $('#inn').on('blur', function() {        
         var inn = $('#inn').val();
-        if (inn){
+        if (inn && inn != _inn){
             $.ajax({
                 type: 'GET',
-                url: '/contact/find-legal/'+inn,
+                url: '/legals/find/'+inn,
             })
                 .done(function (data) {
                     if (data.inn){

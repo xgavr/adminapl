@@ -56,6 +56,20 @@ return [
                     ],
                 ],
             ],
+            'legals' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/legals[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\LegalController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -64,7 +78,7 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],
-            \Company\Controller\RegionController::class => [
+            \Company\Controller\LegalController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],
@@ -72,18 +86,24 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],
+            \Company\Controller\RegionController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+company.manage']
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
-            Controller\RegionController::class => Controller\Factory\RegionControllerFactory::class,
+            Controller\LegalController::class => Controller\Factory\LegalControllerFactory::class,
             Controller\OfficeController::class => Controller\Factory\OfficeControllerFactory::class,
+            Controller\RegionController::class => Controller\Factory\RegionControllerFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
-            Service\RegionManager::class => Service\Factory\RegionManagerFactory::class,
+            Service\LegalManager::class => Service\Factory\LegalManagerFactory::class,
             Service\OfficeManager::class => Service\Factory\OfficeManagerFactory::class,
+            Service\RegionManager::class => Service\Factory\RegionManagerFactory::class,
         ],
     ],
     'view_manager' => [

@@ -92,8 +92,8 @@ $form->prepare();
                             <button type="button" id="legal-dialog-edit" value="<?= $legal->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#legal-modal">
                               Изменить
                             </button>                            
-                            <a class="btn btn-danger" href="<?= $this->url('contact',
-                                    ['action'=>'delete-legal', 'id' => $contact->getId()], ['query' => ['legal' => $legal->getId()]]); ?>">
+                            <a class="btn btn-danger" href="<?= $this->url('legals',
+                                    ['action'=>'delete-association', 'id' => $contact->getId()], ['query' => ['legal' => $legal->getId()]]); ?>">
                                 <span class="glyphicon glyphicon-remove"></span> Удалить
                             </a>                           
                         </td>
@@ -148,7 +148,7 @@ $form->prepare();
     <?php endif;?>        
 </div>
 
-<div class="modal fade" id="legal-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="legal-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content" id="legal-modal-content">
         </div>
@@ -157,7 +157,7 @@ $form->prepare();
 
 <script>
     $('#legal-modal').on('show.bs.modal', function (e) {        
-        var url = '/contact/legal-form/<?= $contact->getId() ?>';
+        var url = '/legals/form/<?= $contact->getId() ?>';
         var legal_id = e.relatedTarget.value;
         if (legal_id){
             url += '?legal='+legal_id;
@@ -171,7 +171,8 @@ $form->prepare();
             })
             .fail(function () {
                 alert("Ошибка открытия формы.");
-            });     })    
+            });    
+    })    
     
 //    $('#legal-dialog-btn').on('click', function(){
 //        $.ajax({

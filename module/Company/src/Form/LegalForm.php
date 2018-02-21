@@ -380,8 +380,6 @@ class LegalForm extends Form
                 'validators' => [
                     ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
                 ],
-            ]); 
-        
-        
+            ]);         
     }           
 }

@@ -134,7 +134,7 @@ $this->pageBreadcrumbs()->setItems([
         <h2>Юридические лица</h2>
         <?php foreach ($office->getContacts() as $contact):?>
             <p>
-                <a class="btn btn-default" href="<?= $this->url('contact', 
+                <a class="btn btn-default" href="<?= $this->url('legals', 
                                     ['action'=>'legal', 'id'=>$contact->getId()]); ?>">
                                 <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getLegals())) ? 'Изменить':'Добавить'; ?>
                 </a>
