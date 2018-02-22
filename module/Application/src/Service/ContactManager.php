@@ -68,7 +68,7 @@ class ContactManager
         } elseif($supplier = $contact->getSupplier()){
             $result['headTitle'] = 'Поставщики'; 
             $result['pageTitle'] = $supplier->getName();
-            $result['route'] = 'suppliers';
+            $result['route'] = 'supplier';
             $result['id'] = $supplier->getId();                        
         } elseIf($office = $contact->getOffice()){
             $result['headTitle'] = 'Офисы'; 

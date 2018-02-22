@@ -9,29 +9,22 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
-use Application\Entity\Supplier;
 
 /**
- * Description of Supplier
+ * Description of Pricesettings
  *
  * @author Daddy
  */
-class SupplierForm extends Form
+class BillGettingForm extends Form
 {
-    
-    protected $objectManager;
-
-    protected $entityManager;
-        
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager)
+    public function __construct()
     {
         // Определяем имя формы.
-        parent::__construct('supplier-form');
+        parent::__construct('bill-getting-form');
      
-        $this->entityManager = $entityManager;
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
                 
@@ -50,46 +43,33 @@ class SupplierForm extends Form
             'type'  => 'text',
             'name' => 'name',
             'attributes' => [
-                'id' => 'supplier_name'
+                'id' => 'name'
             ],
             'options' => [
                 'label' => 'Наименование',
+                'value' => 'Получение накладных',
             ],
         ]);
-
+        
         $this->add([           
             'type'  => 'text',
-            'name' => 'aplId',
+            'name' => 'email',
             'attributes' => [
-                'id' => 'aplId'
+                'id' => 'email'
             ],
             'options' => [
-                'label' => 'AplId',
+                'label' => 'Email для накладных',
             ],
         ]);
         
-        
-        // Добавляем поле "address"
         $this->add([           
             'type'  => 'text',
-            'name' => 'address',
+            'name' => 'emailPassword',
             'attributes' => [
-                'id' => 'supplier_address'
+                'id' => 'email-password'
             ],
             'options' => [
-                'label' => 'Адрес',
-            ],
-        ]);
-        
-        // Добавляем поле "info"
-        $this->add([           
-            'type'  => 'textarea',
-            'name' => 'info',
-            'attributes' => [
-                'id' => 'supplier_info'
-            ],
-            'options' => [
-                'label' => 'Описание',
+                'label' => 'Email пароль',
             ],
         ]);
         
@@ -98,10 +78,10 @@ class SupplierForm extends Form
             'type'  => 'select',
             'name' => 'status',
             'options' => [
-                'label' => 'Status',
+                'label' => 'Статус',
                 'value_options' => [
-                    1 => 'Действующий',
-                    2 => 'В отключке',                    
+                    1 => 'Использовать',
+                    2 => 'Не использовать',                    
                 ]
             ],
         ]);
@@ -116,6 +96,17 @@ class SupplierForm extends Form
                 'id' => 'supplier_submitbutton',
             ],
         ]);        
+        
+        $this->add([
+            'type' => 'csrf',
+            'name' => 'csrf',
+            'options' => [
+                'csrf_options' => [
+                'timeout' => 600
+                ]
+            ],
+        ]);
+        
     }
     
    /**
@@ -129,43 +120,6 @@ class SupplierForm extends Form
         
         $inputFilter->add([
                 'name'     => 'name',
-                'required' => true,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);
-
-        $inputFilter->add([
-                'name'     => 'aplId',
-                'required' => true,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'IsInt',
-                        'options' => [
-                            'min' => 0,
-                            'locale' => 'ru-Ru'
-                        ],
-                    ],
-                ],
-            ]);                          
-        
-        
-        $inputFilter->add([
-                'name'     => 'address',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -184,7 +138,7 @@ class SupplierForm extends Form
             ]);
         
         $inputFilter->add([
-                'name'     => 'info',
+                'name'     => 'email',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -196,7 +150,33 @@ class SupplierForm extends Form
                         'name'    => 'StringLength',
                         'options' => [
                             'min' => 1,
-                            'max' => 1024
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'emailPassword',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
                         ],
                     ],
                 ],
@@ -216,17 +196,4 @@ class SupplierForm extends Form
         
         
     }    
-    
-    
-    public function setObjectManager(ObjectManager $objectManager)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    public function getObjectManager()
-    {
-        return $this->objectManager;
-    }    
-
-    
 }

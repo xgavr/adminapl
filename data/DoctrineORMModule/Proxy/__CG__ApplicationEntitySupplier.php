@@ -64,10 +64,10 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'pricesettings'];
+            return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'pricesettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings'];
         }
 
-        return ['__isInitialized__', 'id', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'pricesettings'];
+        return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'pricesettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings'];
     }
 
     /**
@@ -197,6 +197,28 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setId', [$id]);
 
         return parent::setId($id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAplId()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAplId', []);
+
+        return parent::getAplId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAplId($aplId)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAplId', [$aplId]);
+
+        return parent::setAplId($aplId);
     }
 
     /**
@@ -406,6 +428,50 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPricesettings', [$pricesettings]);
 
         return parent::addPricesettings($pricesettings);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPriceGettings()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPriceGettings', []);
+
+        return parent::getPriceGettings();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addPriceGettings($priceGetting)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPriceGettings', [$priceGetting]);
+
+        return parent::addPriceGettings($priceGetting);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBillGettings()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getBillGettings', []);
+
+        return parent::getBillGettings();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addBillGettings($billGetting)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addBillGettings', [$billGetting]);
+
+        return parent::addBillGettings($billGetting);
     }
 
 }

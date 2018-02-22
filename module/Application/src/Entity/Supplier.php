@@ -30,7 +30,12 @@ class Supplier {
      * @ORM\Column(name="id")   
      */
     protected $id;
-    
+
+    /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId;
+        
     /**
      * @ORM\Column(name="name")   
      */
@@ -75,6 +80,18 @@ class Supplier {
     private $pricesettings;    
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\PriceGetting", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $priceGettings;    
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\BillGetting", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $billGettings;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -82,6 +99,8 @@ class Supplier {
         $this->contacts = new ArrayCollection();
         $this->raw = new ArrayCollection();
         $this->pricesettings = new ArrayCollection();
+        $this->priceGettings = new ArrayCollection();
+        $this->billGettings = new ArrayCollection();
     }
     
     
@@ -95,6 +114,16 @@ class Supplier {
         $this->id = $id;
     }     
 
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
+    }     
+    
     public function getName() 
     {
         return $this->name;
@@ -141,8 +170,8 @@ class Supplier {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_RETIRED => 'Retired'
+            self::STATUS_ACTIVE => 'Действующий',
+            self::STATUS_RETIRED => 'В отключке'
         ];
     }    
     
@@ -245,6 +274,40 @@ class Supplier {
     public function addPricesettings($pricesettings)
     {
         $this->pricesettings[] = $pricesettings;
+    }
+    
+    /**
+     * Returns the array of prices assigned to this.
+     * @return array
+     */
+    public function getPriceGettings()
+    {
+        return $this->priceGettings;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addPriceGettings($priceGetting)
+    {
+        $this->priceGettings[] = $priceGetting;
+    }
+    
+    /**
+     * Returns the array of bills assigned to this.
+     * @return array
+     */
+    public function getBillGettings()
+    {
+        return $this->billGettings;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addBillGettings($billGetting)
+    {
+        $this->billGettings[] = $billGetting;
     }
     
 }

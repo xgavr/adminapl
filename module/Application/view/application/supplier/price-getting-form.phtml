@@ -1,0 +1,141 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ftp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ftpLogin')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ftpPassword')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('emailPassword')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('link')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'price-getting-submit']);
+
+$form->prepare();
+
+?>
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Настройка загрузки прауса поставщика</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('name')); ?>
+                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('email')); ?>
+                            <?= $this->formElement($form->get('email')); ?>
+                            <?= $this->formElementErrors($form->get('email')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('emailPassword')); ?>
+                            <?= $this->formElement($form->get('emailPassword')); ?>
+                            <?= $this->formElementErrors($form->get('emailPassword')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('link')); ?>
+                            <?= $this->formElement($form->get('link')); ?>
+                            <?= $this->formElementErrors($form->get('link')); ?>                  
+                        </div>
+
+                    </div>        
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>                        
+
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ftp')); ?>
+                            <?= $this->formElement($form->get('ftp')); ?>
+                            <?= $this->formElementErrors($form->get('ftp')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ftpLogin')); ?>
+                            <?= $this->formElement($form->get('ftpLogin')); ?>
+                            <?= $this->formElementErrors($form->get('ftpLogin')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ftpPassword')); ?>
+                            <?= $this->formElement($form->get('ftpPassword')); ?>
+                            <?= $this->formElementErrors($form->get('ftpPassword')); ?>                  
+                        </div>
+                        
+                        <?= $this->formElement($form->get('csrf')); ?>
+                    </div>
+                </div>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="price-getting-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#price-getting-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/supplier/price-getting-form/<?= $supplier->getId() ?>?priceGetting=<?= ($priceGetting ? $priceGetting->getId():'') ?>',
+            data: $('#price-getting-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#price-getting-modal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#price-getting-modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    })    
+</script>

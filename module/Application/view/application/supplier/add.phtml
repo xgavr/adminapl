@@ -5,7 +5,7 @@ $this->mainMenu()->setActiveItemId('supplier');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Управление поставщиками'=>$this->url('supplier'),
+            'Поставщики'=>$this->url('supplier'),
             'Добавить поставщика'=>$this->url('supplier', ['action'=>'add'])
             ]);
 
@@ -15,15 +15,9 @@ $form->get('name')->setAttributes([
     'placeholder'=>'Наименование'
     ]);
 
-$form->get('address')->setAttributes([
+$form->get('aplId')->setAttributes([
     'class'=>'form-control', 
-    'placeholder'=>'Адрес',
-    ]);
-
-
-$form->get('info')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'Описание',
+    'placeholder'=>'Код АПЛ'
     ]);
 
 $form->get('status')->setAttributes([
@@ -52,17 +46,11 @@ $form->prepare();
         </div>
                         
         <div class="form-group">
-            <?= $this->formLabel($form->get('address')); ?>
-            <?= $this->formElement($form->get('address')); ?>
-            <?= $this->formElementErrors($form->get('address')); ?>                  
+            <?= $this->formLabel($form->get('aplId')); ?>
+            <?= $this->formElement($form->get('aplId')); ?>
+            <?= $this->formElementErrors($form->get('aplId')); ?>                  
         </div>
-                                
-        <div class="form-group">
-            <?= $this->formLabel($form->get('info')); ?>
-            <?= $this->formElement($form->get('info')); ?>
-            <?= $this->formElementErrors($form->get('info')); ?>                  
-        </div>
-                                
+                                                        
         <div class="form-group">
             <?= $this->formLabel($form->get('status')); ?>
             <?= $this->formElement($form->get('status')); ?>

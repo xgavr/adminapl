@@ -9,29 +9,23 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
-use Application\Entity\Supplier;
+use Application\Entity\PriceGetting;
 
 /**
- * Description of Supplier
+ * Description of Pricesettings
  *
  * @author Daddy
  */
-class SupplierForm extends Form
+class PriceGettingForm extends Form
 {
-    
-    protected $objectManager;
-
-    protected $entityManager;
-        
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager)
+    public function __construct()
     {
         // Определяем имя формы.
-        parent::__construct('supplier-form');
+        parent::__construct('price-getting-form');
      
-        $this->entityManager = $entityManager;
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
                 
@@ -50,46 +44,78 @@ class SupplierForm extends Form
             'type'  => 'text',
             'name' => 'name',
             'attributes' => [
-                'id' => 'supplier_name'
+                'id' => 'ps_name'
             ],
             'options' => [
                 'label' => 'Наименование',
+                'value' => 'Получение прайса',
             ],
         ]);
-
+        
         $this->add([           
             'type'  => 'text',
-            'name' => 'aplId',
+            'name' => 'ftp',
             'attributes' => [
-                'id' => 'aplId'
+                'id' => 'ftp'
             ],
             'options' => [
-                'label' => 'AplId',
+                'label' => 'FTP сервер',
             ],
         ]);
         
-        
-        // Добавляем поле "address"
         $this->add([           
             'type'  => 'text',
-            'name' => 'address',
+            'name' => 'ftpLogin',
             'attributes' => [
-                'id' => 'supplier_address'
+                'id' => 'ftp-login'
             ],
             'options' => [
-                'label' => 'Адрес',
+                'label' => 'FTP логин',
             ],
         ]);
         
-        // Добавляем поле "info"
         $this->add([           
-            'type'  => 'textarea',
-            'name' => 'info',
+            'type'  => 'text',
+            'name' => 'ftpPassword',
             'attributes' => [
-                'id' => 'supplier_info'
+                'id' => 'ftp-password'
             ],
             'options' => [
-                'label' => 'Описание',
+                'label' => 'FTP пароль',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'email',
+            'attributes' => [
+                'id' => 'email'
+            ],
+            'options' => [
+                'label' => 'Email для прайса',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'emailPassword',
+            'attributes' => [
+                'id' => 'email-password'
+            ],
+            'options' => [
+                'label' => 'Email пароль',
+            ],
+        ]);
+        
+        // Добавляем поле "rest"
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'link',
+            'attributes' => [
+                'id' => 'link'
+            ],
+            'options' => [
+                'label' => 'Ссылка на файл прайса',
             ],
         ]);
         
@@ -98,10 +124,10 @@ class SupplierForm extends Form
             'type'  => 'select',
             'name' => 'status',
             'options' => [
-                'label' => 'Status',
+                'label' => 'Статус',
                 'value_options' => [
-                    1 => 'Действующий',
-                    2 => 'В отключке',                    
+                    1 => 'Использовать',
+                    2 => 'Не использовать',                    
                 ]
             ],
         ]);
@@ -116,6 +142,17 @@ class SupplierForm extends Form
                 'id' => 'supplier_submitbutton',
             ],
         ]);        
+        
+        $this->add([
+            'type' => 'csrf',
+            'name' => 'csrf',
+            'options' => [
+                'csrf_options' => [
+                'timeout' => 600
+                ]
+            ],
+        ]);
+        
     }
     
    /**
@@ -129,43 +166,6 @@ class SupplierForm extends Form
         
         $inputFilter->add([
                 'name'     => 'name',
-                'required' => true,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);
-
-        $inputFilter->add([
-                'name'     => 'aplId',
-                'required' => true,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'IsInt',
-                        'options' => [
-                            'min' => 0,
-                            'locale' => 'ru-Ru'
-                        ],
-                    ],
-                ],
-            ]);                          
-        
-        
-        $inputFilter->add([
-                'name'     => 'address',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -184,7 +184,109 @@ class SupplierForm extends Form
             ]);
         
         $inputFilter->add([
-                'name'     => 'info',
+                'name'     => 'ftp',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'ftpLogin',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'ftpPassword',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'email',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'emailPassword',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'link',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -216,17 +318,4 @@ class SupplierForm extends Form
         
         
     }    
-    
-    
-    public function setObjectManager(ObjectManager $objectManager)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    public function getObjectManager()
-    {
-        return $this->objectManager;
-    }    
-
-    
 }

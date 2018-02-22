@@ -9,10 +9,9 @@ namespace Application\Service;
 
 use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Supplier;
-use Application\Entity\Contact;
-use Application\Entity\Phone;
-use Application\Entity\Email;
 use Application\Entity\Pricesettings;
+use Application\Entity\PriceGetting;
+use Application\Entity\BillGetting;
 
 /**
  * Description of SupplierService
@@ -84,8 +83,7 @@ class SupplierManager
         // Создаем новую сущность.
         $supplier = new Supplier();
         $supplier->setName($data['name']);
-        $supplier->setInfo($data['info']);
-        $supplier->setAddress($data['address']);  
+        $supplier->setAplId($data['aplId']);
         $supplier->setStatus($data['status']);
         
         $currentDate = date('Y-m-d H:i:s');
@@ -104,8 +102,7 @@ class SupplierManager
     public function updateSupplier($supplier, $data) 
     {
         $supplier->setName($data['name']);
-        $supplier->setInfo($data['info']);
-        $supplier->setAddress($data['address']);
+        $supplier->setAplId($data['aplId']);
         $supplier->setStatus($data['status']);
 
         $this->entityManager->persist($supplier);
@@ -123,9 +120,14 @@ class SupplierManager
             $this->contactManager->remove($contact);
         }        
         
-        $pricesettings = $supplier->getPricwsettings();
+        $pricesettings = $supplier->getPricesettings();
         foreach ($pricesettings as $pricesetting) {
             $this->removePricesettings($pricesetting);
+        }
+
+        $priceGettings = $supplier->getPriceGettings();
+        foreach ($priceGettings as $priceGetting) {
+            $this->removePriceGetting($priceGetting);
         }
 
         $raws = $supplier->getRaw();
@@ -154,7 +156,6 @@ class SupplierManager
         $pricesettings->setProducer($data['producer']);
         $pricesettings->setRest($data['rest']);
         $pricesettings->setStatus($data['status']);
-        $pricesettings->setSupplier($supplier);
         $pricesettings->setTitle($data['title']);
         
         $currentDate = date('Y-m-d H:i:s');
@@ -163,6 +164,8 @@ class SupplierManager
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($pricesettings);
+
+        $pricesettings->setSupplier($supplier);
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
@@ -191,4 +194,93 @@ class SupplierManager
         $this->entityManager->remove($pricesettings);
         $this->entityManager->flush();
     }
+    
+    public function addNewPriceGetting($supplier, $data)
+    {
+        $priceGetting = new PriceGetting();
+        $priceGetting->setName($data['name']);
+        $priceGetting->setFtp($data['ftp']);
+        $priceGetting->setFtpLogin($data['ftpLogin']);
+        $priceGetting->setFtpPassword($data['ftpPassword']);
+        $priceGetting->setEmail($data['email']);
+        $priceGetting->setEmailPassword($data['emailPassword']);
+        $priceGetting->setLink($data['link']);
+        $priceGetting->setStatus($data['status']);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $priceGetting->setDateCreated($currentDate);        
+        
+        $priceGetting->setSupplier($supplier);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($priceGetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function updatePriceGetting($priceGetting, $data)
+    {
+        $priceGetting->setName($data['name']);
+        $priceGetting->setFtp($data['ftp']);
+        $priceGetting->setFtpLogin($data['ftpLogin']);
+        $priceGetting->setFtpPassword($data['ftpPassword']);
+        $priceGetting->setEmail($data['email']);
+        $priceGetting->setEmailPassword($data['emailPassword']);
+        $priceGetting->setLink($data['link']);
+        $priceGetting->setStatus($data['status']);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($priceGetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function removePriceGetting($priceGetting)
+    {
+        $this->entityManager->remove($priceGetting);
+        $this->entityManager->flush();
+    }
+    
+    public function addNewBillGetting($supplier, $data)
+    {
+        $billGetting = new BillGetting();
+        $billGetting->setName($data['name']);
+        $billGetting->setEmail($data['email']);
+        $billGetting->setEmailPassword($data['emailPassword']);
+        $billGetting->setStatus($data['status']);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $billGetting->setDateCreated($currentDate);        
+        
+        $billGetting->setSupplier($supplier);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($billGetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function updateBillGetting($billGetting, $data)
+    {
+        $billGetting->setName($data['name']);
+        $billGetting->setEmail($data['email']);
+        $billGetting->setEmailPassword($data['emailPassword']);
+        $billGetting->setStatus($data['status']);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($billGetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function removeBillGetting($billGetting)
+    {
+        $this->entityManager->remove($billGetting);
+        $this->entityManager->flush();
+    }
+    
 }
