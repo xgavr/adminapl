@@ -265,6 +265,49 @@ class ContactController extends AbstractActionController
         ]);
     }
     
+    public function phoneFormAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $form = new PhoneForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                $this->contactManager->addPhone($contact, $data['name'], true);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'contact' => $contact,
+        ]);                
+        
+    }
+    
     public function deletePhoneAction()
     {
         $phoneId = $this->params()->fromQuery('id', -1);
@@ -290,6 +333,27 @@ class ContactController extends AbstractActionController
         return $this->redirect()->toRoute('contact', ['action' => 'phone', 'id' => $contact->getId()]);
         
         
+    }
+
+    public function deletePhoneFormAction()
+    {
+        $phoneId = $this->params()->fromRoute('id', -1);
+        
+        $phone = $this->entityManager->getRepository(Phone::class)
+                ->findOneById($phoneId);
+        
+        if ($phone == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->contactManager->removePhone($phone);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
     }
     
     public function emailAction()
@@ -336,6 +400,49 @@ class ContactController extends AbstractActionController
         ]);
     }
     
+    public function emailFormAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $form = new EmailForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                $this->contactManager->addEmail($contact, $data['name'], true);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'contact' => $contact,
+        ]);                
+        
+    }
+
     public function deleteEmailAction()
     {
         $emailId = $this->params()->fromQuery('id', -1);
@@ -358,10 +465,30 @@ class ContactController extends AbstractActionController
         $this->contactManager->removeEmail($email);
         
         // Перенаправляем пользователя на страницу "phone".
-        return $this->redirect()->toRoute('contact', ['action' => 'email', 'id' => $contact->getId()]);
-        
-        
+        return $this->redirect()->toRoute('contact', ['action' => 'email', 'id' => $contact->getId()]);        
     }
+    
+    public function deleteEmailFormAction()
+    {
+        $emailId = $this->params()->fromRoute('id', -1);
+        
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findOneById($emailId);
+        
+        if ($email == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->contactManager->removeEmail($email);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }
+        
 
     public function messengersAction()
     {
@@ -475,5 +602,5 @@ class ContactController extends AbstractActionController
             'contact' => $contact,
             'parent' => $this->contactManager->getParent($contact),
         ]);
-    }
+    }    
 }

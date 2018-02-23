@@ -9,204 +9,296 @@ $this->pageBreadcrumbs()->setItems([
             'Просмотр данных поставщика'=>$this->url('supplier', ['action'=>'view', 'id' => $supplier->getId()])
             ]);  
 
+$this->headScript()
+            ->appendFile($this->basePath('js/jquery.mask.min.js'))
+        ;
+
 ?>
-
-<h1>
-    <?= $this->escapeHtml($supplier->getName()); ?> 
-    <sup>
-        Id: <?= $this->escapeHtml($supplier->getId()); ?>             
-    </sup>
-    <sup>
-        <?php if ($supplier->getAplId()): ?>
-            Код АПЛ: <?= $this->escapeHtml($supplier->getAplId()); ?>             
-        <?php endif;?>
-    </sup>
-</h1>
-<p>    
-    <?= $this->escapeHtml($supplier->getStatusAsString()); ?>
-</p>
-
 
 <div class="row">
     <div class="col-md-4">
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4 class="contact-header">Контактные лица
-                </h4>
-            </div>    
-            <div class="panel-body">
-                <?php foreach ($supplier->getContacts() as $contact):?>
-                <?php endforeach; ?>            
-            </div>        
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="contact-header">Юридические лица
-                </h4>
-            </div>    
-            <div class="panel-body">
-                <?php foreach ($supplier->getContacts() as $contact):?>
-                        <a class="btn btn-default" href="<?= $this->url('legals', 
-                                            ['action'=>'legal', 'id'=>$contact->getId()]); ?>">
-                                        <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getLegals())) ? 'Изменить':'Добавить'; ?>
-                        </a>
-                    <table class="table table-striped table-bordered">
-                        <?php foreach ($contact->getLegals() as $legal): ?>
-                            <tr>
-                               <th class=""><?= $legal->getName() ?></th>
-                               <th class=""><?= $legal->getInn() ?></th>
-                               <th class=""><?= $legal->getStatusAsString() ?></th>
-                           </tr>
-                        <?php endforeach; ?>
-                    </table>
-                <?php endforeach; ?>            
-            </div>        
+                <h3 class="panel-title pull-left"><?= $this->escapeHtml($supplier->getName()); ?></h3>
+                <a class="btn btn-default pull-right" href="<?= $this->url('supplier', 
+                        ['action'=>'edit', 'id'=>$supplier->getId()]); ?>" data-toggle="tooltip" title="Изменить">
+                    <span class="glyphicon glyphicon-pencil" ></span>
+                </a>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                 <tr>
+                    <th>ID:</th>
+                    <td><?= $this->escapeHtml($supplier->getId()) ?></th>
+                </tr>
+                <tr>
+                    <th>AplId:</th>
+                    <td><?= $this->escapeHtml($supplier->getAplId()) ?></th>
+                </tr>
+                <tr>
+                    <th>Статус:</th>
+                    <td><?= $this->escapeHtml($supplier->getStatusAsString()) ?></th>
+                </tr>
+            </table>
         </div>
     </div>
+
     <div class="col-md-4">
-
-        <h4 class="contact-header">Настройки загрузки прайса</h4>
-        <p>
-        <a class="btn btn-default" href="
-            <?= $this->url('pricesettings', ['action'=>'add'], ['query' => ['supplier' => $supplier->getId()]]); ?>">
-            Добавить
-        </a>
-        </p>
-        <table class="table table-striped">
-
-           <tr>
-                <th>ID</th>
-                <th>Наименование</th>
-                <th>Действие</th>
-            </tr>
-
-            <?php foreach ($supplier->getPricesettings() as $row): ?>
-
-            <tr>
-                <td><?= $this->escapeHtml($row->getId()); ?></td>
-                <td>
-                        <?= $this->escapeHtml($row->getName()); ?>
-                </td>
-                <td>
-                    <a class="btn btn-info" href="<?= $this->url('pricesettings', 
-                            ['action'=>'edit', 'id'=>$row->getId()]); ?>">
-                        <span class="glyphicon glyphicon-pencil" ></span> Изменить
-                    </a>
-                    <a class="btn btn-danger" href="<?= $this->url('pricesettings',
-                            ['action'=>'delete', 'id'=>$row->getId()]); ?>">
-                        <span class="glyphicon glyphicon-remove"></span> Удалить
-                    </a>
-                </td>    
-            </tr>
-
-            <?php endforeach; ?>   
-
-        </table>
-    </div>
-</div>   
- <div class="row">
-   
-            <div class="col-md-4">
-                <table class="table table-striped table-bordered">
-                    <tr>
-                        <th>Получение прайса</th>
-                        <td align="right">
-                            <button type="button" supplier-id="<?= $supplier->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#price-getting-modal">
-                                Добавить
-                            </button>                                
-                        </td>
-                    </tr>    
-                    
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Получение прайса</h3>
+                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
+                        data-toggle="modal" data-target="#price-getting-modal" title="Добавить">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                </button>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                <?php if ($supplier->getPriceGettings()): ?>
                     <?php foreach ($supplier->getPriceGettings() as $priceGetting): ?>
                         <tr>
-                            <td colspan="2" align="right">
-                                <button type="button" supplier-id="<?= $supplier->getId() ?>" value="<?= $priceGetting->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#price-getting-modal">
-                                    Изменить
-                                </button>                            
-                                <a class="btn btn-danger" href="<?= $this->url('supplier',
+                            <td>
+                                <?= $priceGetting->getName() ?>
+                            </td>
+                            <td align="right">
+                                <button supplier-id="<?= $supplier->getId() ?>" value="<?= $priceGetting->getId() ?>" class="btn btn-default" 
+                                        data-toggle="modal" data-target="#price-getting-modal" data-toggle="tooltip" title="Изменить">
+                                    <span class="glyphicon glyphicon-pencil" ></span>
+                                </button>
+                                <a class="btn btn-danger" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
                                         ['action'=>'delete-price-getting', 'id' => $priceGetting->getId()]); ?>">
-                                    <span class="glyphicon glyphicon-remove"></span> Удалить
+                                    <span class="glyphicon glyphicon-remove"></span>
                                 </a>                           
                             </td>
                         </tr>
                         <tr>     
-                            <td>Наименование</td>
-                            <th class=""><?= $priceGetting->getName() ?></th>
+                            <th>Статус</th>
+                            <td class=""><?= $priceGetting->getStatusAsString() ?></td>
                        </tr>
                         <tr>     
-                            <td>Статус</td>
-                            <th class=""><?= $priceGetting->getStatusAsString() ?></th>
+                            <th>Email</th>
+                            <td class=""><?= $priceGetting->getEmail() ?></td>
                        </tr>
                         <tr>     
-                            <td>Email</td>
-                            <th class=""><?= $priceGetting->getEmail() ?></th>
+                            <th>Email пароль</th>
+                            <td class=""><?= $priceGetting->getEmailPassword() ?></td>
                        </tr>
                         <tr>     
-                            <td>Email пароль</td>
-                            <th class=""><?= $priceGetting->getEmailPassword() ?></th>
+                            <th>Ftp</th>
+                            <td class=""><?= $priceGetting->getFtp() ?></td>
                        </tr>
                         <tr>     
-                            <td>Ftp</td>
-                            <th class=""><?= $priceGetting->getFtp() ?></th>
+                            <th>Ftp логин</th>
+                            <td class=""><?= $priceGetting->getFtpLogin() ?></td>
                        </tr>
                         <tr>     
-                            <td>Ftp логин</td>
-                            <th class=""><?= $priceGetting->getFtpLogin() ?></th>
+                            <th>Ftp пароль</th>
+                            <td class=""><?= $priceGetting->getFtpPassword() ?></td>
                        </tr>
                         <tr>     
-                            <td>Ftp пароль</td>
-                            <th class=""><?= $priceGetting->getFtpPassword() ?></th>
-                       </tr>
-                        <tr>     
-                            <td>Ссылка на скачивание</td>
-                            <th class=""><?= $priceGetting->getLink() ?></th>
+                            <th>Ссылка на скачивание</th>
+                            <td class=""><?= $priceGetting->getLink() ?></td>
                        </tr>
                     <?php endforeach; ?>
-                </table>
-            </div>    
+                <?php endif; ?>
+            </table>
+        </div>
+    </div>
     
-            <div class="col-md-4">
-                <table class="table table-striped table-bordered">
-                    <tr>
-                        <th>Получение электронных накладных</th>
-                        <td align="right">
-                            <button type="button" supplier-id="<?= $supplier->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#bill-getting-modal">
-                                Добавить
-                            </button>                                
-                        </td>
-                    </tr>    
-                    
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Получение электронных накладных</h3>
+                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
+                        data-toggle="modal" data-target="#bill-getting-modal" title="Добавить">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                </button>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                <?php if ($supplier->getBillGettings()): ?>                    
                     <?php foreach ($supplier->getBillGettings() as $billGetting): ?>
                         <tr>
-                            <td colspan="2" align="right">
-                                <button type="button" supplier-id="<?= $supplier->getId() ?>" value="<?= $billGetting->getId() ?>" class="btn btn-primary" data-toggle="modal" data-target="#bill-getting-modal">
-                                    Изменить
+                            <th class=""><?= $billGetting->getName() ?></th>
+                            <td align="right">
+                                <button supplier-id="<?= $supplier->getId() ?>" value="<?= $billGetting->getId() ?>" class="btn btn-default"
+                                        data-toggle="modal" data-target="#bill-getting-modal" title="Изменить">
+                                    <span class="glyphicon glyphicon-pencil" ></span>
                                 </button>                            
-                                <a class="btn btn-danger" href="<?= $this->url('supplier',
+                                <a class="btn btn-default" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
                                         ['action'=>'delete-bill-getting', 'id' => $billGetting->getId()]); ?>">
-                                    <span class="glyphicon glyphicon-remove"></span> Удалить
+                                    <span class="glyphicon glyphicon-remove"></span>
                                 </a>                           
                             </td>
                         </tr>
                         <tr>     
-                            <td>Наименование</td>
-                            <th class=""><?= $billGetting->getName() ?></th>
+                            <th>Статус</th>
+                            <td class=""><?= $billGetting->getStatusAsString() ?></td>
                        </tr>
                         <tr>     
-                            <td>Статус</td>
-                            <th class=""><?= $billGetting->getStatusAsString() ?></th>
+                            <th>Email</th>
+                            <td class=""><?= $billGetting->getEmail() ?></td>
                        </tr>
                         <tr>     
-                            <td>Email</td>
-                            <th class=""><?= $billGetting->getEmail() ?></th>
-                       </tr>
-                        <tr>     
-                            <td>Email пароль</td>
-                            <th class=""><?= $billGetting->getEmailPassword() ?></th>
+                            <th>Email пароль</th>
+                            <td class=""><?= $billGetting->getEmailPassword() ?></td>
                        </tr>
                     <?php endforeach; ?>
-                </table>
-            </div>    
+                <?php endif; ?>
+            </table>
+        </div>
+    </div>    
+                
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Юридические лица</h3>
+                <?php 
+                    $contacts = $supplier->getContacts(); $legalContact = $contacts[0];                        
+                 ?>
+                <a class="btn btn-default pull-right" href="<?= $this->url('legals',['action'=>'legal', 'id'=>$legalContact->getId()]); ?>">
+                     <span class="glyphicon glyphicon-pencil" ></span>
+                </a>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                <?php foreach ($legalContact->getLegals() as $legal): ?>
+                    <tr>
+                       <th class=""><?= $legal->getName() ?></th>
+                       <th class=""><?= $legal->getInn() ?></th>
+                       <th class=""><?= $legal->getStatusAsString() ?></th>
+                   </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+    </div>    
+
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Контакты</h3>
+                <?php 
+                    $contacts = $supplier->getContacts();                        
+                 ?>
+                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
+                        data-toggle="modal" data-target="#manager-modal" title="Добавить">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                </button>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                <?php foreach ($contacts as $manager):?>
+                    <?php if($contacts[0] == $manager) continue; ?>
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td colspan="2"> 
+                                <div class="pull-left">
+                                    <strong><?= $manager->getName() ?></strong>
+                                    <div>
+                                        <?= $manager->getDescription() ?>
+                                        <span><?= $manager->getStatusAsString() ?></span>
+                                    </div>                                    
+                                </div>
+                                <div class="pull-right">
+                                    <button supplier-id="<?= $supplier->getId() ?>" value="<?= $manager->getId() ?>" class="btn btn-default"
+                                            data-toggle="modal" data-target="#manager-modal" title="Изменить">
+                                        <span class="glyphicon glyphicon-pencil" ></span>
+                                    </button>                            
+                                    <a class="btn btn-default" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
+                                            ['action'=>'delete-manager', 'id' => $manager->getId()]); ?>">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>                                                               
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <?php $phones = $manager->getPhones(); ?>
+                            <td rowspan="<?= count($phones)?>" width="10%">
+                                <button value="<?= $manager->getId() ?>" class="btn btn-default"
+                                        data-toggle="modal" data-target="#phone-modal" title="Добавить телефон">
+                                    <span class="glyphicon glyphicon-phone" ></span>
+                                </button>                                                            
+                            </td>
+                            <td>
+                               <?php if (count($phones)):?>
+                                   <?php $phone = $phones[0]; ?> 
+                                        <div class="pull-left">
+                                            <?= $phone->getName()?>
+                                        </div>
+                                        <div class="pull-right">
+                                            <button value="<?= $phone->getId() ?>" class="btn btn-default phone-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                            
+                                        </div>                                        
+                               <?php endif;?>
+                            </td>
+                       </tr>
+                       <?php if (count($phones)):?>
+                            <?php foreach($phones as $phone):?>
+                                <?php if($phones[0] == $phone) continue; ?>
+                                <tr>
+                                    <td>
+                                        <div class="pull-left">
+                                            <?= $phone->getName()?>
+                                        </div>
+                                        <div class="pull-right">
+                                            <button value="<?= $phone->getId() ?>" class="btn btn-default phone-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                            
+                                        </div>                                        
+                                    </td> 
+                                </tr>
+                            <?php endforeach;?>
+                       <?php endif;?>
+                        <tr>
+                            <?php $emails = $manager->getEmails(); ?>
+                            <td rowspan="<?= count($emails)?>" width="10%">
+                                <button value="<?= $manager->getId() ?>" class="btn btn-default"
+                                        data-toggle="modal" data-target="#email-modal" title="Добавить email">
+                                    <span class="glyphicon glyphicon-envelope" ></span>
+                                </button>                                                            
+                            </td>
+                            <td>
+                               <?php if (count($emails)):?>
+                                   <?php $email = $emails[0]; ?> 
+                                        <div class="pull-left">
+                                            <?= $email->getName()?>
+                                        </div>
+                                        <div class="pull-right">
+                                            <button value="<?= $email->getId() ?>" class="btn btn-default email-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                            
+                                        </div>                                        
+                               <?php endif;?>
+                            </td>
+                       </tr>
+                       <?php if (count($emails)):?>
+                            <?php foreach($emails as $email):?>
+                                <?php if($emails[0] == $email) continue; ?>
+                                <tr>
+                                    <td>
+                                        <div class="pull-left">
+                                            <?= $email->getName()?>
+                                        </div>
+                                        <div class="pull-right">
+                                            <button value="<?= $email->getId() ?>" class="btn btn-default email-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                            
+                                        </div>                                        
+                                    </td> 
+                                </tr>
+                            <?php endforeach;?>
+                       <?php endif;?>
+                    </table>
+                <?php endforeach; ?>            
+            </table>
+        </div>
+    </div>    
+
 </div>
 
 
@@ -220,6 +312,27 @@ $this->pageBreadcrumbs()->setItems([
 <div class="modal fade" id="bill-getting-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content" id="bill-getting-modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="manager-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="manager-modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="phone-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="phone-modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="email-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="email-modal-content">
         </div>
     </div>
 </div>
@@ -243,7 +356,8 @@ $this->pageBreadcrumbs()->setItems([
                 .done(function (data) {
                    $('#price-getting-modal-content').html(data);
                 })
-                .fail(function () {
+                .fail(function (e) {
+                    console.log(e);
                     alert("Ошибка открытия формы.");
                 });    
             }
@@ -272,5 +386,111 @@ $this->pageBreadcrumbs()->setItems([
                 });    
             }
         })
+
+    $('#manager-modal').on('show.bs.modal', function (e) {        
+        var url = '/supplier/manager-form/';
+        var supplier_id = $(e.relatedTarget).attr('supplier-id');
+        if (supplier_id){
+            url += supplier_id;
+            
+            var manager = e.relatedTarget.value;
+            if (manager){
+                url += '?manager=' + manager;
+            }    
+            
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                   $('#manager-modal-content').html(data);
+                })
+                .fail(function () {
+                    alert("Ошибка открытия формы.");
+                });    
+            }
+        })
+
+    $('#phone-modal').on('show.bs.modal', function (e) {        
+        var url = '/contact/phone-form/';
+        var contact = e.relatedTarget.value;
+            if (contact){
+                url += contact;
+                $.ajax({
+                    type: 'GET',
+                    url: url
+                })
+                    .done(function (data) {
+                       $('#phone-modal-content').html(data);
+                    })
+                    .fail(function () {
+                        alert("Ошибка открытия формы.");
+                    });    
+            }
+        })
+        
+    $('.phone-delete').on('click', function(e) {
+        var phone = e.currentTarget.value;
+        if (phone){
+            if (confirm('Удалить телефон?')){
+                $.ajax({
+                    type: 'GET',
+                    url: '/contact/delete-phone-form/'+phone,
+                })
+                    .done(function (data) {
+                        if (data == 'ok'){
+                            window.location.reload();
+                        } else {
+                            alert("Не удалось удалить телефон.");
+                        }    
+                    })
+                    .fail(function (e) {
+                        alert("Не удалось удалить.");
+
+                    });
+            }        
+        }        
+    })    
+
+    $('#email-modal').on('show.bs.modal', function (e) {        
+        var url = '/contact/email-form/';
+        var contact = e.relatedTarget.value;
+            if (contact){
+                url += contact;
+                $.ajax({
+                    type: 'GET',
+                    url: url
+                })
+                    .done(function (data) {
+                       $('#email-modal-content').html(data);
+                    })
+                    .fail(function () {
+                        alert("Ошибка открытия формы.");
+                    });    
+            }
+        })
+        
+    $('.email-delete').on('click', function(e) {
+        var email = e.currentTarget.value;
+        if (email){
+            if (confirm('Удалить email?')){
+                $.ajax({
+                    type: 'GET',
+                    url: '/contact/delete-email-form/'+email,
+                })
+                    .done(function (data) {
+                        if (data == 'ok'){
+                            window.location.reload();
+                        } else {
+                            alert("Не удалось удалить email.");
+                        }    
+                    })
+                    .fail(function (e) {
+                        alert("Не удалось удалить.");
+
+                    });
+            }        
+        }        
+    })    
 </script>
 

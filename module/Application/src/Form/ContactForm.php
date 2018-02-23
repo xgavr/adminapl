@@ -165,8 +165,8 @@ class ContactForm extends Form
             'options' => [
                 'label' => 'Статус',
                 'value_options' => [
-                    1 => 'Active',
-                    2 => 'Retired',                    
+                    1 => 'Доступен',
+                    2 => 'Не доступен',                    
                 ]
             ],
         ]);

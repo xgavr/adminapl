@@ -64,10 +64,10 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'name', 'description', 'status', 'dateCreated', 'supplier', 'client', 'user', 'office', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
+            return ['__isInitialized__', 'id', 'name', 'description', 'address', 'addressSms', 'status', 'icq', 'telegramm', 'dateCreated', 'supplier', 'client', 'user', 'office', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'legals'];
         }
 
-        return ['__isInitialized__', 'id', 'name', 'description', 'status', 'dateCreated', 'supplier', 'client', 'user', 'office', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails'];
+        return ['__isInitialized__', 'id', 'name', 'description', 'address', 'addressSms', 'status', 'icq', 'telegramm', 'dateCreated', 'supplier', 'client', 'user', 'office', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'phones', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'emails', '' . "\0" . 'Application\\Entity\\Contact' . "\0" . 'legals'];
     }
 
     /**
@@ -252,6 +252,94 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStatus', []);
 
         return parent::getStatus();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIcq()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getIcq', []);
+
+        return parent::getIcq();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIcq($icq)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIcq', [$icq]);
+
+        return parent::setIcq($icq);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAddress()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAddress', []);
+
+        return parent::getAddress();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAddress($address)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAddress', [$address]);
+
+        return parent::setAddress($address);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAddressSms()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAddressSms', []);
+
+        return parent::getAddressSms();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAddressSms($addressSms)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAddressSms', [$addressSms]);
+
+        return parent::setAddressSms($addressSms);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTelegramm()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTelegramm', []);
+
+        return parent::getTelegramm();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTelegramm($telegramm)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTelegramm', [$telegramm]);
+
+        return parent::setTelegramm($telegramm);
     }
 
     /**
@@ -461,6 +549,39 @@ class Contact extends \Application\Entity\Contact implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addEmail', [$email]);
 
         return parent::addEmail($email);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLegals()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLegals', []);
+
+        return parent::getLegals();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addLegal($legal)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addLegal', [$legal]);
+
+        return parent::addLegal($legal);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeLegalAssociation($legal)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeLegalAssociation', [$legal]);
+
+        return parent::removeLegalAssociation($legal);
     }
 
 }

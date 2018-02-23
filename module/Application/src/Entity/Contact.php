@@ -203,8 +203,8 @@ class Contact {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_RETIRED => 'Retired'
+            self::STATUS_ACTIVE => 'Доступен',
+            self::STATUS_RETIRED => 'В отставке'
         ];
     }    
     

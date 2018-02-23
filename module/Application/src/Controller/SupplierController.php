@@ -16,6 +16,7 @@ use Application\Entity\BillGetting;
 use Application\Form\SupplierForm;
 use Application\Form\PriceGettingForm;
 use Application\Form\BillGettingForm;
+use Application\Form\ContactForm;
 use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -88,10 +89,10 @@ class SupplierController extends AbstractActionController
                 $data = $form->getData();
                 
                 // Используем менеджер supplier для добавления нового good в базу данных.                
-                $this->supplierManager->addNewSupplier($data);
+                $supplier = $this->supplierManager->addNewSupplier($data);
                 
                 // Перенаправляем пользователя на страницу "supplier".
-                return $this->redirect()->toRoute('supplier', []);
+                return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
             }
         }
         
@@ -135,13 +136,12 @@ class SupplierController extends AbstractActionController
                 $this->supplierManager->updateSupplier($supplier, $data);
                 
                 // Перенаправляем пользователя на страницу "supplier".
-                return $this->redirect()->toRoute('supplier', []);
+                return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
             }
         } else {
             $data = [
                'name' => $supplier->getName(),
-               'address' => $supplier->getAddress(),
-               'info' => $supplier->getInfo(),
+               'aplId' => $supplier->getAplId(),
                'status' => $supplier->getStatus(),
             ];
             
@@ -322,6 +322,7 @@ class SupplierController extends AbstractActionController
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
+        
     public function billGettingFormAction()
     {
         $supplierId = (int)$this->params()->fromRoute('id', -1);
@@ -414,4 +415,97 @@ class SupplierController extends AbstractActionController
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
+
+    public function managerFormAction()
+    {
+        $supplierId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($supplierId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $managerId = (int)$this->params()->fromQuery('manager', -1);
+        
+        // Validate input parameter
+        if ($managerId>0) {
+            $manager = $this->entityManager->getRepository(Contact::class)
+                    ->findOneById($managerId);
+        } else {
+            $manager = null;
+        }
+        
+        $form = new ContactForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                if ($manager){
+                    $this->contactManager->updateContact($manager, $data);                    
+                } else{
+                    $this->contactManager->addNewContact($supplier, $data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($manager){
+                $data = [
+                    'name' => $manager->getName(),  
+                    'description' => $manager->getDescription(),  
+                    'status' => $manager->getStatus(),  
+                ];
+                $form->setData($data);
+            }    
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'manager' => $manager,
+            'supplier' => $supplier,
+        ]);                
+    }
+    
+    public function deleteManagerAction()
+    {
+        $contactId = (int) $this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $supplier = $contact->getSupplier();
+
+        $this->contactManager->removeContact($contact);
+        
+        // Перенаправляем пользователя на страницу "legal".
+        return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
+    }
+    
 }

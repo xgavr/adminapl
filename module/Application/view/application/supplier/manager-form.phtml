@@ -1,0 +1,88 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('description')
+        ->setLabel('Должность')
+        ->setAttributes([
+            'class'=>'form-control',
+        ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'manager-submit']);
+
+$form->prepare();
+
+?>
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title">Сотрудник поставщика</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('name')); ?>
+                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('description')); ?>
+                            <?= $this->formElement($form->get('description')); ?>
+                            <?= $this->formElementErrors($form->get('description')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>                        
+
+                    </div>        
+                </div>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="manager-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#manager-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/supplier/manager-form/<?= $supplier->getId() ?>?manager=<?= ($manager ? $manager->getId():'') ?>',
+            data: $('#contact-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#manager-modal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#manager-modal-content').html(data);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при открытии формы.");
+
+            });
+    })    
+</script>

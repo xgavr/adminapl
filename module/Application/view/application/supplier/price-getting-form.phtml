@@ -133,7 +133,8 @@ $form->prepare();
                     $('#price-getting-modal-content').html(data);
                 }    
             })
-            .fail(function () {
+            .fail(function (e) {
+                console.log(e);
                 alert("Ошибка при открытии формы.");
 
             });

@@ -97,6 +97,8 @@ class SupplierManager
         $this->entityManager->flush();
 
         $this->addPriceFolder($supplier);
+        
+        return $supplier;
     }   
     
     public function updateSupplier($supplier, $data) 

@@ -18,10 +18,6 @@ $emailForm->get('name')->setAttributes([
 $emailForm->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Добавить']);
 $emailForm->prepare();
 
-$this->headScript()
-            ->appendFile($this->basePath('js/jquery.mask.min.js'))
-        ;
-
 ?>
 
 <?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
