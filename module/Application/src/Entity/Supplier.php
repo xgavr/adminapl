@@ -92,6 +92,18 @@ class Supplier {
     private $billGettings;    
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\RequestSetting", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $requestSettings;    
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\SupplySetting", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $supplySettings;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -101,6 +113,8 @@ class Supplier {
         $this->pricesettings = new ArrayCollection();
         $this->priceGettings = new ArrayCollection();
         $this->billGettings = new ArrayCollection();
+        $this->requestSettings = new ArrayCollection();
+        $this->supplySettings = new ArrayCollection();
     }
     
     
@@ -308,6 +322,40 @@ class Supplier {
     public function addBillGettings($billGetting)
     {
         $this->billGettings[] = $billGetting;
+    }
+    
+    /**
+     * Returns the array of request assigned to this.
+     * @return array
+     */
+    public function getRequestSettings()
+    {
+        return $this->requestSettings;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addRequestSetting($requestSetting)
+    {
+        $this->requestSettings[] = $requestSetting;
+    }
+    
+    /**
+     * Returns the array of supply assigned to this.
+     * @return array
+     */
+    public function getSupplySettings()
+    {
+        return $this->supplySettings;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addSupplySetting($supplySetting)
+    {
+        $this->supplySettings[] = $supplySetting;
     }
     
 }

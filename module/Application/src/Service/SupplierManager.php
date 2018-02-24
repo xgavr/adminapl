@@ -12,6 +12,9 @@ use Application\Entity\Supplier;
 use Application\Entity\Pricesettings;
 use Application\Entity\PriceGetting;
 use Application\Entity\BillGetting;
+use Application\Entity\RequestSetting;
+use Application\Entity\SupplySetting;
+use Company\Entity\Office;
 
 /**
  * Description of SupplierService
@@ -130,6 +133,16 @@ class SupplierManager
         $priceGettings = $supplier->getPriceGettings();
         foreach ($priceGettings as $priceGetting) {
             $this->removePriceGetting($priceGetting);
+        }
+
+        $requestSettings = $supplier->getRequestSettings();
+        foreach ($requestSettings as $requestSetting) {
+            $this->removeRequestSetting($requestSetting);
+        }
+
+        $supplySettings = $supplier->getSupplySettings();
+        foreach ($supplySettings as $supplySetting) {
+            $this->removeSupplySetting($supplySetting);
         }
 
         $raws = $supplier->getRaw();
@@ -282,6 +295,100 @@ class SupplierManager
     public function removeBillGetting($billGetting)
     {
         $this->entityManager->remove($billGetting);
+        $this->entityManager->flush();
+    }
+    
+    public function addNewRequestSetting($supplier, $data)
+    {
+        $requestSetting = new RequestSetting();
+        $requestSetting->setName($data['name']);
+        $requestSetting->setDescription($data['description']);
+        $requestSetting->setSite($data['site']);
+        $requestSetting->setLogin($data['login']);
+        $requestSetting->setPassword($data['password']);
+        $requestSetting->setMode($data['mode']);
+        $requestSetting->setStatus($data['status']);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $requestSetting->setDateCreated($currentDate);        
+        
+        $requestSetting->setSupplier($supplier);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($requestSetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function updateRequestSetting($requestSetting, $data)
+    {
+        $requestSetting->setName($data['name']);
+        $requestSetting->setDescription($data['description']);
+        $requestSetting->setSite($data['site']);
+        $requestSetting->setLogin($data['login']);
+        $requestSetting->setPassword($data['password']);
+        $requestSetting->setMode($data['mode']);
+        $requestSetting->setStatus($data['status']);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($requestSetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function removeRequestSetting($requestSetting)
+    {
+        $this->entityManager->remove($requestSetting);
+        $this->entityManager->flush();
+    }
+    
+    public function addNewSupplySetting($supplier, $data)
+    {
+        $supplySetting = new SupplySetting();
+        $supplySetting->setOrderBefore($data['orderBefore']);
+        $supplySetting->setSupplyTime($data['supplyTime']);
+        $supplySetting->setSupplySat($data['supplySat']);
+        $supplySetting->setStatus($data['status']);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $supplySetting->setDateCreated($currentDate); 
+        
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($data['office']);
+        $supplySetting->setOffice($office);
+        
+        $supplySetting->setSupplier($supplier);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($supplySetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function updateSupplySetting($supplySetting, $data)
+    {
+        $supplySetting->setOrderBefore($data['orderBefore']);
+        $supplySetting->setSupplyTime($data['supplyTime']);
+        $supplySetting->setSupplySat($data['supplySat']);
+        $supplySetting->setStatus($data['status']);
+
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($data['office']);
+        $supplySetting->setOffice($office);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($supplySetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    public function removeSupplySetting($supplySetting)
+    {
+        $this->entityManager->remove($supplySetting);
         $this->entityManager->flush();
     }
     

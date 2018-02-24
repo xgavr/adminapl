@@ -1,0 +1,146 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('site')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('description')->setAttributes([
+    'class'=>'form-control', 
+    'style' => 'height: 300px'
+    ]);
+
+$form->get('password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('mode')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'request-setting-submit']);
+
+$form->prepare();
+
+?>
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Параметры заказа поставщику</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('mode')); ?>
+                            <?= $this->formElement($form->get('mode')); ?>
+                            <?= $this->formElementErrors($form->get('mode')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('name')); ?>
+                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('site')); ?>
+                            <?= $this->formElement($form->get('site')); ?>
+                            <?= $this->formElementErrors($form->get('site')); ?>                  
+                        </div>
+                    </div>        
+                </div>    
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('login')); ?>
+                            <?= $this->formElement($form->get('login')); ?>
+                            <?= $this->formElementErrors($form->get('login')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('password')); ?>
+                            <?= $this->formElement($form->get('password')); ?>
+                            <?= $this->formElementErrors($form->get('password')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('description')); ?>
+                            <?= $this->formElement($form->get('description')); ?>
+                            <?= $this->formElementErrors($form->get('description')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+
+                <div class="row">
+                    <div class="col-md-6">                    
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>                        
+                    </div>
+                </div>    
+
+                <?= $this->formElement($form->get('csrf')); ?>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="request-setting-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#request-setting-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/supplier/request-setting-form/<?= $supplier->getId() ?>?requestSetting=<?= ($requestSetting ? $requestSetting->getId():'') ?>',
+            data: $('#request-setting-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#request-setting-modal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#request-setting-modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    })    
+</script>

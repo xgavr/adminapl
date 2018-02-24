@@ -13,10 +13,14 @@ use Application\Entity\Supplier;
 use Application\Entity\Contact;
 use Application\Entity\PriceGetting;
 use Application\Entity\BillGetting;
+use Application\Entity\RequestSetting;
+use Application\Entity\SupplySetting;
 use Application\Form\SupplierForm;
 use Application\Form\PriceGettingForm;
 use Application\Form\BillGettingForm;
+use Application\Form\RequestSettingForm;
 use Application\Form\ContactForm;
+use Application\Form\SupplySettingForm;
 use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -508,4 +512,192 @@ class SupplierController extends AbstractActionController
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
     
+    public function requestSettingFormAction()
+    {
+        $supplierId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($supplierId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $requestSettingId = (int)$this->params()->fromQuery('requestSetting', -1);
+        
+        // Validate input parameter
+        if ($requestSettingId>0) {
+            $requestSetting = $this->entityManager->getRepository(RequestSetting::class)
+                    ->findOneById($requestSettingId);
+        } else {
+            $requestSetting = null;
+        }
+        
+        $form = new RequestSettingForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                if ($requestSetting){
+                    $this->supplierManager->updateRequestSetting($requestSetting, $data, true);                    
+                } else{
+                    $this->supplierManager->addNewRequestSetting($supplier, $data, true);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($requestSetting){
+                $data = [
+                    'name' => $requestSetting->getName(),  
+                    'description' => $requestSetting->getDescription(),  
+                    'site' => $requestSetting->getSite(),  
+                    'login' => $requestSetting->getLogin(),  
+                    'password' => $requestSetting->getPassword(),  
+                    'mode' => $requestSetting->getMode(),  
+                    'status' => $requestSetting->getStatus(),  
+                ];
+                $form->setData($data);
+            }    
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'requestSetting' => $requestSetting,
+            'supplier' => $supplier,
+        ]);                
+    }
+    
+    public function deleteRequestSettingAction()
+    {
+        $requestSettingId = (int) $this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($requestSettingId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $requestSetting = $this->entityManager->getRepository(RequestSetting::class)
+                ->findOneById($requestSettingId);
+        
+        if ($requestSetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $supplier = $requestSetting->getSupplier();
+
+        $this->supplierManager->removeRequestSetting($requestSetting);
+        
+        // Перенаправляем пользователя на страницу "legal".
+        return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
+    }
+
+    public function supplySettingFormAction()
+    {
+        $supplierId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($supplierId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $supplySettingId = (int)$this->params()->fromQuery('supplySetting', -1);
+        
+        // Validate input parameter
+        if ($supplySettingId>0) {
+            $supplySetting = $this->entityManager->getRepository(SupplySetting::class)
+                    ->findOneById($supplySettingId);
+        } else {
+            $supplySetting = null;
+        }
+        
+        $form = new SupplySettingForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+
+                if ($supplySetting){
+                    $this->supplierManager->updateSupplySetting($supplySetting, $data, true);                    
+                } else{
+                    $this->supplierManager->addNewSupplySetting($supplier, $data, true);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($supplySetting){
+                $data = [
+                    'orderBefore' => $supplySetting->getOrderBeforeHi(),  
+                    'supplyTime' => $supplySetting->getSupplyTime(),  
+                    'office' => $supplySetting->getOffice(),  
+                    'supplySat' => $supplySetting->getSupplySat(),  
+                    'status' => $supplySetting->getStatus(),  
+                ];
+                $form->setData($data);
+            }    
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'supplySetting' => $supplySetting,
+            'supplier' => $supplier,
+        ]);                
+    }
+    
+    public function deleteSupplySettingAction()
+    {
+        $suplySettingId = (int) $this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($suplySettingId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $suplySetting = $this->entityManager->getRepository(SupplySetting::class)
+                ->findOneById($suplySettingId);
+        
+        if ($suplySetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $supplier = $suplySetting->getSupplier();
+
+        $this->supplierManager->removeSupplySetting($suplySetting);
+        
+        // Перенаправляем пользователя на страницу "legal".
+        return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
+    }
 }

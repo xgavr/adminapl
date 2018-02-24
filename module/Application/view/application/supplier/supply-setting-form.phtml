@@ -1,0 +1,119 @@
+<?php
+
+$form = $this->form;
+
+$form->get('orderBefore')->setAttributes([
+    'class'=>'form-control', 
+    //'value' => '12:00',
+    ]);
+
+$form->get('supplyTime')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
+$form->get('office')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('supplySat')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'supply-setting-submit']);
+
+$form->prepare();
+
+?>
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Параметры подвоза товара поставщика</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('office')); ?>
+                            <?= $this->formElement($form->get('office')); ?>
+                            <?= $this->formElementErrors($form->get('office')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('supplyTime')); ?>
+                            <?= $this->formElement($form->get('supplyTime')); ?>
+                            <?= $this->formElementErrors($form->get('supplyTime')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('orderBefore')); ?>
+                            <?= $this->formElement($form->get('orderBefore')); ?>
+                            <?= $this->formElementErrors($form->get('orderBefore')); ?>                  
+                        </div>
+                    </div>        
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('supplySat')); ?>
+                            <?= $this->formElement($form->get('supplySat')); ?>
+                            <?= $this->formElementErrors($form->get('supplySat')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+
+                <div class="row">
+                    <div class="col-md-6">                    
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>                        
+                    </div>
+                </div>    
+
+                <?= $this->formElement($form->get('csrf')); ?>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="supply-setting-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#supply-setting-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/supplier/supply-setting-form/<?= $supplier->getId() ?>?supplySetting=<?= ($supplySetting ? $supplySetting->getId():'') ?>',
+            data: $('#supply-setting-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#supply-setting-modal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#supply-setting-modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    })    
+</script>

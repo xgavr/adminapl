@@ -16,159 +16,72 @@ $this->headScript()
 ?>
 
 <div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title pull-left"><?= $this->escapeHtml($supplier->getName()); ?></h3>
-                <a class="btn btn-default pull-right" href="<?= $this->url('supplier', 
-                        ['action'=>'edit', 'id'=>$supplier->getId()]); ?>" data-toggle="tooltip" title="Изменить">
-                    <span class="glyphicon glyphicon-pencil" ></span>
-                </a>
-                <div class="clearfix"></div>
+    <div class="col-md-12">
+        <div class="well well-sm">
+            <div class="pull-left">
+                <h3><?= $this->escapeHtml($supplier->getName()); ?></h3>
+                ID:<span><?= $this->escapeHtml($supplier->getId()) ?></span>
+                AplId:<span><?= $this->escapeHtml($supplier->getAplId()) ?></span>
+                Статус:<span><?= $this->escapeHtml($supplier->getStatusAsString()) ?></span>
             </div>            
-            <table class="table table-striped table-bordered">
-                 <tr>
-                    <th>ID:</th>
-                    <td><?= $this->escapeHtml($supplier->getId()) ?></th>
-                </tr>
-                <tr>
-                    <th>AplId:</th>
-                    <td><?= $this->escapeHtml($supplier->getAplId()) ?></th>
-                </tr>
-                <tr>
-                    <th>Статус:</th>
-                    <td><?= $this->escapeHtml($supplier->getStatusAsString()) ?></th>
-                </tr>
-            </table>
+            <a class="btn btn-default pull-right" href="<?= $this->url('supplier', 
+                    ['action'=>'edit', 'id'=>$supplier->getId()]); ?>" data-toggle="tooltip" title="Изменить">
+                <span class="glyphicon glyphicon-pencil" ></span>
+            </a>
+            <div class="clearfix"></div>
         </div>
     </div>
-
-    <div class="col-md-4">
+</div>    
+<div class="row">    
+    <div class="col-md-8">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title pull-left">Получение прайса</h3>
+                <h3 class="panel-title pull-left">Как заказать?</h3>
                 <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
-                        data-toggle="modal" data-target="#price-getting-modal" title="Добавить">
+                        data-toggle="modal" data-target="#request-setting-modal" title="Добавить">
                     <span class="glyphicon glyphicon-plus" ></span>
                 </button>
                 <div class="clearfix"></div>
             </div>            
             <table class="table table-striped table-bordered">
-                <?php if ($supplier->getPriceGettings()): ?>
-                    <?php foreach ($supplier->getPriceGettings() as $priceGetting): ?>
+                <?php if ($supplier->getRequestSettings()): ?>                    
+                    <?php foreach ($supplier->getRequestSettings() as $requestSetting): ?>
                         <tr>
-                            <td>
-                                <?= $priceGetting->getName() ?>
-                            </td>
-                            <td align="right">
-                                <button supplier-id="<?= $supplier->getId() ?>" value="<?= $priceGetting->getId() ?>" class="btn btn-default" 
-                                        data-toggle="modal" data-target="#price-getting-modal" data-toggle="tooltip" title="Изменить">
-                                    <span class="glyphicon glyphicon-pencil" ></span>
-                                </button>
-                                <a class="btn btn-danger" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
-                                        ['action'=>'delete-price-getting', 'id' => $priceGetting->getId()]); ?>">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>                           
+                            <td colspan="2">
+                                <div class="pull-left">
+                                    <?= $requestSetting->getName() ?>
+                                    <span><?= $requestSetting->getModeAsString() ?></span>
+                                    <span><?= $requestSetting->getStatusAsString() ?></span>
+                                </div>        
+                                <div class="pull-right">                                
+                                    <button supplier-id="<?= $supplier->getId() ?>" value="<?= $requestSetting->getId() ?>" class="btn btn-default"
+                                            data-toggle="modal" data-target="#request-setting-modal" title="Изменить">
+                                        <span class="glyphicon glyphicon-pencil" ></span>
+                                    </button>                            
+                                    <a class="btn btn-default" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
+                                            ['action'=>'delete-request-setting', 'id' => $requestSetting->getId()]); ?>">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </div>    
                             </td>
                         </tr>
                         <tr>     
-                            <th>Статус</th>
-                            <td class=""><?= $priceGetting->getStatusAsString() ?></td>
+                            <th>Сайт</th>
+                            <td class=""><a href="<?= $requestSetting->getSiteNormalize()?>" target="block"><?= $requestSetting->getSite() ?></a></td>
                        </tr>
                         <tr>     
-                            <th>Email</th>
-                            <td class=""><?= $priceGetting->getEmail() ?></td>
+                            <th>Логин</th>
+                            <td class=""><?= $requestSetting->getLogin() ?></td>
                        </tr>
                         <tr>     
-                            <th>Email пароль</th>
-                            <td class=""><?= $priceGetting->getEmailPassword() ?></td>
+                            <th>Пароль</th>
+                            <td class=""><?= $requestSetting->getPassword() ?></td>
                        </tr>
                         <tr>     
-                            <th>Ftp</th>
-                            <td class=""><?= $priceGetting->getFtp() ?></td>
-                       </tr>
-                        <tr>     
-                            <th>Ftp логин</th>
-                            <td class=""><?= $priceGetting->getFtpLogin() ?></td>
-                       </tr>
-                        <tr>     
-                            <th>Ftp пароль</th>
-                            <td class=""><?= $priceGetting->getFtpPassword() ?></td>
-                       </tr>
-                        <tr>     
-                            <th>Ссылка на скачивание</th>
-                            <td class=""><?= $priceGetting->getLink() ?></td>
+                            <td colspan="2"><?= nl2br($requestSetting->getDescription()) ?></td>
                        </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </table>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title pull-left">Получение электронных накладных</h3>
-                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
-                        data-toggle="modal" data-target="#bill-getting-modal" title="Добавить">
-                    <span class="glyphicon glyphicon-plus" ></span>
-                </button>
-                <div class="clearfix"></div>
-            </div>            
-            <table class="table table-striped table-bordered">
-                <?php if ($supplier->getBillGettings()): ?>                    
-                    <?php foreach ($supplier->getBillGettings() as $billGetting): ?>
-                        <tr>
-                            <th class=""><?= $billGetting->getName() ?></th>
-                            <td align="right">
-                                <button supplier-id="<?= $supplier->getId() ?>" value="<?= $billGetting->getId() ?>" class="btn btn-default"
-                                        data-toggle="modal" data-target="#bill-getting-modal" title="Изменить">
-                                    <span class="glyphicon glyphicon-pencil" ></span>
-                                </button>                            
-                                <a class="btn btn-default" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
-                                        ['action'=>'delete-bill-getting', 'id' => $billGetting->getId()]); ?>">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>                           
-                            </td>
-                        </tr>
-                        <tr>     
-                            <th>Статус</th>
-                            <td class=""><?= $billGetting->getStatusAsString() ?></td>
-                       </tr>
-                        <tr>     
-                            <th>Email</th>
-                            <td class=""><?= $billGetting->getEmail() ?></td>
-                       </tr>
-                        <tr>     
-                            <th>Email пароль</th>
-                            <td class=""><?= $billGetting->getEmailPassword() ?></td>
-                       </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </table>
-        </div>
-    </div>    
-                
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title pull-left">Юридические лица</h3>
-                <?php 
-                    $contacts = $supplier->getContacts(); $legalContact = $contacts[0];                        
-                 ?>
-                <a class="btn btn-default pull-right" href="<?= $this->url('legals',['action'=>'legal', 'id'=>$legalContact->getId()]); ?>">
-                     <span class="glyphicon glyphicon-pencil" ></span>
-                </a>
-                <div class="clearfix"></div>
-            </div>            
-            <table class="table table-striped table-bordered">
-                <?php foreach ($legalContact->getLegals() as $legal): ?>
-                    <tr>
-                       <th class=""><?= $legal->getName() ?></th>
-                       <th class=""><?= $legal->getInn() ?></th>
-                       <th class=""><?= $legal->getStatusAsString() ?></th>
-                   </tr>
-                <?php endforeach; ?>
             </table>
         </div>
     </div>    
@@ -298,7 +211,186 @@ $this->headScript()
             </table>
         </div>
     </div>    
+</div>
 
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Юридические лица</h3>
+                <?php 
+                    $contacts = $supplier->getContacts(); $legalContact = $contacts[0];                        
+                 ?>
+                <a class="btn btn-default pull-right" href="<?= $this->url('legals',['action'=>'legal', 'id'=>$legalContact->getId()]); ?>">
+                     <span class="glyphicon glyphicon-pencil" ></span>
+                </a>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                <?php foreach ($legalContact->getLegals() as $legal): ?>
+                    <tr>
+                       <th class=""><?= $legal->getName() ?></th>
+                       <th class=""><?= $legal->getInn() ?></th>
+                       <th class=""><?= $legal->getStatusAsString() ?></th>
+                   </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+    </div>    
+
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Получение прайса</h3>
+                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
+                        data-toggle="modal" data-target="#price-getting-modal" title="Добавить">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                </button>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                <?php if ($supplier->getPriceGettings()): ?>
+                    <?php foreach ($supplier->getPriceGettings() as $priceGetting): ?>
+                        <tr>
+                            <td>
+                                <?= $priceGetting->getName() ?>
+                            </td>
+                            <td align="right">
+                                <button supplier-id="<?= $supplier->getId() ?>" value="<?= $priceGetting->getId() ?>" class="btn btn-default" 
+                                        data-toggle="modal" data-target="#price-getting-modal" data-toggle="tooltip" title="Изменить">
+                                    <span class="glyphicon glyphicon-pencil" ></span>
+                                </button>
+                                <a class="btn btn-danger" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
+                                        ['action'=>'delete-price-getting', 'id' => $priceGetting->getId()]); ?>">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>                           
+                            </td>
+                        </tr>
+                        <tr>     
+                            <th>Статус</th>
+                            <td class=""><?= $priceGetting->getStatusAsString() ?></td>
+                       </tr>
+                        <tr>     
+                            <th>Email</th>
+                            <td class=""><?= $priceGetting->getEmail() ?></td>
+                       </tr>
+                        <tr>     
+                            <th>Email пароль</th>
+                            <td class=""><?= $priceGetting->getEmailPassword() ?></td>
+                       </tr>
+                        <tr>     
+                            <th>Ftp</th>
+                            <td class=""><?= $priceGetting->getFtp() ?></td>
+                       </tr>
+                        <tr>     
+                            <th>Ftp логин</th>
+                            <td class=""><?= $priceGetting->getFtpLogin() ?></td>
+                       </tr>
+                        <tr>     
+                            <th>Ftp пароль</th>
+                            <td class=""><?= $priceGetting->getFtpPassword() ?></td>
+                       </tr>
+                        <tr>     
+                            <th>Ссылка на скачивание</th>
+                            <td class=""><?= $priceGetting->getLink() ?></td>
+                       </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Подвоз</h3>
+                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
+                        data-toggle="modal" data-target="#supply-setting-modal" title="Добавить">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                </button>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                <?php if ($supplier->getSupplySettings()): ?>                    
+                    <?php foreach ($supplier->getSupplySettings() as $supplySetting): ?>
+                        <tr>
+                            <td colspan="2">
+                                <div class="pull-left">
+                                    <span style="width: 60px; color:#E6E6E6; background-color: <?= $supplySetting->getSupplyTimeColor()?>"><?= $supplier->getAplId() ?></span>
+                                    <span><?= $supplySetting->getOffice()->getName() ?></span>
+                                    Заказать до: <span><?= $supplySetting->getOrderBeforeHi()?></span>
+                                    Подвоз часов: <span><?= $supplySetting->getSupplyTime()?></span>
+                                    Подвоз в субботу <span><?= $supplySetting->getSupplySatAsString() ?></span>
+                                    Статус: <span><?= $supplySetting->getStatusAsString() ?></span>
+                                </div>        
+                                <div class="pull-right">                                
+                                    <button supplier-id="<?= $supplier->getId() ?>" value="<?= $supplySetting->getId() ?>" class="btn btn-default"
+                                            data-toggle="modal" data-target="#supply-setting-modal" title="Изменить">
+                                        <span class="glyphicon glyphicon-pencil" ></span>
+                                    </button>                            
+                                    <a class="btn btn-default" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
+                                            ['action'=>'delete-supply-setting', 'id' => $supplySetting->getId()]); ?>">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </div>    
+                            </td>
+                        </tr>
+                        
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </table>
+        </div>
+    </div>    
+
+</div>
+<div class="row">
+        
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Получение электронных накладных</h3>
+                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
+                        data-toggle="modal" data-target="#bill-getting-modal" title="Добавить">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                </button>
+                <div class="clearfix"></div>
+            </div>            
+            <table class="table table-striped table-bordered">
+                <?php if ($supplier->getBillGettings()): ?>                    
+                    <?php foreach ($supplier->getBillGettings() as $billGetting): ?>
+                        <tr>
+                            <th class=""><?= $billGetting->getName() ?></th>
+                            <td align="right">
+                                <button supplier-id="<?= $supplier->getId() ?>" value="<?= $billGetting->getId() ?>" class="btn btn-default"
+                                        data-toggle="modal" data-target="#bill-getting-modal" title="Изменить">
+                                    <span class="glyphicon glyphicon-pencil" ></span>
+                                </button>                            
+                                <a class="btn btn-default" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
+                                        ['action'=>'delete-bill-getting', 'id' => $billGetting->getId()]); ?>">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>                           
+                            </td>
+                        </tr>
+                        <tr>     
+                            <th>Статус</th>
+                            <td class=""><?= $billGetting->getStatusAsString() ?></td>
+                       </tr>
+                        <tr>     
+                            <th>Email</th>
+                            <td class=""><?= $billGetting->getEmail() ?></td>
+                       </tr>
+                        <tr>     
+                            <th>Email пароль</th>
+                            <td class=""><?= $billGetting->getEmailPassword() ?></td>
+                       </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </table>
+        </div>
+    </div>    
+                
+                
+    
 </div>
 
 
@@ -333,6 +425,20 @@ $this->headScript()
 <div class="modal fade" id="email-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content" id="email-modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="request-setting-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="request-setting-modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="supply-setting-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="supply-setting-modal-content">
         </div>
     </div>
 </div>
@@ -380,6 +486,54 @@ $this->headScript()
             })
                 .done(function (data) {
                    $('#bill-getting-modal-content').html(data);
+                })
+                .fail(function () {
+                    alert("Ошибка открытия формы.");
+                });    
+            }
+        })
+
+    $('#request-setting-modal').on('show.bs.modal', function (e) {        
+        var url = '/supplier/request-setting-form/';
+        var supplier_id = $(e.relatedTarget).attr('supplier-id');
+        if (supplier_id){
+            url += supplier_id;
+            
+            var requestSetting = e.relatedTarget.value;
+            if (requestSetting){
+                url += '?requestSetting=' + requestSetting;
+            }    
+            
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                   $('#request-setting-modal-content').html(data);
+                })
+                .fail(function () {
+                    alert("Ошибка открытия формы.");
+                });    
+            }
+        })
+
+    $('#supply-setting-modal').on('show.bs.modal', function (e) {        
+        var url = '/supplier/supply-setting-form/';
+        var supplier_id = $(e.relatedTarget).attr('supplier-id');
+        if (supplier_id){
+            url += supplier_id;
+            
+            var supplySetting = e.relatedTarget.value;
+            if (supplySetting){
+                url += '?supplySetting=' + supplySetting;
+            }    
+            
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                   $('#supply-setting-modal-content').html(data);
                 })
                 .fail(function () {
                     alert("Ошибка открытия формы.");
