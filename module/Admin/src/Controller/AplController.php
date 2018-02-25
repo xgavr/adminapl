@@ -9,6 +9,8 @@ namespace Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
+
 
 class AplController extends AbstractActionController
 {
@@ -34,6 +36,9 @@ class AplController extends AbstractActionController
     public function getStaffsAction()
     {
         $this->aplService->getStaffs();
-        exit;
+        
+        return new JsonModel([
+            'ok'
+        ]);
     }
 }

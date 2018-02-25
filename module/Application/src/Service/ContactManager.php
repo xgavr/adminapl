@@ -13,6 +13,7 @@ use Application\Entity\Phone;
 use Application\Entity\Email;
 use Company\Entity\Office;
 use User\Entity\User;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of ContactService
@@ -85,25 +86,30 @@ class ContactManager
     public function addPhone($contact, $phonestr, $flushnow = false)
     {                
         if ($phonestr){
+            $filter = new PhoneFilter();
+            $filter->setFormat(PhoneFilter::PHONE_FORMAT_DB);
+            $findstr = $filter->filter($phonestr);
             
-            $phone = $this->entityManager->getRepository(Phone::class)
-                    ->findOneByName($phonestr);
+            if ($findstr){
+                $phone = $this->entityManager->getRepository(Phone::class)
+                        ->findOneByName($findstr);
 
-            if ($phone == null){
-                $phone = new Phone();            
-                $phone->setContact($contact);
-                $phone->setName($phonestr);            
+                if ($phone == null){
+                    $phone = new Phone();            
+                    $phone->setContact($contact);
+                    $phone->setName($phonestr);            
 
-                $currentDate = date('Y-m-d H:i:s');
-                $phone->setDateCreated($currentDate);
+                    $currentDate = date('Y-m-d H:i:s');
+                    $phone->setDateCreated($currentDate);
 
-                $contact->addPhone($phone);
+                    $contact->addPhone($phone);
 
-                $this->entityManager->persist($phone);
+                    $this->entityManager->persist($phone);
 
-                if ($flushnow){
-                    $this->entityManager->flush();                
-                }
+                    if ($flushnow){
+                        $this->entityManager->flush();                
+                    }
+                }    
             }    
         } 
     }
