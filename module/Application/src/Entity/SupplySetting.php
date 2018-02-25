@@ -120,6 +120,17 @@ class SupplySetting {
         return $color;
     }
     
+    public function getSupplyTimeSpan()
+    {
+        $span = '<span style="color:#E6E6E6; background-color:';
+        $span .= $this->getSupplyTimeColor();
+        $span .= '">';
+        $span .= $this->getSupplier()->getAplId();
+        $span .= '</span>';
+        
+        return $span;
+    }
+    
     public function setSupplyTime($supplyTime) 
     {
         $this->supplyTime = $supplyTime;

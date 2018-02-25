@@ -41,6 +41,11 @@ class Contact {
     protected $description;
     
     /**
+     * @ORM\Column(name="signature")   
+     */
+    protected $signature;
+    
+    /**
      * @ORM\Column(name="address")   
      */
     protected $address;
@@ -149,6 +154,16 @@ class Contact {
     public function setDescription($description) 
     {
         $this->description = $description;
+    }     
+
+    public function getSignature() 
+    {
+        return $this->signature;
+    }
+
+    public function setSignature($signature) 
+    {
+        $this->signature = $signature;
     }     
 
     public function getStatus() 

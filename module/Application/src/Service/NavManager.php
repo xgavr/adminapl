@@ -62,19 +62,19 @@ class NavManager
             ];
         } else {
             
-            $items[] = [
-                'id' => 'shop',
-                'label' => 'Каталог',
-                'link'  => $url('shop')
-            ];
-            
-            $items[] = [
-                'id' => 'order',
-                'label' => 'Заказы',
-                'link'  => $url('order')
-            ];
-            
             if ($this->rbacManager->isGranted(null, 'client.any.manage') || $this->rbacManager->isGranted(null, 'client.own.manage')) {
+                $items[] = [
+                    'id' => 'shop',
+                    'label' => 'Каталог',
+                    'link'  => $url('shop')
+                ];
+
+                $items[] = [
+                    'id' => 'order',
+                    'label' => 'Заказы',
+                    'link'  => $url('order')
+                ];
+            
                 $items[] = [
                     'id' => 'client',
                     'label' => 'Покупатели',
@@ -240,7 +240,8 @@ class NavManager
             
             $items[] = [
                 'id' => 'logout',
-                'labelHTML' => '<span class="glyphicon glyphicon-user"></span>',
+//                'labelHTML' => '<span class="glyphicon glyphicon-user"></span><strong>'.$this->rbacManager->navUserName().'</strong>',
+                'labelHTML' => '<strong>'.$this->rbacManager->navUserName().'</strong>',
                 'float' => 'right',
                 'dropdown' => [
                     [

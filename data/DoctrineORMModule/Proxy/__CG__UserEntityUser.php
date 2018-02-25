@@ -64,10 +64,10 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
+            return ['__isInitialized__', 'id', 'aplId', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
         }
 
-        return ['__isInitialized__', 'id', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
+        return ['__isInitialized__', 'id', 'aplId', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
     }
 
     /**
@@ -197,6 +197,28 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setId', [$id]);
 
         return parent::setId($id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAplId()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAplId', []);
+
+        return parent::getAplId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAplId($aplId)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAplId', [$aplId]);
+
+        return parent::setAplId($aplId);
     }
 
     /**
@@ -384,6 +406,17 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRolesAsString', []);
 
         return parent::getRolesAsString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRolesAsArray()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRolesAsArray', []);
+
+        return parent::getRolesAsArray();
     }
 
     /**

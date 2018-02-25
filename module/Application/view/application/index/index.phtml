@@ -1,7 +1,11 @@
 <?php
-//    $this->headTitle('');
+    $this->headTitle('Admin APL');
     $this->mainMenu()->setActiveItemId('home');
 ?>
+<div class="page-header">
+  <h1>Admin APL <small>autopartslist.ru</small></h1>
+</div>
+
 <?php if ($this->access('member.manage') || $this->access('user.manage')): ?>
     <div class="panel panel-success">
         <div class="panel-heading">Пользователи</div>
@@ -90,62 +94,65 @@
     </div>
 <?php endif; ?>
 
-<div class="panel panel-success">
-    <div class="panel-heading">Заказ товара</div>
-    <div class="panel-body">
+<?php if ($this->access('client.manage')): ?>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Добавление товара в корзину</h3>
+    <div class="panel panel-success">
+        <div class="panel-heading">Заказ товара</div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Добавление товара в корзину</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <ol>
+                                    <li>
+                                        Перейти на страницу <a href="/shop" target="_blank">Каталог</a>
+                                    </li>
+                                    <li>Выбрать необходимый товар, указать необходимое количество и нажать кнопку Купить
+                                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                                            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                                        </button>                        
+                                    </li>
+                                </ol>
+                            </p>
+                            <p><a class="btn btn-success pull-right" href="/shop">Перейти в каталог&raquo;</a></p>
+
+                        </div>
                     </div>
-                    <div class="panel-body">
-                        <p>
-                            <ol>
-                                <li>
-                                    Перейти на страницу <a href="/shop" target="_blank">Каталог</a>
-                                </li>
-                                <li>Выбрать необходимый товар, указать необходимое количество и нажать кнопку Купить
-                                    <button type="button" class="btn btn-default" aria-label="Left Align">
-                                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
-                                    </button>                        
-                                </li>
-                            </ol>
-                        </p>
-                        <p><a class="btn btn-success pull-right" href="/shop">Перейти в каталог&raquo;</a></p>
+                </div>
 
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Оформление заказа покупателя</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                <ol>
+                                    <li>
+                                        Перейти на страницу <a href="/cart" target="_blank">Корзина</a>
+                                    </li>
+                                    <li>Проверить состав корзины. Уточнить необходимое количество. 
+                                    </li>
+                                    <li>Если все устраивает, то нажать кнопку Оформить заказ</li>
+                                    <li>Оформленные заказы и их статус можно увидеть на странице
+                                        <a href="/order" target="_blank">Заказы</a>
+                                    </li>
+                                </ol>
+                            </p>
+                            <p><a class="btn btn-success pull-right" href="/cart">Перейти в корзину&raquo;</a></p>
+
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Оформление заказа покупателя</h3>
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            <ol>
-                                <li>
-                                    Перейти на страницу <a href="/cart" target="_blank">Корзина</a>
-                                </li>
-                                <li>Проверить состав корзины. Уточнить необходимое количество. 
-                                </li>
-                                <li>Если все устраивает, то нажать кнопку Оформить заказ</li>
-                                <li>Оформленные заказы и их статус можно увидеть на странице
-                                    <a href="/order" target="_blank">Заказы</a>
-                                </li>
-                            </ol>
-                        </p>
-                        <p><a class="btn btn-success pull-right" href="/cart">Перейти в корзину&raquo;</a></p>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>    
-</div>
+        </div>    
+    </div>
+<?php endif;?>
 
 <?php if ($this->access('supplier.manage')): ?>
     <div class="panel panel-success">

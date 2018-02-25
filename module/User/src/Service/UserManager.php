@@ -81,6 +81,7 @@ class UserManager
         $user->setPassword($passwordHash);
         
         $user->setStatus($data['status']);
+        $user->setAplId($data['aplId']);
         
         $currentDate = date('Y-m-d H:i:s');
         $user->setDateCreated($currentDate);        
@@ -100,7 +101,7 @@ class UserManager
             'subject' => 'Регистрация на сайте adminapl.ru',
             'body' => "Здравствуйте, {$data['full_name']}!<br/>Вы зарегистрированы на сайте <a href='http://adminapl.ru'>adminapl.ru</a>!<br/>Логин: {$data['email']}<br/>Пароль: {$data['password']}.<br/><br/><br/>С уважением,<br/>AdminAPL",
         ];
-        $this->postManager->send($post);    
+//        $this->postManager->send($post);    
         
         return $user;
     }
@@ -124,7 +125,8 @@ class UserManager
         
         $user->setEmail($data['email']);
         $user->setFullName($data['full_name']);        
-        $user->setStatus($data['status']); 
+        $user->setStatus($data['status']);
+        $user->setAplId($data['aplId']);
         
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);

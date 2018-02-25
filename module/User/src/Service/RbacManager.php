@@ -151,6 +151,22 @@ class RbacManager
         
         return false;
     }
+    
+    public function navUserName()
+    {
+        $identity = $this->authService->getIdentity();
+        if ($identity==null) {
+            return false;
+        }
+
+        $user = $this->entityManager->getRepository(User::class)
+                ->findOneByEmail($identity);
+        if ($user){
+            return $user->getFullName();
+        }
+        
+        return;
+    }
 }
 
 

@@ -23,6 +23,11 @@ class User
     protected $id;
 
     /** 
+     * @ORM\Column(name="apl_id")  
+     */
+    protected $aplId;
+    
+    /** 
      * @ORM\Column(name="email")  
      */
     protected $email;
@@ -104,6 +109,24 @@ class User
     public function setId($id) 
     {
         $this->id = $id;
+    }
+
+    /**
+     * Returns user apl ID.
+     * @return integer
+     */
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    /**
+     * Sets user apl ID. 
+     * @param int $aplId    
+     */
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
     }
 
     /**
@@ -285,6 +308,17 @@ class User
         return $roleList;
     }
     
+    public function getRolesAsArray()
+    {
+        $roleList = [];
+        
+        foreach ($this->roles as $role) {
+            $roleList[] = $role->getId();
+        }
+        
+        return $roleList;
+    }
+
     /**
      * Assigns a role to user.
      */

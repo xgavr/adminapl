@@ -1,12 +1,12 @@
 <?php
-$this->headTitle('Просмотр данных поставщика '.$supplier->getName());
+$this->headTitle($supplier->getName());
 
 $this->mainMenu()->setActiveItemId('supplier');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Поставщики'=>$this->url('supplier'),
-            'Просмотр данных поставщика'=>$this->url('supplier', ['action'=>'view', 'id' => $supplier->getId()])
+            $supplier->getName() => $this->url('supplier', ['action'=>'view', 'id' => $supplier->getId()])
             ]);  
 
 $this->headScript()
@@ -139,7 +139,7 @@ $this->headScript()
                                             <?= $phone->getName()?>
                                         </div>
                                         <div class="pull-right">
-                                            <button value="<?= $phone->getId() ?>" class="btn btn-default phone-delete"
+                                            <button value="<?= $phone->getId() ?>" class="btn btn-default btn-xs phone-delete"
                                                     title="Удалить">
                                                 <span class="glyphicon glyphicon-remove" ></span>
                                             </button>                                                            
@@ -156,7 +156,7 @@ $this->headScript()
                                             <?= $phone->getName()?>
                                         </div>
                                         <div class="pull-right">
-                                            <button value="<?= $phone->getId() ?>" class="btn btn-default phone-delete"
+                                            <button value="<?= $phone->getId() ?>" class="btn btn-default btn-xs phone-delete"
                                                     title="Удалить">
                                                 <span class="glyphicon glyphicon-remove" ></span>
                                             </button>                                                            
@@ -180,7 +180,7 @@ $this->headScript()
                                             <?= $email->getName()?>
                                         </div>
                                         <div class="pull-right">
-                                            <button value="<?= $email->getId() ?>" class="btn btn-default email-delete"
+                                            <button value="<?= $email->getId() ?>" class="btn btn-default btn-xs email-delete"
                                                     title="Удалить">
                                                 <span class="glyphicon glyphicon-remove" ></span>
                                             </button>                                                            
@@ -197,7 +197,7 @@ $this->headScript()
                                             <?= $email->getName()?>
                                         </div>
                                         <div class="pull-right">
-                                            <button value="<?= $email->getId() ?>" class="btn btn-default email-delete"
+                                            <button value="<?= $email->getId() ?>" class="btn btn-default btn-xs email-delete"
                                                     title="Удалить">
                                                 <span class="glyphicon glyphicon-remove" ></span>
                                             </button>                                                            
@@ -316,7 +316,7 @@ $this->headScript()
                         <tr>
                             <td colspan="2">
                                 <div class="pull-left">
-                                    <span style="width: 60px; color:#E6E6E6; background-color: <?= $supplySetting->getSupplyTimeColor()?>"><?= $supplier->getAplId() ?></span>
+                                    <?= $supplySetting->getSupplyTimeSpan()?>
                                     <span><?= $supplySetting->getOffice()->getName() ?></span>
                                     Заказать до: <span><?= $supplySetting->getOrderBeforeHi()?></span>
                                     Подвоз часов: <span><?= $supplySetting->getSupplyTime()?></span>

@@ -11,6 +11,7 @@ use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Contact;
 use Application\Entity\Phone;
 use Application\Entity\Email;
+use Company\Entity\Office;
 use User\Entity\User;
 
 /**
@@ -142,6 +143,7 @@ class ContactManager
         $description = $data['description'];
         if (!$description) $description = "";
         $contact->setDescription($description);
+        
         $contact->setStatus($data['status']);
         
         $currentDate = date('Y-m-d H:i:s');
@@ -154,8 +156,10 @@ class ContactManager
         } elseif ($parent instanceof \Company\Entity\Office){
             $contact->setOffice($parent);
         } elseif ($parent instanceof \User\Entity\User) {
-            $contact->setUser($parent);            
-            $contact->setName($data['full_name']);
+            $contact->setUser($parent); 
+            if (!$data['name']){
+                $contact->setName($data['full_name']);
+            }    
         } else {
             throw new \Exception('Неверный тип родительской сущности');
         }
@@ -180,6 +184,8 @@ class ContactManager
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+        
+        return $contact;
     }   
     
     public function updateContact($contact, $data) 
@@ -208,10 +214,34 @@ class ContactManager
         $this->entityManager->flush();
     }    
     
+    public function updateUserOffice($contact, $data) 
+    {
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($data['office']);
+        
+        if ($office){
+            $contact->setOffice($office);
+                
+            $this->entityManager->persist($contact);
+            // Применяем изменения к базе данных.
+            $this->entityManager->flush();
+        }    
+    }    
+
     public function updateMessengers($contact, $data) 
     {
         $contact->setIcq($data['icq']);
         $contact->setTelegramm($data['telegramm']);
+                
+        $this->entityManager->persist($contact);
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }    
+    
+    
+    public function updateSignature($contact, $data) 
+    {
+        $contact->setSignature($data['signature']);
                 
         $this->entityManager->persist($contact);
         // Применяем изменения к базе данных.
