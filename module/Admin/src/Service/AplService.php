@@ -14,6 +14,8 @@ use Application\Entity\Email;
 use Application\Entity\Phone;
 use User\Entity\User;
 use Company\Entity\Office;
+use Application\Entity\Supplier;
+
 /**
  * Description of AplService
  *
@@ -39,6 +41,27 @@ class AplService {
      */
     private $contactManager;
 
+    /**
+     * Supplier manager
+     * @var Application\Service\SupplierManager
+     */
+    private $supplierManager;
+
+    /**
+     * Legal manager
+     * @var Company\Service\LegalManager
+     */
+    private $supplierManager;
+    
+    public function __construct($entityManager, $userManager, $contactManager, $supplierManager, $legalManager)
+    {
+        $this->entityManager = $entityManager;
+        $this->userManager = $userManager;
+        $this->contactManager = $contactManager;
+        $this->supplierManager = $supplierManager;
+        $this->legalManager = $legalManager;
+    }
+    
     protected function aplApi()
     {
         return 'https://autopartslist.ru/api/';
@@ -48,13 +71,6 @@ class AplService {
     protected function aplApiKey()
     {
         return md5(date('Y-m-d').'#kjdrf4');
-    }
-    
-    public function __construct($entityManager, $userManager, $contactManager)
-    {
-        $this->entityManager = $entityManager;
-        $this->userManager = $userManager;
-        $this->contactManager = $contactManager;
     }
     
     protected function getOffice($officeAplId)
@@ -69,6 +85,189 @@ class AplService {
         return;
     }
     
+    /*
+     * Загрузка поставщиков
+     */
+    public function getSuppliers()
+    {
+        $url = $this->aplApi().'get-suppliers?api='.$this->aplApiKey();
+        
+        $data = file_get_contents($url);
+
+        if ($data){
+            $data = (array) Json::decode($data);
+        } else {
+            $data = [];
+        }
+        
+        if (count($data)){
+            foreach ($data as $item){                
+                $row = (array) $item;
+
+                $supplier = null;
+                if ($row['id']){
+//                    var_dump($row); exit;
+                    $supplier = $this->entityManager->getRepository(Supplier::class)
+                            ->findOneByAplId($row['id']);
+                    
+                    if (!$supplier){
+                        $data = [
+                            'name' => $row['name'],
+                            'aplId' => $row['id'],
+                            'status' => ($row['publish'] == 1 ? 1:2),
+                        ];
+                        
+                        $supplier = $this->supplierManager->addNewSupplier($data);
+                    }
+                    
+                    if ($supplier){
+                        $contacts = $supplier->getContacts();
+
+                        if (!count($contacts)){
+                            $contact_data = [];
+                            $contact_data['full_name'] = $contact_data['name'] = $supplier->getName();
+                            $contact_data['status'] = $supplier->getStatus();
+                            $this->contactManager->addNewContact($supplier, $contact_data); //Legal contact
+                            $contacts = $supplier->getContacts();                    
+                        } 
+                            
+                        $legalContact = $contacts[0];
+                        
+                        $legals = $legalContact->getLegals();
+                        if (count($legals) == 0){                            
+                            if ($row['inn']){
+                                $legal_data = [
+                                    'inn' => $row['inn'],
+                                    'kpp' => $row['kpp'],
+                                    'name' => $row['kpp'],
+                                    'ogrn' => $row['kpp'],
+                                    'okpo' => $row['kpp'],
+                                    'address' => $row['kpp'],
+                                    'status' => $supplier->getStatus(),
+                                ];
+                                
+                                $legal = $this->legalManager->addLegal($legalContact, $legal_data, true);
+                                
+                                if ($legal){
+                                    if ($row['bik']){
+                                        $bank_account_data = [
+                                            'bik' => $row['bik'],
+                                            'name' => $row['bank'],
+                                            'ks' => $row['firmAccount1'],
+                                            'rs' => $row['firmAccount'],
+                                            'status' => $supplier->getStatus(),
+                                        ];
+                                        $legal = $this->legalManager->addBankAccount($legal, $bank_account_data, true);
+                                    }
+                                    
+                                    if ($row['contract']){
+                                        $contract_data = [
+                                            'name' => 'Договор поставки',
+                                            'act' => $row['contract'],
+                                            'dateStart' => $row['contractdate'],
+                                            'status' => $supplier->getStatus(),
+                                        ];
+                                        $legal = $this->legalManager->addContract($legal, $contract_data, true);
+                                    }
+                                }
+                            }                            
+                        }
+                        
+                        if ($row['manualPhone'] || $row['manualManager'] || $row['manualEmail']){
+                            if (count($contacts) == 1){
+                                $manager_data = [
+                                    'name' => $row['manualManager'],
+                                    'description' => 'Менеджер',
+                                    'phone' => $row['manualPhone'],
+                                    'email' => $row['manualEmail'],
+                                    'status' => $supplier->getStatus(),
+                                ];
+                                $this->contactManager->addNewContact($supplier, $manager_data); //Manager contact                            
+                                $contacts = $supplier->getContacts();                    
+                            }
+                        }    
+                        
+                        $priceGettings = $supplier->getPriceGettings();
+                        
+                        if (count($priceGettings) == 0){
+                            if ($row['download'] || $row['email'] ||$row['ftp']){
+                                if ($row['download']) $priceGettingName = 'Загрузка прайса по ссылке';
+                                if ($row['email']) $priceGettingName = 'Получение прайса по почте';
+                                if ($row['ftp']) $priceGettingName = 'Загрузка прайса по фтп';
+                                
+                                $price_getting_data = [
+                                    'name' => $priceGettingName,
+                                    'ftp' => $row['ftp'],
+                                    'ftpLogin' => $row['ftpuser'],
+                                    'ftpPassword' => $row['ftppassw'],
+                                    'email' => $row['email'],
+                                    'emailPassword' => $row['epassw'],
+                                    'link' => $row['download'],
+                                    'status' => ($row['publish'] == 1 ? 1:2),
+                                ];
+                                
+                                $this->supplierManager->addNewPriceGetting($supplier, $price_getting_data);
+                            }    
+                        }
+                        
+                        $billGettings = $supplier->getBillGettings();
+                        
+                        if (count($billGettings) == 0){
+                            if ($row['billemail']){
+                                
+                                $bill_getting_data = [
+                                    'name' => 'Получение электронных наклданых по почте',
+                                    'email' => $row['billemail'],
+                                    'emailPassword' => $row['billepassw'],
+                                    'status' => ($row['publish'] == 1 ? 1:2),
+                                ];
+                                
+                                $this->supplierManager->addNewBillGetting($supplier, $bill_getting_data);
+                            }    
+                        }
+
+                        $requestSettings = $supplier->getRequestSettings();
+                        
+                        if (count($requestSettings) == 0){
+                            if ($row['manualSite'] || $row['manualDesc']){
+                                $request_setting_data = [
+                                    'name' => 'Параметры ручного заказа',
+                                    'description' => $row['manualDesc'],
+                                    'site' => $row['manualSite'],
+                                    'login' => $row['manualLogin'],
+                                    'password' => $row['manualPassword'],
+                                    'mode' => 1,
+                                    'status' => ($row['publish'] == 1 ? 1:2),
+                                ];
+
+                                $this->supplierManager->addNewRequestSetting($supplier, $request_setting_data);
+                            }
+
+                            if ($row['portal']){
+                                $request_setting_data = [
+                                    'name' => 'Параметры автозаказа',
+                                    'site' => $row['portal'],
+                                    'login' => $row['portalUser'],
+                                    'password' => $row['portalPass'],
+                                    'mode' => 2,
+                                    'status' => ($row['publish'] == 1 ? 1:2),
+                                ];
+
+                                $this->supplierManager->addNewRequestSetting($supplier, $request_setting_data);
+                            }    
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+    /*
+     * Загрузка сотрудников
+     */
     public function getStaffPhone($contact)
     {
         $aplId = $contact->getUser()->getAplId();

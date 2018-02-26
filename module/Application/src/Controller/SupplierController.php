@@ -21,6 +21,7 @@ use Application\Form\BillGettingForm;
 use Application\Form\RequestSettingForm;
 use Application\Form\ContactForm;
 use Application\Form\SupplySettingForm;
+use Application\Form\UploadForm;
 use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -699,5 +700,57 @@ class SupplierController extends AbstractActionController
         
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
+    }
+    
+    public function uploadPriceFormAction()
+    {
+        $supplierId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($supplierId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find the supplier ID
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $form = new UploadForm($this->supplierManager->getPriceFolder($supplier));
+
+        if($this->getRequest()->isPost()) {
+            
+            $data = array_merge_recursive(
+                $this->params()->fromPost(),
+                $this->params()->fromFiles()
+            );            
+//            var_dump($data);
+
+            // Заполняем форму данными.
+            $form->setData($data);
+            if($form->isValid()) {
+                                
+                // Получаем валадированные данные формы.
+                $data = $form->getData();
+              
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+            
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'supplier' => $supplier,
+            'form' => $form,
+        ]);
+        
     }
 }

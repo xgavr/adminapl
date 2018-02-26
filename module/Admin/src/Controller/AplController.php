@@ -33,6 +33,15 @@ class AplController extends AbstractActionController
         return [];
     }
     
+    public function getSuppliersAction()
+    {
+        $this->aplService->getSuppliers();
+        
+        return new JsonModel([
+            'ok'
+        ]);
+    }
+
     public function getStaffsAction()
     {
         $this->aplService->getStaffs();

@@ -13,6 +13,8 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\AplService;
 use User\Service\UserManager;
 use Application\Service\ContactManager;
+use Application\Service\SupplierManager;
+use Company\Service\LegalManager;
 /**
  * Description of ClientManagerFactory
  *
@@ -27,8 +29,10 @@ class AplServiceFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $userManager = $container->get(UserManager::class);  
         $contactManager = $container->get(ContactManager::class);  
+        $supplierManager = $container->get(SupplierManager::class);  
+        $legalManager = $container->get(LegalManager::class);  
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new AplService($entityManager, $userManager, $contactManager);
+        return new AplService($entityManager, $userManager, $contactManager, $supplierManager, $legalManager);
     }
 }

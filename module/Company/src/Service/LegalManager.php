@@ -74,6 +74,8 @@ class LegalManager
         if ($flushnow){
             $this->entityManager->flush();                
         }
+        
+        return $legal;
     }
     
     public function removeLegalAssociation($legal)

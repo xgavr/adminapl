@@ -104,6 +104,13 @@ class SupplierManager
         return $supplier;
     }   
     
+    public function getPriceFolder($supplier)
+    {
+        $this->addPriceFolder($supplier);
+        $price_data_folder_name = $this->priceManager->getPriceFolder();
+        return $price_data_folder_name.'/'.$supplier->getId();
+    }    
+    
     public function updateSupplier($supplier, $data) 
     {
         $supplier->setName($data['name']);
