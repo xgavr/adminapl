@@ -51,7 +51,7 @@ class AplService {
      * Legal manager
      * @var Company\Service\LegalManager
      */
-    private $supplierManager;
+    private $legalManager;
     
     public function __construct($entityManager, $userManager, $contactManager, $supplierManager, $legalManager)
     {
@@ -139,10 +139,10 @@ class AplService {
                                 $legal_data = [
                                     'inn' => $row['inn'],
                                     'kpp' => $row['kpp'],
-                                    'name' => $row['kpp'],
-                                    'ogrn' => $row['kpp'],
-                                    'okpo' => $row['kpp'],
-                                    'address' => $row['kpp'],
+                                    'name' => $row['firmName'],
+                                    'ogrn' => $row['ogrn'],
+                                    'okpo' => $row['okpo'],
+                                    'address' => $row['firmAddress'],
                                     'status' => $supplier->getStatus(),
                                 ];
                                 
@@ -157,7 +157,7 @@ class AplService {
                                             'rs' => $row['firmAccount'],
                                             'status' => $supplier->getStatus(),
                                         ];
-                                        $legal = $this->legalManager->addBankAccount($legal, $bank_account_data, true);
+                                        $this->legalManager->addBankAccount($legal, $bank_account_data, true);
                                     }
                                     
                                     if ($row['contract']){
@@ -167,7 +167,7 @@ class AplService {
                                             'dateStart' => $row['contractdate'],
                                             'status' => $supplier->getStatus(),
                                         ];
-                                        $legal = $this->legalManager->addContract($legal, $contract_data, true);
+                                        $this->legalManager->addContract($legal, $contract_data, true);
                                     }
                                 }
                             }                            
@@ -256,6 +256,33 @@ class AplService {
                                 $this->supplierManager->addNewRequestSetting($supplier, $request_setting_data);
                             }    
                         }
+                        
+                        $supplySettings = $supplier->getSupplySettings();
+                        
+                        if (count($supplySettings) == 0){
+                            if (count($row['offices'])){
+                                $offices = (array) $row['offices'];
+                                foreach ($offices as $office){
+                                    $oldOffice = (array) $office;
+                                    $desc = (array) Json::decode($oldOffice['desc']);
+//                                    var_dump($desc); exit;
+                                    $newOffice = $this->getOffice($oldOffice['parent']);
+                                    
+                                    if ($newOffice){
+                                        $supply_setting_data = [
+                                            'orderBefore' => $desc['orderbefore'],
+                                            'supplyTime' => $desc['speed'],
+                                            'supplySat' => (int) $desc['satdlv'],
+                                            'status' => ($row['publish'] == 1 ? 1:2),
+                                            'office' => $newOffice->getId(),
+                                        ];
+
+                                        $this->supplierManager->addNewSupplySetting($supplier, $supply_setting_data);
+                                    }    
+                                }   
+                            }    
+                        }
+
                     }
                 }
             }

@@ -66,7 +66,7 @@ class Version20180213183801 extends AbstractMigration
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('legal_id', 'integer', ['notnull'=>true]);
         $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>256]);
-        $table->addColumn('city', 'string', ['notnull'=>true, 'length'=>256]);
+        $table->addColumn('city', 'string', ['notnull'=>false, 'length'=>256]);
         $table->addColumn('bik', 'string', ['notnull'=>false, 'length'=>64]);
         $table->addColumn('ks', 'string', ['notnull'=>false, 'length'=>64]);
         $table->addColumn('rs', 'string', ['notnull'=>false, 'length'=>64]);
