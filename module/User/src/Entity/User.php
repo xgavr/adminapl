@@ -53,6 +53,11 @@ class User
     protected $dateCreated;
         
     /**
+     * @ORM\Column(name="birthday")  
+     */
+    protected $birthday;
+        
+    /**
      * @ORM\Column(name="pwd_reset_token")  
      */
     protected $passwordResetToken;
@@ -242,6 +247,24 @@ class User
     public function setDateCreated($dateCreated) 
     {
         $this->dateCreated = $dateCreated;
+    }    
+    
+    /**
+     * Returns the date of birth creation.
+     * @return string     
+     */
+    public function getBirthday() 
+    {
+        return $this->birthday;
+    }
+    
+    /**
+     * Sets the date when this user was birth.
+     * @param string $dateCreated     
+     */
+    public function setBirthday($birthday) 
+    {
+        $this->birthday = $birthday;
     }    
     
     /**

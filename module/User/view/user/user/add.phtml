@@ -19,6 +19,10 @@ $form->get('full_name')->setAttributes([
     'placeholder'=>'John Doe'
     ]);
 
+$form->get('birthday')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('status')->setAttributes([
     'class'=>'form-control'
     ]);
@@ -62,6 +66,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('full_name')); ?>
             <?= $this->formElement($form->get('full_name')); ?>
             <?= $this->formElementErrors($form->get('full_name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('birthday')); ?>
+            <?= $this->formElement($form->get('birthday')); ?>
+            <?= $this->formElementErrors($form->get('birthday')); ?>                  
         </div>
         
         <div class="form-group">

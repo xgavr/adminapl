@@ -76,6 +76,14 @@ class UserForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'date',
+            'name' => 'birthday',            
+            'options' => [
+                'label' => 'День рождения',
+            ],
+        ]);
+        
         if ($this->scenario == 'create') {
         
             // Add "password" field
@@ -251,5 +259,19 @@ class UserForm extends Form
                     ['name'=>'GreaterThan', 'options'=>['min'=>0]]
                 ],
             ]); 
+
+        $inputFilter->add([
+                'name'     => 'birthday',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'Date',
+                    ],
+                ],
+            ]);                                  
+        
     }           
 }
