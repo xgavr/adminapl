@@ -77,7 +77,7 @@ class IndexController extends AbstractActionController
                 $contacts = $user->getContacts();
                 if (count($contacts)){
                     foreach ($contacts as $contact){
-                        $this->contactManager->addPhone($contact, $data['phone'], true);
+                        $this->contactManager->addPhone($contact, $data, true);
                     }                    
                 } else {
                     $data['full_name'] = $data['name'] = $user->getFullName();

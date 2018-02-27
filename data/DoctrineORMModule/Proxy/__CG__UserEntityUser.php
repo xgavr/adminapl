@@ -64,10 +64,10 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'aplId', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
+            return ['__isInitialized__', 'id', 'aplId', 'email', 'fullName', 'password', 'status', 'dateCreated', 'birthday', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
         }
 
-        return ['__isInitialized__', 'id', 'aplId', 'email', 'fullName', 'password', 'status', 'dateCreated', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
+        return ['__isInitialized__', 'id', 'aplId', 'email', 'fullName', 'password', 'status', 'dateCreated', 'birthday', 'passwordResetToken', 'passwordResetTokenCreationDate', '' . "\0" . 'User\\Entity\\User' . "\0" . 'roles', '' . "\0" . 'User\\Entity\\User' . "\0" . 'contacts', '' . "\0" . 'User\\Entity\\User' . "\0" . 'clients'];
     }
 
     /**
@@ -340,6 +340,28 @@ class User extends \User\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDateCreated', [$dateCreated]);
 
         return parent::setDateCreated($dateCreated);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBirthday()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getBirthday', []);
+
+        return parent::getBirthday();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setBirthday($birthday)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setBirthday', [$birthday]);
+
+        return parent::setBirthday($birthday);
     }
 
     /**

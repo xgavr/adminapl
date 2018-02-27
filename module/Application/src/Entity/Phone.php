@@ -30,6 +30,10 @@ class Phone {
      */
     protected $name;
 
+    /**
+     * @ORM\Column(name="comment")   
+     */
+    protected $comment;
     
     /** 
      * @ORM\Column(name="date_created")  
@@ -69,6 +73,16 @@ class Phone {
         $filter = new PhoneFilter();
         $filter->setFormat(PhoneFilter::PHONE_FORMAT_DB);
         $this->name = $filter->filter($name);
+    }     
+
+    public function getComment() 
+    {
+        return $this->comment;
+    }
+
+    public function setComment($comment) 
+    {
+        $this->comment = $comment;
     }     
 
     /**

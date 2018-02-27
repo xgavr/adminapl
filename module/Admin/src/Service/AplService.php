@@ -338,7 +338,7 @@ class AplService {
             if ($data){
                 $phone = (array) Json::decode($data);
 //                var_dump($phone);
-                $this->contactManager->addPhone($contact, $phone['phone'], true);
+                $this->contactManager->addPhone($contact, ['phone' => $phone['phone']], true);
             }
         }    
     }
@@ -359,7 +359,8 @@ class AplService {
         if (count($items)){
             foreach ($items as $item){
                 $row = (array) $item;
-                
+                $desc = (array) Json::decode($row['desc']);
+
                 $user = $contact = null;
                 if ($row['email']){
                     $email = $this->entityManager->getRepository(Email::class)
@@ -390,12 +391,16 @@ class AplService {
 
                 if ($user){
                     
+                    var_dump($desc['dob']);
+                    var_dump(date_format(date_create($desc['dob']), 'Y-m-d'));
+                    
                     $user_data = [
                         'email' => $row['email'],
                         'full_name' => $row['name'],
                         'status' => ($row['publish'] == 1 ? 1:2),
                         'roles' => $user->getRolesAsArray(),
                         'aplId' => $row['id'],
+                        'birthday' => date_format(date_create($desc['dob']), 'Y-m-d'),
                     ];    
 
                     $this->userManager->updateUser($user, $user_data);
@@ -404,7 +409,6 @@ class AplService {
                     if ($row['email']){
                         
                         $roles = [3]; //сотрудник
-                        
                         $user_data = [
                             'email' => $row['email'],
                             'full_name' => $row['name'],
@@ -412,6 +416,7 @@ class AplService {
                             'status' => ($row['publish'] == 1 ? 1:2),
                             'roles' => $roles,
                             'aplId' => $row['id'],
+                            'birthday' => date_format(date_create($desc['dob']), 'Y-m-d'),
                         ];    
                             
                         $user = $this->userManager->addUser($user_data);                        
@@ -439,7 +444,7 @@ class AplService {
                         $contact = $this->contactManager->addNewContact($user, $contact_data);                        
                     }   
 
-                    $desc = (array) Json::decode($row['desc']);
+                    //$desc = (array) Json::decode($row['desc']);
 //                    var_dump($desc['icq']);
                     if ($contact){
                         $this->contactManager->updateMessengers($contact, ['icq' => $desc['icq']]);

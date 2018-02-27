@@ -60,6 +60,18 @@ class PhoneForm extends Form
             ],
         ]);
         
+        // Добавляем поле "comment"
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'comment',
+            'attributes' => [
+                'id' => 'phone_comment'
+            ],
+            'options' => [
+                'label' => 'Комментарий',
+            ],
+        ]);
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -106,5 +118,26 @@ class PhoneForm extends Form
                     ],
                 ],
             ]);        
+        
+        $inputFilter->add([
+                'name'     => 'comment',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                ],
+            ]);
+        
+        
     }    
 }

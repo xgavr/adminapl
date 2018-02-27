@@ -82,6 +82,7 @@ class UserManager
         
         $user->setStatus($data['status']);
         $user->setAplId($data['aplId']);
+        $user->setBirthday($data['birthday']);
         
         $currentDate = date('Y-m-d H:i:s');
         $user->setDateCreated($currentDate);        
@@ -127,6 +128,7 @@ class UserManager
         $user->setFullName($data['full_name']);        
         $user->setStatus($data['status']);
         $user->setAplId($data['aplId']);
+        $user->setBirthday($data['birthday']);
         
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);

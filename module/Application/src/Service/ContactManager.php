@@ -83,35 +83,37 @@ class ContactManager
         
     }
 
-    public function addPhone($contact, $phonestr, $flushnow = false)
+    public function addPhone($contact, $data, $flushnow = false)
     {                
-        if ($phonestr){
-            $filter = new PhoneFilter();
-            $filter->setFormat(PhoneFilter::PHONE_FORMAT_DB);
-            $findstr = $filter->filter($phonestr);
-            
-            if ($findstr){
-                $phone = $this->entityManager->getRepository(Phone::class)
-                        ->findOneByName($findstr);
+        if (is_array($data)){
+            if ($data['phone']){
+                $filter = new PhoneFilter();
+                $filter->setFormat(PhoneFilter::PHONE_FORMAT_DB);
+                $findstr = $filter->filter($data['phone']);
 
-                if ($phone == null){
-                    $phone = new Phone();            
-                    $phone->setContact($contact);
-                    $phone->setName($phonestr);            
+                if ($findstr){
+                    $phone = $this->entityManager->getRepository(Phone::class)
+                            ->findOneByName($findstr);
 
-                    $currentDate = date('Y-m-d H:i:s');
-                    $phone->setDateCreated($currentDate);
+                    if ($phone == null){
+                        $phone = new Phone();            
+                        $phone->setName($data['phone']);
+                        $phone->setComment($data['comment']);
 
-                    $contact->addPhone($phone);
+                        $currentDate = date('Y-m-d H:i:s');
+                        $phone->setDateCreated($currentDate);
 
-                    $this->entityManager->persist($phone);
+                        $this->entityManager->persist($phone);
 
-                    if ($flushnow){
-                        $this->entityManager->flush();                
-                    }
+                        $phone->setContact($contact);
+
+                        if ($flushnow){
+                            $this->entityManager->flush();                
+                        }
+                    }    
                 }    
-            }    
-        } 
+            }
+        }    
     }
     
     public function addEmail($contact, $emailstr, $flushnow = false)
@@ -170,7 +172,7 @@ class ContactManager
             throw new \Exception('Неверный тип родительской сущности');
         }
 
-        $this->addPhone($contact, $data['phone']);
+        $this->addPhone($contact, ['phone' => $data['phone']]);
         
         $this->addEmail($contact, $data['email']);
         
@@ -200,7 +202,7 @@ class ContactManager
         $contact->setDescription($data['description']);
         $contact->setStatus($data['status']);
         
-        $this->addPhone($contact, $data['phone']);
+        $this->addPhone($contact, ['phone' => $data['phone']]);
         
         $this->addEmail($contact, $data['email']);
         

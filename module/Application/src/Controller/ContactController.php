@@ -251,7 +251,7 @@ class ContactController extends AbstractActionController
                 $data['phone'] = $data['name'];
                 unset($data['name']);
 
-                $this->contactManager->addPhone($contact, $data['phone'], true);
+                $this->contactManager->addPhone($contact, $data, true);
                 
                 $phoneform->setData(['name' => null]);
             }
@@ -291,7 +291,7 @@ class ContactController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                $this->contactManager->addPhone($contact, $data['name'], true);
+                $this->contactManager->addPhone($contact, ['phone' => $data['name'], 'comment' => $data['comment']], true);
                 
                 return new JsonModel(
                    ['ok']
