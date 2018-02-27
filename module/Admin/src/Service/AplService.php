@@ -134,43 +134,70 @@ class AplService {
                         $legalContact = $contacts[0];
                         
                         $legals = $legalContact->getLegals();
-                        if (count($legals) == 0){                            
-                            if ($row['inn']){
-                                $legal_data = [
-                                    'inn' => $row['inn'],
-                                    'kpp' => $row['kpp'],
-                                    'name' => $row['firmName'],
-                                    'ogrn' => $row['ogrn'],
-                                    'okpo' => $row['okpo'],
-                                    'address' => $row['firmAddress'],
+                        
+                        $legal_data = null;
+                        if ($row['inn']){
+                            $legal_data = [
+                                'inn' => $row['inn'],
+                                'kpp' => $row['kpp'],
+                                'name' => $row['firmName'],
+                                'ogrn' => $row['ogrn'],
+                                'okpo' => $row['okpo'],
+                                'address' => $row['firmAddress'],
+                                'status' => $supplier->getStatus(),
+                            ];
+                        }    
+                        
+                        $legal = null;
+                        if (is_array($legal_data)){
+                            if (count($legals) == 0){                            
+                                $legal = $this->legalManager->addLegal($legalContact, $legal_data, true);
+                            } else {
+                                $legal = $legals[0];
+                                $legal_data['dateStart'] = $legal->getDateStart();
+                                $this->legalManager->addLegal($legalContact, $legal_data, true);
+                            }    
+                        }    
+                                
+                        if ($legal){
+                            $bank_account_data = null;
+                            if ($row['bik']){
+                                $bank_account_data = [
+                                    'bik' => $row['bik'],
+                                    'name' => $row['bank'],
+                                    'ks' => $row['firmAccount1'],
+                                    'rs' => $row['firmAccount'],
                                     'status' => $supplier->getStatus(),
                                 ];
-                                
-                                $legal = $this->legalManager->addLegal($legalContact, $legal_data, true);
-                                
-                                if ($legal){
-                                    if ($row['bik']){
-                                        $bank_account_data = [
-                                            'bik' => $row['bik'],
-                                            'name' => $row['bank'],
-                                            'ks' => $row['firmAccount1'],
-                                            'rs' => $row['firmAccount'],
-                                            'status' => $supplier->getStatus(),
-                                        ];
-                                        $this->legalManager->addBankAccount($legal, $bank_account_data, true);
-                                    }
-                                    
-                                    if ($row['contract']){
-                                        $contract_data = [
-                                            'name' => 'Договор поставки',
-                                            'act' => $row['contract'],
-                                            'dateStart' => $row['contractdate'],
-                                            'status' => $supplier->getStatus(),
-                                        ];
-                                        $this->legalManager->addContract($legal, $contract_data, true);
-                                    }
+                            }
+                            if (is_array($bank_account_data)){
+                                $bankAccounts = $legal->getBankAccounts();
+                                if (count($bankAccounts)){
+                                    $bankAccount = $bankAccounts[0];
+                                    $this->legalManager->updateBankAccount($bankAccount, $bank_account_data, true);
+                                } else {
+                                    $this->legalManager->addBankAccount($legal, $bank_account_data, true);
+                                }    
+                            }
+                            
+                            $contract_data = null;
+                            if ($row['contract']){
+                                $contract_data = [
+                                    'name' => 'Договор поставки',
+                                    'act' => $row['contract'],
+                                    'dateStart' => trim($row['contractdate'], ' T'),
+                                    'status' => $supplier->getStatus(),
+                                ];
+                            }
+                            if (is_array($contract_data)){
+                                $contracts = $legal->getContracts();
+                                if (count($contrats)){
+                                    $contract = $contracts[0];
+                                    $this->legalManager->updateContract($contract, $contract_data, true);                                                                    
+                                } else {
+                                    $this->legalManager->addContract($legal, $contract_data, true);                                
                                 }
-                            }                            
+                            }
                         }
                         
                         if ($row['manualPhone'] || $row['manualManager'] || $row['manualEmail']){
@@ -259,6 +286,12 @@ class AplService {
                         
                         $supplySettings = $supplier->getSupplySettings();
                         
+                        if (count($supplySettings)){
+                            foreach ($supplySettings as $supplySetting){
+                                $this->supplierManager->removeSupplySetting($supplySetting);
+                            }
+                        }
+                        
                         if (count($supplySettings) == 0){
                             if (count($row['offices'])){
                                 $offices = (array) $row['offices'];
@@ -270,9 +303,9 @@ class AplService {
                                     
                                     if ($newOffice){
                                         $supply_setting_data = [
-                                            'orderBefore' => $desc['orderbefore'],
+                                            'orderBefore' => trim($desc['orderbefore'], ' T'),
                                             'supplyTime' => $desc['speed'],
-                                            'supplySat' => (int) $desc['satdlv'],
+                                            'supplySat' => (($desc['satdlv']==1) ? 1:2),
                                             'status' => ($row['publish'] == 1 ? 1:2),
                                             'office' => $newOffice->getId(),
                                         ];
