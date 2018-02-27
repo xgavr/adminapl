@@ -391,8 +391,8 @@ class AplService {
 
                 if ($user){
                     
-                    var_dump($desc['dob']);
-                    var_dump(date_format(date_create($desc['dob']), 'Y-m-d'));
+//                    var_dump($desc['dob']);
+//                    var_dump(date_format(date_create($desc['dob']), 'Y-m-d'));
                     
                     $user_data = [
                         'email' => $row['email'],
