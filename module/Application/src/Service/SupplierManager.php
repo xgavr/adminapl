@@ -399,4 +399,8 @@ class SupplierManager
         $this->entityManager->flush();
     }
     
+    public function checkPriceFolder($supplier)
+    {
+        $this->rawManager->checkSupplierPrice($supplier);
+    }
 }

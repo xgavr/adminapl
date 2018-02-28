@@ -231,7 +231,7 @@ return [
     ],
     'rbac_manager' => [
         'assertions' => [Service\RbacAssertionManager::class],
-    ],        
+    ],      
     'controllers' => [
         'factories' => [
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
@@ -273,6 +273,79 @@ return [
     'session_containers' => [
         'ContainerNamespace'
     ],
+    'access_filter' => [
+        'controllers' => [
+            \Application\Controller\ClientController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\ContactController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\CurrencyController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\GoodsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Admin\Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\OrderController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\PriceController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\PricesettingsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\ProducerController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\RawController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+raw.manage']
+            ],
+            \Application\Controller\RawpriceController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+raw.manage']
+            ],
+            \Application\Controller\RbController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            \Application\Controller\SupplierController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+supplier.manage']
+            ],
+            \Application\Controller\ShopController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\MemberController::class => [
+                // Give access to "resetPassword", "message" and "setPassword" actions
+                // to anyone.
+                ['actions' => ['resetPassword', 'resetPasswordByPhone', 'smsToken', 'message', 'setPassword'], 'allow' => '*'],
+                // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
+                ['actions' => ['edit', 'changePassword'], 'allow' => '@'],
+                ['actions' => ['index', 'add', 'view'], 'allow' => '+member.manage'],
+                ['actions' => ['clientManagerTransfer'], 'allow' => '+member.transfer.manage'],
+            ],
+        ],
+    ],    
     'view_helpers' => [
         'factories' => [
             View\Helper\Menu::class => View\Helper\Factory\MenuFactory::class,

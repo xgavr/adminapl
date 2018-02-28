@@ -33,10 +33,15 @@ class Raw {
     protected $id;
     
     /**
+     * @ORM\Column(name="name")   
+     */
+    protected $name;
+    
+    /**
      * @ORM\Column(name="filename")   
      */
     protected $filename;
-    
+
     /** 
      * @ORM\Column(name="status")  
      */
@@ -79,9 +84,25 @@ class Raw {
         $this->id = $id;
     }     
 
+    public function getName() 
+    {
+        return $this->name;
+    }
+
+    public function setName($name) 
+    {
+        $this->name = $name;
+    }     
+
     public function getFilename() 
     {
         return $this->filename;
+    }
+
+    public function getBasename() 
+    {
+        $path_parts = pathinfo($this->getFilename());
+        return $path_parts['basename'];
     }
 
     public function setFilename($filename) 

@@ -32,7 +32,7 @@ class Producer {
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Country", inversedBy="producer") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Country", inversedBy="producer") 
      * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
      */
     protected $country;
@@ -60,7 +60,7 @@ class Producer {
 
     /*
      * Возвращает связанный country.
-     * @return \Application\Entity\Country
+     * @return \Company\Entity\Country
      */    
     public function getCountry() 
     {
@@ -69,7 +69,7 @@ class Producer {
 
     /**
      * Задает связанный country.
-     * @param \Application\Entity\Country $country
+     * @param \Company\Entity\Country $country
      */    
     public function setCountry($country) 
     {

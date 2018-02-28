@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Images;
 use Application\Entity\Producer;
-use Application\Entity\Tax;
+use Company\Entity\Tax;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -56,7 +56,7 @@ class Goods {
     protected $producer;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Tax", inversedBy="goods") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Tax", inversedBy="goods") 
      * @ORM\JoinColumn(name="tax_id", referencedColumnName="id")
      */
     protected $tax;
@@ -155,7 +155,7 @@ class Goods {
 
     /*
      * Возвращает связанный tax.
-     * @return \Application\Entity\Tax
+     * @return \Company\Entity\Tax
      */    
     public function getTax() 
     {
@@ -164,7 +164,7 @@ class Goods {
 
     /**
      * Задает связанный tax.
-     * @param \Application\Entity\Tax $tax
+     * @param \Company\Entity\Tax $tax
      */    
     public function setTax($tax) 
     {
