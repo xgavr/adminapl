@@ -12,11 +12,13 @@ use Zend\View\Model\ViewModel;
 use Application\Entity\Supplier;
 use Application\Entity\Contact;
 use Application\Entity\PriceGetting;
+use Application\Entity\Pricesettings;
 use Application\Entity\BillGetting;
 use Application\Entity\RequestSetting;
 use Application\Entity\SupplySetting;
 use Application\Form\SupplierForm;
 use Application\Form\PriceGettingForm;
+use Application\Form\PricesettingsForm;
 use Application\Form\BillGettingForm;
 use Application\Form\RequestSettingForm;
 use Application\Form\ContactForm;
@@ -701,6 +703,103 @@ class SupplierController extends AbstractActionController
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
+
+    public function priceSettingFormAction()
+    {
+        $supplierId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($supplierId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $priceSettingId = (int)$this->params()->fromQuery('priceSetting', -1);
+        
+        // Validate input parameter
+        if ($priceSettingId>0) {
+            $priceSetting = $this->entityManager->getRepository(Pricesettings::class)
+                    ->findOneById($priceSettingId);
+        } else {
+            $priceSetting = null;
+        }
+        
+        $form = new PricesettingsForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+
+                if ($priceSetting){
+                    $this->supplierManager->updatePricesettings($priceSetting, $data, true);                    
+                } else{
+                    $this->supplierManager->addNewPricesettings($supplier, $data, true);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($priceSetting){
+                $data = [
+                    'name' => $priceSetting->getName(),  
+                    'article' => $priceSetting->getArticle(),  
+                    'iid' => $priceSetting->getIid(),  
+                    'producer' => $priceSetting->getProducer(),  
+                    'title' => $priceSetting->getTitle(),  
+                    'rest' => $priceSetting->getRest(),  
+                    'price' => $priceSetting->getPrice(),  
+                    'status' => $priceSetting->getStatus(),  
+                ];
+                $form->setData($data);
+            }    
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'priceSetting' => $priceSetting,
+            'supplier' => $supplier,
+        ]);                
+    }
+
+    public function deletePriceSettingAction()
+    {
+        $priceSettingId = (int) $this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($priceSettingId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $priceSetting = $this->entityManager->getRepository(Pricesettings::class)
+                ->findOneById($priceSettingId);
+        
+        if ($priceSetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $supplier = $priceSetting->getSupplier();
+
+        $this->supplierManager->removePricesettings($priceSetting);
+        
+        // Перенаправляем пользователя на страницу "supplier/view".
+        return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
+    }
+    
     
     public function uploadPriceFormAction()
     {

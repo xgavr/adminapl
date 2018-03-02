@@ -1,0 +1,124 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('article')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
+$form->get('iid')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
+$form->get('producer')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
+$form->get('title')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
+$form->get('price')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
+$form->get('rest')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'supply-setting-submit']);
+
+$form->prepare();
+
+?>
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('iid')); ?>
+                <?= $this->formElement($form->get('iid')); ?>
+                <?= $this->formElementErrors($form->get('iid')); ?>                  
+            </div>
+            
+            <div class="form-group">
+                <?= $this->formLabel($form->get('article')); ?>
+                <?= $this->formElement($form->get('article')); ?>
+                <?= $this->formElementErrors($form->get('article')); ?>                  
+            </div>
+            
+            <div class="form-group">
+                <?= $this->formLabel($form->get('producer')); ?>
+                <?= $this->formElement($form->get('producer')); ?>
+                <?= $this->formElementErrors($form->get('producer')); ?>                  
+            </div>
+            
+            <div class="form-group">
+                <?= $this->formLabel($form->get('title')); ?>
+                <?= $this->formElement($form->get('title')); ?>
+                <?= $this->formElementErrors($form->get('title')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('price')); ?>
+                <?= $this->formElement($form->get('price')); ?>
+                <?= $this->formElementErrors($form->get('price')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('rest')); ?>
+                <?= $this->formElement($form->get('rest')); ?>
+                <?= $this->formElementErrors($form->get('rest')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>                        
+
+            <?= $this->formElement($form->get('csrf')); ?>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#supply-setting-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/supplier/supply-setting-form/<?= $supplier->getId() ?>?supplySetting=<?= ($supplySetting ? $supplySetting->getId():'') ?>',
+            data: $('#supply-setting-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#supply-setting-modal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#supply-setting-modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });
+    })    
+</script>

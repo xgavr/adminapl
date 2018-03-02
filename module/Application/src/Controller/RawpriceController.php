@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Form\PricesettingsForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -182,11 +183,49 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
+        $form = new PricesettingsForm();
+        
+        $priceSettingOptions = [];
+        foreach ($form->getElements() as $element){
+            if ($element->getLabel()){
+                $priceSettingOptions[$element->getName()] = $element->getLabel();
+            }    
+        }
+        
+        $priceSettings = $rawprice->getRaw()->getSupplier()->getPricesettings();
+        if (count($priceSettings)){
+            $priceSetting = $priceSettings[0];
+        } else {
+            $priceSetting = [];
+        }    
+                
+        //сохранение данных настройки прайса
+        if($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);            
+
+            if ($form->isValid()) {
+
+                if ($priceSetting){
+                    $this->supplierManager->updatePricesettings($priceSetting, $data, true);                    
+                } else{
+                    $this->supplierManager->addNewPricesettings($supplier, $data, true);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+            
+        }
         
         // Render the view template.
         return new ViewModel([
             'rawprice' => $rawprice,
             'rawManager' => $this->rawManager,
+            'priceSettingOptions' => $priceSettingOptions,
+            'priceSetting' => $priceSetting,
         ]);
     }      
 }

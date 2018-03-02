@@ -1,31 +1,86 @@
 <?php
-$this->headTitle('Строка '.$rawprice->getId().' '.$rawprice->getRaw()->getSupplier()->getName().' прайс '. $rawprice->getRaw()->getFilename());
+$this->headTitle('Строка '.$rawprice->getId().' '.$rawprice->getRaw()->getSupplier()->getName().' прайс '. $rawprice->getRaw()->getBasename());
   
+$this->mainMenu()->setActiveItemId('raw');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Прайсы'=>$this->url('raw'),
+            $rawprice->getRaw()->getBasename() => $this->url('raw', ['action'=>'view', 'id' => $rawprice->getRaw()->getId()]),
+            'Строка прайса' => $this->url('rawprice', ['action'=>'view', 'id' => $rawprice->getId()]),
+            ]);  
+
+        $this->headLink()
+            ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css')
+                ;
+        
+        $this->headScript()
+            ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js')
+            //->appendFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js')
+                ;
+        
 ?>
 
-<a href="
-    <?= $this->url('raw', ['action' => 'view', 'id' => $rawprice->getRaw()->getId()]); ?>">
-    &lt;&lt; Назад в <?= $rawprice->getRaw()->getFilename() ?>
-</a>
-
 <h1>
-    <?= $this->escapeHtml('Строка '.$rawprice->getId().' '.$rawprice->getRaw()->getSupplier()->getName().' прайс '. $rawprice->getRaw()->getFilename()); ?>    
+    <?= $this->escapeHtml('Строка '.$rawprice->getId().' '.$rawprice->getRaw()->getSupplier()->getName().' прайс '. $rawprice->getRaw()->getBasename()); ?>    
 </h1>
 
 
-<h3 class="contact-header">Данные из строки прайса</h3>
-<p>
-    <?php 
-        $rawdates = $rawprice->getRawdataAsArray();
-    ?>
-    <ol>
-        <?php foreach ($rawdates as $rawdata): ?>
-            <li>
-                <?= $this->escapeHtml($rawdata); ?>
-            </li>
-        <?php endforeach; ?>    
-    </ol>
-</p>
+<div class="row">
+    <div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Сопоставление данных из строки прайса</h3>
+        </div>
+        <div class="panel-body">
+            <form id="price-setting-form">
+                
+                <table class="table table-striped">
+                    <tr>
+                        <th colspan="2" width="50%"> Данные из строки прайса
+                        <th colspan="2"width="50%"> Соответствие колонок
+                    </tr>
+                    <tr>
+                        <th>Колонка</th>
+                        <th>Значение</th>
+                        <th>Соответствие</th>
+                        <th></th>
+                    </tr>
+                    <?php 
+                        $rawdates = $rawprice->getRawdataAsArray();
+                    ?>
+                    <?php foreach ($rawdates as $col => $rawdata): ?>
+                        <tr>
+                            <td>
+                                <?= $this->escapeHtml($col + 1); ?>
+                            </td>
+                            <td>
+                                <?= $this->escapeHtml($rawdata); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->partial('application/supplier/price-setting-select', ['col' => $col + 1,'data' => $priceSetting, 'options'=>$priceSettingOptions]); ?>
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>    
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button type="button" class="btn btn-success refresh-button" id="price-setting-submit">
+                               Сохранить
+                            </button>                        
+                        </td>
+                        <td></td>
+                    </tr>    
+                </table>
+            </form>    
+        </div>
+    </div>    
+</div>
 
 <a class="btn btn-default" href="
     <?= $this->url('rawprice', ['action'=>'parse', 'id' => $rawprice->getId()]); ?>">
@@ -96,3 +151,27 @@ $this->headTitle('Строка '.$rawprice->getId().' '.$rawprice->getRaw()->get
         </td>
     </tr>
 </table>
+
+<script>
+    $('#price-setting-submit').on('click', function(e){
+       var  data = $('#price-setting-form').serialize();
+//        $.ajax({
+//            type: 'POST',
+//            url: '/supplier/request-setting-form/,
+//            data: $('#request-setting-form').serialize()
+//        })
+//            .done(function (data) {
+//                if (data == 'ok'){
+//                    $('#request-setting-modal').modal('hide');
+//                    window.location.reload();
+//                } else {
+//                    $('#request-setting-modal-content').html(data);
+//                }    
+//            })
+//            .fail(function () {
+//                alert("Ошибка при открытии формы.");
+//
+//            });       
+    });
+</script>
+    

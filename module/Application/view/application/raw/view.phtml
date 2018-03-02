@@ -16,45 +16,116 @@ $this->pageBreadcrumbs()->setItems([
 </h1>
 
 
-<h3 class="contact-header">Данные из файла</h3>
-
-
-<table class="table table-striped">
-
-   <tr>
-        <th>ID</th>
-        <th>Данные</th>
-        <th>Действие</th>
-    </tr>
-    
-    <?php foreach ($rawprice as $row): ?>
-    
-    <tr>
-        <td>
-            <a href="<?= $this->url('rawprice', ['action'=>'view', 'id'=>$row->getId()]); ?>">            
-                <?= $this->escapeHtml($row->getId()); ?>
-            </a>    
-        </td>
-        <td>
-        <?php 
-            $rawdates = $row->getRawdataAsArray();
-            $i = 0;
-        ?>
-        <?php foreach ($rawdates as $rawdata): ?>
-            <?php $i++ ?>
-            <div>
-                <b><?= $i?>:</b><?= $this->escapeHtml($rawdata); ?>
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Данные из файла</h3>
             </div>
-        <?php endforeach; ?>    
-        </td>    
-        <td>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>   
+            <div class="panel-body">
+                <table class="table table-striped">
+
+                   <tr>
+                        <th>ID</th>
+                        <th>Данные</th>
+                        <th>Действие</th>
+                    </tr>
+
+                    <?php foreach ($rawprice as $row): ?>
+
+                    <tr>
+                        <td>
+                            <a href="<?= $this->url('rawprice', ['action'=>'view', 'id'=>$row->getId()]); ?>">            
+                                <?= $this->escapeHtml($row->getId()); ?>
+                            </a>    
+                        </td>
+                        <td>
+                        <?php 
+                            $rawdates = $row->getRawdataAsArray();
+                            $i = 0;
+                        ?>
+                        <?php foreach ($rawdates as $rawdata): ?>
+                            <?php $i++ ?>
+                            <div>
+                                <b><?= $i?>:</b><?= $this->escapeHtml($rawdata); ?>
+                            </div>
+                        <?php endforeach; ?>    
+                        </td>    
+                        <td>
+                        </td>    
+                    </tr>
+
+                    <?php endforeach; ?>   
+
+                </table>
+                <?= $this->paginationControl($rawprice,
+                            'Sliding',
+                            'application/partial/paginator', 
+                            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId())]); ?>
     
-</table>
-<?= $this->paginationControl($rawprice,
-            'Sliding',
-            'application/partial/paginator', 
-            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId())]); ?>
+            </div>
+        </div> 
+    </div>    
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Варианты настроек загрузки прайса</h3>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-warning" role="alert">
+                    Пока нет настроек
+                </div>
+<!--                <table class="table table-responsive">
+                    <tr>
+                        <th>
+                            Показатель
+                        </th>
+                        <th>
+                            Номер колонки в прайсе
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Артикул
+                        </th>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Производитель
+                        </th>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Наименование
+                        </th>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Цена
+                        </th>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Остаток
+                        </th>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                </table>-->
+            </div>
+        </div>    
+    </div>
+</div>    

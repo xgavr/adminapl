@@ -1,0 +1,6 @@
+<select class="selectpicker" name="<?= $this->col ?>">
+    <option value="-1">------ Не выбрано ------</option>
+    <?php foreach($this->options as $key => $value): ?>
+        <option value="<?= $key?>" <?= ($this->data[$key] == $this->col) ? 'selected':'' ?>><?= $value?></option>
+    <?php endforeach;?>
+</select>
