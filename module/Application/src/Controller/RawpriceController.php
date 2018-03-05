@@ -196,7 +196,7 @@ class RawpriceController extends AbstractActionController
         if (count($priceSettings)){
             $priceSetting = $priceSettings[0];
         } else {
-            $priceSetting = [];
+            $priceSetting = null;
         }    
                 
         //сохранение данных настройки прайса
@@ -226,6 +226,7 @@ class RawpriceController extends AbstractActionController
             'rawManager' => $this->rawManager,
             'priceSettingOptions' => $priceSettingOptions,
             'priceSetting' => $priceSetting,
+            'form' => $form,
         ]);
     }      
 }

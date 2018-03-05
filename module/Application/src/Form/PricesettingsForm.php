@@ -24,7 +24,7 @@ class PricesettingsForm extends Form
     public function __construct()
     {
         // Определяем имя формы.
-        parent::__construct('pricesettings-form');
+        parent::__construct('price-setting-form');
      
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -47,7 +47,7 @@ class PricesettingsForm extends Form
                 'id' => 'ps_name'
             ],
             'options' => [
-                'label' => 'Наименование',
+//                'label' => 'Наименование настройки',
             ],
         ]);
         
@@ -95,7 +95,7 @@ class PricesettingsForm extends Form
                 'id' => 'ps_title'
             ],
             'options' => [
-                'label' => 'Наименование',
+                'label' => 'Наименование товара',
             ],
         ]);
         
@@ -146,6 +146,18 @@ class PricesettingsForm extends Form
                 'id' => 'supplier_submitbutton',
             ],
         ]);        
+        
+        $this->add([
+            'type' => 'csrf',
+            'name' => 'csrf',
+            'options' => [
+                'csrf_options' => [
+                'timeout' => 600
+                ]
+            ],
+        ]);
+        
+        
     }
     
    /**
@@ -178,18 +190,15 @@ class PricesettingsForm extends Form
         
         $inputFilter->add([
                 'name'     => 'article',
-                'required' => false,
+                'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'StringLength',
+                        'name'    => 'GreaterThan',
                         'options' => [
-                            'min' => 1,
-                            'max' => 11
+                            'min' => 0,
                         ],
                     ],
                 ],
@@ -199,16 +208,13 @@ class PricesettingsForm extends Form
                 'name'     => 'iid',
                 'required' => false,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'StringLength',
+                        'name'    => 'GreaterThan',
                         'options' => [
-                            'min' => 1,
-                            'max' => 11
+                            'min' => 0,
                         ],
                     ],
                 ],
@@ -216,18 +222,15 @@ class PricesettingsForm extends Form
         
         $inputFilter->add([
                 'name'     => 'producer',
-                'required' => false,
+                'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'StringLength',
+                        'name'    => 'GreaterThan',
                         'options' => [
-                            'min' => 1,
-                            'max' => 11
+                            'min' => 0,
                         ],
                     ],
                 ],
@@ -235,18 +238,15 @@ class PricesettingsForm extends Form
         
         $inputFilter->add([
                 'name'     => 'title',
-                'required' => false,
+                'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'StringLength',
+                        'name'    => 'GreaterThan',
                         'options' => [
-                            'min' => 1,
-                            'max' => 11
+                            'min' => 0,
                         ],
                     ],
                 ],
@@ -254,18 +254,15 @@ class PricesettingsForm extends Form
         
         $inputFilter->add([
                 'name'     => 'price',
-                'required' => false,
+                'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'StringLength',
+                        'name'    => 'GreaterThan',
                         'options' => [
-                            'min' => 1,
-                            'max' => 11
+                            'min' => 0,
                         ],
                     ],
                 ],
@@ -273,18 +270,15 @@ class PricesettingsForm extends Form
         
         $inputFilter->add([
                 'name'     => 'rest',
-                'required' => false,
+                'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'StringLength',
+                        'name'    => 'GreaterThan',
                         'options' => [
-                            'min' => 1,
-                            'max' => 11
+                            'min' => 0,
                         ],
                     ],
                 ],

@@ -172,6 +172,20 @@ class Pricesettings {
         $this->dateCreated = $dateCreated;
     }     
     
+    /*
+     * Получить поле по значению
+     */
+    public function getField($value)
+    {
+        if ($value == $this->getArticle()) return 'article';
+        if ($value == $this->getIid()) return 'iid';
+        if ($value == $this->getProducer()) return 'producer';
+        if ($value == $this->getTitle()) return 'title';
+        if ($value == $this->getPrice()) return 'price';
+        if ($value == $this->getRest()) return 'rest';
+        return;
+    }
+    
     
     /**
      * Returns status.

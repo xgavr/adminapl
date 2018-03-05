@@ -736,6 +736,13 @@ class SupplierController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
+            $data += array_flip($data); 
+            
+            if (!$data['status']) $data['status'] = 1;
+            if (!$data['name']) $data['name'] = 'Настройка прайса ' + $supplier->getName();
+            
+//            var_dump($data);
+            
             $form->setData($data);
             if ($form->isValid()) {
 
@@ -748,6 +755,10 @@ class SupplierController extends AbstractActionController
                 return new JsonModel(
                    ['ok']
                 );           
+            } else {
+                return new JsonModel(
+                   $form->getMessages()
+                );                           
             }
         } else {
             if ($priceSetting){

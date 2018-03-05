@@ -10,15 +10,17 @@ $this->pageBreadcrumbs()->setItems([
             'Строка прайса' => $this->url('rawprice', ['action'=>'view', 'id' => $rawprice->getId()]),
             ]);  
 
-        $this->headLink()
-            ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css')
-                ;
+$this->headLink()
+    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css')
+        ;
+
+$this->headScript()
+    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js')
+    //->appendFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js')
+        ;
         
-        $this->headScript()
-            ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js')
-            //->appendFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js')
-                ;
-        
+$form = $this->form;        
+$form->prepare();        
 ?>
 
 <h1>
@@ -33,7 +35,7 @@ $this->pageBreadcrumbs()->setItems([
             <h3 class="panel-title">Сопоставление данных из строки прайса</h3>
         </div>
         <div class="panel-body">
-            <form id="price-setting-form">
+            <?= $this->form()->openTag($form); ?>
                 
                 <table class="table table-striped">
                     <tr>
@@ -41,10 +43,10 @@ $this->pageBreadcrumbs()->setItems([
                         <th colspan="2"width="50%"> Соответствие колонок
                     </tr>
                     <tr>
-                        <th>Колонка</th>
-                        <th>Значение</th>
-                        <th>Соответствие</th>
-                        <th></th>
+                        <th width="5%">Колонка</th>
+                        <th width="45%">Значение</th>
+                        <th width="25%">Соответствие</th>
+                        <th width="25%"></th>
                     </tr>
                     <?php 
                         $rawdates = $rawprice->getRawdataAsArray();
@@ -58,11 +60,15 @@ $this->pageBreadcrumbs()->setItems([
                                 <?= $this->escapeHtml($rawdata); ?>
                             </td>
                             <td>
-                                <?php echo $this->partial('application/supplier/price-setting-select', ['col' => $col + 1,'data' => $priceSetting, 'options'=>$priceSettingOptions]); ?>
+                                <?php echo $this->partial('application/supplier/price-setting-select', ['col' => $col + 1,'data' => $priceSetting->getField($col + 1), 'options'=>$priceSettingOptions]); ?>
                             </td>
-                            <td>
-
-                            </td>
+                            <?php if ($col == 0):?>
+                                <td rowspan="<?= count($rawdates)?>">
+                                    <div id="price-setting-alert">
+                                        
+                                    </div>
+                                </td>
+                            <?php endif; ?>    
                         </tr>
                     <?php endforeach; ?>    
 
@@ -77,7 +83,8 @@ $this->pageBreadcrumbs()->setItems([
                         <td></td>
                     </tr>    
                 </table>
-            </form>    
+            <?= $this->formElement($form->get('csrf')); ?>   
+            <?= $this->form()->closeTag(); ?>
         </div>
     </div>    
 </div>
@@ -154,24 +161,34 @@ $this->pageBreadcrumbs()->setItems([
 
 <script>
     $('#price-setting-submit').on('click', function(e){
+        $('#price-setting-alert').html('');
        var  data = $('#price-setting-form').serialize();
-//        $.ajax({
-//            type: 'POST',
-//            url: '/supplier/request-setting-form/,
-//            data: $('#request-setting-form').serialize()
-//        })
-//            .done(function (data) {
-//                if (data == 'ok'){
-//                    $('#request-setting-modal').modal('hide');
-//                    window.location.reload();
-//                } else {
-//                    $('#request-setting-modal-content').html(data);
-//                }    
-//            })
-//            .fail(function () {
-//                alert("Ошибка при открытии формы.");
-//
-//            });       
+        $.ajax({
+            type: 'POST',
+            url: '/supplier/price-setting-form/<?=$rawprice->getRaw()->getSupplier()->getId()?>?priceSetting=<?= ($priceSetting ? $priceSetting->getId():'') ?>',
+            data: data
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#price-setting-alert').html('<div class="alert alert-success" role="alert">Ок!</div>');
+                    //window.location.reload();
+                } else {
+                    if (jQuery.isPlainObject(data)){
+                        $.each(data, function(key, value){
+                            var msg = '<div class="alert alert-warning" role="alert"><strong>'+key+'</strong>';
+                            $.each(value, function(err, errvalue){
+                                msg +='<div>'+errvalue+'</div>'
+                            });    
+                            msg += '</div>';
+                            $('#price-setting-alert').append(msg);
+                        });
+                    }
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });       
     });
 </script>
     
