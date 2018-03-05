@@ -12,6 +12,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Controller\AbstractActionController;
 use User\Controller\AuthController;
 use User\Service\AuthManager;
+use Zend\Session\SessionManager;
 
 class Module
 {
@@ -28,12 +29,26 @@ class Module
      */
     public function onBootstrap(MvcEvent $event)
     {
+        
         // Get event manager.
         $eventManager = $event->getApplication()->getEventManager();
         $sharedEventManager = $eventManager->getSharedManager();
         // Register the event listener method. 
         $sharedEventManager->attach(AbstractActionController::class, 
                 MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 100);
+        
+        
+        $sessionManager =
+            $event->getApplication()->getServiceManager()
+              ->get(SessionManager::class);
+
+        try {
+            $sessionManager->start();
+            return;
+        } catch (\Exception $e) {
+            session_unset();
+        }        
+
     }
 
 
