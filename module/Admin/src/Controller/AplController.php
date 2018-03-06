@@ -50,4 +50,12 @@ class AplController extends AbstractActionController
             'ok'
         ]);
     }
+    
+    /*
+     * Копирование прайсов с autopartslist.ru
+     */
+    public function aplMirrorAction()
+    {
+        
+    }
 }
