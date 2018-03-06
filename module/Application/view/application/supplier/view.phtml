@@ -404,7 +404,7 @@ $this->headScript()
                 <?php if ($supplier->getRaw()): ?>                    
                     <?php foreach ($supplier->getRaw() as $raw): ?>
                         <tr>
-                            <th class=""><?= $raw->getName() ?></th>
+                            <th class=""><?= $raw->getBasename() ?></th>
                             <td align="right">
                             </td>
                         </tr>
