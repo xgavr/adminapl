@@ -6,11 +6,11 @@
  * and open the template in the editor.
  */
 
-namespace Application\Service\Factory;
+namespace Admin\Service\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Application\Service\SmsManager;
+use Admin\Service\SmsManager;
 
 /**
  * Description of ShopManagerFactory

@@ -34,7 +34,8 @@
         "zendframework/zend-i18n": "^2.7",
         "zendframework/zend-captcha": "^2.7",
         "zendframework/zend-mail": "^2.8",
-        "igorescobar/jquery-mask-plugin": "^1.14"
+        "igorescobar/jquery-mask-plugin": "^1.14",
+        "zendframework/zend-log": "^2.9"
    },
     "autoload": {
         "psr-4": {

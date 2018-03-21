@@ -6,10 +6,10 @@
  * and open the template in the editor.
  */
 
-namespace Application\Service;
+namespace Admin\Service;
 
 /**
- * Description of PostManager
+ * Description of SmsManager
  * send sms from sms.ru
  * @author Daddy
  */

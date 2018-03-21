@@ -11,6 +11,7 @@
  * This should be an array of module namespaces used in the application.
  */
 return [
+    'Zend\Log',
     'Zend\Mail',
     'Zend\Serializer',
     'Zend\Mvc\Plugin\FilePrg',

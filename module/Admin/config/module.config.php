@@ -59,6 +59,8 @@ return [
     'service_manager' => [
         'factories' => [
             Service\AplService::class => Service\Factory\AplServiceFactory::class,
+            Service\PostManager::class => Service\Factory\PostManagerFactory::class,
+            Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,
         ],
     ],    
     'view_manager' => [

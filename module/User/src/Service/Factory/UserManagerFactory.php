@@ -5,8 +5,8 @@ use Interop\Container\ContainerInterface;
 use User\Service\UserManager;
 use User\Service\RoleManager;
 use User\Service\PermissionManager;
-use Application\Service\PostManager;
-use Application\Service\SmsManager;
+use Admin\Service\PostManager;
+use Admin\Service\SmsManager;
 
 /**
  * This is the factory class for UserManager service. The purpose of the factory

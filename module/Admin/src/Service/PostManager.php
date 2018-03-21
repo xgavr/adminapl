@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Application\Service;
+namespace Admin\Service;
 
 use Zend\Mail\Message;
 use Zend\Mime\Message as MimeMessage;
@@ -14,12 +14,20 @@ use Zend\Mime\Mime;
 use Zend\Mime\Part as MimePart;
 use Zend\Mail\Transport\Smtp as SmtpTransport;
 use Zend\Mail\Transport\SmtpOptions;
+use Zend\Mail\Storage\Imap;
+use Zend\Log\Writer\Stream;
+use Zend\Log\Logger;
+
 /**
  * Description of PostManager
  *
  * @author Daddy
  */
 class PostManager {
+    
+    const LOG_FOLDER = './data/log/'; //папка логов
+    const LOG_FILE = './data/log/mail.log'; //лог 
+    
     //put your code here
     /**
      * Doctrine entity manager.
@@ -30,6 +38,11 @@ class PostManager {
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
+        
+        if (!is_dir($this::LOG_FOLDER)){
+            mkdir($this::LOG_FOLDER);
+        }
+        
     }
     
     public function send($options)
@@ -78,5 +91,51 @@ class PostManager {
         $transport->setOptions($options);
         $transport->send($message);
 
+    }
+    
+    public function read($params)
+    {
+        $writer = new Stream($this::LOG_FILE);
+        $logger = new Logger();
+        $logger->addWriter($writer);
+        Logger::registerErrorHandler($logger);
+
+        $mail = new Imap([
+            'host' => $params['host'],
+            'user' => $params['user'],
+            'password' => $params['password'],
+            'ssl' => 'SSL',
+        ]);
+        
+        $logger->info($params['user']);
+        
+        $maxMessage = count($mail);
+        
+        if ($maxMessage){
+            foreach ($mail as $messageNum => $message) {
+                $subject = $message->subject;
+                $type = $message->type;
+                $receivedes = $message->getHeader('received');
+                if (is_string($receivedes)) {
+                    $received = $receivedes;
+                } else {
+                    $received = implode(';', $message->getHeader('received', 'array'));
+                }
+                
+                $headers = '';
+                foreach ($message->getHeaders() as $name => $value) {
+                    if (is_string($value)) {
+                        $headers .= "$name: $value".PHP_EOL;
+                        continue;
+                    }
+                    foreach ($value as $entry) {
+                        $headers .= "$name: $entry".PHP_EOL;
+                    }
+                }  
+                $content = $message->getContent();
+            }
+        }
+        
+        $logger = null;
     }
 }

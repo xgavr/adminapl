@@ -38,13 +38,13 @@ class UserManager
     
     /**
      * Post manager.
-     * @var Application\Service\PostManager
+     * @var Admin\Service\PostManager
      */
     private $postManager;
     
     /**
      * Sms manager.
-     * @var Application\Service\SmsManager
+     * @var Admin\Service\SmsManager
      */
     private $smsManager;
     
