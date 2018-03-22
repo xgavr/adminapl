@@ -15,8 +15,11 @@ use Zend\Mime\Part as MimePart;
 use Zend\Mail\Transport\Smtp as SmtpTransport;
 use Zend\Mail\Transport\SmtpOptions;
 use Zend\Mail\Storage\Imap;
+use Zend\Mail\Exception;
+use RecursiveIteratorIterator;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
+use Admin\Filter\HtmlFilter;
 
 /**
  * Description of PostManager
@@ -93,6 +96,50 @@ class PostManager {
 
     }
     
+    protected function readPart($iterator, $message, $logger = null)
+    {
+        
+        if (isset($message->subject)){
+            $subject = $message->subject;
+        }    
+        
+        if (isset($message->contentType)){
+            $type = $message->contentType;
+        }    
+    
+        if (isset($message->received)){
+            $receivedes = $message->getHeader('received');
+            if (is_string($receivedes)) {
+                $received = $receivedes;
+            } else {
+                $received = implode(';', $message->getHeader('received', 'array'));
+            }
+        }
+        
+        $headers = '';
+        foreach ($message->getHeaders() as $name => $value) {
+            if (is_string($value)) {
+                $headers .= "$name: $value".PHP_EOL;
+                continue;
+            }            
+            foreach ($value as $entry) {
+                $headers .= "$name: $entry".PHP_EOL;
+            }
+        }  
+        
+        $content = $message->getContent();
+        
+        $htmlFilter = new HtmlFilter();
+        
+        if ($logger){
+            $logger->info('Часть '.$iterator);
+            $logger->debug('subject: '.$subject);
+            $logger->debug('type: '.$type);
+            $logger->debug('headers: '.$headers);
+            $logger->debug('content: '.$htmlFilter->filter(base64_decode($content)));        
+        }        
+    }
+    
     public function read($params)
     {
         $writer = new Stream($this::LOG_FILE);
@@ -112,27 +159,13 @@ class PostManager {
         $maxMessage = count($mail);
         
         if ($maxMessage){
+            $i = 0;
             foreach ($mail as $messageNum => $message) {
-                $subject = $message->subject;
-                $type = $message->type;
-                $receivedes = $message->getHeader('received');
-                if (is_string($receivedes)) {
-                    $received = $receivedes;
-                } else {
-                    $received = implode(';', $message->getHeader('received', 'array'));
-                }
-                
-                $headers = '';
-                foreach ($message->getHeaders() as $name => $value) {
-                    if (is_string($value)) {
-                        $headers .= "$name: $value".PHP_EOL;
-                        continue;
-                    }
-                    foreach ($value as $entry) {
-                        $headers .= "$name: $entry".PHP_EOL;
-                    }
-                }  
-                $content = $message->getContent();
+                $this->readPart($i, $message, $logger);
+                foreach (new RecursiveIteratorIterator($message) as $part) {
+                    $i++;
+                   $this->readPart($i, $part, $logger);
+                }                                
             }
         }
         

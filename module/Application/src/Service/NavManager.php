@@ -217,6 +217,12 @@ class NavManager
             if ($this->rbacManager->isGranted(null, 'admin.manage')) {
                 
                 $adminDropdownItems[] = [
+                    'id' => 'post',
+                    'label' => 'Проверка почты',
+                    'link'  => $url('post')
+                ];
+                
+                $adminDropdownItems[] = [
                     'id' => 'apl',
                     'label' => 'Обмен c apl',
                     'link'  => $url('apl')

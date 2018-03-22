@@ -36,17 +36,35 @@ return [
                     ],
                 ],
             ],
+            'post' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/post[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\PostController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
         'controllers' => [
             \Admin\Controller\AplController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+company.manage']
+                ['actions' => '*', 'allow' => '+admin.manage']
             ],
             \Admin\Controller\IndexController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+company.manage']
+                ['actions' => '*', 'allow' => '+admin.manage']
+            ],
+            \Admin\Controller\PostController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+admin.manage']
             ],
         ],
     ],    
@@ -54,6 +72,7 @@ return [
         'factories' => [
             Controller\AplController::class => Controller\Factory\AplControllerFactory::class,
             Controller\IndexController::class => InvokableFactory::class,
+            Controller\PostController::class => Controller\Factory\PostControllerFactory::class,
         ],
     ],
     'service_manager' => [
