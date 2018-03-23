@@ -79,7 +79,7 @@ class TelegrammManager {
         
         try {
             $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
-            $result = $telegram->setWebhook($this::HOOK_URL);
+            $result = $telegram->setWebhook($this::HOOK_URL, ['certificate' => '/var/www/httpd-cert/apl/adminapl.ru.crt']);
             if ($result->isOk()) {
                 echo $result->getDescription();
             }                    
