@@ -41,7 +41,7 @@ class Module
         // Получаем URI запроса
         $uri = $event->getRequest()->getUri();
         $scheme = $uri->getScheme();
-   
+   var_dump($uri);
         // Если схема - не HTTPS, перенаправляем на тот же URI, но
         // со схемой HTTPS.
 //        if ($scheme != 'https'){
