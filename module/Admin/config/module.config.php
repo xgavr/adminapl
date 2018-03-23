@@ -50,6 +50,20 @@ return [
                     ],
                 ],
             ],
+            'proc' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/proc[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ProcessingController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -66,20 +80,27 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage']
             ],
+            \Admin\Controller\ProcessingController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+admin.manage']
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
             Controller\AplController::class => Controller\Factory\AplControllerFactory::class,
-            Controller\IndexController::class => InvokableFactory::class,
+            Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\PostController::class => Controller\Factory\PostControllerFactory::class,
+            Controller\ProcessingController::class => Controller\Factory\ProcessingControllerFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
             Service\AplService::class => Service\Factory\AplServiceFactory::class,
+            Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,
+            Service\TelegrammManager::class => Service\Factory\TelegrammManagerFactory::class,
         ],
     ],    
     'view_manager' => [

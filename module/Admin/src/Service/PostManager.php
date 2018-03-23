@@ -127,17 +127,24 @@ class PostManager {
             }
         }  
         
-        $content = $message->getContent();
-        
         $htmlFilter = new HtmlFilter();
+        $content = $htmlFilter->filter(base64_decode($message->getContent()));
+        
         
         if ($logger){
             $logger->info('Часть '.$iterator);
             $logger->debug('subject: '.$subject);
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
-            $logger->debug('content: '.$htmlFilter->filter(base64_decode($content)));        
-        }        
+            $logger->debug('content: '.$content);        
+        }  
+        
+        $result = [
+            'subject' => $subject,
+            'content' => $content,
+        ];
+        
+        return array_filter($result);
     }
     
     public function read($params)
@@ -158,17 +165,23 @@ class PostManager {
         
         $maxMessage = count($mail);
         
+        $result = [];
         if ($maxMessage){
             $i = 0;
             foreach ($mail as $messageNum => $message) {
-                $this->readPart($i, $message, $logger);
+                $part = $this->readPart($i, $message, $logger);
+                $result[$messageNum] = $part;
                 foreach (new RecursiveIteratorIterator($message) as $part) {
                     $i++;
-                   $this->readPart($i, $part, $logger);
+                    $part = $this->readPart($i, $part, $logger);
+                    
+                    $result[$messageNum] += $part;
                 }                                
             }
         }
         
         $logger = null;
-    }
+        
+        return $result;
+    }    
 }

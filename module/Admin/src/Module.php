@@ -27,25 +27,31 @@ class Module
         $eventManager = $manager->getEventManager();
         $sharedEventManager = $eventManager->getSharedManager();
         // Регистрируем метод-обработчик. 
-        $sharedEventManager->attach(__NAMESPACE__, 'dispatch', 
-                                    [$this, 'onDispatch'], 100);
+        $sharedEventManager->attach(__NAMESPACE__, 'route', 
+                                    [$this, 'onRoute'], 100);        
     }
 
-    // Обработчик события.
-    public function onDispatch(MvcEvent $event)
+    public function onRoute(MvcEvent $event)
     {
-        // Получаем контроллер, к которому был отправлен HTTP-запрос.
-        $controller = $event->getTarget();
-        // Получаем полностью определенное имя класса контроллера.
-        $controllerClass = get_class($controller);
-        // Получаем имя модуля контроллера.
-        $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
-           
-        // Переключаем лэйаут только для контроллеров, принадлежащих нашему модулю.
-        if ($moduleNamespace == __NAMESPACE__) {
-            $viewModel = $event->getViewModel();
-//            $viewModel->setTemplate('layout/layout2');  
-        }        
-    }
-    
+        if (php_sapi_name() == "cli") {
+            // Не выполняем перенаправление на HTTPS в консольном режиме.
+            return;
+        }
+        
+        // Получаем URI запроса
+        $uri = $event->getRequest()->getUri();
+        $scheme = $uri->getScheme();
+   
+        // Если схема - не HTTPS, перенаправляем на тот же URI, но
+        // со схемой HTTPS.
+//        if ($scheme != 'https'){
+//            $uri->setScheme('https');
+//            $response=$event->getResponse();
+//            $response->getHeaders()->addHeaderLine('Location', $uri);
+//            $response->setStatusCode(301);
+//            $response->sendHeaders();
+//            return $response;
+//        }
+    }    
+        
 }

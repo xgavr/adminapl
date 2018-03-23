@@ -12,24 +12,32 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 
 
-class PostController extends AbstractActionController
+class ProcessingController extends AbstractActionController
 {
     
     /**
-     * AplService manager.
+     * PostManager manager.
      * @var Admin\Service\PostManager
      */
     private $postManager;    
     
+    /**
+     * AutoruManager manager.
+     * @var Admin\Service\AutoruManager
+     */
+    private $autoruManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($postManager) 
+    public function __construct($postManager, $autoruManager) 
     {
         $this->postManager = $postManager;        
+        $this->autoruManager = $autoruManager;        
     }   
 
     
     public function indexAction()
     {
+        $this->autoruManager->postOrder();
         
         return [];
     }

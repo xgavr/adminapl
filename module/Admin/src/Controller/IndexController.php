@@ -12,9 +12,43 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+    
+    /**
+     * TelegrammManager manager.
+     * @var Admin\Service\TelegrammManager
+     */
+    private $telegrammManager;    
+    
+    // Метод конструктора, используемый для внедрения зависимостей в контроллер.
+    public function __construct($telegrammManager) 
+    {
+        $this->telegrammManager = $telegrammManager;        
+    }   
+    
     public function indexAction()
     {
         return [];
+    }
+    
+    /*
+     * Telegramm hook
+     */
+    public function telegrammHookAction()
+    {
+        $this->telegrammManager->hook();
+        exit;        
+    }
+    
+    public function telegrammSetAction()
+    {
+        $this->telegrammManager->setHook();
+        exit;
+    }
+    
+    public function telegrammUnsetAction()
+    {
+        $this->telegrammManager->unsetHook();
+        exit;
     }
     
     public function phpinfoAction()
