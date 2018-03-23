@@ -27,10 +27,17 @@ class AutoruManager {
      */
     private $postManager;
     
-    public function __construct($entityManager, $postManager)
+    /**
+     * Telegramm manager.
+     * @var Admin\Service\TelegrammManager
+     */
+    private $telegrammManager;
+    
+    public function __construct($entityManager, $postManager, $telegrammManager)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
+        $this->telegrammManager = $telegrammManager;        
     }
     
     public function postOrder()
@@ -45,6 +52,7 @@ class AutoruManager {
         if (is_array($mail)){
             foreach($mail as $msg){
                 if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру'&& $msg['content']){
+                    $this->telegrammManager->sendMessage(['chat_id' => '189788583', 'text' => $msg['content']]);
                     printf($msg['content']);
                 }
             }
