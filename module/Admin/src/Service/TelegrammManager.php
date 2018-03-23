@@ -22,7 +22,7 @@ class TelegrammManager {
 
     const API_KEY = '460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s';
     const USERNAME = 'SlavaAplBot';
-    const HOOK_URL = 'https://adminapl.ru/index/telegramm-hook';
+    const HOOK_URL = 'https://adminapl.ru/admin/telegramm-hook';
 
     const LOG_FOLDER = './data/log/'; //папка логов
     const LOG_FILE = './data/log/telegramm.log'; //лог 
@@ -59,9 +59,9 @@ class TelegrammManager {
                 'password' => 'Ghjnt3t',
                 'database' => 'telegramm',
              ];
-            $telegram->enableMySql($mysql_credentials, $this::USERNAME . '_');
+            $telegramm->enableMySql($mysql_credentials, $this::USERNAME . '_');
             
-            $telegram->handle();
+            $telegramm->handle();
             
         } catch (Longman\TelegramBot\Exception\TelegramException $e){
             $logger->error($e->getMessage());
@@ -79,7 +79,7 @@ class TelegrammManager {
         
         try {
             $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
-            $result = $telegram->setWebhook($this::HOOK_URL, ['certificate' => '/var/www/httpd-cert/apl/adminapl.ru.crt']);
+            $result = $telegramm->setWebhook($this::HOOK_URL, ['certificate' => '/var/www/httpd-cert/apl/adminapl.ru.crt']);
             if ($result->isOk()) {
                 echo $result->getDescription();
             }                    
@@ -99,7 +99,7 @@ class TelegrammManager {
         
         try {
             $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
-            $result = $telegram->deleteWebhook();
+            $result = $telegramm->deleteWebhook();
             if ($result->isOk()) {
                 echo $result->getDescription();
             }             

@@ -74,7 +74,8 @@ return [
             ],
             \Admin\Controller\IndexController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+admin.manage']
+                ['actions' => '*', 'allow' => '+admin.manage'],
+                ['actions' => 'telegramm-hook', 'allow' => '*']
             ],
             \Admin\Controller\PostController::class => [
                 // Allow access to authenticated users.
