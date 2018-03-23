@@ -22,7 +22,7 @@ class TelegrammManager {
 
     const API_KEY = '460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s';
     const USERNAME = 'SlavaAplBot';
-    const HOOK_URL = 'https://adminapl.ru/admin/telegramm-hook';
+    const HOOK_URL = 'https://adminapl.ru/telegramm/hook';
 
     const LOG_FOLDER = './data/log/'; //папка логов
     const LOG_FILE = './data/log/telegramm.log'; //лог 

@@ -29,28 +29,7 @@ class IndexController extends AbstractActionController
     {
         return [];
     }
-    
-    /*
-     * Telegramm hook
-     */
-    public function telegrammHookAction()
-    {
-        $this->telegrammManager->hook();
-        exit;        
-    }
-    
-    public function telegrammSetAction()
-    {
-        $this->telegrammManager->setHook();
-        exit;
-    }
-    
-    public function telegrammUnsetAction()
-    {
-        $this->telegrammManager->unsetHook();
-        exit;
-    }
-    
+        
     public function phpinfoAction()
     {
         return [];

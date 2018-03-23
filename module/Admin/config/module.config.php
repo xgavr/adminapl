@@ -64,6 +64,20 @@ return [
                     ],
                 ],
             ],
+            'telegramm' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/telegramm[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\TelegrammController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -85,6 +99,11 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage']
             ],
+            \Admin\Controller\TelegrammController::class => [
+                // Allow access to authenticated users.
+                ['actions' => ['index', 'set', 'unset'], 'allow' => '+admin.manage'],
+                ['actions' => ['hook'], 'allow' => '*']
+            ],
         ],
     ],    
     'controllers' => [
@@ -93,6 +112,7 @@ return [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\PostController::class => Controller\Factory\PostControllerFactory::class,
             Controller\ProcessingController::class => Controller\Factory\ProcessingControllerFactory::class,
+            Controller\TelegrammController::class => Controller\Factory\TelegrammControllerFactory::class,
         ],
     ],
     'service_manager' => [
