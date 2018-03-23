@@ -23,6 +23,8 @@ class TelegrammManager {
     const API_KEY = '460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s';
     const USERNAME = 'SlavaAplBot';
     const HOOK_URL = 'https://adminapl.ru/telegramm/hook';
+    const ADMIN_USERS = [189788583];
+    const COMMANDS_PATH = './vendor/longman/src/Commnds/';
 
     const LOG_FOLDER = './data/log/'; //папка логов
     const LOG_FILE = './data/log/telegramm.log'; //лог 
@@ -52,6 +54,8 @@ class TelegrammManager {
         
         try {
             $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
+            $telegram->addCommandsPaths($this::COMMANDS_PATH);
+            $telegram->enableAdmins($this::ADMIN_USERS);
             
             $mysql_credentials = [
                 'host'     => 'localhost',
@@ -61,10 +65,19 @@ class TelegrammManager {
              ];
             $telegramm->enableMySql($mysql_credentials, $this::USERNAME . '_');
             
+//            Logging (Error, Debug and Raw Updates)
+            Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$this::USERNAME."_error.log");
+            Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FOLDER . "/".$this::USERNAME."_debug.log");
+            Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$this::USERNAME."_update.log");
+            
+            $telegram->enableLimiter();
+            
             $telegramm->handle();
             
         } catch (Longman\TelegramBot\Exception\TelegramException $e){
-            $logger->error($e->getMessage());
+            Longman\TelegramBot\TelegramLog::error($e);
+        } catch (Longman\TelegramBot\Exception\TelegramLogException $e){
+            $logger->error($e->getMessage());            
         }    
         
         $logger = null;
