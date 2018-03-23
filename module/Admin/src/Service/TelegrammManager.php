@@ -131,6 +131,7 @@ class TelegrammManager {
         Logger::registerErrorHandler($logger);
         
         try {
+            $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
             $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
         } catch (Longman\TelegramBot\Exception\TelegramException $e){
             $logger->error($e->getMessage());
