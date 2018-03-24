@@ -161,12 +161,13 @@ class PostManager {
             'ssl' => 'SSL',
         ]);
         
-        $logger->info($params['user']);
-        
         $maxMessage = count($mail);
         
         $result = [];
         if ($maxMessage){
+    
+            $logger->info($params['user']);
+        
             $i = 0;
             foreach ($mail as $messageNum => $message) {
                 $part = $this->readPart($i, $message, $logger);
