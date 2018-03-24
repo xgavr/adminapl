@@ -8,6 +8,7 @@
 
 namespace Admin\Service;
 
+use Admin\Filter\AutoruOrderFilter;
 /**
  * Description of AutoruManager
  *
@@ -48,12 +49,16 @@ class AutoruManager {
             'password' => 'kjdrf4',
         ];
         
+        $filter = new AutoruOrderFilter();
+        
         $mail = $this->postManager->read($box);
         if (is_array($mail)){
             foreach($mail as $msg){
                 if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру'&& $msg['content']){
-                    $this->telegrammManager->sendMessage(['chat_id' => '189788583', 'text' => $msg['content']]);
-                    printf($msg['content']);
+                    $text = $filter->filter($msg['content']); 
+                    $text = $msg['subject'].PHP_EOL.$text;
+                    $this->telegrammManager->sendMessage(['chat_id' => '189788583', 'text' => $text]);
+                    //printf(nl2br($text));
                 }
             }
         }

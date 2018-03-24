@@ -96,8 +96,8 @@ return [
                 ['actions' => '*', 'allow' => '+admin.manage']
             ],
             \Admin\Controller\ProcessingController::class => [
-                // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+admin.manage']
+                // Allow access to all users.
+                ['actions' => '*', 'allow' => '*']
             ],
             \Admin\Controller\TelegrammController::class => [
                 // Allow access to authenticated users.

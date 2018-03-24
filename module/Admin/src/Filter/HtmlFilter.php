@@ -9,7 +9,7 @@
 namespace Admin\Filter;
 
 use Zend\Filter\AbstractFilter;
-use Zend\Json\Json;
+
 /**
  * Удаляет html и css тэги
  *

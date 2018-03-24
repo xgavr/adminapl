@@ -176,7 +176,13 @@ class PostManager {
                     $part = $this->readPart($i, $part, $logger);
                     
                     $result[$messageNum] += $part;
-                }                                
+                }  
+                
+                try{
+                    $mail->removeMessage($messageNum);
+                } catch (Exception $e){
+                    $logger->error($e->getMessage());
+                }    
             }
         }
         
