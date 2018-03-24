@@ -57,7 +57,7 @@ class AutoruManager {
                 if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру'&& $msg['content']){
                     $text = $filter->filter($msg['content']); 
                     $text = $msg['subject'].PHP_EOL.$text;
-                    $this->telegrammManager->sendMessage(['chat_id' => '189788583', 'text' => $text]);
+                    $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
                     //printf(nl2br($text));
                 }
             }

@@ -7,3 +7,4 @@ phpunit.xml
 /data/upload/oksm.xls
 /data/prices/
 /data/DoctrineORMModule/Proxy/
+/data/log/
