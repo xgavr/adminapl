@@ -102,8 +102,8 @@ class AplService {
         $response = $client->send();
 
         if ($response->isSuccess()) {
-            $content = $response->getContent();
-            return (array) Json::decode($content);
+            $body = $response->getBody();
+            return (array) Json::decode($body);
         }
         
         return;
