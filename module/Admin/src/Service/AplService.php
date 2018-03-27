@@ -15,6 +15,7 @@ use Application\Entity\Phone;
 use User\Entity\User;
 use Company\Entity\Office;
 use Application\Entity\Supplier;
+use Zend\Http\Client;
 
 /**
  * Description of AplService
@@ -85,6 +86,30 @@ class AplService {
         return;
     }
     
+    /*
+     * Создать заказ в апл
+     * array $data
+     */
+    public function checkout($data)
+    {
+        $url = $this->aplApi().'checkout?api='.$this->aplApiKey();
+        
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setParameterPost($data);
+
+        $response = $client->send();
+
+        if ($response->isSuccess()) {
+            $content = $response->getContent();
+            return (array) Json::decode($content);
+        }
+        
+        return;
+    }
+
+
     /*
      * Загрузка поставщиков
      */

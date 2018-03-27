@@ -9,6 +9,7 @@
 namespace Admin\Filter;
 
 use Zend\Filter\AbstractFilter;
+use User\Filter\PhoneFilter;
 
 /**
  * Удаляет html и css тэги
@@ -48,9 +49,21 @@ class AutoruOrderFilter extends AbstractFilter
     
     public function filter($value)
     {
-        $result = str_replace($this->removes, PHP_EOL, $value); //удаляем ненужные фразы
+        $result['text'] = str_replace($this->removes, PHP_EOL, $value); //удаляем ненужные фразы
         foreach ($this->newlines as $line){
-            $result = str_replace($line, PHP_EOL.$line, $result); //Добавить перенос строки
+            $result['text'] = str_replace($line, PHP_EOL.$line, $result); //Добавить перенос строки
+        }
+        
+        $strgs = explode(PHP_EOL, $result['text']);
+        foreach ($strgs as $strg){
+            $dqs = explode(':', $strg);
+            if (trim($dqs[0]) == 'Телефон'){
+                $phoneFilter = new PhoneFilter();
+                $result['phone'] = $phoneFilter->filter(trim($dqs[1]));
+            }
+            if (trim($dqs[0]) == 'Адрес доставки'){
+                $result['address'] = trim($dqs[1]);
+            }
         }
 
         return $result;

@@ -29,16 +29,23 @@ class AutoruManager {
     private $postManager;
     
     /**
+     * Apl manager.
+     * @var Admin\Service\AplService
+     */
+    private $aplManager;
+
+    /**
      * Telegramm manager.
      * @var Admin\Service\TelegrammManager
      */
     private $telegrammManager;
     
-    public function __construct($entityManager, $postManager, $telegrammManager)
+    public function __construct($entityManager, $postManager, $telegrammManager, $aplManager)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
         $this->telegrammManager = $telegrammManager;        
+        $this->aplManager = $aplManager;        
     }
     
     public function postOrder()
@@ -55,8 +62,24 @@ class AutoruManager {
         if (is_array($mail)){
             foreach($mail as $msg){
                 if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру'&& $msg['content']){
-                    $text = $filter->filter($msg['content']); 
-                    $text = $msg['subject'].PHP_EOL.$text;
+                    $filterd = $filter->filter($msg['content']); 
+                    $text = $msg['subject'].PHP_EOL.$filtered['text'];
+                    
+                    if ($phone = $filtered('phone')){
+                        $data = [
+                            'bo' => 1,
+                            'comment' => 'autoru',
+                            'info2' => $text,
+                            'phone' => $phone,
+                            'address' => $filtered('address'),
+                        ];
+                        
+                        $aplResponce = $this->aplManager->checkout($data);
+                        if ($order = $aplResponce['order']['id']){
+                            $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
+                        }
+                    }
+                    
                     $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
                     //printf(nl2br($text));
                 }

@@ -13,6 +13,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\AutoruManager;
 use Admin\Service\PostManager;
 use Admin\Service\TelegrammManager;
+use Admin\Service\AplService;
 
 /**
  * Description of AutoruManagerFactory
@@ -28,7 +29,8 @@ class AutoruManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $postManager = $container->get(PostManager::class);
         $telegrammManager = $container->get(TelegrammManager::class);
+        $aplManager = $container->get(AplService::class);
         // Инстанцируем сервис и внедряем зависимости.
-        return new AutoruManager($entityManager, $postManager, $telegrammManager);
+        return new AutoruManager($entityManager, $postManager, $telegrammManager, $aplManager);
     }
 }
