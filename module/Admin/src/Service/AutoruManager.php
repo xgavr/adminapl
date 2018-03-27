@@ -76,7 +76,8 @@ class AutoruManager {
                         
                         $aplResponce = $this->aplService->checkout($data);
                         if (is_array($aplResponce)){
-                            if ($order = $aplResponce['order']['id']){
+                            $orderData = (array) $aplResponce['order'];
+                            if ($order = $orderData['id']){
                                 $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
                             }
                         }    
