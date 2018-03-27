@@ -98,6 +98,7 @@ class PostManager {
     
     protected function readPart($iterator, $message, $logger = null)
     {
+        $subject = null;
         
         if (isset($message->subject)){
             $subject = $message->subject;
