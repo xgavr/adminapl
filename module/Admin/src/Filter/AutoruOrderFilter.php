@@ -49,9 +49,11 @@ class AutoruOrderFilter extends AbstractFilter
     
     public function filter($value)
     {
+        $result = [];
+        
         $result['text'] = str_replace($this->removes, PHP_EOL, $value); //удаляем ненужные фразы
         foreach ($this->newlines as $line){
-            $result['text'] = str_replace($line, PHP_EOL.$line, $result); //Добавить перенос строки
+            $result['text'] = str_replace($line, PHP_EOL.$line, $result['text']); //Добавить перенос строки
         }
         
         $strgs = explode(PHP_EOL, $result['text']);

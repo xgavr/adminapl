@@ -65,13 +65,13 @@ class AutoruManager {
                     $filtered = $filter->filter($msg['content']); 
                     $text = $msg['subject'].PHP_EOL.$filtered['text'];
                     
-                    if ($phone = $filtered('phone')){
+                    if ($phone = $filtered['phone']){
                         $data = [
                             'bo' => 1,
                             'comment' => 'autoru',
                             'info2' => $text,
                             'phone' => $phone,
-                            'address' => $filtered('address'),
+                            'address' => $filtered['address'],
                         ];
                         
                         $aplResponce = $this->aplService->checkout($data);
