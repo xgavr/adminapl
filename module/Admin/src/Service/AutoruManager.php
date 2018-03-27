@@ -32,7 +32,7 @@ class AutoruManager {
      * Apl manager.
      * @var Admin\Service\AplService
      */
-    private $aplManager;
+    private $aplService;
 
     /**
      * Telegramm manager.
@@ -40,12 +40,12 @@ class AutoruManager {
      */
     private $telegrammManager;
     
-    public function __construct($entityManager, $postManager, $telegrammManager, $aplManager)
+    public function __construct($entityManager, $postManager, $telegrammManager, $aplService)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
         $this->telegrammManager = $telegrammManager;        
-        $this->aplManager = $aplManager;        
+        $this->aplService = aplService;        
     }
     
     public function postOrder()
@@ -74,7 +74,7 @@ class AutoruManager {
                             'address' => $filtered('address'),
                         ];
                         
-                        $aplResponce = $this->aplManager->checkout($data);
+                        $aplResponce = $this->aplService->checkout($data);
                         if ($order = $aplResponce['order']['id']){
                             $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
                         }

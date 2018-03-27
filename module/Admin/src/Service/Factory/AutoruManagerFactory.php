@@ -29,8 +29,8 @@ class AutoruManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $postManager = $container->get(PostManager::class);
         $telegrammManager = $container->get(TelegrammManager::class);
-        $aplManager = $container->get(AplService::class);
+        $aplService = $container->get(AplService::class);
         // Инстанцируем сервис и внедряем зависимости.
-        return new AutoruManager($entityManager, $postManager, $telegrammManager, $aplManager);
+        return new AutoruManager($entityManager, $postManager, $telegrammManager, $aplService);
     }
 }
