@@ -62,7 +62,7 @@ class AutoruManager {
         if (is_array($mail)){
             foreach($mail as $msg){
                 if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру'&& $msg['content']){
-                    $filterd = $filter->filter($msg['content']); 
+                    $filtered = $filter->filter($msg['content']); 
                     $text = $msg['subject'].PHP_EOL.$filtered['text'];
                     
                     if ($phone = $filtered('phone')){
@@ -75,9 +75,11 @@ class AutoruManager {
                         ];
                         
                         $aplResponce = $this->aplService->checkout($data);
-                        if ($order = $aplResponce['order']['id']){
-                            $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
-                        }
+                        if (is_array($aplResponce)){
+                            if ($order = $aplResponce['order']['id']){
+                                $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
+                            }
+                        }    
                     }
                     
                     $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
