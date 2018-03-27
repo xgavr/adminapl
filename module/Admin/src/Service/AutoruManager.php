@@ -45,7 +45,7 @@ class AutoruManager {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
         $this->telegrammManager = $telegrammManager;        
-        $this->aplService = aplService;        
+        $this->aplService = $aplService;        
     }
     
     public function postOrder()
