@@ -68,7 +68,7 @@ class AutoruManager {
                     if ($phone = $filtered['phone']){
                         $data = [
                             'bo' => 1,
-                            'comment' => 'autoru',
+                            //'comment' => 'autoru',
                             'info2' => $text,
                             'phone' => $phone,
                             'address' => $filtered['address'],
