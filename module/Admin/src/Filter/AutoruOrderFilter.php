@@ -10,6 +10,7 @@ namespace Admin\Filter;
 
 use Zend\Filter\AbstractFilter;
 use User\Filter\PhoneFilter;
+use Zend\Validator\EmailAddress;
 
 /**
  * Удаляет html и css тэги
@@ -34,6 +35,7 @@ class AutoruOrderFilter extends AbstractFilter
         'Номер запчасти:',
         'Информация о покупателе:',
         'Телефон:',
+        'Email:',
         'Адрес доставки:',
     ];
 
@@ -62,6 +64,14 @@ class AutoruOrderFilter extends AbstractFilter
             if (trim($dqs[0]) == 'Телефон'){
                 $phoneFilter = new PhoneFilter();
                 $result['phone'] = $phoneFilter->filter(trim($dqs[1]));
+            }
+            if (trim($dqs[0]) == 'Email'){                
+                if ($dqs[1]){
+                    $emailValidator = new EmailAddress(['allow' => \Zend\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
+                    if ($emailValidator->isValid(trim($dqs[1]))){
+                        $result['email'] = trim($dqs[1]);
+                    }    
+                }    
             }
             if (trim($dqs[0]) == 'Адрес доставки'){
                 $result['address'] = trim($dqs[1]);

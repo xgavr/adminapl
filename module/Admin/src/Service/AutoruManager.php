@@ -71,6 +71,7 @@ class AutoruManager {
                             //'comment' => 'autoru',
                             'info2' => $text,
                             'phone' => $phone,
+                            'email' => $filtered['email'],
                             'address' => $filtered['address'],
                         ];
                         
