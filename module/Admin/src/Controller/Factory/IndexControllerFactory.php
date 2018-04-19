@@ -11,6 +11,8 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Admin\Controller\IndexController;
 use Admin\Service\TelegrammManager;
+use Admin\Service\AdminManager;
+use Admin\Service\SmsManager;
 
 
 /**
@@ -24,8 +26,10 @@ class IndexControllerFactory implements FactoryInterface {
                      $requestedName, array $options = null)
     {
         $telegrammManager = $container->get(TelegrammManager::class);
+        $adminManager = $container->get(AdminManager::class);
+        $smsManager = $container->get(SmsManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new IndexController($telegrammManager);
+        return new IndexController($telegrammManager, $adminManager, $smsManager);
     }
 }

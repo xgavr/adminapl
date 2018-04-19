@@ -64,6 +64,20 @@ return [
                     ],
                 ],
             ],
+            'settings' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/settings',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\IndexController::class,
+                        'action'        => 'settings',
+                    ],
+                ],
+            ],
             'telegramm' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -117,6 +131,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Service\AdminManager::class => Service\Factory\AdminManagerFactory::class,
             Service\AplService::class => Service\Factory\AplServiceFactory::class,
             Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,

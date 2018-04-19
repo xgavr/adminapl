@@ -15,17 +15,21 @@ namespace Admin\Service;
  */
 class SmsManager {
     
-    const API_ID = '066df1aa-8aae-cba4-51f9-83812a6c9d7f';
-    const SMS_API = 'http://sms.ru/sms/send';
+    const API_ID = ''; //не используется
+    const SMS_API = ''; // не используется
+    
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
-    public function __construct($entityManager)
+    private $adminManager;
+
+    public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
+        $this->adminManager = $adminManager;
     }
     
     /*
@@ -35,7 +39,10 @@ class SmsManager {
      */
     public function send($options)
     {
-        $result=file_get_contents(self::SMS_API.'?api_id='.self::API_ID.'&to='.$options['phone'].'&text='. urlencode($options['text']).'&from=APL');
+        $settings = $this->adminManager->getSettings();
+        if ($settings['sms_ru_url'] && $settings['sms_ru_api_id']){
+            $result=file_get_contents($settings['sms_ru_url'].'?api_id='.$settings['sms_ru_api_id'].'&to='.$options['phone'].'&text='. urlencode($options['text']).'&from=APL');
+        }    
         
         return $result;
     }

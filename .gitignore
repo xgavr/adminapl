@@ -8,3 +8,4 @@ phpunit.xml
 /data/prices/
 /data/DoctrineORMModule/Proxy/
 /data/log/
+/data/settings/

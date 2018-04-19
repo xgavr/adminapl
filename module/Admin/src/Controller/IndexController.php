@@ -7,8 +7,11 @@
 
 namespace Admin\Controller;
 
+use Admin\Form\SettingsForm;
+
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
 {
@@ -19,10 +22,24 @@ class IndexController extends AbstractActionController
      */
     private $telegrammManager;    
     
+    /**
+     * AdminManager manager.
+     * @var Admin\Service\AdminManager
+     */
+    private $adminManager;    
+    
+    /**
+     * SmsManager manager.
+     * @var Admin\Service\SmsManager
+     */
+    private $smsManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($telegrammManager) 
+    public function __construct($telegrammManager, $adminManager, $smsManager) 
     {
         $this->telegrammManager = $telegrammManager;        
+        $this->adminManager = $adminManager;        
+        $this->smsManager = $smsManager;        
     }   
     
     public function indexAction()
@@ -77,5 +94,57 @@ class IndexController extends AbstractActionController
             'title' => $title,
             'mem' => $cache,
         ]);
+    }
+    
+    public function settingsAction()
+    {
+        $form = new SettingsForm($this->entityManager);
+    
+        $settings = $this->adminManager->getSettings();
+        
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
+                $this->adminManager->setSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+                // Перенаправляем пользователя на страницу "goods".
+                return $this->redirect()->toRoute('settings');
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        } else {
+            if ($settings){
+                $form->setData($settings);
+            }    
+        }
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+    
+    public function testSmsAction()
+    {
+        $this->smsManager->send(['phone' => '89096319425', 'text' => 'тест']);
+        
+        return new JsonModel([
+            'ok'
+        ]);        
     }
 }

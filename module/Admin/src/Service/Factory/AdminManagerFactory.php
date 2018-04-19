@@ -10,7 +10,6 @@ namespace Admin\Service\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Admin\Service\SmsManager;
 use Admin\Service\AdminManager;
 
 /**
@@ -18,16 +17,15 @@ use Admin\Service\AdminManager;
  *
  * @author Daddy
  */
-class SmsManagerFactory  implements FactoryInterface
+class AdminManagerFactory  implements FactoryInterface
 {
                    
     public function __invoke(ContainerInterface $container, 
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new SmsManager($entityManager, $adminManager);
+        return new AdminManager($entityManager);
     }
 }
