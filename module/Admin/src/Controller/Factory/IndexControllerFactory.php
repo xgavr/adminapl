@@ -13,6 +13,7 @@ use Admin\Controller\IndexController;
 use Admin\Service\TelegrammManager;
 use Admin\Service\AdminManager;
 use Admin\Service\SmsManager;
+use Admin\Service\TamTamManager;
 
 
 /**
@@ -28,8 +29,9 @@ class IndexControllerFactory implements FactoryInterface {
         $telegrammManager = $container->get(TelegrammManager::class);
         $adminManager = $container->get(AdminManager::class);
         $smsManager = $container->get(SmsManager::class);
+        $tamtamManager = $container->get(TamTamManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new IndexController($telegrammManager, $adminManager, $smsManager);
+        return new IndexController($telegrammManager, $adminManager, $smsManager, $tamtamManager);
     }
 }

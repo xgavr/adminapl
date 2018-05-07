@@ -74,19 +74,19 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
-            \Company\Controller\IndexController::class => [
+            Controller\IndexController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],
-            \Company\Controller\LegalController::class => [
+            Controller\LegalController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],
-            \Company\Controller\OfficeController::class => [
+            Controller\OfficeController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],
-            \Company\Controller\RegionController::class => [
+            Controller\RegionController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],

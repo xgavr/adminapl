@@ -169,6 +169,15 @@ return [
             'mode' => 'restrictive'
         ],
         'controllers' => [
+            Controller\MemberController::class => [
+                // Give access to "resetPassword", "message" and "setPassword" actions
+                // to anyone.
+                ['actions' => ['resetPassword', 'resetPasswordByPhone', 'smsToken', 'message', 'setPassword'], 'allow' => '*'],
+                // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
+                ['actions' => ['edit', 'changePassword'], 'allow' => '@'],
+                ['actions' => ['index', 'add', 'view'], 'allow' => '+member.manage'],
+                ['actions' => ['clientManagerTransfer'], 'allow' => '+member.transfer.manage'],
+            ],
             Controller\RoleController::class => [
                 // Allow access to authenticated users having the "role.manage" permission.
                 ['actions' => '*', 'allow' => '+role.manage']

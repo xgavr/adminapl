@@ -68,6 +68,28 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'tamtam_access_token',
+            'attributes' => [
+                'id' => 'tamtam_access_token'
+            ],
+            'options' => [
+                'label' => 'ТамТам access token',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'tamtam_chat_id',
+            'attributes' => [
+                'id' => 'tamtam_chat_id'
+            ],
+            'options' => [
+                'label' => 'ТамТам чат Id',
+            ],
+        ]);
+
                 
         // Добавляем кнопку отправки формы
         $this->add([
@@ -88,7 +110,7 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 
         $inputFilter->add([
                 'name'     => 'sms_ru_api_id',
-                'required' => true,
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],
@@ -107,7 +129,45 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'sms_ru_url',
-                'required' => true,
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'tamtam_chat_id',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'tamtam_access_token',
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],

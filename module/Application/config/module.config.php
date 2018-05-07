@@ -273,74 +273,61 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
-            \Application\Controller\ClientController::class => [
+            Controller\ClientController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\ContactController::class => [
+            Controller\ContactController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\CurrencyController::class => [
+            Controller\CurrencyController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\GoodsController::class => [
+            Controller\GoodsController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Admin\Controller\IndexController::class => [
+            Controller\IndexController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\IndexController::class => [
+            Controller\OrderController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\OrderController::class => [
+            Controller\PriceController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\PriceController::class => [
+            Controller\PricesettingsController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\PricesettingsController::class => [
+            Controller\ProducerController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\ProducerController::class => [
-                // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@']
-            ],
-            \Application\Controller\RawController::class => [
+            Controller\RawController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+raw.manage']
             ],
-            \Application\Controller\RawpriceController::class => [
+            Controller\RawpriceController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+raw.manage']
             ],
-            \Application\Controller\RbController::class => [
+            Controller\RbController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
-            \Application\Controller\SupplierController::class => [
+            Controller\SupplierController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+supplier.manage']
             ],
-            \Application\Controller\ShopController::class => [
+            Controller\ShopController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
-            ],
-            Controller\MemberController::class => [
-                // Give access to "resetPassword", "message" and "setPassword" actions
-                // to anyone.
-                ['actions' => ['resetPassword', 'resetPasswordByPhone', 'smsToken', 'message', 'setPassword'], 'allow' => '*'],
-                // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
-                ['actions' => ['edit', 'changePassword'], 'allow' => '@'],
-                ['actions' => ['index', 'add', 'view'], 'allow' => '+member.manage'],
-                ['actions' => ['clientManagerTransfer'], 'allow' => '+member.transfer.manage'],
             ],
         ],
     ],    

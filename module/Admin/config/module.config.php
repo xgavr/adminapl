@@ -96,24 +96,24 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
-            \Admin\Controller\AplController::class => [
+            Controller\AplController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage']
             ],
-            \Admin\Controller\IndexController::class => [
+            Controller\IndexController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage'],
                 ['actions' => 'telegramm-hook', 'allow' => '*']
             ],
-            \Admin\Controller\PostController::class => [
+            Controller\PostController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage']
             ],
-            \Admin\Controller\ProcessingController::class => [
+            Controller\ProcessingController::class => [
                 // Allow access to all users.
                 ['actions' => '*', 'allow' => '*']
             ],
-            \Admin\Controller\TelegrammController::class => [
+            Controller\TelegrammController::class => [
                 // Allow access to authenticated users.
                 ['actions' => ['index', 'set', 'unset'], 'allow' => '+admin.manage'],
                 ['actions' => ['hook'], 'allow' => '*']
@@ -136,6 +136,7 @@ return [
             Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,
+            Service\TamTamManager::class => Service\Factory\TamTamManagerFactory::class,
             Service\TelegrammManager::class => Service\Factory\TelegrammManagerFactory::class,
         ],
     ],    

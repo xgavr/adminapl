@@ -34,12 +34,19 @@ class IndexController extends AbstractActionController
      */
     private $smsManager;    
 
+    /**
+     * SmsManager manager.
+     * @var Admin\Service\TamTamManager
+     */
+    private $tamtamManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($telegrammManager, $adminManager, $smsManager) 
+    public function __construct($telegrammManager, $adminManager, $smsManager, $tamtamManager) 
     {
         $this->telegrammManager = $telegrammManager;        
         $this->adminManager = $adminManager;        
         $this->smsManager = $smsManager;        
+        $this->tamtamManager = $tamtamManager;        
     }   
     
     public function indexAction()
@@ -146,5 +153,23 @@ class IndexController extends AbstractActionController
         return new JsonModel([
             'ok'
         ]);        
+    }
+
+    public function testTamTamAction()
+    {
+        $result = $this->tamtamManager->message(['chat_id' => '55672109400089', 'text' => 'Привет!']);
+        var_dump($result);
+        return new JsonModel([
+            'ok'
+        ]);        
+    }
+    
+    public function tamTamChatsAction()
+    {
+        $result = $this->tamtamManager->chats();
+        var_dump($result);
+        return new JsonModel([
+            'ok'
+        ]);                
     }
 }

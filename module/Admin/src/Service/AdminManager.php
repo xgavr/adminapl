@@ -62,6 +62,9 @@ class AdminManager {
         $config->admin->sms_ru_url = $data['sms_ru_url'];
         $config->admin->sms_ru_api_id = $data['sms_ru_api_id'];
         
+        $config->admin->tamtam_access_token = $data['tamtam_access_token'];
+        $config->admin->tamtam_chat_id = $data['tamtam_chat_id'];
+        
         $writer = new PhpArray();
         
         $writer->toFile(self::SETTINGS_FILE, $config);
