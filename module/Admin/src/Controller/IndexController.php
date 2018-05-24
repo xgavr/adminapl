@@ -105,7 +105,7 @@ class IndexController extends AbstractActionController
     
     public function settingsAction()
     {
-        $form = new SettingsForm($this->entityManager);
+        $form = new SettingsForm();
     
         $settings = $this->adminManager->getSettings();
         

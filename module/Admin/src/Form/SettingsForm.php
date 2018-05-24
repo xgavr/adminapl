@@ -23,18 +23,14 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
     
     protected $objectManager;    
     
-    protected $entityManager;    
-    
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager)
+    public function __construct()
     {
         // Определяем имя формы.
         parent::__construct('settings-form');
              
-        $this->entityManager = $entityManager;
-        
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
                 
