@@ -159,7 +159,6 @@ class IndexController extends AbstractActionController
     {
         $settings = $this->adminManager->getSettings();
         if ($settings['telegram_admin_chat_id']){
-            var_dump($settings['telegram_admin_chat_id']); exit;
             $result = $this->telegrammManager->sendMessage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет!',
