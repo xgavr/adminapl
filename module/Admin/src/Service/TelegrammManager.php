@@ -24,7 +24,7 @@ class TelegrammManager {
     const USERNAME = 'SlavaAplBot';
     const HOOK_URL = 'https://adminapl.ru/telegramm/hook';
     const ADMIN_USERS = [189788583];
-    const COMMANDS_PATH = './vendor/longman/src/Commnds/';
+    const COMMANDS_PATH = './vendor/longman/src/Commands/';
 
     const LOG_FOLDER = './data/log/'; //папка логов
     const LOG_FILE = './data/log/telegramm.log'; //лог 
