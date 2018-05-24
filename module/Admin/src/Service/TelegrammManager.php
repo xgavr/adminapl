@@ -152,7 +152,7 @@ class TelegrammManager {
             try {
                 $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
                 
-                Request::setClient(new Client(['base_uri' => 'https://api.telegram.org', 'timeout' => 0, 'allow_redirects' => true, 'proxy' => 'http://localhost:8118']));
+                Request::setClient(new Client(['base_uri' => 'https://api.telegram.org', 'timeout' => 0, 'allow_redirects' => false, 'proxy' => 'http://localhost:8118']));
                 
                 $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
             } catch (Longman\TelegramBot\Exception\TelegramException $e){
