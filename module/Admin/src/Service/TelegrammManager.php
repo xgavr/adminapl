@@ -140,10 +140,11 @@ class TelegrammManager {
     
     public function sendMessage($params)
     {
-        var_dump($params); exit;
         $settings = $this->adminManager->getSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name']){
 
+            var_dump($settings); exit;
+            
             $writer = new Stream($this::LOG_FILE);
             $logger = new Logger();
             $logger->addWriter($writer);
