@@ -155,6 +155,21 @@ class IndexController extends AbstractActionController
         ]);        
     }
 
+    public function testTelegramAction()
+    {
+        $settings = $this->adminManager->getSettings();
+        if ($settings['telegram_admin_chat_id']){
+            $result = $this->telegrammManager->sendMessage([
+                'chat_id' => $settings['telegram_admin_chat_id'], 
+                'text' => 'Привет!',
+            ]);
+            var_dump($result);
+        }    
+        return new JsonModel([
+            'ok'
+        ]);        
+    }
+    
     public function testTamTamAction()
     {
         $result = $this->tamtamManager->message(['chat_id' => '55672109400089', 'text' => 'Привет!']);

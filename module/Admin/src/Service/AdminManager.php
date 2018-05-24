@@ -59,11 +59,18 @@ class AdminManager {
             $config->admin = [];
         }
         
+        $config->admin->apl_secret_key = $data['apl_secret_key'];
+
         $config->admin->sms_ru_url = $data['sms_ru_url'];
         $config->admin->sms_ru_api_id = $data['sms_ru_api_id'];
         
-        $config->admin->tamtam_access_token = $data['tamtam_access_token'];
-        $config->admin->tamtam_chat_id = $data['tamtam_chat_id'];
+        $config->admin->telegram_bot_name = $data['telegram_bot_name'];
+        $config->admin->telegram_api_key = $data['telegram_api_key'];
+        $config->admin->telegram_hook_url = $data['telegram_hook_url'];
+        $config->admin->telegram_admin_chat_id = $data['telegram_admin_chat_id'];
+
+//        $config->admin->tamtam_access_token = $data['tamtam_access_token'];
+//        $config->admin->tamtam_chat_id = $data['tamtam_chat_id'];
         
         $writer = new PhpArray();
         

@@ -16,6 +16,11 @@ $this->pageBreadcrumbs()->setItems([
 <?php
 $form = $this->form;
 
+$form->get('apl_secret_key')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'пароль api АПЛ',
+    ]);
+
 $form->get('sms_ru_api_id')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'СМС.РУ api_id',
@@ -26,15 +31,37 @@ $form->get('sms_ru_url')->setAttributes([
     'placeholder'=>'СМС.РУ url http://sms.ru/sms/send',
     ]);
 
-$form->get('tamtam_chat_id')->setAttributes([
+$form->get('telegram_hook_url')->setAttributes([
     'class'=>'form-control', 
-    'placeholder'=>'ТамТам chat_id',
+    'placeholder'=>'Телеграм hook url',
     ]);
 
-$form->get('tamtam_access_token')->setAttributes([
+$form->get('telegram_bot_name')->setAttributes([
     'class'=>'form-control', 
-    'placeholder'=>'ТамТам access token',
+    'placeholder'=>'имя бота',
     ]);
+
+$form->get('telegram_api_key')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Телеграм api key',
+    ]);
+
+$form->get('telegram_admin_chat_id')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Чат администратора',
+    ]);
+
+
+
+//$form->get('tamtam_chat_id')->setAttributes([
+//    'class'=>'form-control', 
+//    'placeholder'=>'ТамТам chat_id',
+//    ]);
+//
+//$form->get('tamtam_access_token')->setAttributes([
+//    'class'=>'form-control', 
+//    'placeholder'=>'ТамТам access token',
+//    ]);
 
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
@@ -52,6 +79,12 @@ $form->prepare();
     <div class="col-md-6">
         <?= $this->form()->openTag($form); ?>
         
+        <div class="form-group">
+            <?= $this->formLabel($form->get('apl_secret_key')); ?>
+            <?= $this->formElement($form->get('apl_secret_key')); ?>
+            <?= $this->formElementErrors($form->get('apl_secret_key')); ?>                  
+        </div>
+                
         <div class="form-group">
             <?= $this->formLabel($form->get('sms_ru_url')); ?>
             <?= $this->formElement($form->get('sms_ru_url')); ?>
@@ -71,23 +104,35 @@ $form->prepare();
         </div>    
 
         <div class="form-group">
-            <?= $this->formLabel($form->get('tamtam_access_token')); ?>
-            <?= $this->formElement($form->get('tamtam_access_token')); ?>
-            <?= $this->formElementErrors($form->get('tamtam_access_token')); ?>                  
+            <?= $this->formLabel($form->get('telegram_bot_name')); ?>
+            <?= $this->formElement($form->get('telegram_bot_name')); ?>
+            <?= $this->formElementErrors($form->get('telegram_bot_name')); ?>                  
         </div>
                 
         <div class="form-group">
-            <?= $this->formLabel($form->get('tamtam_chat_id')); ?>
-            <?= $this->formElement($form->get('tamtam_chat_id')); ?>
-            <?= $this->formElementErrors($form->get('tamtam_chat_id')); ?>                  
+            <?= $this->formLabel($form->get('telegram_api_key')); ?>
+            <?= $this->formElement($form->get('telegram_api_key')); ?>
+            <?= $this->formElementErrors($form->get('telegram_api_key')); ?>                  
         </div>
                 
         <div class="form-group">
-            <button class="btn btn-default test-button" value="/admin/test-tam-tam">
-                <span class="glyphicon glyphicon-phone" ></span>ТамТам тест
+            <?= $this->formLabel($form->get('telegram_hook_url')); ?>
+            <?= $this->formElement($form->get('telegram_hook_url')); ?>
+            <?= $this->formElementErrors($form->get('telegram_hook_url')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('telegram_admin_chat_id')); ?>
+            <?= $this->formElement($form->get('telegram_admin_chat_id')); ?>
+            <?= $this->formElementErrors($form->get('telegram_admin_chat_id')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-default test-button" value="/admin/test-telegram">
+                <span class="glyphicon glyphicon-phone" ></span>Телеграм тест
             </button>
         </div>    
-
+                
         <?= $this->formElement($form->get('submit')); ?>
         
         <?= $this->form()->closeTag(); ?>

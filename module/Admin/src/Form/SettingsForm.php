@@ -90,6 +90,60 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'telegram_api_key',
+            'attributes' => [
+                'id' => 'telegram_api_key'
+            ],
+            'options' => [
+                'label' => 'Телеграм api key',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'telegram_admin_chat_id',
+            'attributes' => [
+                'id' => 'telegram_admin_chat_id'
+            ],
+            'options' => [
+                'label' => 'Телеграм чат администратора',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'telegram_bot_name',
+            'attributes' => [
+                'id' => 'telegram_bot_name'
+            ],
+            'options' => [
+                'label' => 'Телеграм имя бота',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'telegram_hook_url',
+            'attributes' => [
+                'id' => 'telegram_hook_url'
+            ],
+            'options' => [
+                'label' => 'Телеграм hook url',
+            ],
+        ]);
+                
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'apl_secret_key',
+            'attributes' => [
+                'id' => 'apl_secret_key'
+            ],
+            'options' => [
+                'label' => 'Пароль api apl',
+            ],
+        ]);
                 
         // Добавляем кнопку отправки формы
         $this->add([
@@ -167,6 +221,101 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'tamtam_access_token',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'apl_secret_key',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'telegram_hook_url',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'telegram_bot_name',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'telegram_api_key',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'telegram_admin_chat_id',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

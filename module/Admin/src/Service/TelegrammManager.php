@@ -20,10 +20,6 @@ use Zend\Log\Logger;
  */
 class TelegrammManager {
 
-    const API_KEY = '460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s';
-    const USERNAME = 'SlavaAplBot';
-    const HOOK_URL = 'https://adminapl.ru/telegramm/hook';
-    const ADMIN_USERS = [189788583];
     const COMMANDS_PATH = './vendor/longman/src/Commands/';
 
     const LOG_FOLDER = './data/log/'; //папка логов
@@ -35,10 +31,12 @@ class TelegrammManager {
      */
     private $entityManager;
     
+    private $adminManager;   
     
-    public function __construct($entityManager)
+    public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
+        $this->adminManager = $adminManager;
 
         if (!is_dir($this::LOG_FOLDER)){
             mkdir($this::LOG_FOLDER);
@@ -47,98 +45,119 @@ class TelegrammManager {
     
     public function hook()
     {
-        $writer = new Stream($this::LOG_FILE);
-        $logger = new Logger();
-        $logger->addWriter($writer);
-        Logger::registerErrorHandler($logger);
         
-        try {
-            $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
-            $telegram->addCommandsPaths($this::COMMANDS_PATH);
-            $telegram->enableAdmins($this::ADMIN_USERS);
-            
-            $mysql_credentials = [
-                'host'     => 'localhost',
-                'user'     => 'telegramm',
-                'password' => 'Ghjnt3t',
-                'database' => 'telegramm',
-             ];
-            $telegramm->enableMySql($mysql_credentials, $this::USERNAME . '_');
-            
-//            Logging (Error, Debug and Raw Updates)
-            Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$this::USERNAME."_error.log");
-            Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FOLDER . "/".$this::USERNAME."_debug.log");
-            Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$this::USERNAME."_update.log");
-            
-            $telegram->enableLimiter();
-            
-            $telegramm->handle();
-            
-        } catch (Longman\TelegramBot\Exception\TelegramException $e){
-            Longman\TelegramBot\TelegramLog::error($e);
-        } catch (Longman\TelegramBot\Exception\TelegramLogException $e){
-            $logger->error($e->getMessage());            
-        }    
+        $settings = $this->adminManager->getSettings();
+        if ($settings['telegram_api_key'] && $settings['telegram_bot_name'] && $settings['telegram_admin_chat_id']){
         
-        $logger = null;
+            $writer = new Stream($this::LOG_FILE);
+            $logger = new Logger();
+            $logger->addWriter($writer);
+            Logger::registerErrorHandler($logger);
+
+            try {
+                $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $telegram->addCommandsPaths($this::COMMANDS_PATH);
+                $telegram->enableAdmins([$settings['telegram_admin_chat_id']]);
+
+                $mysql_credentials = [
+                    'host'     => 'localhost',
+                    'user'     => 'telegramm',
+                    'password' => 'Ghjnt3t',
+                    'database' => 'telegramm',
+                 ];
+                $telegramm->enableMySql($mysql_credentials, $this::USERNAME . '_');
+
+    //            Logging (Error, Debug and Raw Updates)
+                Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$this::USERNAME."_error.log");
+                Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FOLDER . "/".$this::USERNAME."_debug.log");
+                Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$this::USERNAME."_update.log");
+
+                $telegram->enableLimiter();
+
+                $telegramm->handle();
+
+            } catch (Longman\TelegramBot\Exception\TelegramException $e){
+                Longman\TelegramBot\TelegramLog::error($e);
+            } catch (Longman\TelegramBot\Exception\TelegramLogException $e){
+                $logger->error($e->getMessage());            
+            }    
+
+            $logger = null;
+        }
+        
+        return;
     }
     
     public function setHook()
     {
-        $writer = new Stream($this::LOG_FILE);
-        $logger = new Logger();
-        $logger->addWriter($writer);
-        Logger::registerErrorHandler($logger);
+        $settings = $this->adminManager->getSettings();
+        if ($settings['telegram_api_key'] && $settings['telegram_bot_name'] && $settings['telegram_hook_url']){
         
-        try {
-            $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
-            $result = $telegramm->setWebhook($this::HOOK_URL, ['certificate' => '/var/www/apl/data/www/adminapl/adminapl.key']);
-            if ($result->isOk()) {
-                echo $result->getDescription();
-            }                    
-        } catch (Longman\TelegramBot\Exception\TelegramException $e){
-            $logger->error($e->getMessage());
+            $writer = new Stream($this::LOG_FILE);
+            $logger = new Logger();
+            $logger->addWriter($writer);
+            Logger::registerErrorHandler($logger);
+
+            try {
+                $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $result = $telegramm->setWebhook($settings['telegram_hook_url'], ['certificate' => '/var/www/apl/data/www/adminapl/adminapl.key']);
+                if ($result->isOk()) {
+                    echo $result->getDescription();
+                }                    
+            } catch (Longman\TelegramBot\Exception\TelegramException $e){
+                $logger->error($e->getMessage());
+            }    
+
+            $logger = null;                
         }    
-        
-        $logger = null;                
     }
     
     public function unsetHook()
     {
-        $writer = new Stream($this::LOG_FILE);
-        $logger = new Logger();
-        $logger->addWriter($writer);
-        Logger::registerErrorHandler($logger);
-        
-        try {
-            $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
-            $result = $telegramm->deleteWebhook();
-            if ($result->isOk()) {
-                echo $result->getDescription();
-            }             
-        } catch (Longman\TelegramBot\Exception\TelegramException $e){
-            $logger->error($e->getMessage());
+        $settings = $this->adminManager->getSettings();
+        if ($settings['telegram_api_key'] && $settings['telegram_bot_name']){
+            
+            $writer = new Stream($this::LOG_FILE);
+            $logger = new Logger();
+            $logger->addWriter($writer);
+            Logger::registerErrorHandler($logger);
+
+            try {
+                $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $result = $telegramm->deleteWebhook();
+                if ($result->isOk()) {
+                    echo $result->getDescription();
+                }             
+            } catch (Longman\TelegramBot\Exception\TelegramException $e){
+                $logger->error($e->getMessage());
+            }    
+
+            $logger = null;
         }    
         
-        $logger = null;                        
+        return;
     }
     
     public function sendMessage($params)
     {
-        $writer = new Stream($this::LOG_FILE);
-        $logger = new Logger();
-        $logger->addWriter($writer);
-        Logger::registerErrorHandler($logger);
-        
-        try {
-            $telegramm = new Telegram($this::API_KEY, $this::USERNAME);
-            $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
-        } catch (Longman\TelegramBot\Exception\TelegramException $e){
-            $logger->error($e->getMessage());
+        $settings = $this->adminManager->getSettings();
+        if ($settings['telegram_api_key'] && $settings['telegram_bot_name']){
+
+            $writer = new Stream($this::LOG_FILE);
+            $logger = new Logger();
+            $logger->addWriter($writer);
+            Logger::registerErrorHandler($logger);
+
+            try {
+                $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
+            } catch (Longman\TelegramBot\Exception\TelegramException $e){
+                $logger->error($e->getMessage());
+            }    
+
+            $logger = null;
+
+            return $result;
         }    
-        
-        $logger = null;
-        
-        return $result;
     }
 }

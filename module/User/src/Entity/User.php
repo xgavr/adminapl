@@ -264,7 +264,7 @@ class User
      */
     public function setBirthday($birthday) 
     {
-        $this->birthday = $birthday;
+        $this->birthday = ($birthday) ? $birthday:date('Y-m-d');
     }    
     
     /**
