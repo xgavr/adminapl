@@ -12,6 +12,7 @@ use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Request;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
+use GuzzleHttp\Client;
 
 /**
  * Description of AutoruManager
@@ -143,8 +144,6 @@ class TelegrammManager {
         $settings = $this->adminManager->getSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name']){
 
-            var_dump($settings['telegram_api_key']); exit;
-            
             $writer = new Stream($this::LOG_FILE);
             $logger = new Logger();
             $logger->addWriter($writer);
@@ -152,6 +151,9 @@ class TelegrammManager {
 
             try {
                 $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                
+                Request::setClient(new Client(['base_uri' => 'https://api.telegram.org', 'allow_redirects' => true, 'proxy' => 'http://localhost:8118']));
+                
                 $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
             } catch (Longman\TelegramBot\Exception\TelegramException $e){
                 $logger->error($e->getMessage());

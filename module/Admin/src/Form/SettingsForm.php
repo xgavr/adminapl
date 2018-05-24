@@ -147,7 +147,7 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Сохранить',
-                'id' => 'taxsubmitbutton',
+                'id' => 'settings_submit_button',
             ],
         ]);        
     }
