@@ -163,7 +163,7 @@ class IndexController extends AbstractActionController
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет!',
             ]);
-            var_dump($result);
+            //var_dump($result);
         }    
         return new JsonModel([
             'ok'
