@@ -500,8 +500,6 @@ class AplService {
         
     public function sendTelegramMessage($params)
     {
-        var_dump($params['api_key']);
-        var_dump($this->aplApiKey());
         if ($params['api_key'] == $this->aplApiKey()){
         
             return $this->telegramManager->sendMessage([

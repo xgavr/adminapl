@@ -13,6 +13,7 @@ use Admin\Controller\ProcessingController;
 use Admin\Service\PostManager;
 use Admin\Service\AutoruManager;
 use Admin\Service\TelegrammManager;
+use Admin\Service\AplService;
 
 
 /**
@@ -28,8 +29,9 @@ class ProcessingControllerFactory implements FactoryInterface {
         $postManager = $container->get(PostManager::class);
         $autoruManager = $container->get(AutoruManager::class);
         $telegramManager = $container->get(TelegrammManager::class);
+        $aplService = $container->get(AplService::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ProcessingController($postManager, $autoruManager, $telegramManager);
+        return new ProcessingController($postManager, $autoruManager, $telegramManager, $aplService);
     }
 }

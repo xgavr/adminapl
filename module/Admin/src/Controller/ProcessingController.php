@@ -33,12 +33,19 @@ class ProcessingController extends AbstractActionController
      */
     private $telegramManager;    
     
+    /**
+     * AplService manager.
+     * @var Admin\Service\AplService
+     */
+    private $aplService;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($postManager, $autoruManager, $telegramManager) 
+    public function __construct($postManager, $autoruManager, $telegramManager, $aplService) 
     {
         $this->postManager = $postManager;        
         $this->autoruManager = $autoruManager;
         $this->telegramManager = $telegramManager;
+        $this->aplService = $aplService;
     }   
 
     
