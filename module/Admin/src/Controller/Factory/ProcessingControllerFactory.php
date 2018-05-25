@@ -12,6 +12,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Admin\Controller\ProcessingController;
 use Admin\Service\PostManager;
 use Admin\Service\AutoruManager;
+use Admin\Service\TelegrammManager;
 
 
 /**
@@ -26,8 +27,9 @@ class ProcessingControllerFactory implements FactoryInterface {
     {
         $postManager = $container->get(PostManager::class);
         $autoruManager = $container->get(AutoruManager::class);
+        $telegramManager = $container->get(TelegrammManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ProcessingController($postManager, $autoruManager);
+        return new ProcessingController($postManager, $autoruManager, $telegramManager);
     }
 }

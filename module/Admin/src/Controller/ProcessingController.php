@@ -27,11 +27,18 @@ class ProcessingController extends AbstractActionController
      */
     private $autoruManager;    
     
+    /**
+     * TelegramManager manager.
+     * @var Admin\Service\TelegrammManager
+     */
+    private $telegramManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($postManager, $autoruManager) 
+    public function __construct($postManager, $autoruManager, $telegramManager) 
     {
         $this->postManager = $postManager;        
-        $this->autoruManager = $autoruManager;        
+        $this->autoruManager = $autoruManager;
+        $this->telegramManager = $telegramManager;
     }   
 
     
@@ -40,6 +47,23 @@ class ProcessingController extends AbstractActionController
         $this->autoruManager->postOrder();
         
         return [];
+    }
+    
+    /*
+     * Сообщения в телеграм
+     * $post api_key, chat_id, text
+     */
+    public function telegramAction()
+    {
+        $data = [];
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+            $this->aplService->sendTelegramMessage($data);
+        }    
+        
+        return new JsonModel(
+            $data
+        );
     }
     
 }
