@@ -65,14 +65,14 @@ class AplController extends AbstractActionController
      */
     public function telegramAction()
     {
-        
+        $data = [];
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $this->aplService->sendTelegramMessage($data);
         }    
         
-        return new JsonModel([
-            'ok'
-        ]);
+        return new JsonModel(
+            $data
+        );
     }
 }
