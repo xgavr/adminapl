@@ -56,6 +56,7 @@ class ProcessingController extends AbstractActionController
     public function telegramAction()
     {
         $data = [];
+        var_dump($this->getRequest()->isPost());
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $this->aplService->sendTelegramMessage($data);
