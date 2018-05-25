@@ -160,9 +160,9 @@ class TelegrammManager {
                     'allow_redirects' => false,
 //                    'proxy' => 'http://localhost:8118',
                     'proxy' => 'http://163.172.176.106:32779',
-//                    'request.options' => [
-//                        'proxy' => 'http://localhost:8118',
-//                    ],
+                    'request.options' => [
+                        'proxy' => 'http://163.172.176.106:32779',
+                    ],
                 ]));
                 
                 $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
