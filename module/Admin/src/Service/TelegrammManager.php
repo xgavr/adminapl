@@ -158,10 +158,10 @@ class TelegrammManager {
                     'timeout' => 30.0,
                     'cookie' => true,
                     'allow_redirects' => false,
-                    'proxy' => 'thttp://localhost:8118',
-                    'request.options' => [
-                        'proxy' => 'http://localhost:8118',
-                    ],
+                    'proxy' => 'http://localhost:8118',
+//                    'request.options' => [
+//                        'proxy' => 'http://localhost:8118',
+//                    ],
                 ]));
                 
                 $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
