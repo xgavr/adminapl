@@ -156,7 +156,9 @@ class TelegrammManager {
                     'base_uri' => 'https://api.telegram.org', 
                     'timeout' => 30.0,
                     'cookie' => true,
-                    'proxy' => 'tcp://127.0.0.1:8118',
+                    'request.options' => [
+                        'proxy' => 'tcp://127.0.0.1:8118',
+                    ],
                 ]));
                 
                 $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
