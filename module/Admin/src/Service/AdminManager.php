@@ -68,6 +68,7 @@ class AdminManager {
         $config->admin->telegram_api_key = $data['telegram_api_key'];
         $config->admin->telegram_hook_url = $data['telegram_hook_url'];
         $config->admin->telegram_admin_chat_id = $data['telegram_admin_chat_id'];
+        $config->admin->telegram_proxy = $data['telegram_proxy'];
 
 //        $config->admin->tamtam_access_token = $data['tamtam_access_token'];
 //        $config->admin->tamtam_chat_id = $data['tamtam_chat_id'];

@@ -132,6 +132,17 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 
         $this->add([           
             'type'  => 'text',
+            'name' => 'telegram_proxy',
+            'attributes' => [
+                'id' => 'telegram_proxy'
+            ],
+            'options' => [
+                'label' => 'Телеграм прокси',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
             'name' => 'apl_secret_key',
             'attributes' => [
                 'id' => 'apl_secret_key'
@@ -312,6 +323,25 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'telegram_admin_chat_id',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'telegram_proxy',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

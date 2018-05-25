@@ -51,6 +51,11 @@ $form->get('telegram_admin_chat_id')->setAttributes([
     'placeholder'=>'Чат администратора',
     ]);
 
+$form->get('telegram_proxy')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Использовать прокси',
+    ]);
+
 
 
 //$form->get('tamtam_chat_id')->setAttributes([
@@ -125,6 +130,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('telegram_admin_chat_id')); ?>
             <?= $this->formElement($form->get('telegram_admin_chat_id')); ?>
             <?= $this->formElementErrors($form->get('telegram_admin_chat_id')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('telegram_proxy')); ?>
+            <?= $this->formElement($form->get('telegram_proxy')); ?>
+            <?= $this->formElementErrors($form->get('telegram_proxy')); ?>                  
         </div>
 
         <div class="form-group">
