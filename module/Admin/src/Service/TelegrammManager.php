@@ -157,7 +157,7 @@ class TelegrammManager {
                     'timeout' => 30.0,
                     'cookie' => true,
                     'allow_redirects' => true,
-                    'proxy' => 'tcp://localhost:8118',
+                    'proxy' => 'thttp://localhost:8118',
                     'request.options' => [
                         'proxy' => 'tcp://localhost:8118',
                     ],
