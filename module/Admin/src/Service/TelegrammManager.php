@@ -157,13 +157,11 @@ class TelegrammManager {
                 
                 if ($proxy){
                     Request::setClient(new Client([
-                        'base_uri' => 'https://api.telegram.org', 
-                        'timeout' => 30.0,
-                        'cookie' => true,
-                        'debug' => true,
-                        'allow_redirects' => false,
-    //                    'proxy' => 'http://localhost:8118',
                         'proxy' => $proxy,
+                        'base_uri' => 'https://api.telegram.org', 
+                        'timeout' => 10.0,
+                        'cookie' => true,
+    //                    'proxy' => 'http://localhost:8118',
 //                        'request.options' => [
 //                            'proxy' => $proxy,
 //                        ],
