@@ -148,6 +148,7 @@ class TelegrammManager {
             $logger = new Logger();
             $logger->addWriter($writer);
             Logger::registerErrorHandler($logger);
+            \Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FILE);
 
             try {
                 $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
