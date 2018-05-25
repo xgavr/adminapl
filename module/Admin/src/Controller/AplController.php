@@ -58,4 +58,21 @@ class AplController extends AbstractActionController
     {
         
     }
+    
+    /*
+     * Сообщения в телеграм
+     * $post api_key, chat_id, text
+     */
+    public function telegramAction()
+    {
+        
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+            $this->aplService->sendTelegramMessage($data);
+        }    
+        
+        return new JsonModel([
+            'ok'
+        ]);
+    }
 }

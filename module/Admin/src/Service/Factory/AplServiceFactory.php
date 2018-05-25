@@ -15,6 +15,8 @@ use User\Service\UserManager;
 use Application\Service\ContactManager;
 use Application\Service\SupplierManager;
 use Company\Service\LegalManager;
+use Admin\Service\TelegrammManager;
+use Admin\Service\AdminManager;
 /**
  * Description of ClientManagerFactory
  *
@@ -31,8 +33,10 @@ class AplServiceFactory  implements FactoryInterface
         $contactManager = $container->get(ContactManager::class);  
         $supplierManager = $container->get(SupplierManager::class);  
         $legalManager = $container->get(LegalManager::class);  
+        $telegramManager = $container->get(TelegrammManager::class);  
+        $adminManager = $container->get(AdminManager::class);  
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new AplService($entityManager, $userManager, $contactManager, $supplierManager, $legalManager);
+        return new AplService($entityManager, $userManager, $contactManager, $supplierManager, $legalManager, $telegramManager, $adminManager);
     }
 }

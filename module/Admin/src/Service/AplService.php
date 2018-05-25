@@ -54,13 +54,27 @@ class AplService {
      */
     private $legalManager;
     
-    public function __construct($entityManager, $userManager, $contactManager, $supplierManager, $legalManager)
+    /**
+     * Telegram manager
+     * @var Admin\Service\TelegramManager
+     */
+    private $telegramManager;
+    
+    /**
+     * Admin manager
+     * @var Admin\Service\AdminManager
+     */
+    private $adminManager;
+    
+    public function __construct($entityManager, $userManager, $contactManager, $supplierManager, $legalManager, $telegramManager, $adminManager)
     {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
         $this->contactManager = $contactManager;
         $this->supplierManager = $supplierManager;
         $this->legalManager = $legalManager;
+        $this->telegramManager = $telegramManager;
+        $this->adminManager = $adminManager;
     }
     
     protected function aplApi()
@@ -71,7 +85,8 @@ class AplService {
     
     protected function aplApiKey()
     {
-        return md5(date('Y-m-d').'#kjdrf4');
+        $settings = $this->adminManager->getSettings();
+        return md5(date('Y-m-d').'#'.$settings['apl_secret_key']);
     }
     
     protected function getOffice($officeAplId)
@@ -483,5 +498,17 @@ class AplService {
         }        
     }
         
-    
+    public function sendTelegramMessage($params)
+    {
+        if ($params['api_key'] == $this->aplApiKey()){
+        
+            return $this->telegramManager->sendMessage([
+                'chat_id' => $params['chat_id'], 
+                'text' => $params['text'],
+            ]);
+        
+        }
+        
+        return;
+    }
 }
