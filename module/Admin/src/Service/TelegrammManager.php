@@ -153,7 +153,7 @@ class TelegrammManager {
             try {
                 $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
                 
-                $proxy = $settings['telegram_api_key'];
+                $proxy = $settings['telegram_proxy'];
                 
                 if ($proxy){
                     Request::setClient(new Client([
