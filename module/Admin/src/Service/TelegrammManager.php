@@ -161,10 +161,6 @@ class TelegrammManager {
                         'base_uri' => 'https://api.telegram.org', 
                         'timeout' => 10.0,
                         'cookie' => true,
-    //                    'proxy' => 'http://localhost:8118',
-//                        'request.options' => [
-//                            'proxy' => $proxy,
-//                        ],
                     ]));
                 }    
                 
