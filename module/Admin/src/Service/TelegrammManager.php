@@ -153,15 +153,17 @@ class TelegrammManager {
             try {
                 $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
                 
+                $proxy = 'http://61.41.9.213:10081';
+                
                 Request::setClient(new Client([
                     'base_uri' => 'https://api.telegram.org', 
                     'timeout' => 30.0,
                     'cookie' => true,
                     'allow_redirects' => false,
 //                    'proxy' => 'http://localhost:8118',
-                    'proxy' => 'http://163.172.176.106:32779',
+                    'proxy' => $proxy,
                     'request.options' => [
-                        'proxy' => 'http://163.172.176.106:32779',
+                        'proxy' => $proxy,
                     ],
                 ]));
                 
