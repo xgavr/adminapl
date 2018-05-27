@@ -147,8 +147,7 @@ class TelegrammManager {
             $writer = new Stream($this::LOG_FILE);
             $logger = new Logger();
             $logger->addWriter($writer);
-            Logger::registerErrorHandler($logger);
-           
+            Logger::registerErrorHandler($logger);           
             \Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FILE);
 
             try {
