@@ -1,5 +1,5 @@
 <?php
-$this->headTitle('Офис');
+$this->headTitle('Офис '.$office->getName());
 
 $this->mainMenu()->setActiveItemId('offices');
 
@@ -9,6 +9,10 @@ $this->pageBreadcrumbs()->setItems([
             $office->getName()=>$this->url('offices', ['action'=>'view', 'id'=>$office->getId()])
             ]);
 
+$this->headScript()
+            ->appendFile($this->basePath('js/jquery.mask.min.js'))
+        ;                     
+
 ?>
 
 
@@ -16,143 +20,252 @@ $this->pageBreadcrumbs()->setItems([
 <?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
 <?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Офис</h2>
+    <div class="col-sm-9">
+        <div id="section1">
+            <h2>Офис</h2>
+            <div>
+                <button value="/offices/edit-form/<?= $office->getId() ?>" class="btn btn-default btn-xs"
+                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                    <span class="glyphicon glyphicon-edit" ></span>
+                    Изменить
+                </button>                    
 
-        <p>
-            <a class="btn btn-default" href="<?= $this->url('offices', 
-                                ['action'=>'edit', 'id'=>$office->getId()]); ?>">
-                            <span class="glyphicon glyphicon-pencil" ></span> Изменить
-            </a>
-        </p>
-    
-        <table class="table table-striped table-bordered">
-             <tr>
-                <th>ID:</th>
-                <td><?= $this->escapeHtml($office->getId()) ?></th>
-            </tr>
-             <tr>
-                <th>APL Id:</th>
-                <td><?= $this->escapeHtml($office->getAplId()) ?></th>
-            </tr>
-            <tr>
-                <th>Наименование:</th>
-                <td><?= $this->escapeHtml($office->getName()) ?></th>
-            </tr>
-            <tr>
-                <th>Регион:</th>
-                <td><?= $this->escapeHtml($office->getRegion()->getFullName()) ?></th>
-            </tr>
-            <tr>
-                <th>Статус:</th>
-                <td><?= $this->escapeHtml($office->getStatusAsString()) ?></th>
-            </tr>
-        </table>
+            </div>
+            <table class="table table-striped table-bordered">
+                 <tr>
+                    <th>ID:</th>
+                    <td><?= $this->escapeHtml($office->getId()) ?></th>
+                </tr>
+                <tr>
+                    <th>Наименование:</th>
+                    <td><?= $this->escapeHtml($office->getName()) ?></th>
+                </tr>
+                <tr>
+                    <th>Регион:</th>
+                    <td><?= $this->escapeHtml($office->getRegion()->getFullName()) ?></th>
+                </tr>
+                <tr>
+                    <th>Статус:</th>
+                    <td><?= $this->escapeHtml($office->getStatusAsString()) ?></th>
+                </tr>
+            </table>
+        </div>
+
+        <div id="section2">
+            <h2>Контактные телефоны</h2>
+            <?php foreach ($office->getLegalContacts() as $contact):?>
+                <div>
+                    <button value="/contact/phone-form/<?= $contact->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                        <span class="glyphicon glyphicon-plus" ></span>
+                        телефон
+                    </button>                    
+
+                </div>
+                <table class="table table-striped table-bordered">
+                    <?php foreach ($contact->getPhones() as $phone): ?>
+                        <tr>
+                           <th class="phone_name">
+                                <div class="pull-left">
+                                    <?= $phone->getName()?>
+                                    <span><?= $phone->getComment()?></span>
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                            data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                        <span class="glyphicon glyphicon-edit" ></span>
+                                    </button>                                                            
+                                    <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                                                            
+                                </div>                                        
+                           </th>
+                       </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endforeach; ?>
+        </div>
+        <div id="section3">
+            <h2>Электронная почта</h2>
+            <?php foreach ($office->getLegalContacts() as $contact):?>
+                <div>
+                    <button value="/contact/email-form/<?= $contact->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                        <span class="glyphicon glyphicon-plus" ></span>
+                        email
+                    </button>                                            
+                </div>     
+                <table class="table table-striped table-bordered">
+                    <?php foreach ($contact->getEmails() as $email): ?>
+                        <tr>
+                           <th class="email_name">
+                                <div class="pull-left">
+                                    <?= $email->getName()?>
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs email-edit"
+                                            data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                        <span class="glyphicon glyphicon-edit" ></span>
+                                    </button>                                                            
+                                    <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                                                            
+                                </div>                                        
+                           </th>
+                       </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endforeach; ?>
+        </div>
+
+        <div id="section4">
+            <h2>Мессенджеры</h2>
+            <?php foreach ($office->getLegalContacts() as $contact):?>
+                <div>
+                    <button value="/contact/email-form/<?= $contact->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                        <span class="glyphicon glyphicon-plus" ></span>
+                        email
+                    </button>                                            
+                </div>     
+                <table class="table table-striped table-bordered">
+                    <?php foreach ($contact->getEmails() as $email): ?>
+                        <tr>
+                           <th class="email_name">
+                                <div class="pull-left">
+                                    <?= $email->getName()?>
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs email-edit"
+                                            data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                        <span class="glyphicon glyphicon-edit" ></span>
+                                    </button>                                                            
+                                    <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                                                            
+                                </div>                                        
+                           </th>
+                       </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endforeach; ?>
+        </div>
+
+        <div id="section5">
+            <h3>Адреса</h3>
+            <p>
+                <button value="/contact/address-form/<?= $office->getLegalContact()->getId() ?>" class="btn btn-default btn-xs"
+                        data-toggle="modal" data-target="#modal-dialog" title="Добавить адрес">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                    Добавить адрес
+                </button>                    
+            </p>            
+            <table class="table table-striped table-bordered">
+                <?php if (count($office->getLegalContact()->getAddresses())):?>
+                    <?php foreach ($office->getLegalContact()->getAddresses() as $address): ?>
+                        <tr>
+                            <td>
+                                <?= $this->escapeHtml($address->getName()); ?>
+                            </td>
+                            <td>
+                                <div class="pull-left">
+                                    <?= $this->escapeHtml($address->getAddress()); ?>
+                                </div>                                        
+                                <div class="pull-right">
+                                    <button value="/contact/address-form/<?= $address->getContact()->getId() ?>?address=<?= $address->getId() ?>" class="btn btn-default btn-xs"
+                                            data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                        <span class="glyphicon glyphicon-edit" ></span>
+                                    </button>                                                            
+                                    <button value="/contact/delete-address-form/<?= $address->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                                                            
+                                </div>                                        
+                            </td>
+                       </tr>
+                    <?php endforeach; ?>   
+                <?php endif;?>       
+            </table>
+        </div>
+        <div id="section6">
+            <h2>Юридические лица</h2>
+            <?php foreach ($office->getLegalContacts() as $contact):?>
+                <p>
+                    <a class="btn btn-default btn-xs" href="<?= $this->url('legals', 
+                                        ['action'=>'legal', 'id'=>$contact->getId()]); ?>">
+                                    <span class="glyphicon glyphicon-piggy-bank" ></span> <?= (count($contact->getLegals())) ? 'Изменить':'Добавить'; ?>
+                    </a>
+                </p>
+                <table class="table table-striped table-bordered">
+                    <?php foreach ($contact->getLegals() as $legal): ?>
+                        <tr>
+                           <th class=""><?= $legal->getName() ?></th>
+                           <th class=""><?= $legal->getInn() ?></th>
+                           <th class=""><?= $legal->getKpp() ?></th>
+                       </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endforeach; ?>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Контактные телефоны</h2>
-        <?php foreach ($office->getContacts() as $contact):?>
-            <p>
-                <a class="btn btn-default" href="<?= $this->url('contact', 
-                                    ['action'=>'phone', 'id'=>$contact->getId()]); ?>">
-                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getPhones())) ? 'Изменить':'Добавить'; ?>
-                </a>
-            </p>
-            <table class="table table-striped table-bordered">
-                <?php foreach ($contact->getPhones() as $phone): ?>
-                    <tr>
-                       <th class="phone_name"><?= $phone->getName() ?></th>
-                   </tr>
-                <?php endforeach; ?>
-            </table>
-        <?php endforeach; ?>
-        
-        <h2>Электронная почта</h2>
-        <?php foreach ($office->getContacts() as $contact):?>
-            <p>
-                <a class="btn btn-default" href="<?= $this->url('contact', 
-                                    ['action'=>'email', 'id'=>$contact->getId()]); ?>">
-                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getEmails())) ? 'Изменить':'Добавить'; ?>
-                </a>
-            </p>
-            <table class="table table-striped table-bordered">
-                <?php foreach ($contact->getEmails() as $email): ?>
-                    <tr>
-                       <th class="email_name"><?= $email->getName() ?></th>
-                   </tr>
-                <?php endforeach; ?>
-            </table>
-        <?php endforeach; ?>
-            
-    </div>    
-    <div class="col-md-4">
-        <h2>Мессенджеры</h2>
-        <?php foreach ($office->getContacts() as $contact):?>
-            <p>
-                <a class="btn btn-default" href="<?= $this->url('contact', 
-                                    ['action'=>'messengers', 'id'=>$contact->getId()]); ?>">
-                                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-                </a>
-            </p>
-            <table class="table table-striped table-bordered">
-                <tr>
-                   <td class="">ICQ</td>
-                   <th class=""><?= $contact->getIcq() ?></th>
-               </tr>
-                <tr>
-                   <td class="">Telegramm</td>
-                   <th class=""><?= $contact->getTelegramm() ?></th>
-               </tr>
-            </table>
-        <?php endforeach; ?>
-    </div>    
+    <div class="col-sm-3" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active"><a href="#section1">Офис</a></li>
+            <li><a href="#section2">Контакты</a></li>
+            <li><a href="#section3">Адреса</a></li>
+            <li><a href="#section3">Юридические лица</a></li>
+        </ul>
+    </div>
 </div>
-<div class="row">
-    <div class="col-md-6">
-        <h2>Адреса</h2>
-        <?php foreach ($office->getContacts() as $contact):?>
-            <p>
-                <a class="btn btn-default" href="<?= $this->url('contact', 
-                                    ['action'=>'address', 'id'=>$contact->getId()]); ?>">
-                                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-                </a>
-            </p>
-            <table class="table table-striped table-bordered">
-                <tr>
-                   <td class="">Адрес для документов</td>
-                   <th class=""><?= $contact->getAddress() ?></th>
-               </tr>
-                <tr>
-                   <td class="">Адрес для SMS</td>
-                   <th class=""><?= $contact->getAddressSms() ?></th>
-               </tr>
-            </table>
-        <?php endforeach; ?>
+
+<div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="modal-content">
+        </div>
     </div>
-    <div class="col-md-6">
-        <h2>Юридические лица</h2>
-        <?php foreach ($office->getContacts() as $contact):?>
-            <p>
-                <a class="btn btn-default" href="<?= $this->url('legals', 
-                                    ['action'=>'legal', 'id'=>$contact->getId()]); ?>">
-                                <span class="glyphicon glyphicon-pencil" ></span> <?= (count($contact->getLegals())) ? 'Изменить':'Добавить'; ?>
-                </a>
-            </p>
-            <table class="table table-striped table-bordered">
-                <?php foreach ($contact->getLegals() as $legal): ?>
-                    <tr>
-                       <th class=""><?= $legal->getName() ?></th>
-                       <th class=""><?= $legal->getInn() ?></th>
-                       <th class=""><?= $legal->getKpp() ?></th>
-                   </tr>
-                   <tr>
-                       <td colspan="3">
-                           <?= $legal->getAddress() ?>
-                       </td>
-                   </tr>
-                <?php endforeach; ?>
-            </table>
-        <?php endforeach; ?>
-    </div>
-</div>    
+</div>
+
+<script>
+    $('#modal-dialog').on('show.bs.modal', function (e) {        
+        var url = e.relatedTarget.value;
+        if (url){
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                   $('#modal-content').html(data);
+                })
+                .fail(function () {
+                    alert("Ошибка открытия формы.");
+                }); 
+        }
+    })    
+        
+    $('.this-delete').on('click', function(e) {
+        var url = e.currentTarget.value;
+        if (url){
+            if (confirm('Удалить запись?')){
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                })
+                    .done(function (data) {
+                        if (data == 'ok'){
+                            window.location.reload();
+                        } else {
+                            alert("Не удалось удалить!");
+                        }    
+                    })
+                    .fail(function (e) {
+                        alert("Не удалось удалить.");
+
+                    });
+            }        
+        }        
+    })    
+    
+</script>

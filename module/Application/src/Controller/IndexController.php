@@ -9,6 +9,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use User\Entity\User;
 use Application\Entity\Contact;
 use Application\Entity\Phone;
@@ -113,4 +114,12 @@ class IndexController extends AbstractActionController
         return $this->redirect()->toRoute('application', ['action' => 'settings']);
         
     }
+    
+    public function checkLoginAction()
+    {
+        return new JsonModel([
+            'ident' => $this->identity()
+        ]);
+    }
+    
 }

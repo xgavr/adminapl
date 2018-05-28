@@ -10,6 +10,9 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Company\Entity\Legal;
+use Doctrine\Common\Collections\Criteria;
+
 
 /**
  * Description of Contact
@@ -22,6 +25,8 @@ class Contact {
     // Константы доступности.
     const STATUS_ACTIVE       = 1; // Active user.
     const STATUS_RETIRED      = 2; // Retired user.
+    const STATUS_LEGAL      = 3; // legal record.
+
     
     /**
      * @ORM\Id
@@ -110,6 +115,18 @@ class Contact {
     * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
    */
    private $emails;
+   
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Address", mappedBy="contact")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
+   */
+   private $addresses;
+
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Messenger", mappedBy="contact")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
+   */
+   private $messengers;
 
     /**
      * @ORM\ManyToMany(targetEntity="\Company\Entity\Legal", inversedBy="contacts")
@@ -124,6 +141,9 @@ class Contact {
       $this->phones = new ArrayCollection();
       $this->emails = new ArrayCollection();
       $this->legals = new ArrayCollection();
+      $this->addresses = new ArrayCollection();
+      $this->messengers = new ArrayCollection();
+      
    }
    
     public function getId() 
@@ -408,6 +428,42 @@ class Contact {
      * Возвращает email для этого contact.
      * @return array
      */   
+    
+    /**
+     * Возвращает адреса для этого contact.
+     * @return array
+     */   
+    public function getAddresses() {
+      return $this->addresses;
+   }    
+   
+    /**
+     * Добавляет новый адрес к этому contact.
+     * @param $address
+     */   
+    public function addAddress($address) 
+    {
+        $this->addresses[] = $address;
+    }       
+    
+    /**
+     * Возвращает мессенджер для этого contact.
+     * @return array
+     */   
+    public function getMessengers() {
+      return $this->messengers;
+   }    
+   
+    /**
+     * Добавляет новый мессенджер к этому contact.
+     * @param $address
+     */   
+    public function addMessenger($messenger) 
+    {
+        $this->messengers[] = $messenger;
+    }       
+    
+    
 
     public function getLegals() {
       return $this->legals;

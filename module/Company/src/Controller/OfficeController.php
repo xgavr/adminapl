@@ -112,14 +112,14 @@ class OfficeController extends AbstractActionController
             return;
         }
 
-        $contacts = $office->getContacts();
+        $forLegals = $office->getLegalContacts();
 
-        if (!count($contacts)){
+        if (!count($forLegals)){
             $data['full_name'] = $data['name'] = $office->getName();
-            $data['status'] = Contact::STATUS_ACTIVE;
+            $data['status'] = Contact::STATUS_LEGAL;
             $this->contactManager->addNewContact($office, $data);
         }
-                                
+
         return new ViewModel([
             'office' => $office,
         ]);

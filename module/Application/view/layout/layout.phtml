@@ -58,5 +58,31 @@
             </div>
         </div>
         <?= $this->inlineScript() ?>
+       <script type="text/javascript">
+            /*
+            * проверка на авторизацию
+            */
+
+            var checkLogin = function(){
+                $.ajax({
+                    type: 'POST',
+                    url: '/application/check-login'
+                })
+                    .done(function (data) { 
+                        if (data){
+                            if (!data.ident){
+                                window.location.reload();
+                            }
+                        }    
+                        setTimeout(checkLogin, 60000);
+                    })
+                    .fail(function (e) {
+                        console.log(e);
+                    });                
+            }
+            
+            // вызов проверки на авторизацию
+            checkLogin();
+        </script>        
     </body>
 </html>
