@@ -81,6 +81,11 @@ class Messenger {
         $this->ident = $ident;
     }     
 
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+        
     /**
      * Returns possible statuses as array.
      * @return array
@@ -111,7 +116,12 @@ class Messenger {
     {
         $this->status = $status;
     }
-            
+    
+    public function getType() 
+    {
+        return $this->type;
+    }
+    
     /**
      * Returns possible types as array.
      * @return array
@@ -133,8 +143,8 @@ class Messenger {
     public function getTypesAsString()
     {
         $list = self::getTypesList();
-        if (isset($list[$this->status]))
-            return $list[$this->status];
+        if (isset($list[$this->type]))
+            return $list[$this->type];
         
         return 'Unknown';
     }    

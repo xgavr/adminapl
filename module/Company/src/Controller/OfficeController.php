@@ -9,6 +9,7 @@ namespace Company\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use Company\Entity\Office;
 use Company\Form\OfficeForm;
 use Application\Entity\Contact;
@@ -185,6 +186,66 @@ class OfficeController extends AbstractActionController
             ]);
     }
     
+        /**
+     * This action displays a page allowing to edit an existing office.
+     */
+    public function editFormAction()
+    {
+        $id = (int)$this->params()->fromRoute('id', -1);
+        if ($id<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $office = $this->entityManager->getRepository(Office::class)
+                ->find($id);
+        
+        if ($office == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Create form
+        $form = new OfficeForm($this->entityManager);
+        
+        // Check if user has submitted the form
+        if ($this->getRequest()->isPost()) {
+            
+            // Fill in the form with POST data
+            $data = $this->params()->fromPost();            
+            
+            $form->setData($data);
+            
+            // Validate form
+            if($form->isValid()) {
+                
+                // Get filtered and validated data
+                $data = $form->getData();
+                
+                // Update permission.
+                $this->officeManager->updateOffice($office, $data);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }               
+        } else {
+            $form->setData(array(
+                    'name'=>$office->getName(),
+                    'aplId'=>$office->getAplId(),     
+                    'region'=>$office->getRegion(),     
+                    'status'=>$office->getStatus(),     
+                ));
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+                'form' => $form,
+                'office' => $office
+            ]);
+    }
+
     /**
      * This action deletes a region.
      */

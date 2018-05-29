@@ -22,7 +22,7 @@ $this->headScript()
 
     <div class="col-sm-9">
         <div id="section1">
-            <h2>Офис</h2>
+            <h2>Офис <?= $office->getName() ?></h2>
             <div>
                 <button value="/offices/edit-form/<?= $office->getId() ?>" class="btn btn-default btn-xs"
                         data-toggle="modal" data-target="#modal-dialog" title="Изменить">
@@ -121,37 +121,40 @@ $this->headScript()
         </div>
 
         <div id="section4">
-            <h2>Мессенджеры</h2>
-            <?php foreach ($office->getLegalContacts() as $contact):?>
-                <div>
-                    <button value="/contact/email-form/<?= $contact->getId() ?>" class="btn btn-default btn-xs"
-                            data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
-                        <span class="glyphicon glyphicon-plus" ></span>
-                        email
-                    </button>                                            
-                </div>     
-                <table class="table table-striped table-bordered">
-                    <?php foreach ($contact->getEmails() as $email): ?>
+            <h3>Мессенджеры</h3>
+            <p>
+                <button value="/contact/messenger-form/<?= $office->getLegalContact()->getId() ?>" class="btn btn-default btn-xs"
+                        data-toggle="modal" data-target="#modal-dialog" title="Добавить мессенджер">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                    мессенджер
+                </button>                    
+            </p>            
+            <table class="table table-striped table-bordered">
+                <?php if (count($office->getLegalContact()->getMessengers())):?>
+                    <?php foreach ($office->getLegalContact()->getMessengers() as $messenger): ?>
                         <tr>
-                           <th class="email_name">
+                            <td>
+                                <?= $this->escapeHtml($messenger->getTypesAsString()); ?>
+                            </td>
+                            <td>
                                 <div class="pull-left">
-                                    <?= $email->getName()?>
-                                </div>
+                                    <?= $this->escapeHtml($messenger->getIdent()); ?>
+                                </div>                                        
                                 <div class="pull-right">
-                                    <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs email-edit"
+                                    <button value="/contact/messenger-form/<?= $messenger->getContact()->getId() ?>?messenger=<?= $messenger->getId() ?>" class="btn btn-default btn-xs"
                                             data-toggle="modal" data-target="#modal-dialog" title="Изменить">
                                         <span class="glyphicon glyphicon-edit" ></span>
                                     </button>                                                            
-                                    <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                    <button value="/contact/delete-messenger-form/<?= $messenger->getId() ?>" class="btn btn-default btn-xs this-delete"
                                             title="Удалить">
                                         <span class="glyphicon glyphicon-remove" ></span>
                                     </button>                                                            
                                 </div>                                        
-                           </th>
+                            </td>
                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endforeach; ?>
+                    <?php endforeach; ?>   
+                <?php endif;?>       
+            </table>
         </div>
 
         <div id="section5">
@@ -160,7 +163,7 @@ $this->headScript()
                 <button value="/contact/address-form/<?= $office->getLegalContact()->getId() ?>" class="btn btn-default btn-xs"
                         data-toggle="modal" data-target="#modal-dialog" title="Добавить адрес">
                     <span class="glyphicon glyphicon-plus" ></span>
-                    Добавить адрес
+                    адрес
                 </button>                    
             </p>            
             <table class="table table-striped table-bordered">

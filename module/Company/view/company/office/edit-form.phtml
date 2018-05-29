@@ -1,0 +1,101 @@
+<?php
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование'
+    ]);
+
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'apl ID'
+    ]);
+
+$form->get('region')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Регион'
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Статус'
+    ]);
+
+$form->get('submit')
+        ->setAttributes(['class'=>'btn btn-primary'])
+        ->setValue('Сохранить');
+
+$form->prepare();
+?>
+
+        <?= $this->form()->openTag($form); ?>
+
+        <div class="modal-header">
+            <h5 class="modal-title">Изменить данные офиса</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+            
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-10">
+        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('name')); ?>
+                        <?= $this->formElement($form->get('name')); ?>
+                        <?= $this->formElementErrors($form->get('name')); ?>                  
+                    </div>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('aplId')); ?>
+                        <?= $this->formElement($form->get('aplId')); ?>
+                        <?= $this->formElementErrors($form->get('aplId')); ?>                  
+                    </div>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('region')); ?>
+                        <?= $this->formElement($form->get('region')); ?>
+                        <?= $this->formElementErrors($form->get('region')); ?>                  
+                    </div>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?>
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                    </div>
+        
+                    <?= $this->formElement($form->get('csrf')); ?>
+                </div>
+            </div>
+        </div>    
+        
+        <?= $this->form()->closeTag(); ?>
+        
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            <button type="button" class="btn btn-primary" id="office-submit">Сохранить</button>
+        </div>
+        
+
+<script>
+    $('#office-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/offices/edit-form/<?= $office->getId() ?>',
+            data: $('#office-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#modal-dialog').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#modal-content').html(data);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при открытии формы.");
+
+            });
+    })    
+</script>

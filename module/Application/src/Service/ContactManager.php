@@ -11,6 +11,8 @@ use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Contact;
 use Application\Entity\Phone;
 use Application\Entity\Email;
+use Application\Entity\Address;
+use Application\Entity\Messenger;
 use Company\Entity\Office;
 use User\Entity\User;
 use User\Filter\PhoneFilter;
@@ -172,9 +174,13 @@ class ContactManager
             throw new \Exception('Неверный тип родительской сущности');
         }
 
-        $this->addPhone($contact, ['phone' => $data['phone']]);
+        if (isset($data['phone'])){
+            $this->addPhone($contact, ['phone' => $data['phone']]);
+        }    
         
-        $this->addEmail($contact, $data['email']);
+        if (isset($data['email'])){
+            $this->addEmail($contact, $data['email']);
+        }    
         
        if ($data['email'] && $data['password']){
             $user = $this->entityManager->getRepository(User::class)
@@ -256,16 +262,6 @@ class ContactManager
         $this->entityManager->flush();
     }    
     
-    public function updateAddress($contact, $data) 
-    {
-        $contact->setAddress($data['address']);
-        $contact->setAddressSms($data['addressSms']);
-                
-        $this->entityManager->persist($contact);
-        // Применяем изменения к базе данных.
-        $this->entityManager->flush();
-    }    
-    
     public function removePhone($phone)
     {
         $this->entityManager->remove($phone);
@@ -293,6 +289,16 @@ class ContactManager
             $this->entityManager->remove($email);
         }        
         
+        $addresses = $contact->getAddresses();
+        foreach ($addresses as $address) {
+            $this->entityManager->remove($address);
+        }        
+        
+        $messengers = $contact->getMessengers();
+        foreach ($messengers as $messenger) {
+            $this->entityManager->remove($messenger);
+        }        
+        
         $legals = $contact->getLegals();
         foreach ($legals as $legal) {
             $this->entityManager->removeLegalAssociation($legal);
@@ -302,5 +308,80 @@ class ContactManager
         
         $this->entityManager->flush();
     }    
+    
+    public function addNewAddress($contact, $data, $flushnow = false)
+    {                
+        $address = new Address();            
+        $address->setName($data['name']);
+        $address->setAddress($data['address']);
+        $address->setAddressSms($data['addressSms']);
+
+        $currentDate = date('Y-m-d H:i:s');
+        $address->setDateCreated($currentDate);
+
+        $this->entityManager->persist($address);
+
+        $address->setContact($contact);
+
+        if ($flushnow){
+            $this->entityManager->flush();                
+        }
+    }
+        
+    public function updateAddress($address, $data) 
+    {
+        $address->setName($data['name']);
+        $address->setAddress($data['address']);
+        $address->setAddressSms($data['addressSms']);
+                
+        $this->entityManager->persist($address);
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }        
+    
+    public function removeAddress($address) 
+    {   
+        
+        $this->entityManager->remove($address);
+        
+        $this->entityManager->flush();
+    }    
+    
+    
+    public function addNewMessenger($contact, $data, $flushnow = false)
+    {                
+        $messenger = new Messenger();            
+        $messenger->setIdent($data['ident']);
+        $messenger->setStatus($data['status']);
+        $messenger->setType($data['type']);
+
+        $this->entityManager->persist($messenger);
+
+        $messenger->setContact($contact);
+
+        if ($flushnow){
+            $this->entityManager->flush();                
+        }
+    }
+        
+    public function updateMessenger($messenger, $data) 
+    {
+        $messenger->setType($data['type']);
+        $messenger->setStatus($data['status']);
+        $messenger->setIdent($data['ident']);
+                
+        $this->entityManager->persist($messenger);
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }        
+    
+    public function removeMessenger($messenger) 
+    {   
+        
+        $this->entityManager->remove($messenger);
+        
+        $this->entityManager->flush();
+    }    
+    
     
 }

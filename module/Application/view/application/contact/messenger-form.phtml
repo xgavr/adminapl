@@ -1,0 +1,89 @@
+<?php
+
+$form = $this->form;
+
+$form->get('type')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Мессенджер'    
+    ]);
+
+$form->get('ident')->setAttributes([
+    'class'=>'form-control', 
+    'label' => 'Идентификатор пользователя в мессенджере'
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'messenger-submit']);
+
+$form->prepare();
+
+?>
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title">Мессенджеры</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('type')); ?>
+                            <?= $this->formElement($form->get('type')); ?>
+                            <?= $this->formElementErrors($form->get('type')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ident')); ?>
+                            <?= $this->formElement($form->get('ident')); ?>
+                            <?= $this->formElementErrors($form->get('ident')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+
+                    </div>        
+                </div>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="messenger-submit">Сохранить</button>
+            </div>
+                
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#messenger-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/contact/messenger-form/<?= $contact->getId() ?>?messenger=<?= ($messenger ? $messenger->getId():'') ?>',
+            data: $('#messenger-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#modal-dialog').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#modal-content').html(data);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при открытии формы.");
+
+            });
+    })    
+</script>

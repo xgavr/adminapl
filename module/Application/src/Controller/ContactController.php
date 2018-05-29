@@ -15,9 +15,13 @@ use Application\Entity\Supplier;
 use User\Entity\User;
 use Application\Entity\Phone;
 use Application\Entity\Email;
+use Application\Entity\Messenger;
+use Application\Entity\Address;
 use Application\Form\ContactForm;
 use Application\Form\PhoneForm;
 use Application\Form\EmailForm;
+use Application\Form\AddressForm;
+use Application\Form\MessengerForm;
 use Company\Form\LegalForm;
 use Zend\View\Model\JsonModel;
 
@@ -547,6 +551,93 @@ class ContactController extends AbstractActionController
         ]);
     }
     
+    public function messengerFormAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        $messengerId = (int)$this->params()->fromQuery('messenger', -1);
+        
+        // Validate input parameter
+        if ($messengerId>0) {
+            $messenger = $this->entityManager->getRepository(Messenger::class)
+                    ->findOneById($messengerId);
+        } else {
+            $messenger = null;
+        }        
+
+        $form = new MessengerForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                
+                if ($messenger){
+                    $this->contactManager->updateMessenger($messenger, $data);                                        
+                } else {
+                    $this->contactManager->addNewMessenger($contact, $data, true);                                                            
+                }
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                var_dump($form->getMessages());
+            }
+        } else {
+            if ($messenger){
+                $form->setData([
+                    'type' => $messenger->getType(), 
+                    'ident' => $messenger->getIdent(), 
+                    'status' => $messenger->getStatus()
+                ]);
+            }    
+        }    
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'contact' => $contact,
+            'messenger' => $messenger,
+        ]);                
+        
+    }
+
+    public function deleteMessengerFormAction()
+    {
+        $messengerId = $this->params()->fromRoute('id', -1);
+        
+        $messenger = $this->entityManager->getRepository(Messenger::class)
+                ->findOneById($messengerId);
+        
+        if ($messenger == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->contactManager->removeMessenger($messenger);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }
+
     public function addressAction()
     {
         $contactId = (int)$this->params()->fromRoute('id', -1);
@@ -602,5 +693,93 @@ class ContactController extends AbstractActionController
             'contact' => $contact,
             'parent' => $this->contactManager->getParent($contact),
         ]);
-    }    
+    }
+    
+    public function addressFormAction()
+    {
+        $contactId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        $addressId = (int)$this->params()->fromQuery('address', -1);
+        
+        // Validate input parameter
+        if ($addressId>0) {
+            $address = $this->entityManager->getRepository(Address::class)
+                    ->findOneById($addressId);
+        } else {
+            $address = null;
+        }        
+
+        $form = new AddressForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                
+                if ($address){
+                    $this->contactManager->updateAddress($address, $data);                                        
+                } else {
+                    $this->contactManager->addNewAddress($contact, $data, true);                                                            
+                }
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                var_dump($form->getMessages());
+            }
+        } else {
+            if ($address){
+                $form->setData([
+                    'name' => $address->getName(), 
+                    'address' => $address->getAddress(), 
+                    'addressSms' => $address->getAddressSms()
+                ]);
+            }    
+        }    
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'contact' => $contact,
+            'address' => $address,
+        ]);                
+        
+    }
+
+    public function deleteAddressFormAction()
+    {
+        $addressId = $this->params()->fromRoute('id', -1);
+        
+        $address = $this->entityManager->getRepository(Address::class)
+                ->findOneById($addressId);
+        
+        if ($address == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->contactManager->removeAddress($address);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }
+    
 }
