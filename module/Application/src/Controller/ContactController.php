@@ -286,7 +286,16 @@ class ContactController extends AbstractActionController
             return;                        
         }        
 
-        $form = new PhoneForm($this->entityManager);
+        $phoneId = (int)$this->params()->fromQuery('phone', -1);
+        
+        // Validate input parameter
+        if ($phoneId>0) {
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneById($phoneId);
+        } else {
+            $phone = null;
+        }        
+        $form = new PhoneForm($this->entityManager, $phone);
 
         if ($this->getRequest()->isPost()) {
             
@@ -295,19 +304,31 @@ class ContactController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                $this->contactManager->addPhone($contact, ['phone' => $data['name'], 'comment' => $data['comment']], true);
+                if ($phone){
+                    $this->contactManager->updatePhone($phone, ['phone' => $data['name'], 'comment' => $data['comment']]);                    
+                } else {
+                    $this->contactManager->addPhone($contact, ['phone' => $data['name'], 'comment' => $data['comment']], true);
+                }    
                 
                 return new JsonModel(
                    ['ok']
                 );           
             }
-        }        
-        
+        } else {
+            if ($phone){
+                $data = [
+                    'name' => $phone->getName(),  
+                    'comment' => $phone->getComment(),  
+                ];
+                $form->setData($data);
+            }  
+        }    
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
             'contact' => $contact,
+            'phone' => $phone,
         ]);                
         
     }
@@ -421,7 +442,16 @@ class ContactController extends AbstractActionController
             return;                        
         }        
 
-        $form = new EmailForm($this->entityManager);
+        $emailId = (int)$this->params()->fromQuery('email', -1);
+        
+        // Validate input parameter
+        if ($emailId>0) {
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneById($emailId);
+        } else {
+            $email = null;
+        }        
+        $form = new EmailForm($this->entityManager, $email);
 
         if ($this->getRequest()->isPost()) {
             
@@ -430,19 +460,30 @@ class ContactController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                $this->contactManager->addEmail($contact, $data['name'], true);
+                if ($email){
+                    $this->contactManager->updateEmail($email, ['email' => $data['name']]);                    
+                } else {
+                    $this->contactManager->addEmail($contact, $data['name'], true);
+                }    
                 
                 return new JsonModel(
                    ['ok']
                 );           
             }
-        }        
-        
+        } else {
+            if ($email){
+                $data = [
+                    'name' => $email->getName(),  
+                ];
+                $form->setData($data);
+            }  
+        }    
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
             'contact' => $contact,
+            'email' => $email,
         ]);                
         
     }

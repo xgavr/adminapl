@@ -69,7 +69,7 @@ class PhoneExistsValidator extends AbstractValidator
         if($this->options['phone']==null) {
             $isValid = ($phone==null);
         } else {
-            if($this->options['phone']->getName()!=$phoneFilter->filter($value) && $phone!=null) 
+            if($this->options['phone']->getName($format = PhoneFilter::PHONE_FORMAT_DB)!=$phoneFilter->filter($value) && $phone!=null) 
                 $isValid = false;
             else 
                 $isValid = true;

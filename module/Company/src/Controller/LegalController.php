@@ -365,6 +365,27 @@ class LegalController extends AbstractActionController
         return $this->redirect()->toRoute('legals', ['action' => 'legal', 'id' => $contact->getId()]);
     }
         
+    public function deleteAssociationFormAction()
+    {
+        $legalId = $this->params()->fromRoute('id', -1);
+        
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->findOneById($legalId);
+        
+        if ($legal == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->legalManager->removeLegalAssociation($legal);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }
+
     public function bankAccountFormAction()
     {
         $legalId = (int)$this->params()->fromRoute('id', -1);
@@ -467,6 +488,29 @@ class LegalController extends AbstractActionController
         
         return;
     }
+    
+    public function deleteBankAccountFormAction()
+    {
+        $bankAccountId = $this->params()->fromRoute('id', -1);
+        
+        $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                ->findOneById($bankAccountId);
+        
+        if ($bankAccount == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->legalManager->removeBankAccount($bankAccount);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }
+        
+    
     
     public function bikInfoAction()
     {
@@ -586,4 +630,26 @@ class LegalController extends AbstractActionController
         
         return;
     }
+    
+    public function deleteContractFormAction()
+    {
+        $contractId = $this->params()->fromRoute('id', -1);
+        
+        $contract = $this->entityManager->getRepository(Contract::class)
+                ->findOneById($contractId);
+        
+        if ($contract == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->legalManager->removeContract($contract);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }
+    
 }

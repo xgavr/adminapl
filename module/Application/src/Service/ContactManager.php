@@ -262,11 +262,28 @@ class ContactManager
         $this->entityManager->flush();
     }    
     
+    public function updatePhone($phone, $data)
+    {                
+        $phone->setName($data['phone']);
+        $phone->setComment($data['comment']);
+
+        $this->entityManager->persist($phone);
+        $this->entityManager->flush();                
+    }
+    
     public function removePhone($phone)
     {
         $this->entityManager->remove($phone);
         $this->entityManager->flush();
         
+    }
+    
+    public function updateEmail($email, $data)
+    {                
+        $email->setName($data['email']);
+
+        $this->entityManager->persist($email);
+        $this->entityManager->flush();                
     }
     
     public function removeEmail($email)

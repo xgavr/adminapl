@@ -17,7 +17,7 @@ $form->prepare();
             <?= $this->form()->openTag($form); ?>
             
             <div class="modal-header">
-                <h5 class="modal-title">Добавить контактный email</h5>
+                <h5 class="modal-title">Контактный email</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -46,15 +46,15 @@ $form->prepare();
     $('#email-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/contact/email-form/<?= $contact->getId() ?>',
+            url: '/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>',
             data: $('#email-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#email-modal').modal('hide');
+                    $('#modal-dialog').modal('hide');
                     window.location.reload();
                 } else {
-                    $('#email-modal-content').html(data);
+                    $('#modal-content').html(data);
                 }    
             })
             .fail(function (e) {

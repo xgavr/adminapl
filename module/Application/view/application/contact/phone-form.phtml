@@ -62,15 +62,15 @@ $form->prepare();
     $('#phone-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/contact/phone-form/<?= $contact->getId() ?>',
+            url: '/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>',
             data: $('#phone-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#phone-modal').modal('hide');
+                    $('#modal-dialog').modal('hide');
                     window.location.reload();
                 } else {
-                    $('#phone-modal-content').html(data);
+                    $('#modal-content').html(data);
                 }    
             })
             .fail(function (e) {
