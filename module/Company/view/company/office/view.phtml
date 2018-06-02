@@ -30,7 +30,7 @@ $legalContact = $office->getLegalContact();
             </div>
             <div class="panel-body">
                 <div class="pull-left">
-                    ID: <?= $this->escapeHtml($office->getId()) ?><br/>
+                    ID: <?= $this->escapeHtml($office->getId()) ?>, AplId: <?= $this->escapeHtml($office->getAplId()) ?><br/>
                     Наименование: <?= $this->escapeHtml($office->getName()) ?><br/>
                     Регион: <?= $this->escapeHtml($office->getRegion()->getFullName()) ?><br/>
                     Статус: <?= $this->escapeHtml($office->getStatusAsString()) ?><br/>
@@ -239,7 +239,7 @@ $legalContact = $office->getLegalContact();
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="pull-left">
-                                    Банковские счета
+                                    Банковские счета <?= $legal->getName() ?>
                                 </div>                                
                                 <div class="pull-right">
                                     <button value="/legals/bank-account-form/<?= $legal->getId() ?>" class="btn btn-default btn-xs"
@@ -270,7 +270,7 @@ $legalContact = $office->getLegalContact();
                                 </div>    
                              <?php endforeach; ?>
                         </div>
-                        <div class="panel panel-default">
+<!--                        <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="pull-left">
                                     Договоры
@@ -300,7 +300,7 @@ $legalContact = $office->getLegalContact();
                                      </div>
                                 </div>    
                              <?php endforeach; ?>
-                        </div>                        
+                        </div>                        -->
                     </div>
                     <?php endforeach; ?>
                 </div>                    
