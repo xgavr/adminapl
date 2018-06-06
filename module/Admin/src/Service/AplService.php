@@ -12,8 +12,10 @@ use Zend\Json\Json;
 
 use Application\Entity\Email;
 use Application\Entity\Phone;
+use Application\Entity\Messenger;
 use User\Entity\User;
 use Company\Entity\Office;
+use Application\Entity\Contact;
 use Application\Entity\Supplier;
 use Zend\Http\Client;
 
@@ -161,18 +163,16 @@ class AplService {
                     }
                     
                     if ($supplier){
-                        $contacts = $supplier->getContacts();
+                        $legalContact = $supplier->getLegalContact();
 
-                        if (!count($contacts)){
+                        if (!$legalContact){
                             $contact_data = [];
                             $contact_data['full_name'] = $contact_data['name'] = $supplier->getName();
-                            $contact_data['status'] = $supplier->getStatus();
+                            $contact_data['status'] = Contact::STATUS_LEGAL;
                             $this->contactManager->addNewContact($supplier, $contact_data); //Legal contact
-                            $contacts = $supplier->getContacts();                    
+                            $legalContact = $supplier->getLegalContact();                    
                         } 
                             
-                        $legalContact = $contacts[0];
-                        
                         $legals = $legalContact->getLegals();
                         
                         $legal_data = null;
@@ -469,7 +469,7 @@ class AplService {
                             'name' => $row['name'],
                             'phone' => $row['phone'],
                             'email' => $row['email'],
-                            'status' => ($row['publish'] == 1 ? 1:2),
+                            'status' => Contact::STATUS_LEGAL,
                         ];
 
                         $this->contactManager->updateContact($contact, $contact_data);                                                
@@ -478,7 +478,7 @@ class AplService {
                             'name' => $row['name'],
                             'phone' => $row['phone'],
                             'email' => $row['email'],
-                            'status' => ($row['publish'] == 1 ? 1:2),
+                            'status' => Contact::STATUS_LEGAL,
                         ];
 
                         $contact = $this->contactManager->addNewContact($user, $contact_data);                        
@@ -487,7 +487,16 @@ class AplService {
                     //$desc = (array) Json::decode($row['desc']);
 //                    var_dump($desc['icq']);
                     if ($contact){
-                        $this->contactManager->updateMessengers($contact, ['icq' => $desc['icq']]);
+                        //$this->contactManager->updateMessengers($contact, ['icq' => $desc['icq']]);
+                        $messenger = $this->entityManager->getRepository(Messenger::class)
+                                ->findOneBy(['type' => Messenger::TYPE_ICQ, 'ident' => $desc['icq']]);
+                        
+                        if ($messenger == null){
+                            $this->contactManager->addNewMessenger($contact, ['type' => Messenger::TYPE_ICQ, 'ident' => $desc['icq'], 'status' => Messenger::STATUS_ACTIVE]);
+                        }
+                        
+                        
+                        
                         $this->contactManager->updateSignature($contact, ['signature' => $desc['signature']]);
                         $this->contactManager->updateUserOffice($contact, ['office' => $this->getOffice($row['parent'])]);
                     }

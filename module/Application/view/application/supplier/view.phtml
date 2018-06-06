@@ -14,230 +14,243 @@ $this->headScript()
         ;
 
 ?>
-
 <div class="row">
-    <div class="col-md-12">
-        <div class="well well-sm">
-            <div class="pull-left">
-                <h3><?= $this->escapeHtml($supplier->getName()); ?></h3>
-                ID:<span><?= $this->escapeHtml($supplier->getId()) ?></span>
-                AplId:<span><?= $this->escapeHtml($supplier->getAplId()) ?></span>
-                Статус:<span><?= $this->escapeHtml($supplier->getStatusAsString()) ?></span>
-            </div>            
-            <a class="btn btn-default pull-right" href="<?= $this->url('supplier', 
-                    ['action'=>'edit', 'id'=>$supplier->getId()]); ?>" data-toggle="tooltip" title="Изменить">
-                <span class="glyphicon glyphicon-pencil" ></span>
-            </a>
-            <div class="clearfix"></div>
+    <div class="col-sm-9">
+        <div class="panel panel-default" id="section1">
+            <div class="panel-heading">
+                <h2><?= $supplier->getName() ?></h2>                
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="pull-left">
+                    ID: <?= $this->escapeHtml($supplier->getId()) ?>
+                    AplId: <?= $this->escapeHtml($supplier->getAplId()) ?><br/>
+                    Статус: <?= $this->escapeHtml($supplier->getStatusAsString()) ?>
+                </div>
+                <div class="pull-right">
+                    <button value="/supplier/edit-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                        <span class="glyphicon glyphicon-edit" ></span>
+                    </button>                                                    
+                </div>
+            </div>
         </div>
-    </div>
-</div>    
-<div class="row">    
-    <div class="col-md-8">
-        <div class="panel panel-primary">
+
+        <div class="panel panel-default" id="section2">
             <div class="panel-heading">
                 <h3 class="panel-title pull-left">Как заказать?</h3>
-                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
-                        data-toggle="modal" data-target="#request-setting-modal" title="Добавить">
-                    <span class="glyphicon glyphicon-plus" ></span>
-                </button>
+                <div class="pull-right">
+                    <button value="/supplier/request-setting-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Добавить">
+                        <span class="glyphicon glyphicon-plus" ></span>
+                    </button>                                                                        
+                </div>
                 <div class="clearfix"></div>
-            </div>            
-            <table class="table table-striped table-bordered">
+            </div>
+            <div class="panel-body">
                 <?php if ($supplier->getRequestSettings()): ?>                    
-                    <?php foreach ($supplier->getRequestSettings() as $requestSetting): ?>
-                        <tr>
-                            <td colspan="2">
-                                <div class="pull-left">
-                                    <?= $requestSetting->getName() ?>
-                                    <span><?= $requestSetting->getModeAsString() ?></span>
-                                    <span><?= $requestSetting->getStatusAsString() ?></span>
-                                </div>        
-                                <div class="pull-right">                                
-                                    <button supplier-id="<?= $supplier->getId() ?>" value="<?= $requestSetting->getId() ?>" class="btn btn-default"
-                                            data-toggle="modal" data-target="#request-setting-modal" title="Изменить">
-                                        <span class="glyphicon glyphicon-pencil" ></span>
-                                    </button>                            
-                                    <a class="btn btn-default" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
-                                            ['action'=>'delete-request-setting', 'id' => $requestSetting->getId()]); ?>">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </a>
-                                </div>    
-                            </td>
-                        </tr>
-                        <tr>     
-                            <th>Сайт</th>
-                            <td class=""><a href="<?= $requestSetting->getSiteNormalize()?>" target="block"><?= $requestSetting->getSite() ?></a></td>
-                       </tr>
-                        <tr>     
-                            <th>Логин</th>
-                            <td class=""><?= $requestSetting->getLogin() ?></td>
-                       </tr>
-                        <tr>     
-                            <th>Пароль</th>
-                            <td class=""><?= $requestSetting->getPassword() ?></td>
-                       </tr>
-                        <tr>     
-                            <td colspan="2"><?= nl2br($requestSetting->getDescription()) ?></td>
-                       </tr>
-                    <?php endforeach; ?>
+                    <div class="panel-group">
+                        <?php foreach ($supplier->getRequestSettings() as $requestSetting): ?>                
+                            <div class="panel panel-info">
+                                <div class="panel-body">
+                                    <div class="pull-left">
+                                        <?= $requestSetting->getName() ?><br/>
+                                        Способ заказа: <span><?= $requestSetting->getModeAsString() ?></span><br/>
+                                        <!--<span><?= $requestSetting->getStatusAsString() ?></span>-->
+                                        <!--<br/>-->
+                                        Сайт: <a href="<?= $requestSetting->getSiteNormalize()?>" target="block"><?= $requestSetting->getSite() ?></a>
+                                        <br/>
+                                        Логин: <?= $requestSetting->getLogin() ?><br/>
+                                        Пароль: <?= $requestSetting->getPassword() ?><br/>
+                                        <?= nl2br($requestSetting->getDescription()) ?>
+                                    </div>        
+                                    <div class="pull-right">                                
+                                        <button value="/supplier/request-setting-form/<?= $supplier->getId() ?>?requestSetting=<?= $requestSetting->getId() ?>" class="btn btn-default btn-xs"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                            <span class="glyphicon glyphicon-edit" ></span>
+                                        </button>                                                    
+                                        <button value="/supplier/delete-request-setting-form/<?= $requestSetting->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                title="Удалить">
+                                            <span class="glyphicon glyphicon-remove" ></span>
+                                        </button>                                                           
+                                    </div>                                                                        
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 <?php endif; ?>
-            </table>
+            </div>
         </div>
-    </div>    
 
-    <div class="col-md-4">
-        <div class="panel panel-primary">
+        <div class="panel panel-default" id="section3">
             <div class="panel-heading">
                 <h3 class="panel-title pull-left">Контакты</h3>
-                <?php 
-                    $contacts = $supplier->getContacts();                        
-                 ?>
-                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default pull-right" 
-                        data-toggle="modal" data-target="#manager-modal" title="Добавить">
-                    <span class="glyphicon glyphicon-plus" ></span>
-                </button>
+                <div class="pull-right">
+                    <button value="/supplier/manager-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Добавить">
+                        <span class="glyphicon glyphicon-plus" ></span>
+                    </button>                                                                        
+                </div>
                 <div class="clearfix"></div>
-            </div>            
-            <table class="table table-striped table-bordered">
-                <?php foreach ($contacts as $manager):?>
-                    <?php if($contacts[0] == $manager) continue; ?>
-                    <table class="table table-striped table-bordered">
-                        <tr>
-                            <td colspan="2"> 
-                                <div class="pull-left">
-                                    <strong><?= $manager->getName() ?></strong>
-                                    <div>
-                                        <?= $manager->getDescription() ?>
-                                        <span><?= $manager->getStatusAsString() ?></span>
-                                    </div>                                    
+            </div>
+            <div class="panel-body">
+                <?php if ($supplier->getOtherContacts()): ?>                    
+                    <div class="panel-group">
+                        <?php foreach ($supplier->getOtherContacts() as $manager):?>
+                            <div class="panel panel-info">
+                                <div class="panel-body">
+                                    <div class="pull-left">
+                                        <strong><?= $manager->getName() ?></strong>
+                                        <div>
+                                            <?= $manager->getDescription() ?>
+                                            <!--<span><?= $manager->getStatusAsString() ?></span>-->
+                                        </div>                                    
+                                    </div>
+                                    <div class="pull-right">                                
+                                        <button value="/supplier/manager-form/<?= $supplier->getId() ?>?manager=<?= $manager->getId() ?>" class="btn btn-default btn-xs"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                            <span class="glyphicon glyphicon-edit" ></span>
+                                        </button>                                                    
+                                        <button value="/supplier/delete-manager-form/<?= $manager->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                title="Удалить">
+                                            <span class="glyphicon glyphicon-remove" ></span>
+                                        </button>                                                           
+                                    </div>                                                                        
                                 </div>
-                                <div class="pull-right">
-                                    <button supplier-id="<?= $supplier->getId() ?>" value="<?= $manager->getId() ?>" class="btn btn-default"
-                                            data-toggle="modal" data-target="#manager-modal" title="Изменить">
-                                        <span class="glyphicon glyphicon-pencil" ></span>
-                                    </button>                            
-                                    <a class="btn btn-default" data-toggle="confirmation" data-title="Удалить?" title="Удалить" href="<?= $this->url('supplier',
-                                            ['action'=>'delete-manager', 'id' => $manager->getId()]); ?>">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </a>                                                               
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <div class="panel-title">Контактные телефоны</div>
+                                        </div>
+                                        <div class="pull-right">
+                                            <button value="/contact/phone-form/<?= $manager->getId() ?>" class="btn btn-default btn-xs"
+                                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                                                <span class="glyphicon glyphicon-plus" ></span>
+                                            </button>                                        
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="panel panel-group">
+                                            <?php foreach ($manager->getPhones() as $phone): ?>
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="pull-left">
+                                                            <?= $phone->getName()?> <span><?= $phone->getComment()?></span>
+                                                        </div>
+                                                        <div class="pull-right">
+                                                            <button value="/contact/phone-form/<?= $manager->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                                                    data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                                                <span class="glyphicon glyphicon-edit" ></span>
+                                                            </button>                                                            
+                                                            <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                                    title="Удалить">
+                                                                <span class="glyphicon glyphicon-remove" ></span>
+                                                            </button>                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>    
+                                            <?php endforeach; ?>
+                                        </div>                    
+                                    </div>
+                                </div>    
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <div class="panel-title">Электронная почта</div>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button value="/contact/email-form/<?= $manager->getId() ?>" class="btn btn-default btn-xs"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                                            <span class="glyphicon glyphicon-plus" ></span>
+                                        </button>                                        
+                                    </div>
+                                    <div class="clearfix"></div>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <?php $phones = $manager->getPhones(); ?>
-                            <td rowspan="<?= count($phones)?>" width="10%">
-                                <button value="<?= $manager->getId() ?>" class="btn btn-default"
-                                        data-toggle="modal" data-target="#phone-modal" title="Добавить телефон">
-                                    <span class="glyphicon glyphicon-phone" ></span>
-                                </button>                                                            
-                            </td>
-                            <td>
-                               <?php if (count($phones)):?>
-                                   <?php $phone = $phones[0]; ?> 
-                                        <div class="pull-left">
-                                            <?= $phone->getName()?>
-                                        </div>
-                                        <div class="pull-right">
-                                            <button value="<?= $phone->getId() ?>" class="btn btn-default btn-xs phone-delete"
-                                                    title="Удалить">
-                                                <span class="glyphicon glyphicon-remove" ></span>
-                                            </button>                                                            
-                                        </div>                                        
-                               <?php endif;?>
-                            </td>
-                       </tr>
-                       <?php if (count($phones)):?>
-                            <?php foreach($phones as $phone):?>
-                                <?php if($phones[0] == $phone) continue; ?>
-                                <tr>
-                                    <td>
-                                        <div class="pull-left">
-                                            <?= $phone->getName()?>
-                                        </div>
-                                        <div class="pull-right">
-                                            <button value="<?= $phone->getId() ?>" class="btn btn-default btn-xs phone-delete"
-                                                    title="Удалить">
-                                                <span class="glyphicon glyphicon-remove" ></span>
-                                            </button>                                                            
-                                        </div>                                        
-                                    </td> 
-                                </tr>
-                            <?php endforeach;?>
-                       <?php endif;?>
-                        <tr>
-                            <?php $emails = $manager->getEmails(); ?>
-                            <td rowspan="<?= count($emails)?>" width="10%">
-                                <button value="<?= $manager->getId() ?>" class="btn btn-default"
-                                        data-toggle="modal" data-target="#email-modal" title="Добавить email">
-                                    <span class="glyphicon glyphicon-envelope" ></span>
-                                </button>                                                            
-                            </td>
-                            <td>
-                               <?php if (count($emails)):?>
-                                   <?php $email = $emails[0]; ?> 
-                                        <div class="pull-left">
-                                            <?= $email->getName()?>
-                                        </div>
-                                        <div class="pull-right">
-                                            <button value="<?= $email->getId() ?>" class="btn btn-default btn-xs email-delete"
-                                                    title="Удалить">
-                                                <span class="glyphicon glyphicon-remove" ></span>
-                                            </button>                                                            
-                                        </div>                                        
-                               <?php endif;?>
-                            </td>
-                       </tr>
-                       <?php if (count($emails)):?>
-                            <?php foreach($emails as $email):?>
-                                <?php if($emails[0] == $email) continue; ?>
-                                <tr>
-                                    <td>
-                                        <div class="pull-left">
-                                            <?= $email->getName()?>
-                                        </div>
-                                        <div class="pull-right">
-                                            <button value="<?= $email->getId() ?>" class="btn btn-default btn-xs email-delete"
-                                                    title="Удалить">
-                                                <span class="glyphicon glyphicon-remove" ></span>
-                                            </button>                                                            
-                                        </div>                                        
-                                    </td> 
-                                </tr>
-                            <?php endforeach;?>
-                       <?php endif;?>
-                    </table>
-                <?php endforeach; ?>            
-            </table>
+                                <div class="panel-body">
+                                    <div class="panel panel-group">
+                                        <?php foreach ($manager->getEmails() as $email): ?>
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <div class="pull-left">
+                                                        <?= $email->getName()?>
+                                                    </div>
+                                                    <div class="pull-right">
+                                                        <button value="/contact/email-form/<?= $manager->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                                            <span class="glyphicon glyphicon-edit" ></span>
+                                                        </button>                                                            
+                                                        <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                                title="Удалить">
+                                                            <span class="glyphicon glyphicon-remove" ></span>
+                                                        </button>                                                            
+                                                    </div>
+                                                </div>
+                                            </div>    
+                                        <?php endforeach; ?>
+                                    </div>                    
+                                </div>
+                            </div>  
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="pull-left">
+                                        <div class="panel-title">Мессенджеры</div>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button value="/contact/messenger-form/<?= $manager->getId() ?>" class="btn btn-default btn-xs"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Добавить мессенджер">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>                                            
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="panel panel-group">
+                                        <?php foreach ($manager->getMessengers() as $messenger): ?>
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <div class="pull-left">
+                                                        <?= $this->escapeHtml($messenger->getTypesAsString()); ?>: <?= $this->escapeHtml($messenger->getIdent()); ?>
+                                                    </div>
+                                                    <div class="pull-right">
+                                                        <button value="/contact/messenger-form/<?= $messenger->getContact()->getId() ?>?messenger=<?= $messenger->getId() ?>" class="btn btn-default btn-xs"
+                                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                                            <span class="glyphicon glyphicon-edit" ></span>
+                                                        </button>                                                            
+                                                        <button value="/contact/delete-messenger-form/<?= $messenger->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                                title="Удалить">
+                                                            <span class="glyphicon glyphicon-remove" ></span>
+                                                        </button>                                                            
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>                    
+                                </div>
+                            </div>                        
+                        <?php endforeach; ?>            
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
+        <div class="panel panel-default" id="section4">
+            <?php echo $this->partial('/company/legal/partial-view', ['legalContact' => $legalContact]); ?>
+        </div>    
+    </div>
+    <div class="col-sm-3" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active"><a href="#section1">Офис</a></li>
+            <li><a href="#section2">Контактные телефоны</a></li>
+            <li><a href="#section3">Электронная почта</a></li>
+            <li><a href="#section4">Мессенджеры</a></li>
+            <li><a href="#section5">Адреса</a></li>
+            <li><a href="#section6">Юридические лица</a></li>
+        </ul>
     </div>    
-</div>
+</div>    
 
 <div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title pull-left">Юридические лица</h3>
-                <?php 
-                    $contacts = $supplier->getContacts(); $legalContact = $contacts[0];                        
-                 ?>
-                <a class="btn btn-default pull-right" href="<?= $this->url('legals',['action'=>'legal', 'id'=>$legalContact->getId()]); ?>">
-                     <span class="glyphicon glyphicon-pencil" ></span>
-                </a>
-                <div class="clearfix"></div>
-            </div>            
-            <table class="table table-striped table-bordered">
-                <?php foreach ($legalContact->getLegals() as $legal): ?>
-                    <tr>
-                       <th class=""><?= $legal->getName() ?></th>
-                       <th class=""><?= $legal->getInn() ?></th>
-                       <th class=""><?= $legal->getStatusAsString() ?></th>
-                   </tr>
-                <?php endforeach; ?>
-            </table>
-        </div>
-    </div>    
-
     <div class="col-md-4">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -417,234 +430,43 @@ $this->headScript()
 </div>
 
 
-<div class="modal fade" id="price-getting-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" id="price-getting-modal-content">
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="bill-getting-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="bill-getting-modal-content">
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="manager-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="manager-modal-content">
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="phone-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="phone-modal-content">
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="email-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="email-modal-content">
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="request-setting-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="request-setting-modal-content">
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="supply-setting-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="supply-setting-modal-content">
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="upload-price-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" id="upload-price-modal-content">
+        <div class="modal-content" id="modal-content">
         </div>
     </div>
 </div>
 
 <script>
-    $('#price-getting-modal').on('show.bs.modal', function (e) {        
-        var url = '/supplier/price-getting-form/';
-        var supplier_id = $(e.relatedTarget).attr('supplier-id');
-        if (supplier_id){
-            url += supplier_id;
-            
-            var priceGetting = e.relatedTarget.value;
-            if (priceGetting){
-                url += '?priceGetting=' + priceGetting;
-            }    
-            
+    $('#modal-dialog').on('show.bs.modal', function (e) {        
+        var url = e.relatedTarget.value;
+        if (url){
             $.ajax({
                 type: 'GET',
                 url: url
             })
                 .done(function (data) {
-                   $('#price-getting-modal-content').html(data);
+                   $('#modal-content').html(data);
                 })
-                .fail(function (e) {
-                    console.log(e);
+                .fail(function () {
                     alert("Ошибка открытия формы.");
-                });    
-            }
-        })
+                }); 
+        }
+    })    
         
-    $('#bill-getting-modal').on('show.bs.modal', function (e) {        
-        var url = '/supplier/bill-getting-form/';
-        var supplier_id = $(e.relatedTarget).attr('supplier-id');
-        if (supplier_id){
-            url += supplier_id;
-            
-            var billGetting = e.relatedTarget.value;
-            if (billGetting){
-                url += '?billGetting=' + billGetting;
-            }    
-            
-            $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (data) {
-                   $('#bill-getting-modal-content').html(data);
-                })
-                .fail(function () {
-                    alert("Ошибка открытия формы.");
-                });    
-            }
-        })
-
-    $('#request-setting-modal').on('show.bs.modal', function (e) {        
-        var url = '/supplier/request-setting-form/';
-        var supplier_id = $(e.relatedTarget).attr('supplier-id');
-        if (supplier_id){
-            url += supplier_id;
-            
-            var requestSetting = e.relatedTarget.value;
-            if (requestSetting){
-                url += '?requestSetting=' + requestSetting;
-            }    
-            
-            $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (data) {
-                   $('#request-setting-modal-content').html(data);
-                })
-                .fail(function () {
-                    alert("Ошибка открытия формы.");
-                });    
-            }
-        })
-
-    $('#supply-setting-modal').on('show.bs.modal', function (e) {        
-        var url = '/supplier/supply-setting-form/';
-        var supplier_id = $(e.relatedTarget).attr('supplier-id');
-        if (supplier_id){
-            url += supplier_id;
-            
-            var supplySetting = e.relatedTarget.value;
-            if (supplySetting){
-                url += '?supplySetting=' + supplySetting;
-            }    
-            
-            $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (data) {
-                   $('#supply-setting-modal-content').html(data);
-                })
-                .fail(function () {
-                    alert("Ошибка открытия формы.");
-                });    
-            }
-        })
-
-    $('#manager-modal').on('show.bs.modal', function (e) {        
-        var url = '/supplier/manager-form/';
-        var supplier_id = $(e.relatedTarget).attr('supplier-id');
-        if (supplier_id){
-            url += supplier_id;
-            
-            var manager = e.relatedTarget.value;
-            if (manager){
-                url += '?manager=' + manager;
-            }    
-            
-            $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (data) {
-                   $('#manager-modal-content').html(data);
-                })
-                .fail(function () {
-                    alert("Ошибка открытия формы.");
-                });    
-            }
-        })
-
-    $('#upload-price-modal').on('show.bs.modal', function (e) {        
-        var url = '/supplier/upload-price-form/';
-        var supplier_id = $(e.relatedTarget).attr('supplier-id');
-        if (supplier_id){
-            url += supplier_id;
-                        
-            $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (data) {
-                   $('#upload-price-modal-content').html(data);
-                })
-                .fail(function () {
-                    alert("Ошибка открытия формы.");
-                });    
-            }
-        })
-
-    $('#phone-modal').on('show.bs.modal', function (e) {        
-        var url = '/contact/phone-form/';
-        var contact = e.relatedTarget.value;
-            if (contact){
-                url += contact;
+    $('.this-delete').on('click', function(e) {
+        var url = e.currentTarget.value;
+        if (url){
+            if (confirm('Удалить запись?')){
                 $.ajax({
                     type: 'GET',
-                    url: url
-                })
-                    .done(function (data) {
-                       $('#phone-modal-content').html(data);
-                    })
-                    .fail(function () {
-                        alert("Ошибка открытия формы.");
-                    });    
-            }
-        })
-        
-    $('.phone-delete').on('click', function(e) {
-        var phone = e.currentTarget.value;
-        if (phone){
-            if (confirm('Удалить телефон?')){
-                $.ajax({
-                    type: 'GET',
-                    url: '/contact/delete-phone-form/'+phone,
+                    url: url,
                 })
                     .done(function (data) {
                         if (data == 'ok'){
                             window.location.reload();
                         } else {
-                            alert("Не удалось удалить телефон.");
+                            alert("Не удалось удалить!");
                         }    
                     })
                     .fail(function (e) {
@@ -654,46 +476,5 @@ $this->headScript()
             }        
         }        
     })    
-
-    $('#email-modal').on('show.bs.modal', function (e) {        
-        var url = '/contact/email-form/';
-        var contact = e.relatedTarget.value;
-            if (contact){
-                url += contact;
-                $.ajax({
-                    type: 'GET',
-                    url: url
-                })
-                    .done(function (data) {
-                       $('#email-modal-content').html(data);
-                    })
-                    .fail(function () {
-                        alert("Ошибка открытия формы.");
-                    });    
-            }
-        })
-        
-    $('.email-delete').on('click', function(e) {
-        var email = e.currentTarget.value;
-        if (email){
-            if (confirm('Удалить email?')){
-                $.ajax({
-                    type: 'GET',
-                    url: '/contact/delete-email-form/'+email,
-                })
-                    .done(function (data) {
-                        if (data == 'ok'){
-                            window.location.reload();
-                        } else {
-                            alert("Не удалось удалить email.");
-                        }    
-                    })
-                    .fail(function (e) {
-                        alert("Не удалось удалить.");
-
-                    });
-            }        
-        }        
-    })    
+    
 </script>
-

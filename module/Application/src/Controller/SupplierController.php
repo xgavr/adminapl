@@ -162,6 +162,63 @@ class SupplierController extends AbstractActionController
         ]);  
     }    
     
+    public function editFormAction()
+    {
+        $id = (int)$this->params()->fromRoute('id', -1);
+        if ($id<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->find($id);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Create form
+        $form = new SupplierForm($this->entityManager);
+        
+        // Check if user has submitted the form
+        if ($this->getRequest()->isPost()) {
+            
+            // Fill in the form with POST data
+            $data = $this->params()->fromPost();            
+            
+            $form->setData($data);
+            
+            // Validate form
+            if($form->isValid()) {
+                
+                // Get filtered and validated data
+                $data = $form->getData();
+                
+                // Update permission.
+                $this->supplierManager->updateSupplier($supplier, $data);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }               
+        } else {
+            $form->setData(array(
+                    'name'=>$supplier->getName(),
+                    'aplId'=>$supplier->getAplId(),     
+                    'status'=>$supplier->getStatus(),     
+                ));
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+                'form' => $form,
+                'supplier' => $supplier
+            ]);
+    }
+    
+    
     public function deleteAction()
     {
         $supplierId = $this->params()->fromRoute('id', -1);
@@ -218,17 +275,18 @@ class SupplierController extends AbstractActionController
             return;                        
         }        
         
-        $contacts = $supplier->getContacts();
+        $forLegals = $supplier->getLegalContacts();
 
-        if (!count($contacts)){
+        if (!count($forLegals)){
             $data['full_name'] = $data['name'] = $supplier->getName();
-            $data['status'] = Contact::STATUS_ACTIVE;
+            $data['status'] = Contact::STATUS_LEGAL;
             $this->contactManager->addNewContact($supplier, $data);
         }
         
         // Render the view template.
         return new ViewModel([
             'supplier' => $supplier,
+            'legalContact' => $supplier->getLegalContact(),
             'supplierManager' => $this->supplierManager,
         ]);
     }    
@@ -515,6 +573,27 @@ class SupplierController extends AbstractActionController
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
     
+    public function deleteManagerFormAction()
+    {
+        $contactId = $this->params()->fromRoute('id', -1);
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->findOneById($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->contactManager->removeContact($contact);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }    
+    
     public function requestSettingFormAction()
     {
         $supplierId = (int)$this->params()->fromRoute('id', -1);
@@ -610,6 +689,28 @@ class SupplierController extends AbstractActionController
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
+    
+    public function deleteRequestSettingFormAction()
+    {
+        $requestSettingId = $this->params()->fromRoute('id', -1);
+        
+        $requestSetting = $this->entityManager->getRepository(RequestSetting::class)
+                ->findOneById($requestSettingId);
+        
+        if ($requestSetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->supplierManager->removeRequestSetting($requestSetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }
+    
 
     public function supplySettingFormAction()
     {

@@ -389,6 +389,39 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     /**
      * {@inheritDoc}
      */
+    public function getLegalContacts()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLegalContacts', []);
+
+        return parent::getLegalContacts();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLegalContact()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLegalContact', []);
+
+        return parent::getLegalContact();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getOtherContacts()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getOtherContacts', []);
+
+        return parent::getOtherContacts();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getRaw()
     {
 
