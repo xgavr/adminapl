@@ -117,6 +117,10 @@ class PostManager {
             }
         }
         
+        if (isset($message->disposition)){
+            $disposition = $message->disposition;
+        }
+        
         $headers = '';
         foreach ($message->getHeaders() as $name => $value) {
             if (is_string($value)) {
@@ -135,6 +139,8 @@ class PostManager {
         if ($logger){
             $logger->info('Часть '.$iterator);
             $logger->debug('subject: '.$subject);
+            $logger->debug('received: '.$received);
+            $logger->debug('disposition: '.$disposition);
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
             $logger->debug('content: '.$content);        
@@ -182,7 +188,7 @@ class PostManager {
                 
                 if (!$params['leave_message']){
                     try{
-                            $mail->removeMessage($messageNum);
+                       $mail->removeMessage($messageNum);
                     } catch (Exception $e){
                         $logger->error($e->getMessage());
                     }    
