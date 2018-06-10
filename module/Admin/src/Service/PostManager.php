@@ -117,8 +117,16 @@ class PostManager {
             }
         }
         
+        if (isset($message->description)){
+            $description = $message->description;
+        }
+        
         if (isset($message->disposition)){
             $disposition = $message->disposition;
+        }
+        
+        if (isset($message->filename)){
+            $disposition = $message->filename;
         }
         
         $headers = '';
@@ -141,6 +149,8 @@ class PostManager {
             $logger->debug('subject: '.$subject);
             $logger->debug('received: '.$received);
             $logger->debug('disposition: '.$disposition);
+            $logger->debug('description: '.$description);
+            $logger->debug('filename: '.$filename);
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
             $logger->debug('content: '.$content);        
