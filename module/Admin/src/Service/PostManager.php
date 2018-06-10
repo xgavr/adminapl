@@ -108,6 +108,7 @@ class PostManager {
             $type = $message->contentType;
         }    
     
+        $received = '';
         if (isset($message->received)){
             $receivedes = $message->getHeader('received');
             if (is_string($receivedes)) {
