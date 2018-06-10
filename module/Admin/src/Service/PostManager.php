@@ -117,16 +117,24 @@ class PostManager {
             }
         }
         
+        $description = '';
         if (isset($message->description)){
             $description = $message->description;
         }
         
+        $disposition = '';
         if (isset($message->disposition)){
             $disposition = $message->disposition;
         }
         
+        $boundary = '';
+        if (isset($message->boundary)){
+            $boundary = $message->boundary;
+        }
+        
+        $filename = '';
         if (isset($message->filename)){
-            $disposition = $message->filename;
+            $filename = $message->filename;
         }
         
         $headers = '';
@@ -149,7 +157,7 @@ class PostManager {
             $logger->debug('subject: '.$subject);
             $logger->debug('received: '.$received);
             $logger->debug('disposition: '.$disposition);
-            $logger->debug('description: '.$description);
+            $logger->debug('boundary: '.$boundary);
             $logger->debug('filename: '.$filename);
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
@@ -189,6 +197,7 @@ class PostManager {
             foreach ($mail as $messageNum => $message) {
                 $part = $this->readPart($i, $message, $logger);
                 $result[$messageNum] = $part;
+                $i = 0;
                 foreach (new RecursiveIteratorIterator($message) as $part) {
                     $i++;
                     $part = $this->readPart($i, $part, $logger);
