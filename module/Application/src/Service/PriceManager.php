@@ -33,11 +33,17 @@ class PriceManager {
      * @var Doctrine\ORM\EntityManager
      */
     private $entityManager;
+    
+    /*
+     * @var Admin\Service\PostManager
+     */
+    private $postManager;
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $postManager)
     {
         $this->entityManager = $entityManager;
+        $this->postManager = $postManager;
     }
     
     public function getPriceFolder()
@@ -190,6 +196,24 @@ class PriceManager {
             $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
             $this->clearPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
         }
+    }
+    
+    /**
+     * Проверка почты в ящике поставщика
+     * @var Application\Entity\PriceGettting $priceGetting
+     */
+    public function getPriceByMail($priceGetting)
+    {
+        $box = [
+            'host' => 'imap.yandex.ru',
+            'user' => $priceGetting->getEmail(),
+            'password' => $priceGetting->getEmailPassword(),
+            'leave_message' => true,
+        ];
+        
+        $mail = $this->postManager->read($box);
+        
+        return $mail;
     }
         
 }

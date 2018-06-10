@@ -9,7 +9,9 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use Application\Entity\Raw;
+use Application\Entity\PriceGetting;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -66,6 +68,28 @@ class PriceController extends AbstractActionController
         $this->priceManager->checkSupplierPrice();
 
         return $this->redirect()->toRoute('price', []);
+        
+    }
+    
+    public function byMailAction()
+    {
+        $priceGettingId = $this->params()->fromRoute('id', -1);
+        // Находим существующий supplier в базе данных.    
+        $priceGetting = $this->entityManager->getRepository(PriceGetting::class)
+                ->findOneById($priceGettingId);  
+        	
+        if ($priceGetting == null) {
+            $this->getResponse()->setStatusCode(401);
+            exit;                        
+        } 
+        
+        $result = $this->priceManager->getPriceByMail($priceGetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
         
     }
     

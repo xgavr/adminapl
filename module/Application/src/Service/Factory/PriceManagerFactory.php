@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\PriceManager;
+use Admin\Service\PostManager;
 /**
  * Description of PbManagerFactory
  *
@@ -23,8 +24,9 @@ class PriceManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $postManager = $container->get(PostManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new PriceManager($entityManager);
+        return new PriceManager($entityManager, $postManager);
     }
 }

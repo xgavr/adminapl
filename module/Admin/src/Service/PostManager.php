@@ -180,10 +180,12 @@ class PostManager {
                     $result[$messageNum] += $part;
                 }  
                 
-                try{
-                    $mail->removeMessage($messageNum);
-                } catch (Exception $e){
-                    $logger->error($e->getMessage());
+                if (!$params['leave_message']){
+                    try{
+                            $mail->removeMessage($messageNum);
+                    } catch (Exception $e){
+                        $logger->error($e->getMessage());
+                    }    
                 }    
             }
         }

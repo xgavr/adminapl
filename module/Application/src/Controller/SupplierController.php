@@ -387,6 +387,29 @@ class SupplierController extends AbstractActionController
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
+    
+    public function deletePriceGettingFormAction()
+    {
+        $priceGettingId = $this->params()->fromRoute('id', -1);
+        
+        $priceGetting = $this->entityManager->getRepository(PriceGetting::class)
+                ->findOneById($priceGettingId);
+        
+        if ($priceGetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->supplierManager->removePriceGetting($priceGetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }    
+    
+    
         
     public function billGettingFormAction()
     {
@@ -409,7 +432,7 @@ class SupplierController extends AbstractActionController
         
         // Validate input parameter
         if ($billGettingId>0) {
-            $billGetting = $this->entityManager->getRepository(PriceGetting::class)
+            $billGetting = $this->entityManager->getRepository(BillGetting::class)
                     ->findOneById($billGettingId);
         } else {
             $billGetting = null;
@@ -475,11 +498,34 @@ class SupplierController extends AbstractActionController
         
         $supplier = $billGetting->getSupplier();
 
-        $this->supplierManager->removePriceGetting($billGetting);
+        $this->supplierManager->removeBillGetting($billGetting);
         
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
+    
+    public function deleteBillGettingFormAction()
+    {
+        $billGettingId = $this->params()->fromRoute('id', -1);
+        
+        $billGetting = $this->entityManager->getRepository(BillGetting::class)
+                ->findOneById($billGettingId);
+        
+        if ($billGetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->supplierManager->removeBillGetting($billGetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }    
+    
+    
 
     public function managerFormAction()
     {
@@ -804,6 +850,28 @@ class SupplierController extends AbstractActionController
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
+    
+    public function deleteSupplySettingFormAction()
+    {
+        $suplySettingId = $this->params()->fromRoute('id', -1);
+        
+        $suplySetting = $this->entityManager->getRepository(SupplySetting::class)
+                ->findOneById($suplySettingId);
+        
+        if ($priceGetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->supplierManager->removeSupplySetting($suplySetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }    
+    
 
     public function priceSettingFormAction()
     {
