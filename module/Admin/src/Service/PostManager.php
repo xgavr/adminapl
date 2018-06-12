@@ -164,7 +164,6 @@ class PostManager {
             $logger->debug('filename: '.$filename);
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
-            $logger->debug('headers: '.$message->getHeaders());
             //$logger->debug('content: '.$content);  
 //            $logger->debug('rawContent: '.$rawContent);
         }  
