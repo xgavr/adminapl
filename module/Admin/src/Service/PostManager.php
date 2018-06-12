@@ -96,6 +96,38 @@ class PostManager {
 
     }
     
+    protected function readMimePart($string, $logger = null)
+    {
+        try{
+            $message = MimeMessage::createFromMessage($string);
+        } catch (Exception $e){
+            return '';
+        }    
+        
+        if ($message){
+            
+            foreach ($message->getParts() as $part){            
+                $headers = '';
+                foreach ($part->getHeaders() as $name => $value) {
+                    if (is_string($value)) {
+                        $headers .= "$name: $value".PHP_EOL;
+                        continue;
+                    }            
+                    foreach ($value as $entry) {
+                        $headers .= "$name: $entry".PHP_EOL;
+                    }
+                }  
+
+                $logger->info('--mime--');
+                $logger->debug('--id: '.$part->id);
+                $logger->debug('--headres: '.$headers);
+            }    
+            
+        }
+        
+        return '';
+    }
+    
     protected function readPart($iterator, $message, $logger = null)
     {
         $subject = null;
@@ -152,6 +184,9 @@ class PostManager {
         $htmlFilter = new HtmlFilter();
         $content = $htmlFilter->filter(base64_decode($message->getContent()));
         $rawContent = $message->getContent();
+        if ($rawContent){
+            $this->readMimePart($rawContent);
+        }
         
         
         if ($logger){
