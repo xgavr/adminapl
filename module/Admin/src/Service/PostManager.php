@@ -106,13 +106,12 @@ class PostManager {
         
         if ($message){
             
-            foreach ($message->getParts() as $part){            
+            foreach ($message->getParts() as $partNum => $part){            
                 $headers = '';
-                var_dump($part);
 
                 if ($logger){
                     $logger->info('--mime--');
-                    $logger->debug('--headres: '.$headers);
+                    $logger->debug('--partNum: '.$partNum);
                 }    
             }    
             
