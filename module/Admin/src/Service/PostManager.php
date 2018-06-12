@@ -118,9 +118,11 @@ class PostManager {
                     }
                 }  
 
-                $logger->info('--mime--');
-                $logger->debug('--id: '.$part->id);
-                $logger->debug('--headres: '.$headers);
+                if ($logger){
+                    $logger->info('--mime--');
+                    $logger->debug('--id: '.$part->id);
+                    $logger->debug('--headres: '.$headers);
+                }    
             }    
             
         }
@@ -185,7 +187,7 @@ class PostManager {
         $content = $htmlFilter->filter(base64_decode($message->getContent()));
         $rawContent = $message->getContent();
         if ($rawContent){
-            $this->readMimePart($rawContent);
+            $this->readMimePart($rawContent, $logger);
         }
         
         
