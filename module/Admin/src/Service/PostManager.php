@@ -106,12 +106,16 @@ class PostManager {
         
         if ($message){
             
-                foreach (new RecursiveIteratorIterator($message) as $part) {
-                    $i++;
-                    $part = $this->readPart($i, $part, $logger);
-                    
-                    //$result[$messageNum] += $part;
-                }  
+            foreach ($message->getParts() as $partNum => $part){            
+
+                if ($logger){
+                    $logger->info('--mime--');
+                    $logger->info('--Часть '.$iterator);
+                    $logger->debug('--partNum: '.$partNum);
+                    $logger->debug('--partClass: '.get_class($part));
+                    $logger->debug('--headers: '.$part->getHeaders());
+                }    
+            }    
             
         }
         
@@ -189,7 +193,7 @@ class PostManager {
         }  
         
         if ($rawContent){
-            $this->readMimeMessage($iterator, $rawContent, $logger);
+            //$this->readMimeMessage($iterator, $rawContent, $logger);
         }
         
         $result = [
