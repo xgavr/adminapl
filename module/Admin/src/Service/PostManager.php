@@ -149,7 +149,9 @@ class PostManager {
             }
         }  
         
-        $rawContent = $message->getRawContent();
+        if ($iterator){
+            $rawContent = $message->getRawContent();
+        }    
         
         $htmlFilter = new HtmlFilter();
         $content = $htmlFilter->filter(base64_decode($message->getContent()));
