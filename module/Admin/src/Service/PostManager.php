@@ -108,19 +108,10 @@ class PostManager {
             
             foreach ($message->getParts() as $part){            
                 $headers = '';
-                foreach ($part->getHeaders() as $name => $value) {
-                    if (is_string($value)) {
-                        $headers .= "$name: $value".PHP_EOL;
-                        continue;
-                    }            
-                    foreach ($value as $entry) {
-                        $headers .= "$name: $entry".PHP_EOL;
-                    }
-                }  
+                var_dump($part);
 
                 if ($logger){
                     $logger->info('--mime--');
-                    $logger->debug('--id: '.$part->id);
                     $logger->debug('--headres: '.$headers);
                 }    
             }    
