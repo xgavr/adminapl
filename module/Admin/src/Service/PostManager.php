@@ -107,23 +107,23 @@ class PostManager {
         if ($message){
             
             foreach ($message->getParts() as $partNum => $part){            
-                $headers = PHP_EOL;
-                foreach ($part->getHeadersArray() as $name => $value) {
-                    if (is_string($value)) {
-                        $headers .= "++$name: $value".PHP_EOL;
-                        continue;
-                    }            
-                    foreach ($value as $entry) {
-                        $headers .= "++=$name: $entry".PHP_EOL;
-                    }
-                }  
+//                $headers = PHP_EOL;
+//                foreach ($part->getHeadersArray() as $name => $value) {
+//                    if (is_string($value)) {
+//                        $headers .= "++$name: $value".PHP_EOL;
+//                        continue;
+//                    }            
+//                    foreach ($value as $entry) {
+//                        $headers .= "++=$name: $entry".PHP_EOL;
+//                    }
+//                }  
 
                 if ($logger){
                     $logger->info('--mime--');
                     $logger->info('--Часть '.$iterator);
                     $logger->debug('--partNum: '.$partNum);
                     $logger->debug('--partClass: '.get_class($part));
-                    $logger->debug('--headers: '.$headers);
+                    $logger->debug('--headers: '.$part->getHeaders());
                 }    
             }    
             
@@ -199,7 +199,7 @@ class PostManager {
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
             //$logger->debug('content: '.$content);  
-            $logger->debug('rawContent: '.$rawContent);
+            //$logger->debug('rawContent: '.$rawContent);
         }  
         
         if ($rawContent){
