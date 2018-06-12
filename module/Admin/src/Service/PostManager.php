@@ -107,13 +107,23 @@ class PostManager {
         if ($message){
             
             foreach ($message->getParts() as $partNum => $part){            
-                $headers = '';
+                $headers = PHP_EOL;
+                foreach ($message->getHeadersArray() as $name => $value) {
+                    if (is_string($value)) {
+                        $headers .= "++$name: $value".PHP_EOL;
+                        continue;
+                    }            
+                    foreach ($value as $entry) {
+                        $headers .= "++=$name: $entry".PHP_EOL;
+                    }
+                }  
 
                 if ($logger){
                     $logger->info('--mime--');
                     $logger->info('--Часть '.$iterator);
                     $logger->debug('--partNum: '.$partNum);
                     $logger->debug('--partClass: '.get_class($part));
+                    $logger->debug('--headers: '.$headers);
                 }    
             }    
             
