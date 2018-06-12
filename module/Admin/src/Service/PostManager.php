@@ -200,7 +200,6 @@ class PostManager {
         
             foreach ($mail as $messageNum => $message) {
                 $logger->info('---------------------------------------------------');
-                $logger->debug('rawHeader: '. $message->getRawHeader($messageNum));
                 $part = $this->readPart(0, $message, $logger);
                 $result[$messageNum] = $part;
                 $i = 0;
