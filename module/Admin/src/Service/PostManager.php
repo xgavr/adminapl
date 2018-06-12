@@ -164,13 +164,14 @@ class PostManager {
             $logger->debug('filename: '.$filename);
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
-            $logger->debug('content: '.$content);  
-            $logger->debug('rawContent: '.$rawContent);
+            //$logger->debug('content: '.$content);  
+            //$logger->debug('rawContent: '.$rawContent);
         }  
         
         $result = [
             'subject' => $subject,
             'content' => $content,
+            'rawContent' => $rawContent,
         ];
         
         return array_filter($result);
@@ -183,6 +184,8 @@ class PostManager {
         $logger->addWriter($writer);
         Logger::registerErrorHandler($logger);
 
+        if (!isset($params['leave_message'])) $params['leave_message'] = false;
+        
         $mail = new Imap([
             'host' => $params['host'],
             'user' => $params['user'],
@@ -195,11 +198,11 @@ class PostManager {
         $result = [];
         if ($maxMessage){
     
+            $logger->info('---------------------------------------------------');
             $logger->info($params['user']);
         
-            $i = 0;
             foreach ($mail as $messageNum => $message) {
-                $part = $this->readPart($i, $message, $logger);
+                $part = $this->readPart(0, $message, $logger);
                 $result[$messageNum] = $part;
                 $i = 0;
                 foreach (new RecursiveIteratorIterator($message) as $part) {
