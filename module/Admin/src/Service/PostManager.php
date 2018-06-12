@@ -96,7 +96,7 @@ class PostManager {
 
     }
     
-    protected function readMimePart($string, $logger = null)
+    protected function readMimePart($iterator, $string, $logger = null)
     {
         try{
             $message = MimeMessage::createFromMessage($string);
@@ -111,7 +111,9 @@ class PostManager {
 
                 if ($logger){
                     $logger->info('--mime--');
+                    $logger->info('--Часть '.$iterator);
                     $logger->debug('--partNum: '.$partNum);
+                    $logger->debug('--partClass: '.get_class($part));
                 }    
             }    
             
@@ -176,10 +178,6 @@ class PostManager {
         $htmlFilter = new HtmlFilter();
         $content = $htmlFilter->filter(base64_decode($message->getContent()));
         $rawContent = $message->getContent();
-        if ($rawContent){
-            $this->readMimePart($rawContent, $logger);
-        }
-        
         
         if ($logger){
             $logger->info('Часть '.$iterator);
@@ -193,6 +191,10 @@ class PostManager {
             //$logger->debug('content: '.$content);  
             $logger->debug('rawContent: '.$rawContent);
         }  
+        
+        if ($rawContent){
+            $this->readMimePart($iterator, $rawContent, $logger);
+        }
         
         $result = [
             'subject' => $subject,
