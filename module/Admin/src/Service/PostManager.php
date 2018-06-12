@@ -96,36 +96,22 @@ class PostManager {
 
     }
     
-    protected function readMimePart($iterator, $string, $logger = null)
+    protected function readMimeMessage($iterator, $mimeString, $logger = null)
     {
         try{
-            $message = MimeMessage::createFromMessage($string);
+            $message = MimeMessage::createFromMessage($mimeString);
         } catch (Exception $e){
             return '';
         }    
         
         if ($message){
             
-            foreach ($message->getParts() as $partNum => $part){            
-//                $headers = PHP_EOL;
-//                foreach ($part->getHeadersArray() as $name => $value) {
-//                    if (is_string($value)) {
-//                        $headers .= "++$name: $value".PHP_EOL;
-//                        continue;
-//                    }            
-//                    foreach ($value as $entry) {
-//                        $headers .= "++=$name: $entry".PHP_EOL;
-//                    }
-//                }  
-
-                if ($logger){
-                    $logger->info('--mime--');
-                    $logger->info('--Часть '.$iterator);
-                    $logger->debug('--partNum: '.$partNum);
-                    $logger->debug('--partClass: '.get_class($part));
-                    $logger->debug('--headers: '.$part->getHeaders());
-                }    
-            }    
+                foreach (new RecursiveIteratorIterator($message) as $part) {
+                    $i++;
+                    $part = $this->readPart($i, $part, $logger);
+                    
+                    //$result[$messageNum] += $part;
+                }  
             
         }
         
@@ -203,7 +189,7 @@ class PostManager {
         }  
         
         if ($rawContent){
-            $this->readMimePart($iterator, $rawContent, $logger);
+            $this->readMimeMessage($iterator, $rawContent, $logger);
         }
         
         $result = [
