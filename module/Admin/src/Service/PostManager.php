@@ -108,7 +108,7 @@ class PostManager {
             
             foreach ($message->getParts() as $partNum => $part){            
                 $headers = PHP_EOL;
-                foreach ($message->getHeadersArray() as $name => $value) {
+                foreach ($part->getHeadersArray() as $name => $value) {
                     if (is_string($value)) {
                         $headers .= "++$name: $value".PHP_EOL;
                         continue;
