@@ -151,6 +151,7 @@ class PostManager {
         
         $htmlFilter = new HtmlFilter();
         $content = $htmlFilter->filter(base64_decode($message->getContent()));
+        $rawContent = $message->getContent();
         
         
         if ($logger){
@@ -163,7 +164,7 @@ class PostManager {
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
             //$logger->debug('content: '.$content);  
-//            $logger->debug('rawContent: '.$rawContent);
+            $logger->debug('rawContent: '.$rawContent);
         }  
         
         $result = [
