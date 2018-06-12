@@ -169,7 +169,7 @@ class PostManager {
         $result = [
             'subject' => $subject,
             'content' => $content,
-            'rawContent' => $rawContent,
+//            'rawContent' => $rawContent,
         ];
         
         return array_filter($result);
@@ -196,10 +196,11 @@ class PostManager {
         $result = [];
         if ($maxMessage){
     
-            $logger->info('---------------------------------------------------');
             $logger->info($params['user']);
         
             foreach ($mail as $messageNum => $message) {
+                $logger->info('---------------------------------------------------');
+                $logger->debug('rawHeader: '. $message->getRawHeader($messageNum));
                 $part = $this->readPart(0, $message, $logger);
                 $result[$messageNum] = $part;
                 $i = 0;
