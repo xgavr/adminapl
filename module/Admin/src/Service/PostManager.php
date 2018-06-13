@@ -96,7 +96,7 @@ class PostManager {
 
     }
     
-    protected function readMimeMessage($iterator, $mimeString, $logger = null)
+    protected function readMimeMessage($mimeString, $logger = null)
     {
         try{
             $message = MimeMessage::createFromMessage($mimeString);
@@ -106,11 +106,11 @@ class PostManager {
         
         if ($message){
             
+            $logger->info('--mime--');
+            
             foreach ($message->getParts() as $partNum => $part){            
 
                 if ($logger){
-                    $logger->info('--mime--');
-                    $logger->info('--Часть '.$iterator);
                     $logger->debug('--partNum: '.$partNum);
                     $logger->debug('--partClass: '.get_class($part));
                     $logger->debug('--headers: '.$part->getHeaders());
@@ -193,7 +193,7 @@ class PostManager {
         }  
         
         if ($rawContent){
-            $this->readMimeMessage($iterator, $rawContent, $logger);
+            $this->readMimeMessage($rawContent, $logger);
         }
         
         $result = [
