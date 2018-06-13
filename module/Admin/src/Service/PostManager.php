@@ -140,13 +140,13 @@ class PostManager {
         $type = '';
         if (isset($message->contentType)){
             $types = $message->getHeader('contentType', 'array');
-            $type .= $message->contentType. " (".count($types).")".PHP_EOL;
+            $type .= $message->contentType.PHP_EOL;
             foreach ($types as $value){
                 if (stripos($value, 'multipart/mixed') !== false && stripos ($value, 'boundary') !== false){
                     $typeValues = explode(';', trim($value));
-                    $type .= $value. " (".count($typeValues).")".PHP_EOL;
                     foreach ($typeValues as $typeValue){
                         if (stripos($typeValue, 'boundary') !== false){
+                            $type .= "boundary : ".$typeValue.PHP_EOL;
                             $typeValuesBoundaries = explode('=', trim($typeValue));
                             if ($typeValuesBoundaries[0] == 'boundary'){
                                 $boundary[] = $typeValuesBoundaries[1];
