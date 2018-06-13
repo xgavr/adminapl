@@ -193,7 +193,7 @@ class PostManager {
         }  
         
         if ($rawContent){
-            //$this->readMimeMessage($iterator, $rawContent, $logger);
+            $this->readMimeMessage($iterator, $rawContent, $logger);
         }
         
         $result = [
@@ -226,9 +226,12 @@ class PostManager {
         $result = [];
         if ($maxMessage){
     
+            $logger->info('');
+            $logger->info('');
             $logger->info($params['user']);
         
             foreach ($mail as $messageNum => $message) {
+                $logger->info('');
                 $logger->info('---------------------------------------------------');
                 $part = $this->readPart(0, $message, $logger);
                 $result[$messageNum] = $part;
