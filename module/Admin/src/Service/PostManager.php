@@ -142,6 +142,7 @@ class PostManager {
             $type .= $message->contentType.PHP_EOL;
             $types = $message->getHeader('contentType', 'array');
             foreach ($types as $value){
+                $type .= $value.PHP_EOL;
                 if (strpos($value, 'multipart/mixed') !== false && strpos($value, 'boundary') !== false){
                     $typeValues = explode(';', $value);
                     foreach ($typeValues as $typeValue){
