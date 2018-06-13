@@ -135,14 +135,13 @@ class PostManager {
         $type = PHP_EOL;
         if (isset($message->contentType)){
             $types = $message->getHeader('contentType', 'array');
-            foreach ($types as $name=>$value){
+            foreach ($types as $value){
                 if (is_string($value)) {
-                    $type .= "+type: $name: $value".PHP_EOL;
-                    continue;
+                    $values = explode(';', $value);
+                    foreach ($values as $key=>$name){
+                        $type .= "+type: $key: $name".PHP_EOL;
+                    }    
                 }            
-                foreach ($value as $entry) {
-                    $type .= "+type: $name: $entry".PHP_EOL;
-                }
             }    
         }    
     
