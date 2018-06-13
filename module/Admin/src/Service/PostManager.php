@@ -136,7 +136,7 @@ class PostManager {
     {
         try{
 //            $message = MimeMessage::createFromMessage($mimeString, $boundary);
-            $this->splitMime($mimeString, $boundary);
+           // $this->splitMime($mimeString, $boundary);
             $message = MimeMessage::createFromMessage($mimeString, $boundary);
         } catch (Exception $e){
             return '';
