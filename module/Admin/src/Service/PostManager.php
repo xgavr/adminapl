@@ -107,6 +107,7 @@ class PostManager {
         if ($message){
             
             $logger->info('--mime--');
+            $logger->debug('--messageClass: '.get_class($message));
             
             foreach ($message->getParts() as $partNum => $part){            
 
