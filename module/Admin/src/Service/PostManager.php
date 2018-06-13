@@ -132,8 +132,12 @@ class PostManager {
             $subject = $message->subject;
         }    
         
+        $type = '';
         if (isset($message->contentType)){
-            $type = $message->contentType;
+            $types = implode(';', $message->getHeader('type', 'array'));
+            foreach ($types as $name=>$value){
+                $type .= "+type: $name: $value".PHP_EOL;
+            }    
         }    
     
         $received = '';
@@ -169,11 +173,11 @@ class PostManager {
         $headers = '';
         foreach ($message->getHeaders() as $name => $value) {
             if (is_string($value)) {
-                $headers .= "$name: $value".PHP_EOL;
+                $headers .= "+header: $name: $value".PHP_EOL;
                 continue;
             }            
             foreach ($value as $entry) {
-                $headers .= "$name: $entry".PHP_EOL;
+                $headers .= "+header: $name: $entry".PHP_EOL;
             }
         }  
         
