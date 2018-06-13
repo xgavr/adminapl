@@ -96,10 +96,47 @@ class PostManager {
 
     }
     
+    public static function splitMime($body, $boundary)
+    {
+        // TODO: we're ignoring \r for now - is this function fast enough and is it safe to assume noone needs \r?
+        $body = str_replace("\r", '', $body);
+
+        $start = 0;
+        $res = [];
+        // find every mime part limiter and cut out the
+        // string before it.
+        // the part before the first boundary string is discarded:
+        $p = strpos($body, '--' . $boundary . "\n", $start);
+        var_dump($p);
+        if ($p === false) {
+            // no parts found!
+            return [];
+        }
+
+        // position after first boundary line
+        $start = $p + 3 + strlen($boundary);
+
+        while (($p = strpos($body, '--' . $boundary . "\n", $start)) !== false) {
+            $res[] = substr($body, $start, $p - $start);
+            $start = $p + 3 + strlen($boundary);
+        }
+
+        // no more parts, find end boundary
+        $p = strpos($body, '--' . $boundary . '--', $start);
+        if ($p === false) {
+//            throw new Exception\RuntimeException('Not a valid Mime Message: End Missing');
+        }
+
+        // the remaining part also needs to be parsed:
+        $res[] = substr($body, $start, $p - $start);
+        return $res;
+    }
+    
     protected function readMimeMessage($mimeString, $boundary, $logger = null)
     {
         try{
 //            $message = MimeMessage::createFromMessage($mimeString, $boundary);
+            $this->splitMime($mimeString, $boundary);
             $message = MimeMessage::createFromMessage($mimeString, $boundary);
         } catch (Exception $e){
             return '';
@@ -209,7 +246,7 @@ class PostManager {
             $logger->debug('filename: '.$filename);
             $logger->debug('headers: '.$headers);
             //$logger->debug('content: '.$content);  
-            $logger->debug('rawContent: '.$rawContent);
+            //$logger->debug('rawContent: '.$rawContent);
         }  
 
         if (trim($boundary) && trim($rawContent)){
