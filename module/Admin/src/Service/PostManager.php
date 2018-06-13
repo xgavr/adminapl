@@ -99,6 +99,7 @@ class PostManager {
     protected function readMimeMessage($mimeString, $boundary, $logger = null)
     {
         try{
+//            $message = MimeMessage::createFromMessage($mimeString, $boundary);
             $message = MimeMessage::createFromMessage($mimeString, $boundary);
         } catch (Exception $e){
             return '';
@@ -143,10 +144,10 @@ class PostManager {
             $type .= $message->contentType.PHP_EOL;
             foreach ($types as $value){
                 if (stripos($value, 'multipart/mixed') !== false && stripos ($value, 'boundary') !== false){
-                    $typeValues = explode(';', trim($value));
+                    $typeValues = explode(';', $value);
                     foreach ($typeValues as $typeValue){
                         if (stripos($typeValue, 'boundary') !== false){
-                            $typeValuesBoundaries = explode('=', trim($typeValue));
+                            $typeValuesBoundaries = explode('=', $typeValue);
                             if (trim($typeValuesBoundaries[0]) == 'boundary'){
                                 $boundary = $typeValuesBoundaries[1];
                             }
@@ -212,7 +213,7 @@ class PostManager {
         }  
 
         if (trim($boundary) && trim($rawContent)){
-            $this->readMimeMessage($rawContent, "--".$boundary, $logger);            
+            $this->readMimeMessage($rawContent, $boundary, $logger);            
         }
                 
         $result = [
