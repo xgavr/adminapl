@@ -132,28 +132,39 @@ class PostManager {
             $subject = $message->subject;
         }    
         
-        $type = PHP_EOL;
+        $boundary = [];
+        if (isset($message->boundary)){
+            $boundary[] = $message->boundary;
+        }
+        
+        $type = '';
         if (isset($message->contentType)){
+            $type .= $message->contentType.PHP_EOL;
             $types = $message->getHeader('contentType', 'array');
             foreach ($types as $value){
-                if (is_string($value)) {
-                    $values = explode(';', $value);
-                    foreach ($values as $key=>$name){
-                        $type .= "+type: $key: $name".PHP_EOL;
-                    }    
-                }            
+                if (strpos($value, 'multipart/mixed') && strpos($value, 'boundary')){
+                    $typeValues = explode(';', $value);
+                    foreach ($typeValues as $typeValue){
+                        if (strpos($typeValue, 'boundary')){
+                            $typeValuesBoundaries = explode('=', $typeValue);
+                            if ($typeValuesBoundaries[0] == 'boundary'){
+                                $boundary[] = $typeValuesBoundaries[1];
+                            }
+                        }    
+                    }
+                }
             }    
         }    
     
-        $received = '';
-        if (isset($message->received)){
-            $receivedes = $message->getHeader('received');
-            if (is_string($receivedes)) {
-                $received = $receivedes;
-            } else {
-                $received = implode(';', $message->getHeader('received', 'array'));
-            }
-        }
+//        $received = '';
+//        if (isset($message->received)){
+//            $receivedes = $message->getHeader('received');
+//            if (is_string($receivedes)) {
+//                $received = $receivedes;
+//            } else {
+//                $received = implode(';', $message->getHeader('received', 'array'));
+//            }
+//        }
         
         $description = '';
         if (isset($message->description)){
@@ -163,11 +174,6 @@ class PostManager {
         $disposition = '';
         if (isset($message->disposition)){
             $disposition = $message->disposition;
-        }
-        
-        $boundary = '';
-        if (isset($message->boundary)){
-            $boundary = $message->boundary;
         }
         
         $filename = '';
@@ -193,9 +199,9 @@ class PostManager {
         if ($logger){
             $logger->info('Часть '.$iterator);
             $logger->debug('subject: '.$subject);
-            $logger->debug('received: '.$received);
+//            $logger->debug('received: '.$received);
             $logger->debug('disposition: '.$disposition);
-            $logger->debug('boundary: '.$boundary);
+            $logger->debug('boundary: '.implode(';', $boundary));
             $logger->debug('filename: '.$filename);
             $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
