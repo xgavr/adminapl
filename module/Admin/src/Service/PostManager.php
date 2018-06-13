@@ -140,20 +140,20 @@ class PostManager {
         $type = '';
         if (isset($message->contentType)){
             $type .= $message->contentType.PHP_EOL;
-            $types = $message->getHeader('contentType', 'array');
-            foreach ($types as $value){
-                if (strpos($value, 'multipart/mixed') && strpos($value, 'boundary')){
-                    $typeValues = explode(';', $value);
-                    foreach ($typeValues as $typeValue){
-                        if (strpos($typeValue, 'boundary')){
-                            $typeValuesBoundaries = explode('=', $typeValue);
-                            if ($typeValuesBoundaries[0] == 'boundary'){
-                                $boundary[] = $typeValuesBoundaries[1];
-                            }
-                        }    
-                    }
-                }
-            }    
+//            $types = $message->getHeader('contentType', 'array');
+//            foreach ($types as $value){
+//                if (strpos($value, 'multipart/mixed') && strpos($value, 'boundary')){
+//                    $typeValues = explode(';', $value);
+//                    foreach ($typeValues as $typeValue){
+//                        if (strpos($typeValue, 'boundary')){
+//                            $typeValuesBoundaries = explode('=', $typeValue);
+//                            if ($typeValuesBoundaries[0] == 'boundary'){
+//                                $boundary[] = $typeValuesBoundaries[1];
+//                            }
+//                        }    
+//                    }
+//                }
+//            }    
         }    
     
 //        $received = '';
@@ -199,11 +199,11 @@ class PostManager {
         if ($logger){
             $logger->info('Часть '.$iterator);
             $logger->debug('subject: '.$subject);
+            $logger->debug('type: '.$type);
 //            $logger->debug('received: '.$received);
             $logger->debug('disposition: '.$disposition);
             $logger->debug('boundary: '.implode(';', $boundary));
             $logger->debug('filename: '.$filename);
-            $logger->debug('type: '.$type);
             $logger->debug('headers: '.$headers);
             //$logger->debug('content: '.$content);  
             //$logger->debug('rawContent: '.$rawContent);
