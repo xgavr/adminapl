@@ -208,7 +208,7 @@ class PostManager {
             $logger->debug('filename: '.$filename);
             $logger->debug('headers: '.$headers);
             //$logger->debug('content: '.$content);  
-            //$logger->debug('rawContent: '.$rawContent);
+            $logger->debug('rawContent: '.$rawContent);
         }  
 
         if (trim($boundary) && trim($rawContent)){
