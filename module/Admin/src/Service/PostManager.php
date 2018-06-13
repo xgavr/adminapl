@@ -140,20 +140,20 @@ class PostManager {
         $type = '';
         if (isset($message->contentType)){
             $type .= $message->contentType.PHP_EOL;
-//            $types = $message->getHeader('contentType', 'array');
-//            foreach ($types as $value){
-//                if (strpos($value, 'multipart/mixed') && strpos($value, 'boundary')){
-//                    $typeValues = explode(';', $value);
-//                    foreach ($typeValues as $typeValue){
-//                        if (strpos($typeValue, 'boundary')){
-//                            $typeValuesBoundaries = explode('=', $typeValue);
-//                            if ($typeValuesBoundaries[0] == 'boundary'){
-//                                $boundary[] = $typeValuesBoundaries[1];
-//                            }
-//                        }    
-//                    }
-//                }
-//            }    
+            $types = $message->getHeader('contentType', 'array');
+            foreach ($types as $value){
+                if (strpos($value, 'multipart/mixed') !== false && strpos($value, 'boundary') !== false){
+                    $typeValues = explode(';', $value);
+                    foreach ($typeValues as $typeValue){
+                        if (strpos($typeValue, 'boundary')){
+                            $typeValuesBoundaries = explode('=', $typeValue);
+                            if ($typeValuesBoundaries[0] == 'boundary'){
+                                $boundary[] = $typeValuesBoundaries[1];
+                            }
+                        }    
+                    }
+                }
+            }    
         }    
     
 //        $received = '';
