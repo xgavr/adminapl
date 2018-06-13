@@ -107,7 +107,7 @@ class PostManager {
         // string before it.
         // the part before the first boundary string is discarded:
         $p = strpos($body, '--' . $boundary . "\n", $start);
-        var_dump($p);
+        var_dump($boundary);
         if ($p === false) {
             // no parts found!
             return [];
