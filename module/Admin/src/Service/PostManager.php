@@ -146,9 +146,10 @@ class PostManager {
                     $typeValues = explode(';', trim($value));
                     foreach ($typeValues as $typeValue){
                         if (stripos($typeValue, 'boundary') !== false){
-                            $type .= "boundary : ".$typeValue.PHP_EOL;
                             $typeValuesBoundaries = explode('=', trim($typeValue));
-                            if ($typeValuesBoundaries[0] == 'boundary'){
+                            $type .= 'boundary0:'.$typeValuesBoundaries[0].PHP_EOL;
+                            $type .= 'boundary1:'.$typeValuesBoundaries[1].PHP_EOL;
+                            if (trim($typeValuesBoundaries[0]) == 'boundary'){
                                 $boundary[] = $typeValuesBoundaries[1];
                             }
                         }    
