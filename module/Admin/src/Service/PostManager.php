@@ -204,7 +204,7 @@ class PostManager {
             $logger->debug('type: '.$type);
 //            $logger->debug('received: '.$received);
             $logger->debug('disposition: '.$disposition);
-            $logger->debug('boundary: '.implode(';', $boundary));
+            $logger->debug('boundary: '.$boundary);
             $logger->debug('filename: '.$filename);
             $logger->debug('headers: '.$headers);
             //$logger->debug('content: '.$content);  
