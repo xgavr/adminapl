@@ -115,7 +115,7 @@ class PostManager {
                     $logger->debug('--partNum: '.$partNum);
                     $logger->debug('--partClass: '.get_class($part));
                     $logger->debug('--headers: '.$part->getHeaders());
-                    $logger->debug('--content: '.$part->getContent());
+                    //$logger->debug('--content: '.$part->getContent());
                 }    
             }    
             
@@ -194,7 +194,7 @@ class PostManager {
             //$logger->debug('rawContent: '.$rawContent);
         }  
         
-        if ($rawContent){
+        if (trim($rawContent)){
             $this->readMimeMessage($rawContent, $logger);
         }
         
