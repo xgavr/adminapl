@@ -115,6 +115,7 @@ class PostManager {
                     $logger->debug('--partNum: '.$partNum);
                     $logger->debug('--partClass: '.get_class($part));
                     $logger->debug('--headers: '.$part->getHeaders());
+                    $logger->debug('--content: '.$part->getContent());
                 }    
             }    
             
