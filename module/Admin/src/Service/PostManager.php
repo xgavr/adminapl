@@ -96,10 +96,10 @@ class PostManager {
 
     }
     
-    protected function readMimeMessage($mimeString, $logger = null)
+    protected function readMimeMessage($mimeString, $boundary, $logger = null)
     {
         try{
-            $message = MimeMessage::createFromMessage($mimeString);
+            $message = MimeMessage::createFromMessage($mimeString, $boundary);
         } catch (Exception $e){
             return '';
         }    
@@ -132,9 +132,9 @@ class PostManager {
             $subject = $message->subject;
         }    
         
-        $boundary = [];
+        $boundary = '';
         if (isset($message->boundary)){
-            $boundary[] = $message->boundary;
+            $boundary = $message->boundary;
         }
         
         $type = '';
@@ -147,10 +147,8 @@ class PostManager {
                     foreach ($typeValues as $typeValue){
                         if (stripos($typeValue, 'boundary') !== false){
                             $typeValuesBoundaries = explode('=', trim($typeValue));
-                            $type .= 'boundary0:'.$typeValuesBoundaries[0].PHP_EOL;
-                            $type .= 'boundary1:'.$typeValuesBoundaries[1].PHP_EOL;
                             if (trim($typeValuesBoundaries[0]) == 'boundary'){
-                                $boundary[] = $typeValuesBoundaries[1];
+                                $boundary = $typeValuesBoundaries[1];
                             }
                         }    
                     }
@@ -158,6 +156,12 @@ class PostManager {
             }    
         }    
     
+        $rawContent = $message->getContent();
+        
+        if (trim($boundary) && trim($rawContent)){
+            $this->readMimeMessage($rawContent, $boundary, $logger);            
+        }
+        
 //        $received = '';
 //        if (isset($message->received)){
 //            $receivedes = $message->getHeader('received');
@@ -196,7 +200,6 @@ class PostManager {
         
         $htmlFilter = new HtmlFilter();
         $content = $htmlFilter->filter(base64_decode($message->getContent()));
-        $rawContent = $message->getContent();
         
         if ($logger){
             $logger->info('Часть '.$iterator);
@@ -210,11 +213,7 @@ class PostManager {
             //$logger->debug('content: '.$content);  
             //$logger->debug('rawContent: '.$rawContent);
         }  
-        
-        if (trim($rawContent)){
-            $this->readMimeMessage($rawContent, $logger);
-        }
-        
+                
         $result = [
             'subject' => $subject,
             'content' => $content,
