@@ -212,7 +212,7 @@ class PostManager {
         }  
 
         if (trim($boundary) && trim($rawContent)){
-            $this->readMimeMessage($rawContent, $boundary, $logger);            
+            $this->readMimeMessage($rawContent, "--".$boundary, $logger);            
         }
                 
         $result = [
