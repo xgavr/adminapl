@@ -158,9 +158,6 @@ class PostManager {
     
         $rawContent = $message->getContent();
         
-        if (trim($boundary) && trim($rawContent)){
-            $this->readMimeMessage($rawContent, $boundary, $logger);            
-        }
         
 //        $received = '';
 //        if (isset($message->received)){
@@ -213,6 +210,10 @@ class PostManager {
             //$logger->debug('content: '.$content);  
             //$logger->debug('rawContent: '.$rawContent);
         }  
+
+        if (trim($boundary) && trim($rawContent)){
+            $this->readMimeMessage($rawContent, $boundary, $logger);            
+        }
                 
         $result = [
             'subject' => $subject,
