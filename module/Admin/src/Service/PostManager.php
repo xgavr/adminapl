@@ -186,7 +186,7 @@ class PostManager {
                         if (stripos($typeValue, 'boundary') !== false){
                             $typeValuesBoundaries = explode('=', $typeValue);
                             if (trim($typeValuesBoundaries[0]) == 'boundary'){
-                                $boundary = $typeValuesBoundaries[1];
+                                $boundary = str_replace(['"', "'"], '', $typeValuesBoundaries[1]);
                             }
                         }    
                     }
