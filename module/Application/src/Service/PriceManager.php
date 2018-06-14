@@ -206,12 +206,14 @@ class PriceManager {
     {
         $box = [
             'host' => 'imap.yandex.ru',
+            'server' => '{imap.yandex.ru:993/imap/ssl}INBOX',
             'user' => $priceGetting->getEmail(),
             'password' => $priceGetting->getEmailPassword(),
             'leave_message' => true,
         ];
         
-        $mail = $this->postManager->read($box);
+        //$mail = $this->postManager->read($box);
+        $mail = $this->postManager->readImap($box);
         
         return $mail;
     }

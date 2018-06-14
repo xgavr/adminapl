@@ -314,4 +314,45 @@ class PostManager {
         
         return $result;
     }    
+    
+    /*
+     * read Imap
+     */
+    
+    protected function flattenParts($messageParts, $flattenedParts = array(), $prefix = '', $index = 1, $fullPrefix = true) {
+
+	foreach($messageParts as $part) {
+		$flattenedParts[$prefix.$index] = $part;
+		if(isset($part->parts)) {
+			if($part->type == 2) {
+				$flattenedParts = $this->flattenParts($part->parts, $flattenedParts, $prefix.$index.'.', 0, false);
+			}
+			elseif($fullPrefix) {
+				$flattenedParts = $this->flattenParts($part->parts, $flattenedParts, $prefix.$index.'.');
+			}
+			else {
+				$flattenedParts = $this->flattenParts($part->parts, $flattenedParts, $prefix);
+			}
+			unset($flattenedParts[$prefix.$index]->parts);
+		}
+		$index++;
+	}
+
+	return $flattenedParts;			
+    }
+    
+    public function readImap($params)
+    {
+        $connection = imap_open(
+                $params['server'], 
+                $params['user'], 
+                $params['password']
+        );
+        
+        $structure = imap_fetchstructure($connection, 1);
+        
+        $flattenedParts = $this->flattenParts($structure->parts);
+        
+        print_r($flattenedParts);
+    }
 }
