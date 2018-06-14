@@ -341,6 +341,42 @@ class PostManager {
 	return $flattenedParts;			
     }
     
+    protected function getPart($connection, $messageNumber, $partNumber, $encoding) {
+	
+	$data = imap_fetchbody($connection, $messageNumber, $partNumber);
+	switch($encoding) {
+		case 0: return $data; // 7BIT
+		case 1: return $data; // 8BIT
+		case 2: return $data; // BINARY
+		case 3: return base64_decode($data); // BASE64
+		case 4: return quoted_printable_decode($data); // QUOTED_PRINTABLE
+		case 5: return $data; // OTHER
+	}
+    }
+    
+    protected function getFilenameFromPart($part) {
+
+	$filename = '';
+	
+	if($part->ifdparameters) {
+		foreach($part->dparameters as $object) {
+			if(strtolower($object->attribute) == 'filename') {
+				$filename = $object->value;
+			}
+		}
+	}
+
+	if(!$filename && $part->ifparameters) {
+		foreach($part->parameters as $object) {
+			if(strtolower($object->attribute) == 'name') {
+				$filename = $object->value;
+			}
+		}
+	}
+	
+	return $filename;
+    }
+    
     public function readImap($params)
     {
         $connection = imap_open(
@@ -348,11 +384,49 @@ class PostManager {
                 $params['user'], 
                 $params['password']
         );
-        
-        $structure = imap_fetchstructure($connection, 1);
+        $messageNumber = 1;
+        $structure = imap_fetchstructure($connection, $messageNumber);
         
         $flattenedParts = $this->flattenParts($structure->parts);
         
-        print_r($flattenedParts);
+        foreach($flattenedParts as $partNumber => $part) {
+
+            switch($part->type) {
+		
+		case 0:
+			// the HTML or plain text part of the email
+			$message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+			// now do something with the message, e.g. render it
+		break;
+	
+		case 1:
+			// multi-part headers, can ignore
+	
+		break;
+		case 2:
+			// attached message headers, can ignore
+		break;
+	
+		case 3: // application
+		case 4: // audio
+		case 5: // image
+		case 6: // video
+		case 7: // other
+			$filename = $this->getFilenameFromPart($part);
+			if($filename) {
+				// it's an attachment
+				$attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+				// now do something with the attachment, e.g. save it somewhere
+			}
+			else {
+				// don't know what it is
+			}
+		break;
+	
+            }
+	
+        }       
+
+        var_dump($filename);
     }
 }
