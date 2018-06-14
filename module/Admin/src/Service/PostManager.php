@@ -153,7 +153,7 @@ class PostManager {
                     $logger->debug('--partNum: '.$partNum);
                     $logger->debug('--partClass: '.get_class($part));
                     $logger->debug('--headers: '.$part->getHeaders());
-                    //$logger->debug('--content: '.$part->getContent());
+                    $logger->debug('--content: '.$part->getContent());
                 }    
             }    
             
@@ -246,7 +246,7 @@ class PostManager {
             $logger->debug('filename: '.$filename);
             $logger->debug('headers: '.$headers);
             //$logger->debug('content: '.$content);  
-            //$logger->debug('rawContent: '.$rawContent);
+            $logger->debug('rawContent: '.$rawContent);
         }  
 
         if (trim($boundary) && trim($rawContent)){
