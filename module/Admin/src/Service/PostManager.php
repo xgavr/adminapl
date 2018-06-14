@@ -319,7 +319,8 @@ class PostManager {
      * read Imap
      */
     
-    protected function flattenParts($messageParts, $flattenedParts = array(), $prefix = '', $index = 1, $fullPrefix = true) {
+    protected function flattenParts($messageParts, $flattenedParts = array(), $prefix = '', $index = 1, $fullPrefix = true) 
+    {
 
 	foreach($messageParts as $part) {
 		$flattenedParts[$prefix.$index] = $part;
@@ -341,7 +342,8 @@ class PostManager {
 	return $flattenedParts;			
     }
     
-    protected function getPart($connection, $messageNumber, $partNumber, $encoding) {
+    protected function getPart($connection, $messageNumber, $partNumber, $encoding) 
+    {
 	
 	$data = imap_fetchbody($connection, $messageNumber, $partNumber);
 	switch($encoding) {
@@ -354,7 +356,8 @@ class PostManager {
 	}
     }
     
-    protected function getFilenameFromPart($part) {
+    protected function getFilenameFromPart($part)
+    {        
 
 	$filename = '';
 	
@@ -373,8 +376,16 @@ class PostManager {
 			}
 		}
 	}
-	
-	return $filename;
+
+        print_r($part);
+	switch($part->encoding) {
+		case 0: return $filename; // 7BIT
+		case 1: return $filename; // 8BIT
+		case 2: return $filename; // BINARY
+		case 3: return base64_decode($filename); // BASE64
+		case 4: return quoted_printable_decode($filename); // QUOTED_PRINTABLE
+		case 5: return $filename; // OTHER
+	}
     }
     
     public function readImap($params)
@@ -391,11 +402,18 @@ class PostManager {
         
         foreach($flattenedParts as $partNumber => $part) {
 
+            
             switch($part->type) {
 		
 		case 0:
+                    $charset = 'utf-8';
+                    if ($part->parameters[0]->attribute == 'charset'){
+                        $charset = $part->parameters[0]->value;
+                    }
+                        
 			// the HTML or plain text part of the email
 			$message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                        $message = iconv($charset, 'utf-8', $message);
 			// now do something with the message, e.g. render it
 		break;
 	
@@ -413,6 +431,7 @@ class PostManager {
 		case 6: // video
 		case 7: // other
 			$filename = $this->getFilenameFromPart($part);
+                    var_dump($filename);
 			if($filename) {
 				// it's an attachment
 				$attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
@@ -427,6 +446,5 @@ class PostManager {
 	
         }       
 
-        var_dump($filename);
     }
 }
