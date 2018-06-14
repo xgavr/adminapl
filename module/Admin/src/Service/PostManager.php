@@ -377,19 +377,13 @@ class PostManager {
 		}
 	}
 
-        print_r($part);
-	switch($part->encoding) {
-		case 0: return $filename; // 7BIT
-		case 1: return $filename; // 8BIT
-		case 2: return $filename; // BINARY
-		case 3: return base64_decode($filename); // BASE64
-		case 4: return quoted_printable_decode($filename); // QUOTED_PRINTABLE
-		case 5: return $filename; // OTHER
-	}
+        return iconv_mime_decode($filename);
     }
     
     public function readImap($params)
     {
+        $result = [];
+        
         $connection = imap_open(
                 $params['server'], 
                 $params['user'], 
@@ -414,7 +408,8 @@ class PostManager {
 			// the HTML or plain text part of the email
 			$message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
                         $message = iconv($charset, 'utf-8', $message);
-			// now do something with the message, e.g. render it
+                        // now do something with the message, e.g. render it
+                        $result['content'] = $message;
 		break;
 	
 		case 1:
@@ -431,20 +426,28 @@ class PostManager {
 		case 6: // video
 		case 7: // other
 			$filename = $this->getFilenameFromPart($part);
-                    var_dump($filename);
-			if($filename) {
+
+                        if($filename) {
 				// it's an attachment
 				$attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
 				// now do something with the attachment, e.g. save it somewhere
-			}
-			else {
+                                
+                                $temp_file = tempnam(sys_get_temp_dir(), 'Pst');
+                                $fh = fopen($temp_file, 'w');
+				fwrite($fh, $attachment);
+				fclose($fh);                                
+                        } else {
 				// don't know what it is
 			}
+                        
+                        $result['filename'] = $filename;
+                        $result['temp_file'] = $temp_file;
+                        
 		break;
 	
             }
 	
-        }       
-
+        }   
+        return $result;
     }
 }
