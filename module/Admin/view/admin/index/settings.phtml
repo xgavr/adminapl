@@ -56,6 +56,18 @@ $form->get('telegram_proxy')->setAttributes([
     'placeholder'=>'Использовать прокси',
     ]);
 
+$form->get('ftp_apl_suppliers_price')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ftp_apl_suppliers_price_login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ftp_apl_suppliers_price_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 
 
 //$form->get('tamtam_chat_id')->setAttributes([
@@ -80,9 +92,9 @@ $form->prepare();
     Заполните форму и нажмите <i>Сохранить</i>.
 </p>
 
+<?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-6">
-        <?= $this->form()->openTag($form); ?>
+    <div class="col-md-8">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('apl_secret_key')); ?>
@@ -144,14 +156,37 @@ $form->prepare();
             </button>
         </div>    
                 
-        <?= $this->formElement($form->get('submit')); ?>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ftp_apl_suppliers_price')); ?>
+            <?= $this->formElement($form->get('ftp_apl_suppliers_price')); ?>
+            <?= $this->formElementErrors($form->get('ftp_apl_suppliers_price')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ftp_apl_suppliers_price_login')); ?>
+            <?= $this->formElement($form->get('ftp_apl_suppliers_price_login')); ?>
+            <?= $this->formElementErrors($form->get('ftp_apl_suppliers_price_login')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ftp_apl_suppliers_price_password')); ?>
+            <?= $this->formElement($form->get('ftp_apl_suppliers_price_password')); ?>
+            <?= $this->formElementErrors($form->get('ftp_apl_suppliers_price_password')); ?>                  
+        </div>
+
         
-        <?= $this->form()->closeTag(); ?>
     </div>   
-    <div class="col-md-4">
+    <div class="col-sm-3" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active">
+                <?= $this->formElement($form->get('submit')); ?>
+            </li>
+        </ul>
     </div>    
     
 </div>   
+
+<?= $this->form()->closeTag(); ?>
 
 <script async="true">
     $('.test-button').on('click', function(e) {

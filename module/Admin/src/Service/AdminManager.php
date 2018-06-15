@@ -69,6 +69,10 @@ class AdminManager {
         $config->admin->telegram_hook_url = $data['telegram_hook_url'];
         $config->admin->telegram_admin_chat_id = $data['telegram_admin_chat_id'];
         $config->admin->telegram_proxy = $data['telegram_proxy'];
+        
+        $config->admin->ftp_apl_suppliers_price = $data['ftp_apl_suppliers_price'];
+        $config->admin->ftp_apl_suppliers_price_login = $data['ftp_apl_suppliers_price_login'];
+        $config->admin->ftp_apl_suppliers_price_password = $data['ftp_apl_suppliers_price_password'];
 
 //        $config->admin->tamtam_access_token = $data['tamtam_access_token'];
 //        $config->admin->tamtam_chat_id = $data['tamtam_chat_id'];

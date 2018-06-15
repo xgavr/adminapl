@@ -348,6 +348,7 @@ class SupplierController extends AbstractActionController
                     'emailPassword' => $priceGetting->getEmailPassword(),  
                     'link' => $priceGetting->getLink(),  
                     'status' => $priceGetting->getStatus(),  
+                    'orderToApl' => $priceGetting->getOrderToApl(),  
                 ];
                 $form->setData($data);
             }    

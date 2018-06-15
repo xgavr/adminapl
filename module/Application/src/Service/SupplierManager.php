@@ -228,6 +228,7 @@ class SupplierManager
         $priceGetting->setEmailPassword($data['emailPassword']);
         $priceGetting->setLink($data['link']);
         $priceGetting->setStatus($data['status']);
+        $priceGetting->setOrderToApl($data['orderToApl']);
         
         $currentDate = date('Y-m-d H:i:s');
         $priceGetting->setDateCreated($currentDate);        
@@ -251,6 +252,7 @@ class SupplierManager
         $priceGetting->setEmailPassword($data['emailPassword']);
         $priceGetting->setLink($data['link']);
         $priceGetting->setStatus($data['status']);
+        $priceGetting->setOrderToApl($data['orderToApl']);
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($priceGetting);

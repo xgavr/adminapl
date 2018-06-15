@@ -34,6 +34,10 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('orderToApl')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'price-getting-submit']);
 
 $form->prepare();
@@ -107,6 +111,15 @@ $form->prepare();
                         </div>
                         
                         <?= $this->formElement($form->get('csrf')); ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('orderToApl')); ?>
+                            <?= $this->formElement($form->get('orderToApl')); ?>
+                            <?= $this->formElementErrors($form->get('orderToApl')); ?>                  
+                        </div>                        
                     </div>
                 </div>
             </div>    

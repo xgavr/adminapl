@@ -276,6 +276,8 @@ $this->headScript()
                                         FTP логин: <span><?= $priceGetting->getFtpLogin() ?></span><br/>
                                         FTP пароль: <span><?= $priceGetting->getFtpPassword() ?></span><br/>
                                         Ссылка на скачивание: <span><?= $priceGetting->getLink() ?></span><br/>
+                                        Обмен с АПЛ: <span><?= $priceGetting->getOrderToAplAsString() ?></span><br/>
+                                        Статус: <span><?= $priceGetting->getStatusAsString() ?></span><br/>
                                     </div>        
                                     <div class="pull-right">                                
                                         <button value="/supplier/price-getting-form/<?= $supplier->getId() ?>?priceGetting=<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs"

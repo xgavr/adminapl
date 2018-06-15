@@ -132,6 +132,19 @@ class PriceGettingForm extends Form
             ],
         ]);
         
+        // Add "orderToApl" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'orderToApl',
+            'options' => [
+                'label' => 'Обмен с АПЛ',
+                'value_options' => [
+                    1 => 'Закачивать файл прайса на сервер АПЛ',
+                    2 => 'Не закачивать файл прайса на сервер АПЛ',                    
+                ]
+            ],
+        ]);
+        
                 
         // Добавляем кнопку отправки формы
         $this->add([
@@ -307,6 +320,17 @@ class PriceGettingForm extends Form
         // Add input for "status" field
         $inputFilter->add([
                 'name'     => 'status',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'orderToApl',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

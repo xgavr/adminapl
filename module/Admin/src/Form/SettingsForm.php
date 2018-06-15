@@ -152,6 +152,39 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'ftp_apl_suppliers_price',
+            'attributes' => [
+                'id' => 'ftp_apl_suppliers_price'
+            ],
+            'options' => [
+                'label' => 'FTP АПЛ для прайсов поставщиков',
+            ],
+        ]);
+                
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'ftp_apl_suppliers_price_login',
+            'attributes' => [
+                'id' => 'ftp_apl_suppliers_price_login'
+            ],
+            'options' => [
+                'label' => 'Логин на FTP АПЛ для прайсов поставщиков',
+            ],
+        ]);
+                
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'ftp_apl_suppliers_price_password',
+            'attributes' => [
+                'id' => 'ftp_apl_suppliers_price_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на FTP АПЛ для прайсов поставщиков',
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -342,6 +375,63 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'telegram_proxy',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'ftp_apl_suppliers_price',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'ftp_apl_suppliers_price_login',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'ftp_apl_suppliers_price_password',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

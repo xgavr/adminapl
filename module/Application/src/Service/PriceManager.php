@@ -15,6 +15,7 @@ use Application\Entity\Country;
 use Application\Entity\Producer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Entity\PriceGetting;
 use MvlabsPHPExcel\Service;
 use Zend\Json\Json;
 
@@ -212,10 +213,29 @@ class PriceManager {
             'leave_message' => true,
         ];
         
-        //$mail = $this->postManager->read($box);
-        $mail = $this->postManager->readImap($box);
+        $mailList = $this->postManager->readImap($box);
         
-        return $mail;
+        if (count($mailList)){
+            foreach ($mailList as $mail){
+                if (count($mail['attachment'])){
+                    foreach($mail['attachment'] as $attachment){
+                        if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                            $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
+                            if (copy($attachment['temp_file'], $target)){
+                                
+                                if ($priceGetting->getOrderToApl == PriceGetting::ORDER_PRICE_FILE_TO_APL){
+                                    
+                                }
+                                
+                                unlink($attachment['temp_file']);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return;
     }
         
 }

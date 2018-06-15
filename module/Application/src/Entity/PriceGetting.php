@@ -22,6 +22,9 @@ class PriceGetting {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
+    const ORDER_PRICE_FILE_TO_APL       = 1; // Закачивать полученый прайс на сервер АПЛ.
+    const NO_ORDER_PRICE_FILE_TO_APL    = 2; // Не закачивать полученый прайс на сервер АПЛ.
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -74,6 +77,11 @@ class PriceGetting {
      * @ORM\Column(name="status")  
      */
     protected $status;    
+       
+    /**
+     * @ORM\Column(name="order_to_apl")  
+     */
+    protected $orderToApl;    
        
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="priceGettings") 
@@ -217,6 +225,50 @@ class PriceGetting {
         $this->status = $status;
     }   
     
+    /**
+     * Returns orderToApl.
+     * @return int     
+     */
+    public function getOrderToApl() 
+    {
+        return $this->orderToApl;
+    }
+
+    
+    /**
+     * Returns possible orders as array.
+     * @return array
+     */
+    public static function getOrderToAplList() 
+    {
+        return [
+            self::ORDER_PRICE_FILE_TO_APL => 'Закачивать на сервер АПЛ',
+            self::NO_ORDER_PRICE_FILE_TO_APL => 'Не закачивать на сервер АПЛ'
+        ];
+    }    
+    
+    /**
+     * Returns user orders as string.
+     * @return string
+     */
+    public function getOrderToAplAsString()
+    {
+        $list = self::getOrderToAplList();
+        if (isset($list[$this->orderToApl]))
+            return $list[$this->orderToApl];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets order.
+     * @param int $order     
+     */
+    public function setOrderToApl($order) 
+    {
+        $this->orderToApl = $order;
+    }   
+
     /*
      * Возвращает связанный supplier.
      * @return \Application\Entity\Supplier
