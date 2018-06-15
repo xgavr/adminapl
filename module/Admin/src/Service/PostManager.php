@@ -31,7 +31,6 @@ class PostManager {
     const LOG_FOLDER = './data/log/'; //папка логов
     const LOG_FILE = './data/log/mail.log'; //лог 
     
-    //put your code here
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager

@@ -134,6 +134,7 @@ return [
             Service\AdminManager::class => Service\Factory\AdminManagerFactory::class,
             Service\AplService::class => Service\Factory\AplServiceFactory::class,
             Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
+            Service\FtpManager::class => Service\Factory\FtpManagerFactory::class,
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,
             Service\TamTamManager::class => Service\Factory\TamTamManagerFactory::class,

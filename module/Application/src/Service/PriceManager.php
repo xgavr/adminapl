@@ -222,11 +222,6 @@ class PriceManager {
                         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
                             $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
                             if (copy($attachment['temp_file'], $target)){
-                                
-                                if ($priceGetting->getOrderToApl == PriceGetting::ORDER_PRICE_FILE_TO_APL){
-                                    
-                                }
-                                
                                 unlink($attachment['temp_file']);
                             }
                         }

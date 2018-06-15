@@ -81,4 +81,5 @@ class AdminManager {
         
         $writer->toFile(self::SETTINGS_FILE, $config);
     }
+        
 }
