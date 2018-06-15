@@ -376,7 +376,7 @@ class PostManager {
 		}
 	}
 
-        return iconv_mime_decode($filename, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'cp1251');
+        return iconv_mime_decode($filename, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'utf-8');
     }
     
     public function readImap($params)
