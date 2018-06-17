@@ -9,6 +9,7 @@
 namespace Admin\Service;
 
 use Admin\Filter\AutoruOrderFilter;
+use Admin\Filter\HtmlFilter;
 /**
  * Description of AutoruManager
  *
@@ -52,18 +53,21 @@ class AutoruManager {
     {
         $box = [
             'host' => 'imap.yandex.ru',
+            'server' => '{imap.yandex.ru:993/imap/ssl}INBOX',
             'user' => 'autoru@autopartslist.ru',
             'password' => 'kjdrf4',
-            'leave_message' => true,
+            'leave_message' => false,
         ];
         
         $filter = new AutoruOrderFilter();
+        $htmlFilter = new HtmlFilter();
         
-        $mail = $this->postManager->read($box);
+        $mail = $this->postManager->readImap($box);
         if (is_array($mail)){
             foreach($mail as $msg){
-                if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру'&& $msg['content']){
-                    $filtered = $filter->filter($msg['content']); 
+                
+                if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру' && $msg['content']['HTML']){
+                    $filtered = $filter->filter($htmlFilter->filter($msg['content']['HTML'])); 
                     $text = $msg['subject'].PHP_EOL.$filtered['text'];
                     
                     $address = '';
@@ -86,16 +90,17 @@ class AutoruManager {
                             'address' => $address,
                         ];
                         
-//                        $aplResponce = $this->aplService->checkout($data);
-//                        if (is_array($aplResponce)){
-//                            $orderData = (array) $aplResponce['order'];
-//                            if ($order = $orderData['id']){
-//                                $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
-//                            }
-//                        }    
+                
+                        $aplResponce = $this->aplService->checkout($data);
+                        if (is_array($aplResponce)){
+                            $orderData = (array) $aplResponce['order'];
+                            if ($order = $orderData['id']){
+                                $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
+                            }
+                        }    
                     }
                     
-                    //$this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
+                    $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
                     //printf(nl2br($text));
                 }
             }
