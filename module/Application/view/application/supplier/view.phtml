@@ -290,6 +290,27 @@ $this->headScript()
                                         </button>                                                           
                                     </div>                                                                        
                                 </div>
+                                <?php foreach($lastPrice as $filename => $value):?>
+                                    <div class="panel-body">
+                                        <div class="pull-left">
+                                            <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
+                                        </div>
+                                        <div class="pull-right">       
+                                            <button value="/price/upload-price-file-to-apl-form/<?= $supplier->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
+                                                    title="Закачать прайс на сервер АПЛ">
+                                                <span class="glyphicon glyphicon-upload" ></span>
+                                            </button>                                                           
+                                            <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('price',
+                                                    ['action'=>'download-price-file-form'], ['query' => ['filename' => $value['path']]]); ?>">
+                                                <span class="glyphicon glyphicon-download"></span>
+                                            </a>
+                                            <button value="/price/delete-price-file-form?filename=<?= $value['path']?>" class="btn btn-default btn-xs this-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                           
+                                        </div>                                                                        
+                                    </div>    
+                               <? endforeach;?>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -393,37 +414,6 @@ $this->headScript()
         </ul>
     </div>    
 </div>    
-
-<div class="row">
-        
-                
-                
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title pull-left">Прайсы</h3>
-                <button supplier-id="<?= $supplier->getId() ?>" class="btn btn-default btn-xs pull-right" 
-                        data-toggle="modal" data-target="#upload-price-modal" title="Загрузить">
-                    <span class="glyphicon glyphicon-upload" ></span>
-                </button>
-                <div class="clearfix"></div>
-            </div>            
-            <table class="table table-striped table-bordered">
-                <?php if ($supplier->getRaw()): ?>                    
-                    <?php foreach ($supplier->getRaw() as $raw): ?>
-                        <tr>
-                            <th class=""><?= $raw->getBasename() ?></th>
-                            <td align="right">
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </table>
-        </div>
-    </div>    
-    
-</div>
-
 
 <div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" role="document">

@@ -465,6 +465,8 @@ class PostManager {
                 }
                 
                 $messageNumber++;
+                
+                if ($messageNumber > 10) break;
             }    
         }    
         

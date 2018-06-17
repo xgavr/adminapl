@@ -12,6 +12,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Raw;
 use Application\Entity\PriceGetting;
+use Application\Entity\Supplier;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -181,18 +182,17 @@ class PriceController extends AbstractActionController
     
     public function deleteAction()
     {
-        $supplierId = $this->params()->fromRoute('id', -1);
+        $priceId = $this->params()->fromRoute('id', -1);
         
-        $supplier = $this->entityManager->getRepository(Price::class)
-                ->findOneById($supplierId);        
-        if ($supplier == null) {
+        $price = $this->entityManager->getRepository(Price::class)
+                ->findOneById($priceId);        
+        if ($price == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $this->supplierManager->removePrice($supplier);
+        $this->supplierManager->removePrice($price);
         
-        // Перенаправляем пользователя на страницу "rb/tax".
         return $this->redirect()->toRoute('supplier', []);
     }    
 
@@ -221,4 +221,65 @@ class PriceController extends AbstractActionController
             'supplierManager' => $this->supplierManager,
         ]);
     }      
+    
+    public function deletePriceFileFormAction()
+    {
+        $filename = $this->params()->fromQuery('filename');
+        
+        if (file_exists(realpath($filename))){
+            unlink(realpath($filename));
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }
+    
+    public function uploadPriceFileToAplFormAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);        
+
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $filename = $this->params()->fromQuery('filename');
+        
+        if (file_exists(realpath($filename))){
+            $this->priceManager->putPriceFileToApl($supplier, $filename);
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }
+    
+    public function downloadPriceFileFormAction()
+    {
+        $filename = $this->params()->fromQuery('filename');
+        
+        $file = realpath($filename);
+        
+        if (file_exists($file)){
+            if (ob_get_level()) {
+              ob_end_clean();
+            }
+            // заставляем браузер показать окно сохранения файла
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename=' . basename($file));
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            // читаем файл и отправляем его пользователю
+            readfile($file);
+        }
+        exit;          
+    }    
 }

@@ -21,10 +21,15 @@ class FtpManager {
      */
     private $entityManager;
     
-    public function __construct($entityManager)
+    /*
+     * @var Admin\Service\AdminManager
+     */
+    private $adminManager;
+    
+    public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
-        
+        $this->adminManager = $adminManager;
     }
 
     /*
@@ -34,14 +39,15 @@ class FtpManager {
      * $params['port'] - фтп порт
      * $params['login'] - логин
      * $params['password'] - пароль
-     * $params['dest_file'] - локальный файл
-     * $params['source_file'] - файл на фтп
+     * $params['source_file'] - локальный файл
+     * $params['dest_file'] - файл на фтп
      */
     public function put($params)
     {
-        $ftp = ftp_connect($params['host'], $params['port']);
+        $ftp = ftp_connect($params['host']);
         
-        ftp_login($ftp, $params['login'],$params['password']);
+        ftp_login($ftp, $params['login'],$params['password']) or die("Cannot login");
+        ftp_pasv($ftp, true) or die("Cannot switch to passive mode");
         
         if (ftp_login){
 
@@ -53,5 +59,27 @@ class FtpManager {
         }
         
         return false;
-    }    
+    }
+
+    /*
+     * Перекинуть прайс в папку прайсов на АПЛ
+     *  @var $params array
+     * $params['source_file'] - локальный файл
+     * $params['dest_file'] - файл на фтп
+     */
+    public function putPriceToApl($params)
+    {
+        $settings = $this->adminManager->getSettings();
+        if ($settings['ftp_apl_suppliers_price']){
+            $params['host'] = $settings['ftp_apl_suppliers_price'];
+            $params['login'] = $settings['ftp_apl_suppliers_price_login'];
+            $params['password'] = $settings['ftp_apl_suppliers_price_password'];
+            
+            if (file_exists($params['source_file']) && $params['dest_file']){
+                return $this->put($params);
+            }
+        }
+        
+        return;        
+    }
 }

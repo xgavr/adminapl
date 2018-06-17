@@ -15,6 +15,8 @@ use Application\Entity\BillGetting;
 use Application\Entity\RequestSetting;
 use Application\Entity\SupplySetting;
 use Company\Entity\Office;
+use Zend\File\ClassFileLocator;
+
 
 /**
  * Description of SupplierService
@@ -109,7 +111,42 @@ class SupplierManager
         $this->addPriceFolder($supplier);
         $price_data_folder_name = $this->priceManager->getPriceFolder();
         return $price_data_folder_name.'/'.$supplier->getId();
-    }    
+    }  
+    
+    public function getPriceArxFolder($supplier)
+    {
+        $this->addPriceFolder($supplier);
+        $arx_price_data_folder_name = $this->priceManager->getPriceArxFolder();
+        return $arx_price_data_folder_name.'/'.$supplier->getId();
+    }  
+    
+    public function getLastPriceFile($supplier)
+    {
+        $path = $this->getPriceFolder($supplier);
+
+        $result = [];
+        foreach (new \DirectoryIterator($path) as $fileInfo) {
+            if($fileInfo->isDot()) continue;
+            $result[$fileInfo->getFilename()] = [
+                'path' => $fileInfo->getPathname(), 
+                'date' => $fileInfo->getMTime(),
+                'size' => $fileInfo->getSize(),
+            ];
+        }        
+
+        if (!count($result)){
+            $arxPath = $this->getPriceArxFolder($supplier);
+            foreach (new \DirectoryIterator($arxPath) as $fileInfo) {
+                if($fileInfo->isDot()) continue;
+                $result[$fileInfo->getFilename()] = [
+                    'path' => $fileInfo->getPathname(), 
+                    'date' => $fileInfo->getMTime(),
+                    'size' => $fileInfo->getSize(),
+                ];
+            }        
+        }
+        return $result;
+    }
     
     public function updateSupplier($supplier, $data) 
     {

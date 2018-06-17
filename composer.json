@@ -36,8 +36,7 @@
         "zendframework/zend-mail": "^2.8",
         "igorescobar/jquery-mask-plugin": "^1.14",
         "zendframework/zend-log": "^2.9",
-        "longman/telegram-bot": "^0.52.0",
-        "fabiang/xmpp": "^0.7.0"
+        "longman/telegram-bot": "^0.52.0"
    },
     "autoload": {
         "psr-4": {

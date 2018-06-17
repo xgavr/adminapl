@@ -288,6 +288,7 @@ class SupplierController extends AbstractActionController
             'supplier' => $supplier,
             'legalContact' => $supplier->getLegalContact(),
             'supplierManager' => $this->supplierManager,
+            'lastPrice' => $this->supplierManager->getLastPriceFile($supplier),
         ]);
     }    
     
@@ -980,7 +981,6 @@ class SupplierController extends AbstractActionController
         // Перенаправляем пользователя на страницу "supplier/view".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
-    
     
     public function uploadPriceFormAction()
     {

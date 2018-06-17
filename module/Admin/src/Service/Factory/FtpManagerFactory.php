@@ -11,9 +11,10 @@ namespace Admin\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\FtpManager;
+use Admin\Service\AdminManager;
 
 /**
- * Description of ShopManagerFactory
+ * Description of FtpManagerFactory
  *
  * @author Daddy
  */
@@ -24,8 +25,9 @@ class FtpManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new FtpManager($entityManager);
+        return new FtpManager($entityManager, $adminManager);
     }
 }

@@ -40,11 +40,17 @@ class PriceManager {
      */
     private $postManager;
   
+    /*
+     * @var Admin\Service\FtpManager
+     */
+    private $ftpManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $postManager)
+    public function __construct($entityManager, $postManager, $ftpManager)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;
+        $this->ftpManager = $ftpManager;
     }
     
     public function getPriceFolder()
@@ -199,6 +205,18 @@ class PriceManager {
         }
     }
     
+    public function putPriceFileToApl($supplier, $filename)
+    {
+        if (file_exists($filename)){
+            $pathinfo = pathinfo($filename);
+            $destfile = '/'.$supplier->getAplId().'/'.$pathinfo['basename'];
+            return $this->ftpManager->putPriceToApl(['source_file' => realpath($filename), 'dest_file' => $destfile]);
+        }
+        
+        return;
+    }
+    
+    
     /**
      * Проверка почты в ящике поставщика
      * @var Application\Entity\PriceGettting $priceGetting
@@ -210,7 +228,7 @@ class PriceManager {
             'server' => '{imap.yandex.ru:993/imap/ssl}INBOX',
             'user' => $priceGetting->getEmail(),
             'password' => $priceGetting->getEmailPassword(),
-            'leave_message' => true,
+            'leave_message' => false,
         ];
         
         $mailList = $this->postManager->readImap($box);
@@ -222,6 +240,10 @@ class PriceManager {
                         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
                             $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
                             if (copy($attachment['temp_file'], $target)){
+                                if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
+                                    $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
+                                    $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
+                                }    
                                 unlink($attachment['temp_file']);
                             }
                         }
