@@ -49,16 +49,11 @@ class FtpManager {
         ftp_login($ftp, $params['login'],$params['password']) or die("Cannot login");
         ftp_pasv($ftp, true) or die("Cannot switch to passive mode");
         
-        if (ftp_login){
+        $result = ftp_put($ftp, $params['dest_file'], $params['source_file'], FTP_BINARY);
 
-            $result = ftp_put($ftp, $params['dest_file'], $params['source_file'], FTP_BINARY);
+        ftp_close($ftp);
 
-            ftp_close($ftp);
-
-            return $result;
-        }
-        
-        return false;
+        return $result;
     }
 
     /*
