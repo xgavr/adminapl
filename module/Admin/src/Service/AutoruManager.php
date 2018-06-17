@@ -54,6 +54,7 @@ class AutoruManager {
             'host' => 'imap.yandex.ru',
             'user' => 'autoru@autopartslist.ru',
             'password' => 'kjdrf4',
+            'leave_message' => true,
         ];
         
         $filter = new AutoruOrderFilter();
@@ -85,16 +86,16 @@ class AutoruManager {
                             'address' => $address,
                         ];
                         
-                        $aplResponce = $this->aplService->checkout($data);
-                        if (is_array($aplResponce)){
-                            $orderData = (array) $aplResponce['order'];
-                            if ($order = $orderData['id']){
-                                $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
-                            }
-                        }    
+//                        $aplResponce = $this->aplService->checkout($data);
+//                        if (is_array($aplResponce)){
+//                            $orderData = (array) $aplResponce['order'];
+//                            if ($order = $orderData['id']){
+//                                $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
+//                            }
+//                        }    
                     }
                     
-                    $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
+                    //$this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
                     //printf(nl2br($text));
                 }
             }
