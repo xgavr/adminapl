@@ -104,6 +104,8 @@ class RawManager {
     public function uploadRawprice($supplier, $filename)
     {
         ini_set('memory_limit', '1024M');
+        set_time_limit(0); 
+        $start = time();
         
         if (file_exists($filename)){
             
@@ -126,7 +128,7 @@ class RawManager {
 
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
-                $mvexcel = new Service\PhpExcelService();    
+                $mvexcel = new Service\PhpExcelService();
                 $excel = $mvexcel->createPHPExcelObject($filename);
 
                 $raw = new Raw();
@@ -136,6 +138,8 @@ class RawManager {
 
                 $currentDate = date('Y-m-d H:i:s');
                 $raw->setDateCreated($currentDate);
+
+                $this->entityManager->persist($raw);
 
                 $sheets = $excel->getAllSheets();
                 foreach ($sheets as $sheet) { // PHPExcel_Worksheet
@@ -163,13 +167,16 @@ class RawManager {
                             $this->entityManager->persist($rawprice);
 
                             $raw->addRawprice($rawprice);
+                            
+                            if (time() - $start > 25){
+                                $this->entityManager->flush();
+                                $start = time();
+                            }
 
                         }
                         // Применяем изменения к базе данных.
                     }	
                 }
-
-                $this->entityManager->persist($raw);
 
                 $this->entityManager->flush();                    
 
