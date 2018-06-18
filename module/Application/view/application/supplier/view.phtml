@@ -211,26 +211,28 @@ $this->headScript()
                                                 </div>
                                                 <div class="panel-body">
                                                     <div class="panel panel-group">
-                                                        <?php foreach ($manager->getMessengers() as $messenger): ?>
-                                                            <div class="panel panel-default">
-                                                                <div class="panel-body">
-                                                                    <div class="pull-left">
-                                                                        <?= $this->escapeHtml($messenger->getTypesAsString()); ?>: <?= $this->escapeHtml($messenger->getIdent()); ?>
+                                                        <?php if ($manager->getMessengers()): ?>
+                                                            <?php foreach ($manager->getMessengers() as $messenger): ?>
+                                                                <div class="panel panel-default">
+                                                                    <div class="panel-body">
+                                                                        <div class="pull-left">
+                                                                            <?= $this->escapeHtml($messenger->getTypesAsString()); ?>: <?= $this->escapeHtml($messenger->getIdent()); ?>
+                                                                        </div>
+                                                                        <div class="pull-right">
+                                                                            <button value="/contact/messenger-form/<?= $messenger->getContact()->getId() ?>?messenger=<?= $messenger->getId() ?>" class="btn btn-default btn-xs"
+                                                                                    data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                                                                <span class="glyphicon glyphicon-edit" ></span>
+                                                                            </button>                                                            
+                                                                            <button value="/contact/delete-messenger-form/<?= $messenger->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                                                    title="Удалить">
+                                                                                <span class="glyphicon glyphicon-remove" ></span>
+                                                                            </button>                                                            
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="pull-right">
-                                                                        <button value="/contact/messenger-form/<?= $messenger->getContact()->getId() ?>?messenger=<?= $messenger->getId() ?>" class="btn btn-default btn-xs"
-                                                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                                                            <span class="glyphicon glyphicon-edit" ></span>
-                                                                        </button>                                                            
-                                                                        <button value="/contact/delete-messenger-form/<?= $messenger->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                                                                title="Удалить">
-                                                                            <span class="glyphicon glyphicon-remove" ></span>
-                                                                        </button>                                                            
-                                                                    </div>
-                                                                </div>
 
-                                                            </div>
-                                                        <?php endforeach; ?>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
                                                     </div>                    
                                                 </div>
                                             </div>                        
@@ -266,16 +268,25 @@ $this->headScript()
                                     <div class="pull-left">
                                         <?= $priceGetting->getName() ?><br/>
                                         Email: <span><?= $priceGetting->getEmail() ?></span> 
-                                        <button value="/price/by-mail/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
-                                                title="Проверить получение">
-                                            <span class="glyphicon glyphicon-envelope" ></span>
-                                        </button>                                                    
+                                        <?php if ($priceGetting->getEmail()): ?>
+                                            <button value="/price/by-mail/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
+                                                    title="Проверить почту">
+                                                <span class="glyphicon glyphicon-envelope" ></span>
+                                            </button>
+                                        <?php endif; ?>
                                         <br/>
                                         Email пароль: <span><?= $priceGetting->getEmailPassword() ?></span><br/>
                                         FTP: <span><?= $priceGetting->getFtp() ?></span><br/>
                                         FTP логин: <span><?= $priceGetting->getFtpLogin() ?></span><br/>
                                         FTP пароль: <span><?= $priceGetting->getFtpPassword() ?></span><br/>
-                                        Ссылка на скачивание: <span><?= $priceGetting->getLink() ?></span><br/>
+                                        Ссылка на скачивание: <span><?= $priceGetting->getLink() ?></span>
+                                        <?php if ($priceGetting->getLink()): ?>
+                                            <button value="/price/by-link/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
+                                                    title="Скачать по ссылке">
+                                                <span class="glyphicon glyphicon-save-file" ></span>
+                                            </button>
+                                        <?php endif; ?>
+                                        <br/>
                                         Обмен с АПЛ: <span><?= $priceGetting->getOrderToAplAsString() ?></span><br/>
                                         Статус: <span><?= $priceGetting->getStatusAsString() ?></span><br/>
                                     </div>        
@@ -296,6 +307,10 @@ $this->headScript()
                                             <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
                                         </div>
                                         <div class="pull-right">       
+                                            <button value="/raw/upload-raw-form/<?= $supplier->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
+                                                    title="Загрузить файл в базу">
+                                                <span class="glyphicon glyphicon-import" ></span>
+                                            </button>                                                           
                                             <button value="/price/upload-price-file-to-apl-form/<?= $supplier->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
                                                     title="Закачать прайс на сервер АПЛ">
                                                 <span class="glyphicon glyphicon-upload" ></span>

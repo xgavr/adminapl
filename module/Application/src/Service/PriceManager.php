@@ -16,8 +16,6 @@ use Application\Entity\Producer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\PriceGetting;
-use MvlabsPHPExcel\Service;
-use Zend\Json\Json;
 
 /**
  * Description of PriceManager
@@ -96,100 +94,6 @@ class PriceManager {
         
     }
     
-    /**
-     * Загрузка сырого прайса
-     * @var Application\Entity\Supplier
-     * @var string $filename
-     */
-    
-    public function uploadRawprice($supplier, $filename){
-                
-        if (file_exists($filename)){
-            $mvexcel = new Service\PhpExcelService();    
-            $excel = $mvexcel->createPHPExcelObject($filename);
-            
-            $raw = new Raw();
-            $raw->setSupplier($supplier);
-            $raw->setFilename($filename);
-            $raw->setStatus($raw->getStatusActive());
-
-            $currentDate = date('Y-m-d H:i:s');
-            $raw->setDateCreated($currentDate);
-                        
-            $sheets = $excel->getAllSheets();
-            foreach ($sheets as $sheet) { // PHPExcel_Worksheet
-
-                $excel_sheet_content = $sheet->toArray();
-
-                if (count($sheet)){
-                    foreach ($excel_sheet_content as $row){
-                        $rawprice = new Rawprice();
-
-                        $rawprice->setRawdata(Json::encode($row));
-
-                        $rawprice->setRaw($raw);
-
-                        $currentDate = date('Y-m-d H:i:s');
-                        $rawprice->setDateCreated($currentDate);
-
-                        // Добавляем сущность в менеджер сущностей.
-                        $this->entityManager->persist($rawprice);
-                        
-                        $raw->addRawprice($rawprice);
-
-                    }
-                    // Применяем изменения к базе данных.
-                }	
-            }
-
-            $this->entityManager->persist($raw);
-            
-            $this->entityManager->flush();                    
-            
-            unset($excel);
-            unset($mvexcel);
-        }
-    }
-    
-    /*
-     * 
-     * Проверка папки с прайсами. Если в папке есть прайс то загружаем его
-     * 
-     * @var Application\Entity\Supplier $supplier
-     * @var string $folderName
-     * 
-     */
-    public function checkPriceFolder($supplier, $folderName)
-    {
-    
-        if (is_dir($folderName)){
-            if ($dh = opendir($folderName)) {
-                while (($file = readdir($dh)) !== false) {
-                    if($file != "." && $file != ".."){ // если это не папка
-                        if(is_file($folderName."/".$file)){ // если файл
-                            
-                            if ($supplier->getStatus() == $supplier->getStatusActive()){
-                                $this->uploadRawprice($supplier, $folderName."/".$file);
-                            }
-                            
-                            $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
-                            if (is_dir($arx_folder)){
-                                if (!rename($folderName."/".$file, $arx_folder."/".$file)){
-                                    unlink($folderName."/".$file);
-                                }
-                            }
-                            
-                        }                        
-                        // если папка, то рекурсивно вызываем
-                        if(is_dir($folderName."/".$file)){
-                            $this->checkPriceFolder($supplier, $folderName."/".$file);
-                        }
-                    }           
-                }
-                closedir($dh);
-            }
-        }
-    }
     
     /*
      * Проход по всем поставщикам - поиск файлов с прайсам в папках
@@ -223,32 +127,51 @@ class PriceManager {
      */
     public function getPriceByMail($priceGetting)
     {
-        $box = [
-            'host' => 'imap.yandex.ru',
-            'server' => '{imap.yandex.ru:993/imap/ssl}INBOX',
-            'user' => $priceGetting->getEmail(),
-            'password' => $priceGetting->getEmailPassword(),
-            'leave_message' => false,
-        ];
-        
-        $mailList = $this->postManager->readImap($box);
-        
-        if (count($mailList)){
-            foreach ($mailList as $mail){
-                if (count($mail['attachment'])){
-                    foreach($mail['attachment'] as $attachment){
-                        if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                            $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
-                            if (copy($attachment['temp_file'], $target)){
-                                if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
-                                    $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
-                                    $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
-                                }    
-                                unlink($attachment['temp_file']);
+        if ($priceGetting->getEmail() && $priceGetting->getEmailPassword()){
+            $box = [
+                'host' => 'imap.yandex.ru',
+                'server' => '{imap.yandex.ru:993/imap/ssl}INBOX',
+                'user' => $priceGetting->getEmail(),
+                'password' => $priceGetting->getEmailPassword(),
+                'leave_message' => false,
+            ];
+
+            $mailList = $this->postManager->readImap($box);
+
+            if (count($mailList)){
+                foreach ($mailList as $mail){
+                    if (count($mail['attachment'])){
+                        foreach($mail['attachment'] as $attachment){
+                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                                $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
+                                if (copy($attachment['temp_file'], $target)){
+                                    if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
+                                        $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
+                                        $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
+                                    }    
+                                    unlink($attachment['temp_file']);
+                                }
                             }
                         }
                     }
                 }
+            }
+        }    
+        
+        return;
+    }
+    
+    public function getPriceByLink($priceGetting)
+    {
+        if ($priceGetting->getLink()){
+            $pathinfo = pathinfo($priceGetting->getLink());
+            $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$pathinfo['basename'];
+            if ($result = copy($priceGetting->getLink(), $target)){
+                if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
+                    $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$pathinfo['basename'];
+                    $this->ftpManager->putPriceToApl(['source_file' => $target, 'dest_file' => $destfile]);
+                }  
+                return $result;
             }
         }
         

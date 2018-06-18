@@ -94,6 +94,28 @@ class PriceController extends AbstractActionController
         
     }
     
+    public function byLinkAction()
+    {
+        $priceGettingId = $this->params()->fromRoute('id', -1);
+        // Находим существующий supplier в базе данных.    
+        $priceGetting = $this->entityManager->getRepository(PriceGetting::class)
+                ->findOneById($priceGettingId);  
+        	
+        if ($priceGetting == null) {
+            $this->getResponse()->setStatusCode(401);
+            exit;                        
+        } 
+        
+        $result = $this->priceManager->getPriceByLink($priceGetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+        
+    }
+    
     public function addAction() 
     {     
         // Создаем форму.

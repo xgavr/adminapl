@@ -20,6 +20,10 @@ use Application\Entity\Goods;
 use MvlabsPHPExcel\Service;
 use Zend\Json\Json;
 
+use Zend\Validator\File\IsCompressed;
+use Zend\Filter\Decompress;
+
+
 /**
  * Description of PriceManager
  *
@@ -99,65 +103,89 @@ class RawManager {
     
     public function uploadRawprice($supplier, $filename)
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '1024M');
         
         if (file_exists($filename)){
-            $mvexcel = new Service\PhpExcelService();    
-            $excel = $mvexcel->createPHPExcelObject($filename);
             
-            $raw = new Raw();
-            $raw->setSupplier($supplier);
-            $raw->setFilename($filename);
-            $raw->setStatus($raw->getStatusActive());
-
-            $currentDate = date('Y-m-d H:i:s');
-            $raw->setDateCreated($currentDate);
-                        
-            $sheets = $excel->getAllSheets();
-            foreach ($sheets as $sheet) { // PHPExcel_Worksheet
-
-                $excel_sheet_content = $sheet->toArray();
-
-                if (count($sheet)){
-                    foreach ($excel_sheet_content as $row){
-                        $rawprice = new Rawprice();
-
-                        $rawprice->setRawdata(Json::encode($row));
-                        
-                        $rawprice->setArticle('');
-                        $rawprice->setGoodname('');
-                        $rawprice->setProducer('');
-                        $rawprice->setPrice(0);
-                        $rawprice->setRest(0);
-
-                        $rawprice->setRaw($raw);
-                        
-//                        $unknownProducer = new UnknownProducer();
-//                        $rawprice->setUnknownProducer($unknownProducer);
-
-//                        $good = new Goods();
-//                        $rawprice->setGood($good);
-
-                        $currentDate = date('Y-m-d H:i:s');
-                        $rawprice->setDateCreated($currentDate);
-
-                        // Добавляем сущность в менеджер сущностей.
-                        $this->entityManager->persist($rawprice);
-                        
-                        $raw->addRawprice($rawprice);
-
-                    }
-                    // Применяем изменения к базе данных.
-                }	
+            $pathinfo = pathinfo($filename);
+            
+            $validator = new IsCompressed();
+            
+            if ($validator->isValid($filename)){
+                $filter = new Decompress([
+                    'adapter' => $pathinfo['extension'],
+                    'options' => [
+                        'target' => $pathinfo['dirname'],
+                    ],
+                ]);
+                if ($filter->filter($filename)){
+                    unlink($filename);
+                    return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
+                }
             }
 
-            $this->entityManager->persist($raw);
-            
-            $this->entityManager->flush();                    
-            
-            unset($excel);
-            unset($mvexcel);
+            if ($supplier->getStatus() == $supplier->getStatusActive()){
+                
+                $mvexcel = new Service\PhpExcelService();    
+                $excel = $mvexcel->createPHPExcelObject($filename);
+
+                $raw = new Raw();
+                $raw->setSupplier($supplier);
+                $raw->setFilename($pathinfo['basename']);
+                $raw->setStatus($raw->getStatusActive());
+
+                $currentDate = date('Y-m-d H:i:s');
+                $raw->setDateCreated($currentDate);
+
+                $sheets = $excel->getAllSheets();
+                foreach ($sheets as $sheet) { // PHPExcel_Worksheet
+
+                    $excel_sheet_content = $sheet->toArray();
+
+                    if (count($sheet)){
+                        foreach ($excel_sheet_content as $row){
+                            $rawprice = new Rawprice();
+
+                            $rawprice->setRawdata(Json::encode($row));
+
+                            $rawprice->setArticle('');
+                            $rawprice->setGoodname('');
+                            $rawprice->setProducer('');
+                            $rawprice->setPrice(0);
+                            $rawprice->setRest(0);
+
+                            $rawprice->setRaw($raw);
+
+                            $currentDate = date('Y-m-d H:i:s');
+                            $rawprice->setDateCreated($currentDate);
+
+                            // Добавляем сущность в менеджер сущностей.
+                            $this->entityManager->persist($rawprice);
+
+                            $raw->addRawprice($rawprice);
+
+                        }
+                        // Применяем изменения к базе данных.
+                    }	
+                }
+
+                $this->entityManager->persist($raw);
+
+                $this->entityManager->flush();                    
+
+                unset($excel);
+                unset($mvexcel);
+            }    
+
+            $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
+            if (is_dir($arx_folder)){
+                if (!rename(realpath($filename), realpath($arx_folder."/".$pathinfo['basename']))){
+                    //unlink(realpath($filename));
+                }
+            }
         }
+        
+        return;
     }
     
     /*
@@ -179,15 +207,7 @@ class RawManager {
                             
                             if ($supplier->getStatus() == $supplier->getStatusActive()){
                                 $this->uploadRawprice($supplier, $folderName."/".$file);
-                            }
-                            
-                            $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
-                            if (is_dir($arx_folder)){
-                                if (!rename($folderName."/".$file, $arx_folder."/".$file)){
-                                    unlink($folderName."/".$file);
-                                }
-                            }
-                            
+                            }                                                        
                         }                        
                         // если папка, то рекурсивно вызываем
                         if(is_dir($folderName."/".$file)){
@@ -198,6 +218,7 @@ class RawManager {
                 closedir($dh);
             }
         }
+        return;
     }
     
     /*
@@ -217,7 +238,8 @@ class RawManager {
                 $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
                 $this->clearPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
             }
-        }    
+        } 
+        return;
     }
     
     /*

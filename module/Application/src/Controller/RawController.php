@@ -9,8 +9,10 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Entity\Supplier;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -61,6 +63,30 @@ class RawController extends AbstractActionController
             'raws' => $paginator,
         ]);  
     }
+    
+    public function uploadRawFormAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);        
+
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $filename = $this->params()->fromQuery('filename');
+        
+        if (file_exists(realpath($filename))){
+            $this->rawManager->uploadRawprice($supplier, $filename);
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }
+    
     
     public function checkAction()
     {
