@@ -168,7 +168,7 @@ class RawManager {
 
                             $raw->addRawprice($rawprice);
                             
-                            if (time() - $start > 25){
+                            if (time() - $start > 29){
                                 $this->entityManager->flush();
                                 $start = time();
                             }
@@ -186,8 +186,8 @@ class RawManager {
 
             $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
             if (is_dir($arx_folder)){
-                if (!rename(realpath($filename), realpath($arx_folder."/".$pathinfo['basename']))){
-                    //unlink(realpath($filename));
+                if (copy(realpath($filename), realpath($arx_folder).'/'.$pathinfo['basename'])){
+                    unlink(realpath($filename));
                 }
             }
         }
