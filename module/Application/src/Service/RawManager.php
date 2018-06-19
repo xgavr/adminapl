@@ -96,12 +96,12 @@ class RawManager {
     }
     
     /**
-     * Загрузка сырого прайса
+     * Загрузка сырого прайса csv, txt
      * @var Application\Entity\Supplier
      * @var string $filename
      */
     
-    public function uploadRawprice($supplier, $filename)
+    public function uploadRawpriceCsv($supplier, $filename)
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(0); 
@@ -109,24 +109,90 @@ class RawManager {
         
         if (file_exists($filename)){
             
-            $pathinfo = pathinfo($filename);
-            
-            $validator = new IsCompressed();
-            
-            if ($validator->isValid($filename)){
-                $filter = new Decompress([
-                    'adapter' => $pathinfo['extension'],
-                    'options' => [
-                        'target' => $pathinfo['dirname'],
-                    ],
-                ]);
-                if ($filter->filter($filename)){
-                    unlink($filename);
-                    return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
+            if ($supplier->getStatus() == $supplier->getStatusActive()){
+                
+                $pathinfo = pathinfo($filename);
+                
+                $csvFileObject = new \SplFileObject(realpath($filename)); 
+                list($delimiter, $enclosure) = $csvFileObject->getCsvControl();
+                var_dump($delimiter); exit;
+                $lines = fopen(realpath($filename), 'r');
+                
+                if($lines) {
+
+                    $raw = new Raw();
+                    $raw->setSupplier($supplier);
+                    $raw->setFilename($pathinfo['basename']);
+                    $raw->setStatus($raw->getStatusActive());
+
+                    $currentDate = date('Y-m-d H:i:s');
+                    $raw->setDateCreated($currentDate);
+
+                    $this->entityManager->persist($raw);
+
+                    while (($line = fgetcsv($lines, 4096, $delimiter, $enclosure)) !== false) {
+                        
+                        $rawprice = new Rawprice();
+
+                        $rawprice->setRawdata(Json::encode($line));
+
+                        $rawprice->setArticle('');
+                        $rawprice->setGoodname('');
+                        $rawprice->setProducer('');
+                        $rawprice->setPrice(0);
+                        $rawprice->setRest(0);
+
+                        $rawprice->setRaw($raw);
+
+                        $currentDate = date('Y-m-d H:i:s');
+                        $rawprice->setDateCreated($currentDate);
+
+                        // Добавляем сущность в менеджер сущностей.
+                        $this->entityManager->persist($rawprice);
+
+                        $raw->addRawprice($rawprice);
+
+                        if (time() - $start > 29){
+                            $this->entityManager->flush();
+                            $start = time();
+                        }
+                        
+                    }
+                    
+                    $this->entityManager->flush();                    
+
+                    fclose($lines);
+                }                                
+            }    
+
+            $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
+            if (is_dir($arx_folder)){
+                if (copy(realpath($filename), realpath($arx_folder).'/'.$pathinfo['basename'])){
+                    unlink(realpath($filename));
                 }
             }
-
+        }
+        
+        return;
+    }
+    
+    /**
+     * Загрузка сырого прайса xls, xlsx
+     * @var Application\Entity\Supplier
+     * @var string $filename
+     */
+    
+    public function uploadRawpriceXls($supplier, $filename)
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(0); 
+        $start = time();
+        
+        if (file_exists($filename)){
+            
             if ($supplier->getStatus() == $supplier->getStatusActive()){
+                
+                $pathinfo = pathinfo($filename);
                 
                 $mvexcel = new Service\PhpExcelService();
                 $excel = $mvexcel->createPHPExcelObject($filename);
@@ -175,13 +241,15 @@ class RawManager {
 
                         }
                         // Применяем изменения к базе данных.
-                    }	
+                    }
+                    
                 }
-
+                
                 $this->entityManager->flush();                    
 
                 unset($excel);
                 unset($mvexcel);
+
             }    
 
             $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
@@ -195,6 +263,45 @@ class RawManager {
         return;
     }
     
+    
+    /*
+     * Загрузка сырого прайса
+     * @var Application\Entity\Supplier
+     * @var string $filename
+     */
+    
+    public function uploadRawprice($supplier, $filename)
+    {
+        if (file_exists($filename)){
+            
+            $pathinfo = pathinfo($filename);
+            
+            $validator = new IsCompressed();
+            
+            if ($validator->isValid($filename)){
+                $filter = new Decompress([
+                    'adapter' => $pathinfo['extension'],
+                    'options' => [
+                        'target' => $pathinfo['dirname'],
+                    ],
+                ]);
+                if ($filter->filter($filename)){
+                    unlink($filename);
+                    return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
+                }
+            }
+            
+            if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
+                return $this->uploadRawpriceXls($supplier, $filename);
+            }
+            if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
+                return $this->uploadRawpriceCsv($supplier, $filename);
+            }
+        }
+        
+        return;
+    }
+        
     /*
      * 
      * Проверка папки с прайсами. Если в папке есть прайс то загружаем его
