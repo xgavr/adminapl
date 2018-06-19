@@ -160,6 +160,7 @@ class PriceManager {
         
         return;
     }
+
     
     public function getPriceByLink($priceGetting)
     {
@@ -177,5 +178,5 @@ class PriceManager {
         
         return;
     }
-        
+    
 }
