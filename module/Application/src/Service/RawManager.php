@@ -18,8 +18,10 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 use Application\Filter\CsvDetectDelimiterFilter;
+use Application\Filter\UnicodeDecodeFilter;
 use MvlabsPHPExcel\Service;
 use Zend\Json\Json;
+use Zend\Json\Decoder;
 
 use Zend\Validator\File\IsCompressed;
 use Zend\Filter\Decompress;
@@ -118,6 +120,8 @@ class RawManager {
                 $delimiter = $filter->filter($filename);
                 
                 $lines = fopen($filename, 'r');
+
+                $filter = new UnicodeDecodeFilter();
                 
                 if($lines) {
 
@@ -135,7 +139,7 @@ class RawManager {
                         
                         $rawprice = new Rawprice();
 
-                        $rawprice->setRawdata(Json::encode($line));
+                        $rawprice->setRawdata($filter->filter(Json::encode($row)));
 
                         $rawprice->setArticle('');
                         $rawprice->setGoodname('');
@@ -189,6 +193,8 @@ class RawManager {
         set_time_limit(0); 
         $start = time();
         
+        $filter = new UnicodeDecodeFilter();
+        
         if (file_exists($filename)){
             
             if ($supplier->getStatus() == $supplier->getStatusActive()){
@@ -217,7 +223,7 @@ class RawManager {
                         foreach ($excel_sheet_content as $row){
                             $rawprice = new Rawprice();
 
-                            $rawprice->setRawdata(Json::encode($row));
+                            $rawprice->setRawdata($filter->filter(Json::encode($row)));
 
                             $rawprice->setArticle('');
                             $rawprice->setGoodname('');
