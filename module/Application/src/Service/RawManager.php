@@ -17,6 +17,7 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
+use Application\Filter\CsvDetectDelimiterFilter;
 use MvlabsPHPExcel\Service;
 use Zend\Json\Json;
 
@@ -113,10 +114,10 @@ class RawManager {
                 
                 $pathinfo = pathinfo($filename);
                 
-                $csvFileObject = new \SplFileObject(realpath($filename)); 
-                list($delimiter, $enclosure) = $csvFileObject->getCsvControl();
-                var_dump($delimiter); exit;
-                $lines = fopen(realpath($filename), 'r');
+                $filter = new CsvDetectDelimiterFilter();
+                $delimiter = $filter->filter($filename);
+                
+                $lines = fopen($filename, 'r');
                 
                 if($lines) {
 
@@ -130,7 +131,7 @@ class RawManager {
 
                     $this->entityManager->persist($raw);
 
-                    while (($line = fgetcsv($lines, 4096, $delimiter, $enclosure)) !== false) {
+                    while (($line = fgetcsv($lines, 4096, $delimiter)) !== false) {
                         
                         $rawprice = new Rawprice();
 

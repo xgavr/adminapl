@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Admin\Filter;
+namespace Application\Filter;
 
 use Zend\Filter\AbstractFilter;
 
