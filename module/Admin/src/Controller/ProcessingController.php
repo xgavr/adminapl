@@ -10,11 +10,18 @@ namespace Admin\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
+use Application\Entity\PriceGetting;
 
 
 class ProcessingController extends AbstractActionController
 {
     
+    /**
+     * Менеджер сущностей.
+     * @var Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
+
     /**
      * PostManager manager.
      * @var Admin\Service\PostManager
@@ -39,13 +46,21 @@ class ProcessingController extends AbstractActionController
      */
     private $aplService;    
 
+    /**
+     * PriceManager manager.
+     * @var Application\Service\PriceManager
+     */
+    private $priceManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($postManager, $autoruManager, $telegramManager, $aplService) 
+    public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, $aplService, $priceManager) 
     {
+        $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
         $this->autoruManager = $autoruManager;
         $this->telegramManager = $telegramManager;
         $this->aplService = $aplService;
+        $this->priceManager = $priceManager;
     }   
 
     
@@ -71,6 +86,24 @@ class ProcessingController extends AbstractActionController
         return new JsonModel(
             $data
         );
+    }
+    
+    /*
+     * Скачать все прайсы по ссылкам
+     */
+    public function pricesByLinkAction()
+    {
+        $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
+                ->findBy(['status' => PriceGetting::STATUS_ACTIVE]);
+        
+        foreach ($priceGettings as $priceGetting){
+            $this->priceManager->getPriceByLink($priceGetting);
+        }
+        
+        return new JsonModel(
+            $data
+        );
+        
     }
     
 }

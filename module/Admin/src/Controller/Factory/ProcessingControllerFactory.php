@@ -14,6 +14,7 @@ use Admin\Service\PostManager;
 use Admin\Service\AutoruManager;
 use Admin\Service\TelegrammManager;
 use Admin\Service\AplService;
+use Application\Service\PriceManager;
 
 
 /**
@@ -26,12 +27,14 @@ class ProcessingControllerFactory implements FactoryInterface {
     public function __invoke(ContainerInterface $container, 
                      $requestedName, array $options = null)
     {
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $postManager = $container->get(PostManager::class);
         $autoruManager = $container->get(AutoruManager::class);
         $telegramManager = $container->get(TelegrammManager::class);
         $aplService = $container->get(AplService::class);
+        $priceManager = $container->get(PriceManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ProcessingController($postManager, $autoruManager, $telegramManager, $aplService);
+        return new ProcessingController($entityManager, $postManager, $autoruManager, $telegramManager, $aplService, $priceManager);
     }
 }

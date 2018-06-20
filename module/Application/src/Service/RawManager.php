@@ -106,7 +106,7 @@ class RawManager {
     
     public function uploadRawpriceCsv($supplier, $filename)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(0); 
         $start = time();
         
@@ -116,15 +116,14 @@ class RawManager {
                 
                 $pathinfo = pathinfo($filename);
                 
-                $filter = new CsvDetectDelimiterFilter();
-                $delimiter = $filter->filter($filename);
-                
+                $delimiterFilter = new CsvDetectDelimiterFilter();
+                $delimiter = $delimiterFilter->filter($filename);
                 $lines = fopen($filename, 'r');
 
-                $filter = new UnicodeDecodeFilter();
-                
                 if($lines) {
 
+                    $filter = new UnicodeDecodeFilter();
+                
                     $raw = new Raw();
                     $raw->setSupplier($supplier);
                     $raw->setFilename($pathinfo['basename']);
@@ -135,7 +134,7 @@ class RawManager {
 
                     $this->entityManager->persist($raw);
 
-                    while (($line = fgetcsv($lines, 4096, $delimiter)) !== false) {
+                    while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
                         
                         $rawprice = new Rawprice();
 
@@ -157,8 +156,9 @@ class RawManager {
 
                         $raw->addRawprice($rawprice);
 
-                        if (time() - $start > 29){
+                        if (time() - $start > 10){
                             $this->entityManager->flush();
+                            var_dump(time() - $start); exit;
                             $start = time();
                         }
                         
@@ -189,7 +189,7 @@ class RawManager {
     
     public function uploadRawpriceXls($supplier, $filename)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(0); 
         $start = time();
         
@@ -241,7 +241,7 @@ class RawManager {
 
                             $raw->addRawprice($rawprice);
                             
-                            if (time() - $start > 29){
+                            if (time() - $start > 20){
                                 $this->entityManager->flush();
                                 $start = time();
                             }

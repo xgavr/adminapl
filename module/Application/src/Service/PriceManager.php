@@ -8,14 +8,10 @@
 
 namespace Application\Service;
 
-use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Supplier;
-use Application\Entity\Tax;
-use Application\Entity\Country;
-use Application\Entity\Producer;
-use Application\Entity\Raw;
-use Application\Entity\Rawprice;
 use Application\Entity\PriceGetting;
+use Zend\Http\Client;
+use Application\Validator\FileExtensionValidator;
 
 /**
  * Description of PriceManager
@@ -26,6 +22,7 @@ class PriceManager {
     
     const PRICE_FOLDER       = './data/prices'; // папка с прайсами
     const PRICE_FOLDER_ARX   = './data/prices/arx'; // папка с архивами прайсов
+    const PRICE_FILE_EXTENSIONS   = 'zip, rar, xls, xlsx, csv, txt'; //допустимые расширения файлов прайсов
 
     /**
      * Doctrine entity manager.
@@ -162,7 +159,7 @@ class PriceManager {
     }
 
     
-    public function getPriceByLink($priceGetting)
+    public function getPriceByLink1($priceGetting)
     {
         if ($priceGetting->getLink()){
             $pathinfo = pathinfo($priceGetting->getLink());
@@ -179,4 +176,47 @@ class PriceManager {
         return;
     }
     
+    public function getPriceByLink($priceGetting)
+    {
+        if ($priceGetting->getLink()){
+            $pathinfo = pathinfo($priceGetting->getLink());
+            
+            $client = new Client($priceGetting->getLink());
+            $client->setMethod('GET');
+            
+            $response = $client->send();
+            
+            $filename = '';
+            if ($response->isSuccess()){
+                
+                $validator = new FileExtensionValidator(self::PRICE_FILE_EXTENSIONS);
+                
+                if ($validator->isValid($pathinfo['basename'])){
+                    $filename = $pathinfo['basename'];
+                } else {
+                    preg_match_all("/\w+\.\w+/", $response->getHeaders()->get('Content-Disposition')->getFieldValue(), $output);
+                
+                    if ($validator->isValid($output[0][0])){
+                        $filename = $output[0][0];
+                    }    
+                }
+                
+                if ($filename){
+                    $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$filename;
+                    $result = file_put_contents($target, $response->getBody());
+
+                    if ($result === false){
+
+                    } else {
+                        if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
+                            $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$filename;
+                            $this->ftpManager->putPriceToApl(['source_file' => $target, 'dest_file' => $destfile]);
+                        }                      
+                    }
+                }    
+            }            
+        }
+        
+        return;
+    }
 }
