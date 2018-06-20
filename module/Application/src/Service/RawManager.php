@@ -157,8 +157,8 @@ class RawManager {
                         $raw->addRawprice($rawprice);
 
                         if (time() - $start > 10){
-                            $this->entityManager->flush();
                             var_dump(time() - $start); exit;
+                            $this->entityManager->flush();
                             $start = time();
                         }
                         
