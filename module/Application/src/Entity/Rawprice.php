@@ -147,7 +147,12 @@ class Rawprice {
 
     public function getRawdataAsArray() 
     {
-        return Json::decode($this->rawdata);
+        try {
+            $result = Json::decode($this->getRawdata());
+        } catch (Exception $e){
+            $result = null;
+        }    
+        return $result;
     }
 
     public function setRawdata($rawdata) 

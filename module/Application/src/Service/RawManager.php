@@ -107,7 +107,7 @@ class RawManager {
     public function uploadRawpriceCsv($supplier, $filename)
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(0); 
+        set_time_limit(0);
         $start = time();
         
         if (file_exists($filename)){
@@ -134,11 +134,15 @@ class RawManager {
 
                     $this->entityManager->persist($raw);
 
-                    while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
+                    while (($row = fgets($lines, 4096)) !== false) {
+                        $charset = mb_detect_encoding($str, mb_detect_order('Windows-1251'), true);
+                        var_dump($charset); exit;
+                        //$row = mb_convert_encoding($row, 'utf-8', $charset);
+                        var_dump($row); exit; 
                         
                         $rawprice = new Rawprice();
 
-                        $rawprice->setRawdata($filter->filter(Json::encode($row)));
+                        $rawprice->setRawdata($row);
 
                         $rawprice->setArticle('');
                         $rawprice->setGoodname('');
@@ -155,9 +159,8 @@ class RawManager {
                         $this->entityManager->persist($rawprice);
 
                         $raw->addRawprice($rawprice);
-
-                        if (time() - $start > 10){
-                            var_dump(time() - $start); exit;
+                        
+                        if (time() - $start > 5){
                             $this->entityManager->flush();
                             $start = time();
                         }
@@ -223,7 +226,7 @@ class RawManager {
                         foreach ($excel_sheet_content as $row){
                             $rawprice = new Rawprice();
 
-                            $rawprice->setRawdata($filter->filter(Json::encode($row)));
+                            $rawprice->setRawdata(Json::encode($row));
 
                             $rawprice->setArticle('');
                             $rawprice->setGoodname('');
@@ -241,7 +244,7 @@ class RawManager {
 
                             $raw->addRawprice($rawprice);
                             
-                            if (time() - $start > 20){
+                            if (time() - $start > 5){
                                 $this->entityManager->flush();
                                 $start = time();
                             }
