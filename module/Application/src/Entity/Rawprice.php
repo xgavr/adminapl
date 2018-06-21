@@ -10,7 +10,6 @@ namespace Application\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Json\Json;
 
 /**
  * Description of Customer
@@ -146,13 +145,8 @@ class Rawprice {
     }
 
     public function getRawdataAsArray() 
-    {
-        try {
-            $result = Json::decode($this->getRawdata());
-        } catch (Exception $e){
-            $result = null;
-        }    
-        return $result;
+    {        
+        return explode(';', $this->rawdata);
     }
 
     public function setRawdata($rawdata) 

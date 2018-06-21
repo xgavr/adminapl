@@ -17,8 +17,8 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
+use Application\Filter\RawToStr;
 use Application\Filter\CsvDetectDelimiterFilter;
-use Application\Filter\ToUtf8;
 use MvlabsPHPExcel\Service;
 use Zend\Json\Json;
 
@@ -119,8 +119,11 @@ class RawManager {
 
                 if($lines) {
 
-                    $filter = new ToUtf8();
+                    $detector = new CsvDetectDelimiterFilter();
+                    $delimiter = $detector->filter($filename);
                 
+                    $filter = new RawToStr();
+
                     $raw = new Raw();
                     $raw->setSupplier($supplier);
                     $raw->setFilename($pathinfo['basename']);
@@ -131,12 +134,11 @@ class RawManager {
 
                     $this->entityManager->persist($raw);
 
-                    while (($row = fgets($lines, 4096)) !== false) {
-                        $row = $filter->filter($row);
-                        
+                    while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
+
                         $rawprice = new Rawprice();
 
-                        $rawprice->setRawdata($row);
+                        $rawprice->setRawdata($filter->filter($row));
 
                         $rawprice->setArticle('');
                         $rawprice->setGoodname('');
@@ -209,7 +211,7 @@ class RawManager {
 
                 $this->entityManager->persist($raw);
                     
-                $filter = new ToUtf8();
+                $filter = new RawToStr();
                     
                 $sheets = $excel->getAllSheets();
                 foreach ($sheets as $sheet) { // PHPExcel_Worksheet
@@ -219,9 +221,8 @@ class RawManager {
                     if (count($sheet)){
                         foreach ($excel_sheet_content as $row){
                             $rawprice = new Rawprice();
-                            $str = implode(';', $row);
 
-                            $rawprice->setRawdata($filter->filter($str));
+                            $rawprice->setRawdata($filter->filter($row));
 
                             $rawprice->setArticle('');
                             $rawprice->setGoodname('');
