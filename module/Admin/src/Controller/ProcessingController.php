@@ -101,7 +101,7 @@ class ProcessingController extends AbstractActionController
         }
         
         return new JsonModel(
-            $data
+            ['ok']
         );
         
     }
