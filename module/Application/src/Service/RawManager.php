@@ -10,9 +10,6 @@ namespace Application\Service;
 
 use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Supplier;
-use Application\Entity\Tax;
-use Application\Entity\Country;
-use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
