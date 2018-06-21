@@ -18,10 +18,9 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 use Application\Filter\CsvDetectDelimiterFilter;
-use Application\Filter\UnicodeDecodeFilter;
+use Application\Filter\ToUtf8;
 use MvlabsPHPExcel\Service;
 use Zend\Json\Json;
-use Zend\Json\Decoder;
 
 use Zend\Validator\File\IsCompressed;
 use Zend\Filter\Decompress;
@@ -116,13 +115,11 @@ class RawManager {
                 
                 $pathinfo = pathinfo($filename);
                 
-                $delimiterFilter = new CsvDetectDelimiterFilter();
-                $delimiter = $delimiterFilter->filter($filename);
                 $lines = fopen($filename, 'r');
 
                 if($lines) {
 
-                    $filter = new UnicodeDecodeFilter();
+                    $filter = new ToUtf8();
                 
                     $raw = new Raw();
                     $raw->setSupplier($supplier);
@@ -135,10 +132,7 @@ class RawManager {
                     $this->entityManager->persist($raw);
 
                     while (($row = fgets($lines, 4096)) !== false) {
-                        $charset = mb_detect_encoding($str, mb_detect_order('Windows-1251'), true);
-                        var_dump($charset); exit;
-                        //$row = mb_convert_encoding($row, 'utf-8', $charset);
-                        var_dump($row); exit; 
+                        $row = $filter->filter($row);
                         
                         $rawprice = new Rawprice();
 
@@ -160,7 +154,7 @@ class RawManager {
 
                         $raw->addRawprice($rawprice);
                         
-                        if (time() - $start > 5){
+                        if (time() - $start > 1){
                             $this->entityManager->flush();
                             $start = time();
                         }
@@ -196,8 +190,6 @@ class RawManager {
         set_time_limit(0); 
         $start = time();
         
-        $filter = new UnicodeDecodeFilter();
-        
         if (file_exists($filename)){
             
             if ($supplier->getStatus() == $supplier->getStatusActive()){
@@ -216,7 +208,9 @@ class RawManager {
                 $raw->setDateCreated($currentDate);
 
                 $this->entityManager->persist($raw);
-
+                    
+                $filter = new ToUtf8();
+                    
                 $sheets = $excel->getAllSheets();
                 foreach ($sheets as $sheet) { // PHPExcel_Worksheet
 
@@ -225,8 +219,9 @@ class RawManager {
                     if (count($sheet)){
                         foreach ($excel_sheet_content as $row){
                             $rawprice = new Rawprice();
+                            $str = implode(';', $row);
 
-                            $rawprice->setRawdata(Json::encode($row));
+                            $rawprice->setRawdata($filter->filter($str));
 
                             $rawprice->setArticle('');
                             $rawprice->setGoodname('');
@@ -244,7 +239,7 @@ class RawManager {
 
                             $raw->addRawprice($rawprice);
                             
-                            if (time() - $start > 5){
+                            if (time() - $start > 1){
                                 $this->entityManager->flush();
                                 $start = time();
                             }
