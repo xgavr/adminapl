@@ -158,24 +158,10 @@ class PriceManager {
         return;
     }
 
-    
-    public function getPriceByLink1($priceGetting)
-    {
-        if ($priceGetting->getLink()){
-            $pathinfo = pathinfo($priceGetting->getLink());
-            $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$pathinfo['basename'];
-            if ($result = copy($priceGetting->getLink(), $target)){
-                if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
-                    $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$pathinfo['basename'];
-                    $this->ftpManager->putPriceToApl(['source_file' => $target, 'dest_file' => $destfile]);
-                }  
-                return $result;
-            }
-        }
-        
-        return;
-    }
-    
+    /*
+     * Получить прайс по ссылке
+     * @var Application\Entity\PriceGettting $priceGetting
+     */
     public function getPriceByLink($priceGetting)
     {
         if ($priceGetting->getLink()){
