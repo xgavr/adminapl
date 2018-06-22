@@ -91,11 +91,27 @@ class NavManager
             }
             
             if ($this->rbacManager->isGranted(null, 'supplier.manage')) {
-                $items[] = [
+                $priceDropdownItems = [];
+
+                $priceDropdownItems[] = [
                     'id' => 'raw',
-                    'label' => 'Прайсы',
+                    'label' => 'Загруженные',
                     'link'  => $url('raw')
                 ];
+                
+                $priceDropdownItems[] = [
+                    'id' => 'priceGetting',
+                    'label' => 'Настройки',
+                    'link'  => $url('price', ['action' => 'priceGetting'])
+                ];
+                
+                if (count($priceDropdownItems)!=0) {
+                    $items[] = [
+                        'id' => 'raw',
+                        'label' => 'Прайсы',
+                        'dropdown' => $priceDropdownItems
+                    ];
+                }                
             }
             
             //Справочники

@@ -1,0 +1,135 @@
+<?php
+    $this->headTitle('Каталог');
+    $this->mainMenu()->setActiveItemId('shop');
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Каталог'=>$this->url('shop'),
+                ]);
+    
+$this->headLink()
+//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+        ;
+
+$this->headScript()
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+            ;    
+    
+?>    
+<div id="toolbar">
+    <div class="form-inline" role="form">
+        <div class="form-group">
+            <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+        </div>
+        <button id="ok" type="submit" class="btn btn-default">OK</button>
+    </div>
+</div>
+<table id="table" 
+    data-toggle="table" 
+    data-url="/shop/shop-content"
+    data-side-pagination="server"
+    data-pagination="true" 
+    data-page-list="[5, 10, 20, 50]"
+    data-toolbar="#toolbar"
+    data-show-refresh="true"
+    data-show-toggle="true"
+    data-query-params="queryParams"
+    data-response-handler="responseHandler"
+    >
+    <thead>
+        <tr>
+             <th data-field="id" data-type="numeric">ID</th>
+             <th data-field="name">Наименование</th>
+             <th data-field="code">Артикул</th>
+             <th data-field="producer" data-formatter="producerFormatter">Производитель</th>
+             <th data-field="price" data-align="right" data-formatter="priceFormatter">Цена</th>
+             <th data-field="num" data-formatter="numFormatter" data-align='rigth'>Количество</th>
+             <th data-field="incart" data-formatter="incartFormatter" data-align='center' da>Купить</th>             
+         </tr>                
+    </thead>
+</table>
+
+<script type="text/javascript">
+    var $table = $('#table'),
+        $ok = $('#ok');
+
+    $(function () {
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
+        });
+    });
+    
+    function queryParams() {
+        var params = {offset: 0, limit: 10};
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        return params;
+    }
+    function responseHandler(res) {
+        return res;
+    }
+    
+    function incartFormatter(value, row){
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn';
+        if (row.incart){
+            btn += ' btn-success"';  
+        } else {
+            btn += ' btn-default"';
+        }
+        btn += ' aria-label="Left Align"'; 
+        btn += ' id="shop_index_add_cart_' + row.id+'"';
+        btn += ' onClick="addCart({good: '+row.id+', price: '+row.price+'})"';
+        if (row.available && row.price > 0){
+            btn += '>';
+        } else {
+            btn += ' disabled>';
+        }
+        btn += '<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }
+    
+    function numFormatter(value, row){
+       return '<input class="form-control input-sm" id="num'+row.id+'" style="width: 100px" min="1" type="number" value="1"/>'; 
+    }
+    
+    function producerFormatter(value, row) {
+        return value.name;
+    }
+    
+    function priceFormatter(value, row) {
+        return parseFloat(value).toFixed(2);
+    }
+    
+    var addCart = function(data){
+        data.num = $('#num'+data.good).val();
+        $.post(
+            '/shop/add-cart',
+            data,
+            addCartSuccess
+        );
+    };
+    
+    function addCartSuccess(data)
+    {
+        if (data.num){  
+            $('#nav_cart_badge').html(data.num);
+        }  
+        if (data.good){
+            $('#shop_index_add_cart_'+data.good).removeClass('btn-default');
+            $('#shop_index_add_cart_'+data.good).addClass('btn-success');
+        }
+    }
+</script>

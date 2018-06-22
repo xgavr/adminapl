@@ -303,5 +303,32 @@ class PriceController extends AbstractActionController
             readfile($file);
         }
         exit;          
-    }    
+    }  
+    
+    
+    public function priceGettingAction()
+    {
+        return new ViewModel([]);                  
+    }
+    
+    public function priceGettingContentAction()
+    {
+        
+        $supplierId = $this->params()->fromRoute('supplier', -1);
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(PriceGetting::class)
+                    ->findBy([]);            
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);          
+    }
+    
 }
