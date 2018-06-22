@@ -106,4 +106,22 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    /*
+     * Чтение почтовых ящиков для прайсов
+     */
+    public function pricesByMailAction()
+    {
+        $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
+                ->findBy(['status' => PriceGetting::STATUS_ACTIVE]);
+        
+        foreach ($priceGettings as $priceGetting){
+            $this->priceManager->getPriceByMail($priceGetting);
+        }
+        
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }
