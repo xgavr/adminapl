@@ -120,7 +120,11 @@ class SupplierManager
         return $arx_price_data_folder_name.'/'.$supplier->getId();
     }  
     
-    public function getLastPriceFile($supplier)
+    /*
+     * Показать файлы в папке с прайсами
+     * 
+     */
+    public function getLastPriceFile($supplier, $arx = false)
     {
         $path = $this->getPriceFolder($supplier);
 
@@ -134,19 +138,22 @@ class SupplierManager
             ];
         }        
 
-        if (!count($result)){
-            $arxPath = $this->getPriceArxFolder($supplier);
-            foreach (new \DirectoryIterator($arxPath) as $fileInfo) {
-                if($fileInfo->isDot()) continue;
-                $result[$fileInfo->getFilename()] = [
-                    'path' => $fileInfo->getPathname(), 
-                    'date' => $fileInfo->getMTime(),
-                    'size' => $fileInfo->getSize(),
-                ];
-            }        
-        }
+        if ($arx){
+            if (!count($result)){
+                $arxPath = $this->getPriceArxFolder($supplier);
+                foreach (new \DirectoryIterator($arxPath) as $fileInfo) {
+                    if($fileInfo->isDot()) continue;
+                    $result[$fileInfo->getFilename()] = [
+                        'path' => $fileInfo->getPathname(), 
+                        'date' => $fileInfo->getMTime(),
+                        'size' => $fileInfo->getSize(),
+                    ];
+                }        
+            }
+        }    
         return $result;
-    }
+    }    
+    
     
     public function updateSupplier($supplier, $data) 
     {

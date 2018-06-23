@@ -1,0 +1,118 @@
+<?php
+$this->headTitle('Файлы с прайсами к загрузке');
+
+$this->mainMenu()->setActiveItemId('price');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Прайсы'=>$this->url('price'),
+            'Очередь файлов с прайсами' => $this->url('price', ['action'=>'queue'])
+            ]);  
+
+?>
+
+<h1>Очередь файлов с прайсами</h1>
+<div class="row">
+    <div class="col-sm-9">
+        <div class="panel-group">
+            <?php foreach($priceGettings as $priceGetting):?>
+                <?php $files = $supplierManager->getLastPriceFile($priceGetting->getSupplier()); ?>
+                <?php if (count($files)): ?>
+                    <?php foreach($files as $filename=>$value): ?>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
+                            </div>
+                            <div class="pull-right">       
+                                <button value="/raw/upload-raw-form/<?= $priceGetting->getSupplier()->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
+                                        title="Загрузить файл в базу">
+                                    <span class="glyphicon glyphicon-import" ></span>
+                                </button>                                                           
+                                <button value="/price/upload-price-file-to-apl-form/<?= $priceGetting->getSupplier()->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
+                                        title="Закачать прайс на сервер АПЛ">
+                                    <span class="glyphicon glyphicon-upload" ></span>
+                                </button>                                                           
+                                <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('price',
+                                        ['action'=>'download-price-file-form'], ['query' => ['filename' => $value['path']]]); ?>">
+                                    <span class="glyphicon glyphicon-download"></span>
+                                </a>
+                                <button value="/price/delete-price-file-form?filename=<?= $value['path']?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                           
+                            </div>                                                                        
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>        
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#modal-dialog').on('show.bs.modal', function (e) {        
+        var url = e.relatedTarget.value;
+        if (url){
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                   $('#modal-content').html(data);
+                })
+                .fail(function () {
+                    alert("Ошибка открытия формы.");
+                }); 
+        }
+    })    
+        
+    $('.this-delete').on('click', function(e) {
+        var url = e.currentTarget.value;
+        if (url){
+            if (confirm('Удалить запись?')){
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                })
+                    .done(function (data) {
+                        if (data == 'ok'){
+                            window.location.reload();
+                        } else {
+                            alert("Не удалось удалить!");
+                        }    
+                    })
+                    .fail(function (e) {
+                        alert("Не удалось удалить.");
+
+                    });
+            }        
+        }        
+    })    
+    
+    $('.refresh-button').on('click', function(e) {
+        var url = e.currentTarget.value;
+        
+        if (url){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    dialog.modal('hide');
+                    if (data == 'ok'){
+                        bootbox.alert("Ок!");
+                    }    
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })    
+    
+</script>

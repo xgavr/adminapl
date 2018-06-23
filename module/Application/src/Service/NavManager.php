@@ -95,8 +95,8 @@ class NavManager
 
                 $priceDropdownItems[] = [
                     'id' => 'raw',
-                    'label' => 'Загруженные',
-                    'link'  => $url('raw')
+                    'label' => 'Очередь',
+                    'link'  => $url('price', ['action' => 'queue'])
                 ];
                 
                 $priceDropdownItems[] = [
