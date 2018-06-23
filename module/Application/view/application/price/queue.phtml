@@ -18,36 +18,58 @@ $this->pageBreadcrumbs()->setItems([
             <?php foreach($priceGettings as $priceGetting):?>
                 <?php $files = $supplierManager->getLastPriceFile($priceGetting->getSupplier()); ?>
                 <?php if (count($files)): ?>
-                    <?php foreach($files as $filename=>$value): ?>
-                        <div class="panel-body">
-                            <div class="pull-left">
-                                <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title pull-left"><?= $priceGetting->getSupplier()->getName(); ?></h3>
+                            <div class="pull-right">
+                                <button value="/supplier/price-getting-form/<?= $priceGetting->getSupplier()->getId() ?>?priceGetting=<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                    
                             </div>
-                            <div class="pull-right">       
-                                <button value="/raw/upload-raw-form/<?= $priceGetting->getSupplier()->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
-                                        title="Загрузить файл в базу">
-                                    <span class="glyphicon glyphicon-import" ></span>
-                                </button>                                                           
-                                <button value="/price/upload-price-file-to-apl-form/<?= $priceGetting->getSupplier()->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
-                                        title="Закачать прайс на сервер АПЛ">
-                                    <span class="glyphicon glyphicon-upload" ></span>
-                                </button>                                                           
-                                <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('price',
-                                        ['action'=>'download-price-file-form'], ['query' => ['filename' => $value['path']]]); ?>">
-                                    <span class="glyphicon glyphicon-download"></span>
-                                </a>
-                                <button value="/price/delete-price-file-form?filename=<?= $value['path']?>" class="btn btn-default btn-xs this-delete"
-                                        title="Удалить">
-                                    <span class="glyphicon glyphicon-remove" ></span>
-                                </button>                                                           
-                            </div>                                                                        
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>        
+                            <div class="clearfix"></div>
+                        </div>                        
+                        <?php foreach($files as $filename=>$value): ?>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
+                                </div>
+                                <div class="pull-right">       
+                                    <button value="/raw/upload-raw-form/<?= $priceGetting->getSupplier()->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
+                                            title="Загрузить файл в базу">
+                                        <span class="glyphicon glyphicon-import" ></span>
+                                    </button>                                                           
+                                    <button value="/price/upload-price-file-to-apl-form/<?= $priceGetting->getSupplier()->getId() ?>?filename=<?= $value['path']?>" 
+                                            class="btn btn-<?= ($priceGetting->getOrderToApl() == 1) ? 'success':'warning' ?> btn-xs refresh-button"
+                                            title="Закачать прайс на сервер АПЛ">
+                                        <span class="glyphicon glyphicon-upload" ></span>
+                                    </button>                                                           
+                                    <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('price',
+                                            ['action'=>'download-price-file-form'], ['query' => ['filename' => $value['path']]]); ?>">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                    </a>
+                                    <button value="/price/delete-price-file-form?filename=<?= $value['path']?>" class="btn btn-danger btn-xs this-delete"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                                                           
+                                </div>                                                                        
+                            </div>
+                        <?php endforeach; ?>
+                    </div>    
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="modal-content">
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     $('#modal-dialog').on('show.bs.modal', function (e) {        
