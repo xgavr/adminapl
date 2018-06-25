@@ -344,15 +344,16 @@ class PostManager {
 
                         case 0:
                             $charset = 'utf-8';
-                            if ($part->parameters[0]->attribute == 'charset'){
-                                $charset = $part->parameters[0]->value;
+                            $parametrs = (array) $part->parameters;
+                            if ($parameters[0]->attribute == 'charset'){
+                                $charset = $parameters[0]->value;
                             }
 
-                                // the HTML or plain text part of the email
-                                $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
-                                $message = iconv($charset, 'utf-8', $message);
-                                // now do something with the message, e.g. render it
-                                $result[$messageNumber]['content'][$part->subtype] = $message;
+                            // the HTML or plain text part of the email
+                            $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                            $message = iconv($charset, 'utf-8', $message);
+                            // now do something with the message, e.g. render it
+                            $result[$messageNumber]['content'][$part->subtype] = $message;
                         break;
 
                         case 1:
