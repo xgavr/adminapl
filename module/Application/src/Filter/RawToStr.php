@@ -10,6 +10,8 @@ namespace Application\Filter;
 
 use Zend\Filter\AbstractFilter;
 use Application\Filter\ToUtf8;
+use Zend\Filter\StripNewlines;
+use Zend\Filter\StringTrim;
 
 /**
  * Декодирует строку в utf-8
@@ -37,7 +39,9 @@ class RawToStr extends AbstractFilter
     {
         if (is_array($value)){
             
-            $filter = new ToUtf8();
+            $toUtf8filter = new ToUtf8();
+            $stripNewLinesFilter = new StripNewlines();
+            $stringTrimFilter = new StringTrim();
             
             $result = [];
             foreach ($value as $key=>$row){
@@ -47,10 +51,18 @@ class RawToStr extends AbstractFilter
                     $result[] = '';
                 }            
             }
-            return $filter->filter(trim(implode(';', $result)));
+
+            $filtered = implode(';', $result);
+            
+        } else {
+            $filtered = $value;
         }
         
-        return $value;
+        $filtered = $toUtf8filter->filter($filtered);
+        $filtered = $stringTrimFilter->filter($filtered);
+        $filtered = $stripNewLinesFilter->filter($filtered);
+
+        return $filtered;
     }
     
 }

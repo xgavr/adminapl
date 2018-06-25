@@ -418,15 +418,31 @@ $this->headScript()
         </div>
     </div>
     <div class="col-sm-3" id="side-nav" >
-        <ul class="nav nav-stacked nav-list affix">
-            <li class="active"><a href="#section1"><?= $supplier->getName() ?></a></li>
-            <li><a href="#section2">Как заказать?</a></li>
-            <li><a href="#section3">Контакты</a></li>
-            <li><a href="#section4">Юридические лица</a></li>
-            <li><a href="#section5">Настройки получения прайса</a></li>
-            <li><a href="#section6">Подвоз</a></li>
-            <li><a href="#section6">Получение электронных накладных</a></li>
-        </ul>
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="active"><a href="#section1"><?= $supplier->getName() ?></a></li>
+                            <li><a href="#section2">Как заказать?</a></li>
+                            <li><a href="#section3">Контакты</a></li>
+                            <li><a href="#section4">Юридические лица</a></li>
+                            <li><a href="#section5">Настройки получения прайса</a></li>
+                            <li><a href="#section6">Подвоз</a></li>
+                            <li><a href="#section6">Получение электронных накладных</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <button value="/supplier/upload-price-form/<?= $supplier->getId() ?>" class="btn btn-info btn-xs"
+                                data-toggle="modal" data-target="#modal-dialog" title="Загрузить прайс">
+                            <span class="glyphicon glyphicon-export" >Загрузить прайс</span>
+                        </button>                            
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>    
 </div>    
 

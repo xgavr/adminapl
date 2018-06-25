@@ -13,14 +13,16 @@ $this->pageBreadcrumbs()->setItems([
 
 <h1>Очередь файлов с прайсами</h1>
 <div class="row">
-    <div class="col-sm-9">
+    <div class="col-sm-12">
         <div class="panel-group">
             <?php foreach($priceGettings as $priceGetting):?>
                 <?php $files = $supplierManager->getLastPriceFile($priceGetting->getSupplier()); ?>
                 <?php if (count($files)): ?>
-                    <div class="panel panel-info">
+                    <div class="panel panel-<?= ($priceGetting->getSupplier()->getStatus() == 1) ? 'info':'default' ?>">
                         <div class="panel-heading">
-                            <h3 class="panel-title pull-left"><?= $priceGetting->getSupplier()->getName(); ?></h3>
+                            <h3 class="panel-title pull-left">
+                                <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $priceGetting->getSupplier()->getId()]) ?>"><?= $priceGetting->getSupplier()->getName(); ?></a>
+                            </h3>
                             <div class="pull-right">
                                 <button value="/supplier/price-getting-form/<?= $priceGetting->getSupplier()->getId() ?>?priceGetting=<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs"
                                         data-toggle="modal" data-target="#modal-dialog" title="Изменить">

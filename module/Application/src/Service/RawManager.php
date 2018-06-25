@@ -134,24 +134,28 @@ class RawManager {
                     while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
 
                         $rawprice = new Rawprice();
+                        
+                        $str = $filter->filter($row);
 
-                        $rawprice->setRawdata($filter->filter($row));
+                        if ($str){
+                            $rawprice->setRawdata($str);
 
-                        $rawprice->setArticle('');
-                        $rawprice->setGoodname('');
-                        $rawprice->setProducer('');
-                        $rawprice->setPrice(0);
-                        $rawprice->setRest(0);
+                            $rawprice->setArticle('');
+                            $rawprice->setGoodname('');
+                            $rawprice->setProducer('');
+                            $rawprice->setPrice(0);
+                            $rawprice->setRest(0);
 
-                        $rawprice->setRaw($raw);
+                            $rawprice->setRaw($raw);
 
-                        $currentDate = date('Y-m-d H:i:s');
-                        $rawprice->setDateCreated($currentDate);
+                            $currentDate = date('Y-m-d H:i:s');
+                            $rawprice->setDateCreated($currentDate);
 
-                        // Добавляем сущность в менеджер сущностей.
-                        $this->entityManager->persist($rawprice);
+                            // Добавляем сущность в менеджер сущностей.
+                            $this->entityManager->persist($rawprice);
 
-                        $raw->addRawprice($rawprice);
+                            $raw->addRawprice($rawprice);
+                        }    
                         
                         if (time() - $start > 1){
                             $this->entityManager->flush();
@@ -218,24 +222,29 @@ class RawManager {
                     if (count($sheet)){
                         foreach ($excel_sheet_content as $row){
                             $rawprice = new Rawprice();
+                            
+                            $str = $filter->filter($row);
 
-                            $rawprice->setRawdata($filter->filter($row));
+                            if ($str){
 
-                            $rawprice->setArticle('');
-                            $rawprice->setGoodname('');
-                            $rawprice->setProducer('');
-                            $rawprice->setPrice(0);
-                            $rawprice->setRest(0);
+                                $rawprice->setRawdata($filter->filter($row));
 
-                            $rawprice->setRaw($raw);
+                                $rawprice->setArticle('');
+                                $rawprice->setGoodname('');
+                                $rawprice->setProducer('');
+                                $rawprice->setPrice(0);
+                                $rawprice->setRest(0);
 
-                            $currentDate = date('Y-m-d H:i:s');
-                            $rawprice->setDateCreated($currentDate);
+                                $rawprice->setRaw($raw);
 
-                            // Добавляем сущность в менеджер сущностей.
-                            $this->entityManager->persist($rawprice);
+                                $currentDate = date('Y-m-d H:i:s');
+                                $rawprice->setDateCreated($currentDate);
 
-                            $raw->addRawprice($rawprice);
+                                // Добавляем сущность в менеджер сущностей.
+                                $this->entityManager->persist($rawprice);
+
+                                $raw->addRawprice($rawprice);
+                            }    
                             
                             if (time() - $start > 1){
                                 $this->entityManager->flush();

@@ -100,9 +100,9 @@ class NavManager
                 ];
                 
                 $priceDropdownItems[] = [
-                    'id' => 'priceGetting',
-                    'label' => 'Настройки',
-                    'link'  => $url('price', ['action' => 'priceGetting'])
+                    'id' => 'raw',
+                    'label' => 'Загруженные',
+                    'link'  => $url('raw')
                 ];
                 
                 if (count($priceDropdownItems)!=0) {

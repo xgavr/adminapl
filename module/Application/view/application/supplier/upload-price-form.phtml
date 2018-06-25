@@ -64,8 +64,8 @@ $form->prepare();
                 dialog.modal('hide');
                 if (data == 'ok'){
                     $('#upload-price-modal').modal('hide');
-                    bootbox.alert("Файл успешно загружен.");
-//                    window.location.reload();
+                    //bootbox.alert("Файл успешно загружен.");
+                    window.location.reload();
                 } else {
                     $('#upload-price-modal-content').html(data);
                 }    
