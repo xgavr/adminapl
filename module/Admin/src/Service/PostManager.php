@@ -344,7 +344,7 @@ class PostManager {
 
                         case 0:
                             $charset = 'utf-8';
-                            $parametrs = (array) $part->parameters;
+                            $parameters = (array) $part->parameters;
                             if ($parameters[0]->attribute == 'charset'){
                                 $charset = $parameters[0]->value;
                             }
