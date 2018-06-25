@@ -327,10 +327,10 @@ class PostManager {
 
             $imap_obj = imap_check($connection);
         } catch (Exception $e){
-            
+            return;
         }    
         
-        if (isset($connection) && isset($imap_obj) && $imap_obj->Nmsgs){
+        if ($imap_obj->Nmsgs){
     
             $messageNumber = 1;
             while ($messageNumber <= $imap_obj->Nmsgs){
