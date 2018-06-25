@@ -136,7 +136,7 @@ class PriceManager {
 
             if (count($mailList)){
                 foreach ($mailList as $mail){
-                    if (count($mail['attachment'])){
+                    if (isset($mail['attachment'])){
                         foreach($mail['attachment'] as $attachment){
                             if ($attachment['filename'] && file_exists($attachment['temp_file'])){
                                 $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];

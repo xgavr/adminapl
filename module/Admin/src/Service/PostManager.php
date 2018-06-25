@@ -316,16 +316,21 @@ class PostManager {
     public function readImap($params)
     {
         $result = [];
+        $imap_obj = $connection = null;
         
-        $connection = imap_open(
-                $params['server'], 
-                $params['user'], 
-                $params['password']
-        );
+        try{
+            $connection = imap_open(
+                    $params['server'], 
+                    $params['user'], 
+                    $params['password']
+            );
 
-        $imap_obj = imap_check($connection);
+            $imap_obj = imap_check($connection);
+        } catch (Exception $e){
+            
+        }    
         
-        if ($imap_obj->Nmsgs){
+        if (isset($connection) && isset($imap_obj) && $imap_obj->Nmsgs){
     
             $messageNumber = 1;
             while ($messageNumber <= $imap_obj->Nmsgs){
