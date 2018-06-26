@@ -8,6 +8,7 @@
 namespace Admin\Controller;
 
 use Admin\Form\SettingsForm;
+use Admin\Form\PriceSettingsForm;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -103,6 +104,9 @@ class IndexController extends AbstractActionController
         ]);
     }
     
+    /*
+     * Управление общими настройками
+     */
     public function settingsAction()
     {
         $form = new SettingsForm();
@@ -146,6 +150,88 @@ class IndexController extends AbstractActionController
         
     }
     
+    public function priceSettingsAction()
+    {
+        $form = new PriceSettingsForm();
+    
+        $settings = $this->adminManager->getPriceSettings();
+        
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setPriceSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+                // Перенаправляем пользователя на страницу "goods".
+                return $this->redirect()->toRoute('admin', ['action' => 'price-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        } else {
+            if ($settings){
+                $form->setData($settings);
+            }    
+        }
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
+    /*
+     * Управление настройками загрузки прайсов
+     */    
+    public function priceSettingsFormAction()
+    {
+        $form = new PriceSettingsForm();
+    
+        $settings = $this->adminManager->getPriceSettings();
+        
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
+                $this->adminManager->setPriceSettings($data);                
+            }
+        } else {
+            if ($settings){
+                $form->setData($settings);
+            }    
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
     public function testSmsAction()
     {
         $this->smsManager->send(['phone' => '89096319425', 'text' => 'тест']);

@@ -18,7 +18,8 @@ use Zend\Config\Writer\PhpArray;
 class AdminManager {
     
     const SETTINGS_DIR       = './data/settings/'; // папка с настройками
-    const SETTINGS_FILE       = './data/settings/config.php'; // файл с настройками
+    const SETTINGS_FILE       = './data/settings/config.php'; // файл с настройками общими
+    const PRICE_SETTINGS_FILE       = './data/settings/price_config.php'; // файл с настройками загрузки прайсов
     
     /**
      * Doctrine entity manager.
@@ -31,6 +32,10 @@ class AdminManager {
         $this->entityManager = $entityManager;
     }
     
+    /*
+     * Получить общие настройки загрузки
+     * @return array 
+     */    
     public function getSettings()
     {
         if (file_exists(self::SETTINGS_FILE)){
@@ -81,5 +86,49 @@ class AdminManager {
         
         $writer->toFile(self::SETTINGS_FILE, $config);
     }
+
+    
+    /*
+     * Получить настройки загрузки прайсов
+     * @return array 
+     */
+    public function getPriceSettings()
+    {
+        if (file_exists(self::PRICE_SETTINGS_FILE)){
+            $config = new Config(include self::PRICE_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->price = [];
+        }   
         
+        return $config->price;
+    }
+        
+    /*
+     * Настройки загрузки прайсов
+     * @array $data
+     */
+    public function setPriceSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::PRICE_SETTINGS_FILE)){
+            $config = new Config(include self::PRICE_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->price = [];
+        }
+        
+        if (!isset($config->price)){
+            $config->price = [];
+        }
+        
+        $config->price->upload_raw = $data['upload_raw']; //загружать прайсы в базу
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::PRICE_SETTINGS_FILE, $config);
+    }
+    
 }

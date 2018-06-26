@@ -1,0 +1,54 @@
+<?php
+$this->headTitle('Настройки загрузки прайсов');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Настройки загрузки прайсов'=>$this->url('settings', ['action' => 'price-settings']),
+            ]);
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<?php
+$form = $this->form;
+
+$form->get('upload_raw')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Настройки загрузки прайсов</h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<?= $this->form()->openTag($form); ?>
+<div class="row">
+    <div class="col-md-8">
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('upload_raw')); ?>
+            <?= $this->formElement($form->get('upload_raw')); ?>
+            <?= $this->formElementErrors($form->get('upload_raw')); ?>                  
+        </div>        
+    </div>   
+    <div class="col-sm-3" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active">
+                <?= $this->formElement($form->get('submit')); ?>
+            </li>
+        </ul>
+    </div>    
+    
+</div>   
+
+<?= $this->form()->closeTag(); ?>

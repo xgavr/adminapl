@@ -94,15 +94,21 @@ class NavManager
                 $priceDropdownItems = [];
 
                 $priceDropdownItems[] = [
-                    'id' => 'raw',
+                    'id' => 'raw_queue',
                     'label' => 'Очередь',
                     'link'  => $url('price', ['action' => 'queue'])
                 ];
                 
                 $priceDropdownItems[] = [
-                    'id' => 'raw',
+                    'id' => 'raw_uploaded',
                     'label' => 'Загруженные',
                     'link'  => $url('raw')
+                ];
+                
+                $priceDropdownItems[] = [
+                    'id' => 'raw_settings',
+                    'label' => 'Настройки',
+                    'link'  => $url('admin', ['action' => 'price-settings'])
                 ];
                 
                 if (count($priceDropdownItems)!=0) {

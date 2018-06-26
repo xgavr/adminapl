@@ -399,12 +399,12 @@ class PostManager {
 
                         }
 
-                    }   
+                    }
+                    
+                    if (!$params['leave_message']){
+                        imap_delete($connection, $messageNumber);
+                    }                
                 }    
-                
-                if (!$params['leave_message']){
-                    imap_delete($connection, $messageNumber);
-                }
                 
                 $messageNumber++;
                 

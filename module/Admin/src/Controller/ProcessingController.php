@@ -65,8 +65,14 @@ class ProcessingController extends AbstractActionController
      */
     private $supplierManager;    
 
+    /**
+     * AdminManager manager.
+     * @var Admin\Service\AdminManager
+     */
+    private $adminManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, $aplService, $priceManager, $rawManager, $supplierManager) 
+    public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, $aplService, $priceManager, $rawManager, $supplierManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -76,6 +82,7 @@ class ProcessingController extends AbstractActionController
         $this->priceManager = $priceManager;
         $this->rawManager = $rawManager;
         $this->supplierManager = $supplierManager;
+        $this->adminManager = $adminManager;
     }   
 
     
@@ -143,14 +150,18 @@ class ProcessingController extends AbstractActionController
      */
     public function rawPricesAction()
     {
-        $suppliers = $this->entityManager->getRepository(Supplier::class)
-                ->findBy([]);
-        foreach ($suppliers as $supplier){
-            $files = $this->supplierManager->getLastPriceFile($supplier);
-            if (count($files)){
-                return $this->rawManager->checkSupplierPrice($supplier);
+        $settings = $this->adminManager->getPriceSettings();
+        
+        if ($settings['upload_raw'] == 1){
+            $suppliers = $this->entityManager->getRepository(Supplier::class)
+                    ->findBy([]);
+            foreach ($suppliers as $supplier){
+                $files = $this->supplierManager->getLastPriceFile($supplier);
+                if (count($files)){
+                    return $this->rawManager->checkSupplierPrice($supplier);
+                }
             }
-        }
+        }    
         
         return new JsonModel(
             ['ok']
