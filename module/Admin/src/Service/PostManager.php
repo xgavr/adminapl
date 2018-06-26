@@ -342,7 +342,7 @@ class PostManager {
                 $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);
                 $result[$messageNumber]['date'] = $headers[0]->date;
 
-                if ($structure->parts){
+                if (isset($structure->parts)){
                     $flattenedParts = $this->flattenParts($structure->parts);
 
                     foreach($flattenedParts as $partNumber => $part) {
