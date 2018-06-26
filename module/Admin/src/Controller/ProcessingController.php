@@ -63,7 +63,7 @@ class ProcessingController extends AbstractActionController
      * SupplierManager manager.
      * @var Application\Service\SupplierManager
      */
-    private $rawManager;    
+    private $supplierManager;    
 
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, $aplService, $priceManager, $rawManager, $supplierManager) 
@@ -146,13 +146,15 @@ class ProcessingController extends AbstractActionController
         $suppliers = $this->entityManager->getRepository(Supplier::class)
                 ->findBy([]);
         foreach ($suppliers as $supplier){
-            $files = $supplierManager->getLastPriceFile($supplier);
+            $files = $this->supplierManager->getLastPriceFile($supplier);
             if (count($files)){
                 return $this->rawManager->checkSupplierPrice($supplier);
             }
         }
         
-        return;
+        return new JsonModel(
+            ['ok']
+        );
     }
     
 }
