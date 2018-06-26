@@ -746,7 +746,7 @@ class RawManager {
             
             if (time() - $start > 1){
                 $this->entityManager->flush();
-                $this->entityManager->clear();
+//                $this->entityManager->clear();
                 $start = time();
             }
         }        
