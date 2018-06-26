@@ -179,10 +179,14 @@ class PriceManager {
                 if ($validator->isValid($pathinfo['basename'])){
                     $filename = $pathinfo['basename'];
                 } else {
-                    preg_match_all("/\w+\.\w+/", $response->getHeaders()->get('Content-Disposition')->getFieldValue(), $output);
-                
-                    if ($validator->isValid($output[0][0])){
-                        $filename = $output[0][0];
+                    
+                    if ($response->getHeaders()->get('Content-Disposition')){
+                    
+                        preg_match_all("/\w+\.\w+/", $response->getHeaders()->get('Content-Disposition')->getFieldValue(), $output);
+
+                        if ($validator->isValid($output[0][0])){
+                            $filename = $output[0][0];
+                        }    
                     }    
                 }
                 

@@ -94,7 +94,27 @@ class RawManager {
         
     }
     
-    /**
+    /*
+     * Переместить файл в архив
+     * @var Application\Entity\Supplier
+     * @var string $filename
+     */
+    public function renameToArchive($supplier, $filename)            
+    {
+        if (file_exists($filename)){
+            $pathinfo = pathinfo($filename);
+            $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
+            if (is_dir($arx_folder)){
+                if (copy(realpath($filename), realpath($arx_folder).'/'.$pathinfo['basename'])){
+                    unlink(realpath($filename));
+                }
+            }
+        }
+        
+        return;
+    }
+
+        /**
      * Загрузка сырого прайса csv, txt
      * @var Application\Entity\Supplier
      * @var string $filename
@@ -169,13 +189,9 @@ class RawManager {
                     fclose($lines);
                 }                                
             }    
+            
+            $this->renameToArchive($supplier, $filename);
 
-            $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
-            if (is_dir($arx_folder)){
-                if (copy(realpath($filename), realpath($arx_folder).'/'.$pathinfo['basename'])){
-                    unlink(realpath($filename));
-                }
-            }
         }
         
         return;
@@ -264,12 +280,7 @@ class RawManager {
 
             }    
 
-            $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
-            if (is_dir($arx_folder)){
-                if (copy(realpath($filename), realpath($arx_folder).'/'.$pathinfo['basename'])){
-                    unlink(realpath($filename));
-                }
-            }
+            $this->renameToArchive($supplier, $filename);
         }
         
         return;
@@ -286,29 +297,33 @@ class RawManager {
     {
         if (file_exists($filename)){
             
-            $pathinfo = pathinfo($filename);
-            
-            $validator = new IsCompressed();
-            
-            if ($validator->isValid($filename)){
-                $filter = new Decompress([
-                    'adapter' => $pathinfo['extension'],
-                    'options' => [
-                        'target' => $pathinfo['dirname'],
-                    ],
-                ]);
-                if ($filter->filter($filename)){
-                    unlink($filename);
-                    return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
+            if ($supplier->getStatus() == Supplier::STATUS_ACTIVE){
+                $pathinfo = pathinfo($filename);
+
+                $validator = new IsCompressed();
+
+                if ($validator->isValid($filename)){
+                    $filter = new Decompress([
+                        'adapter' => $pathinfo['extension'],
+                        'options' => [
+                            'target' => $pathinfo['dirname'],
+                        ],
+                    ]);
+                    if ($filter->filter($filename)){
+                        unlink($filename);
+                        return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
+                    }
+                }
+
+                if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
+                    return $this->uploadRawpriceXls($supplier, $filename);
+                }
+                if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
+                    return $this->uploadRawpriceCsv($supplier, $filename);
                 }
             }
             
-            if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-                return $this->uploadRawpriceXls($supplier, $filename);
-            }
-            if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
-                return $this->uploadRawpriceCsv($supplier, $filename);
-            }
+            $this->renameToArchive($supplier, $filename);
         }
         
         return;
@@ -323,8 +338,7 @@ class RawManager {
      * 
      */
     public function checkPriceFolder($supplier, $folderName)
-    {
-    
+    {    
         if (is_dir($folderName)){
             if ($dh = opendir($folderName)) {
                 while (($file = readdir($dh)) !== false) {
@@ -352,8 +366,6 @@ class RawManager {
      */
     public function checkSupplierPrice($supplier = null)
     {
-        ini_set('memory_limit', '512M');
-        
         if ($supplier){
             $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
             $this->clearPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());            

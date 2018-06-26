@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\PriceGetting;
+use Application\Entity\Supplier;
 
 
 class ProcessingController extends AbstractActionController
@@ -52,8 +53,20 @@ class ProcessingController extends AbstractActionController
      */
     private $priceManager;    
 
+    /**
+     * RawManager manager.
+     * @var Application\Service\RawManager
+     */
+    private $rawManager;    
+
+    /**
+     * SupplierManager manager.
+     * @var Application\Service\SupplierManager
+     */
+    private $rawManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, $aplService, $priceManager) 
+    public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, $aplService, $priceManager, $rawManager, $supplierManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -61,6 +74,8 @@ class ProcessingController extends AbstractActionController
         $this->telegramManager = $telegramManager;
         $this->aplService = $aplService;
         $this->priceManager = $priceManager;
+        $this->rawManager = $rawManager;
+        $this->supplierManager = $supplierManager;
     }   
 
     
@@ -121,7 +136,23 @@ class ProcessingController extends AbstractActionController
         return new JsonModel(
             ['ok']
         );
+    }
+    
+    /*
+     * Загрузка прайсов в базу
+     */
+    public function rawPricesAction()
+    {
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findBy([]);
+        foreach ($suppliers as $supplier){
+            $files = $supplierManager->getLastPriceFile($supplier);
+            if (count($files)){
+                return $this->rawManager->checkSupplierPrice($supplier);
+            }
+        }
         
+        return;
     }
     
 }
