@@ -732,11 +732,17 @@ class RawManager {
     
     public function removeRaw($raw)
     {
-        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        $start = time();
         
         $rawprices = $raw->getRawprice();
         foreach ($rawprices as $rawprice){
             $this->entityManager->remove($rawprice);
+            
+            if (time() - $start > 1){
+                $this->entityManager->flush();
+                $start = time();
+            }
         }        
         
         $this->entityManager->remove($raw);
