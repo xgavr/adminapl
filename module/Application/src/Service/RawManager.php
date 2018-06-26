@@ -179,12 +179,14 @@ class RawManager {
                         
                         if (time() - $start > 1){
                             $this->entityManager->flush();
+                            $this->entityManager->clear();
                             $start = time();
                         }
                         
                     }
                     
                     $this->entityManager->flush();                    
+                    $this->entityManager->clear();
 
                     fclose($lines);
                 }                                
@@ -264,6 +266,7 @@ class RawManager {
                             
                             if (time() - $start > 1){
                                 $this->entityManager->flush();
+                                $this->entityManager->clear();
                                 $start = time();
                             }
 
@@ -274,6 +277,7 @@ class RawManager {
                 }
                 
                 $this->entityManager->flush();                    
+                $this->entityManager->clear();
 
                 unset($excel);
                 unset($mvexcel);
@@ -742,12 +746,14 @@ class RawManager {
             
             if (time() - $start > 1){
                 $this->entityManager->flush();
+                $this->entityManager->clear();
                 $start = time();
             }
         }        
         
         $this->entityManager->remove($raw);
         $this->entityManager->flush();
+        $this->entityManager->clear();
     }
         
 }
