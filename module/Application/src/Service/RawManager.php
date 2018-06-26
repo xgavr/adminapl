@@ -732,6 +732,7 @@ class RawManager {
     
     public function removeRaw($raw)
     {
+        ini_set('memory_limit', '1024M');
         set_time_limit(0);
         $start = time();
         
