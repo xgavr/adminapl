@@ -125,7 +125,7 @@ class RawManager {
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
         $i = 0;
-        $batchSize = 1000;        
+        $batchSize = 10000;        
         
         if (file_exists($filename)){
             
@@ -210,7 +210,7 @@ class RawManager {
         ini_set('memory_limit', '2048M');
         set_time_limit(0); 
         $i = 0;
-        $batchSize = 1000;        
+        $batchSize = 10000;        
         
         if (file_exists($filename)){
             
