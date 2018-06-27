@@ -66,7 +66,6 @@ class RawController extends AbstractActionController
     
     public function uploadRawFormAction()
     {
-        ignore_user_abort(true);
         
         $supplierId = $this->params()->fromRoute('id', -1);
         
