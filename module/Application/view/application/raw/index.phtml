@@ -1,21 +1,15 @@
 <?php
-$this->headTitle('Прайсы');
+$this->headTitle('Прайсы загруженные');
 
 $this->mainMenu()->setActiveItemId('raw');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Прайсы'=>$this->url('raw'),
+            'Очередь'=>$this->url('price', ['action' => 'queue']),
+            'Прайсы загруженные' => $this->url('raw'),
             ]);  
 
 ?>
-
-<p>
-<a class="btn btn-default" href="
-    <?= $this->url('raw', ['action'=>'check']); ?>">
-    Проверить
-</a>
-</p>
 
 <div class="row">
     <div class="col-md-8">

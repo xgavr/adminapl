@@ -125,6 +125,7 @@ class AdminManager {
         }
         
         $config->price->upload_raw = $data['upload_raw']; //загружать прайсы в базу
+        $config->price->is_loading_raw = $data['is_loading_raw']; //идет загрузка прайса
         
         $writer = new PhpArray();
         
