@@ -336,7 +336,6 @@ class PriceController extends AbstractActionController
      */
     public function queueAction()
     {
-        ignore_user_abort(true);
         
         $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
                     ->findBy([]);
