@@ -114,12 +114,18 @@
                 var url = e.currentTarget.value;
                 if (url){
                     if (confirm('Удалить запись?')){
+                        var dialog = bootbox.dialog({
+                            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                            closeButton: false
+                        });
+                        
                         $.ajax({
                             type: 'GET',
                             url: url,
                         })
                             .done(function (data) {
                                 if (data == 'ok'){
+                                    bootbox.alert("Ок!");
                                     window.location.reload();
                                 } else {
                                     alert("Не удалось удалить!");

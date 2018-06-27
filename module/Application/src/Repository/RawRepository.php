@@ -26,7 +26,7 @@ class RawRepository extends EntityRepository{
 
         $queryBuilder->select('c')
             ->from(Raw::class, 'c')
-            ->orderBy('c.id')
+            ->orderBy('c.id', 'DESC')
                 ;
 
         return $queryBuilder->getQuery();

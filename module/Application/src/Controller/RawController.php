@@ -114,6 +114,24 @@ class RawController extends AbstractActionController
         return $this->redirect()->toRoute('raw', []);
     }    
 
+    public function deleteFormAction()
+    {
+        $rawId = $this->params()->fromRoute('id', -1);
+        
+        $raw = $this->entityManager->getRepository(Raw::class)
+                ->findOneById($rawId);        
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->rawManager->removeRaw($raw);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+
     public function parseAction()
     {
         $rawId = (int)$this->params()->fromRoute('id', -1);

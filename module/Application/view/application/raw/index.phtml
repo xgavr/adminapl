@@ -30,7 +30,11 @@ $this->pageBreadcrumbs()->setItems([
                 <td>
                         <?= $this->escapeHtml($row->getId()); ?>
                 </td>
-                <td><?= $this->escapeHtml($row->getSupplier()->getName()); ?></td>
+                <td>
+                    <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $row->getSupplier()->getId()])?>">
+                        <?= $this->escapeHtml($row->getSupplier()->getName()); ?>
+                    </a>
+                </td>
                 <td>
                     <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$row->getId()]); ?>">            
                         <?= $this->escapeHtml($row->getBasename()); ?>
@@ -39,14 +43,10 @@ $this->pageBreadcrumbs()->setItems([
                 <td><?= $this->escapeHtml($row->getStatusAsString()); ?></td>
                 <td><?= $this->escapeHtml($row->getDateCreated()); ?></td>
                 <td>
-                    <a class="btn btn-info" href="<?= $this->url('raw', 
-                            ['action'=>'view', 'id'=>$row->getId()]); ?>">
-                        <span class="glyphicon glyphicon-pencil" ></span> Просмотр
-                    </a>
-                    <a class="btn btn-danger" href="<?= $this->url('raw',
-                            ['action'=>'delete', 'id'=>$row->getId()]); ?>">
-                        <span class="glyphicon glyphicon-remove"></span> Удалить
-                    </a>
+                    <button value="/raw/delete-form/<?= $row->getId() ?>" class="btn btn-danger btn-xs this-delete"
+                            title="Удалить">
+                        <span class="glyphicon glyphicon-remove" ></span>
+                    </button>                                                           
                 </td>    
             </tr>
 
