@@ -318,101 +318,100 @@ class PostManager {
         $result = [];
         $imap_obj = $connection = null;
         
-        try{
-            $connection = imap_open(
-                    $params['server'], 
-                    $params['user'], 
-                    $params['password']
-            );
+        $connection = imap_open(
+                $params['server'], 
+                $params['user'], 
+                $params['password']
+        );
+        
+        if ($connection){
 
             $imap_obj = imap_check($connection);
-        } catch (Exception $e){
-            return;
-        }    
-        
-        if ($imap_obj->Nmsgs){
-    
-            $messageNumber = 1;
-            while ($messageNumber <= $imap_obj->Nmsgs){
 
-                $structure = imap_fetchstructure($connection, $messageNumber);
-                $headers = imap_fetch_overview($connection, $messageNumber);
+            if ($imap_obj->Nmsgs){
 
-                $result[$messageNumber]['from'] = $headers[0]->from;
-                $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);
-                $result[$messageNumber]['date'] = $headers[0]->date;
+                $messageNumber = 1;
+                while ($messageNumber <= $imap_obj->Nmsgs){
 
-                if (isset($structure->parts)){
-                    $flattenedParts = $this->flattenParts($structure->parts);
+                    $structure = imap_fetchstructure($connection, $messageNumber);
+                    $headers = imap_fetch_overview($connection, $messageNumber);
 
-                    foreach($flattenedParts as $partNumber => $part) {
-                        switch($part->type) {
+                    $result[$messageNumber]['from'] = $headers[0]->from;
+                    $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);
+                    $result[$messageNumber]['date'] = $headers[0]->date;
 
-                            case 0:
-                                $charset = 'utf-8';
-                                $parameters = (array) $part->parameters;
-                                if ($parameters[0]->attribute == 'charset'){
-                                    $charset = $parameters[0]->value;
-                                }
+                    if (isset($structure->parts)){
+                        $flattenedParts = $this->flattenParts($structure->parts);
 
-                                // the HTML or plain text part of the email
-                                $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
-                                $message = iconv($charset, 'utf-8', $message);
-                                // now do something with the message, e.g. render it
-                                $result[$messageNumber]['content'][$part->subtype] = $message;
-                            break;
+                        foreach($flattenedParts as $partNumber => $part) {
+                            switch($part->type) {
 
-                            case 1:
-                                    // multi-part headers, can ignore
-
-                            break;
-                            case 2:
-                                    // attached message headers, can ignore
-                            break;
-
-                            case 3: // application
-                            case 4: // audio
-                            case 5: // image
-                            case 6: // video
-                            case 7: // other
-                                    $filename = $this->getFilenameFromPart($part);
-
-                                    if($filename) {
-                                            // it's an attachment
-                                            $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
-                                            // now do something with the attachment, e.g. save it somewhere
-
-                                            $temp_file = tempnam(sys_get_temp_dir(), 'Pst');
-                                            $fh = fopen($temp_file, 'w');
-                                            fwrite($fh, $attachment);
-                                            fclose($fh);                                
-                                    } else {
-                                            // don't know what it is
+                                case 0:
+                                    $charset = 'utf-8';
+                                    $parameters = (array) $part->parameters;
+                                    if ($parameters[0]->attribute == 'charset'){
+                                        $charset = $parameters[0]->value;
                                     }
 
-                                    $result[$messageNumber]['attachment'][$partNumber] = [
-                                        'filename' =>$filename,
-                                        'temp_file' => $temp_file,
-                                    ];
+                                    // the HTML or plain text part of the email
+                                    $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                    $message = iconv($charset, 'utf-8', $message);
+                                    // now do something with the message, e.g. render it
+                                    $result[$messageNumber]['content'][$part->subtype] = $message;
+                                break;
 
-                            break;
+                                case 1:
+                                        // multi-part headers, can ignore
+
+                                break;
+                                case 2:
+                                        // attached message headers, can ignore
+                                break;
+
+                                case 3: // application
+                                case 4: // audio
+                                case 5: // image
+                                case 6: // video
+                                case 7: // other
+                                        $filename = $this->getFilenameFromPart($part);
+
+                                        if($filename) {
+                                                // it's an attachment
+                                                $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                                // now do something with the attachment, e.g. save it somewhere
+
+                                                $temp_file = tempnam(sys_get_temp_dir(), 'Pst');
+                                                $fh = fopen($temp_file, 'w');
+                                                fwrite($fh, $attachment);
+                                                fclose($fh);                                
+                                        } else {
+                                                // don't know what it is
+                                        }
+
+                                        $result[$messageNumber]['attachment'][$partNumber] = [
+                                            'filename' =>$filename,
+                                            'temp_file' => $temp_file,
+                                        ];
+
+                                break;
+
+                            }
 
                         }
 
-                    }
-                    
-                    if (!$params['leave_message']){
-                        imap_delete($connection, $messageNumber);
-                    }                
+                        if (!$params['leave_message']){
+                            imap_delete($connection, $messageNumber);
+                        }                
+                    }    
+
+                    $messageNumber++;
+
+                    if ($messageNumber > 10) break;
                 }    
-                
-                $messageNumber++;
-                
-                if ($messageNumber > 10) break;
             }    
+
+            imap_close($connection, CL_EXPUNGE);
         }    
-        
-        imap_close($connection, CL_EXPUNGE);
         
         return $result;
     }
