@@ -40,81 +40,97 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'supply-setting-submit']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'price-setting-submit']);
 
 $form->prepare();
 
 ?>
-
-
             
-            <?= $this->form()->openTag($form); ?>
-            
-            <div class="form-group">
-                <?= $this->formLabel($form->get('name')); ?>
-                <?= $this->formElement($form->get('name')); ?>
-                <?= $this->formElementErrors($form->get('name')); ?>                  
-            </div>
+<?= $this->form()->openTag($form); ?>
 
-            <div class="form-group">
-                <?= $this->formLabel($form->get('iid')); ?>
-                <?= $this->formElement($form->get('iid')); ?>
-                <?= $this->formElementErrors($form->get('iid')); ?>                  
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Описание полей прайса</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             
-            <div class="form-group">
-                <?= $this->formLabel($form->get('article')); ?>
-                <?= $this->formElement($form->get('article')); ?>
-                <?= $this->formElementErrors($form->get('article')); ?>                  
-            </div>
-            
-            <div class="form-group">
-                <?= $this->formLabel($form->get('producer')); ?>
-                <?= $this->formElement($form->get('producer')); ?>
-                <?= $this->formElementErrors($form->get('producer')); ?>                  
-            </div>
-            
-            <div class="form-group">
-                <?= $this->formLabel($form->get('title')); ?>
-                <?= $this->formElement($form->get('title')); ?>
-                <?= $this->formElementErrors($form->get('title')); ?>                  
-            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('name')); ?>
+                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                        </div>
 
-            <div class="form-group">
-                <?= $this->formLabel($form->get('price')); ?>
-                <?= $this->formElement($form->get('price')); ?>
-                <?= $this->formElementErrors($form->get('price')); ?>                  
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('iid')); ?>
+                            <?= $this->formElement($form->get('iid')); ?>
+                            <?= $this->formElementErrors($form->get('iid')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('article')); ?>
+                            <?= $this->formElement($form->get('article')); ?>
+                            <?= $this->formElementErrors($form->get('article')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('producer')); ?>
+                            <?= $this->formElement($form->get('producer')); ?>
+                            <?= $this->formElementErrors($form->get('producer')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('title')); ?>
+                            <?= $this->formElement($form->get('title')); ?>
+                            <?= $this->formElementErrors($form->get('title')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('price')); ?>
+                            <?= $this->formElement($form->get('price')); ?>
+                            <?= $this->formElementErrors($form->get('price')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('rest')); ?>
+                            <?= $this->formElement($form->get('rest')); ?>
+                            <?= $this->formElementErrors($form->get('rest')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>                        
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <button type="button" class="btn btn-primary" id="price-setting-submit">Сохранить</button>
+                        </div>
+
+                    </div>                        
+                </div>                    
             </div>
+`            
 
-            <div class="form-group">
-                <?= $this->formLabel($form->get('rest')); ?>
-                <?= $this->formElement($form->get('rest')); ?>
-                <?= $this->formElementErrors($form->get('rest')); ?>                  
-            </div>
-
-            <div class="form-group">
-                <?= $this->formLabel($form->get('status')); ?>
-                <?= $this->formElement($form->get('status')); ?>
-                <?= $this->formElementErrors($form->get('status')); ?>                  
-            </div>                        
-
-            <?= $this->formElement($form->get('csrf')); ?>
-            
             <?= $this->form()->closeTag(); ?>
             
 <script>
-    $('#supply-setting-submit').on('click', function() {
+    $('#price-setting-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/supplier/supply-setting-form/<?= $supplier->getId() ?>?supplySetting=<?= ($supplySetting ? $supplySetting->getId():'') ?>',
-            data: $('#supply-setting-form').serialize()
+            url: '/supplier/price-setting-form/<?= $supplier->getId() ?>?priceSetting=<?= ($priceSetting ? $priceSetting->getId():'') ?>',
+            data: $('#price-setting-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#supply-setting-modal').modal('hide');
+                    $('#price-setting-modal').modal('hide');
                     window.location.reload();
                 } else {
-                    $('#supply-setting-modal-content').html(data);
+                    $('#price-setting-modal-content').html(data);
                 }    
             })
             .fail(function () {

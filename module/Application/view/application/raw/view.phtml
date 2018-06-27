@@ -17,7 +17,7 @@ $this->pageBreadcrumbs()->setItems([
 
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Данные из файла</h3>
@@ -66,66 +66,33 @@ $this->pageBreadcrumbs()->setItems([
             </div>
         </div> 
     </div>    
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Варианты настроек загрузки прайса</h3>
-            </div>
-            <div class="panel-body">
-                <div class="alert alert-warning" role="alert">
-                    Пока нет настроек
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $raw->getSupplier()->getId()])?>"><?= $raw->getSupplier()->getName() ?></a>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <?//= $raw->getRawprice()->count(); ?> строк
+                    </div>
                 </div>
-<!--                <table class="table table-responsive">
-                    <tr>
-                        <th>
-                            Показатель
-                        </th>
-                        <th>
-                            Номер колонки в прайсе
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            Артикул
-                        </th>
-                        <td>
-                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Производитель
-                        </th>
-                        <td>
-                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Наименование
-                        </th>
-                        <td>
-                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Цена
-                        </th>
-                        <td>
-                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Остаток
-                        </th>
-                        <td>
-                            
-                        </td>
-                    </tr>
-                </table>-->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Описания полей                        
+                        <div class="pull-right">
+                            <button value="/supplier/price-setting-form/<?= $raw->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>                                                                        
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                    </div>
+                </div>
             </div>
-        </div>    
-    </div>
+        </div>
+    </div>    
 </div>    

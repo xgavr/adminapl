@@ -902,7 +902,7 @@ class SupplierController extends AbstractActionController
             $priceSetting = null;
         }
         
-        $form = new PricesettingsForm();
+        $form = new PriceSettingsForm();
 
         if ($this->getRequest()->isPost()) {
             
