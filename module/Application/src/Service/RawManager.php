@@ -124,7 +124,8 @@ class RawManager {
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
-        $start = time();
+        $i = 0;
+        $batchSize = 1000;        
         
         if (file_exists($filename)){
             
@@ -177,10 +178,9 @@ class RawManager {
                             $raw->addRawprice($rawprice);
                         }    
                         
-                        if (time() - $start > 1){
+                        $i++;
+                        if (($i % $batchSize) === 0) {
                             $this->entityManager->flush();
-                            $this->entityManager->clear();
-                            $start = time();
                         }
                         
                     }
@@ -209,7 +209,8 @@ class RawManager {
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(0); 
-        $start = time();
+        $i = 0;
+        $batchSize = 1000;        
         
         if (file_exists($filename)){
             
@@ -264,14 +265,12 @@ class RawManager {
                                 $raw->addRawprice($rawprice);
                             }    
                             
-                            if (time() - $start > 1){
+                            $i++;
+                            if (($i % $batchSize) === 0) {
                                 $this->entityManager->flush();
-                                $this->entityManager->clear();
-                                $start = time();
                             }
 
                         }
-                        // Применяем изменения к базе данных.
                     }
                     
                 }
@@ -738,18 +737,14 @@ class RawManager {
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(0);
-        $start = time();
         
         $rawprices = $raw->getRawprice();
-        foreach ($rawprices as $rawprice){
-            $this->entityManager->remove($rawprice);
-            
-            if (time() - $start > 1){
-                $this->entityManager->flush();
-//                $this->entityManager->clear();
-                $start = time();
-            }
-        }        
+        
+//        foreach ($rawprices as $rawprice){
+//            $this->entityManager->remove($rawprice);            
+//        }        
+        
+        $this->entityManager->getRepository(Raw::class)->deleteRawprices($raw);
         
         $this->entityManager->remove($raw);
         $this->entityManager->flush();

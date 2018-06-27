@@ -89,6 +89,23 @@ class RawRepository extends EntityRepository{
                 ;
 
         return $queryBuilder->getQuery()->getResult();
-    }        
+    }  
+    
+    /*
+     * Удаление raw
+     * @var Apllication\Entity\Raw
+     * 
+     */
+    public function deleteRawprices($raw)
+    {
+        $rawId = $raw->getId();
+        
+        if ($rawId){
+            $entityManager = $this->getEntityManager();
+            $query = $entityManager->createQuery("delete from Application\Entity\Rawprice m where m.raw = $rawId");
+            $numDeleted = $query->execute();
+        }    
+        return;
+    }
         
 }
