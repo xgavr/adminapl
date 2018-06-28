@@ -12,13 +12,13 @@ use Zend\View\Model\ViewModel;
 use Application\Entity\Supplier;
 use Application\Entity\Contact;
 use Application\Entity\PriceGetting;
-use Application\Entity\Pricesettings;
+use Application\Entity\PriceSettings;
 use Application\Entity\BillGetting;
 use Application\Entity\RequestSetting;
 use Application\Entity\SupplySetting;
 use Application\Form\SupplierForm;
 use Application\Form\PriceGettingForm;
-use Application\Form\PricesettingsForm;
+use Application\Form\PriceSettingsForm;
 use Application\Form\BillGettingForm;
 use Application\Form\RequestSettingForm;
 use Application\Form\ContactForm;
@@ -860,7 +860,7 @@ class SupplierController extends AbstractActionController
         $suplySetting = $this->entityManager->getRepository(SupplySetting::class)
                 ->findOneById($suplySettingId);
         
-        if ($priceGetting == null) {
+        if ($suplySetting == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
@@ -896,7 +896,7 @@ class SupplierController extends AbstractActionController
         
         // Validate input parameter
         if ($priceSettingId>0) {
-            $priceSetting = $this->entityManager->getRepository(Pricesettings::class)
+            $priceSetting = $this->entityManager->getRepository(PriceSettings::class)
                     ->findOneById($priceSettingId);
         } else {
             $priceSetting = null;
@@ -907,10 +907,9 @@ class SupplierController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
-            $data += array_flip($data); 
             
             if (!$data['status']) $data['status'] = 1;
-            if (!$data['name']) $data['name'] = 'Настройка прайса ' + $supplier->getName();
+            if (!$data['name']) $data['name'] = 'Описание полей прайса '.$supplier->getName();
             
 //            var_dump($data);
             
@@ -918,9 +917,9 @@ class SupplierController extends AbstractActionController
             if ($form->isValid()) {
 
                 if ($priceSetting){
-                    $this->supplierManager->updatePricesettings($priceSetting, $data, true);                    
+                    $this->supplierManager->updatePriceSettings($priceSetting, $data, true);                    
                 } else{
-                    $this->supplierManager->addNewPricesettings($supplier, $data, true);
+                    $this->supplierManager->addNewPriceSettings($supplier, $data, true);
                 }    
                 
                 return new JsonModel(
@@ -956,6 +955,27 @@ class SupplierController extends AbstractActionController
         ]);                
     }
 
+    public function deletePriceSettingFormAction()
+    {
+        $priceSettingId = $this->params()->fromRoute('id', -1);
+        
+        $priceSetting = $this->entityManager->getRepository(PriceSettings::class)
+                ->findOneById($priceSettingId);
+        
+        if ($priceSetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->supplierManager->removePriceSettings($priceSetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }    
+    
     public function deletePriceSettingAction()
     {
         $priceSettingId = (int) $this->params()->fromRoute('id', -1);

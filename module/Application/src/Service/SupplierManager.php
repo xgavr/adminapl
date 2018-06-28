@@ -178,7 +178,7 @@ class SupplierManager
         
         $pricesettings = $supplier->getPricesettings();
         foreach ($pricesettings as $pricesetting) {
-            $this->removePricesettings($pricesetting);
+            $this->removePriceSettings($pricesetting);
         }
 
         $priceGettings = $supplier->getPriceGettings();
@@ -212,7 +212,7 @@ class SupplierManager
        $this->contactManager->addNewContact($supplier, $data);
     }   
     
-    public function addNewPricesettings($supplier, $data)
+    public function addNewPriceSettings($supplier, $data)
     {
         $pricesettings = new Pricesettings();
         $pricesettings->setArtice($data['article']);
@@ -237,7 +237,7 @@ class SupplierManager
         $this->entityManager->flush();
     }
     
-    public function updatePricesettings($pricesettings, $data)
+    public function updatePriceSettings($pricesettings, $data)
     {
         $pricesettings->setArtice($data['article']);
         $pricesettings->setIid($data['iid']);
@@ -255,7 +255,7 @@ class SupplierManager
         $this->entityManager->flush();
     }
     
-    public function removePricesettings($pricesettings)
+    public function removePriceSettings($pricesettings)
     {
         $this->entityManager->remove($pricesettings);
         $this->entityManager->flush();
