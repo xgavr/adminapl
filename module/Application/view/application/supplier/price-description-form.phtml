@@ -130,7 +130,7 @@ $form->prepare();
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#price-setting-modal').modal('hide');
+                    $('#price-description-modal').modal('hide');
                     window.location.reload();
                 } else {
                     $('#price-description-modal-content').html(data);

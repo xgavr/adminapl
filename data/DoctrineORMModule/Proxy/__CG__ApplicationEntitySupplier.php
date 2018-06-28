@@ -64,10 +64,10 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'pricesettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
+            return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
         }
 
-        return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'pricesettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
+        return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
     }
 
     /**
@@ -444,23 +444,23 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     /**
      * {@inheritDoc}
      */
-    public function getPricesettings()
+    public function getPriceDescriptions()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPricesettings', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPriceDescriptions', []);
 
-        return parent::getPricesettings();
+        return parent::getPriceDescriptions();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addPricesettings($pricesettings)
+    public function addPriceDescription($priceDescription)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPricesettings', [$pricesettings]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addPriceDescription', [$priceDescription]);
 
-        return parent::addPricesettings($pricesettings);
+        return parent::addPriceDescription($priceDescription);
     }
 
     /**

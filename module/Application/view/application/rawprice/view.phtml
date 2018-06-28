@@ -64,7 +64,7 @@ $form->prepare();
                             </td>
                             <?php if ($col == 0):?>
                                 <td rowspan="<?= count($rawdates)?>">
-                                    <div id="price-setting-alert">
+                                    <div id="price-description-alert">
                                         
                                     </div>
                                 </td>
@@ -76,7 +76,7 @@ $form->prepare();
                         <td></td>
                         <td></td>
                         <td>
-                            <button type="button" class="btn btn-success refresh-button" id="price-setting-submit">
+                            <button type="button" class="btn btn-success refresh-button" id="price-description-submit">
                                Сохранить
                             </button>                        
                         </td>
@@ -160,17 +160,17 @@ $form->prepare();
 </table>
 
 <script>
-    $('#price-setting-submit').on('click', function(e){
-        $('#price-setting-alert').html('');
-       var  data = $('#price-setting-form').serialize();
+    $('#price-description-submit').on('click', function(e){
+        $('#price-description-alert').html('');
+       var  data = $('#price-description-form').serialize();
         $.ajax({
             type: 'POST',
-            url: '/supplier/price-setting-form/<?=$rawprice->getRaw()->getSupplier()->getId()?>?priceDescription=<?= ($priceDescription ? $priceDescription->getId():'') ?>',
+            url: '/supplier/price-description-form/<?=$rawprice->getRaw()->getSupplier()->getId()?>?priceDescription=<?= ($priceDescription ? $priceDescription->getId():'') ?>',
             data: data
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#price-setting-alert').html('<div class="alert alert-success" role="alert">Ок!</div>');
+                    $('#price-description-alert').html('<div class="alert alert-success" role="alert">Ок!</div>');
                     //window.location.reload();
                 } else {
                     if (jQuery.isPlainObject(data)){
@@ -180,7 +180,7 @@ $form->prepare();
                                 msg +='<div>'+errvalue+'</div>'
                             });    
                             msg += '</div>';
-                            $('#price-setting-alert').append(msg);
+                            $('#price-description-alert').append(msg);
                         });
                     }
                 }    

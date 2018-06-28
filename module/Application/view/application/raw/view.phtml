@@ -82,7 +82,7 @@ $this->pageBreadcrumbs()->setItems([
                     <div class="panel-heading">
                         Описания полей                        
                         <div class="pull-right">
-                            <button value="/supplier/price-setting-form/<?= $raw->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
+                            <button value="/supplier/price-description-form/<?= $raw->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
                                     data-toggle="modal" data-target="#modal-dialog" title="Добавить">
                                 <span class="glyphicon glyphicon-plus" ></span>
                             </button>                                                                        
@@ -93,19 +93,19 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="panel-body">
                             <div class="pull-left">
                                 <?= $priceDescription->getName();?><br/>
-                                Артикул: <?= $priceDescription->getArticle();?>,
-                                Производитель: <?= $priceDescription->getProducer();?>,
-                                Наименование: <?= $priceDescription->getTitle();?>,
-                                Цена: <?= $priceDescription->getPrice();?>,
-                                Остаток: <?= $priceDescription->getRest();?>
+                                Артикул: <?= $priceDescription->getArticle();?>,<br/>
+                                Производитель: <?= $priceDescription->getProducer();?>,<br/>
+                                Наименование: <?= $priceDescription->getTitle();?>,<br/>
+                                Цена: <?= $priceDescription->getPrice();?>,<br/>
+                                Остаток: <?= $priceDescription->getRest();?><br/>
                             </div>
                             
                             <div class="pull-right">
-                                <button value="/supplier/price-setting-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
+                                <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
                                         data-toggle="modal" data-target="#modal-dialog" title="Изменить">
                                     <span class="glyphicon glyphicon-edit" ></span>
                                 </button>                                                    
-                                <button value="/supplier/delete-price-setting-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                <button value="/supplier/delete-price-description-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
                                         title="Удалить">
                                     <span class="glyphicon glyphicon-remove" ></span>
                                 </button>                                                           
