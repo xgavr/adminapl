@@ -16,7 +16,6 @@ use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 use Application\Filter\RawToStr;
 use Application\Filter\CsvDetectDelimiterFilter;
-use MvlabsPHPExcel\Service;
 use Zend\Json\Json;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -231,13 +230,18 @@ class RawManager {
                     
                 $filter = new RawToStr();
                     
-                $spreadsheet = IOFactory::load($filename);
+                $reader = IOFactory::createReaderForFile($filename);
+                $filterSubset = new \Application\Filter\ExcelColumn();
+                $reader->setReadFilter($filterSubset);
+                $spreadsheet = $reader->load($filename);
 
                 $sheets = $spreadsheet->getAllSheets();
                 foreach ($sheets as $sheet) { // PHPExcel_Worksheet
+
                     $excel_sheet_content = $sheet->toArray();
 
-                    if (count($sheet)){
+                    if (count($excel_sheet_content)){
+                        
                         foreach ($excel_sheet_content as $row){
 
                             $str = $filter->filter($row);
@@ -287,97 +291,7 @@ class RawManager {
         }
         
         return;
-    }
-
-    /**
-     * Загрузка сырого прайса xls, xlsx
-     * @var Application\Entity\Supplier
-     * @var string $filename
-     */
-    
-    public function uploadRawpriceXls2($supplier, $filename)
-    {
-        ini_set('memory_limit', '2048M');
-        set_time_limit(0); 
-        $i = 0;
-        $batchSize = 50000;        
-        
-        if (file_exists($filename)){
-            
-            if ($supplier->getStatus() == $supplier->getStatusActive()){
-                
-                $pathinfo = pathinfo($filename);
-                
-                $mvexcel = new Service\PhpExcelService();
-                $excel = $mvexcel->createPHPExcelObject($filename);
-
-                $raw = new Raw();
-                $raw->setSupplier($supplier);
-                $raw->setFilename($pathinfo['basename']);
-                $raw->setStatus($raw->getStatusActive());
-
-                $currentDate = date('Y-m-d H:i:s');
-                $raw->setDateCreated($currentDate);
-
-                $this->entityManager->persist($raw);
-                    
-                $filter = new RawToStr();
-                    
-                $sheets = $excel->getAllSheets();
-                foreach ($sheets as $sheet) { // PHPExcel_Worksheet
-                    $excel_sheet_content = $sheet->toArray();
-
-                    if (count($sheet)){
-                        foreach ($excel_sheet_content as $row){
-                            $rawprice = new Rawprice();
-                            
-                            $str = $filter->filter($row);
-
-                            if ($str){
-
-                                $rawprice->setRawdata($filter->filter($row));
-
-                                $rawprice->setArticle('');
-                                $rawprice->setGoodname('');
-                                $rawprice->setProducer('');
-                                $rawprice->setPrice(0);
-                                $rawprice->setRest(0);
-
-                                $rawprice->setRaw($raw);
-
-                                $currentDate = date('Y-m-d H:i:s');
-                                $rawprice->setDateCreated($currentDate);
-
-                                // Добавляем сущность в менеджер сущностей.
-                                $this->entityManager->persist($rawprice);
-
-                                $raw->addRawprice($rawprice);
-                            }    
-                            
-                            $i++;
-                            if (($i % $batchSize) === 0) {
-                                $this->entityManager->flush();
-                            }
-
-                        }
-                    }
-                    
-                }
-                
-                $this->entityManager->flush();                    
-                $this->entityManager->clear();
-
-                unset($excel);
-                unset($mvexcel);
-
-            }    
-
-            $this->renameToArchive($supplier, $filename);
-        }
-        
-        return;
-    }
-    
+    }    
     
     /*
      * Загрузка сырого прайса
