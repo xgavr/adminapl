@@ -57,12 +57,50 @@ class RawController extends AbstractActionController
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
         $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
+        $paginator->setCurrentPageNumber($page);
+
         // Визуализируем шаблон представления.
         return new ViewModel([
             'raws' => $paginator,
         ]);  
     }
+    
+    public function viewAction() 
+    {       
+        $rawId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find the raw ID
+        $raw = $this->entityManager->getRepository(Raw::class)
+                ->findOneById($rawId);
+        
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $page = $this->params()->fromQuery('page', 1);
+        
+        $query = $this->entityManager->getRepository(Rawprice::class)
+                    ->findRawRawprice($raw);
+                
+        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setCurrentPageNumber($page);
+        
+        // Render the view template.
+        return new ViewModel([
+            'raw' => $raw,
+            'rawManager' => $this->rawManager,
+            'rawprice' => $paginator,
+        ]);
+    }      
     
     public function uploadRawFormAction()
     {
@@ -245,42 +283,5 @@ class RawController extends AbstractActionController
         
         return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
         
-    }        
-    
-    public function viewAction() 
-    {       
-        $rawId = (int)$this->params()->fromRoute('id', -1);
-
-        // Validate input parameter
-        if ($rawId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        // Find the raw ID
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);
-        
-        if ($raw == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        $page = $this->params()->fromQuery('page', 1);
-        
-        $query = $this->entityManager->getRepository(Rawprice::class)
-                    ->findRawRawprice($raw);
-                
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
-        
-        // Render the view template.
-        return new ViewModel([
-            'raw' => $raw,
-            'rawManager' => $this->rawManager,
-            'rawprice' => $paginator,
-        ]);
-    }      
+    }            
 }
