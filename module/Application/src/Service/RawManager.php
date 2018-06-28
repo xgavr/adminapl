@@ -305,7 +305,7 @@ class RawManager {
 
                 $validator = new IsCompressed();
 
-                if ($validator->isValid($filename)){
+                if ($validator->isValid($filename) && $pathinfo['extension'] != 'xlsx'){
                     $filter = new Decompress([
                         'adapter' => $pathinfo['extension'],
                         'options' => [
