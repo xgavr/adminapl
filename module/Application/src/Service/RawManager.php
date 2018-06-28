@@ -207,7 +207,7 @@ class RawManager {
     
     public function uploadRawpriceXls($supplier, $filename)
     {
-        ini_set('memory_limit', '4096M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(0); 
         $i = 0;
         $batchSize = 50000;        
