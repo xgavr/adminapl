@@ -40,7 +40,7 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'price-setting-submit']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'price-description-submit']);
 
 $form->prepare();
 
@@ -113,7 +113,7 @@ $form->prepare();
                 </div>    
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" id="price-setting-submit">Сохранить</button>
+                    <button type="button" class="btn btn-primary" id="price-description-submit">Сохранить</button>
                 </div>
 
             </div>
@@ -122,18 +122,18 @@ $form->prepare();
             <?= $this->form()->closeTag(); ?>
             
 <script>
-    $('#price-setting-submit').on('click', function() {
+    $('#price-description-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/supplier/price-setting-form/<?= $supplier->getId() ?>?priceSetting=<?= ($priceSetting ? $priceSetting->getId():'') ?>',
-            data: $('#price-setting-form').serialize()
+            url: '/supplier/price-description-form/<?= $supplier->getId() ?>?priceDescription=<?= ($priceDescription ? $priceDescription->getId():'') ?>',
+            data: $('#price-description-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){
                     $('#price-setting-modal').modal('hide');
                     window.location.reload();
                 } else {
-                    $('#price-setting-modal-content').html(data);
+                    $('#price-description-modal-content').html(data);
                 }    
             })
             .fail(function () {

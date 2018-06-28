@@ -12,7 +12,7 @@ use Zend\InputFilter\InputFilter;
 use Application\Entity\PriceGetting;
 
 /**
- * Description of Pricesettings
+ * Description of PriceGetting
  *
  * @author Daddy
  */

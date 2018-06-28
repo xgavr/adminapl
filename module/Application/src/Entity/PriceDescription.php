@@ -13,10 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description of Pricelist
  * @ORM\Entity(repositoryClass="\Application\Repository\SupplierRepository")
- * @ORM\Table(name="price_settings")
+ * @ORM\Table(name="price_description")
  * @author Daddy
  */
-class Pricesettings {
+class PriceDescription {
     
      // Supplier status constants.
     const STATUS_ACTIVE       = 1; // Active user.
@@ -76,7 +76,7 @@ class Pricesettings {
     protected $status;    
        
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="price_settings") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="priceDescriptions") 
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
      */
     private $supplier;    
@@ -108,7 +108,7 @@ class Pricesettings {
 
     public function setArtice($article) 
     {
-        $this->article = $article;
+        $this->article = (int) $article;
     }     
 
 
@@ -119,7 +119,7 @@ class Pricesettings {
 
     public function setIid($iid) 
     {
-        $this->iid = $iid;
+        $this->iid = (int) $iid;
     }     
 
     public function getProducer() 
@@ -129,7 +129,7 @@ class Pricesettings {
 
     public function setProducer($producer) 
     {
-        $this->producer = $producer;
+        $this->producer = (int) $producer;
     }     
 
     public function getTitle() 
@@ -139,7 +139,7 @@ class Pricesettings {
 
     public function setTitle($title) 
     {
-        $this->title = $title;
+        $this->title = (int) $title;
     }     
 
     public function getPrice() 
@@ -149,7 +149,7 @@ class Pricesettings {
 
     public function setPrice($price) 
     {
-        $this->price = $price;
+        $this->price = (int) $price;
     }     
 
     public function getRest() 
@@ -159,7 +159,7 @@ class Pricesettings {
 
     public function setRest($rest) 
     {
-        $this->rest = $rest;
+        $this->rest = (int) $rest;
     }     
 
     public function getDateCreated() 
@@ -257,7 +257,7 @@ class Pricesettings {
     public function setSupplier($supplier) 
     {
         $this->supplier = $supplier;
-        $supplier->addPricesettings($this);
+        $supplier->addPriceDescription($this);
     }    
         
 }

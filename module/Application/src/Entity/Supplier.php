@@ -76,10 +76,10 @@ class Supplier {
     private $raw;
 
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Pricesettings", mappedBy="supplier")
+    * @ORM\OneToMany(targetEntity="Application\Entity\PriceDescription", mappedBy="supplier")
     * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
      */
-    private $pricesettings;    
+    private $priceDescriptions;    
     
     /**
     * @ORM\OneToMany(targetEntity="Application\Entity\PriceGetting", mappedBy="supplier")
@@ -112,7 +112,7 @@ class Supplier {
     {
         $this->contacts = new ArrayCollection();
         $this->raw = new ArrayCollection();
-        $this->pricesettings = new ArrayCollection();
+        $this->priceDescriptions = new ArrayCollection();
         $this->priceGettings = new ArrayCollection();
         $this->billGettings = new ArrayCollection();
         $this->requestSettings = new ArrayCollection();
@@ -309,17 +309,17 @@ class Supplier {
      * Returns the array of contacts assigned to this.
      * @return array
      */
-    public function getPricesettings()
+    public function getPriceDescriptions()
     {
-        return $this->pricesettings;
+        return $this->priceDescriptions;
     }
         
     /**
      * Assigns.
      */
-    public function addPricesettings($pricesettings)
+    public function addPriceDescription($priceDescription)
     {
-        $this->pricesettings[] = $pricesettings;
+        $this->priceDescriptions[] = $priceDescription;
     }
     
     /**

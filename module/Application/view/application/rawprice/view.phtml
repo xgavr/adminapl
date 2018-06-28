@@ -60,7 +60,7 @@ $form->prepare();
                                 <?= $this->escapeHtml($rawdata); ?>
                             </td>
                             <td>
-                                <?php echo $this->partial('application/supplier/price-setting-select', ['col' => $col + 1,'data' => $priceSetting->getField($col + 1), 'options'=>$priceSettingOptions]); ?>
+                                <?php echo $this->partial('application/supplier/price-description-select', ['col' => $col + 1,'data' => $$priceDescription->getField($col + 1), 'options'=>$priceDescriptionOptions]); ?>
                             </td>
                             <?php if ($col == 0):?>
                                 <td rowspan="<?= count($rawdates)?>">
@@ -165,7 +165,7 @@ $form->prepare();
        var  data = $('#price-setting-form').serialize();
         $.ajax({
             type: 'POST',
-            url: '/supplier/price-setting-form/<?=$rawprice->getRaw()->getSupplier()->getId()?>?priceSetting=<?= ($priceSetting ? $priceSetting->getId():'') ?>',
+            url: '/supplier/price-setting-form/<?=$rawprice->getRaw()->getSupplier()->getId()?>?priceDescription=<?= ($priceDescription ? $priceDescription->getId():'') ?>',
             data: data
         })
             .done(function (data) {

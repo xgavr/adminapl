@@ -15,7 +15,7 @@ class Version20180104161235 extends AbstractMigration
      */
     public function getDescription()
     {
-        $description = 'A migration which creates the `pricesettings` tables.';
+        $description = 'A migration which creates the `cart` tables.';
         return $description;
     }
     

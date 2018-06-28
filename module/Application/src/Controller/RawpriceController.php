@@ -11,7 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
-use Application\Form\PricesettingsForm;
+use Application\Form\PriceDescriptionForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -183,21 +183,8 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
-        $form = new PricesettingsForm();
+        $form = new PriceDescriptionForm();
         
-        $priceSettingOptions = [];
-        foreach ($form->getElements() as $element){
-            if ($element->getLabel()){
-                $priceSettingOptions[$element->getName()] = $element->getLabel();
-            }    
-        }
-        
-        $priceSettings = $rawprice->getRaw()->getSupplier()->getPricesettings();
-        if (count($priceSettings)){
-            $priceSetting = $priceSettings[0];
-        } else {
-            $priceSetting = null;
-        }    
                 
         //сохранение данных настройки прайса
         if($this->getRequest()->isPost()) {
@@ -207,10 +194,10 @@ class RawpriceController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                if ($priceSetting){
-                    $this->supplierManager->updatePricesettings($priceSetting, $data, true);                    
+                if ($priceDescription){
+                    $this->supplierManager->updatePriceDescription($priceDescription, $data, true);                    
                 } else{
-                    $this->supplierManager->addNewPricesettings($supplier, $data, true);
+                    $this->supplierManager->addNewPriceDescription($supplier, $data, true);
                 }    
                 
                 return new JsonModel(
@@ -224,8 +211,7 @@ class RawpriceController extends AbstractActionController
         return new ViewModel([
             'rawprice' => $rawprice,
             'rawManager' => $this->rawManager,
-            'priceSettingOptions' => $priceSettingOptions,
-            'priceSetting' => $priceSetting,
+            'priceDescription' => $priceDescription,
             'form' => $form,
         ]);
     }      

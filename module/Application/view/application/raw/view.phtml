@@ -89,23 +89,23 @@ $this->pageBreadcrumbs()->setItems([
                         </div>
                         <div class="clearfix"></div>
                     </div>
-                    <?php foreach($raw->getSupplier()->getPriceSettings() as $priceSetting): ?>
+                    <?php foreach($raw->getSupplier()->getPriceDescriptions() as $priceDescription): ?>
                         <div class="panel-body">
                             <div class="pull-left">
-                                <?= $priceSetting->getName();?><br/>
-                                Артикул: <?= $priceSetting->getArticle();?>,
-                                Производитель: <?= $priceSetting->getProducer();?>,
-                                Наименование: <?= $priceSetting->getTitle();?>,
-                                Цена: <?= $priceSetting->getPrice();?>,
-                                Остаток: <?= $priceSetting->getRest();?>
+                                <?= $priceDescription->getName();?><br/>
+                                Артикул: <?= $priceDescription->getArticle();?>,
+                                Производитель: <?= $priceDescription->getProducer();?>,
+                                Наименование: <?= $priceDescription->getTitle();?>,
+                                Цена: <?= $priceDescription->getPrice();?>,
+                                Остаток: <?= $priceDescription->getRest();?>
                             </div>
                             
                             <div class="pull-right">
-                                <button value="/supplier/price-setting-form/<?= $priceSetting->getSupplier()->getId() ?>?priceSetting=<?= $priceSetting->getId() ?>" class="btn btn-default btn-xs"
+                                <button value="/supplier/price-setting-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
                                         data-toggle="modal" data-target="#modal-dialog" title="Изменить">
                                     <span class="glyphicon glyphicon-edit" ></span>
                                 </button>                                                    
-                                <button value="/supplier/delete-price-setting-form/<?= $priceSetting->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                <button value="/supplier/delete-price-setting-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
                                         title="Удалить">
                                     <span class="glyphicon glyphicon-remove" ></span>
                                 </button>                                                           

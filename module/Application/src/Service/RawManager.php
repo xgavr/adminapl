@@ -386,9 +386,9 @@ class RawManager {
     /*
      * Обработка данных прайса
      * @var Application\Entity\Rawprice @rawprice
-     * @var Apllication\Entity\Pricesettings #paicesettings
+     * @var Apllication\Entity\PriceDescription #paicesettings
      */
-    public function parseRawdata($rawprice, $pricesetting)
+    public function parseRawdata($rawprice, $priceDescription)
     {
         $rawdata = Json::decode($rawprice->getRawdata());
         $result = [
@@ -399,20 +399,20 @@ class RawManager {
             'rest' => 0,
         ];
         
-        if ($pricesetting->getArticle() && count($rawdata) >= $pricesetting->getArticle()){
-            $result['article'] = $rawdata[$pricesetting->getArticle() - 1];
+        if ($priceDescription->getArticle() && count($rawdata) >= $priceDescription->getArticle()){
+            $result['article'] = $rawdata[$priceDescription->getArticle() - 1];
         }    
-        if ($pricesetting->getProducer() && count($rawdata) >= $pricesetting->getProducer()){
-            $result['producer'] = $rawdata[$pricesetting->getProducer() - 1];
+        if ($priceDescription->getProducer() && count($rawdata) >= $priceDescription->getProducer()){
+            $result['producer'] = $rawdata[$priceDescription->getProducer() - 1];
         }    
-        if ($pricesetting->getTitle() && count($rawdata) >= $pricesetting->getTitle()){
-            $result['goodname'] = $rawdata[$pricesetting->getTitle() - 1];
+        if ($priceDescription->getTitle() && count($rawdata) >= $priceDescription->getTitle()){
+            $result['goodname'] = $rawdata[$priceDescription->getTitle() - 1];
         }    
-        if ($pricesetting->getPrice() && count($rawdata) >= $pricesetting->getPrice()){
-            $result['price'] = $rawdata[$pricesetting->getPrice() - 1];
+        if ($priceDescription->getPrice() && count($rawdata) >= $priceDescription->getPrice()){
+            $result['price'] = $rawdata[$priceDescription->getPrice() - 1];
         }   
-        if ($pricesetting->getRest() && count($rawdata) >= $pricesetting->getRest()){
-            $result['rest'] = $rawdata[$pricesetting->getRest() - 1];
+        if ($priceDescription->getRest() && count($rawdata) >= $priceDescription->getRest()){
+            $result['rest'] = $rawdata[$priceDescription->getRest() - 1];
         }    
         
         if ($result['producer'] && $result['goodname'] && $result['price']){        
@@ -471,12 +471,12 @@ class RawManager {
         ini_set('memory_limit', '512M');
         
         $raw = $rawprice->getRaw();
-        $pricesettings = $raw->getSupplier()->getPricesettings();
+        $priceDescriptions = $raw->getSupplier()->getPriceDescriptions();
         
         $data = [];
-        foreach ($pricesettings as $pricesetting){
-            if ($pricesetting->getStatus() == $pricesetting->getStatusActive()){
-                $parceData = $this->parseRawdata($rawprice,$pricesetting);
+        foreach ($priceDescriptions as $priceDescription){
+            if ($priceDescription->getStatus() == $priceDescription->getStatusActive()){
+                $parceData = $this->parseRawdata($rawprice,$priceDescription);
                 if (is_array($parceData)){
                     $data[] = $parceData; 
                 }            

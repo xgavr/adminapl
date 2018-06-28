@@ -9,7 +9,7 @@ namespace Application\Service;
 
 use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Supplier;
-use Application\Entity\Pricesettings;
+use Application\Entity\PriceDescription;
 use Application\Entity\PriceGetting;
 use Application\Entity\BillGetting;
 use Application\Entity\RequestSetting;
@@ -176,9 +176,9 @@ class SupplierManager
             $this->contactManager->remove($contact);
         }        
         
-        $pricesettings = $supplier->getPricesettings();
-        foreach ($pricesettings as $pricesetting) {
-            $this->removePriceSettings($pricesetting);
+        $priceDescriptions = $supplier->getPriceDescriptions();
+        foreach ($priceDescriptions as $priceDescription) {
+            $this->removePriceDescription($priceDescription);
         }
 
         $priceGettings = $supplier->getPriceGettings();
@@ -212,52 +212,52 @@ class SupplierManager
        $this->contactManager->addNewContact($supplier, $data);
     }   
     
-    public function addNewPriceSettings($supplier, $data)
+    public function addNewPriceDescription($supplier, $data)
     {
-        $pricesettings = new Pricesettings();
-        $pricesettings->setArtice($data['article']);
-        $pricesettings->setIid($data['iid']);
-        $pricesettings->setName($data['name']);
-        $pricesettings->setPrice($data['price']);
-        $pricesettings->setProducer($data['producer']);
-        $pricesettings->setRest($data['rest']);
-        $pricesettings->setStatus($data['status']);
-        $pricesettings->setTitle($data['title']);
+        $priceDescription = new PriceDescription();
+        $priceDescription->setArtice($data['article']);
+        $priceDescription->setIid($data['iid']);
+        $priceDescription->setName($data['name']);
+        $priceDescription->setPrice($data['price']);
+        $priceDescription->setProducer($data['producer']);
+        $priceDescription->setRest($data['rest']);
+        $priceDescription->setStatus($data['status']);
+        $priceDescription->setTitle($data['title']);
         
         $currentDate = date('Y-m-d H:i:s');
-        $pricesettings->setDateCreated($currentDate);        
+        $priceDescription->setDateCreated($currentDate);        
         
         
         // Добавляем сущность в менеджер сущностей.
-        $this->entityManager->persist($pricesettings);
+        $this->entityManager->persist($priceDescription);
 
-        $pricesettings->setSupplier($supplier);
+        $priceDescription->setSupplier($supplier);
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
     }
     
-    public function updatePriceSettings($pricesettings, $data)
+    public function updatePriceDescription($priceDescription, $data)
     {
-        $pricesettings->setArtice($data['article']);
-        $pricesettings->setIid($data['iid']);
-        $pricesettings->setName($data['name']);
-        $pricesettings->setPrice($data['price']);
-        $pricesettings->setProducer($data['producer']);
-        $pricesettings->setRest($data['rest']);
-        $pricesettings->setStatus($data['status']);
-        $pricesettings->setTitle($data['title']);
+        $priceDescription->setArtice($data['article']);
+        $priceDescription->setIid($data['iid']);
+        $priceDescription->setName($data['name']);
+        $priceDescription->setPrice($data['price']);
+        $priceDescription->setProducer($data['producer']);
+        $priceDescription->setRest($data['rest']);
+        $priceDescription->setStatus($data['status']);
+        $priceDescription->setTitle($data['title']);
         
         // Добавляем сущность в менеджер сущностей.
-        $this->entityManager->persist($pricesettings);
+        $this->entityManager->persist($priceDescription);
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
     }
     
-    public function removePriceSettings($pricesettings)
+    public function removePriceDescription($priceDescription)
     {
-        $this->entityManager->remove($pricesettings);
+        $this->entityManager->remove($priceDescription);
         $this->entityManager->flush();
     }
     

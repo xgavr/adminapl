@@ -12,13 +12,13 @@ use Zend\View\Model\ViewModel;
 use Application\Entity\Supplier;
 use Application\Entity\Contact;
 use Application\Entity\PriceGetting;
-use Application\Entity\PriceSettings;
+use Application\Entity\PriceDescription;
 use Application\Entity\BillGetting;
 use Application\Entity\RequestSetting;
 use Application\Entity\SupplySetting;
 use Application\Form\SupplierForm;
 use Application\Form\PriceGettingForm;
-use Application\Form\PriceSettingsForm;
+use Application\Form\PriceDescriptionForm;
 use Application\Form\BillGettingForm;
 use Application\Form\RequestSettingForm;
 use Application\Form\ContactForm;
@@ -875,7 +875,7 @@ class SupplierController extends AbstractActionController
     }    
     
 
-    public function priceSettingFormAction()
+    public function priceDescriptionFormAction()
     {
         $supplierId = (int)$this->params()->fromRoute('id', -1);
         
@@ -892,17 +892,17 @@ class SupplierController extends AbstractActionController
             return;                        
         }        
 
-        $priceSettingId = (int)$this->params()->fromQuery('priceSetting', -1);
+        $priceDescriptionId = (int)$this->params()->fromQuery('priceDescription', -1);
         
         // Validate input parameter
-        if ($priceSettingId>0) {
-            $priceSetting = $this->entityManager->getRepository(PriceSettings::class)
-                    ->findOneById($priceSettingId);
+        if ($priceDescriptionId>0) {
+            $priceDescription = $this->entityManager->getRepository(PriceDescription::class)
+                    ->findOneById($priceDescriptionId);
         } else {
-            $priceSetting = null;
+            $priceDescription = null;
         }
         
-        $form = new PriceSettingsForm();
+        $form = new PriceDescriptionForm();
 
         if ($this->getRequest()->isPost()) {
             
@@ -916,10 +916,10 @@ class SupplierController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
 
-                if ($priceSetting){
-                    $this->supplierManager->updatePriceSettings($priceSetting, $data, true);                    
+                if ($priceDescription){
+                    $this->supplierManager->updatePriceDescription($priceDescription, $data, true);                    
                 } else{
-                    $this->supplierManager->addNewPriceSettings($supplier, $data, true);
+                    $this->supplierManager->addNewPriceDescription($supplier, $data, true);
                 }    
                 
                 return new JsonModel(
@@ -931,16 +931,16 @@ class SupplierController extends AbstractActionController
                 );                           
             }
         } else {
-            if ($priceSetting){
+            if ($priceDescription){
                 $data = [
-                    'name' => $priceSetting->getName(),  
-                    'article' => $priceSetting->getArticle(),  
-                    'iid' => $priceSetting->getIid(),  
-                    'producer' => $priceSetting->getProducer(),  
-                    'title' => $priceSetting->getTitle(),  
-                    'rest' => $priceSetting->getRest(),  
-                    'price' => $priceSetting->getPrice(),  
-                    'status' => $priceSetting->getStatus(),  
+                    'name' => $priceDescription->getName(),  
+                    'article' => $priceDescription->getArticle(),  
+                    'iid' => $priceDescription->getIid(),  
+                    'producer' => $priceDescription->getProducer(),  
+                    'title' => $priceDescription->getTitle(),  
+                    'rest' => $priceDescription->getRest(),  
+                    'price' => $priceDescription->getPrice(),  
+                    'status' => $priceDescription->getStatus(),  
                 ];
                 $form->setData($data);
             }    
@@ -950,24 +950,24 @@ class SupplierController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'priceSetting' => $priceSetting,
+            'priceDescription' => $priceDescription,
             'supplier' => $supplier,
         ]);                
     }
 
-    public function deletePriceSettingFormAction()
+    public function deletePriceDescriptionFormAction()
     {
-        $priceSettingId = $this->params()->fromRoute('id', -1);
+        $priceDescriptionId = $this->params()->fromRoute('id', -1);
         
-        $priceSetting = $this->entityManager->getRepository(PriceSettings::class)
-                ->findOneById($priceSettingId);
+        $priceDescription = $this->entityManager->getRepository(PriceDescription::class)
+                ->findOneById($priceDescriptionId);
         
-        if ($priceSetting == null) {
+        if ($priceDescription == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $this->supplierManager->removePriceSettings($priceSetting);
+        $this->supplierManager->removePriceDescription($priceDescription);
         
         return new JsonModel(
            ['ok']
@@ -976,27 +976,27 @@ class SupplierController extends AbstractActionController
         exit;
     }    
     
-    public function deletePriceSettingAction()
+    public function deletePriceDescriptionAction()
     {
-        $priceSettingId = (int) $this->params()->fromRoute('id', -1);
+        $priceDescriptionId = (int) $this->params()->fromRoute('id', -1);
         
         // Validate input parameter
-        if ($priceSettingId<0) {
+        if ($priceDescriptionId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
-        $priceSetting = $this->entityManager->getRepository(Pricesettings::class)
-                ->findOneById($priceSettingId);
+        $priceDescription = $this->entityManager->getRepository(PriceDescription::class)
+                ->findOneById($priceDescriptionId);
         
-        if ($priceSetting == null) {
+        if ($priceDescription == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $supplier = $priceSetting->getSupplier();
+        $supplier = $priceDescription->getSupplier();
 
-        $this->supplierManager->removePricesettings($priceSetting);
+        $this->supplierManager->removePriceDescription($priceDescription);
         
         // Перенаправляем пользователя на страницу "supplier/view".
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);

@@ -11,7 +11,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Description of Pricesettings
+ * Description of BillGetting
  *
  * @author Daddy
  */
