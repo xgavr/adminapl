@@ -91,65 +91,29 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <?php foreach($raw->getSupplier()->getPriceDescriptions() as $priceDescription): ?>
                         <div class="panel-body">
-                            <table class="table-striped table-bordered">
-                                <tr>
-                                    <td colspan="3">
-                                        <?= $priceDescription->getName();?>                                            
-                                    </td>
-                                    <td>
-                                        <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
-                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                            <span class="glyphicon glyphicon-edit" ></span>
-                                        </button>                                                    
-                                        <button value="/supplier/delete-price-description-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                                title="Удалить">
-                                            <span class="glyphicon glyphicon-remove" ></span>
-                                        </button>                                                                                                       
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                       Артикул: 
-                                    </td>
-                                    <td>
-                                        <?= $priceDescription->getArticle();?>
-                                    </td>
-                                    <td>
-                                       Производитель: 
-                                    </td>
-                                    <td>
-                                        <?= $priceDescription->getProducer();?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                       Наименование: 
-                                    </td>
-                                    <td>
-                                        <?= $priceDescription->getTitle();?>
-                                    </td>
-                                    <td>
-                                       Внутренний номер: 
-                                    </td>
-                                    <td>
-                                        <?= $priceDescription->getIid();?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                       Цена: 
-                                    </td>
-                                    <td>
-                                        <?= $priceDescription->getPrice();?>
-                                    </td>
-                                    <td>
-                                       Остаток: 
-                                    </td>
-                                    <td>
-                                        <?= $priceDescription->getRest();?>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="pull-right">
+                                <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                    
+                                <button value="/supplier/delete-price-description-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                                                                                                       
+                            </div>
+                            <div>
+                                <i><?= $priceDescription->getName() ?></i><br/>
+                                
+                                <?php foreach($priceDescriptionElements as $element):?>
+                                    <?php if(in_array($element->getName(), ['name', 'status'])) continue; ?>
+                                    <?php $func = 'get'.ucfirst($element->getName()); ?>
+                                    <?php if (method_exists($priceDescription, $func)):?>
+                                        <?php if($priceDescription->$func()):?>
+                                            <b><?= $priceDescription->$func()?></b>: <?= $element->getLabel()?> <br/>
+                                        <?php endif;?>    
+                                    <?php endif;?>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                             
                     <?php endforeach;?>

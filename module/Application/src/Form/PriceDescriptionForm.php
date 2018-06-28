@@ -46,7 +46,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'ps_name'
             ],
             'options' => [
-                'label' => 'Наименование настройки',
+                'label' => 'Наименование описания полей',
             ],
         ]);
         
@@ -58,7 +58,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'ps_article'
             ],
             'options' => [
-                'label' => 'Артикул',
+                'label' => 'Артикул товара',
             ],
         ]);
         
@@ -70,7 +70,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'ps_iid'
             ],
             'options' => [
-                'label' => 'Внутренний ID',
+                'label' => 'Номер у поставщика',
             ],
         ]);
         
@@ -93,7 +93,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'country'
             ],
             'options' => [
-                'label' => 'Страна',
+                'label' => 'Страна производителя',
             ],
         ]);
 
@@ -105,7 +105,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'ps_title'
             ],
             'options' => [
-                'label' => 'Наименование',
+                'label' => 'Наименование товара',
             ],
         ]);
         
@@ -116,7 +116,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'description'
             ],
             'options' => [
-                'label' => 'Описание',
+                'label' => 'Описание подробное',
             ],
         ]);
         
@@ -124,10 +124,10 @@ class PriceDescriptionForm extends Form
             'type'  => 'text',
             'name' => 'image',
             'attributes' => [
-                'id' => 'description'
+                'id' => 'image'
             ],
             'options' => [
-                'label' => 'Картинка',
+                'label' => 'Ссылка на изображние товара',
             ],
         ]);
         
@@ -173,7 +173,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'ps_rest'
             ],
             'options' => [
-                'label' => 'Количество',
+                'label' => 'Наличие, остаток',
             ],
         ]);
         
@@ -206,7 +206,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'lot'
             ],
             'options' => [
-                'label' => 'Оригинальный номер',
+                'label' => 'Мин. количество',
             ],
         ]);
         
@@ -217,7 +217,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'vendor'
             ],
             'options' => [
-                'label' => 'Оригинальный номер',
+                'label' => 'Номер замены',
             ],
         ]);
         
@@ -228,7 +228,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'car'
             ],
             'options' => [
-                'label' => 'Оригинальный номер',
+                'label' => 'Марки, модели',
             ],
         ]);
         
@@ -239,7 +239,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'bar'
             ],
             'options' => [
-                'label' => 'Оригинальный номер',
+                'label' => 'Штрихкод',
             ],
         ]);
         
@@ -250,7 +250,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'comment'
             ],
             'options' => [
-                'label' => 'Оригинальный номер',
+                'label' => 'Комментарий',
             ],
         ]);
         
@@ -261,7 +261,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'weight'
             ],
             'options' => [
-                'label' => 'Оригинальный номер',
+                'label' => 'Вес, объем',
             ],
         ]);
         

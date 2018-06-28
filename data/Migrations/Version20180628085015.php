@@ -26,6 +26,7 @@ class Version20180628085015 extends AbstractMigration
         $table->addColumn('currency', 'integer', ['notnull'=>FALSE]);        
         $table->addColumn('comment', 'integer', ['notnull'=>FALSE]);        
         $table->addColumn('weight', 'integer', ['notnull'=>FALSE]);        
+        $table->addColumn('country', 'integer', ['notnull'=>FALSE]);        
 
     }
 
@@ -45,6 +46,7 @@ class Version20180628085015 extends AbstractMigration
         $table->dropColumn('currency');        
         $table->dropColumn('comment');        
         $table->dropColumn('weight');        
+        $table->dropColumn('country');        
 
     }
 }

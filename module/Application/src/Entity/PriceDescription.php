@@ -111,6 +111,11 @@ class PriceDescription {
     protected $weight;
 
     /**
+     * @ORM\Column(name="country")   
+     */
+    protected $country;
+
+    /**
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;    
@@ -295,6 +300,16 @@ class PriceDescription {
     public function setWeight($weight) 
     {
         $this->weight = (int) $weight;
+    }     
+
+    public function getCountry() 
+    {
+        return $this->country;
+    }
+
+    public function setCountry($country) 
+    {
+        $this->country = (int) $country;
     }     
 
     public function getDateCreated() 

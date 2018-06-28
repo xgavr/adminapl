@@ -13,6 +13,7 @@ use Zend\View\Model\JsonModel;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Supplier;
+use Application\Form\PriceDescriptionForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -94,11 +95,13 @@ class RawController extends AbstractActionController
         $paginator->setDefaultItemCountPerPage(10);        
         $paginator->setCurrentPageNumber($page);
         
+        $priceDescriptionForm = new PriceDescriptionForm();
         // Render the view template.
         return new ViewModel([
             'raw' => $raw,
             'rawManager' => $this->rawManager,
             'rawprice' => $paginator,
+            'priceDescriptionElements' => $priceDescriptionForm->getElements(),
         ]);
     }      
     

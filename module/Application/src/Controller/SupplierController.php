@@ -933,14 +933,24 @@ class SupplierController extends AbstractActionController
         } else {
             if ($priceDescription){
                 $data = [
-                    'name' => $priceDescription->getName(),  
                     'article' => $priceDescription->getArticle(),  
+                    'bar' => $priceDescription->getBar(),  
+                    'car' => $priceDescription->getCar(),  
+                    'comment' => $priceDescription->getComment(),  
+                    'country' => $priceDescription->getCountry(),  
+                    'currency' => $priceDescription->getCurrency(),  
                     'iid' => $priceDescription->getIid(),  
-                    'producer' => $priceDescription->getProducer(),  
-                    'title' => $priceDescription->getTitle(),  
-                    'rest' => $priceDescription->getRest(),  
+                    'lot' => $priceDescription->getLot(),  
+                    'name' => $priceDescription->getName(),  
+                    'oem' => $priceDescription->getOem(),  
                     'price' => $priceDescription->getPrice(),  
+                    'producer' => $priceDescription->getProducer(),  
+                    'rest' => $priceDescription->getRest(),  
                     'status' => $priceDescription->getStatus(),  
+                    'unit' => $priceDescription->getUnit(),  
+                    'title' => $priceDescription->getTitle(),  
+                    'vendor' => $priceDescription->getVendor(),  
+                    'weight' => $priceDescription->getWeight(),  
                 ];
                 $form->setData($data);
             }    

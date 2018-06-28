@@ -216,13 +216,23 @@ class SupplierManager
     {
         $priceDescription = new PriceDescription();
         $priceDescription->setArtice($data['article']);
+        $priceDescription->setBar($data['bar']);
+        $priceDescription->setCar($data['car']);
+        $priceDescription->setComment($data['comment']);
+        $priceDescription->setCountry($data['country']);
+        $priceDescription->setCurrency($data['currency']);
         $priceDescription->setIid($data['iid']);
+        $priceDescription->setLot($data['lot']);
         $priceDescription->setName($data['name']);
+        $priceDescription->setOem($data['oem']);
         $priceDescription->setPrice($data['price']);
         $priceDescription->setProducer($data['producer']);
         $priceDescription->setRest($data['rest']);
         $priceDescription->setStatus($data['status']);
+        $priceDescription->setUnit($data['unit']);
         $priceDescription->setTitle($data['title']);
+        $priceDescription->setVendor($data['vendor']);
+        $priceDescription->setWeight($data['weight']);
         
         $currentDate = date('Y-m-d H:i:s');
         $priceDescription->setDateCreated($currentDate);        
@@ -240,13 +250,23 @@ class SupplierManager
     public function updatePriceDescription($priceDescription, $data)
     {
         $priceDescription->setArtice($data['article']);
+        $priceDescription->setBar($data['bar']);
+        $priceDescription->setCar($data['car']);
+        $priceDescription->setComment($data['comment']);
+        $priceDescription->setCountry($data['country']);
+        $priceDescription->setCurrency($data['currency']);
         $priceDescription->setIid($data['iid']);
+        $priceDescription->setLot($data['lot']);
         $priceDescription->setName($data['name']);
+        $priceDescription->setOem($data['oem']);
         $priceDescription->setPrice($data['price']);
         $priceDescription->setProducer($data['producer']);
         $priceDescription->setRest($data['rest']);
         $priceDescription->setStatus($data['status']);
+        $priceDescription->setUnit($data['unit']);
         $priceDescription->setTitle($data['title']);
+        $priceDescription->setVendor($data['vendor']);
+        $priceDescription->setWeight($data['weight']);
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($priceDescription);
