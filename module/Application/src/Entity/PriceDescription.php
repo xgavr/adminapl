@@ -66,6 +66,51 @@ class PriceDescription {
     protected $rest;
     
     /**
+     * @ORM\Column(name="oem")   
+     */
+    protected $oem;
+
+    /**
+     * @ORM\Column(name="vendor")   
+     */
+    protected $vendor;
+
+    /**
+     * @ORM\Column(name="lot")   
+     */
+    protected $lot;
+
+    /**
+     * @ORM\Column(name="unit")   
+     */
+    protected $unit;
+
+    /**
+     * @ORM\Column(name="car")   
+     */
+    protected $car;
+
+    /**
+     * @ORM\Column(name="bar")   
+     */
+    protected $bar;
+
+    /**
+     * @ORM\Column(name="currency")   
+     */
+    protected $currency;
+
+    /**
+     * @ORM\Column(name="comment")   
+     */
+    protected $comment;
+
+    /**
+     * @ORM\Column(name="weight")   
+     */
+    protected $weight;
+
+    /**
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;    
@@ -160,6 +205,96 @@ class PriceDescription {
     public function setRest($rest) 
     {
         $this->rest = (int) $rest;
+    }     
+
+    public function getOem() 
+    {
+        return $this->oem;
+    }
+
+    public function setOem($oem) 
+    {
+        $this->oem = (int) $oem;
+    }     
+
+    public function getVendor() 
+    {
+        return $this->vendor;
+    }
+
+    public function setVendor($vendor) 
+    {
+        $this->vendor = (int) $vendor;
+    }     
+
+    public function getUnit() 
+    {
+        return $this->unit;
+    }
+
+    public function setUnit($unit) 
+    {
+        $this->unit = (int) $unit;
+    }     
+
+    public function getCar() 
+    {
+        return $this->car;
+    }
+
+    public function setCar($car) 
+    {
+        $this->car = (int) $car;
+    }     
+
+    public function getLot() 
+    {
+        return $this->lot;
+    }
+
+    public function setLot($lot) 
+    {
+        $this->lot = (int) $lot;
+    }     
+
+    public function getBar() 
+    {
+        return $this->bar;
+    }
+
+    public function setBar($bar) 
+    {
+        $this->bar = (int) $bar;
+    }     
+
+    public function getCurrency() 
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency($currency) 
+    {
+        $this->currency = (int) $currency;
+    }     
+
+    public function getComment() 
+    {
+        return $this->comment;
+    }
+
+    public function setComment($comment) 
+    {
+        $this->comment = (int) $comment;
+    }     
+
+    public function getWeight() 
+    {
+        return $this->weight;
+    }
+
+    public function setWeight($weight) 
+    {
+        $this->weight = (int) $weight;
     }     
 
     public function getDateCreated() 

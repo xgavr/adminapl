@@ -188,6 +188,83 @@ class PriceDescriptionForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'oem',
+            'attributes' => [
+                'id' => 'oem'
+            ],
+            'options' => [
+                'label' => 'Оригинальный номер',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'lot',
+            'attributes' => [
+                'id' => 'lot'
+            ],
+            'options' => [
+                'label' => 'Оригинальный номер',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'vendor',
+            'attributes' => [
+                'id' => 'vendor'
+            ],
+            'options' => [
+                'label' => 'Оригинальный номер',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'car',
+            'attributes' => [
+                'id' => 'car'
+            ],
+            'options' => [
+                'label' => 'Оригинальный номер',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'bar',
+            'attributes' => [
+                'id' => 'bar'
+            ],
+            'options' => [
+                'label' => 'Оригинальный номер',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'comment',
+            'attributes' => [
+                'id' => 'comment'
+            ],
+            'options' => [
+                'label' => 'Оригинальный номер',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'weight',
+            'attributes' => [
+                'id' => 'weight'
+            ],
+            'options' => [
+                'label' => 'Оригинальный номер',
+            ],
+        ]);
+        
         // Add "status" field
         $this->add([            
             'type'  => 'select',
@@ -472,7 +549,7 @@ class PriceDescriptionForm extends Form
             ]);
         
         $inputFilter->add([
-                'name'     => 'unit',
+                'name'     => 'oem',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -490,6 +567,99 @@ class PriceDescriptionForm extends Form
 //                        ],
 //                    ],
 //                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'lot',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+//                'validators' => [
+//                    [
+//                        'name'    => 'StringLength',
+//                        'options' => [
+//                            'min' => 1,
+//                            'max' => 11
+//                        ],
+//                    ],
+//                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'unit',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'vendor',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'car',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'bar',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'comment',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'weight',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
             ]);
         
         // Add input for "status" field
