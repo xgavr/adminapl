@@ -241,7 +241,6 @@ class RawManager {
                         foreach ($excel_sheet_content as $row){
 
                             $str = $filter->filter($row);
-                            print_r($str); exit;
 
                             if ($str){
 
