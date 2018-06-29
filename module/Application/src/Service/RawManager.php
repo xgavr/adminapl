@@ -235,7 +235,7 @@ class RawManager {
                     
                 try{
                     $reader = IOFactory::createReaderForFile($filename);
-                } catch (Reader\Exception $e){
+                } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
                     //попытка прочитать файл старым способом
                     return $this->uploadRawpriceXls2($supplier, $filename);
                 }    
