@@ -122,7 +122,10 @@ class SupplierManager
     
     /*
      * Показать файлы в папке с прайсами
+     * @var Application\Entity\Supplier $supplier
+     * @bool $arx
      * 
+     * return array
      */
     public function getLastPriceFile($supplier, $arx = false)
     {
@@ -153,6 +156,36 @@ class SupplierManager
         }    
         return $result;
     }    
+    
+    /*
+     * Получить массив файлов с прайсами для загрузки
+     * 
+     * return array
+     */
+    public function getPriceFilesToUpload()
+    {
+        $result = [];
+        $sort_array = [];
+        $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
+                    ->findBy([]);
+        foreach ($priceGettings as $priceGetting){
+            $files = $this->getLastPriceFile($priceGetting->getSupplier());
+            if (count($files)){
+                foreach ($files as $filename=>$value){
+                    $sort_array[] = $value['date'];
+                    $result[] = [
+                        'priceGetting' => $priceGetting, 
+                        'filename' => $filename, 
+                        'value' => $value,
+                        ];
+                }
+            }
+        }
+        
+        array_multisort($sort_array, $result);
+        
+        return $result;
+    }
     
     
     public function updateSupplier($supplier, $data) 

@@ -343,6 +343,7 @@ class PriceController extends AbstractActionController
         return new ViewModel([
             'priceGettings' => $priceGettings,
             'supplierManager' => $this->supplierManager,
+            'files' => $this->supplierManager->getPriceFilesToUpload(),
         ]);
                     
     }    

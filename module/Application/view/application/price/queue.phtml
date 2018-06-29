@@ -15,51 +15,48 @@ $this->pageBreadcrumbs()->setItems([
 <div class="row">
     <div class="col-sm-12">
         <div class="panel-group">
-            <?php foreach($priceGettings as $priceGetting):?>
-                <?php $files = $supplierManager->getLastPriceFile($priceGetting->getSupplier()); ?>
-                <?php if (count($files)): ?>
-                    <div class="panel panel-<?= ($priceGetting->getSupplier()->getStatus() == 1) ? 'info':'default' ?>">
+            <?php if (count($files)): ?>
+                <?php foreach($files as $file):?>
+                    <div class="panel panel-<?= ($file['priceGetting']->getSupplier()->getStatus() == 1) ? 'info':'default' ?>">
                         <div class="panel-heading">
                             <h3 class="panel-title pull-left">
-                                <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $priceGetting->getSupplier()->getId()]) ?>"><?= $priceGetting->getSupplier()->getName(); ?></a>
+                                <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $file['priceGetting']->getSupplier()->getId()]) ?>"><?= $file['priceGetting']->getSupplier()->getName(); ?></a>
                             </h3>
                             <div class="pull-right">
-                                <button value="/supplier/price-getting-form/<?= $priceGetting->getSupplier()->getId() ?>?priceGetting=<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs"
+                                <button value="/supplier/price-getting-form/<?= $file['priceGetting']->getSupplier()->getId() ?>?priceGetting=<?= $file['priceGetting']->getId() ?>" class="btn btn-default btn-xs"
                                         data-toggle="modal" data-target="#modal-dialog" title="Изменить">
                                     <span class="glyphicon glyphicon-edit" ></span>
                                 </button>                                                    
                             </div>
                             <div class="clearfix"></div>
                         </div>                        
-                        <?php foreach($files as $filename=>$value): ?>
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                    <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
-                                </div>
-                                <div class="pull-right">       
-                                    <button value="/raw/upload-raw-form/<?= $priceGetting->getSupplier()->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
-                                            title="Загрузить файл в базу">
-                                        <span class="glyphicon glyphicon-import" ></span>
-                                    </button>                                                           
-                                    <button value="/price/upload-price-file-to-apl-form/<?= $priceGetting->getSupplier()->getId() ?>?filename=<?= $value['path']?>" 
-                                            class="btn btn-<?= ($priceGetting->getOrderToApl() == 1) ? 'success':'warning' ?> btn-xs refresh-button"
-                                            title="Закачать прайс на сервер АПЛ">
-                                        <span class="glyphicon glyphicon-upload" ></span>
-                                    </button>                                                           
-                                    <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('price',
-                                            ['action'=>'download-price-file-form'], ['query' => ['filename' => $value['path']]]); ?>">
-                                        <span class="glyphicon glyphicon-download"></span>
-                                    </a>
-                                    <button value="/price/delete-price-file-form?filename=<?= $value['path']?>" class="btn btn-danger btn-xs this-delete"
-                                            title="Удалить">
-                                        <span class="glyphicon glyphicon-remove" ></span>
-                                    </button>                                                           
-                                </div>                                                                        
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                <i><?= date('d-m-Y H:i:s', $file['value']['date'])?></i> (<?= $file['value']['size'] ?>) <?= $file['filename'] ?>
                             </div>
-                        <?php endforeach; ?>
+                            <div class="pull-right">       
+                                <button value="/raw/upload-raw-form/<?= $file['priceGetting']->getSupplier()->getId() ?>?filename=<?= $file['value']['path']?>" class="btn btn-default btn-xs refresh-button"
+                                        title="Загрузить файл в базу">
+                                    <span class="glyphicon glyphicon-import" ></span>
+                                </button>                                                           
+                                <button value="/price/upload-price-file-to-apl-form/<?= $file['priceGetting']->getSupplier()->getId() ?>?filename=<?= $file['value']['path']?>" 
+                                        class="btn btn-<?= ($file['priceGetting']->getOrderToApl() == 1) ? 'success':'warning' ?> btn-xs refresh-button"
+                                        title="Закачать прайс на сервер АПЛ">
+                                    <span class="glyphicon glyphicon-upload" ></span>
+                                </button>                                                           
+                                <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('price',
+                                        ['action'=>'download-price-file-form'], ['query' => ['filename' => $file['value']['path']]]); ?>">
+                                    <span class="glyphicon glyphicon-download"></span>
+                                </a>
+                                <button value="/price/delete-price-file-form?filename=<?= $file['value']['path']?>" class="btn btn-danger btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                           
+                            </div>                                                                        
+                        </div>
                     </div>    
-                <?php endif; ?>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </div>
