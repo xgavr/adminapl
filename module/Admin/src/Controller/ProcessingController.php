@@ -153,14 +153,14 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
         
         if ($settings['upload_raw'] == 1){
-            $suppliers = $this->entityManager->getRepository(Supplier::class)
-                    ->findBy([]);
-            foreach ($suppliers as $supplier){
-                $files = $this->supplierManager->getLastPriceFile($supplier);
-                if (count($files)){
-                    return $this->rawManager->checkSupplierPrice($supplier);
+            
+            $files = $this->supplierManager->getPriceFilesToUpload();
+            if (count($files)){
+                foreach ($files as $file){
+                    $this->rawManager->checkSupplierPrice($file['priceGetting']->getSupplier());
+                    break;
                 }
-            }
+            }            
         }    
         
         return new JsonModel(
