@@ -56,7 +56,7 @@ class TelegrammManager {
             Logger::registerErrorHandler($logger);
 
             try {
-                $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $telegram = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
                 $telegram->addCommandsPaths($this::COMMANDS_PATH);
                 $telegram->enableAdmins([$settings['telegram_admin_chat_id']]);
 
@@ -66,7 +66,7 @@ class TelegrammManager {
                     'password' => 'Ghjnt3t',
                     'database' => 'telegramm',
                  ];
-                $telegramm->enableMySql($mysql_credentials, $this::USERNAME . '_');
+                $telegram->enableMySql($mysql_credentials, $this::USERNAME . '_');
 
     //            Logging (Error, Debug and Raw Updates)
                 Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$this::USERNAME."_error.log");
@@ -75,7 +75,7 @@ class TelegrammManager {
 
                 $telegram->enableLimiter();
 
-                $telegramm->handle();
+                $telegram->handle();
 
             } catch (Longman\TelegramBot\Exception\TelegramException $e){
                 Longman\TelegramBot\TelegramLog::error($e);
@@ -100,8 +100,8 @@ class TelegrammManager {
             Logger::registerErrorHandler($logger);
 
             try {
-                $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
-                $result = $telegramm->setWebhook($settings['telegram_hook_url'], ['certificate' => '/var/www/apl/data/www/adminapl/adminapl.key']);
+                $telegram = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $result = $telegram->setWebhook($settings['telegram_hook_url'], ['certificate' => '/var/www/apl/data/www/adminapl/adminapl.key']);
                 if ($result->isOk()) {
                     echo $result->getDescription();
                 }                    
@@ -124,8 +124,8 @@ class TelegrammManager {
             Logger::registerErrorHandler($logger);
 
             try {
-                $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
-                $result = $telegramm->deleteWebhook();
+                $telegram = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $result = $telegram->deleteWebhook();
                 if ($result->isOk()) {
                     echo $result->getDescription();
                 }             
@@ -151,7 +151,7 @@ class TelegrammManager {
             \Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FILE);
 
             try {
-                $telegramm = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $telegram = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
                 
                 $proxy = $settings['telegram_proxy'];
                 
