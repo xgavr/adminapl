@@ -235,7 +235,7 @@ class RawManager {
                     
                 try{
                     $reader = IOFactory::createReaderForFile($filename);
-                } catch (Exception $e){
+                } catch (Reader\Exception $e){
                     //попытка прочитать файл старым способом
                     return $this->uploadRawpriceXls2($supplier, $filename);
                 }    
