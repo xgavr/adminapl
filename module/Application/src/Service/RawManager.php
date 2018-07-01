@@ -75,27 +75,48 @@ class RawManager {
     public function clearPriceFolder($supplier, $folderName)
     {
         if (is_dir($folderName)){
-            if ($dh = opendir($folderName)) {
-                while (($file = readdir($dh)) !== false) {
-                    if($file != "." && $file != ".."){ // если это не папка
-                        if(is_file($folderName."/".$file)){ // если файл
-                            unlink($folderName."/".$file);                            
-                        }                        
-                        // если папка, то рекурсивно вызываем
-                        if(is_dir($folderName."/".$file)){
-                            $this->clearPriceFolder($supplier, $folderName."/".$file);
-                        }
-                    }           
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    unlink($fileInfo->getFilename());                            
                 }
-                closedir($dh);
-                
-                if ($folderName != self::PRICE_FOLDER.'/'.$supplier->getId()){
-                    rmdir($folderName);
+                if ($fileInfo->isDir()){
+                    $this->clearPriceFolder($supplier, $fileInfo->getFilename());
+                    
                 }
+            }
+            if ($folderName != self::PRICE_FOLDER.'/'.$supplier->getId()){
+                rmdir($folderName);
             }
         }
         
     }
+    
+    /*
+     * 
+     * Проверка папки с прайсами. Если в папке есть прайс то загружаем его
+     * 
+     * @var Application\Entity\Supplier $supplier
+     * @var string $folderName
+     * 
+     */
+    public function checkPriceFolder($supplier, $folderName)
+    {    
+        if (is_dir($folderName)){
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    if ($supplier->getStatus() == $supplier->getStatusActive()){
+                        $this->uploadRawprice($supplier, $fileInfo->getFilename());
+                    }                                                                            
+                }
+                if ($fileInfo->isDir()){
+                    $this->checkPriceFolder($supplier, $fileInfo->getFilename());                    
+                }
+            }
+        }
+        return;
+    }    
     
     /*
      * Переместить файл в архив
@@ -433,38 +454,6 @@ class RawManager {
         return;
     }
         
-    /*
-     * 
-     * Проверка папки с прайсами. Если в папке есть прайс то загружаем его
-     * 
-     * @var Application\Entity\Supplier $supplier
-     * @var string $folderName
-     * 
-     */
-    public function checkPriceFolder($supplier, $folderName)
-    {    
-        if (is_dir($folderName)){
-            if ($dh = opendir($folderName)) {
-                while (($file = readdir($dh)) !== false) {
-                    if($file != "." && $file != ".."){ // если это не папка
-                        if(is_file($folderName."/".$file)){ // если файл
-                            
-                            if ($supplier->getStatus() == $supplier->getStatusActive()){
-                                $this->uploadRawprice($supplier, $folderName."/".$file);
-                            }                                                        
-                        }                        
-                        // если папка, то рекурсивно вызываем
-                        if(is_dir($folderName."/".$file)){
-                            $this->checkPriceFolder($supplier, $folderName."/".$file);
-                        }
-                    }           
-                }
-                closedir($dh);
-            }
-        }
-        return;
-    }
-    
     /*
      * Проход по всем поставщикам - поиск файлов с прайсам в папках
      */

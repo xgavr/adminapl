@@ -69,26 +69,20 @@ class PriceManager {
     public function clearPriceFolder($supplier, $folderName)
     {
         if (is_dir($folderName)){
-            if ($dh = opendir($folderName)) {
-                while (($file = readdir($dh)) !== false) {
-                    if($file != "." && $file != ".."){ // если это не папка
-                        if(is_file($folderName."/".$file)){ // если файл
-                            unlink($folderName."/".$file);                            
-                        }                        
-                        // если папка, то рекурсивно вызываем
-                        if(is_dir($folderName."/".$file)){
-                            $this->clearPriceFolder($supplier, $folderName."/".$file);
-                        }
-                    }           
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    unlink($fileInfo->getFilename());                            
                 }
-                closedir($dh);
-                
-                if ($folderName != self::PRICE_FOLDER.'/'.$supplier->getId()){
-                    rmdir($folderName);
+                if ($fileInfo->isDir()){
+                    $this->clearPriceFolder($supplier, $fileInfo->getFilename());
+                    
                 }
             }
+            if ($folderName != self::PRICE_FOLDER.'/'.$supplier->getId()){
+                rmdir($folderName);
+            }
         }
-        
     }
     
     /*
