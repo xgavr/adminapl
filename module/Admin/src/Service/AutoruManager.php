@@ -53,7 +53,7 @@ class AutoruManager {
     {
         $box = [
             'host' => 'imap.yandex.ru',
-            'server' => '{imap.yandex.ru:993/imap/ssl}INBOX',
+            'server' => '{imap.yandex.ru:993/imap/ssl}',
             'user' => 'autoru@autopartslist.ru',
             'password' => 'kjdrf4',
             'leave_message' => false,
