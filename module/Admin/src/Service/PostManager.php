@@ -330,10 +330,10 @@ class PostManager {
         $result = [];
         $imap_obj = $connection = null;
         
-        if (!is_array($params['folders'])){
+        if (isset($params['folders']) && !is_array($params['folders'])){
             $params['folders'] = ['INBOX', 'Спам'];
         }            
-        if (!$params['trash']) $params['trash'] = 'Удаленные';
+        if (!isset($params['trash'])) $params['trash'] = 'Удаленные';
         
         foreach ($params['folders'] as $foldername){
             
