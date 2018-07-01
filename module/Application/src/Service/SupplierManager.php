@@ -266,6 +266,10 @@ class SupplierManager
         $priceDescription->setTitle($data['title']);
         $priceDescription->setVendor($data['vendor']);
         $priceDescription->setWeight($data['weight']);
+        $priceDescription->setMarkdown($data['markdown']);
+        $priceDescription->setSale($data['sale']);
+        $priceDescription->setImage($data['image']);
+        $priceDescription->setType($data['type']);
         
         $currentDate = date('Y-m-d H:i:s');
         $priceDescription->setDateCreated($currentDate);        
@@ -300,6 +304,10 @@ class SupplierManager
         $priceDescription->setTitle($data['title']);
         $priceDescription->setVendor($data['vendor']);
         $priceDescription->setWeight($data['weight']);
+        $priceDescription->setMarkdown($data['markdown']);
+        $priceDescription->setSale($data['sale']);
+        $priceDescription->setImage($data['image']);
+        $priceDescription->setType($data['type']);
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($priceDescription);

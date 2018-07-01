@@ -951,6 +951,10 @@ class SupplierController extends AbstractActionController
                     'title' => $priceDescription->getTitle(),  
                     'vendor' => $priceDescription->getVendor(),  
                     'weight' => $priceDescription->getWeight(),  
+                    'type' => $priceDescription->getType(),  
+                    'markdown' => $priceDescription->getMarkdown(),  
+                    'sale' => $priceDescription->getSale(),  
+                    'image' => $priceDescription->getImage(),  
                 ];
                 $form->setData($data);
             }    

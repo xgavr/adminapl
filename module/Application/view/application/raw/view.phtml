@@ -105,7 +105,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <i><?= $priceDescription->getName() ?></i><br/>
                                 
                                 <?php foreach($priceDescriptionElements as $element):?>
-                                    <?php if(in_array($element->getName(), ['name', 'status'])) continue; ?>
+                                    <?php if(in_array($element->getName(), ['name', 'status', 'type'])) continue; ?>
                                     <?php $func = 'get'.ucfirst($element->getName()); ?>
                                     <?php if (method_exists($priceDescription, $func)):?>
                                         <?php if($priceDescription->$func()):?>

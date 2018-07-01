@@ -336,9 +336,11 @@ class PostManager {
                     $structure = imap_fetchstructure($connection, $messageNumber);
                     $headers = imap_fetch_overview($connection, $messageNumber);
 
-                    $result[$messageNumber]['from'] = $headers[0]->from;
-                    $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);
-                    $result[$messageNumber]['date'] = $headers[0]->date;
+                    if (isset($headers[0])){
+                        $result[$messageNumber]['from'] = $headers[0]->from;
+                        $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);
+                        $result[$messageNumber]['date'] = $headers[0]->date;
+                    }    
 
                     if (isset($structure->parts)){
                         $flattenedParts = $this->flattenParts($structure->parts);
@@ -349,9 +351,11 @@ class PostManager {
                                 case 0:
                                     $charset = 'utf-8';
                                     $parameters = (array) $part->parameters;
-                                    if ($parameters[0]->attribute == 'charset'){
-                                        $charset = $parameters[0]->value;
-                                    }
+                                    if (isset($parameters[0])){
+                                        if ($parameters[0]->attribute == 'charset'){
+                                            $charset = $parameters[0]->value;
+                                        }
+                                    }    
 
                                     // the HTML or plain text part of the email
                                     $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);

@@ -22,6 +22,9 @@ class PriceDescription {
     const STATUS_ACTIVE       = 1; // Active user.
     const STATUS_RETIRED      = 2; // Retired user.
     
+    const TYPE_PRICE       = 1; // Описание полей прайса
+    const TYPE_CROSS      = 2; // Описание полей кросс листа
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -116,6 +119,21 @@ class PriceDescription {
     protected $country;
 
     /**
+     * @ORM\Column(name="markdown")   
+     */
+    protected $markdown;
+
+    /**
+     * @ORM\Column(name="sale")   
+     */
+    protected $sale;
+
+    /**
+     * @ORM\Column(name="image")   
+     */
+    protected $image;
+
+    /**
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;    
@@ -124,6 +142,11 @@ class PriceDescription {
      * @ORM\Column(name="status")  
      */
     protected $status;    
+       
+    /**
+     * @ORM\Column(name="type")  
+     */
+    protected $type;    
        
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="priceDescriptions") 
@@ -312,6 +335,36 @@ class PriceDescription {
         $this->country = (int) $country;
     }     
 
+    public function getMarkdown() 
+    {
+        return $this->markdown;
+    }
+
+    public function setMarkdown($markdown) 
+    {
+        $this->markdown = (int) $markdown;
+    }     
+
+    public function getSale() 
+    {
+        return $this->sale;
+    }
+
+    public function setSale($sale) 
+    {
+        $this->sale = (int) $sale;
+    }     
+
+    public function getImage() 
+    {
+        return $this->image;
+    }
+
+    public function setImage($image) 
+    {
+        $this->image = (int) $image;
+    }     
+
     public function getDateCreated() 
     {
         return $this->dateCreated;
@@ -389,6 +442,50 @@ class PriceDescription {
     public function setStatus($status) 
     {
         $this->status = $status;
+    }   
+    
+    /**
+     * Returns type.
+     * @return int     
+     */
+    public function getType() 
+    {
+        return $this->type;
+    }
+
+    
+    /**
+     * Returns possible types as array.
+     * @return array
+     */
+    public static function getTypeList() 
+    {
+        return [
+            self::TYPE_CROSS => 'Кросс',
+            self::TYPE_PRICE => 'Прайс'
+        ];
+    }    
+    
+    /**
+     * Returns type as string.
+     * @return string
+     */
+    public function getTypeAsString()
+    {
+        $list = self::getTypeList();
+        if (isset($list[$this->type]))
+            return $list[$this->type];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets type.
+     * @param int $type     
+     */
+    public function setType($type) 
+    {
+        $this->type = $type;
     }   
     
     /*

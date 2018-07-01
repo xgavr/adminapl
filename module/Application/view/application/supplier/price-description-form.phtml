@@ -89,6 +89,22 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('type')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('markdown')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('sale')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('image')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'price-description-submit']);
 
 $form->prepare();
@@ -105,6 +121,15 @@ $form->prepare();
             </div>
             
             <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('type')); ?>
+                            <?= $this->formElement($form->get('type')); ?>
+                            <?= $this->formElementErrors($form->get('type')); ?>                  
+                        </div>
+                    </div>
+                </div>    
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
@@ -160,6 +185,12 @@ $form->prepare();
                             <?= $this->formElementErrors($form->get('currency')); ?>                  
                         </div>                        
 
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('markdown')); ?>
+                            <?= $this->formElement($form->get('markdown')); ?>
+                            <?= $this->formElementErrors($form->get('markdown')); ?>                  
+                        </div>                        
+
                     </div>
                 
                     <div class="col-md-4">
@@ -194,6 +225,12 @@ $form->prepare();
                             <?= $this->formElementErrors($form->get('bar')); ?>                  
                         </div>                        
 
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('image')); ?>
+                            <?= $this->formElement($form->get('image')); ?>
+                            <?= $this->formElementErrors($form->get('image')); ?>                  
+                        </div>                        
+
                     </div>
                     
                     <div class="col-md-4">
@@ -226,6 +263,12 @@ $form->prepare();
                             <?= $this->formLabel($form->get('country')); ?>
                             <?= $this->formElement($form->get('country')); ?>
                             <?= $this->formElementErrors($form->get('country')); ?>                  
+                        </div>                        
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('sale')); ?>
+                            <?= $this->formElement($form->get('sale')); ?>
+                            <?= $this->formElementErrors($form->get('sale')); ?>                  
                         </div>                        
 
                     </div>

@@ -127,7 +127,7 @@ class PriceDescriptionForm extends Form
                 'id' => 'image'
             ],
             'options' => [
-                'label' => 'Ссылка на изображние товара',
+                'label' => 'Ссылка на картинку',
             ],
         ]);
         
@@ -265,6 +265,28 @@ class PriceDescriptionForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'markdown',
+            'attributes' => [
+                'id' => 'markdown'
+            ],
+            'options' => [
+                'label' => 'Уценка',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'sale',
+            'attributes' => [
+                'id' => 'sale'
+            ],
+            'options' => [
+                'label' => 'Распродажа',
+            ],
+        ]);
+        
         // Add "status" field
         $this->add([            
             'type'  => 'select',
@@ -274,6 +296,18 @@ class PriceDescriptionForm extends Form
                 'value_options' => [
                     1 => 'Active',
                     2 => 'Retired',                    
+                ]
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'type',
+            'options' => [
+                'label' => 'Тип',
+                'value_options' => [
+                    1 => 'Прайс',
+                    2 => 'Кросс',                    
                 ]
             ],
         ]);
@@ -662,9 +696,44 @@ class PriceDescriptionForm extends Form
                 ],                
             ]);
         
+        $inputFilter->add([
+                'name'     => 'markdown',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'sale',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+            ]);
+        
         // Add input for "status" field
         $inputFilter->add([
                 'name'     => 'status',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'type',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
