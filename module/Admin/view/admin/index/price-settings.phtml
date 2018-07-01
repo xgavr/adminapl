@@ -16,6 +16,14 @@ $this->pageBreadcrumbs()->setItems([
 <?php
 $form = $this->form;
 
+$form->get('receiving_mail')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('receiving_link')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('upload_raw')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -35,6 +43,18 @@ $form->prepare();
 <div class="row">
     <div class="col-md-8">
         
+        <div class="form-group">
+            <?= $this->formLabel($form->get('receiving_mail')); ?>
+            <?= $this->formElement($form->get('receiving_mail')); ?>
+            <?= $this->formElementErrors($form->get('receiving_mail')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('receiving_link')); ?>
+            <?= $this->formElement($form->get('receiving_link')); ?>
+            <?= $this->formElementErrors($form->get('receiving_link')); ?>                  
+        </div>
+                        
         <div class="form-group">
             <?= $this->formLabel($form->get('upload_raw')); ?>
             <?= $this->formElement($form->get('upload_raw')); ?>

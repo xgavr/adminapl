@@ -53,6 +53,30 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'receiving_mail',
+            'options' => [
+                'label' => 'Прайсы по почте',
+                'value_options' => [
+                    1 => 'Получать',
+                    2 => 'Не получать',                    
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'receiving_link',
+            'options' => [
+                'label' => 'Прайсы по ссылке',
+                'value_options' => [
+                    1 => 'Скачивать',
+                    2 => 'Не скачивать',                    
+                ]
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -72,6 +96,28 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
                 
         $inputFilter->add([
                 'name'     => 'upload_raw',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'receiving_mail',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'receiving_link',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

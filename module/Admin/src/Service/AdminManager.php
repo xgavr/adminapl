@@ -124,6 +124,8 @@ class AdminManager {
             $config->price = [];
         }
         
+        $config->price->receiving_mail = $data['receiving_mail']; //получать прайсы по почте
+        $config->price->receiving_link = $data['receiving_link']; //получать прайсы по ссылке
         $config->price->upload_raw = $data['upload_raw']; //загружать прайсы в базу
 //        $config->price->is_loading_raw = $data['is_loading_raw']; //идет загрузка прайса
         
