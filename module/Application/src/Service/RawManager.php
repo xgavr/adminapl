@@ -78,10 +78,10 @@ class RawManager {
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
-                    unlink($fileInfo->getFilename());                            
+                    unlink($fileInfo->getPathname());                            
                 }
                 if ($fileInfo->isDir()){
-                    $this->clearPriceFolder($supplier, $fileInfo->getFilename());
+                    $this->clearPriceFolder($supplier, $fileInfo->getPathname());
                     
                 }
             }
@@ -107,11 +107,11 @@ class RawManager {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
                     if ($supplier->getStatus() == $supplier->getStatusActive()){
-                        $this->uploadRawprice($supplier, $fileInfo->getFilename());
+                        $this->uploadRawprice($supplier, $fileInfo->getPathname());
                     }                                                                            
                 }
                 if ($fileInfo->isDir()){
-                    $this->checkPriceFolder($supplier, $fileInfo->getFilename());                    
+                    $this->checkPriceFolder($supplier, $fileInfo->getPathname());                    
                 }
             }
         }
