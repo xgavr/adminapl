@@ -9,9 +9,6 @@ $this->pageBreadcrumbs()->setItems([
             $rawprice->getRaw()->getBasename() => $this->url('raw', ['action'=>'view', 'id' => $rawprice->getRaw()->getId()]),
             'Строка прайса' => $this->url('rawprice', ['action'=>'view', 'id' => $rawprice->getId()]),
             ]);  
-
-$this->headLink()
-    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css')
         ;
         
 ?>
@@ -28,117 +25,45 @@ $this->headLink()
             <h3 class="panel-title">Сопоставление данных из строки прайса</h3>
         </div>
         <div class="panel-body">
-            <?= $this->form()->openTag($form); ?>
-                
-                <table class="table table-striped">
+            <table class="table table-striped">
+                <tr>
+                    <th colspan="<?= count($rawprice->getRaw()->getSupplier()->getPriceDescriptions()) + 2;?>" width="50%"> 
+                        <div class="pull-left">
+                            Данные из строки прайса                            
+                        </div>
+                        <div class="pull-right">
+                            <button value="/supplier/price-description-form/<?= $rawprice->getRaw()->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить описание полей">
+                                    Добавить описание полей
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>                                                                        
+                        </div>                            
+                    </th>    
+                </tr>
+                <tr>
+                    <th width="5%">Колонка</th>
+                    <th width="45%">Значение</th>
+                    <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
+                        <th>
+                            <?= $this->escapeHTML($priceDescription->getName());?>
+                        </th>
+                    <?php endforeach;?>
+                </tr>
+                <?php 
+                    $rawdates = $rawprice->getRawdataAsArray();
+                ?>
+                <?php foreach ($rawdates as $col => $rawdata): ?>
                     <tr>
-                        <th colspan="<?= count($rawprice->getRaw()->getSupplier()->getPriceDescriptions()) + 2;?>" width="50%"> 
-                            <div class="pull-left">
-                                Данные из строки прайса                            
-                            </div>
-                            <div class="pull-right">
-                                <button value="/supplier/price-description-form/<?= $rawprice->getRaw()->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
-                                        data-toggle="modal" data-target="#modal-dialog" title="Добавить описание полей">
-                                        Добавить описание полей
-                                    <span class="glyphicon glyphicon-plus" ></span>
-                                </button>                                                                        
-                            </div>                            
-                        </th>    
+                        <td>
+                            <?= $this->escapeHtml($col + 1); ?>
+                        </td>
+                        <td>
+                            <?= $this->escapeHtml($rawdata); ?>
+                        </td>
                     </tr>
-                    <tr>
-                        <th width="5%">Колонка</th>
-                        <th width="45%">Значение</th>
-                        <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
-                            <th>
-                                <?= $this->escapeHTML($priceDescription->getName());?>
-                            </th>
-                        <?php endforeach;?>
-                    </tr>
-                    <?php 
-                        $rawdates = $rawprice->getRawdataAsArray();
-                    ?>
-                    <?php foreach ($rawdates as $col => $rawdata): ?>
-                        <tr>
-                            <td>
-                                <?= $this->escapeHtml($col + 1); ?>
-                            </td>
-                            <td>
-                                <?= $this->escapeHtml($rawdata); ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>    
+                <?php endforeach; ?>    
 
-                </table>
+            </table>
         </div>
     </div>    
-</div>
-
-<a class="btn btn-default" href="
-    <?= $this->url('rawprice', ['action'=>'parse', 'id' => $rawprice->getId()]); ?>">
-    1.Парсить
-</a>
-<?php if ($rawprice->getProducer()): ?>
-    <a class="btn btn-default" href="
-        <?= $this->url('rawprice', ['action'=>'unknown-producer', 'id' => $rawprice->getId()]); ?>">
-        2.Производитель
-    </a>
-    <?php if ($rawprice->getUnknownProducer() && $rawprice->getUnknownProducer()->getProducer() && $rawprice->getGoodname()): ?>
-        <a class="btn btn-default" href="
-            <?= $this->url('rawprice', ['action'=>'good', 'id' => $rawprice->getId()]); ?>">
-            3.Товар
-        </a>
-    <? endif; ?>
-    <?php if ($rawprice->getGood()): ?>
-        <a class="btn btn-default" href="
-            <?= $this->url('rawprice', ['action'=>'price', 'id' => $rawprice->getId()]); ?>">
-            4.Цена
-        </a>
-    <? endif; ?>
-<? endif; ?>
-<h3 class="contact-header">Прочитанные данные</h3>
-<table class="table table-striped">
-
-   <tr>
-        <th>Поле</th>
-        <th>Значение</th>
-    </tr>
-    <tr>
-        <td>
-            Артикул
-        </td>
-        <td>
-            <?= $this->escapeHtml($rawprice->getArticle()) ?>
-        </td>
-    <tr>
-        <td>
-            Производитель
-        </td>        
-        <td>
-            <?= $this->escapeHtml($rawprice->getProducer()) ?>
-        </td>
-    </tr>    
-    <tr>
-        <td>
-            Наименование
-        </td>        
-        <td>
-            <?= $this->escapeHtml($rawprice->getGoodname()) ?>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Цена
-        </td>        
-        <td>
-            <?= $this->escapeHtml($rawprice->getPrice()) ?>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Остаток
-        </td>        
-        <td>
-            <?= $this->escapeHtml($rawprice->getRest()) ?>
-        </td>
-    </tr>
-</table>    
+</div>    
