@@ -347,7 +347,7 @@ class PostManager {
                 );
 
                 if ($connection){
-
+                      //Просмотр названий папок
     //                $list = imap_list($connection, '{imap.yandex.ru:993/imap/ssl}', '*');
     //                foreach ($list as $value) {
     //    
@@ -359,7 +359,6 @@ class PostManager {
                     $imap_obj = imap_check($connection);
 
                     if ($imap_obj->Nmsgs){
-
                         $messageNumber = 1;
                         while ($messageNumber <= $imap_obj->Nmsgs){
 
@@ -377,7 +376,6 @@ class PostManager {
 
                                 foreach($flattenedParts as $partNumber => $part) {
                                     switch($part->type) {
-
                                         case 0:
                                             $charset = 'utf-8';
                                             $parameters = (array) $part->parameters;
@@ -392,6 +390,26 @@ class PostManager {
                                             $message = iconv($charset, 'utf-8', $message);
                                             // now do something with the message, e.g. render it
                                             $result[$messageNumber]['content'][$part->subtype] = $message;
+
+                                            $filename = $this->getFilenameFromPart($part);
+                                            if($filename) {
+                                                    // it's an attachment
+                                                    $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                                    // now do something with the attachment, e.g. save it somewhere
+
+                                                    $temp_file = tempnam(sys_get_temp_dir(), 'Pst');
+                                                    $fh = fopen($temp_file, 'w');
+                                                    fwrite($fh, $attachment);
+                                                    fclose($fh);                                
+                                                    
+                                                    $result[$messageNumber]['attachment'][$partNumber] = [
+                                                        'filename' =>$filename,
+                                                        'temp_file' => $temp_file,
+                                                    ];
+                                            } else {
+                                                    // don't know what it is
+                                            }
+
                                         break;
 
                                         case 1:
@@ -420,14 +438,15 @@ class PostManager {
                                                         $fh = fopen($temp_file, 'w');
                                                         fwrite($fh, $attachment);
                                                         fclose($fh);                                
+
+                                                        $result[$messageNumber]['attachment'][$partNumber] = [
+                                                            'filename' =>$filename,
+                                                            'temp_file' => $temp_file,
+                                                        ];
+
                                                 } else {
                                                         // don't know what it is
                                                 }
-
-                                                $result[$messageNumber]['attachment'][$partNumber] = [
-                                                    'filename' =>$filename,
-                                                    'temp_file' => $temp_file,
-                                                ];
 
                                                 break;
 
