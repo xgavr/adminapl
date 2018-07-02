@@ -13,14 +13,7 @@ $this->pageBreadcrumbs()->setItems([
 $this->headLink()
     ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css')
         ;
-
-$this->headScript()
-    ->appendFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js')
-    //->appendFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js')
-        ;
         
-$form = $this->form;        
-$form->prepare();        
 ?>
 
 <h1>
@@ -39,14 +32,27 @@ $form->prepare();
                 
                 <table class="table table-striped">
                     <tr>
-                        <th colspan="2" width="50%"> Данные из строки прайса
-                        <th colspan="2"width="50%"> Соответствие колонок
+                        <th colspan="<?= count($rawprice->getRaw()->getSupplier()->getPriceDescriptions()) + 2;?>" width="50%"> 
+                            <div class="pull-left">
+                                Данные из строки прайса                            
+                            </div>
+                            <div class="pull-right">
+                                <button value="/supplier/price-description-form/<?= $rawprice->getRaw()->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Добавить описание полей">
+                                        Добавить описание полей
+                                    <span class="glyphicon glyphicon-plus" ></span>
+                                </button>                                                                        
+                            </div>                            
+                        </th>    
                     </tr>
                     <tr>
                         <th width="5%">Колонка</th>
                         <th width="45%">Значение</th>
-                        <th width="25%">Соответствие</th>
-                        <th width="25%"></th>
+                        <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
+                            <th>
+                                <?= $this->escapeHTML($priceDescription->getName());?>
+                            </th>
+                        <?php endforeach;?>
                     </tr>
                     <?php 
                         $rawdates = $rawprice->getRawdataAsArray();
@@ -59,32 +65,10 @@ $form->prepare();
                             <td>
                                 <?= $this->escapeHtml($rawdata); ?>
                             </td>
-                            <td>
-                                <?php echo $this->partial('application/supplier/price-description-select', ['col' => $col + 1,'data' => $$priceDescription->getField($col + 1), 'options'=>$priceDescriptionOptions]); ?>
-                            </td>
-                            <?php if ($col == 0):?>
-                                <td rowspan="<?= count($rawdates)?>">
-                                    <div id="price-description-alert">
-                                        
-                                    </div>
-                                </td>
-                            <?php endif; ?>    
                         </tr>
                     <?php endforeach; ?>    
 
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-success refresh-button" id="price-description-submit">
-                               Сохранить
-                            </button>                        
-                        </td>
-                        <td></td>
-                    </tr>    
                 </table>
-            <?= $this->formElement($form->get('csrf')); ?>   
-            <?= $this->form()->closeTag(); ?>
         </div>
     </div>    
 </div>
@@ -157,38 +141,4 @@ $form->prepare();
             <?= $this->escapeHtml($rawprice->getRest()) ?>
         </td>
     </tr>
-</table>
-
-<script>
-    $('#price-description-submit').on('click', function(e){
-        $('#price-description-alert').html('');
-       var  data = $('#price-description-form').serialize();
-        $.ajax({
-            type: 'POST',
-            url: '/supplier/price-description-form/<?=$rawprice->getRaw()->getSupplier()->getId()?>?priceDescription=<?= ($priceDescription ? $priceDescription->getId():'') ?>',
-            data: data
-        })
-            .done(function (data) {
-                if (data == 'ok'){
-                    $('#price-description-alert').html('<div class="alert alert-success" role="alert">Ок!</div>');
-                    //window.location.reload();
-                } else {
-                    if (jQuery.isPlainObject(data)){
-                        $.each(data, function(key, value){
-                            var msg = '<div class="alert alert-warning" role="alert"><strong>'+key+'</strong>';
-                            $.each(value, function(err, errvalue){
-                                msg +='<div>'+errvalue+'</div>'
-                            });    
-                            msg += '</div>';
-                            $('#price-description-alert').append(msg);
-                        });
-                    }
-                }    
-            })
-            .fail(function () {
-                alert("Ошибка при открытии формы.");
-
-            });       
-    });
-</script>
-    
+</table>    

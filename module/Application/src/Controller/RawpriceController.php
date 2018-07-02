@@ -38,12 +38,19 @@ class RawpriceController extends AbstractActionController
      */
     private $rawManager;    
     
+    /**
+     * Менеджер.
+     * @var Application\Service\ParseManager 
+     */
+    private $parseManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $supplierManager, $rawManager) 
+    public function __construct($entityManager, $supplierManager, $rawManager, $parseManager) 
     {
         $this->entityManager = $entityManager;
         $this->supplierManager = $supplierManager;
         $this->rawManager = $rawManager;
+        $this->parseManager = $parseManager;
     }    
     
     public function indexAction()
@@ -183,36 +190,10 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
-        $form = new PriceDescriptionForm();
-        
-                
-        //сохранение данных настройки прайса
-        if($this->getRequest()->isPost()) {
-            
-            $data = $this->params()->fromPost();
-            $form->setData($data);            
-
-            if ($form->isValid()) {
-
-                if ($priceDescription){
-                    $this->supplierManager->updatePriceDescription($priceDescription, $data, true);                    
-                } else{
-                    $this->supplierManager->addNewPriceDescription($supplier, $data, true);
-                }    
-                
-                return new JsonModel(
-                   ['ok']
-                );           
-            }
-            
-        }
-        
         // Render the view template.
         return new ViewModel([
             'rawprice' => $rawprice,
             'rawManager' => $this->rawManager,
-            'priceDescription' => $priceDescription,
-            'form' => $form,
         ]);
     }      
 }

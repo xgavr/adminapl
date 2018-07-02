@@ -42,6 +42,11 @@ class Rawprice {
     protected $article;
 
     /**
+     * @ORM\Column(name="iid")   
+     */
+    protected $iid;
+    
+    /**
      * @ORM\Column(name="producer")   
      */
     protected $producer;
@@ -60,6 +65,71 @@ class Rawprice {
      * @ORM\Column(name="rest")   
      */
     protected $rest;
+    
+    /**
+     * @ORM\Column(name="oem")   
+     */
+    protected $oem;
+
+    /**
+     * @ORM\Column(name="vendor")   
+     */
+    protected $vendor;
+
+    /**
+     * @ORM\Column(name="lot")   
+     */
+    protected $lot;
+
+    /**
+     * @ORM\Column(name="unit")   
+     */
+    protected $unit;
+
+    /**
+     * @ORM\Column(name="car")   
+     */
+    protected $car;
+
+    /**
+     * @ORM\Column(name="bar")   
+     */
+    protected $bar;
+
+    /**
+     * @ORM\Column(name="currency")   
+     */
+    protected $currency;
+
+    /**
+     * @ORM\Column(name="comment")   
+     */
+    protected $comment;
+
+    /**
+     * @ORM\Column(name="weight")   
+     */
+    protected $weight;
+
+    /**
+     * @ORM\Column(name="country")   
+     */
+    protected $country;
+
+    /**
+     * @ORM\Column(name="markdown")   
+     */
+    protected $markdown;
+
+    /**
+     * @ORM\Column(name="sale")   
+     */
+    protected $sale;
+
+    /**
+     * @ORM\Column(name="image")   
+     */
+    protected $image;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
@@ -99,6 +169,16 @@ class Rawprice {
         $this->article = $article;
     }     
     
+    public function getIid() 
+    {
+        return $this->iid;
+    }
+
+    public function setIid($iid) 
+    {
+        $this->iid = (int) $iid;
+    }     
+
     public function getProducer() 
     {
         return $this->producer;
@@ -117,6 +197,16 @@ class Rawprice {
     public function setGoodname($goodname) 
     {
         $this->goodname = $goodname;
+    }     
+    
+    public function getTitle() 
+    {
+        return $this->goodname;
+    }
+
+    public function setTitle($title) 
+    {
+        $this->goodname = $title;
     }     
     
     public function getPrice() 
@@ -138,6 +228,136 @@ class Rawprice {
     {
         $this->rest = $rest;
     }     
+    
+    public function getOem() 
+    {
+        return $this->oem;
+    }
+
+    public function setOem($oem) 
+    {
+        $this->oem = $oem;
+    }     
+
+    public function getVendor() 
+    {
+        return $this->vendor;
+    }
+
+    public function setVendor($vendor) 
+    {
+        $this->vendor = $vendor;
+    }     
+
+    public function getUnit() 
+    {
+        return $this->unit;
+    }
+
+    public function setUnit($unit) 
+    {
+        $this->unit = $unit;
+    }     
+
+    public function getCar() 
+    {
+        return $this->car;
+    }
+
+    public function setCar($car) 
+    {
+        $this->car = $car;
+    }     
+
+    public function getLot() 
+    {
+        return $this->lot;
+    }
+
+    public function setLot($lot) 
+    {
+        $this->lot = (int) $lot;
+    }     
+
+    public function getBar() 
+    {
+        return $this->bar;
+    }
+
+    public function setBar($bar) 
+    {
+        $this->bar = $bar;
+    }     
+
+    public function getCurrency() 
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency($currency) 
+    {
+        $this->currency = $currency;
+    }     
+
+    public function getComment() 
+    {
+        return $this->comment;
+    }
+
+    public function setComment($comment) 
+    {
+        $this->comment = $comment;
+    }     
+
+    public function getWeight() 
+    {
+        return $this->weight;
+    }
+
+    public function setWeight($weight) 
+    {
+        $this->weight = $weight;
+    }     
+
+    public function getCountry() 
+    {
+        return $this->country;
+    }
+
+    public function setCountry($country) 
+    {
+        $this->country = $country;
+    }     
+
+    public function getMarkdown() 
+    {
+        return $this->markdown;
+    }
+
+    public function setMarkdown($markdown) 
+    {
+        $this->markdown = (int) $markdown;
+    }     
+
+    public function getSale() 
+    {
+        return $this->sale;
+    }
+
+    public function setSale($sale) 
+    {
+        $this->sale = (int) $sale;
+    }     
+
+    public function getImage() 
+    {
+        return $this->image;
+    }
+
+    public function setImage($image) 
+    {
+        $this->image = $image;
+    }         
 
     public function getRawdata() 
     {

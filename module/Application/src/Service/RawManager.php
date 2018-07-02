@@ -149,7 +149,6 @@ class RawManager {
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
         $i = 0;
-        $batchSize = $this::PRICE_BATCHSIZE;        
         
         if (file_exists($filename)){
             
@@ -203,7 +202,7 @@ class RawManager {
                         }    
                         
                         $i++;
-                        if (($i % $batchSize) === 0) {
+                        if (($i % $this::PRICE_BATCHSIZE) === 0) {
                             $this->entityManager->flush();
                         }
                         
@@ -234,7 +233,6 @@ class RawManager {
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
         $i = 0;
-        $batchSize = $this::PRICE_BATCHSIZE;        
         
         if (file_exists($filename)){
             
@@ -299,7 +297,7 @@ class RawManager {
                             }    
                             
                             $i++;
-                            if (($i % $batchSize) === 0) {
+                            if (($i % $this::PRICE_BATCHSIZE) === 0) {
                                 $this->entityManager->flush();
                             }
 
@@ -333,7 +331,6 @@ class RawManager {
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
         $i = 0;
-        $batchSize = $this::PRICE_BATCHSIZE;        
         
         if (file_exists($filename)){
             
@@ -388,7 +385,7 @@ class RawManager {
                             }    
                             
                             $i++;
-                            if (($i % $batchSize) === 0) {
+                            if (($i % $this::PRICE_BATCHSIZE) === 0) {
                                 $this->entityManager->flush();
                             }
 
@@ -410,7 +407,6 @@ class RawManager {
         
         return;
     }
-    
     
     /*
      * Загрузка сырого прайса
@@ -472,351 +468,7 @@ class RawManager {
         } 
         return;
     }
-    
-    /*
-     * Обработка данных прайса
-     * @var Application\Entity\Rawprice @rawprice
-     * @var Apllication\Entity\PriceDescription #paicesettings
-     */
-    public function parseRawdata($rawprice, $priceDescription)
-    {
-        $rawdata = Json::decode($rawprice->getRawdata());
-        $result = [
-            'article' => '',
-            'producer' => '',
-            'goodname' => '',
-            'price' => 0,
-            'rest' => 0,
-        ];
-        
-        if ($priceDescription->getArticle() && count($rawdata) >= $priceDescription->getArticle()){
-            $result['article'] = $rawdata[$priceDescription->getArticle() - 1];
-        }    
-        if ($priceDescription->getProducer() && count($rawdata) >= $priceDescription->getProducer()){
-            $result['producer'] = $rawdata[$priceDescription->getProducer() - 1];
-        }    
-        if ($priceDescription->getTitle() && count($rawdata) >= $priceDescription->getTitle()){
-            $result['goodname'] = $rawdata[$priceDescription->getTitle() - 1];
-        }    
-        if ($priceDescription->getPrice() && count($rawdata) >= $priceDescription->getPrice()){
-            $result['price'] = $rawdata[$priceDescription->getPrice() - 1];
-        }   
-        if ($priceDescription->getRest() && count($rawdata) >= $priceDescription->getRest()){
-            $result['rest'] = $rawdata[$priceDescription->getRest() - 1];
-        }    
-        
-        if ($result['producer'] && $result['goodname'] && $result['price']){        
-            return $result;
-        }    
-        
-        return;
-    }
-    
-    /*
-     * @var array @parsedates
-     */
-    
-    protected function selectBestParsedata($parsedates)
-    {
-        if (count($parsedates == 1)){
-            return $parsedates[0];
-        }
-        
-        foreach ($parsedates as $parsedata){
-            /*Какие то правила выбора лучшего набора данных*/
-            return $parsedata;
-        }
-        
-        return;
-    }
-    
-    /*
-     * @var Application\Entity\Rawprice $rawprice
-     * @var array @parsedata
-     * @var bool $flushnow
-     */
-    
-    protected function updateParsedata($rawprice, $parsedata, $flushnow)
-    {
-        $rawprice->setArticle($parsedata['article']);
-        $rawprice->setProducer($parsedata['producer']);
-        $rawprice->setGoodname($parsedata['goodname']);
-        $rawprice->setPrice($parsedata['price']);
-        $rawprice->setRest($parsedata['rest']);
-        
-        $this->entityManager->persist($rawprice);
-        
-        if ($flushnow){
-            $this->entityManager->flush();
-        }    
-    }
-    
-    /*
-     * Обработка строки rawprice
-     * @var Application\Entity\Rawprice $rawprice;
-     * @bool $flushnow
-     */
-    public function parseRawprice($rawprice, $flushnow = true)
-    {
-        ini_set('memory_limit', '512M');
-        
-        $raw = $rawprice->getRaw();
-        $priceDescriptions = $raw->getSupplier()->getPriceDescriptions();
-        
-        $data = [];
-        foreach ($priceDescriptions as $priceDescription){
-            if ($priceDescription->getStatus() == $priceDescription->getStatusActive()){
-                $parceData = $this->parseRawdata($rawprice,$priceDescription);
-                if (is_array($parceData)){
-                    $data[] = $parceData; 
-                }            
-            }            
-        }
-        
-        if (count($data)){
-            $this->updateParsedata($rawprice, $this->selectBestParsedata($data), $flushnow);
-        }    
-        
-        return;
-    }
-    
-    /*
-     * Парсить все записи
-     * @var Application\Entity\Raw @raw
-     * 
-     */
-    public function parseRaw($raw)
-    {
-        foreach ($raw->getRawprice() as $rawprice){
-            $this->parseRawprice($rawprice, false);
-        }
-        
-        $this->entityManager->flush();
-    }
-    
-    /*
-     * Собрать неизвестных поставщиков
-     * @var Application\Entity\Rawprice
-     * 
-     */
-    public function unknownProducerRawprice($rawprice, $flushnow = true)
-    {
-        if ($rawprice->getProducer()){
-            $unknownProducer = $this->producerManager->addUnknownProducer($rawprice->getProducer(), false);
-            $rawprice->setUnknownProducer($unknownProducer);
-            $this->entityManager->persist($rawprice);        
-        }
-        if ($flushnow){        
-            $this->entityManager->flush();
-        }    
-    }
-
-    /*
-     * Выбрать и добавить уникальных производителей
-     * @var Application\Entity\Raw @raw
-     * 
-     */    
-    public function addNewUnknownProducerRaw($raw)
-    {
-        $producers = $this->entityManager->getRepository(Raw::class)
-                ->findProducerRawprice($raw);
-        foreach ($producers as $producer){
-            if (is_string($producer['producer']) && $producer['producer']){
-                $this->producerManager->addUnknownProducer($producer['producer'], false);
-            }    
-        }
-        $this->entityManager->flush();
-    }
-    
-    /*
-     * Парсить все записи
-     * @var Application\Entity\Raw @raw
-     * 
-     */
-    public function unknownProducerRaw($raw)
-    {
-        foreach ($raw->getRawprice() as $rawprice){
-            $this->unknownProducerRawprice($rawprice, false);
-        }
-        
-        $this->entityManager->flush();
-    }
-    
-    
-    /*
-     * Выбрать и добавить уникальные товары
-     * @var Application\Entity\Raw @raw
-     * 
-     */    
-    public function addNewGoodsRaw($raw)
-    {
-        ini_set('memory_limit', '512M');
-        
-        $rawprices = $this->entityManager->getRepository(Raw::class)
-                ->findGoodRawprice($raw);
-
-        foreach ($rawprices as $rawprice){
-
-            if (is_string($rawprice['article']) && $rawprice['goodname'] && $rawprice['unknownProducer']){
-                
-                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneById($rawprice['unknownProducer']);
-                
-                if ($unknownProducer && $unknownProducer->getProducer()){
-                    
-                    $good = $this->entityManager->getRepository(Goods::class)
-                                ->findOneBy([
-                                    'producer' => $unknownProducer->getProducer(), 
-                                    'code' => $rawprice['article'],
-                                    'name' => $rawprice['goodname'],
-                                ]);
-                    
-                    if ($good == NULL){
-                        $good = $this->goodManager->addNewGoods([
-                            'name' => $rawprice['goodname'],
-                            'code' => $rawprice['article'],
-                            'available' => Goods::AVAILABLE_TRUE,
-                            'description' => $rawprice['goodname'],
-                            'producer' => $unknownProducer->getProducer(),
-                        ], false);
-                    }                
-                }    
-            }    
-        }
-        $this->entityManager->flush();
-    }
-    
-    
-    /*
-     * Привязать товар к прайсу
-     * @var Application\Entity\Rawprice
-     */
-    public function addGoodRawprice($rawprice, $flushnow = true)
-    {
-        if ($rawprice->getUnknownProducer()){
-            if ($rawprice->getUnknownProducer()->getProducer() && $rawprice->getGoodname()){
-                $good = $this->entityManager->getRepository(Goods::class)
-                            ->findOneBy([
-                                'producer' => $rawprice->getUnknownProducer()->getProducer()->getId(), 
-                                'code' => $rawprice->getArticle(),
-                                'name' => $rawprice->getGoodname(),
-                            ]);
-                if ($good == NULL){                    
-                    $good = $this->goodManager->addNewGoods([
-                        'name' => $rawprice->getGoodname(),
-                        'code' =>$rawprice->getArticle(),
-                        'available' => Goods::AVAILABLE_TRUE,
-                        'description' => $rawprice->getGoodname(),
-                        'producer' => $rawprice->getUnknownProducer()->getProducer(),
-                    ]);
-                }
-                
-                $rawprice->setGood($good);
-                $this->entityManager->persist($rawprice);        
-                if ($flushnow){
-                    $this->entityManager->flush();    
-                }
-            }
-        }
-    }
-    
-    public function updateGoodRawprice($rawprice, $flushnow = true)
-    {
-        if ($rawprice->getUnknownProducer() && $rawprice->getGood()){
-            if ($rawprice->getUnknownProducer()->getProducer() && $rawprice->getGoodname()){
-                $good = $this->entityManager->getRepository(Goods::class)
-                            ->findOneBy([
-                                'producer' => $rawprice->getUnknownProducer()->getProducer(), 
-                                'code' => $rawprice->getArticle(),
-                                'name' => $rawprice->getGoodname(),
-                            ]);
-                if ($good == NULL){
-                    $good = $this->goodManager->updateGoods($rawprice->getGood(), [
-                        'name' => $rawprice->getGoodname(),
-                        'code' =>$rawprice->getArticle(),
-                        'available' => Goods::AVAILABLE_TRUE,
-                        'description' => $rawprice->getGoodname(),
-                        'producer' => $rawprice->getUnknownProducer()->getProducer(),
-                    ]);
-                }
-                
-                $rawprice->setGood($good);
-                $this->entityManager->persist($rawprice);        
-                if ($flushnow){
-                    $this->entityManager->flush();    
-                }
-            }
-        }
-    }
-    
-    /*
-     * Установить цену товара
-     * @var Application\Entity\Rawprice $rawprice
-     */
-    public function setPriceRawprice($rawprice, $flushnow = true)
-    {
-        if ($rawprice->getGood()){
             
-            $good = $rawprice->getGood();
-            $price = $this->goodManager->getMaxPrice($good);
-            
-            $good->setPrice($price);
-            $this->entityManager->persist($good);        
-            if ($flushnow){
-                $this->entityManager->flush();    
-            }
-        }        
-    }
-
-
-    /*
-     * Парсить все записи
-     * @var Application\Entity\Raw @raw
-     * 
-     */
-    public function addGoodRaw($raw)
-    {
-        set_time_limit(180);
-        ini_set('memory_limit', '512M');
-        
-        foreach ($raw->getRawprice() as $rawprice){
-            $this->addGoodRawprice($rawprice, false);
-        }
-        
-        $this->entityManager->flush();
-    }
-    
-    /*
-     * Парсить все записи
-     * @var Application\Entity\Raw @raw
-     * 
-     */
-    public function updateGoodRaw($raw)
-    {
-        foreach ($raw->getRawprice() as $rawprice){
-            $this->updateGoodRawprice($rawprice, false);
-        }
-        
-        $this->entityManager->flush();
-    }
-    
-    /*
-     * Установить цену в товарах прайса
-     * @var Application\Entity\Raw @raw
-     * 
-     */
-    public function setPriceRaw($raw)
-    {
-        set_time_limit(180);
-        ini_set('memory_limit', '512M');
-
-        foreach ($raw->getRawprice() as $rawprice){
-            $this->setPriceRawprice($rawprice, false);
-        }
-        
-        $this->entityManager->flush();
-    }
-        
     public function removeRawprice($rawprice)
     {
         $this->entityManager->remove($rawprice);
