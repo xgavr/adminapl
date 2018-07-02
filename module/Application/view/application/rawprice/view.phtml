@@ -42,10 +42,20 @@ $this->pageBreadcrumbs()->setItems([
                 </tr>
                 <tr>
                     <th width="5%">Колонка</th>
-                    <th width="45%">Значение</th>
+                    <th>Значение</th>
                     <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
                         <th>
-                            <?= $this->escapeHTML($priceDescription->getName());?>
+                            <div class="pull-left">
+                                <?= $this->escapeHtml($priceDescription->getName());?>
+                            </div>    
+                            <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                <span class="glyphicon glyphicon-edit" ></span>
+                            </button>                                                    
+                            <button value="/supplier/delete-price-description-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                    title="Удалить">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </button>                                                                                                                                       
                         </th>
                     <?php endforeach;?>
                 </tr>
@@ -60,6 +70,11 @@ $this->pageBreadcrumbs()->setItems([
                         <td>
                             <?= $this->escapeHtml($rawdata); ?>
                         </td>
+                        <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
+                            <td>
+                                <?= $this->escapeHtml($priceDescription->getFieldLabel($col + 1));?>
+                            </td>
+                        <?php endforeach;?>
                     </tr>
                 <?php endforeach; ?>    
 

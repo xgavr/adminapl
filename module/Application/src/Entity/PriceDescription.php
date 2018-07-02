@@ -378,14 +378,20 @@ class PriceDescription {
     /*
      * Получить поле по значению
      */
-    public function getField($value)
+    public function getFieldLabel($value)
     {
-        if ($value == $this->getArticle()) return 'article';
-        if ($value == $this->getIid()) return 'iid';
-        if ($value == $this->getProducer()) return 'producer';
-        if ($value == $this->getTitle()) return 'title';
-        if ($value == $this->getPrice()) return 'price';
-        if ($value == $this->getRest()) return 'rest';
+        
+        $form = new \Application\Form\PriceDescriptionForm();
+        $elements = $form->getElements();
+        foreach ($elements as $element){
+            if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
+            $func = 'get'.ucfirst($element->getName());
+            if (method_exists($this, $func)){
+                if($this->$func() == $value){
+                    return $element->getLabel();
+                }
+            }
+        }
         return;
     }
     
