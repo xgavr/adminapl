@@ -76,7 +76,9 @@ class ParseManager {
                 }
             }
         }  
-            
+        
+        if (!count($result)) return;
+        
         if (count($result) === 1){
             foreach ($result as $parce){
                 return $parce;
