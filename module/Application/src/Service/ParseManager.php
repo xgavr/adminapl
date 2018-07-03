@@ -67,10 +67,11 @@ class ParseManager {
                 if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
                 $func = 'get'.ucfirst($element->getName());
                 if (method_exists($priceDescription, $func)){
+
+                    $result[$priceDescription->getId()][$element->getName()] = '';                            
+
                     if($priceDescription->$func() && count($rawdata) >= $priceDescription->$func()){
                         $result[$priceDescription->getId()][$element->getName()] = $rawdata[$priceDescription->$func() - 1];
-                    } else {
-                        $result[$priceDescription->getId()][$element->getName()] = '';                            
                     }
                 }
             }
@@ -82,9 +83,10 @@ class ParseManager {
             }
         } else {
             //выбор лучшей разборки
+            return $result[0];
         }
         
-        return result;
+        return;
     }
         
     /*
@@ -97,11 +99,9 @@ class ParseManager {
     {
         $data = $this->parseRawdata($rawprice);
         
-        if (!is_array($data)) {
-            $data = [];
-        } else {
-            $rawprice->setStatus($status);            
-        }    
+        if (!is_array($data)) return;
+
+        $rawprice->setStatus($status);            
         
         $rawprice->setArticle($data['article']);
         $rawprice->setProducer($data['producer']);
