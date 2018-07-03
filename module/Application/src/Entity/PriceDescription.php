@@ -74,6 +74,11 @@ class PriceDescription {
     protected $oem;
 
     /**
+     * @ORM\Column(name="oem_brand")   
+     */
+    protected $brand;
+
+    /**
      * @ORM\Column(name="vendor")   
      */
     protected $vendor;
@@ -243,6 +248,16 @@ class PriceDescription {
     public function setOem($oem) 
     {
         $this->oem = (int) $oem;
+    }     
+
+    public function getBrand() 
+    {
+        return $this->brand;
+    }
+
+    public function setBrand($brand) 
+    {
+        $this->brand = (int) $brand;
     }     
 
     public function getVendor() 

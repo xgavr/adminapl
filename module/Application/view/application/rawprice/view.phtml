@@ -19,66 +19,107 @@ $this->pageBreadcrumbs()->setItems([
 
 
 <div class="row">
-    <div class="col-md-12">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Сопоставление данных из строки прайса</h3>
-        </div>
-        <div class="panel-body">
-            <table class="table table-striped">
-                <tr>
-                    <th colspan="<?= count($rawprice->getRaw()->getSupplier()->getPriceDescriptions()) + 2;?>" width="50%"> 
-                        <div class="pull-left">
-                            Данные из строки прайса                            
-                        </div>
-                        <div class="pull-right">
-                            <button value="/supplier/price-description-form/<?= $rawprice->getRaw()->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
-                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить описание полей">
-                                    Добавить описание полей
-                                <span class="glyphicon glyphicon-plus" ></span>
-                            </button>                                                                        
-                        </div>                            
-                    </th>    
-                </tr>
-                <tr>
-                    <th width="5%">Колонка</th>
-                    <th>Значение</th>
-                    <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
-                        <th>
-                            <div class="pull-left">
-                                <?= $this->escapeHtml($priceDescription->getName());?>
-                            </div>    
-                            <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
-                                    data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                <span class="glyphicon glyphicon-edit" ></span>
-                            </button>                                                    
-                            <button value="/supplier/delete-price-description-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                    title="Удалить">
-                                <span class="glyphicon glyphicon-remove" ></span>
-                            </button>                                                                                                                                       
-                        </th>
-                    <?php endforeach;?>
-                </tr>
-                <?php 
-                    $rawdates = $rawprice->getRawdataAsArray();
-                ?>
-                <?php foreach ($rawdates as $col => $rawdata): ?>
+    <div class="col-xs-11">
+        <div class="panel panel-default" id="section1">
+            <div class="panel-heading">
+                <h3 class="panel-title">Сопоставление данных из строки прайса</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
                     <tr>
-                        <td>
-                            <?= $this->escapeHtml($col + 1); ?>
-                        </td>
-                        <td>
-                            <?= $this->escapeHtml($rawdata); ?>
-                        </td>
+                        <th colspan="<?= count($rawprice->getRaw()->getSupplier()->getPriceDescriptions()) + 2;?>" width="50%"> 
+                            <div class="pull-left">
+                                Данные из строки прайса                            
+                            </div>
+                            <div class="pull-right">
+                                <button value="/supplier/price-description-form/<?= $rawprice->getRaw()->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Добавить описание полей">
+                                        Добавить описание полей
+                                    <span class="glyphicon glyphicon-plus" ></span>
+                                </button>                                                                        
+                            </div>                            
+                        </th>    
+                    </tr>
+                    <tr>
+                        <th width="5%">Колонка</th>
+                        <th>Значение</th>
                         <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
-                            <td>
-                                <?= $this->escapeHtml($priceDescription->getFieldLabel($col + 1));?>
-                            </td>
+                            <th>
+                                <div class="pull-left">
+                                    <?= $this->escapeHtml($priceDescription->getName());?>
+                                </div>    
+                                <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                    
+                                <button value="/supplier/delete-price-description-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                                                                                                       
+                            </th>
                         <?php endforeach;?>
                     </tr>
-                <?php endforeach; ?>    
+                    <?php 
+                        $rawdates = $rawprice->getRawdataAsArray();
+                    ?>
+                    <?php foreach ($rawdates as $col => $rawdata): ?>
+                        <tr>
+                            <td>
+                                <?= $this->escapeHtml($col + 1); ?>
+                            </td>
+                            <td>
+                                <?= $this->escapeHtml($rawdata); ?>
+                            </td>
+                            <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
+                                <td>
+                                    <?= $this->escapeHtml($priceDescription->getFieldLabel($col + 1));?>
+                                </td>
+                            <?php endforeach;?>
+                        </tr>
+                    <?php endforeach; ?>    
 
-            </table>
+                </table>
+            </div>
+        </div> 
+        <div class="panel panel-default" id="section2">
+            <div class="panel-heading">
+                <button value="/rawprice/parse/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                        title="Разобрать">
+                        Разобрать
+                </button>                            
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tr>
+                        <?php foreach($rawprice->getFieldValues() as $key => $value):?>
+                            <th>
+                                <?= $this->escapeHtml($key)?>
+                            </th>
+                        <?php endforeach;?>
+                    </tr>    
+                    <tr>
+                        <?php foreach($rawprice->getFieldValues() as $key => $value):?>
+                            <td>
+                                <?= $this->escapeHtml($value)?>
+                            </td>
+                        <?php endforeach;?>
+                    </tr>    
+                </table>
+            </div>
+        </div>
+    </div>    
+    <div class="col-xs-1" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="active"><a href="#section1">Строка прайса</a></li>
+                            <li><a href="#section2">Разборка</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>    
 </div>    

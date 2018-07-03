@@ -943,6 +943,7 @@ class SupplierController extends AbstractActionController
                     'lot' => $priceDescription->getLot(),  
                     'name' => $priceDescription->getName(),  
                     'oem' => $priceDescription->getOem(),  
+                    'brand' => $priceDescription->getBrand(),  
                     'price' => $priceDescription->getPrice(),  
                     'producer' => $priceDescription->getProducer(),  
                     'rest' => $priceDescription->getRest(),  

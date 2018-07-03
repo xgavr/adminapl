@@ -258,6 +258,7 @@ class SupplierManager
         $priceDescription->setLot($data['lot']);
         $priceDescription->setName($data['name']);
         $priceDescription->setOem($data['oem']);
+        $priceDescription->setBrand($data['brand']);
         $priceDescription->setPrice($data['price']);
         $priceDescription->setProducer($data['producer']);
         $priceDescription->setRest($data['rest']);
@@ -296,6 +297,7 @@ class SupplierManager
         $priceDescription->setLot($data['lot']);
         $priceDescription->setName($data['name']);
         $priceDescription->setOem($data['oem']);
+        $priceDescription->setBrand($data['brand']);
         $priceDescription->setPrice($data['price']);
         $priceDescription->setProducer($data['producer']);
         $priceDescription->setRest($data['rest']);

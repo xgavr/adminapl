@@ -189,6 +189,7 @@ class RawManager {
                             $rawprice->setProducer('');
                             $rawprice->setPrice(0);
                             $rawprice->setRest(0);
+                            $rawprice->setStatus(Rawprice::STATUS_NEW);
 
                             $rawprice->setRaw($raw);
 
@@ -284,6 +285,7 @@ class RawManager {
                                 $rawprice->setProducer('');
                                 $rawprice->setPrice(0);
                                 $rawprice->setRest(0);
+                                $rawprice->setStatus(Rawprice::STATUS_NEW);
 
                                 $rawprice->setRaw($raw);
 
@@ -372,6 +374,7 @@ class RawManager {
                                 $rawprice->setProducer('');
                                 $rawprice->setPrice(0);
                                 $rawprice->setRest(0);
+                                $rawprice->setStatus(Rawprice::STATUS_NEW);
 
                                 $rawprice->setRaw($raw);
 

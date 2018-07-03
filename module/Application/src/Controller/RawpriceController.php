@@ -9,6 +9,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Form\PriceDescriptionForm;
@@ -108,10 +109,12 @@ class RawpriceController extends AbstractActionController
         $rawprice = $this->entityManager->getRepository(Rawprice::class)
                 ->findOneById($rawpriceId);
         
-        $this->rawManager->parseRawprice($rawprice);
-        
-        return $this->redirect()->toRoute('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);
-        
+        $parse = $this->parseManager->updateRawprice($rawprice, true, Rawprice::STATUS_PARSE);
+//        return $this->redirect()->toRoute('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);
+
+        return new JsonModel(
+           ['ok']
+        );                   
     }        
 
     public function unknownProducerAction()

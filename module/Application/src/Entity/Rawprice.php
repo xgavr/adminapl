@@ -19,6 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Rawprice {
            
+    const STATUS_NEW       = 1; // только что загрузили
+    const STATUS_PARSE      = 2; // прошел разборку.    
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -70,6 +73,11 @@ class Rawprice {
      * @ORM\Column(name="oem")   
      */
     protected $oem;
+
+    /**
+     * @ORM\Column(name="oem_brand")   
+     */
+    protected $brand;
 
     /**
      * @ORM\Column(name="vendor")   
@@ -132,6 +140,11 @@ class Rawprice {
     protected $image;    
 
     /**
+     * @ORM\Column(name="status")   
+     */
+    protected $status;    
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
      * @ORM\JoinColumn(name="raw_id", referencedColumnName="id")
      */
@@ -148,6 +161,50 @@ class Rawprice {
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     private $good;
+    
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_NEW => 'Новый',
+            self::STATUS_PARSE => 'Разобран'
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }   
+    
     
     public function getId() 
     {
@@ -166,7 +223,7 @@ class Rawprice {
 
     public function setArticle($article) 
     {
-        $this->article = $article;
+        $this->article = (string) $article;
     }     
     
     public function getIid() 
@@ -186,7 +243,7 @@ class Rawprice {
 
     public function setProducer($producer) 
     {
-        $this->producer = $producer;
+        $this->producer = (string) $producer;
     }     
     
     public function getGoodname() 
@@ -196,7 +253,7 @@ class Rawprice {
 
     public function setGoodname($goodname) 
     {
-        $this->goodname = $goodname;
+        $this->goodname = (string) $goodname;
     }     
     
     public function getTitle() 
@@ -206,7 +263,7 @@ class Rawprice {
 
     public function setTitle($title) 
     {
-        $this->goodname = $title;
+        $this->goodname = (string) $title;
     }     
     
     public function getPrice() 
@@ -216,7 +273,7 @@ class Rawprice {
 
     public function setPrice($price) 
     {
-        $this->price = $price;
+        $this->price = (float) $price;
     }     
     
     public function getRest() 
@@ -226,7 +283,7 @@ class Rawprice {
 
     public function setRest($rest) 
     {
-        $this->rest = $rest;
+        $this->rest = (string) $rest;
     }     
     
     public function getOem() 
@@ -237,6 +294,16 @@ class Rawprice {
     public function setOem($oem) 
     {
         $this->oem = $oem;
+    }     
+
+    public function getBrand() 
+    {
+        return $this->brand;
+    }
+
+    public function setBrand($brand) 
+    {
+        $this->brand = $brand;
     }     
 
     public function getVendor() 
@@ -450,4 +517,27 @@ class Rawprice {
         $this->good = $good;
         $good->addRawprice($this);
     }     
+    
+    /*
+     * Получить поля со значениями и заголовками
+     */
+    public function getFieldValues()
+    {
+        $result = [];
+        
+        $form = new \Application\Form\PriceDescriptionForm();
+        $elements = $form->getElements();
+        foreach ($elements as $element){
+            if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
+            $func = 'get'.ucfirst($element->getName());
+            if (method_exists($this, $func)){
+                if($this->$func()){
+                    $result[$element->getLabel()] = $this->$func();
+                }
+            }
+        }
+        return $result;
+    }
+    
+    
 }

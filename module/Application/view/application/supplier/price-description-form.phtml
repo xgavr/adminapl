@@ -42,6 +42,11 @@ $form->get('oem')->setAttributes([
     'min' => 0,
     ]);
 
+$form->get('brand')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
 $form->get('vendor')->setAttributes([
     'class'=>'form-control', 
     'min' => 0,
@@ -186,10 +191,10 @@ $form->prepare();
                         </div>                        
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('markdown')); ?>
-                            <?= $this->formElement($form->get('markdown')); ?>
-                            <?= $this->formElementErrors($form->get('markdown')); ?>                  
-                        </div>                        
+                            <?= $this->formLabel($form->get('iid')); ?>
+                            <?= $this->formElement($form->get('iid')); ?>
+                            <?= $this->formElementErrors($form->get('iid')); ?>                  
+                        </div>
 
                     </div>
                 
@@ -208,9 +213,9 @@ $form->prepare();
                         
                         
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('vendor')); ?>
-                            <?= $this->formElement($form->get('vendor')); ?>
-                            <?= $this->formElementErrors($form->get('vendor')); ?>                  
+                            <?= $this->formLabel($form->get('brand')); ?>
+                            <?= $this->formElement($form->get('brand')); ?>
+                            <?= $this->formElementErrors($form->get('brand')); ?>                  
                         </div>                        
 
                         <div class="form-group">
@@ -231,6 +236,12 @@ $form->prepare();
                             <?= $this->formElementErrors($form->get('image')); ?>                  
                         </div>                        
 
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('markdown')); ?>
+                            <?= $this->formElement($form->get('markdown')); ?>
+                            <?= $this->formElementErrors($form->get('markdown')); ?>                  
+                        </div>                        
+
                     </div>
                     
                     <div class="col-md-4">
@@ -242,15 +253,15 @@ $form->prepare();
                         </div>
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('iid')); ?>
-                            <?= $this->formElement($form->get('iid')); ?>
-                            <?= $this->formElementErrors($form->get('iid')); ?>                  
-                        </div>
-
-                        <div class="form-group">
                             <?= $this->formLabel($form->get('lot')); ?>
                             <?= $this->formElement($form->get('lot')); ?>
                             <?= $this->formElementErrors($form->get('lot')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('vendor')); ?>
+                            <?= $this->formElement($form->get('vendor')); ?>
+                            <?= $this->formElementErrors($form->get('vendor')); ?>                  
                         </div>
 
                         <div class="form-group">

@@ -201,6 +201,17 @@ class PriceDescriptionForm extends Form
         
         $this->add([           
             'type'  => 'text',
+            'name' => 'brand',
+            'attributes' => [
+                'id' => 'brand'
+            ],
+            'options' => [
+                'label' => 'ОЕ Бренд',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
             'name' => 'lot',
             'attributes' => [
                 'id' => 'lot'
@@ -584,6 +595,27 @@ class PriceDescriptionForm extends Form
         
         $inputFilter->add([
                 'name'     => 'oem',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+//                'validators' => [
+//                    [
+//                        'name'    => 'StringLength',
+//                        'options' => [
+//                            'min' => 1,
+//                            'max' => 11
+//                        ],
+//                    ],
+//                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'brand',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

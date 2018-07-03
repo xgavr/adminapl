@@ -86,76 +86,55 @@ class ParseManager {
                     return $parce;
                 }
             } else {
-                //выбор лучшей разбоки в будущем
+                //выбор лучшей разборки
             }
         }
         
         return result;
     }
-    
-    /*
-     * @var array @parsedates
-     */
-    
-    protected function selectBestParsedata($parsedates)
-    {
-        if (count($parsedates == 1)){
-            return $parsedates[0];
-        }
         
-        foreach ($parsedates as $parsedata){
-            /*Какие то правила выбора лучшего набора данных*/
-            return $parsedata;
-        }
-        
-        return;
-    }
-    
     /*
      * @var Application\Entity\Rawprice $rawprice
      * @var array @parsedata
      * @var bool $flushnow
      */
     
-    protected function updateParsedata($rawprice, $parsedata, $flushnow)
+    public function updateRawprice($rawprice, $flushnow = true, $status = Rawprice::STATUS_PARSE)
     {
-        $rawprice->setArticle($parsedata['article']);
-        $rawprice->setProducer($parsedata['producer']);
-        $rawprice->setGoodname($parsedata['goodname']);
-        $rawprice->setPrice($parsedata['price']);
-        $rawprice->setRest($parsedata['rest']);
+        $data = $this->parseRawdata($rawprice);
         
+        if (!is_array($data)) {
+            $data = [];
+        } else {
+            $rawprice->setStatus($status);            
+        }    
+        
+        $rawprice->setArticle($data['article']);
+        $rawprice->setProducer($data['producer']);
+        $rawprice->setTitle($data['title']);
+        $rawprice->setPrice($data['price']);
+        $rawprice->setRest($data['rest']);            
+        $rawprice->setIid($data['iid']);
+        $rawprice->setOem($data['oem']);
+        $rawprice->setBrand($data['brand']);
+        $rawprice->setVendor($data['vendor']);
+        $rawprice->setLot($data['lot']);
+        $rawprice->setUnit($data['unit']);
+        $rawprice->setCar($data['car']);
+        $rawprice->setBar($data['bar']);
+        $rawprice->setCurrency($data['currency']);
+        $rawprice->setComment($data['comment']);
+        $rawprice->setWeight($data['weight']);
+        $rawprice->setCountry($data['country']);
+        $rawprice->setMarkdown($data['markdown']);
+        $rawprice->setSale($data['sale']);
+        $rawprice->setImage($data['image']);
+
         $this->entityManager->persist($rawprice);
-        
+
         if ($flushnow){
             $this->entityManager->flush();
-        }    
-    }
-    
-    /*
-     * Обработка строки rawprice
-     * @var Application\Entity\Rawprice $rawprice;
-     * @bool $flushnow
-     */
-    public function parseRawprice($rawprice, $flushnow = true)
-    {
-        ini_set('memory_limit', '512M');
-        
-        $raw = $rawprice->getRaw();
-        $priceDescriptions = $raw->getSupplier()->getPriceDescriptions();
-        
-        $data = [];
-        foreach ($priceDescriptions as $priceDescription){
-            if ($priceDescription->getStatus() == $priceDescription->getStatusActive()){
-                $parceData = $this->parseRawdata($rawprice,$priceDescription);
-                if (is_array($parceData)){
-                    $data[] = $parceData; 
-                }            
-            }            
-        }
-        
-        if (count($data)){
-            $this->updateParsedata($rawprice, $this->selectBestParsedata($data), $flushnow);
+            $this->entityManager->clear();
         }    
         
         return;
@@ -173,6 +152,7 @@ class ParseManager {
         }
         
         $this->entityManager->flush();
+        $this->entityManager->clear();
     }
     
     /*
