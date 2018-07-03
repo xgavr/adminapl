@@ -66,28 +66,27 @@ class ParseManager {
 
         $rawdata = explode(';', $rawprice->getRawdata());
         
-        if (count($rawdata)){
-                
-            foreach($priceDescriptions as $priceDescription){
-                
-                foreach ($elements as $element){
-                    if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
-                    $func = 'get'.ucfirst($element->getName());
-                    if (method_exists($priceDescription, $func)){
-                        if($priceDescription->$func() && count($rawdata) >= $priceDescription->$func()){
-                            $result[$priceDescription->getId()][$element->getName()] = $rawdata[$priceDescription->$func() - 1];                            
-                        }
+        foreach($priceDescriptions as $priceDescription){
+
+            foreach ($elements as $element){
+                if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
+                $func = 'get'.ucfirst($element->getName());
+                if (method_exists($priceDescription, $func)){
+                    if($priceDescription->$func() && count($rawdata) >= $priceDescription->$func()){
+                        $result[$priceDescription->getId()][$element->getName()] = $rawdata[$priceDescription->$func() - 1];
+                    } else {
+                        $result[$priceDescription->getId()][$element->getName()] = '';                            
                     }
                 }
-            }  
-            
-            if (count($result) === 1){
-                foreach ($result as $parce){
-                    return $parce;
-                }
-            } else {
-                //выбор лучшей разборки
             }
+        }  
+            
+        if (count($result) === 1){
+            foreach ($result as $parce){
+                return $parce;
+            }
+        } else {
+            //выбор лучшей разборки
         }
         
         return result;
