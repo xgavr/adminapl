@@ -12,6 +12,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\PriceGetting;
 use Application\Entity\Supplier;
+use Application\Entity\Rawprice;
 
 
 class ProcessingController extends AbstractActionController
@@ -71,8 +72,16 @@ class ProcessingController extends AbstractActionController
      */
     private $adminManager;    
 
+    /**
+     * AdminManager manager.
+     * @var Application\Service\ParseManager
+     */
+    private $parseManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, $aplService, $priceManager, $rawManager, $supplierManager, $adminManager) 
+    public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
+            $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
+            $parseManger) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -83,6 +92,7 @@ class ProcessingController extends AbstractActionController
         $this->rawManager = $rawManager;
         $this->supplierManager = $supplierManager;
         $this->adminManager = $adminManager;
+        $this->parseManager = $parseManager;
     }   
 
     
@@ -169,6 +179,31 @@ class ProcessingController extends AbstractActionController
                     break;
                 }
             }            
+        }    
+        
+        return new JsonModel(
+            ['ok']
+        );
+    }
+    
+    /*
+     * Разборка прайсов
+     */
+    public function parseRawAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+        
+        if ($settings['parse_raw'] == 1){
+            $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                    ->findBy(['status' => Rawprice::STATUS_NEW], ['id' => 'ASC'], null, 10000)
+                    ;
+            
+            foreach ($rawprices as $rawprice){
+                $this->parseManager->updateRawprice($rawprice, false, Rawprice::STATUS_PARSE);
+            }
+            
+            $this->entityManager->flush();
+            $this->entityManager->clear();
         }    
         
         return new JsonModel(

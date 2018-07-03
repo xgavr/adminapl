@@ -43,18 +43,6 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
                         
         $this->add([            
             'type'  => 'select',
-            'name' => 'upload_raw',
-            'options' => [
-                'label' => 'Загружать прайсы в БД',
-                'value_options' => [
-                    1 => 'Загружать',
-                    2 => 'Не загружать',                    
-                ]
-            ],
-        ]);
-                
-        $this->add([            
-            'type'  => 'select',
             'name' => 'receiving_mail',
             'options' => [
                 'label' => 'Прайсы по почте',
@@ -77,6 +65,30 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'upload_raw',
+            'options' => [
+                'label' => 'Загружать прайсы в БД',
+                'value_options' => [
+                    1 => 'Загружать',
+                    2 => 'Не загружать',                    
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'parse_raw',
+            'options' => [
+                'label' => 'Разборка загруженных прайсов',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -95,17 +107,6 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
         $this->setInputFilter($inputFilter);
                 
         $inputFilter->add([
-                'name'     => 'upload_raw',
-                'required' => true,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
-                ],
-            ]); 
-        
-        $inputFilter->add([
                 'name'     => 'receiving_mail',
                 'required' => true,
                 'filters'  => [                    
@@ -118,6 +119,28 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'receiving_link',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'upload_raw',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'parse_raw',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
