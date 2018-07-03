@@ -282,7 +282,7 @@ class Rawprice {
 
     public function setPrice($price) 
     {
-        $this->price = (float) $price;
+        $this->price = (string) $price;
     }     
     
     public function getRest() 

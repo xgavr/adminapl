@@ -184,11 +184,6 @@ class RawManager {
                         
                             $rawprice->setRawdata($str);
 
-                            $rawprice->setArticle('');
-                            $rawprice->setGoodname('');
-                            $rawprice->setProducer('');
-                            $rawprice->setPrice(0);
-                            $rawprice->setRest(0);
                             $rawprice->setStatus(Rawprice::STATUS_NEW);
 
                             $rawprice->setRaw($raw);
@@ -275,16 +270,10 @@ class RawManager {
                             $str = $filter->filter($row);
 
                             if ($str){
-
-                                
+                              
                                 $rawprice = new Rawprice();
                                 $rawprice->setRawdata($filter->filter($row));
 
-                                $rawprice->setArticle('');
-                                $rawprice->setGoodname('');
-                                $rawprice->setProducer('');
-                                $rawprice->setPrice(0);
-                                $rawprice->setRest(0);
                                 $rawprice->setStatus(Rawprice::STATUS_NEW);
 
                                 $rawprice->setRaw($raw);
@@ -361,19 +350,14 @@ class RawManager {
 
                     if (count($sheet)){
                         foreach ($excel_sheet_content as $row){
-                            $rawprice = new Rawprice();
-                            
                             $str = $filter->filter($row);
 
                             if ($str){
 
+                                $rawprice = new Rawprice();
+                            
                                 $rawprice->setRawdata($filter->filter($row));
 
-                                $rawprice->setArticle('');
-                                $rawprice->setGoodname('');
-                                $rawprice->setProducer('');
-                                $rawprice->setPrice(0);
-                                $rawprice->setRest(0);
                                 $rawprice->setStatus(Rawprice::STATUS_NEW);
 
                                 $rawprice->setRaw($raw);
