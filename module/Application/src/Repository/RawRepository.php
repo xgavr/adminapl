@@ -116,6 +116,31 @@ class RawRepository extends EntityRepository{
     }
     
     /*
+     * Получить записи для разбора
+     */
+    public function findNewRawprice($maxResults)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('rp')
+                ->distinct()
+                ->from(\Application\Entity\PriceDescription::class, 'pd')
+                ->join(\Application\Entity\Supplier::class, 's', 'WITH', 'pd.supplier = s.id')
+                ->join(Raw::class, 'r', 'WITH', 'r.supplier = s.id')
+                ->join(Rawprice::class, 'rp', 'WITH', 'rp.raw = r.id')
+                ->where('rp.status = ?1')
+                ->setParameter('1', Rawprice::STATUS_NEW)
+                ->orderBy('rp.id', 'ASC')
+                ->setMaxResults($maxResults)
+                ;
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+                
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /*
      * Удаление raw
      * @var Apllication\Entity\Raw
      * 

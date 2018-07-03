@@ -195,10 +195,11 @@ class ProcessingController extends AbstractActionController
         set_time_limit(0);
         
         $settings = $this->adminManager->getPriceSettings();
-        
+
         if ($settings['parse_raw'] == 1){
             $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                    ->findBy(['status' => Rawprice::STATUS_NEW], ['id' => 'ASC'], 10000)
+//                    ->findBy(['status' => Rawprice::STATUS_NEW], ['id' => 'ASC'], 10000)
+                    ->findNewRawprice(10)
                     ;
             
             foreach ($rawprices as $rawprice){
