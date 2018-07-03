@@ -191,13 +191,13 @@ class ProcessingController extends AbstractActionController
      */
     public function parseRawAction()
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '1024M');
         set_time_limit(0);
         
         $settings = $this->adminManager->getPriceSettings();
         
         if ($settings['parse_raw'] == 1){
-            $rawprices = $this->entityManager->getRepository(Rawprice::class)
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findBy(['status' => Rawprice::STATUS_NEW], ['id' => 'ASC'], null, 10000)
                     ;
             
