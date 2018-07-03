@@ -81,7 +81,7 @@ class ProcessingController extends AbstractActionController
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
-            $parseManger) 
+            $parseManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -191,6 +191,9 @@ class ProcessingController extends AbstractActionController
      */
     public function parseRawAction()
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        
         $settings = $this->adminManager->getPriceSettings();
         
         if ($settings['parse_raw'] == 1){
