@@ -198,7 +198,7 @@ class ProcessingController extends AbstractActionController
         
         if ($settings['parse_raw'] == 1){
             $raw = $this->entityManager->getRepository(Rawprice::class)
-                    ->findBy(['status' => Rawprice::STATUS_NEW], ['id' => 'ASC'], null, 1000)
+                    ->findBy(['status' => Rawprice::STATUS_NEW], ['id' => 'ASC'], 10000)
                     ;
             
             foreach ($rawprices as $rawprice){
