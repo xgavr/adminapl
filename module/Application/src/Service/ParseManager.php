@@ -14,13 +14,8 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
-use Application\Filter\RawToStr;
-use Application\Filter\CsvDetectDelimiterFilter;
-use Zend\Json\Json;
 use Application\Form\PriceDescriptionForm;
 
-use Zend\Validator\File\IsCompressed;
-use Zend\Filter\Decompress;
 
 
 /**

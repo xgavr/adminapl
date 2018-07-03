@@ -242,7 +242,7 @@ class Rawprice {
 
     public function setIid($iid) 
     {
-        $this->iid = (int) $iid;
+        $this->iid = (string) $iid;
     }     
 
     public function getProducer() 
