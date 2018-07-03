@@ -94,6 +94,28 @@ class RawRepository extends EntityRepository{
     }  
     
     /*
+     * Получить статусы обработки прайса
+     * @var Apllication\Entity\Raw
+     * 
+     */
+    public function rawpriceStatuses($raw = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r.status as status, count(r.id) as status_count')
+                ->from(Rawprice::class, 'r')
+                ->groupBy('r.status')
+                ;
+        if ($raw){
+            $queryBuilder->where('r.raw = ?1')
+                    ->setParameter('1', $raw->getId())
+                    ;
+        }
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /*
      * Удаление raw
      * @var Apllication\Entity\Raw
      * 

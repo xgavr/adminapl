@@ -194,7 +194,16 @@ class Rawprice {
             return $list[$this->status];
         
         return 'Unknown';
-    }    
+    }  
+    
+    public function getStatusName($status)
+    {
+        $list = self::getStatusList();
+        if (isset($list[$status]))
+            return $list[$status];
+        
+        return 'Unknown';        
+    }
     
     /**
      * Sets status.

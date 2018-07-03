@@ -117,6 +117,26 @@ class RawpriceController extends AbstractActionController
         );                   
     }        
 
+    public function parseRawAction()
+    {
+        $rawId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $raw = $this->entityManager->getRepository(Raw::class)
+                ->findOneById($rawId);
+        
+        $this->parseManager->parseRaw($raw);
+
+        return new JsonModel(
+           ['ok']
+        );                   
+    }        
+
     public function unknownProducerAction()
     {
         $rawpriceId = (int)$this->params()->fromRoute('id', -1);

@@ -31,7 +31,7 @@ use Zend\Filter\Decompress;
  */
 class ParseManager {
         
-    const PRICE_BATCHSIZE    = 50000; // количество записей единовременной загруки строк прайса
+    const ROW_BATCHSIZE    = 10000; // количество записей единовременной загруки строк прайса
 
     /**
      * Doctrine entity manager.
@@ -147,12 +147,23 @@ class ParseManager {
      */
     public function parseRaw($raw)
     {
+        set_time_limit(0);
+        $i = 0;
         foreach ($raw->getRawprice() as $rawprice){
-            $this->parseRawprice($rawprice, false);
+            if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
+                $this->updateRawprice($rawprice, false, Rawprice::STATUS_PARSE);
+            }    
+
+            $i++;
+            if (($i % $this::ROW_BATCHSIZE) === 0) {
+                $this->entityManager->flush();
+            }
         }
         
         $this->entityManager->flush();
         $this->entityManager->clear();
+        
+        return;
     }
     
     /*

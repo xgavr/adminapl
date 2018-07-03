@@ -87,6 +87,13 @@ class RawController extends AbstractActionController
         
         $page = $this->params()->fromQuery('page', 1);
         
+        $statuses = $this->entityManager->getRepository(Raw::class)
+                ->rawpriceStatuses($raw);
+        
+        foreach ($statuses as $key => $status){
+            $statuses[$key]['name'] = Rawprice::getStatusName($status['status']);
+        }
+        
         $query = $this->entityManager->getRepository(Rawprice::class)
                     ->findRawRawprice($raw);
                 
@@ -102,6 +109,7 @@ class RawController extends AbstractActionController
             'rawManager' => $this->rawManager,
             'rawprice' => $paginator,
             'priceDescriptionElements' => $priceDescriptionForm->getElements(),
+            'statuses' => $statuses,
         ]);
     }      
     
