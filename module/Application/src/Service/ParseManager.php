@@ -193,7 +193,7 @@ class ParseManager {
      */    
     public function findRawpricesForParse($raw = null)
     {
-        if (!raw){
+        if (!$raw){
             $raw = $this->findRawForParse();
         }    
         
