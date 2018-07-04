@@ -124,18 +124,17 @@ class RawRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('rp')
-                ->distinct()
-                ->from(\Application\Entity\PriceDescription::class, 'pd')
-                ->join(\Application\Entity\Supplier::class, 's', 'WITH', 'pd.supplier = s.id')
-                ->join(Raw::class, 'r', 'WITH', 'r.supplier = s.id')
-                ->join(Rawprice::class, 'rp', 'WITH', 'rp.raw = r.id')
+                ->from(Rawprice::class, 'rp')
+//                ->join(Raw::class, 'r', 'WITH', 'r.id = rp.raw')
+//                ->join(\Application\Entity\Supplier::class, 's','WITH', 'r.supplier = s.id')
+//                ->join(\Application\Entity\PriceDescription::class, 'pd', 'WITH', 'pd.supplier = s.id')
+//                ->distinct()
                 ->where('rp.status = ?1')
                 ->setParameter('1', Rawprice::STATUS_NEW)
-                ->orderBy('rp.id', 'ASC')
                 ->setMaxResults($maxResults)
                 ;
         
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
                 
         return $queryBuilder->getQuery()->getResult();
     }

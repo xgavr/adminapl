@@ -392,7 +392,7 @@ class Rawprice {
 
     public function setWeight($weight) 
     {
-        $this->weight = $weight;
+        $this->weight = (float) $weight;
     }     
 
     public function getCountry() 

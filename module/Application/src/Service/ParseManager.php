@@ -143,7 +143,7 @@ class ParseManager {
      */
     public function parseRaw($raw)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(0);
         $i = 0;
         foreach ($raw->getRawprice() as $rawprice){
