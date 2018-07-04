@@ -140,6 +140,23 @@ class RawRepository extends EntityRepository{
     }
     
     /*
+     * Выборка записей raw
+     * @var Apllication\Entity\Raw
+     * 
+     */
+    public function findRawpriceRaw($raw, $status = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+//        $queryBuilder->select('rp')
+//                ->from(Rawprice::class, 'rp')
+//                ->where('rp.status = ?1')
+//                ->setParameter('1', Rawprice::STATUS_NEW)
+                
+    }
+    
+    /*
      * Удаление raw
      * @var Apllication\Entity\Raw
      * 

@@ -197,17 +197,8 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_raw'] == 1){
-            $rawprices = $this->entityManager->getRepository(Rawprice::class)
-//                    ->findBy(['status' => Rawprice::STATUS_NEW], ['id' => 'ASC'], 10000)
-                    ->findNewRawprice(10)
-                    ;
-            
-            foreach ($rawprices as $rawprice){
-                $this->parseManager->updateRawprice($rawprice, false, Rawprice::STATUS_PARSE);
-            }
-            
-            $this->entityManager->flush();
-            $this->entityManager->clear();
+            $raw = $this->parseManager->findRawForParse();
+            var_dump($raw->getId());
         }    
         
         return new JsonModel(

@@ -412,7 +412,7 @@ class Rawprice {
 
     public function setMarkdown($markdown) 
     {
-        $this->markdown = (int) $markdown;
+        $this->markdown = (int) !empty($markdown);
     }     
 
     public function getSale() 
@@ -422,7 +422,7 @@ class Rawprice {
 
     public function setSale($sale) 
     {
-        $this->sale = (int) $sale;
+        $this->sale = (int) !empty($sale);
     }     
 
     public function getImage() 

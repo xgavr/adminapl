@@ -14,6 +14,7 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
+use Application\Entity\PriceDescription;
 use Application\Form\PriceDescriptionForm;
 
 
@@ -26,7 +27,7 @@ use Application\Form\PriceDescriptionForm;
  */
 class ParseManager {
         
-    const ROW_BATCHSIZE    = 10000; // количество записей единовременной загруки строк прайса
+    const ROW_BATCHSIZE    = 50000; // количество записей единовременной загруки строк прайса
 
     /**
      * Doctrine entity manager.
@@ -159,6 +160,31 @@ class ParseManager {
         
         $this->entityManager->flush();
         $this->entityManager->clear();
+        
+        return;
+    }
+    
+    /*
+     * Поиск прайса для разбоки
+     */
+    public function findRawForParse()
+    {
+        $raws = $this->entityManager->getRepository(Raw::class)
+                ->findBy(['status' => Raw::STATUS_ACTIVE], ['id' => 'ASC'])
+                ;
+        foreach ($raws as $raw){
+            $priceDescriptions = $this->entityManager->getRepository(PriceDescription::class)
+                    ->findBy(['supplier' => $raw->getSupplier()->getId(), 'status' => PriceDescription::STATUS_ACTIVE]);
+            if (count($priceDescriptions)){
+                $statuses = $this->entityManager->getRepository(Raw::class)
+                        ->rawpriceStatuses($raw);
+                foreach ($statuses as $status){
+                    if ($status['status'] == Rawprice::STATUS_NEW && $status['status_count']){
+                        return $raw;
+                    }
+                }
+            }
+        }
         
         return;
     }
