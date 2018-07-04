@@ -36,8 +36,9 @@ class RawRepository extends EntityRepository{
 
     /*
      * @var Apllication\Entity\Raw
+     * $var int status
      */
-    public function findRawRawprice($raw)
+    public function findRawRawprice($raw, $status = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -49,6 +50,11 @@ class RawRepository extends EntityRepository{
             ->orderBy('c.id')
             ->setParameter('1', $raw->getId())    
                 ;
+        if ($status){
+            $queryBuilder->andWhere('c.status = ?2')
+            ->setParameter('2', (int) $status)    
+                ;                    
+        }
 
         return $queryBuilder->getQuery();
     }
@@ -118,43 +124,24 @@ class RawRepository extends EntityRepository{
     /*
      * Получить записи для разбора
      */
-    public function findNewRawprice($maxResults)
+    public function findRawpriceForParse($raw)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('rp')
                 ->from(Rawprice::class, 'rp')
-//                ->join(Raw::class, 'r', 'WITH', 'r.id = rp.raw')
-//                ->join(\Application\Entity\Supplier::class, 's','WITH', 'r.supplier = s.id')
-//                ->join(\Application\Entity\PriceDescription::class, 'pd', 'WITH', 'pd.supplier = s.id')
-//                ->distinct()
-                ->where('rp.status = ?1')
-                ->setParameter('1', Rawprice::STATUS_NEW)
-                ->setMaxResults($maxResults)
+                ->where('rp.raw = ?1')
+                ->andWhere('rp.status = ?2')
+                ->setParameter('1', $raw->getId())
+                ->setParameter('2', Rawprice::STATUS_NEW)
                 ;
         
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
                 
         return $queryBuilder->getQuery()->getResult();
     }
     
-    /*
-     * Выборка записей raw
-     * @var Apllication\Entity\Raw
-     * 
-     */
-    public function findRawpriceRaw($raw, $status = null)
-    {
-        $entityManager = $this->getEntityManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
-        
-//        $queryBuilder->select('rp')
-//                ->from(Rawprice::class, 'rp')
-//                ->where('rp.status = ?1')
-//                ->setParameter('1', Rawprice::STATUS_NEW)
-                
-    }
     
     /*
      * Удаление raw

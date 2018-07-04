@@ -262,7 +262,7 @@ class Rawprice {
 
     public function setGoodname($goodname) 
     {
-        $this->goodname = (string) $goodname;
+        $this->goodname = mb_substr($title, 0, 200);
     }     
     
     public function getTitle() 
@@ -272,7 +272,7 @@ class Rawprice {
 
     public function setTitle($title) 
     {
-        $this->goodname = (string) $title;
+        $this->goodname = mb_substr($title, 0, 200);
     }     
     
     public function getPrice() 

@@ -94,8 +94,10 @@ class RawController extends AbstractActionController
             $statuses[$key]['name'] = Rawprice::getStatusName($status['status']);
         }
         
+        $status = $this->params()->fromQuery('status');
+        
         $query = $this->entityManager->getRepository(Rawprice::class)
-                    ->findRawRawprice($raw);
+                    ->findRawRawprice($raw, $status);
                 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
@@ -110,6 +112,7 @@ class RawController extends AbstractActionController
             'rawprice' => $paginator,
             'priceDescriptionElements' => $priceDescriptionForm->getElements(),
             'statuses' => $statuses,
+            'status' => $status,
         ]);
     }      
     

@@ -48,45 +48,69 @@ class ParseManager {
     }
     
     /*
-     * Разбока строки данных прайса
-     * @var Application\Entity\Rawprice @rawprice
+     * Получить поля и функции описания прайса
      */
-    public function parseRawdata($rawprice)
+    public function getPriceDescriptionFunc($raw)
     {
         $result= [];
-        
-        $priceDescriptions = $rawprice->getRaw()->getSupplier()->getPriceDescriptions();
 
+        $priceDescriptions = $raw->getSupplier()->getPriceDescriptions();
         $form = new PriceDescriptionForm();
         $elements = $form->getElements();
 
-        $rawdata = explode(';', $rawprice->getRawdata());
-        
         foreach($priceDescriptions as $priceDescription){
-
-            foreach ($elements as $element){
-                if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
-                $func = 'get'.ucfirst($element->getName());
-                if (method_exists($priceDescription, $func)){
-
-                    $result[$priceDescription->getId()][$element->getName()] = '';                            
-
-                    if($priceDescription->$func() && count($rawdata) >= $priceDescription->$func()){
-                        $result[$priceDescription->getId()][$element->getName()] = $rawdata[$priceDescription->$func() - 1];
+            if ($priceDescription->getStatus() == PriceDescription::STATUS_ACTIVE){
+                foreach ($elements as $element){
+                    if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
+                    $func = 'get'.ucfirst($element->getName());
+                    if (method_exists($priceDescription, $func)){
+                        $result[$priceDescription->getId()][$element->getName()] = $priceDescription->$func();
                     }
                 }
-            }
+            }    
         }  
         
-        if (!count($result)) return;
+        if (count($result)){
+            return $result;
+        }
         
-        if (count($result) === 1){
-            foreach ($result as $parce){
-                return $parce;
+        return;
+    }
+    
+    /*
+     * Разбока строки данных прайса
+     * @var Application\Entity\Rawprice @rawprice
+     */
+    public function parseRawdata($rawprice, $priceDescriptionFunc = null)
+    {
+        if (!$priceDescriptionFunc){
+            $priceDescriptionFunc = $this->getPriceDescriptionFunc($rawprice->getRaw());
+        }
+        
+        if (count($priceDescriptionFunc)){
+            $result= [];
+    
+            $rawdata = explode(';', $rawprice->getRawdata());
+        
+            foreach ($priceDescriptionFunc as $priceDescriptionId => $elements){
+                foreach ($elements as $name => $value){
+                    $result[$priceDescriptionId][$name] = '';
+                    if ($value && count($rawdata) >= $value){
+                        $result[$priceDescriptionId][$name] = $rawdata[$value - 1];                        
+                    }
+                }    
             }
-        } else {
-            //выбор лучшей разборки
-            return $result[0];
+
+            if (!count($result)) return;
+        
+            if (count($result) === 1){
+                foreach ($result as $parce){
+                    return $parce;
+                }
+            } else {
+                //выбор лучшей разборки
+                return $result[0];
+            }        
         }
         
         return;
@@ -98,9 +122,9 @@ class ParseManager {
      * @var bool $flushnow
      */
     
-    public function updateRawprice($rawprice, $flushnow = true, $status = Rawprice::STATUS_PARSE)
+    public function updateRawprice($rawprice, $priceDescriptionFunc = null, $flushnow = true, $status = Rawprice::STATUS_PARSE)
     {
-        $data = $this->parseRawdata($rawprice);
+        $data = $this->parseRawdata($rawprice, $priceDescriptionFunc);
         
         if (!is_array($data)) return;
 
@@ -138,33 +162,6 @@ class ParseManager {
     }
     
     /*
-     * Парсить все записи
-     * @var Application\Entity\Raw @raw
-     * 
-     */
-    public function parseRaw($raw)
-    {
-        ini_set('memory_limit', '2048M');
-        set_time_limit(0);
-        $i = 0;
-        foreach ($raw->getRawprice() as $rawprice){
-            if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
-                $this->updateRawprice($rawprice, false, Rawprice::STATUS_PARSE);
-            }    
-
-            $i++;
-            if (($i % $this::ROW_BATCHSIZE) === 0) {
-                $this->entityManager->flush();
-            }
-        }
-        
-        $this->entityManager->flush();
-        $this->entityManager->clear();
-        
-        return;
-    }
-    
-    /*
      * Поиск прайса для разбоки
      */
     public function findRawForParse()
@@ -189,6 +186,61 @@ class ParseManager {
         return;
     }
     
+    /*
+     * Получить записи прайса для разбоки
+     * @var Application\Entity\Raw @raw
+     * 
+     */    
+    public function findRawpricesForParse($raw = null)
+    {
+        if (!raw){
+            $raw = $this->findRawForParse();
+        }    
+        
+        if ($raw){
+            return $this->entityManager->getRepository(Rawprice::class)
+                    ->findRawpriceForParse($raw, $this::ROW_BATCHSIZE);
+            
+            
+        }
+        return;
+    }
+    
+    /*
+     * Парсить записи прайса
+     * @var Application\Entity\Raw @raw
+     * 
+     */
+    public function parseRaw($raw)
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+        $i = 0;
+        
+        $rawprices = $this->findRawpricesForParse($raw);
+        $priceDescriptionFunc = $this->getPriceDescriptionFunc($raw);
+        
+        if (count($priceDescriptionFunc)){
+            foreach ($rawprices as $rawprice){
+
+                if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
+                    $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSE);
+
+                    $i++;
+                    if (($i % $this::ROW_BATCHSIZE) === 0) {
+                        $this->entityManager->flush();
+                    }
+                }    
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+        }    
+        
+        return;
+    }
+    
+
     /*
      * Собрать неизвестных поставщиков
      * @var Application\Entity\Rawprice

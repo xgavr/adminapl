@@ -109,7 +109,7 @@ class RawpriceController extends AbstractActionController
         $rawprice = $this->entityManager->getRepository(Rawprice::class)
                 ->findOneById($rawpriceId);
         
-        $parse = $this->parseManager->updateRawprice($rawprice, true, Rawprice::STATUS_PARSE);
+        $parse = $this->parseManager->updateRawprice($rawprice, null, true, Rawprice::STATUS_PARSE);
 //        return $this->redirect()->toRoute('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);
 
         return new JsonModel(

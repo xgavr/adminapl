@@ -197,8 +197,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_raw'] == 1){
-            $raw = $this->parseManager->findRawForParse();
-            var_dump($raw->getId());
+            $this->parseManager->parseRaw();
         }    
         
         return new JsonModel(
