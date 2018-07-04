@@ -217,24 +217,30 @@ class ParseManager {
         set_time_limit(0);
         $i = 0;
         
-        $rawprices = $this->findRawpricesForParse($raw);
-        $priceDescriptionFunc = $this->getPriceDescriptionFunc($raw);
+        if (!raw){
+            $raw = $this->findRawForParse();
+        }    
         
-        if (count($priceDescriptionFunc)){
-            foreach ($rawprices as $rawprice){
+        if ($raw){
+            $rawprices = $this->findRawpricesForParse($raw);
+            $priceDescriptionFunc = $this->getPriceDescriptionFunc($raw);
 
-                if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
-                    $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSE);
+            if (count($priceDescriptionFunc)){
+                foreach ($rawprices as $rawprice){
 
-                    $i++;
-                    if (($i % $this::ROW_BATCHSIZE) === 0) {
-                        $this->entityManager->flush();
-                    }
-                }    
-            }
+                    if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
+                        $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSE);
 
-            $this->entityManager->flush();
-            $this->entityManager->clear();
+                        $i++;
+                        if (($i % $this::ROW_BATCHSIZE) === 0) {
+                            $this->entityManager->flush();
+                        }
+                    }    
+                }
+
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+            }    
         }    
         
         return;
