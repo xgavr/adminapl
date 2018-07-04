@@ -26,7 +26,7 @@ class RawRepository extends EntityRepository{
 
         $queryBuilder->select('c, count(r.id) as rowcount')
             ->from(Raw::class, 'c')
-            ->join('c.rawprice', 'r')
+            ->leftJoin('c.rawprice', 'r')
             ->groupBy('c.id')     
             ->orderBy('c.id', 'DESC')
                 ;
