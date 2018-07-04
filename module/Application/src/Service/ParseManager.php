@@ -27,7 +27,7 @@ use Application\Form\PriceDescriptionForm;
  */
 class ParseManager {
         
-    const ROW_BATCHSIZE    = 50000; // количество записей единовременной загруки строк прайса
+    const ROW_BATCHSIZE    = 30000; // количество записей единовременной загруки строк прайса
 
     /**
      * Doctrine entity manager.
