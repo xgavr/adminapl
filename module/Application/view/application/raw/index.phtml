@@ -64,13 +64,37 @@ $this->pageBreadcrumbs()->setItems([
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
                 <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Прайсы                       
+                        <div class="clearfix"></div>
+                    </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            Всего прайсов: <?= $raws->getTotalItemCount(); ?><br/>
-                            <?php foreach($statuses as $status):?>
-                                <?= $status['name']?>: <?= $status['status_count']?><br/>                                
+                            <?php foreach($rawStatuses as $rawStatus):?>
+                                <?= $rawStatus['status_count']?>: <?= $rawStatus['name']?><br/>                                
                             <?php endforeach;?>
                         </div>
+                    </div>
+                    <div class="panel-footer">
+                        Всего: <?= $raws->getTotalItemCount(); ?><br/>                        
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Строки прайсов                       
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <?php $totalStatusCount = 0?>
+                            <?php foreach($statuses as $status):?>
+                                <?= $status['status_count']?>: <?= $status['name']?><br/>                                
+                                <?php $totalStatusCount += $status['status_count']?>
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        Всего: <?= $totalStatusCount ?><br/>                        
                     </div>
                 </div>
             </div>

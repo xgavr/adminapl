@@ -180,6 +180,10 @@ class ParseManager {
                         return $raw;
                     }
                 }
+                
+                $raw->setStatus(Raw::STATUS_PARSED);
+                $this->entityManager->persist($raw);
+                $this->entityManager->flush();
             }
         }
         
@@ -204,6 +208,35 @@ class ParseManager {
             
         }
         return;
+    }
+    
+    /*
+     * Поиск прайсов на удаление
+     */
+    public function findRawForDelete()
+    {
+        $raws = $this->entityManager->getRepository(Raw::class)
+                ->findBy(['status' => Raw::STATUS_ACTIVE], ['id' => 'ASC'])
+                ;
+        foreach ($raws as $raw){
+            $priceDescriptions = $this->entityManager->getRepository(PriceDescription::class)
+                    ->findBy(['supplier' => $raw->getSupplier()->getId(), 'status' => PriceDescription::STATUS_ACTIVE]);
+            if (count($priceDescriptions)){
+                $statuses = $this->entityManager->getRepository(Raw::class)
+                        ->rawpriceStatuses($raw);
+                foreach ($statuses as $status){
+                    if ($status['status'] == Rawprice::STATUS_PARSE && $status['status_count']){
+                        return;
+                    }
+                    if ($status['status'] == Rawprice::STATUS_NEW && $status['status_count']){
+                        return;
+                    }
+                }
+            }
+        }
+        
+        return;
+        
     }
     
     /*

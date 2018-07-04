@@ -122,6 +122,24 @@ class RawRepository extends EntityRepository{
     }
     
     /*
+     * Получить статусы состояния прайсов
+     * @var Apllication\Entity\Raw
+     * 
+     */
+    public function rawStatuses()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r.status as status, count(r.id) as status_count')
+                ->from(Raw::class, 'r')
+                ->groupBy('r.status')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /*
      * Получить записи для разбора
      */
     public function findRawpriceForParse($raw)

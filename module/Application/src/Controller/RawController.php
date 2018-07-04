@@ -66,10 +66,17 @@ class RawController extends AbstractActionController
             $statuses[$key]['name'] = Rawprice::getStatusName($status['status']);
         }
         
+        $rawStatuses = $this->entityManager->getRepository(Raw::class)
+                ->rawStatuses();
+        foreach ($rawStatuses as $key => $status){
+            $rawStatuses[$key]['name'] = Raw::getStatusName($status['status']);
+        }
+        
         // Визуализируем шаблон представления.
         return new ViewModel([
             'raws' => $paginator,
             'statuses' => $statuses,
+            'rawStatuses' => $rawStatuses,
         ]);  
     }
     

@@ -21,8 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Raw {
     
      // Supplier status constants.
-    const STATUS_ACTIVE       = 1; // Active user.
-    const STATUS_RETIRED      = 2; // Retired user.
+    const STATUS_ACTIVE       = 1; // Active raw.
+    const STATUS_RETIRED      = 2; // Retired raw.
+    const STATUS_PARSED       = 3; //Разобран
     
            
     /**
@@ -127,8 +128,9 @@ class Raw {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_RETIRED => 'Retired'
+            self::STATUS_ACTIVE => 'Новый',
+            self::STATUS_RETIRED => 'Удалить',
+            self::STATUS_PARSED => 'Разобран',
         ];
     }    
     
@@ -145,6 +147,15 @@ class Raw {
         return 'Unknown';
     }    
     
+    public function getStatusName($status)
+    {
+        $list = self::getStatusList();
+        if (isset($list[$status]))
+            return $list[$status];
+        
+        return 'Unknown';        
+    }
+        
     public function getStatusActive()
     {
         return self::STATUS_ACTIVE;
