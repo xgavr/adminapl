@@ -211,7 +211,7 @@ class ParseManager {
      * @var Application\Entity\Raw @raw
      * 
      */
-    public function parseRaw($raw)
+    public function parseRaw($raw = null)
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
