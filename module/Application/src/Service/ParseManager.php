@@ -217,7 +217,7 @@ class ParseManager {
         set_time_limit(0);
         $i = 0;
         
-        if (!raw){
+        if (!$raw){
             $raw = $this->findRawForParse();
         }    
         
