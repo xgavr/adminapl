@@ -60,7 +60,21 @@ $this->pageBreadcrumbs()->setItems([
                     ['route' => array('route' => 'raw')]); ?>
         
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Всего прайсов: <?= $raws->getTotalItemCount(); ?><br/>
+                            <?php foreach($statuses as $status):?>
+                                <?= $status['name']?>: <?= $status['status_count']?><br/>                                
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>    
 </div>
 
