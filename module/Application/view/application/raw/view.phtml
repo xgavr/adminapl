@@ -65,6 +65,12 @@ $this->pageBreadcrumbs()->setItems([
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Еще прайсы от <?= $raw->getSupplier()->getName()?>
+                    <div class="pull-right">
+                        <button value="/rawprice/old-raw/<?= $raw->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Разобрать">
+                                Проверить на удаление
+                        </button>                            
+                    </div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
