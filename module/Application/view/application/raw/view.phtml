@@ -61,6 +61,36 @@ $this->pageBreadcrumbs()->setItems([
     
             </div>
         </div> 
+        <?php if($otherRaws):?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Еще прайсы от <?= $raw->getSupplier()->getName()?>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <?php foreach($otherRaws as $otherRaw):?>
+                           <tr>
+                                <td>
+                                    <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$otherRaw[0]->getId()]); ?>">            
+                                        <?= $this->escapeHtml($otherRaw[0]->getBasename()); ?>
+                                    </a>    
+                                </td>
+                                <td><?= $this->escapeHtml($otherRaw['rowcount']); ?></td>
+                                <td><?= $this->escapeHtml($otherRaw[0]->getStatusAsString()); ?></td>
+                                <td><?= $this->escapeHtml($otherRaw[0]->getDateCreated()); ?></td>
+                                <td>
+                                    <button value="/raw/delete-form/<?= $otherRaw[0]->getId() ?>" class="btn btn-danger btn-xs this-delete"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                                                           
+                                </td>    
+                           </tr>
+                        <?php endforeach;?>
+                    </table>           
+                </div>
+            </div>
+        <?php endif;?>        
     </div>    
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
@@ -131,38 +161,7 @@ $this->pageBreadcrumbs()->setItems([
                         </div>
                             
                     <?php endforeach;?>
-                </div>
-                
-                <?php if($otherRaws):?>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Еще прайсы от <?= $raw->getSupplier()->getName()?>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="panel-body">
-                            <table class="table table-striped">
-                                <?php foreach($otherRaws as $otherRaw):?>
-                                   <tr>
-                                        <td>
-                                            <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$otherRaw[0]->getId()]); ?>">            
-                                                <?= $this->escapeHtml($otherRaw[0]->getBasename()); ?>
-                                            </a>    
-                                        </td>
-                                        <td><?= $this->escapeHtml($otherRaw['rowcount']); ?></td>
-                                        <td><?= $this->escapeHtml($otherRaw[0]->getStatusAsString()); ?></td>
-                                        <td><?= $this->escapeHtml($otherRaw[0]->getDateCreated()); ?></td>
-                                        <td>
-                                            <button value="/raw/delete-form/<?= $otherRaw[0]->getId() ?>" class="btn btn-danger btn-xs this-delete"
-                                                    title="Удалить">
-                                                <span class="glyphicon glyphicon-remove" ></span>
-                                            </button>                                                           
-                                        </td>    
-                                   </tr>
-                                <?php endforeach;?>
-                            </table>           
-                        </div>
-                    </div>
-                <?php endif;?>
+                </div>                
             </div>
         </div>
     </div>    
