@@ -279,6 +279,7 @@ class ParseManager {
             $priceDescriptionFunc = $this->getPriceDescriptionFunc($raw);
 
             if (count($priceDescriptionFunc)){
+                
                 foreach ($rawprices as $rawprice){
 
                     if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
@@ -289,6 +290,20 @@ class ParseManager {
                             $this->entityManager->flush();
                         }
                     }    
+                }
+                
+                $parsedAll = true;
+                $statuses = $this->entityManager->getRepository(Raw::class)
+                        ->rawpriceStatuses($raw);
+                foreach ($statuses as $status){
+                    if ($status['status'] == Rawprice::STATUS_NEW && $status['status_count']){
+                        $parsedAll = false;
+                    }
+                }
+                
+                if ($parsedAll){
+                    $raw->setStatus(Raw::STATUS_PARSED);
+                    $this->entityManager->persist($raw);                    
                 }
 
                 $this->entityManager->flush();
