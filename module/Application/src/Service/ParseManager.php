@@ -230,8 +230,6 @@ class ParseManager {
             $oldRaws = $this->entityManager->getRepository(Raw::class)
                     ->findOldRaw($raw);
             
-            var_dump(count($oldRaws)); exit;
-            
             foreach ($oldRaws as $oldRaw){
                 foreach ($rawprices as $rawprice){
                     if ($rawprice->getProducer() && $rawprice->getArticle()){
@@ -247,6 +245,9 @@ class ParseManager {
                         }
                     }    
                 }
+
+                var_dump($coincidence); exit;
+            
                 
                 if (($coincidence *100/ $i) > 30){
                     $oldRaw->setStatus(Raw::STATUS_RETIRED);
