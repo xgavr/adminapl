@@ -68,6 +68,7 @@ class RawRepository extends EntityRepository{
             //->orderBy('c.id')
             ->setParameter('1', $raw->getId())    
                 ;
+        
         if ($status){
             $queryBuilder->andWhere('c.status = ?2')
             ->setParameter('2', (int) $status)    

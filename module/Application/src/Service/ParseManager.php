@@ -224,7 +224,7 @@ class ParseManager {
         $coincidence = 0;
         
         if ($raw){
-            $rawprices = $this->entityManager->getRepository(Raw::class)
+            $rawprices = $this->entityManager->getRepository(Rawprice::class)
                     ->findRawRawprice($raw);
             var_dump(count($rawprices)); exit;
             $oldRaws = $this->entityManager->getRepository(Raw::class)
