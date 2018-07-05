@@ -232,6 +232,8 @@ class ParseManager {
             
             foreach ($oldRaws as $oldRaw){
                 foreach ($rawprices as $rawprice){
+                    var_dump($rawprice->getProducer());
+                    var_dump($rawprice->getArticle()); exit;
                     if ($rawprice->getProducer() && $rawprice->getArticle()){
                         $oldRawprices = $this->entityManager->getRepository(Rawprice::class)
                                 ->findBy(['raw' => $oldRaw->getId(), 'producer' => $rawprice->getProducer(), 'article' => $rawprice->getArticle()]);
