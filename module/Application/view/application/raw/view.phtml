@@ -140,9 +140,26 @@ $this->pageBreadcrumbs()->setItems([
                             <div class="clearfix"></div>
                         </div>
                         <div class="panel-body">
-                            <?php foreach($otherRaws as $otherRaw):?>
-                                
-                            <?php endforeach;?>
+                            <table class="table table-striped">
+                                <?php foreach($otherRaws as $otherRaw):?>
+                                   <tr>
+                                        <td>
+                                            <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$otherRaw[0]->getId()]); ?>">            
+                                                <?= $this->escapeHtml($otherRaw[0]->getBasename()); ?>
+                                            </a>    
+                                        </td>
+                                        <td><?= $this->escapeHtml($otherRaw['rowcount']); ?></td>
+                                        <td><?= $this->escapeHtml($otherRaw[0]->getStatusAsString()); ?></td>
+                                        <td><?= $this->escapeHtml($otherRaw[0]->getDateCreated()); ?></td>
+                                        <td>
+                                            <button value="/raw/delete-form/<?= $otherRaw[0]->getId() ?>" class="btn btn-danger btn-xs this-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                           
+                                        </td>    
+                                   </tr>
+                                <?php endforeach;?>
+                            </table>           
                         </div>
                     </div>
                 <?php endif;?>
