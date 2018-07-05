@@ -225,7 +225,8 @@ class ParseManager {
         
         if ($raw){
             $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                    ->findBy(['raw' => $raw->getId()]);
+                    ->findRawRawprice($raw)
+                    ->getResult();
             var_dump(count($rawprices)); exit;
             $oldRaws = $this->entityManager->getRepository(Raw::class)
                     ->findOldRaw($raw);
