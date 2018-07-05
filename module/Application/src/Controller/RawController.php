@@ -52,8 +52,10 @@ class RawController extends AbstractActionController
     {
         $page = $this->params()->fromQuery('page', 1);
         
+        $status = $this->params()->fromQuery('status');
+        
         $query = $this->entityManager->getRepository(Raw::class)
-                    ->findAllRaw();
+                    ->findAllRaw($status);
                 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
@@ -119,6 +121,12 @@ class RawController extends AbstractActionController
         $paginator->setCurrentPageNumber($page);
         
         $priceDescriptionForm = new PriceDescriptionForm();
+        
+        $otherRaws = $this->entityManager->getRepository(Raw::class)
+            ->findAllRaw(null, $raw->getSupplier(), $raw)
+            ->getResult()
+                ;
+
         // Render the view template.
         return new ViewModel([
             'raw' => $raw,
@@ -127,6 +135,7 @@ class RawController extends AbstractActionController
             'priceDescriptionElements' => $priceDescriptionForm->getElements(),
             'statuses' => $statuses,
             'status' => $status,
+            'otherRaws' => $otherRaws,
         ]);
     }      
     

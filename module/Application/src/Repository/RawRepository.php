@@ -18,7 +18,7 @@ use Application\Entity\Rawprice;
  */
 class RawRepository extends EntityRepository{
 
-    public function findAllRaw()
+    public function findAllRaw($status = null, $supplier = null, $exceptRaw = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -30,7 +30,25 @@ class RawRepository extends EntityRepository{
             ->groupBy('c.id')     
             ->orderBy('c.id', 'DESC')
                 ;
-//var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        
+        if ($status){
+            $queryBuilder->andWhere('c.status = ?2')
+            ->setParameter('2', (int) $status)    
+                ;                    
+        }
+
+        if ($supplier){
+            $queryBuilder->andWhere('c.supplier = ?3')
+            ->setParameter('3', $supplier->getId())    
+                ;                    
+        }
+
+        if ($exceptRaw){
+            $queryBuilder->andWhere('c.id != ?4')
+            ->setParameter('4', $exceptRaw->getId())    
+                ;                    
+        }
+
         return $queryBuilder->getQuery();
     }        
 
@@ -47,7 +65,7 @@ class RawRepository extends EntityRepository{
         $queryBuilder->select('c')
             ->from(Rawprice::class, 'c')
             ->where('c.raw = ?1')    
-            ->orderBy('c.id')
+            //->orderBy('c.id')
             ->setParameter('1', $raw->getId())    
                 ;
         if ($status){
@@ -160,6 +178,29 @@ class RawRepository extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();
     }
     
+    /*
+     * Поиск старых прайсов по отношению к данному прайсу
+     * @var Apllication\Entity\Raw
+     * 
+     */
+    public function findOldRaw($raw)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r')
+                ->from(Raw::class, 'r')
+                ->where('r.supplier = ?1')
+                ->andWhere('r.id < ?2')
+                ->andWhere('r.status = ?3')
+                ->setParameter('1', $raw->getSupplier()->getId())
+                ->setParameter('2', $raw->getId())
+                ->setParameter('3', Raw::STATUS_PARSED)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
     
     /*
      * Удаление raw

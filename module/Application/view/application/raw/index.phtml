@@ -70,13 +70,15 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
+                            <?php $totalRawStatusCount = 0?>
                             <?php foreach($rawStatuses as $rawStatus):?>
-                                <?= $rawStatus['status_count']?>: <?= $rawStatus['name']?><br/>                                
+                                <?= $rawStatus['status_count']?>: <a href="<?= $this->url('raw', ['action' => 'index'], ['query' => ['status' => $rawStatus['status']]])?>"><?= $rawStatus['name']?></a><br/>                                
+                                <?php $totalRawStatusCount += $rawStatus['status_count']?>
                             <?php endforeach;?>
                         </div>
                     </div>
                     <div class="panel-footer">
-                        Всего: <?= $raws->getTotalItemCount(); ?><br/>                        
+                        Всего: <?= $totalRawStatusCount; ?><br/>                        
                     </div>
                 </div>
                 <div class="panel panel-info">

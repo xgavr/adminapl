@@ -133,6 +133,20 @@ $this->pageBreadcrumbs()->setItems([
                             
                     <?php endforeach;?>
                 </div>
+                
+                <?php if($otherRaws):?>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Еще прайсы от <?= $raw->getSupplier()->getName()?>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <?php foreach($otherRaws as $otherRaw):?>
+                                
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                <?php endif;?>
             </div>
         </div>
     </div>    

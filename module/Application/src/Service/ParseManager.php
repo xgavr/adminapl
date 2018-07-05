@@ -163,6 +163,7 @@ class ParseManager {
     
     /*
      * Поиск прайса для разбоки
+     * return Application\Entity\Raw
      */
     public function findRawForParse()
     {
@@ -211,32 +212,51 @@ class ParseManager {
     }
     
     /*
-     * Поиск прайсов на удаление
+     * Поиск и пометка старых прайсов на удаление
+     * @var Application\Entity\Raw @raw
+     * 
      */
-    public function findRawForDelete()
-    {
-        $raws = $this->entityManager->getRepository(Raw::class)
-                ->findBy(['status' => Raw::STATUS_ACTIVE], ['id' => 'ASC'])
-                ;
-        foreach ($raws as $raw){
-            $priceDescriptions = $this->entityManager->getRepository(PriceDescription::class)
-                    ->findBy(['supplier' => $raw->getSupplier()->getId(), 'status' => PriceDescription::STATUS_ACTIVE]);
-            if (count($priceDescriptions)){
-                $statuses = $this->entityManager->getRepository(Raw::class)
-                        ->rawpriceStatuses($raw);
-                foreach ($statuses as $status){
-                    if ($status['status'] == Rawprice::STATUS_PARSE && $status['status_count']){
-                        return;
-                    }
-                    if ($status['status'] == Rawprice::STATUS_NEW && $status['status_count']){
-                        return;
-                    }
+    
+    public function setOldRaw($raw)
+    {        
+        $i = 0;
+        $batch_count = 100;
+        $coincidence = 0;
+        
+        if ($raw){
+            $rawprices = $this->entityManager->getRepository(Raw::class)
+                    ->findRawRawprice($raw);
+            
+            $oldRaws = $this->entityManager->getRepository(Raw::class)
+                    ->findOldRaw($raw);
+            
+            foreach ($oldRaws as $oldRaw){
+                foreach ($rawprices as $rawprice){
+                    if ($rawprice->getProducer() && $rawprice->getArticle()){
+                        $oldRawprices = $this->entityManager->getRepository(Rawprice::class)
+                                ->findBy(['raw' => $oldRaw->getId(), 'producer' => $rawprice->getProducer(), 'article' => $rawprice->getArticle()]);
+                        if ($oldRawprices){
+                            $coincidence++;
+                        }
+                        
+                        $i++;
+                        if ($i >= $batch_count){
+                            break;
+                        }
+                    }    
                 }
-            }
-        }
+                
+                if (($coincidence *100/ $i) > 30){
+                    $oldRaw->setStatus(Raw::STATUS_RETIRED);
+                    $this->entityManager->persist($oldRaw);
+                }                      
+            }    
+            
+            $this->entityManager->flush();
+            
+        }  
         
         return;
-        
     }
     
     /*
