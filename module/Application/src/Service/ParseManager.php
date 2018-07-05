@@ -219,6 +219,12 @@ class ParseManager {
     
     public function setOldRaw($raw)
     {        
+        if ($raw->getStatus() == Raw::STATUS_PARSED){
+            
+        } else {
+            return;
+        }
+        
         $i = 0;
         $batch_count = 100;
         $coincidence = 0;
@@ -311,6 +317,8 @@ class ParseManager {
                     $raw->setStatus(Raw::STATUS_PARSED);
                     $this->entityManager->persist($raw);                    
                     $this->entityManager->flush();
+                    
+                    $this->setOldRaw($raw);
                 }
 
                 $this->entityManager->clear();
