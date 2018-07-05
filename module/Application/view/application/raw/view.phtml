@@ -11,11 +11,6 @@ $this->pageBreadcrumbs()->setItems([
 
 ?>
 
-<h1>
-    <?= $this->escapeHtml($raw->getSupplier()->getName().' прайс '. $raw->getBasename()); ?>    
-</h1>
-
-
 <div class="row">
     <div class="col-md-9">
         <div class="panel panel-default">
@@ -73,6 +68,10 @@ $this->pageBreadcrumbs()->setItems([
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $raw->getSupplier()->getId()])?>"><?= $raw->getSupplier()->getName() ?></a>
+                        <br/>
+                        <?= $this->escapeHtml($raw->getBasename()); ?>
+                        <br/>
+                        <?= $this->escapeHtml($raw->getStatusAsString()); ?>
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
