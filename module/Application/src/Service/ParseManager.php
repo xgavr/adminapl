@@ -292,6 +292,8 @@ class ParseManager {
                     }    
                 }
                 
+                $this->entityManager->flush();
+                
                 $parsedAll = true;
                 $statuses = $this->entityManager->getRepository(Raw::class)
                         ->rawpriceStatuses($raw);
@@ -304,9 +306,9 @@ class ParseManager {
                 if ($parsedAll){
                     $raw->setStatus(Raw::STATUS_PARSED);
                     $this->entityManager->persist($raw);                    
+                    $this->entityManager->flush();
                 }
 
-                $this->entityManager->flush();
                 $this->entityManager->clear();
             }    
         }    
