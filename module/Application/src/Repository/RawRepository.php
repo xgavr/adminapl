@@ -56,7 +56,7 @@ class RawRepository extends EntityRepository{
      * @var Apllication\Entity\Raw
      * $var int status
      */
-    public function findRawRawprice($raw, $status = null)
+    public function findRawRawprice($raw, $status = null, $limit = 0)
     {
         $entityManager = $this->getEntityManager();
 
@@ -73,6 +73,10 @@ class RawRepository extends EntityRepository{
             $queryBuilder->andWhere('c.status = ?2')
             ->setParameter('2', (int) $status)    
                 ;                    
+        }
+
+        if ($limit){
+            $queryBuilder->setMaxResults($limit);
         }
 
         return $queryBuilder->getQuery();
