@@ -466,18 +466,11 @@ class RawManager {
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(0);
-        
-        $rawprices = $raw->getRawprice();
-        
-//        foreach ($rawprices as $rawprice){
-//            $this->entityManager->remove($rawprice);            
-//        }        
-        
+                
         $this->entityManager->getRepository(Raw::class)->deleteRawprices($raw);
         
         $this->entityManager->remove($raw);
         $this->entityManager->flush();
-        $this->entityManager->clear();
     }
         
 }

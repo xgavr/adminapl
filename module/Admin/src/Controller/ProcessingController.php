@@ -205,4 +205,23 @@ class ProcessingController extends AbstractActionController
         );
     }
     
+    /*
+     * Удаление старых прайсов
+     */
+    public function deleteOldPricesAction()
+    {
+        set_time_limit(0);
+        
+        $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findRawForRemove();
+        
+        foreach ($raws as $raw){
+            $this->rawManager->removeRaw($raw);
+        }
+        
+        return new JsonModel(
+            ['ok']
+        );
+    }
+    
 }

@@ -208,6 +208,24 @@ class RawRepository extends EntityRepository{
     }
     
     /*
+     * Поиск прайсов для удаления
+     */
+    public function findRawForRemove()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r')
+                ->from(Raw::class, 'r')
+                ->where('r.dateCreated <= ?1')
+                ->setParameter('1', date('Y-m-d', strtotime('-1 week')))
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+
+
+    /*
      * Удаление raw
      * @var Apllication\Entity\Raw
      * 

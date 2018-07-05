@@ -328,7 +328,6 @@ class ParseManager {
         return;
     }
     
-
     /*
      * Собрать неизвестных поставщиков
      * @var Application\Entity\Rawprice
