@@ -235,7 +235,7 @@ class ParseManager {
                     if ($rawprice->getProducer() && $rawprice->getArticle()){
                         $oldRawprices = $this->entityManager->getRepository(Rawprice::class)
                                 ->findBy(['raw' => $oldRaw->getId(), 'producer' => $rawprice->getProducer(), 'article' => $rawprice->getArticle()]);
-                var_dump($oldRawprices); exit;
+
                         if ($oldRawprices){
                             $coincidence++;
                         }
