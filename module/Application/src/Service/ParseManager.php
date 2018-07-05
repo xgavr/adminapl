@@ -300,7 +300,7 @@ class ParseManager {
                         $parsedAll = false;
                     }
                 }
-                var_dump($statuses);
+                var_dump($parsedAll);
                 if ($parsedAll){
                     $raw->setStatus(Raw::STATUS_PARSED);
                     $this->entityManager->persist($raw);                    
