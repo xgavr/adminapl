@@ -101,6 +101,7 @@ class PriceManager {
     
     public function putPriceFileToApl($supplier, $filename)
     {
+        setlocale(LC_ALL, 'ru_RU.UTF-8');
         if (file_exists($filename)){
             $pathinfo = pathinfo($filename);
             $destfile = '/'.$supplier->getAplId().'/'.$pathinfo['basename'];
@@ -157,6 +158,7 @@ class PriceManager {
      */
     public function getPriceByLink($priceGetting)
     {
+        setlocale(LC_ALL, 'ru_RU.UTF-8');
         if ($priceGetting->getLink()){
             $pathinfo = pathinfo($priceGetting->getLink());
             
