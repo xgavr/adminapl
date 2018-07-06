@@ -168,7 +168,7 @@ class ParseManager {
     public function findRawForParse()
     {
         $raws = $this->entityManager->getRepository(Raw::class)
-                ->findBy(['status' => Raw::STATUS_ACTIVE], ['id' => 'ASC'])
+                ->findBy(['status' => Raw::STATUS_ACTIVE], ['id' => 'DESC'])
                 ;
         foreach ($raws as $raw){
             $priceDescriptions = $this->entityManager->getRepository(PriceDescription::class)
