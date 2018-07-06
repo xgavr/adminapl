@@ -225,9 +225,7 @@ class ParseManager {
             return;
         }
         
-        $i = 0;
-        $batch_count = 100;
-        $coincidence = 0;
+        $batch_count = 101;
         
         if ($raw){
             $rawprices = $this->entityManager->getRepository(Rawprice::class)
@@ -238,6 +236,8 @@ class ParseManager {
                     ->findOldRaw($raw);
             
             foreach ($oldRaws as $oldRaw){
+                $i = 1;
+                $coincidence = 0;
                 foreach ($rawprices as $rawprice){
                     if ($rawprice->getProducer() && $rawprice->getArticle()){
                         $oldRawprices = $this->entityManager->getRepository(Rawprice::class)
