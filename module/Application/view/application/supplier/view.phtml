@@ -466,11 +466,13 @@ $this->headScript()
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-body">
-                        <button value="/supplier/upload-price-form/<?= $supplier->getId() ?>" class="btn btn-info btn-xs"
-                                data-toggle="modal" data-target="#modal-dialog" title="Загрузить прайс">
-                            <span class="glyphicon glyphicon-export" >Загрузить прайс</span>
-                        </button>                            
-                    </div>
+                        <div class="pull-right">                                
+                            <button value="/supplier/upload-price-form/<?= $supplier->getId() ?>" class="btn btn-info btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Загрузить прайс">
+                                <span class="glyphicon glyphicon-export" >Загрузить прайс</span>
+                            </button>                            
+                        </div>
+                    </div>    
                 </div>
             </div>
         </div>
