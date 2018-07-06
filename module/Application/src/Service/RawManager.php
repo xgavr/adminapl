@@ -125,7 +125,7 @@ class RawManager {
      */
     public function renameToArchive($supplier, $filename)            
     {
-        setlocale(LC_ALL, 'ru_RU.UTF-8');
+        setlocale(LC_ALL, 'en_US.UTF-8');
 
         if (file_exists($filename)){
             $pathinfo = pathinfo($filename);
@@ -148,7 +148,7 @@ class RawManager {
     
     public function uploadRawpriceCsv($supplier, $filename)
     {
-        setlocale(LC_ALL, 'ru_RU.UTF-8');
+        setlocale(LC_ALL, 'en_US.UTF-8');
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
         $i = 0;
@@ -229,7 +229,7 @@ class RawManager {
     
     public function uploadRawpriceXls($supplier, $filename)
     {
-        setlocale(LC_ALL, 'ru_RU.UTF-8');
+        setlocale(LC_ALL, 'en_US.UTF-8');
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
         $i = 0;
@@ -323,7 +323,7 @@ class RawManager {
     
     public function uploadRawpriceXls2($supplier, $filename)
     {
-        setlocale(LC_ALL, 'ru_RU.UTF-8');
+        setlocale(LC_ALL, 'en_US.UTF-8');
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
         $i = 0;
@@ -408,7 +408,7 @@ class RawManager {
     
     public function uploadRawprice($supplier, $filename)
     {
-        setlocale(LC_ALL, 'ru_RU.UTF-8');
+        setlocale(LC_ALL, 'en_US.UTF-8');
         
         if (file_exists($filename)){
             
