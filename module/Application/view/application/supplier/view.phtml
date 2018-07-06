@@ -332,7 +332,37 @@ $this->headScript()
                 <?php endif; ?>
             </div>
         </div>
+        
         <div class="panel panel-default" id="section6">
+            <div class="panel-heading">
+                Загруженные прайсы
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <?php foreach($supplier->getRaw() as $raw):?>
+                       <tr>
+                            <td>
+                                <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$raw->getId()]); ?>">            
+                                    <?= $this->escapeHtml($raw->getBasename()); ?>
+                                </a>    
+                            </td>
+                            <td><?= $this->escapeHtml($raw['rowcount']); ?></td>
+                            <td><?= $this->escapeHtml($raw->getStatusAsString()); ?></td>
+                            <td><?= $this->escapeHtml($raw->getDateCreated()); ?></td>
+                            <td>
+                                <button value="/raw/delete-form/<?= $raw->getId() ?>" class="btn btn-danger btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                           
+                            </td>    
+                       </tr>
+                    <?php endforeach;?>
+                </table>           
+            </div>            
+        </div>
+        
+        <div class="panel panel-default" id="section7">
             <div class="panel-heading">
                 <h3 class="panel-title pull-left">Подвоз</h3>
                 <div class="pull-right">
@@ -377,7 +407,7 @@ $this->headScript()
                 <?php endif; ?>
             </div>
         </div>
-        <div class="panel panel-default" id="section7">
+        <div class="panel panel-default" id="section8">
             <div class="panel-heading">
                 <h3 class="panel-title pull-left">Получение электронных накладных</h3>
                 <div class="pull-right">
@@ -428,8 +458,9 @@ $this->headScript()
                             <li><a href="#section3">Контакты</a></li>
                             <li><a href="#section4">Юридические лица</a></li>
                             <li><a href="#section5">Настройки получения прайса</a></li>
-                            <li><a href="#section6">Подвоз</a></li>
-                            <li><a href="#section6">Получение электронных накладных</a></li>
+                            <li><a href="#section6">Загруженные прайсы</a></li>
+                            <li><a href="#section7">Подвоз</a></li>
+                            <li><a href="#section8">Получение электронных накладных</a></li>
                         </ul>
                     </div>
                 </div>
