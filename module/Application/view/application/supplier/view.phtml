@@ -340,18 +340,18 @@ $this->headScript()
             </div>
             <div class="panel-body">
                 <table class="table table-striped">
-                    <?php foreach($supplier->getRaw() as $raw):?>
+                    <?php foreach($raws as $raw):?>
                        <tr>
                             <td>
-                                <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$raw->getId()]); ?>">            
-                                    <?= $this->escapeHtml($raw->getBasename()); ?>
+                                <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$raw[0]->getId()]); ?>">            
+                                    <?= $this->escapeHtml($raw[0]->getBasename()); ?>
                                 </a>    
                             </td>
                             <td><?= $this->escapeHtml($raw['rowcount']); ?></td>
-                            <td><?= $this->escapeHtml($raw->getStatusAsString()); ?></td>
-                            <td><?= $this->escapeHtml($raw->getDateCreated()); ?></td>
+                            <td><?= $this->escapeHtml($raw[0]->getStatusAsString()); ?></td>
+                            <td><?= $this->escapeHtml($raw[0]->getDateCreated()); ?></td>
                             <td>
-                                <button value="/raw/delete-form/<?= $raw->getId() ?>" class="btn btn-danger btn-xs this-delete"
+                                <button value="/raw/delete-form/<?= $raw[0]->getId() ?>" class="btn btn-danger btn-xs this-delete"
                                         title="Удалить">
                                     <span class="glyphicon glyphicon-remove" ></span>
                                 </button>                                                           

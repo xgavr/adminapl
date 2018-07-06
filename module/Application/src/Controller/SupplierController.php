@@ -283,12 +283,18 @@ class SupplierController extends AbstractActionController
             $this->contactManager->addNewContact($supplier, $data);
         }
         
+        $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+            ->findAllRaw(null, $supplier)
+            ->getResult();
+
+        
         // Render the view template.
         return new ViewModel([
             'supplier' => $supplier,
             'legalContact' => $supplier->getLegalContact(),
             'supplierManager' => $this->supplierManager,
             'lastPrice' => $this->supplierManager->getLastPriceFile($supplier),
+            'raws' => $raws,
         ]);
     }    
     
