@@ -462,13 +462,30 @@ class RawManager {
         } 
         return;
     }
+    
+    /*
+     * Получить количестов строк прайса
+     */
+    public function getRawRowcount($raw)
+    {
+        $result = $this->entityManager->getRepository(Raw::class)
+                ->rawpriceCount($raw);
+        
+        return $result;
+    }
             
+    /*
+     * Удаление строки прайса
+     */
     public function removeRawprice($rawprice)
     {
         $this->entityManager->remove($rawprice);
         $this->entityManager->flush();        
     }
     
+    /*
+     * Удаление прайса
+     */
     public function removeRaw($raw)
     {
         ini_set('memory_limit', '1024M');

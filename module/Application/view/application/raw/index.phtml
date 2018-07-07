@@ -28,23 +28,23 @@ $this->pageBreadcrumbs()->setItems([
             <?php foreach ($raws as $row): ?>
             <tr>
                 <td>
-                        <?= $this->escapeHtml($row[0]->getId()); ?>
+                        <?= $this->escapeHtml($row->getId()); ?>
                 </td>
                 <td>
-                    <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $row[0]->getSupplier()->getId()])?>">
-                        <?= $this->escapeHtml($row[0]->getSupplier()->getName()); ?>
+                    <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $row->getSupplier()->getId()])?>">
+                        <?= $this->escapeHtml($row->getSupplier()->getName()); ?>
                     </a>
                 </td>
                 <td>
-                    <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$row[0]->getId()]); ?>">            
-                        <?= $this->escapeHtml($row[0]->getBasename()); ?>
+                    <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$row->getId()]); ?>">            
+                        <?= $this->escapeHtml($row->getBasename()); ?>
                     </a>    
                 </td>
-                <td><?= $this->escapeHtml($row['rowcount']); ?></td>
-                <td><?= $this->escapeHtml($row[0]->getStatusAsString()); ?></td>
-                <td><?= $this->escapeHtml($row[0]->getDateCreated()); ?></td>
+                <td><?= $rawManager->getRawRowcount($row); ?></td>
+                <td><?= $this->escapeHtml($row->getStatusAsString()); ?></td>
+                <td><?= $this->escapeHtml($row->getDateCreated()); ?></td>
                 <td>
-                    <button value="/raw/delete-form/<?= $row[0]->getId() ?>" class="btn btn-danger btn-xs this-delete"
+                    <button value="/raw/delete-form/<?= $row->getId() ?>" class="btn btn-danger btn-xs this-delete"
                             title="Удалить">
                         <span class="glyphicon glyphicon-remove" ></span>
                     </button>                                                           

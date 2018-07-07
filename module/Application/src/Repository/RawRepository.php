@@ -24,10 +24,8 @@ class RawRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c, count(r.id) as rowcount')
+        $queryBuilder->select('c')
             ->from(Raw::class, 'c')
-            ->leftJoin('c.rawprice', 'r')
-            ->groupBy('c.id')     
             ->orderBy('c.id', 'DESC')
                 ;
         
@@ -121,6 +119,32 @@ class RawRepository extends EntityRepository{
 
         return $queryBuilder->getQuery()->getResult();
     }  
+    
+    /*
+     * Получить количество строк прайса
+     * @var Apllication\Entity\Raw
+     * 
+     */
+    public function rawpriceCount($raw)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('count(r.id) as rowcount')
+                ->from(Rawprice::class, 'r')
+                ->where('r.raw = ?1')
+                ->groupBy('r.raw')
+                ->setParameter('1', $raw->getId())
+                ;
+        
+        $result = $queryBuilder->getQuery()->getSingleResult();
+
+        if ($result){
+            return $result['rowcount'];
+        }
+
+        return;
+    }
     
     /*
      * Получить статусы обработки прайса
