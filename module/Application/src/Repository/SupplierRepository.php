@@ -36,6 +36,9 @@ class SupplierRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }     
     
+    /*
+     * Поиск поставщиков у которых отсутствует описание полей
+     */
     public function absentPriceDescriptions()
     {
         $entityManager = $this->getEntityManager();
@@ -49,6 +52,28 @@ class SupplierRepository extends EntityRepository{
                 ->setParameter('1', Supplier::STATUS_ACTIVE)
                 ->leftJoin(\Application\Entity\PriceDescription::class, 'pd', 'WITH', 'pd.supplier = s.id')
                 ->having('price_description_count = 0')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
+    /*
+     * Поиск поставщиков у которых нет загруженных прайсов
+     */
+    public function absentRaws()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('s, count(r.id) as raw_count')
+                ->from(Supplier::class, 's')
+                ->groupBy('s.id')
+                ->where('s.status = ?1')
+                ->setParameter('1', Supplier::STATUS_ACTIVE)
+                ->leftJoin(\Application\Entity\Raw::class, 'r', 'WITH', 'r.supplier = s.id and r.status = ?2')
+                ->setParameter('2', \Application\Entity\Raw::STATUS_PARSED)
+                ->having('raw_count = 0')
                 ;
         
         return $queryBuilder->getQuery()->getResult();

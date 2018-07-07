@@ -89,10 +89,25 @@ $this->pageBreadcrumbs()->setItems([
                         Всего: <?= $totalStatusCount; ?><br/>                        
                     </div>
                 </div>
+                <?php if(count($absentRaws)):?>
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            !. Отсутствуют прайсы
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body panel-height" style="overflow-y: scroll;">
+                            <div class="pull-left">
+                                <?php foreach($absentRaws as $absentRaw):?>
+                                    <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $absentRaw[0]->getId()]) ?>"><?= $absentRaw[0]->getName()?></a><br/>                                
+                                <?php endforeach;?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <?php if(count($absentPriceDescriptions)):?>
                     <div class="panel panel-warning">
                         <div class="panel-heading">
-                            Отсутствуют описания полей
+                            !. Отсутствуют описания полей прайса
                             <div class="clearfix"></div>
                         </div>
                         <div class="panel-body panel-height" style="overflow-y: scroll;">

@@ -80,6 +80,9 @@ class SupplierController extends AbstractActionController
         
         $absentPriceDescriptions = $this->entityManager->getRepository(Supplier::class)
                 ->absentPriceDescriptions();
+
+        $absentRaws = $this->entityManager->getRepository(Supplier::class)
+                ->absentRaws();
         
         // Визуализируем шаблон представления.
         return new ViewModel([
@@ -87,6 +90,7 @@ class SupplierController extends AbstractActionController
             'supplierManager' => $this->supplierManager,
             'statuses' => $statuses,
             'absentPriceDescriptions' => $absentPriceDescriptions,
+            'absentRaws' => $absentRaws,
         ]);  
     }
     
