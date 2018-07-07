@@ -33,13 +33,16 @@ class Basename extends AbstractFilter
     
     public function filter($value)
     {
-        if (strpos($value, '/') === false) {
-            $path_parts = pathinfo('a'.$value);
-        } else {
-            $value= str_replace('/', '/a', $value);
-            $path_parts = pathinfo($value);
-        }
-        return substr($path_parts["basename"], 1);        
+//        if (strpos($value, '/') === false) {
+//            $path_parts = pathinfo('a'.$value);
+//        } else {
+//            $value= str_replace('/', '/a', $value);
+//            $path_parts = pathinfo($value);
+//        }
+//        return substr($path_parts["basename"], 1); 
+        
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        return pathinfo($value, PATHINFO_BASENAME);
     }
     
 }
