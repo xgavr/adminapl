@@ -289,6 +289,20 @@ class PostManager {
 	}
     }
     
+    protected function getBody($connection, $messageNumber, $encoding) 
+    {
+	
+	$data = imap_body($connection, $messageNumber);
+	switch($encoding) {
+		case 0: return $data; // 7BIT
+		case 1: return $data; // 8BIT
+		case 2: return $data; // BINARY
+		case 3: return base64_decode($data); // BASE64
+		case 4: return quoted_printable_decode($data); // QUOTED_PRINTABLE
+		case 5: return $data; // OTHER
+	}
+    }
+    
     protected function getFilenameFromPart($part)
     {        
 
@@ -311,7 +325,7 @@ class PostManager {
 	}
 
         return iconv_mime_decode($filename, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'utf-8');
-    }
+    }    
     
     /*
      * Чтение почтового ящика
@@ -356,14 +370,21 @@ class PostManager {
     //    
     //                }            
 
+//                    var_dump($connection);
+                    
                     $imap_obj = imap_check($connection);
 
                     if ($imap_obj->Nmsgs){
+    
+//                        var_dump($imap_obj->Nmsgs);
+                        
                         $messageNumber = 1;
                         while ($messageNumber <= $imap_obj->Nmsgs){
 
                             $structure = imap_fetchstructure($connection, $messageNumber);
                             $headers = imap_fetch_overview($connection, $messageNumber);
+
+//                            var_dump($structure); exit;
 
                             if (isset($headers[0])){
                                 $result[$messageNumber]['from'] = $headers[0]->from;
@@ -371,10 +392,24 @@ class PostManager {
                                 $result[$messageNumber]['date'] = $headers[0]->date;
                             }    
 
+//                            var_dump($headers); exit;                            
+//                            var_dump($structure->parts); exit;
+//                            var_dump($this->flattenParts($structure)); exit;
+
+                            $flattenedParts = [];
+                            
                             if (isset($structure->parts)){
                                 $flattenedParts = $this->flattenParts($structure->parts);
+                            } else{
+                                $flattenedParts[] = $structure;
+                            }
+                            
+                            if (count($flattenedParts)){
 
                                 foreach($flattenedParts as $partNumber => $part) {
+                                    
+//                                    var_dump($part); exit;
+                                    
                                     switch($part->type) {
                                         case 0:
                                             $charset = 'utf-8';
@@ -386,7 +421,12 @@ class PostManager {
                                             }    
 
                                             // the HTML or plain text part of the email
-                                            $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                            if (isset($structure->parts)){
+                                                $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                            } else {
+                                                $message = $this->getBody($connection, $messageNumber, $part->encoding);
+                                            }    
+                                            
                                             $message = iconv($charset, 'utf-8', $message);
                                             // now do something with the message, e.g. render it
                                             $result[$messageNumber]['content'][$part->subtype] = $message;
@@ -431,7 +471,12 @@ class PostManager {
 
                                                 if($filename) {
                                                         // it's an attachment
-                                                        $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                                        if (isset($structure->parts)){
+                                                            $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                                        } else {
+                                                            $attachment = $this->getBody($connection, $messageNumber, $part->encoding);
+                                                        }    
+//                                                        var_dump($attachment); exit;
                                                         // now do something with the attachment, e.g. save it somewhere
 
                                                         $temp_file = tempnam(sys_get_temp_dir(), 'Pst');
