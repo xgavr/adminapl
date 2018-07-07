@@ -62,18 +62,27 @@ class SupplierController extends AbstractActionController
     public function indexAction()
     {
         $page = $this->params()->fromQuery('page', 1);
+        $status = $this->params()->fromQuery('status');
         
         $query = $this->entityManager->getRepository(Supplier::class)
-                    ->findAllSupplier();
+                    ->findAllSupplier($status);
                 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
         $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
+        $paginator->setCurrentPageNumber($page);    
+        
+        $statuses = $this->entityManager->getRepository(Supplier::class)
+                ->statuses();
+        foreach ($statuses as $key => $status){
+            $statuses[$key]['name'] = Supplier::getStatusName($status['status']);
+        }
+        
         // Визуализируем шаблон представления.
         return new ViewModel([
             'supplier' => $paginator,
-            'supplierManager' => $this->supplierManager
+            'supplierManager' => $this->supplierManager,
+            'statuses' => $statuses,
         ]);  
     }
     

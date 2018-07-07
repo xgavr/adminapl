@@ -44,7 +44,14 @@ class Basename extends AbstractFilter
 //        setlocale(LC_ALL,'ru_RU.UTF-8');
 //        return pathinfo($value, PATHINFO_BASENAME);
         
-        return urldecode(pathinfo(urlencode($value), PATHINFO_BASENAME));
+//        return urldecode(pathinfo(urlencode($value), PATHINFO_BASENAME));
+
+        $separator = " qq ";
+        $path = preg_replace("/[^ ]/u", $separator."\$0".$separator, $value);
+        $base = basename($path);
+        $base = str_replace($separator, "", $base);
+
+        return $base;
     }
     
 }

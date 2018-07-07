@@ -45,6 +45,10 @@ $this->pageBreadcrumbs()->setItems([
                             ['action'=>'delete', 'id'=>$row->getId()]); ?>">
                         <span class="glyphicon glyphicon-remove"></span> Удалить
                     </a>
+                    <button value="/supplier/edit-form/<?= $row->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                        <span class="glyphicon glyphicon-edit" ></span>
+                    </button>                                                                               
                 </td>    
             </tr>
 
@@ -56,6 +60,7 @@ $this->pageBreadcrumbs()->setItems([
                     'application/partial/paginator', 
                     ['route' => array('route' => 'supplier')]); ?>
     </div>
+    
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
@@ -66,7 +71,15 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
+                            <?php $totalStatusCount = 0?>
+                            <?php foreach($statuses as $status):?>
+                                <?= $status['status_count']?>: <a href="<?= $this->url('supplier', ['action' => 'index'], ['query' => ['status' => $status['status']]])?>"><?= $status['name']?></a><br/>                                
+                                <?php $totalStatusCount += $status['status_count']?>
+                            <?php endforeach;?>
                         </div>
+                    </div>
+                    <div class="panel-footer">
+                        Всего: <?= $totalStatusCount; ?><br/>                        
                     </div>
                 </div>
             </div>                

@@ -17,7 +17,7 @@ use Application\Entity\Supplier;
  */
 class SupplierRepository extends EntityRepository{
 
-    public function findAllSupplier()
+    public function findAllSupplier($status = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -27,7 +27,30 @@ class SupplierRepository extends EntityRepository{
             ->from(Supplier::class, 'c')
             ->orderBy('c.id')
                 ;
+        if ($status){
+            $queryBuilder->andWhere('c.status = ?1')
+                    ->setParameter('1', $status);
+        }
 
         return $queryBuilder->getQuery();
-    }        
+    }      
+    
+    /*
+     * Получить статусы поставщиков
+     * @var Apllication\Entity\Raw
+     * 
+     */
+    public function statuses()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r.status as status, count(r.id) as status_count')
+                ->from(Supplier::class, 'r')
+                ->groupBy('r.status')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
 }

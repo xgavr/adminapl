@@ -187,7 +187,7 @@ class Supplier {
     {
         return [
             self::STATUS_ACTIVE => 'Действующий',
-            self::STATUS_RETIRED => 'В отключке'
+            self::STATUS_RETIRED => 'Отключен'
         ];
     }    
     
@@ -204,6 +204,15 @@ class Supplier {
         return 'Unknown';
     }    
     
+    public function getStatusName($status)
+    {
+        $list = self::getStatusList();
+        if (isset($list[$status]))
+            return $list[$status];
+        
+        return 'Unknown';        
+    }
+            
     public function getStatusActive()
     {
         return self::STATUS_ACTIVE;
