@@ -311,6 +311,7 @@ class SupplierController extends AbstractActionController
             'legalContact' => $supplier->getLegalContact(),
             'supplierManager' => $this->supplierManager,
             'lastPrice' => $this->supplierManager->getLastPriceFile($supplier),
+            'arxPrice' => $this->supplierManager->getArxPriceFile($supplier),
             'raws' => $raws,
         ]);
     }    
