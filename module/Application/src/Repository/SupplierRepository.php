@@ -34,7 +34,26 @@ class SupplierRepository extends EntityRepository{
         }
 
         return $queryBuilder->getQuery();
-    }      
+    }     
+    
+    public function absentPriceDescriptions()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('s, count(pd.id) as price_description_count')
+                ->from(Supplier::class, 's')
+                ->groupBy('s.id')
+                ->where('s.status = ?1')
+                ->setParameter('1', Supplier::STATUS_ACTIVE)
+                ->leftJoin(\Application\Entity\PriceDescription::class, 'pd', 'WITH', 'pd.supplier = s.id')
+                ->having('price_description_count = 0')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
     
     /*
      * Получить статусы поставщиков

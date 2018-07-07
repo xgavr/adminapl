@@ -78,11 +78,15 @@ class SupplierController extends AbstractActionController
             $statuses[$key]['name'] = Supplier::getStatusName($status['status']);
         }
         
+        $absentPriceDescriptions = $this->entityManager->getRepository(Supplier::class)
+                ->absentPriceDescriptions();
+        
         // Визуализируем шаблон представления.
         return new ViewModel([
             'supplier' => $paginator,
             'supplierManager' => $this->supplierManager,
             'statuses' => $statuses,
+            'absentPriceDescriptions' => $absentPriceDescriptions,
         ]);  
     }
     

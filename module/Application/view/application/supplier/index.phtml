@@ -8,6 +8,11 @@ $this->pageBreadcrumbs()->setItems([
             'Поставщики'=>$this->url('supplier'),
             ]);
 ?>
+<style>
+    .panel-height {
+      height: 100px;
+    }    
+</style>
 
 <p>
     <a class="btn btn-default" href="
@@ -84,6 +89,21 @@ $this->pageBreadcrumbs()->setItems([
                         Всего: <?= $totalStatusCount; ?><br/>                        
                     </div>
                 </div>
+                <?php if(count($absentPriceDescriptions)):?>
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            Отсутствуют описания полей
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body panel-height" style="overflow-y: scroll;">
+                            <div class="pull-left">
+                                <?php foreach($absentPriceDescriptions as $absentPriceDescription):?>
+                                    <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $absentPriceDescription[0]->getId()]) ?>"><?= $absentPriceDescription[0]->getName()?></a><br/>                                
+                                <?php endforeach;?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>                
         </div>
     </div>    
