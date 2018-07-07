@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Raw {
     
      // Supplier status constants.
+    const STATUS_LOAD       = 4; //В процессе загрузки
     const STATUS_ACTIVE       = 1; // Active raw.
     const STATUS_RETIRED      = 2; // Retired raw.
     const STATUS_PARSED       = 3; //Разобран
@@ -131,6 +132,7 @@ class Raw {
             self::STATUS_ACTIVE => 'Новый',
             self::STATUS_RETIRED => 'Удалить',
             self::STATUS_PARSED => 'Разобран',
+            self::STATUS_LOAD => 'Загружается',
         ];
     }    
     

@@ -171,7 +171,7 @@ class RawManager {
                     $raw = new Raw();
                     $raw->setSupplier($supplier);
                     $raw->setFilename($pathinfo['basename']);
-                    $raw->setStatus($raw->getStatusActive());
+                    $raw->setStatus(Raw::STATUS_LOAD);
 
                     $currentDate = date('Y-m-d H:i:s');
                     $raw->setDateCreated($currentDate);
@@ -207,6 +207,8 @@ class RawManager {
                         
                     }
                     
+                    $raw->setStatus(Raw::STATUS_ACTIVE);
+                    $this->entityManager->persist($raw);
                     $this->entityManager->flush();                    
                     $this->entityManager->clear();
 
@@ -243,7 +245,7 @@ class RawManager {
                 $raw = new Raw();
                 $raw->setSupplier($supplier);
                 $raw->setFilename($pathinfo['basename']);
-                $raw->setStatus($raw->getStatusActive());
+                $raw->setStatus(Raw::STATUS_LOAD);
 
                 $currentDate = date('Y-m-d H:i:s');
                 $raw->setDateCreated($currentDate);
@@ -301,6 +303,8 @@ class RawManager {
                     
                 }
                 
+                $raw->setStatus(Raw::STATUS_ACTIVE);
+                $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
                 $this->entityManager->clear();
 
@@ -340,7 +344,7 @@ class RawManager {
                 $raw = new Raw();
                 $raw->setSupplier($supplier);
                 $raw->setFilename($pathinfo['basename']);
-                $raw->setStatus($raw->getStatusActive());
+                $raw->setStatus(Raw::STATUS_LOAD);
 
                 $currentDate = date('Y-m-d H:i:s');
                 $raw->setDateCreated($currentDate);
@@ -386,6 +390,8 @@ class RawManager {
                     
                 }
                 
+                $raw->setStatus(Raw::STATUS_ACTIVE);
+                $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
                 $this->entityManager->clear();
 
