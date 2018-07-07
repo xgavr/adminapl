@@ -10,18 +10,16 @@ namespace Application\Service;
 
 use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Supplier;
-use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
-use Application\Entity\Goods;
 use Application\Filter\RawToStr;
 use Application\Filter\CsvDetectDelimiterFilter;
 use MvlabsPHPExcel\Service;
-use Zend\Json\Json;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 use Zend\Validator\File\IsCompressed;
 use Zend\Filter\Decompress;
+use Application\Filter\Basename;
 
 
 /**
@@ -125,7 +123,6 @@ class RawManager {
      */
     public function renameToArchive($supplier, $filename)            
     {
-        setlocale(LC_ALL, 'en_US.UTF-8');
 
         if (file_exists($filename)){
             $pathinfo = pathinfo($filename);
@@ -148,7 +145,6 @@ class RawManager {
     
     public function uploadRawpriceCsv($supplier, $filename)
     {
-        setlocale(LC_ALL, 'en_US.UTF-8');
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
         $i = 0;
@@ -158,6 +154,7 @@ class RawManager {
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
                 $pathinfo = pathinfo($filename);
+                $basenameFilter = new Basename();
                 
                 $lines = fopen($filename, 'r');
 
@@ -170,7 +167,7 @@ class RawManager {
 
                     $raw = new Raw();
                     $raw->setSupplier($supplier);
-                    $raw->setFilename($pathinfo['basename']);
+                    $raw->setFilename($basenameFilter->filter($filename));
                     $raw->setStatus(Raw::STATUS_LOAD);
 
                     $currentDate = date('Y-m-d H:i:s');
@@ -231,7 +228,6 @@ class RawManager {
     
     public function uploadRawpriceXls($supplier, $filename)
     {
-        setlocale(LC_ALL, 'en_US.UTF-8');
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
         $i = 0;
@@ -241,10 +237,11 @@ class RawManager {
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
                 $pathinfo = pathinfo($filename);
+                $basenameFilter = new Basename();
                 
                 $raw = new Raw();
                 $raw->setSupplier($supplier);
-                $raw->setFilename($pathinfo['basename']);
+                $raw->setFilename($basenameFilter->filter($filename));
                 $raw->setStatus(Raw::STATUS_LOAD);
 
                 $currentDate = date('Y-m-d H:i:s');
@@ -327,7 +324,6 @@ class RawManager {
     
     public function uploadRawpriceXls2($supplier, $filename)
     {
-        setlocale(LC_ALL, 'en_US.UTF-8');
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
         $i = 0;
@@ -337,13 +333,14 @@ class RawManager {
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
                 $pathinfo = pathinfo($filename);
+                $basenameFilter = new Basename();
                 
                 $mvexcel = new Service\PhpExcelService();
                 $excel = $mvexcel->createPHPExcelObject($filename);
 
                 $raw = new Raw();
                 $raw->setSupplier($supplier);
-                $raw->setFilename($pathinfo['basename']);
+                $raw->setFilename($basenameFilter->filter($filename));
                 $raw->setStatus(Raw::STATUS_LOAD);
 
                 $currentDate = date('Y-m-d H:i:s');
@@ -414,7 +411,6 @@ class RawManager {
     
     public function uploadRawprice($supplier, $filename)
     {
-        setlocale(LC_ALL, 'en_US.UTF-8');
         
         if (file_exists($filename)){
             
