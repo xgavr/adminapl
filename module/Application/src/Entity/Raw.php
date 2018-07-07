@@ -8,7 +8,7 @@
 
 namespace Application\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Application\Filter\Basename;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -93,8 +93,8 @@ class Raw {
 
     public function getBasename() 
     {
-        $path_parts = pathinfo($this->getFilename());
-        return $path_parts['basename'];
+        $basenameFilter = new Basename();
+        return $basenameFilter->filter($this->getFilename());
     }
 
     public function setFilename($filename) 

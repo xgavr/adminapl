@@ -312,6 +312,17 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     /**
      * {@inheritDoc}
      */
+    public function getStatusName($status)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStatusName', [$status]);
+
+        return parent::getStatusName($status);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getStatusActive()
     {
 

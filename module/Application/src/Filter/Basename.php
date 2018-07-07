@@ -41,8 +41,8 @@ class Basename extends AbstractFilter
 //        }
 //        return substr($path_parts["basename"], 1); 
         
-//        setlocale(LC_ALL,'ru_RU.UTF-8');
-//        return pathinfo($value, PATHINFO_BASENAME);
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        return pathinfo($value, PATHINFO_BASENAME);
         
 //        return urldecode(pathinfo(urlencode($value), PATHINFO_BASENAME));
 
@@ -51,9 +51,9 @@ class Basename extends AbstractFilter
 //        $base = basename($path);
 //        $base = str_replace($separator, "", $base);
         
-        $mas=explode("/",$value);
-
-        return $mas[sizeof($mas)-1];
+//        $mas=explode("/",$value);
+//
+//        return $mas[sizeof($mas)-1];
     }
     
 }
