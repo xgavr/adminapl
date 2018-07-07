@@ -24,8 +24,10 @@ class RawRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
+        $queryBuilder->select('c, count(r.id) as rowcount')
             ->from(Raw::class, 'c')
+            ->leftJoin('c.rawprice', 'r')
+            ->groupBy('c.id')     
             ->orderBy('c.id', 'DESC')
                 ;
         
@@ -130,20 +132,14 @@ class RawRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('count(r.id) as rowcount')
+        $queryBuilder->select('count(r.id) as rawprice_count')
                 ->from(Rawprice::class, 'r')
                 ->where('r.raw = ?1')
                 ->groupBy('r.raw')
                 ->setParameter('1', $raw->getId())
                 ;
-        
-        $result = $queryBuilder->getQuery()->getSingleResult();
 
-        if ($result){
-            return $result['rowcount'];
-        }
-
-        return;
+        return $queryBuilder->getQuery()->getResult();
     }
     
     /*

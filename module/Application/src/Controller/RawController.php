@@ -79,7 +79,6 @@ class RawController extends AbstractActionController
             'raws' => $paginator,
             'statuses' => $statuses,
             'rawStatuses' => $rawStatuses,
-            'rawManager' => $this->rawManager,
         ]);  
     }
     
