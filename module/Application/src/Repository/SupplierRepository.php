@@ -25,7 +25,8 @@ class SupplierRepository extends EntityRepository{
 
         $queryBuilder->select('c')
             ->from(Supplier::class, 'c')
-            ->orderBy('c.id')
+            ->orderBy('c.status')
+            ->addOrderBy('c.name')
                 ;
         if ($status){
             $queryBuilder->andWhere('c.status = ?1')

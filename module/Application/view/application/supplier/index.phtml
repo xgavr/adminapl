@@ -23,6 +23,7 @@ $this->pageBreadcrumbs()->setItems([
 
            <tr>
                 <th>ID</th>
+                <th>AplID</th>
                 <th>Наименование</th>
                 <th>Действие</th>
             </tr>
@@ -31,20 +32,21 @@ $this->pageBreadcrumbs()->setItems([
 
             <tr>
                 <td><?= $this->escapeHtml($row->getId()); ?></td>
+                <td><?= $this->escapeHtml($row->getAplId()); ?></td>
                 <td>
                     <a href="<?= $this->url('supplier', ['action'=>'view', 'id'=>$row->getId()]); ?>">
                         <?= $this->escapeHtml($row->getName()); ?>
                     </a> 
                 </td>
-                <td>
-                    <a class="btn btn-info" href="<?= $this->url('supplier', 
+                <td align="right">
+<!--                    <a class="btn btn-info" href="<?= $this->url('supplier', 
                             ['action'=>'edit', 'id'=>$row->getId()]); ?>">
                         <span class="glyphicon glyphicon-pencil" ></span> Изменить
                     </a>
                     <a class="btn btn-danger" href="<?= $this->url('supplier',
                             ['action'=>'delete', 'id'=>$row->getId()]); ?>">
                         <span class="glyphicon glyphicon-remove"></span> Удалить
-                    </a>
+                    </a>-->
                     <button value="/supplier/edit-form/<?= $row->getId() ?>" class="btn btn-default btn-xs"
                             data-toggle="modal" data-target="#modal-dialog" title="Изменить">
                         <span class="glyphicon glyphicon-edit" ></span>

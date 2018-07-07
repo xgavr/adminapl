@@ -46,12 +46,14 @@ class Basename extends AbstractFilter
         
 //        return urldecode(pathinfo(urlencode($value), PATHINFO_BASENAME));
 
-        $separator = " qq ";
-        $path = preg_replace("/[^ ]/u", $separator."\$0".$separator, $value);
-        $base = basename($path);
-        $base = str_replace($separator, "", $base);
+//        $separator = " qq ";
+//        $path = preg_replace("/[^ ]/u", $separator."\$0".$separator, $value);
+//        $base = basename($path);
+//        $base = str_replace($separator, "", $base);
+        
+        $mas=explode("/",$value);
 
-        return $base;
+        return $mas[sizeof($mas)-1];
     }
     
 }
