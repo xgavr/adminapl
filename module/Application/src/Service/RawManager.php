@@ -151,6 +151,10 @@ class RawManager {
         
         if (file_exists($filename)){
             
+            if (!filesize($filename)){
+                return;
+            }
+
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
                 $pathinfo = pathinfo($filename);
@@ -234,6 +238,10 @@ class RawManager {
         
         if (file_exists($filename)){
             
+            if (!filesize($filename)){
+                return;
+            }
+
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
                 $pathinfo = pathinfo($filename);
@@ -329,6 +337,10 @@ class RawManager {
         $i = 0;
         
         if (file_exists($filename)){
+            
+            if (!filesize($filename)){
+                return;
+            }
             
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
