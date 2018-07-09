@@ -115,8 +115,8 @@ class ParseManager {
         
             $resultParse = [];
             foreach ($spl as $priceDescription){
-                var_dump($spl[$priceDescription]);
-                var_dump(count($resultParse));
+//                var_dump($spl[$priceDescription]);
+//                var_dump(count($resultParse));
                 if (count($spl[$priceDescription]) > count($resultParse) - 1){
                     $resultParse = $spl[$priceDescription];
                     $resultParse['priceDescription'] = $priceDescription;
