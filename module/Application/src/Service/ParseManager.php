@@ -51,7 +51,7 @@ class ParseManager {
      */
     public function getPriceDescriptionFunc($raw)
     {
-        $result= [];
+        $spl = new \SplObjectStorage();
 
         $priceDescriptions = $raw->getSupplier()->getPriceDescriptions();
         $form = new PriceDescriptionForm();
@@ -59,18 +59,20 @@ class ParseManager {
 
         foreach($priceDescriptions as $priceDescription){
             if ($priceDescription->getStatus() == PriceDescription::STATUS_ACTIVE){
+                $result = [];
                 foreach ($elements as $element){
                     if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
                     $func = 'get'.ucfirst($element->getName());
                     if (method_exists($priceDescription, $func)){
-                        $result[$priceDescription->getId()][$element->getName()] = $priceDescription->$func();
+                        $result[$element->getName()] = $priceDescription->$func();
                     }
                 }
+                $spl[$priceDescription] = $result;
             }    
         }  
         
-        if (count($result)){
-            return $result;
+        if ($spl->count()){
+            return $spl;
         }
         
         return;
@@ -86,33 +88,39 @@ class ParseManager {
         if (!$priceDescriptionFunc){
             $priceDescriptionFunc = $this->getPriceDescriptionFunc($rawprice->getRaw());
         }
-        
+
         if (count($priceDescriptionFunc)){
-            $result= [];
+            $spl = new \SplObjectStorage();
     
             $rawdata = explode(';', $rawprice->getRawdata());
         
-            foreach ($priceDescriptionFunc as $priceDescriptionId => $elements){
-                foreach ($elements as $name => $value){
-                    $result[$priceDescriptionId][$name] = '';
+            foreach ($priceDescriptionFunc as $priceDescription){
+                $result = [];
+                foreach ($priceDescriptionFunc[$priceDescription] as $name => $value){
+                    $result[$name] = '';
                     if ($value && count($rawdata) >= $value){
-                        $result[$priceDescriptionId][$name] = $rawdata[$value - 1];                        
-                    } elseif ($value && $name == 'defaultProducer'){
-                        $result[$priceDescriptionId]['producer'] = $value;                                                
+                        $result[$name] = $rawdata[$value - 1];                        
                     }
                 }    
-            }
-
-            if (!count($result)) return;
-        
-            if (count($result) === 1){
-                foreach ($result as $parce){
-                    return $parce;
+                
+                if (!$result['producer'] && $priceDescriptionFunc[$priceDescription]['defaultProducer']){
+                    $result['producer'] = $priceDescriptionFunc[$priceDescription]['defaultProducer'];
                 }
-            } else {
-                //выбор лучшей разборки
-                return $result[0];
-            }        
+                
+                $spl[$priceDescription] = $result;
+            }
+            
+
+            if (!count($spl)) return;
+        
+            $resultParse = [];
+            foreach ($spl as $priceDescription){
+                if (count($spl[$priceDescription]) > count($resultParse)){
+                    $resultParse = $spl[$priceDescription];
+                    $resultParse['priceDescription'] = $priceDescription;
+                }
+            }
+            return $resultParse;
         }
         
         return;
@@ -152,6 +160,7 @@ class ParseManager {
         $rawprice->setMarkdown($data['markdown']);
         $rawprice->setSale($data['sale']);
         $rawprice->setImage($data['image']);
+        $rawprice->setPriceDescription($data['priceDescription']);
 
         $this->entityManager->persist($rawprice);
 
