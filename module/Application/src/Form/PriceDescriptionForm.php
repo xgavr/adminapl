@@ -86,6 +86,18 @@ class PriceDescriptionForm extends Form
             ],
         ]);
         
+        // Добавляем поле "defaultProducer"
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'defaultProducer',
+            'attributes' => [
+                'id' => 'defaultProducer'
+            ],
+            'options' => [
+                'label' => 'Производитель, если не указан',
+            ],
+        ]);
+        
         $this->add([           
             'type'  => 'text',
             'name' => 'country',
@@ -425,6 +437,25 @@ class PriceDescriptionForm extends Form
 //                ],
             ]);
         
+        $inputFilter->add([
+                'name'     => 'defaultProducer',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+//                'validators' => [
+//                    [
+//                        'name'    => 'StringLength',
+//                        'options' => [
+//                            'min' => 1,
+//                            'max' => 11
+//                        ],
+//                    ],
+//                ],
+            ]);
+
         $inputFilter->add([
                 'name'     => 'country',
                 'required' => false,

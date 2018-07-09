@@ -8,11 +8,8 @@
 namespace Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\PriceGetting;
-use Application\Entity\Supplier;
-use Application\Entity\Rawprice;
 
 
 class ProcessingController extends AbstractActionController
@@ -174,10 +171,7 @@ class ProcessingController extends AbstractActionController
             
             $files = $this->supplierManager->getPriceFilesToUpload();
             if (count($files)){
-                foreach ($files as $file){
-                    $this->rawManager->checkSupplierPrice($file['priceGetting']->getSupplier());
-                    break;
-                }
+                $this->rawManager->checkSupplierPrice($files[0]['priceGetting']->getSupplier());
             }            
         }    
         

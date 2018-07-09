@@ -461,18 +461,11 @@ class RawManager {
     /*
      * Проход по всем поставщикам - поиск файлов с прайсам в папках
      */
-    public function checkSupplierPrice($supplier = null)
+    public function checkSupplierPrice($supplier)
     {
         if ($supplier){
             $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
             $this->clearPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());            
-        } else {
-            $suppliers = $this->entityManager->getRepository(Supplier::class)->findAll();
-
-            foreach ($suppliers as $supplier){
-                $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
-                $this->clearPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
-            }
         } 
         return;
     }

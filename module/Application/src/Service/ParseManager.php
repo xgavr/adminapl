@@ -60,7 +60,7 @@ class ParseManager {
         foreach($priceDescriptions as $priceDescription){
             if ($priceDescription->getStatus() == PriceDescription::STATUS_ACTIVE){
                 foreach ($elements as $element){
-                    if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
+                    if(in_array($element->getName(), ['name', 'status', 'type', 'defaultProducer'])) continue;
                     $func = 'get'.ucfirst($element->getName());
                     if (method_exists($priceDescription, $func)){
                         $result[$priceDescription->getId()][$element->getName()] = $priceDescription->$func();
@@ -284,11 +284,15 @@ class ParseManager {
         }    
         
         if ($raw){
+            
             $rawprices = $this->findRawpricesForParse($raw);
             $priceDescriptionFunc = $this->getPriceDescriptionFunc($raw);
 
             if (count($priceDescriptionFunc)){
                 
+                $raw->setStatus(Raw::STATUS_PARSE);
+                $this->entityManager->persist($raw);
+            
                 foreach ($rawprices as $rawprice){
 
                     if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
@@ -318,6 +322,10 @@ class ParseManager {
                     $this->entityManager->flush();
                     
                     $this->setOldRaw($raw);
+                } else {
+                    $raw->setStatus(Raw::STATUS_ACTIVE);
+                    $this->entityManager->persist($raw);                    
+                    $this->entityManager->flush();                    
                 }
 
                 $this->entityManager->clear();

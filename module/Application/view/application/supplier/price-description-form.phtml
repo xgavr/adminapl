@@ -22,6 +22,11 @@ $form->get('producer')->setAttributes([
     'min' => 0,
     ]);
 
+$form->get('defaultProducer')->setAttributes([
+    'class'=>'form-control', 
+    'min' => 0,
+    ]);
+
 $form->get('title')->setAttributes([
     'class'=>'form-control', 
     'min' => 0,
@@ -282,6 +287,11 @@ $form->prepare();
                             <?= $this->formElementErrors($form->get('sale')); ?>                  
                         </div>                        
 
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('defaultProducer')); ?>
+                            <?= $this->formElement($form->get('defaultProducer')); ?>
+                            <?= $this->formElementErrors($form->get('defaultProducer')); ?>                  
+                        </div>
                     </div>
                     
                 </div>    

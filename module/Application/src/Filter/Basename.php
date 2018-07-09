@@ -34,7 +34,8 @@ class Basename extends AbstractFilter
     public function filter($value)
     {
         
-        setlocale(LC_ALL,'ru_RU.UTF-8');
+//        setlocale(LC_ALL,'ru_RU.UTF-8');
+        setlocale(LC_ALL,'C.UTF-8');
         return pathinfo($value, PATHINFO_BASENAME);
         
     }

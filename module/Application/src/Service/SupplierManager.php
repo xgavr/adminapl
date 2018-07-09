@@ -271,6 +271,7 @@ class SupplierManager
         $priceDescription->setBrand($data['brand']);
         $priceDescription->setPrice($data['price']);
         $priceDescription->setProducer($data['producer']);
+        $priceDescription->setDefaultProducer($data['defaultProducer']);
         $priceDescription->setRest($data['rest']);
         $priceDescription->setStatus($data['status']);
         $priceDescription->setUnit($data['unit']);
@@ -310,6 +311,7 @@ class SupplierManager
         $priceDescription->setBrand($data['brand']);
         $priceDescription->setPrice($data['price']);
         $priceDescription->setProducer($data['producer']);
+        $priceDescription->setDefaultProducer($data['defaultProducer']);
         $priceDescription->setRest($data['rest']);
         $priceDescription->setStatus($data['status']);
         $priceDescription->setUnit($data['unit']);

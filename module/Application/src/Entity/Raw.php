@@ -24,6 +24,7 @@ class Raw {
     const STATUS_LOAD       = 4; //В процессе загрузки
     const STATUS_ACTIVE       = 1; // Active raw.
     const STATUS_RETIRED      = 2; // Retired raw.
+    const STATUS_PARSE       = 5; //Разбирается
     const STATUS_PARSED       = 3; //Разобран
     
            

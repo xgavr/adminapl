@@ -54,6 +54,11 @@ class PriceDescription {
     protected $producer;
     
     /**
+     * @ORM\Column(name="default_producer")   
+     */
+    protected $defaultProducer;
+    
+    /**
      * @ORM\Column(name="title")   
      */
     protected $title;
@@ -208,6 +213,16 @@ class PriceDescription {
     public function setProducer($producer) 
     {
         $this->producer = (int) $producer;
+    }     
+
+    public function getDefaultProducer() 
+    {
+        return $this->defaultProducer;
+    }
+
+    public function setDefaultProducer($defaultProducer) 
+    {
+        $this->defaultProducer = (string) $defaultProducer;
     }     
 
     public function getTitle() 
@@ -399,7 +414,7 @@ class PriceDescription {
         $form = new \Application\Form\PriceDescriptionForm();
         $elements = $form->getElements();
         foreach ($elements as $element){
-            if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
+            if(in_array($element->getName(), ['name', 'status', 'type', 'defaultProducer'])) continue;
             $func = 'get'.ucfirst($element->getName());
             if (method_exists($this, $func)){
                 if($this->$func() == $value){

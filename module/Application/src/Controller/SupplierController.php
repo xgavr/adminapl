@@ -970,6 +970,7 @@ class SupplierController extends AbstractActionController
                     'brand' => $priceDescription->getBrand(),  
                     'price' => $priceDescription->getPrice(),  
                     'producer' => $priceDescription->getProducer(),  
+                    'defaultProducer' => $priceDescription->getDefaultProducer(),  
                     'rest' => $priceDescription->getRest(),  
                     'status' => $priceDescription->getStatus(),  
                     'unit' => $priceDescription->getUnit(),  
