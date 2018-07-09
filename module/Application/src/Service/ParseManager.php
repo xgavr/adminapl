@@ -97,7 +97,7 @@ class ParseManager {
             foreach ($priceDescriptionFunc as $priceDescription){
                 $result = [];
                 foreach ($priceDescriptionFunc[$priceDescription] as $name => $value){
-                    //$result[$name] = '';
+                    $result[$name] = '';
                     if ($value && is_numeric($value) && count($rawdata) >= $value && $rawdata[$value - 1]){
                         $result[$name] = $rawdata[$value - 1];                        
                     }
@@ -117,7 +117,7 @@ class ParseManager {
             foreach ($spl as $priceDescription){
 //                var_dump($spl[$priceDescription]);
 //                var_dump(count($resultParse));
-                if (count($spl[$priceDescription]) > count($resultParse) - 1){
+                if (count(array_filter($spl[$priceDescription])) > count(array_filter($resultParse)) - 1){
                     $resultParse = $spl[$priceDescription];
                     $resultParse['priceDescription'] = $priceDescription;
                 }
