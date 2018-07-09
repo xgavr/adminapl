@@ -97,7 +97,7 @@ class ParseManager {
             foreach ($priceDescriptionFunc as $priceDescription){
                 $result = [];
                 foreach ($priceDescriptionFunc[$priceDescription] as $name => $value){
-                    $result[$name] = '';
+                    //$result[$name] = '';
                     if ($value && count($rawdata) >= $value){
                         $result[$name] = $rawdata[$value - 1];                        
                     }
