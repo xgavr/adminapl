@@ -151,6 +151,12 @@ class Rawprice {
     private $raw;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\PriceDescription", inversedBy="rawprice") 
+     * @ORM\JoinColumn(name="price_description_id", referencedColumnName="id")
+     */
+    private $priceDescription;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\UnknownProducer", inversedBy="rawprice") 
      * @ORM\JoinColumn(name="unknown_producer_id", referencedColumnName="id")
      */
@@ -485,6 +491,25 @@ class Rawprice {
     {
         $this->raw = $raw;
         $raw->addRawprice($this);
+    }     
+    
+    /*
+     * Возвращает связанный priceDescription.
+     * @return \Application\Entity\PriceDescription
+     */    
+    public function getPriceDescription() 
+    {
+        return $this->priceDescription;
+    }
+
+    /**
+     * Задает связанный priceDescription.
+     * @param \Application\Entity\PriceDescription $priceDescription
+     */    
+    public function setPriceDescription($priceDescription) 
+    {
+        $this->priceDescription = $priceDescription;
+//        $priceDescription->addRawprice($this);
     }     
     
     /*

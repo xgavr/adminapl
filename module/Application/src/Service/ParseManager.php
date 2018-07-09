@@ -60,7 +60,7 @@ class ParseManager {
         foreach($priceDescriptions as $priceDescription){
             if ($priceDescription->getStatus() == PriceDescription::STATUS_ACTIVE){
                 foreach ($elements as $element){
-                    if(in_array($element->getName(), ['name', 'status', 'type', 'defaultProducer'])) continue;
+                    if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
                     $func = 'get'.ucfirst($element->getName());
                     if (method_exists($priceDescription, $func)){
                         $result[$priceDescription->getId()][$element->getName()] = $priceDescription->$func();
@@ -79,6 +79,7 @@ class ParseManager {
     /*
      * Разбока строки данных прайса
      * @var Application\Entity\Rawprice @rawprice
+     * @var array $priceDescriptionFunc - описание полей прайса
      */
     public function parseRawdata($rawprice, $priceDescriptionFunc = null)
     {
@@ -96,6 +97,8 @@ class ParseManager {
                     $result[$priceDescriptionId][$name] = '';
                     if ($value && count($rawdata) >= $value){
                         $result[$priceDescriptionId][$name] = $rawdata[$value - 1];                        
+                    } elseif ($value && $name == 'defaultProducer'){
+                        $result[$priceDescriptionId]['producer'] = $value;                                                
                     }
                 }    
             }
