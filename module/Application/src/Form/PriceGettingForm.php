@@ -65,6 +65,17 @@ class PriceGettingForm extends Form
         
         $this->add([           
             'type'  => 'text',
+            'name' => 'ftpDir',
+            'attributes' => [
+                'id' => 'ftpDir'
+            ],
+            'options' => [
+                'label' => 'Папка на FTP сервере',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
             'name' => 'ftpLogin',
             'attributes' => [
                 'id' => 'ftp-login'
@@ -127,7 +138,7 @@ class PriceGettingForm extends Form
                 'id' => 'filename'
             ],
             'options' => [
-                'label' => 'Фраза в наименовании файла',
+                'label' => 'Фраза в имени файла',
             ],
         ]);
         
@@ -135,11 +146,11 @@ class PriceGettingForm extends Form
             'type'  => 'select',
             'name' => 'statusFilename',
             'options' => [
-                'label' => 'Файлы, содеражащие в наименование фразу',
+                'label' => 'Фильтр наименований файлов прайсов',
                 'value_options' => [
-                    1 => 'Игнорировать, принимать файлы с любым наименованием',
-                    2 => 'Принимать',
-                    3 => 'Не принимать',                    
+                    1 => 'Принимать файлы с любым наименованием',
+                    2 => 'Принимать наименования, садержащие фразу',
+                    3 => 'Принимать наименования, не содержащие фразу',                    
                 ]
             ],
         ]);
@@ -235,6 +246,25 @@ class PriceGettingForm extends Form
                         'options' => [
                             'min' => 1,
                             'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'ftpDir',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
                         ],
                     ],
                 ],

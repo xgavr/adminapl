@@ -343,6 +343,7 @@ class SupplierManager
         $priceGetting = new PriceGetting();
         $priceGetting->setName($data['name']);
         $priceGetting->setFtp($data['ftp']);
+        $priceGetting->setFtp($data['ftpDir']);
         $priceGetting->setFtpLogin($data['ftpLogin']);
         $priceGetting->setFtpPassword($data['ftpPassword']);
         $priceGetting->setEmail($data['email']);
@@ -369,6 +370,7 @@ class SupplierManager
     {
         $priceGetting->setName($data['name']);
         $priceGetting->setFtp($data['ftp']);
+        $priceGetting->setFtp($data['ftpDir']);
         $priceGetting->setFtpLogin($data['ftpLogin']);
         $priceGetting->setFtpPassword($data['ftpPassword']);
         $priceGetting->setEmail($data['email']);

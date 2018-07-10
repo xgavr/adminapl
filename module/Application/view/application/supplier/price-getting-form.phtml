@@ -10,6 +10,10 @@ $form->get('ftp')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('ftpDir')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('ftpLogin')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -27,6 +31,14 @@ $form->get('emailPassword')->setAttributes([
     ]);
 
 $form->get('link')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('filename')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('statusFilename')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -71,15 +83,15 @@ $form->prepare();
                         </div>
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('emailPassword')); ?>
-                            <?= $this->formElement($form->get('emailPassword')); ?>
-                            <?= $this->formElementErrors($form->get('emailPassword')); ?>                  
+                            <?= $this->formLabel($form->get('ftp')); ?>
+                            <?= $this->formElement($form->get('ftp')); ?>
+                            <?= $this->formElementErrors($form->get('ftp')); ?>                  
                         </div>
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('link')); ?>
-                            <?= $this->formElement($form->get('link')); ?>
-                            <?= $this->formElementErrors($form->get('link')); ?>                  
+                            <?= $this->formLabel($form->get('ftpDir')); ?>
+                            <?= $this->formElement($form->get('ftpDir')); ?>
+                            <?= $this->formElementErrors($form->get('ftpDir')); ?>                  
                         </div>
 
                     </div>        
@@ -93,9 +105,9 @@ $form->prepare();
 
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('ftp')); ?>
-                            <?= $this->formElement($form->get('ftp')); ?>
-                            <?= $this->formElementErrors($form->get('ftp')); ?>                  
+                            <?= $this->formLabel($form->get('emailPassword')); ?>
+                            <?= $this->formElement($form->get('emailPassword')); ?>
+                            <?= $this->formElementErrors($form->get('emailPassword')); ?>                  
                         </div>
 
                         <div class="form-group">
@@ -113,6 +125,33 @@ $form->prepare();
                         <?= $this->formElement($form->get('csrf')); ?>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('link')); ?>
+                            <?= $this->formElement($form->get('link')); ?>
+                            <?= $this->formElementErrors($form->get('link')); ?>                  
+                        </div>
+
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('statusFilename')); ?>
+                            <?= $this->formElement($form->get('statusFilename')); ?>
+                            <?= $this->formElementErrors($form->get('statusFilename')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('filename')); ?>
+                            <?= $this->formElement($form->get('filename')); ?>
+                            <?= $this->formElementErrors($form->get('filename')); ?>                  
+                        </div>
+
+                    </div>
+                </div>    
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">

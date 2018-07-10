@@ -12,6 +12,7 @@ use Application\Entity\Supplier;
 use Application\Entity\PriceGetting;
 use Zend\Http\Client;
 use Application\Validator\FileExtensionValidator;
+use Application\Validator\PriceNameValidator;
 
 /**
  * Description of PriceManager
@@ -128,13 +129,21 @@ class PriceManager {
 
             $mailList = $this->postManager->readImap($box);
 
+            $priceNameValidator = new PriceNameValidator();
+            
             if (count($mailList)){
                 foreach ($mailList as $mail){
                     if (isset($mail['attachment'])){
                         foreach($mail['attachment'] as $attachment){
                             if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                                //Проверка наименования файла
+                                if (!$priceNameValidator->isValid($attachment['filename'], $priceGetting)){
+                                    unlink($attachment['temp_file']);
+                                }
+                                 
                                 $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
                                 if (copy($attachment['temp_file'], $target)){
+
                                     if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
                                         $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
                                         $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
@@ -185,6 +194,11 @@ class PriceManager {
                 }
                 
                 if ($filename){
+                    //Проверка наименования файла
+                    if (!$priceNameValidator->isValid($filename, $priceGetting)){
+                        return;
+                    }
+
                     $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$filename;
                     $result = file_put_contents($target, $response->getBody());
 

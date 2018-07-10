@@ -367,6 +367,7 @@ class SupplierController extends AbstractActionController
                 $data = [
                     'name' => $priceGetting->getName(),  
                     'ftp' => $priceGetting->getFtp(),  
+                    'ftpDir' => $priceGetting->getFtpDir(),  
                     'ftpLogin' => $priceGetting->getFtpLogin(),  
                     'ftpPassword' => $priceGetting->getFtpPassword(),  
                     'email' => $priceGetting->getEmail(),  
