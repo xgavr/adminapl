@@ -367,8 +367,8 @@ $this->headScript()
                 Файлы прайсов в архивной папке
                 <div class="clearfix"></div>
             </div>
-            <div class="panel-body">
-                <?php foreach($arxPrice as $filename => $value):?>
+            <?php foreach($arxPrice as $filename => $value):?>
+                <div class="panel-body">
                     <div class="pull-left">
                         <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
                     </div>
@@ -390,8 +390,8 @@ $this->headScript()
                             <span class="glyphicon glyphicon-remove" ></span>
                         </button>                                                           
                     </div>                                                                        
-                <? endforeach;?>
-            </div>    
+                </div>    
+            <? endforeach;?>
         </div>
         
         <div class="panel panel-default" id="section7">
