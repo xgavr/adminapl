@@ -107,7 +107,7 @@ class PriceGettingForm extends Form
             ],
         ]);
         
-        // Добавляем поле "rest"
+        // Добавляем поле "link"
         $this->add([           
             'type'  => 'text',
             'name' => 'link',
@@ -116,6 +116,31 @@ class PriceGettingForm extends Form
             ],
             'options' => [
                 'label' => 'Ссылка на файл прайса',
+            ],
+        ]);
+        
+        // Добавляем поле "filename"
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'filename',
+            'attributes' => [
+                'id' => 'filename'
+            ],
+            'options' => [
+                'label' => 'Фраза в наименовании файла',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'statusFilename',
+            'options' => [
+                'label' => 'Файлы, содеражащие в наименование фразу',
+                'value_options' => [
+                    1 => 'Игнорировать, принимать файлы с любым наименованием',
+                    2 => 'Принимать',
+                    3 => 'Не принимать',                    
+                ]
             ],
         ]);
         
@@ -317,7 +342,37 @@ class PriceGettingForm extends Form
                 ],
             ]);
         
+        $inputFilter->add([
+                'name'     => 'filename',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                ],
+            ]);
+        
         // Add input for "status" field
+        $inputFilter->add([
+                'name'     => 'statusFilename',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3]]]
+                ],
+            ]); 
+        
         $inputFilter->add([
                 'name'     => 'status',
                 'required' => true,

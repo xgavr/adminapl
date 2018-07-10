@@ -349,6 +349,8 @@ class SupplierManager
         $priceGetting->setEmailPassword($data['emailPassword']);
         $priceGetting->setLink($data['link']);
         $priceGetting->setStatus($data['status']);
+        $priceGetting->setStatusFilename($data['statusFilename']);
+        $priceGetting->setFilename($data['filename']);
         $priceGetting->setOrderToApl($data['orderToApl']);
         
         $currentDate = date('Y-m-d H:i:s');
@@ -373,6 +375,8 @@ class SupplierManager
         $priceGetting->setEmailPassword($data['emailPassword']);
         $priceGetting->setLink($data['link']);
         $priceGetting->setStatus($data['status']);
+        $priceGetting->setStatusFilename($data['statusFilename']);
+        $priceGetting->setFilename($data['filename']);
         $priceGetting->setOrderToApl($data['orderToApl']);
         
         // Добавляем сущность в менеджер сущностей.

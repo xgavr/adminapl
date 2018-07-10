@@ -22,6 +22,10 @@ class PriceGetting {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
+    const STATUS_FILENAME_NONE       = 1; //Игнорировать filename, принимать файлы с любым наименованием
+    const STATUS_FILENAME_IN         = 2; //Принимать файлы, содержащие filename
+    const STATUS_FILENAME_EX         = 3; //Исключить файлы с наименованием, содержащие filename
+    
     const ORDER_PRICE_FILE_TO_APL       = 1; // Закачивать полученый прайс на сервер АПЛ.
     const NO_ORDER_PRICE_FILE_TO_APL    = 2; // Не закачивать полученый прайс на сервер АПЛ.
     
@@ -42,7 +46,11 @@ class PriceGetting {
      */
     protected $ftp;
     
-    
+    /**
+     * @ORM\Column(name="ftp_dir")   
+     */
+    protected $ftpDir;
+        
     /**
      * @ORM\Column(name="ftp_login")   
      */
@@ -68,6 +76,16 @@ class PriceGetting {
      */
     protected $link;
     
+    /**
+     * @ORM\Column(name="filename")  
+     */
+    protected $filename;    
+
+    /**
+     * @ORM\Column(name="status_filename")  
+     */
+    protected $statusFilename;    
+
     /**
      * @ORM\Column(name="date_created")  
      */
@@ -119,6 +137,16 @@ class PriceGetting {
         $this->ftp = $ftp;
     }     
 
+    public function getFtpDir() 
+    {
+        return $this->ftpDir;
+    }
+
+    public function setFtpDir($ftpDir) 
+    {
+        $this->ftpDir = $ftpDir;
+    }     
+
 
     public function getFtpLogin() 
     {
@@ -168,6 +196,16 @@ class PriceGetting {
     public function setLink($link) 
     {
         $this->link = $link;
+    }     
+
+    public function getFilename() 
+    {
+        return $this->filename;
+    }
+
+    public function setFilename($filename) 
+    {
+        $this->filename = $filename;
     }     
 
     public function getDateCreated() 
@@ -225,6 +263,51 @@ class PriceGetting {
         $this->status = $status;
     }   
     
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatusFilename() 
+    {
+        return $this->statusFilename;
+    }
+
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusFilenameList() 
+    {
+        return [
+            self::STATUS_FILENAME_NONE => 'Принимать файлы с любым наименованием',
+            self::STATUS_FILENAME_IN => 'Принимать файлы с наименованием, содержащие строку ...',
+            self::STATUS_FILENAME_EX => 'Исключить файлы с наименованием, сожержащие строку ...'
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusFilenameAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->statusFilename]))
+            return $list[$this->statusFilename];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatusFilename($statusFilename) 
+    {
+        $this->statusFilename = $statusFilename;
+    }   
+
     /**
      * Returns orderToApl.
      * @return int     
