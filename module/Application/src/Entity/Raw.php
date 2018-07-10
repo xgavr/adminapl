@@ -133,6 +133,7 @@ class Raw {
             self::STATUS_ACTIVE => 'Новый',
             self::STATUS_RETIRED => 'Удалить',
             self::STATUS_PARSED => 'Разобран',
+            self::STATUS_PARSE => 'Разбирается',
             self::STATUS_LOAD => 'Загружается',
         ];
     }    
