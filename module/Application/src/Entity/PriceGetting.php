@@ -287,7 +287,7 @@ class PriceGetting {
     }    
     
     /**
-     * Returns user status as string.
+     * Returns status as string.
      * @return string
      */
     public function getStatusFilenameAsString()
@@ -298,6 +298,28 @@ class PriceGetting {
         
         return 'Unknown';
     }    
+    
+    /*
+     * Возврат статуса фильтра имени файлов
+     */
+    public function getStatusFilenameRuleAsString()
+    {
+        switch ($this->getStatusFilename()){
+            case self::STATUS_FILENAME_IN :
+                if ($this->getFilename()){
+                    return "Принимаем файлы, содержащие в наименовании фразу <q>".$this->getFilename()."</q>";
+                }
+                break;
+            case self::STATUS_FILENAME_EX :
+                if ($this->getFilename()){
+                    return "Принимаем файлы, не содержащие в наименовании фразу <q>".$this->getFilename()."</q>";
+                }
+                break;
+            default: 
+        }
+        
+        return 'Принимаем файлы с любым наименованием';
+    }
     
     /**
      * Sets status.

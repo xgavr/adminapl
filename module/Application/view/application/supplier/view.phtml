@@ -276,7 +276,8 @@ $this->headScript()
                                         <?php endif; ?>
                                         <br/>
                                         Email пароль: <span><?= $priceGetting->getEmailPassword() ?></span><br/>
-                                        FTP: <span><?= $priceGetting->getFtp() ?></span><br/>
+                                        FTP сервер: <span><?= $priceGetting->getFtp() ?></span><br/>
+                                        FTP папка: <span><?= $priceGetting->getFtpDir() ?></span><br/>
                                         FTP логин: <span><?= $priceGetting->getFtpLogin() ?></span><br/>
                                         FTP пароль: <span><?= $priceGetting->getFtpPassword() ?></span><br/>
                                         Ссылка на скачивание: <span><?= $priceGetting->getLink() ?></span>
@@ -287,6 +288,7 @@ $this->headScript()
                                             </button>
                                         <?php endif; ?>
                                         <br/>
+                                        <?= $priceGetting->getStatusFilenameRuleAsString() ?><br/>
                                         Обмен с АПЛ: <span><?= $priceGetting->getOrderToAplAsString() ?></span><br/>
                                         Статус: <span><?= $priceGetting->getStatusAsString() ?></span><br/>
                                     </div>        
