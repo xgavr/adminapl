@@ -2,6 +2,7 @@
 
 namespace Application\Validator;
 
+use Zend\Validator\AbstractValidator;
 use Application\Entity\PriceGetting;
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,7 +15,7 @@ use Application\Entity\PriceGetting;
  *
  * @author Daddy
  */
-class PriceNameValidator extends Extension
+class PriceNameValidator extends AbstractValidator
 {
     
     public function __construct($options = null) 
