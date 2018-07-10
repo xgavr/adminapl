@@ -196,6 +196,7 @@ class PriceManager {
                 
                 if ($filename){
                     //Проверка наименования файла
+                    $priceNameValidator = new PriceNameValidator();
                     if (!$priceNameValidator->isValid($filename, $priceGetting)){
                         return;
                     }
