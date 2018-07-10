@@ -153,6 +153,7 @@ class ParseManager {
         $rawprice->setVendor($data['vendor']);
         $rawprice->setLot($data['lot']);
         $rawprice->setUnit($data['unit']);
+        $rawprice->setPack($data['pack']);
         $rawprice->setCar($data['car']);
         $rawprice->setBar($data['bar']);
         $rawprice->setCurrency($data['currency']);

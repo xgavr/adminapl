@@ -275,6 +275,7 @@ class SupplierManager
         $priceDescription->setRest($data['rest']);
         $priceDescription->setStatus($data['status']);
         $priceDescription->setUnit($data['unit']);
+        $priceDescription->setPack($data['pack']);
         $priceDescription->setTitle($data['title']);
         $priceDescription->setVendor($data['vendor']);
         $priceDescription->setWeight($data['weight']);
@@ -315,6 +316,7 @@ class SupplierManager
         $priceDescription->setRest($data['rest']);
         $priceDescription->setStatus($data['status']);
         $priceDescription->setUnit($data['unit']);
+        $priceDescription->setPack($data['pack']);
         $priceDescription->setTitle($data['title']);
         $priceDescription->setVendor($data['vendor']);
         $priceDescription->setWeight($data['weight']);

@@ -99,6 +99,11 @@ class PriceDescription {
     protected $unit;
 
     /**
+     * @ORM\Column(name="pack")   
+     */
+    protected $pack;
+
+    /**
      * @ORM\Column(name="car")   
      */
     protected $car;
@@ -293,6 +298,16 @@ class PriceDescription {
     public function setUnit($unit) 
     {
         $this->unit = (int) $unit;
+    }     
+
+    public function getPack() 
+    {
+        return $this->pack;
+    }
+
+    public function setPack($pack) 
+    {
+        $this->pack = (int) $pack;
     }     
 
     public function getCar() 

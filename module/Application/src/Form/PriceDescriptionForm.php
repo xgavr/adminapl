@@ -202,6 +202,17 @@ class PriceDescriptionForm extends Form
         
         $this->add([           
             'type'  => 'text',
+            'name' => 'pack',
+            'attributes' => [
+                'id' => 'ps_rest'
+            ],
+            'options' => [
+                'label' => 'Упаковка',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
             'name' => 'oem',
             'attributes' => [
                 'id' => 'oem'
@@ -689,6 +700,18 @@ class PriceDescriptionForm extends Form
         
         $inputFilter->add([
                 'name'     => 'unit',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToNull'],
+                    ['name' => 'ToInt'],
+                ],                
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'pack',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

@@ -974,6 +974,7 @@ class SupplierController extends AbstractActionController
                     'rest' => $priceDescription->getRest(),  
                     'status' => $priceDescription->getStatus(),  
                     'unit' => $priceDescription->getUnit(),  
+                    'pack' => $priceDescription->getPack(),  
                     'title' => $priceDescription->getTitle(),  
                     'vendor' => $priceDescription->getVendor(),  
                     'weight' => $priceDescription->getWeight(),  

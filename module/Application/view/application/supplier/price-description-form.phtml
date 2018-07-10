@@ -71,6 +71,10 @@ $form->get('unit')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('pack')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('car')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -139,20 +143,28 @@ $form->prepare();
                             <?= $this->formElementErrors($form->get('type')); ?>                  
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+                    </div>
                 </div>    
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <?= $this->formLabel($form->get('name')); ?>
                             <?= $this->formElement($form->get('name')); ?>
                             <?= $this->formElementErrors($form->get('name')); ?>                  
                         </div>
                     </div>
-                    <div class="col-md-4">
+                                                
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                            <?= $this->formLabel($form->get('defaultProducer')); ?>
+                            <?= $this->formElement($form->get('defaultProducer')); ?>
+                            <?= $this->formElementErrors($form->get('defaultProducer')); ?>                  
                         </div>
                     </div>
                 </div>    
@@ -196,10 +208,10 @@ $form->prepare();
                         </div>                        
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('iid')); ?>
-                            <?= $this->formElement($form->get('iid')); ?>
-                            <?= $this->formElementErrors($form->get('iid')); ?>                  
-                        </div>
+                            <?= $this->formLabel($form->get('markdown')); ?>
+                            <?= $this->formElement($form->get('markdown')); ?>
+                            <?= $this->formElementErrors($form->get('markdown')); ?>                  
+                        </div>                        
 
                     </div>
                 
@@ -242,10 +254,11 @@ $form->prepare();
                         </div>                        
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('markdown')); ?>
-                            <?= $this->formElement($form->get('markdown')); ?>
-                            <?= $this->formElementErrors($form->get('markdown')); ?>                  
+                            <?= $this->formLabel($form->get('unit')); ?>
+                            <?= $this->formElement($form->get('unit')); ?>
+                            <?= $this->formElementErrors($form->get('unit')); ?>                  
                         </div>                        
+
 
                     </div>
                     
@@ -270,10 +283,10 @@ $form->prepare();
                         </div>
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('unit')); ?>
-                            <?= $this->formElement($form->get('unit')); ?>
-                            <?= $this->formElementErrors($form->get('unit')); ?>                  
-                        </div>                        
+                            <?= $this->formLabel($form->get('iid')); ?>
+                            <?= $this->formElement($form->get('iid')); ?>
+                            <?= $this->formElementErrors($form->get('iid')); ?>                  
+                        </div>
 
                         <div class="form-group">
                             <?= $this->formLabel($form->get('country')); ?>
@@ -288,10 +301,11 @@ $form->prepare();
                         </div>                        
 
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('defaultProducer')); ?>
-                            <?= $this->formElement($form->get('defaultProducer')); ?>
-                            <?= $this->formElementErrors($form->get('defaultProducer')); ?>                  
-                        </div>
+                            <?= $this->formLabel($form->get('pack')); ?>
+                            <?= $this->formElement($form->get('pack')); ?>
+                            <?= $this->formElementErrors($form->get('pack')); ?>                  
+                        </div>                        
+
                     </div>
                     
                 </div>    

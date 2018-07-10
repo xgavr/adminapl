@@ -95,6 +95,11 @@ class Rawprice {
     protected $unit;
 
     /**
+     * @ORM\Column(name="pack")   
+     */
+    protected $pack;
+
+    /**
      * @ORM\Column(name="car")   
      */
     protected $car;
@@ -339,6 +344,16 @@ class Rawprice {
     public function setUnit($unit) 
     {
         $this->unit = $unit;
+    }     
+
+    public function getPack() 
+    {
+        return $this->pack;
+    }
+
+    public function setPack($pack) 
+    {
+        $this->pack = $pack;
     }     
 
     public function getCar() 
