@@ -31,24 +31,26 @@ class PriceNameValidator extends AbstractValidator
      * @param  Application\Entity\Pricegetting  $priceGetting
      * @return bool
      */
-    public function isValid($value, $priceGetting)
+    public function isValid($value, $priceGetting = null)
     {
-        if ($priceGetting->getStatusFilename() != PriceGetting::STATUS_FILENAME_NONE){
-            $phrase = $priceGetting->getFilename();
-            if ($phrase){
-                if ($priceGetting->getStatusFilename() == PriceGetting::STATUS_FILENAME_IN){
-                    if (mb_stripos($value, $phrase) !== false){
-                        return true; //Если фраза содержится в имени файла - пропускаем
-                    } else {
-                        return false;    
+        if ($priceGetting){
+            if ($priceGetting->getStatusFilename() != PriceGetting::STATUS_FILENAME_NONE){
+                $phrase = $priceGetting->getFilename();
+                if ($phrase){
+                    if ($priceGetting->getStatusFilename() == PriceGetting::STATUS_FILENAME_IN){
+                        if (mb_stripos($value, $phrase) !== false){
+                            return true; //Если фраза содержится в имени файла - пропускаем
+                        } else {
+                            return false;    
+                        }
+                    }                    
+                    if ($priceGetting->getStatusFilename() == PriceGetting::STATUS_FILENAME_EX){
+                        if (mb_stripos($value, $phrase) !== false){
+                            return false; //Если фраза содержится в имени файла - исключаем
+                        } else {
+                            return true;
+                        }    
                     }
-                }                    
-                if ($priceGetting->getStatusFilename() == PriceGetting::STATUS_FILENAME_EX){
-                    if (mb_stripos($value, $phrase) !== false){
-                        return false; //Если фраза содержится в имени файла - исключаем
-                    } else {
-                        return true;
-                    }    
                 }
             }
         }
