@@ -138,18 +138,19 @@ class PriceManager {
                             if ($attachment['filename'] && file_exists($attachment['temp_file'])){
                                 //Проверка наименования файла
                                 if (!$priceNameValidator->isValid($attachment['filename'], $priceGetting)){
-                                    unlink($attachment['temp_file']);
+                                    unlink($attachment['temp_file']);                                    
                                 }
-                                 
-                                $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
-                                if (copy($attachment['temp_file'], $target)){
+                                if (file_exists($attachment['temp_file'])){ 
+                                    $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
+                                    if (copy($attachment['temp_file'], $target)){
 
-                                    if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
-                                        $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
-                                        $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
-                                    }    
-                                    unlink($attachment['temp_file']);
-                                }
+                                        if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
+                                            $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
+                                            $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
+                                        }    
+                                        unlink($attachment['temp_file']);
+                                    }
+                                }    
                             }
                         }
                     }
