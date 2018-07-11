@@ -97,8 +97,9 @@ class RawController extends AbstractActionController
                 ->findOneById($rawId);
         
         if ($raw == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
+            return $this->redirect()->toRoute('raw');
+//            $this->getResponse()->setStatusCode(404);
+//            return;                        
         }        
         
         $page = $this->params()->fromQuery('page', 1);

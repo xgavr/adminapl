@@ -103,26 +103,49 @@ $this->pageBreadcrumbs()->setItems([
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $raw->getSupplier()->getId()])?>"><?= $raw->getSupplier()->getName() ?></a>
-                        <br/>
-                        <?= $this->escapeHtml($raw->getBasename()); ?>
-                        <br/>
-                        <?= $this->escapeHtml($raw->getStatusAsString()); ?>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $raw->getSupplier()->getId()])?>"><?= $raw->getSupplier()->getName() ?></a>
+                            </div>    
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="pull-left">
+                                    <?= $this->escapeHtml($raw->getBasename()); ?>
+                                    <br/>
+                                    <?= $this->escapeHtml($raw->getStatusAsString()); ?>
+                                </div>    
+                            </div>
+                        </div>    
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
-                        <div class="pull-left">
-                            <?= $rawprice->getTotalItemCount(); ?> строк<br/>
-                            <?php foreach($statuses as $status):?>
-                            <a href="<?= $this->url('raw', ['action' => 'view', 'id' => $raw->getId()], ['query' => ['status' => $status['status']]]);?>"><?= $status['name']?></a>: <?= $status['status_count']?><br/>                                
-                            <?php endforeach;?>
-                        </div>
-                        <div class="pull-right">
-                            <button value="/rawprice/parse-raw/<?= $raw->getId() ?>" class="btn btn-info btn-xs refresh-button"
-                                    title="Разобрать">
-                                    Разобрать
-                            </button>                            
-                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="pull-left">
+                                    <?= $rawprice->getTotalItemCount(); ?> строк<br/>
+                                    <?php foreach($statuses as $status):?>
+                                    <a href="<?= $this->url('raw', ['action' => 'view', 'id' => $raw->getId()], ['query' => ['status' => $status['status']]]);?>"><?= $status['name']?></a>: <?= $status['status_count']?><br/>                                
+                                    <?php endforeach;?>
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/rawprice/parse-raw/<?= $raw->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                            title="Разобрать">
+                                            Разобрать
+                                    </button> 
+                                </div>
+                            </div>
+                        </div>    
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="pull-right">
+                                    <button value="/raw/delete-form/<?= $raw->getId() ?>" class="btn btn-danger btn-xs this-delete"
+                                            title="Удалить">
+                                            Удалить
+                                    </button>                            
+                                </div>
+                            </div>
+                        </div>    
                     </div>
                     <div>
                         
