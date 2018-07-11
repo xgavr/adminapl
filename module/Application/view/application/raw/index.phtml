@@ -37,7 +37,7 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
                 <td>
                     <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$row[0]->getId()]); ?>">            
-                        <?= $this->escapeHtml($row[0]->getBasename()); ?>
+                        <?//= $this->escapeHtml($row[0]->getBasename()); ?>
                     </a>    
                 </td>
                 <td><?= $this->escapeHtml($row['rowcount']); ?></td>

@@ -62,17 +62,17 @@ class RawController extends AbstractActionController
         $paginator->setDefaultItemCountPerPage(10);        
         $paginator->setCurrentPageNumber($page);
 
-//        $statuses = $this->entityManager->getRepository(Rawprice::class)
-//                ->rawpriceStatuses();
-//        foreach ($statuses as $key => $status){
-//            $statuses[$key]['name'] = Rawprice::getStatusName($status['status']);
-//        }
+        $statuses = $this->entityManager->getRepository(Rawprice::class)
+                ->rawpriceStatuses();
+        foreach ($statuses as $key => $status){
+            $statuses[$key]['name'] = Rawprice::getStatusName($status['status']);
+        }
         
-//        $rawStatuses = $this->entityManager->getRepository(Raw::class)
-//                ->rawStatuses();
-//        foreach ($rawStatuses as $key => $status){
-//            $rawStatuses[$key]['name'] = Raw::getStatusName($status['status']);
-//        }
+        $rawStatuses = $this->entityManager->getRepository(Raw::class)
+                ->rawStatuses();
+        foreach ($rawStatuses as $key => $status){
+            $rawStatuses[$key]['name'] = Raw::getStatusName($status['status']);
+        }
         
         // Визуализируем шаблон представления.
         return new ViewModel([
