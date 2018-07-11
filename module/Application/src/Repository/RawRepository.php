@@ -28,7 +28,7 @@ class RawRepository extends EntityRepository{
             ->from(Raw::class, 'c')
             //->join('c.rawprice', 'r')
             ->groupBy('c.id')     
-            //->orderBy('c.id', 'DESC')
+            ->orderBy('c.id', 'DESC')
                 ;
         
         if ($status){
