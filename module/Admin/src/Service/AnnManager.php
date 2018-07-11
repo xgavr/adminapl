@@ -38,15 +38,15 @@ class AnnManager
         $desired_error = 0.001;
         $max_epochs = 500000;
         $epochs_between_reports = 1000;
-        $ann = fann_create_standart($num_layers, $num_input, $num_neurons_hidden, $num_output);
+        $ann = fann_create_standard($num_layers, $num_input, $num_neurons_hidden, $num_output);
         if ($ann) {
             fann_set_activation_function_hidden($ann, FANN_SIGMOID_SYMMETRIC);
             fann_set_activation_function_output($ann, FANN_SIGMOID_SYMMETRIC);
-            $filename = self::DATA_DIR . "xor.data";
+            $filename = realpath(self::DATA_DIR . "xor.data");
             
             if (file_exists($filename)){
                 if (fann_train_on_file($ann, $filename, $max_epochs, $epochs_between_reports, $desired_error))
-                    fann_save($ann, self::DATA_DIR . "xor_float.net");
+                    fann_save($ann, realpath(self::DATA_DIR . "xor_float.net"));
             }    
             
             fann_destroy($ann);

@@ -9,3 +9,4 @@ phpunit.xml
 /data/DoctrineORMModule/Proxy/
 /data/log/
 /data/settings/
+/data/ann/
