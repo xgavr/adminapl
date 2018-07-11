@@ -24,12 +24,11 @@ class RawRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c, count(r.id) as rowcount')
+        $queryBuilder->select('c, count(c.id) as rowcount')
             ->from(Raw::class, 'c')
-            ->leftJoin('c.rawprice', 'r')
+            //->join('c.rawprice', 'r')
             ->groupBy('c.id')     
-            ->orderBy('c.id', 'DESC')
-            ->setCacheable(true)
+            //->orderBy('c.id', 'DESC')
                 ;
         
         if ($status){
