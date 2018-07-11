@@ -250,6 +250,7 @@ class ParseManager {
                     ->findOldRaw($raw);
             
             foreach ($oldRaws as $oldRaw){
+                
                 $i = 1;
                 $coincidence = 0;
                 foreach ($rawprices as $rawprice){

@@ -409,74 +409,32 @@ class PostManager {
                                 foreach($flattenedParts as $partNumber => $part) {
                                     
 //                                    var_dump($part); exit;
-                                    
-                                    switch($part->type) {
-                                        case 0:
-                                            $charset = 'utf-8';
-                                            $parameters = (array) $part->parameters;
-                                            if (isset($parameters[0])){
-                                                if ($parameters[0]->attribute == 'charset'){
-                                                    $charset = $parameters[0]->value;
-                                                }
-                                            }    
+                                    if ($part){
+                                        switch($part->type) {
+                                            case 0:
+                                                $charset = 'utf-8';
+                                                $parameters = (array) $part->parameters;
+                                                if (isset($parameters[0])){
+                                                    if ($parameters[0]->attribute == 'charset'){
+                                                        $charset = $parameters[0]->value;
+                                                    }
+                                                }    
 
-                                            // the HTML or plain text part of the email
-                                            if (isset($structure->parts)){
-                                                $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
-                                            } else {
-                                                $message = $this->getBody($connection, $messageNumber, $part->encoding);
-                                            }    
-                                            
-                                            $message = iconv($charset, 'utf-8', $message);
-                                            // now do something with the message, e.g. render it
-                                            $result[$messageNumber]['content'][$part->subtype] = $message;
+                                                // the HTML or plain text part of the email
+                                                if (isset($structure->parts)){
+                                                    $message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                                } else {
+                                                    $message = $this->getBody($connection, $messageNumber, $part->encoding);
+                                                }    
 
-                                            $filename = $this->getFilenameFromPart($part);
-                                            if($filename) {
-                                                    // it's an attachment
-                                                    $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
-                                                    // now do something with the attachment, e.g. save it somewhere
+                                                $message = iconv($charset, 'utf-8', $message);
+                                                // now do something with the message, e.g. render it
+                                                $result[$messageNumber]['content'][$part->subtype] = $message;
 
-                                                    $temp_file = tempnam(sys_get_temp_dir(), 'Pst');
-                                                    $fh = fopen($temp_file, 'w');
-                                                    fwrite($fh, $attachment);
-                                                    fclose($fh);                                
-                                                    
-                                                    $result[$messageNumber]['attachment'][$partNumber] = [
-                                                        'filename' =>$filename,
-                                                        'temp_file' => $temp_file,
-                                                    ];
-                                            } else {
-                                                    // don't know what it is
-                                            }
-
-                                        break;
-
-                                        case 1:
-                                                // multi-part headers, can ignore
-
-                                        break;
-                                        case 2:
-                                                // attached message headers, can ignore
-                                        break;
-
-                                        case 3: // application
-                                        case 4: // audio
-                                        case 5: // image
-                                        case 6: // video
-                                        case 7: // other
-                                        case 8: // other
-                                        case 9: // other
                                                 $filename = $this->getFilenameFromPart($part);
-
                                                 if($filename) {
                                                         // it's an attachment
-                                                        if (isset($structure->parts)){
-                                                            $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
-                                                        } else {
-                                                            $attachment = $this->getBody($connection, $messageNumber, $part->encoding);
-                                                        }    
-//                                                        var_dump($attachment); exit;
+                                                        $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
                                                         // now do something with the attachment, e.g. save it somewhere
 
                                                         $temp_file = tempnam(sys_get_temp_dir(), 'Pst');
@@ -488,14 +446,57 @@ class PostManager {
                                                             'filename' =>$filename,
                                                             'temp_file' => $temp_file,
                                                         ];
-
                                                 } else {
                                                         // don't know what it is
                                                 }
 
-                                                break;
+                                            break;
 
-                                    }
+                                            case 1:
+                                                    // multi-part headers, can ignore
+
+                                            break;
+                                            case 2:
+                                                    // attached message headers, can ignore
+                                            break;
+
+                                            case 3: // application
+                                            case 4: // audio
+                                            case 5: // image
+                                            case 6: // video
+                                            case 7: // other
+                                            case 8: // other
+                                            case 9: // other
+                                                    $filename = $this->getFilenameFromPart($part);
+
+                                                    if($filename) {
+                                                            // it's an attachment
+                                                            if (isset($structure->parts)){
+                                                                $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+                                                            } else {
+                                                                $attachment = $this->getBody($connection, $messageNumber, $part->encoding);
+                                                            }    
+    //                                                        var_dump($attachment); exit;
+                                                            // now do something with the attachment, e.g. save it somewhere
+
+                                                            $temp_file = tempnam(sys_get_temp_dir(), 'Pst');
+                                                            $fh = fopen($temp_file, 'w');
+                                                            fwrite($fh, $attachment);
+                                                            fclose($fh);                                
+
+                                                            $result[$messageNumber]['attachment'][$partNumber] = [
+                                                                'filename' =>$filename,
+                                                                'temp_file' => $temp_file,
+                                                            ];
+
+                                                    } else {
+                                                            // don't know what it is
+                                                    }
+
+                                                    break;
+
+                                        }
+                                    }    
 
                                 }
 
