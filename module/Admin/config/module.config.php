@@ -132,6 +132,7 @@ return [
     'service_manager' => [
         'factories' => [
             Service\AdminManager::class => Service\Factory\AdminManagerFactory::class,
+            Service\AnnManager::class => Service\Factory\AnnManagerFactory::class,
             Service\AplService::class => Service\Factory\AplServiceFactory::class,
             Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
             Service\FtpManager::class => Service\Factory\FtpManagerFactory::class,
