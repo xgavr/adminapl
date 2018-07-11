@@ -10,3 +10,4 @@ phpunit.xml
 /data/log/
 /data/settings/
 /data/ann/
+/config/autoload/local-development.php
