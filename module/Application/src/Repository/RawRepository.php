@@ -21,9 +21,31 @@ class RawRepository extends EntityRepository
     /*
      * Быстрая вставка строки прайса
      */
-    public function insertRawprice($row)
+    public function insertRawprice($row, $id)
     {
         return $this->getEntityManager()->getConnection()->insert('rawprice', $row);
+    }
+    
+    /*
+     * Быстрое обновлеие строки прайса
+     */
+    public function updateRawprice($rawprice)
+    {
+        $metadata = $this->getEntityManager()->getClassMetadata(Rawprice::class);
+        $colums = $metadata->getColumnNames();
+        
+        $data = [];
+        foreach ($colums as $columnName){
+            if (in_array($columnName, ['id', 'rawdata', 'date_created'])) continue;
+            $data[$columnName] = $metadata->getFieldValue($rawprice, $metadata->getFieldName($columnName));
+        }
+        
+        if ($rawprice->getPriceDescription()){
+            $data['price_description_id'] = (int) $rawprice->getPriceDescription();
+        }
+        
+        //var_dump($data); exit;
+        return $this->getEntityManager()->getConnection()->update('rawprice', $data, ['id' => $rawprice->getId()]);
     }
     
     public function findAllRaw($status = null, $supplier = null, $exceptRaw = null)

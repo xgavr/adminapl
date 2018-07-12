@@ -104,7 +104,7 @@ class ParseManager {
                 }    
                 
                 if (!$result['producer'] && $priceDescriptionFunc[$priceDescription]['defaultProducer']){
-                    $result['producer'] = $priceDescriptionFunc[$priceDescription]['defaultProducer'];
+                    $result['producer'] = $priceDescriptionFunc[$priceDescription]['defaultProducer'];                    
                 }
                 
                 $spl[$priceDescription] = $result;
@@ -119,7 +119,7 @@ class ParseManager {
 //                var_dump(count($resultParse));
                 if (count(array_filter($spl[$priceDescription])) > count(array_filter($resultParse)) - 1){
                     $resultParse = $spl[$priceDescription];
-                    $resultParse['priceDescription'] = $priceDescription;
+                    $resultParse['priceDescription'] = $priceDescription->getId();
                 }
             }
             return $resultParse;
@@ -139,7 +139,7 @@ class ParseManager {
         $data = $this->parseRawdata($rawprice, $priceDescriptionFunc);
         
         if (!is_array($data)) return;
-
+                
         $rawprice->setStatus($status);            
         
         $rawprice->setArticle($data['article']);
@@ -164,17 +164,13 @@ class ParseManager {
         $rawprice->setSale($data['sale']);
         $rawprice->setImage($data['image']);
         $rawprice->setPriceDescription($data['priceDescription']);
-
-        $this->entityManager->persist($rawprice);
-
-        if ($flushnow){
-            $this->entityManager->flush();
-            $this->entityManager->clear();
-        }    
         
+        $this->entityManager->getRepository(Rawprice::class)
+                ->updateRawprice($rawprice);
+
         return;
-    }
-    
+    }    
+
     /*
      * Поиск прайса для разбоки
      * return Application\Entity\Raw
@@ -274,10 +270,9 @@ class ParseManager {
                 if (($coincidence *100/ $i) > 30){
                     $oldRaw->setStatus(Raw::STATUS_RETIRED);
                     $this->entityManager->persist($oldRaw);
+                    $this->entityManager->flush($oldRaw);            
                 }                      
             }    
-            
-            $this->entityManager->flush();
             
         }  
         
@@ -293,7 +288,6 @@ class ParseManager {
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
-        $i = 0;
         
         if (!$raw){
             $raw = $this->findRawForParse();
@@ -306,22 +300,16 @@ class ParseManager {
 
             if (count($priceDescriptionFunc)){
                 
-//                $raw->setStatus(Raw::STATUS_PARSE);
-//                $this->entityManager->persist($raw);
+                $raw->setStatus(Raw::STATUS_PARSE);
+                $this->entityManager->persist($raw);
+                $this->entityManager->flush();
             
                 foreach ($rawprices as $rawprice){
 
                     if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
                         $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSE);
-
-                        $i++;
-                        if (($i % $this::ROW_BATCHSIZE) === 0) {
-                            $this->entityManager->flush();
-                        }
                     }    
                 }
-                
-                $this->entityManager->flush();
                 
                 $parsedAll = true;
                 $statuses = $this->entityManager->getRepository(Raw::class)
@@ -332,15 +320,14 @@ class ParseManager {
                     }
                 }
 
-                if ($parsedAll){
+                if ($parsedAll){            
                     $raw->setStatus(Raw::STATUS_PARSED);
                     $this->entityManager->persist($raw);                    
-                    $this->entityManager->flush();
+                    $this->entityManager->flush($raw);
                     
                     $this->setOldRaw($raw);
                 }
 
-                $this->entityManager->clear();
             }    
         }    
         
