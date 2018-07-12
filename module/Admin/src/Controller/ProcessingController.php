@@ -165,6 +165,8 @@ class ProcessingController extends AbstractActionController
      */
     public function rawPricesAction()
     {
+        set_time_limit(0);
+
         $settings = $this->adminManager->getPriceSettings();
         
         if ($settings['upload_raw'] == 1){

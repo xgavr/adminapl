@@ -178,6 +178,7 @@ class RawManager {
                     $raw->setDateCreated($currentDate);
 
                     $this->entityManager->persist($raw);
+                    $this->entityManager->flush();                    
 
                     while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
 
@@ -204,6 +205,7 @@ class RawManager {
                         $i++;
                         if (($i % $this::PRICE_BATCHSIZE) === 0) {
                             $this->entityManager->flush();
+                            $this->entityManager->clear();
                         }
                         
                     }
@@ -256,6 +258,7 @@ class RawManager {
                 $raw->setDateCreated($currentDate);
 
                 $this->entityManager->persist($raw);
+                $this->entityManager->flush();                    
                     
                 $filter = new RawToStr();
                     
@@ -301,6 +304,7 @@ class RawManager {
                             $i++;
                             if (($i % $this::PRICE_BATCHSIZE) === 0) {
                                 $this->entityManager->flush();
+                                $this->entityManager->clear();
                             }
 
                         }
@@ -359,6 +363,7 @@ class RawManager {
                 $raw->setDateCreated($currentDate);
 
                 $this->entityManager->persist($raw);
+                $this->entityManager->flush();                    
                     
                 $filter = new RawToStr();
                     
@@ -392,6 +397,7 @@ class RawManager {
                             $i++;
                             if (($i % $this::PRICE_BATCHSIZE) === 0) {
                                 $this->entityManager->flush();
+                                $this->entityManager->clear();
                             }
 
                         }

@@ -59,7 +59,7 @@ class RawController extends AbstractActionController
                 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setDefaultItemCountPerPage(10); 
         $paginator->setCurrentPageNumber($page);
 
         $statuses = $this->entityManager->getRepository(Rawprice::class)

@@ -306,8 +306,8 @@ class ParseManager {
 
             if (count($priceDescriptionFunc)){
                 
-                $raw->setStatus(Raw::STATUS_PARSE);
-                $this->entityManager->persist($raw);
+//                $raw->setStatus(Raw::STATUS_PARSE);
+//                $this->entityManager->persist($raw);
             
                 foreach ($rawprices as $rawprice){
 
@@ -338,10 +338,6 @@ class ParseManager {
                     $this->entityManager->flush();
                     
                     $this->setOldRaw($raw);
-                } else {
-                    $raw->setStatus(Raw::STATUS_ACTIVE);
-                    $this->entityManager->persist($raw);                    
-                    $this->entityManager->flush();                    
                 }
 
                 $this->entityManager->clear();
