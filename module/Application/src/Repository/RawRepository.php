@@ -21,7 +21,7 @@ class RawRepository extends EntityRepository
     /*
      * Быстрая вставка строки прайса
      */
-    public function insertRawprice($row, $id)
+    public function insertRawprice($row)
     {
         return $this->getEntityManager()->getConnection()->insert('rawprice', $row);
     }
