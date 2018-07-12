@@ -16,8 +16,16 @@ use Application\Entity\Rawprice;
  *
  * @author Daddy
  */
-class RawRepository extends EntityRepository{
-
+class RawRepository extends EntityRepository
+{
+    /*
+     * Быстрая вставка строки прайса
+     */
+    public function insertRawprice($row)
+    {
+        return $this->getEntityManager()->getConnection()->insert('rawprice', $row);
+    }
+    
     public function findAllRaw($status = null, $supplier = null, $exceptRaw = null)
     {
         $entityManager = $this->getEntityManager();

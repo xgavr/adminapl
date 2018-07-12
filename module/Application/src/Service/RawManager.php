@@ -157,7 +157,6 @@ class RawManager {
 
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
-                $pathinfo = pathinfo($filename);
                 $basenameFilter = new Basename();
                 
                 $lines = fopen($filename, 'r');
@@ -185,35 +184,23 @@ class RawManager {
                         $str = $filter->filter($row);
 
                         if ($str){
-                            $rawprice = new Rawprice();
-                        
-                            $rawprice->setRawdata($str);
+                            $data = [
+                                'rawdata' => $filter->filter($row),
+                                'status'  => Rawprice::STATUS_NEW,
+                                'date_created' => date('Y-m-d H:i:s'),
+                                'raw_id' => $raw->getId(),
+                                'good_id' => null,
+                                'unknown_producer_id' => null,
+                            ];
 
-                            $rawprice->setStatus(Rawprice::STATUS_NEW);
-
-                            $rawprice->setRaw($raw);
-
-                            $currentDate = date('Y-m-d H:i:s');
-                            $rawprice->setDateCreated($currentDate);
-
-                            // Добавляем сущность в менеджер сущностей.
-                            $this->entityManager->persist($rawprice);
-
-                            $raw->addRawprice($rawprice);
-                        }    
-                        
-                        $i++;
-                        if (($i % $this::PRICE_BATCHSIZE) === 0) {
-                            $this->entityManager->flush();
-                            $this->entityManager->clear();
-                        }
-                        
+                            $this->entityManager->getRepository(Rawprice::class)
+                                    ->insertRawprice($data);
+                        }                            
                     }
                     
                     $raw->setStatus(Raw::STATUS_ACTIVE);
                     $this->entityManager->persist($raw);
                     $this->entityManager->flush();                    
-                    $this->entityManager->clear();
 
                     fclose($lines);
                 }                                
@@ -236,7 +223,6 @@ class RawManager {
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
-        $i = 0;
         
         if (file_exists($filename)){
             
@@ -246,7 +232,6 @@ class RawManager {
 
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
-                $pathinfo = pathinfo($filename);
                 $basenameFilter = new Basename();
                 
                 $raw = new Raw();
@@ -285,28 +270,18 @@ class RawManager {
 
                             if ($str){
                               
-                                $rawprice = new Rawprice();
-                                $rawprice->setRawdata($filter->filter($row));
-
-                                $rawprice->setStatus(Rawprice::STATUS_NEW);
-
-                                $rawprice->setRaw($raw);
-
-                                $currentDate = date('Y-m-d H:i:s');
-                                $rawprice->setDateCreated($currentDate);
-
-                                // Добавляем сущность в менеджер сущностей.
-                                $this->entityManager->persist($rawprice);
-
-                                $raw->addRawprice($rawprice);
-                            }    
-                            
-                            $i++;
-                            if (($i % $this::PRICE_BATCHSIZE) === 0) {
-                                $this->entityManager->flush();
-                                $this->entityManager->clear();
-                            }
-
+                                $data = [
+                                    'rawdata' => $filter->filter($row),
+                                    'status'  => Rawprice::STATUS_NEW,
+                                    'date_created' => date('Y-m-d H:i:s'),
+                                    'raw_id' => $raw->getId(),
+                                    'good_id' => null,
+                                    'unknown_producer_id' => null,
+                                ];
+                                
+                                $this->entityManager->getRepository(Rawprice::class)
+                                        ->insertRawprice($data);
+                            }                               
                         }
                     }
                     
@@ -315,7 +290,6 @@ class RawManager {
                 $raw->setStatus(Raw::STATUS_ACTIVE);
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
-                $this->entityManager->clear();
 
                 unset($excel);
                 unset($mvexcel);
@@ -338,7 +312,6 @@ class RawManager {
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
-        $i = 0;
         
         if (file_exists($filename)){
             
@@ -348,7 +321,6 @@ class RawManager {
             
             if ($supplier->getStatus() == $supplier->getStatusActive()){
                 
-                $pathinfo = pathinfo($filename);
                 $basenameFilter = new Basename();
                 
                 $mvexcel = new Service\PhpExcelService();
@@ -376,30 +348,19 @@ class RawManager {
                             $str = $filter->filter($row);
 
                             if ($str){
-
-                                $rawprice = new Rawprice();
-                            
-                                $rawprice->setRawdata($filter->filter($row));
-
-                                $rawprice->setStatus(Rawprice::STATUS_NEW);
-
-                                $rawprice->setRaw($raw);
-
-                                $currentDate = date('Y-m-d H:i:s');
-                                $rawprice->setDateCreated($currentDate);
-
-                                // Добавляем сущность в менеджер сущностей.
-                                $this->entityManager->persist($rawprice);
-
-                                $raw->addRawprice($rawprice);
-                            }    
-                            
-                            $i++;
-                            if (($i % $this::PRICE_BATCHSIZE) === 0) {
-                                $this->entityManager->flush();
-                                $this->entityManager->clear();
-                            }
-
+                                
+                                $data = [
+                                    'rawdata' => $filter->filter($row),
+                                    'status'  => Rawprice::STATUS_NEW,
+                                    'date_created' => date('Y-m-d H:i:s'),
+                                    'raw_id' => $raw->getId(),
+                                    'good_id' => null,
+                                    'unknown_producer_id' => null,
+                                ];
+                                
+                                $this->entityManager->getRepository(Rawprice::class)
+                                        ->insertRawprice($data);
+                            }                                
                         }
                     }
                     
@@ -408,7 +369,6 @@ class RawManager {
                 $raw->setStatus(Raw::STATUS_ACTIVE);
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
-                $this->entityManager->clear();
 
                 unset($excel);
                 unset($mvexcel);
