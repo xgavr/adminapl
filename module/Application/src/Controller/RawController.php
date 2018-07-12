@@ -50,17 +50,17 @@ class RawController extends AbstractActionController
     
     public function indexAction()
     {
-        $page = $this->params()->fromQuery('page', 1);
-        
-        $status = $this->params()->fromQuery('status');
-        
-        $query = $this->entityManager->getRepository(Raw::class)
-                    ->findAllRaw($status);
-                
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10); 
-        $paginator->setCurrentPageNumber($page);
+//        $page = $this->params()->fromQuery('page', 1);
+//        
+//        $status = $this->params()->fromQuery('status');
+//        
+//        $query = $this->entityManager->getRepository(Raw::class)
+//                    ->findAllRaw($status);
+//                
+//        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
+//        $paginator = new Paginator($adapter);
+//        $paginator->setDefaultItemCountPerPage(10); 
+//        $paginator->setCurrentPageNumber($page);
 
         $statuses = $this->entityManager->getRepository(Rawprice::class)
                 ->rawpriceStatuses();
@@ -76,12 +76,37 @@ class RawController extends AbstractActionController
         
         // Визуализируем шаблон представления.
         return new ViewModel([
-            'raws' => $paginator,
+            //'raws' => $paginator,
             'statuses' => $statuses,
             'rawStatuses' => $rawStatuses,
         ]);  
     }
     
+    public function contentAction()
+    {
+        
+        $q = $this->params()->fromQuery('search', '');
+        $status = $this->params()->fromQuery('status');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(Raw::class)
+                    ->findAllRaw($status);            
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);         
+    }
+
+
     public function viewAction() 
     {       
         $rawId = (int)$this->params()->fromRoute('id', -1);
