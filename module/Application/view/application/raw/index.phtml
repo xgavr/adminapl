@@ -47,12 +47,12 @@ $this->headScript()
             <thead>
                 <tr>
                      <th data-field="0" data-formatter="idFormatter" data-type="numeric">ID</th>
-                     <!--<th data-field="supplier">Поставщик</th>-->
+                     <th data-field="0" data-formatter="supplierFormatter">Поставщик</th>
                      <th data-field="0" data-formatter="filenameFormatter">Файл</th>
                      <th data-field="rowcount">Строк</th>
-<!--                     <th data-field="status">Status</th>
-                     <th data-field="dateCreated">Дата</th>
-                     <th data-field="code">Действие</th>-->
+                     <th data-field="0" data-formatter="statusFormatter">Состояние</th>
+                     <th data-field="0" data-formatter="dateCreatedFormatter">Дата</th>
+                     <th data-field="0" data-formatter="activeFormatter">Действие</th>
                  </tr>                
             </thead>
         </table>
@@ -130,47 +130,43 @@ $this->headScript()
         return res;
     }
     
-    function incartFormatter(value, row){
+    function activeFormatter(value, row){
+        var url = '/raw/delete-form/'+value.id;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn';
-        if (row.incart){
-            btn += ' btn-success"';  
-        } else {
-            btn += ' btn-default"';
-        }
+        btn += ' class="btn btn-danger btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 
-        btn += ' id="shop_index_add_cart_' + row.id+'"';
-        btn += ' onClick="addCart({good: '+row.id+', price: '+row.price+'})"';
-        if (row.available && row.price > 0){
-            btn += '>';
-        } else {
-            btn += ' disabled>';
-        }
-        btn += '<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>';
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }
     
     function idFormatter(value, row) {
-        console.log(value);
         return value.id;
     }
     
+    function supplierFormatter(value, row) {
+        return '<a href="/supplier/view/'+value.supplier.id+'">'+value.supplier.name+'</a>';
+    }
+    
     function filenameFormatter(value, row) {
-        return value.filename;
+        return '<a href="/raw/view/'+value.id+'">'+value.filename+'</a>';
     }
     
-    function numFormatter(value, row){
-       return '<input class="form-control input-sm" id="num'+row.id+'" style="width: 100px" min="1" type="number" value="1"/>'; 
+    function statusFormatter(value, row) {
+        switch (value.status){
+            case '2': return 'Удален'; 
+            case '3': return 'Разобран'; 
+            case '4': return 'Загружается'; 
+            case '5': return 'Разбирается'; 
+            default: return 'Новый';    
+        }
     }
     
-    function producerFormatter(value, row) {
-        return value.name;
-    }
-    
-    function priceFormatter(value, row) {
-        return parseFloat(value).toFixed(2);
+    function dateCreatedFormatter(value, row) {
+        return value.dateCreated;
     }
     
     var addCart = function(data){

@@ -50,17 +50,6 @@ class RawController extends AbstractActionController
     
     public function indexAction()
     {
-//        $page = $this->params()->fromQuery('page', 1);
-//        
-//        $status = $this->params()->fromQuery('status');
-//        
-//        $query = $this->entityManager->getRepository(Raw::class)
-//                    ->findAllRaw($status);
-//                
-//        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-//        $paginator = new Paginator($adapter);
-//        $paginator->setDefaultItemCountPerPage(10); 
-//        $paginator->setCurrentPageNumber($page);
 
         $statuses = $this->entityManager->getRepository(Rawprice::class)
                 ->rawpriceStatuses();
@@ -76,7 +65,6 @@ class RawController extends AbstractActionController
         
         // Визуализируем шаблон представления.
         return new ViewModel([
-            //'raws' => $paginator,
             'statuses' => $statuses,
             'rawStatuses' => $rawStatuses,
         ]);  

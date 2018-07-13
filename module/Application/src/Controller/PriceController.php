@@ -335,13 +335,8 @@ class PriceController extends AbstractActionController
      * Очередь файлов с прайсам для загрузки
      */
     public function queueAction()
-    {
-        
-        $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
-                    ->findBy([]);
-        
+    {        
         return new ViewModel([
-            'priceGettings' => $priceGettings,
             'supplierManager' => $this->supplierManager,
             'files' => $this->supplierManager->getPriceFilesToUpload(),
         ]);

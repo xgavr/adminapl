@@ -177,7 +177,8 @@ class SupplierManager
         $result = [];
         $sort_array = [];
         $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
-                    ->findBy([]);
+                    ->findBy(['status' => PriceGetting::STATUS_ACTIVE]);
+        
         foreach ($priceGettings as $priceGetting){
             $files = $this->getLastPriceFile($priceGetting->getSupplier());
             if (count($files)){
