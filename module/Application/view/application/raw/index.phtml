@@ -46,13 +46,13 @@ $this->headScript()
             >
             <thead>
                 <tr>
-                     <th data-field="0" data-formatter="idFormatter" data-type="numeric">ID</th>
-                     <th data-field="0" data-formatter="supplierFormatter">Поставщик</th>
-                     <th data-field="0" data-formatter="filenameFormatter">Файл</th>
-                     <th data-field="rowcount">Строк</th>
-                     <th data-field="0" data-formatter="statusFormatter">Состояние</th>
-                     <th data-field="0" data-formatter="dateCreatedFormatter">Дата</th>
-                     <th data-field="0" data-formatter="activeFormatter">Действие</th>
+                     <th data-field="id" data-type="numeric">ID</th>
+                     <th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>
+                     <th data-field="filename"  data-formatter="filenameFormatter">Файл</th>
+                     <th data-field="">Строк</th>
+                     <th data-field="status" data-formatter="statusFormatter">Состояние</th>
+                     <th data-field="dateCreated" data-formatter="dateCreatedFormatter">Дата</th>
+                     <th data-field="" data-formatter="activeFormatter">Действие</th>
                  </tr>                
             </thead>
         </table>
@@ -131,7 +131,7 @@ $this->headScript()
     }
     
     function activeFormatter(value, row){
-        var url = '/raw/delete-form/'+value.id;
+        var url = '/raw/delete-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs this-delete"';
@@ -143,16 +143,12 @@ $this->headScript()
         return btn;
     }
     
-    function idFormatter(value, row) {
-        return value.id;
-    }
-    
     function supplierFormatter(value, row) {
-        return '<a href="/supplier/view/'+value.supplier.id+'">'+value.supplier.name+'</a>';
+        return '<a href="/supplier/view/'+value.id+'">'+value.name+'</a>';
     }
     
     function filenameFormatter(value, row) {
-        return '<a href="/raw/view/'+value.id+'">'+value.filename+'</a>';
+        return '<a href="/raw/view/'+row.id+'">'+value+'</a>';
     }
     
     function statusFormatter(value, row) {
@@ -166,7 +162,7 @@ $this->headScript()
     }
     
     function dateCreatedFormatter(value, row) {
-        return value.dateCreated;
+        return value;
     }
     
     var addCart = function(data){
