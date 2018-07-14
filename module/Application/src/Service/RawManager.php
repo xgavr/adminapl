@@ -168,16 +168,18 @@ class RawManager {
                 
                     $filter = new RawToStr();
 
+                    $rows = 0;
                     $raw = new Raw();
                     $raw->setSupplier($supplier);
                     $raw->setFilename($basenameFilter->filter($filename));
                     $raw->setStatus(Raw::STATUS_LOAD);
+                    $raw->setRows($rows);                    
 
                     $currentDate = date('Y-m-d H:i:s');
                     $raw->setDateCreated($currentDate);
 
                     $this->entityManager->persist($raw);
-                    $this->entityManager->flush();                    
+                    $this->entityManager->flush();
 
                     while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
 
@@ -195,10 +197,12 @@ class RawManager {
 
                             $this->entityManager->getRepository(Rawprice::class)
                                     ->insertRawprice($data);
+                            $rows ++;
                         }                            
                     }
                     
                     $raw->setStatus(Raw::STATUS_ACTIVE);
+                    $raw->setRows($rows);                    
                     $this->entityManager->persist($raw);
                     $this->entityManager->flush();                    
 
@@ -234,16 +238,18 @@ class RawManager {
                 
                 $basenameFilter = new Basename();
                 
+                $rows = 0;
                 $raw = new Raw();
                 $raw->setSupplier($supplier);
                 $raw->setFilename($basenameFilter->filter($filename));
                 $raw->setStatus(Raw::STATUS_LOAD);
+                $raw->setRows($rows);
 
                 $currentDate = date('Y-m-d H:i:s');
                 $raw->setDateCreated($currentDate);
 
                 $this->entityManager->persist($raw);
-                $this->entityManager->flush();                    
+                $this->entityManager->flush();
                     
                 $filter = new RawToStr();
                     
@@ -281,6 +287,7 @@ class RawManager {
                                 
                                 $this->entityManager->getRepository(Rawprice::class)
                                         ->insertRawprice($data);
+                                $rows ++;
                             }                               
                         }
                     }
@@ -288,6 +295,7 @@ class RawManager {
                 }
                 
                 $raw->setStatus(Raw::STATUS_ACTIVE);
+                $raw->setRows($rows);
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
 
@@ -326,16 +334,18 @@ class RawManager {
                 $mvexcel = new Service\PhpExcelService();
                 $excel = $mvexcel->createPHPExcelObject($filename);
 
+                $rows = 0;
                 $raw = new Raw();
                 $raw->setSupplier($supplier);
                 $raw->setFilename($basenameFilter->filter($filename));
                 $raw->setStatus(Raw::STATUS_LOAD);
+                $raw->setRows($rows);
 
                 $currentDate = date('Y-m-d H:i:s');
                 $raw->setDateCreated($currentDate);
 
                 $this->entityManager->persist($raw);
-                $this->entityManager->flush();                    
+                $this->entityManager->flush();
                     
                 $filter = new RawToStr();
                     
@@ -360,6 +370,7 @@ class RawManager {
                                 
                                 $this->entityManager->getRepository(Rawprice::class)
                                         ->insertRawprice($data);
+                                $rows ++;
                             }                                
                         }
                     }
@@ -367,6 +378,7 @@ class RawManager {
                 }
                 
                 $raw->setStatus(Raw::STATUS_ACTIVE);
+                $raw->setRows($rows);
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
 

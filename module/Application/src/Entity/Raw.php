@@ -45,6 +45,11 @@ class Raw {
      */
     protected $filename;
 
+    /**
+     * @ORM\Column(name="rows")   
+     */
+    protected $rows;
+
     /** 
      * @ORM\Column(name="status")  
      */
@@ -111,6 +116,16 @@ class Raw {
     public function setName($name) 
     {
         $this->name = $name;
+    }     
+
+    public function getRows() 
+    {
+        return $this->rows;
+    }
+
+    public function setRows($rows) 
+    {
+        $this->rows = $rows;
     }     
 
     
