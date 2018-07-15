@@ -37,7 +37,7 @@ class ToUtf8 extends AbstractFilter
         if (mb_detect_encoding($value, 'UTF-8', true) == 'UTF-8'){
             return $value;
         } else {        
-            return iconv('Windows-1251', 'UTF-8', $value);
+            return iconv('Windows-1251', 'UTF-8//IGNORE', $value);
         }    
     }
     
