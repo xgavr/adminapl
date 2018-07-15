@@ -373,7 +373,7 @@ class Rawprice {
 
     public function setLot($lot) 
     {
-        $this->lot = (int) $lot;
+        $this->lot = (string) $lot;
     }     
 
     public function getBar() 
@@ -413,7 +413,7 @@ class Rawprice {
 
     public function setWeight($weight) 
     {
-        $this->weight = (float) $weight;
+        $this->weight = (string) $weight;
     }     
 
     public function getCountry() 
@@ -433,7 +433,7 @@ class Rawprice {
 
     public function setMarkdown($markdown) 
     {
-        $this->markdown = (int) !empty($markdown);
+        $this->markdown = (string) $markdown;
     }     
 
     public function getSale() 
@@ -443,7 +443,7 @@ class Rawprice {
 
     public function setSale($sale) 
     {
-        $this->sale = (int) !empty($sale);
+        $this->sale = (string) $sale;
     }     
 
     public function getImage() 
