@@ -410,6 +410,7 @@ class RawManager {
                 $validator = new IsCompressed();
 
                 if ($validator->isValid($filename) && $pathinfo['extension'] != 'xlsx'){
+                    setlocale(LC_ALL,'ru_RU.UTF-8');
                     $filter = new Decompress([
                         'adapter' => $pathinfo['extension'],
                         'options' => [
