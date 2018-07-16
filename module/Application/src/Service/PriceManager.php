@@ -13,6 +13,7 @@ use Application\Entity\PriceGetting;
 use Zend\Http\Client;
 use Application\Validator\FileExtensionValidator;
 use Application\Validator\PriceNameValidator;
+use Application\Filter\Basename;
 
 /**
  * Description of PriceManager
@@ -103,8 +104,8 @@ class PriceManager {
     public function putPriceFileToApl($supplier, $filename)
     {
         if (file_exists($filename)){
-            $pathinfo = pathinfo($filename);
-            $destfile = '/'.$supplier->getAplId().'/'.$pathinfo['basename'];
+            $filter = new Basename();
+            $destfile = '/'.$supplier->getAplId().'/'.$filter->filter($filename);
             return $this->ftpManager->putPriceToApl(['source_file' => realpath($filename), 'dest_file' => $destfile]);
         }
         

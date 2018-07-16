@@ -126,10 +126,10 @@ class RawManager {
     {
 
         if (file_exists($filename)){
-            $pathinfo = pathinfo($filename);
+            $filter = new Basename();
             $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
             if (is_dir($arx_folder)){
-                if (copy(realpath($filename), realpath($arx_folder).'/'.$pathinfo['basename'])){
+                if (copy(realpath($filename), realpath($arx_folder).'/'.$filter->filter($filename))){
                     unlink(realpath($filename));
                 }
             }
