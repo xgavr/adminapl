@@ -24,8 +24,11 @@ class Supplier {
         
      // Supplier status constants.
     const STATUS_ACTIVE       = 1; // Active user.
-    const STATUS_RETIRED      = 2; // Retired user.
+    const STATUS_RETIRED      = 2; // Retired user.    
    
+    const PRICE_FOLDER       = './data/prices'; // папка с прайсами
+    const PRICE_FOLDER_ARX   = './data/prices/arx'; // папка с архивами прайсов
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -129,6 +132,16 @@ class Supplier {
     {
         $this->id = $id;
     }     
+    
+    public function getPriceFolder()
+    {
+        return self::PRICE_FOLDER.'/'.$this->getId();
+    }
+
+    public function getArxPriceFolder()
+    {
+        return self::PRICE_FOLDER_ARX.'/'.$this->getId();
+    }
 
     public function getAplId() 
     {

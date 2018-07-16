@@ -117,6 +117,33 @@ class RawManager {
         return;
     }    
     
+    
+    /*
+     * 
+     * Удаление старых файлов
+     * 
+     * @var Application\Entity\Supplier $supplier
+     * @var string $folderName
+     * 
+     */
+    public function removeOldPrices($supplier)
+    {    
+        $check_time = 60*60*24*7; //Неделя
+        
+        $folderName = $supplier->getArxPriceFolder();
+        if (is_dir($folderName)){
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    if ((time() - $check_time) > $fileInfo->getMTime()){
+                        unlink(realpath($fileInfo->getPathname()));
+                    }    
+                }
+            }
+        }
+        return;
+    }    
+    
     /*
      * Переместить файл в архив
      * @var Application\Entity\Supplier
@@ -134,6 +161,8 @@ class RawManager {
                 }
             }
         }
+        
+        $this->removeOldPrices($supplier);
         
         return;
     }
