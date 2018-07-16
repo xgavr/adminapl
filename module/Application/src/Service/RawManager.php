@@ -100,6 +100,7 @@ class RawManager {
      */
     public function checkPriceFolder($supplier, $folderName)
     {    
+        setlocale(LC_ALL,'ru_RU.UTF-8');
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
