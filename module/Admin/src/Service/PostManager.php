@@ -323,8 +323,16 @@ class PostManager {
 			}
 		}
 	}
-
-        return iconv_mime_decode($filename, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'utf-8');
+        
+        if (substr($filename, 0, 2) == '=?'){
+            $result = iconv_mime_decode($filename, ICONV_MIME_DECODE_STRICT, 'utf-8');
+        } else {    
+            $filter = new \Application\Filter\ToUtf8();
+            $result = $filter->filter($filename);
+        }
+        return $result;
+//        return iconv_mime_decode($filename, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'utf-8');
+//        return mb_decode_mimeheader($filename);
     }    
     
     /*
@@ -468,7 +476,7 @@ class PostManager {
                                             case 8: // other
                                             case 9: // other
                                                     $filename = $this->getFilenameFromPart($part);
-
+//var_dump($filename);
                                                     if($filename) {
                                                             // it's an attachment
                                                             if (isset($structure->parts)){
