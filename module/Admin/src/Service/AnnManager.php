@@ -45,12 +45,34 @@ class AnnManager
             $filename = realpath(self::DATA_DIR . "xor.data");
             
             if (file_exists($filename)){
+                $target = self::DATA_DIR . "xor_float.net";
+
+                if (!file_exists($target)){
+                    $fh = fopen($target, 'w') or die("Can't create file");
+                    fclose($fh);
+                }
                 if (fann_train_on_file($ann, $filename, $max_epochs, $epochs_between_reports, $desired_error))
-                    fann_save($ann, realpath(self::DATA_DIR . "xor_float.net"));
+                    fann_save($ann, realpath($target));
             }    
             
             fann_destroy($ann);
         }        
+    }
+    
+    public function test()
+    {
+        $train_file = (self::DATA_DIR  . "xor_float.net");
+        if (!is_file($train_file))
+            die("The file xor_float.net has not been created! Please run simple_train.php to generate it");
+
+        $ann = fann_create_from_file(realpath($train_file));
+        if (!$ann)
+            die("ANN could not be created");
+
+        $input = array(11, 1);
+        $calc_out = fann_run($ann, $input);
+        printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
+        fann_destroy($ann);        
     }
     
 }
