@@ -325,7 +325,7 @@ class PostManager {
 	}
         
         if (substr($filename, 0, 2) == '=?'){
-            $result = iconv_mime_decode($filename, ICONV_MIME_DECODE_STRICT, 'utf-8');
+            $result = iconv_mime_decode($filename, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'utf-8');
         } else {    
             $filter = new \Application\Filter\ToUtf8();
             $result = $filter->filter($filename);
