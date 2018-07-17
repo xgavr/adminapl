@@ -87,13 +87,14 @@ class AnnManager
         $i = 0;
         $result = [];
         if (is_array($suppliers)){
-            foreach ($suppliers as $supplier){
+            foreach ($suppliers as $supplierId){
                 $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                        ->findBy(['supplier' => $supplier, 'status' => \Application\Entity\Raw::STATUS_PARSED]);
+                        ->findBy(['supplier' => $supplierId, 'status' => \Application\Entity\Raw::STATUS_PARSED]);
                 foreach ($raws as $raw){
                     if (!$raw->getRows()) continue;
                      $oldRaws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                             ->findOldRaw($raw);
+        var_dump(count($oldRaws));
                     foreach ($oldRaws as $oldRaw){
                         if (!$oldRaw->getRows()) continue;
                         if ($oldRaw->getStatus = \Application\Entity\Raw::STATUS_RETIRED){
