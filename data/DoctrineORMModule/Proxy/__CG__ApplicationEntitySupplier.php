@@ -202,6 +202,28 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     /**
      * {@inheritDoc}
      */
+    public function getPriceFolder()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPriceFolder', []);
+
+        return parent::getPriceFolder();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getArxPriceFolder()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getArxPriceFolder', []);
+
+        return parent::getArxPriceFolder();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getAplId()
     {
 

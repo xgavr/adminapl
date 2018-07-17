@@ -302,5 +302,23 @@ class IndexController extends AbstractActionController
         ]);                
         
     }
+    
+    public function trainAction()
+    {
+        $suppliers = [
+            1, //acs
+            8, //sosed
+            85,
+            9,
+        ];
+        
+        $result = $this->annManager->removeOldPricesTrain($suppliers);
+        var_dump($result);
+        
+        return new JsonModel([
+            'ok'
+        ]);                
+                
+    }
 
 }

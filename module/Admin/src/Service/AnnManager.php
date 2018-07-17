@@ -82,21 +82,36 @@ class AnnManager
      */
     public function removeOldPricesTrain($suppliers)            
     {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
         $filename = self::DATA_DIR . 'remove_old_prices.data';
+        $i = 0;
+        $result = [];
         if (is_array($suppliers)){
             foreach ($suppliers as $supplier){
                 $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                        ->findBy(['status' => \Application\Entity\Raw::STATUS_PARSED]);
+                        ->findBy(['supplier' => $supplier, 'status' => \Application\Entity\Raw::STATUS_PARSED]);
                 foreach ($raws as $raw){
+                    if (!$raw->getRows()) continue;
                      $oldRaws = $this->entityManager->getRepository(Raw::class)
                             ->findOldRaw($raw);
                     foreach ($oldRaws as $oldRaw){
-                        
+                        if (!$oldRaw->getRows()) continue;
+                        if ($oldRaw->getStatus = \Application\Entity\Raw::STATUS_RETIRED){
+                            $result[] = [ 
+                                'input' => [
+                                        levenshtein($raw->getFilename(), $oldRaw->getFilename), //сравнение наименований файлов прайсов
+                                        round($raw->getRows()/$oldRow->getRows(), 3), //отношение количества строк                                
+                                    ],
+                                'output' => $oldRaw->getStatus(), //статус
+                               ];
+                            $i ++; //количество объектов
+                        }    
                     }
                 }
             }
         }
-        return;
+        
+        return $result;
     }
     
 }
