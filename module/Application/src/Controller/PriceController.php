@@ -282,6 +282,7 @@ class PriceController extends AbstractActionController
     
     public function downloadPriceFileFormAction()
     {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
         $filename = $this->params()->fromQuery('filename');
         
         $file = realpath($filename);
