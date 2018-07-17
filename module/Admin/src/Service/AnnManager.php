@@ -92,7 +92,7 @@ class AnnManager
                         ->findBy(['supplier' => $supplier, 'status' => \Application\Entity\Raw::STATUS_PARSED]);
                 foreach ($raws as $raw){
                     if (!$raw->getRows()) continue;
-                     $oldRaws = $this->entityManager->getRepository(Raw::class)
+                     $oldRaws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                             ->findOldRaw($raw);
                     foreach ($oldRaws as $oldRaw){
                         if (!$oldRaw->getRows()) continue;
