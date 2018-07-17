@@ -75,4 +75,28 @@ class AnnManager
         fann_destroy($ann);        
     }
     
+    /*
+     * Подготовка обучающей выбоки для решения по удалению старых прайсов
+     * @param array $suppliers - список постащиков для выборки
+     * @return file - файл с данными для обучения в формате fann
+     */
+    public function removeOldPricesTrain($suppliers)            
+    {
+        $filename = self::DATA_DIR . 'remove_old_prices.data';
+        if (is_array($suppliers)){
+            foreach ($suppliers as $supplier){
+                $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                        ->findBy(['status' => \Application\Entity\Raw::STATUS_PARSED]);
+                foreach ($raws as $raw){
+                     $oldRaws = $this->entityManager->getRepository(Raw::class)
+                            ->findOldRaw($raw);
+                    foreach ($oldRaws as $oldRaw){
+                        
+                    }
+                }
+            }
+        }
+        return;
+    }
+    
 }
