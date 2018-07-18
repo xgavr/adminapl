@@ -80,32 +80,30 @@ class AnnManager
      * @param array $suppliers - список постащиков для выборки
      * @return file - файл с данными для обучения в формате fann
      */
-    public function removeOldPricesTrain($suppliers)            
+    public function removeOldPricesTrain()            
     {
-        setlocale(LC_ALL,'ru_RU.UTF-8');
+
         $filename = self::DATA_DIR . 'remove_old_prices.data';
         $i = 0;
         $result = [];
-        if (is_array($suppliers)){
-            foreach ($suppliers as $supplierId){
-                $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                        ->findBy(['supplier' => $supplierId, 'status' => \Application\Entity\Raw::STATUS_PARSED]);
-                foreach ($raws as $raw){
-                    if (!$raw->getRows()) continue;
-                     $oldRaws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                            ->findOldDeletedRaw($raw);
-                    foreach ($oldRaws as $oldRaw){
-                        if (!$oldRaw->getRows()) continue;
-                        $result[] = [ 
-                            'input' => [
-                                    similar_text($raw->getFilename(), $oldRaw->getFilename), //сравнение наименований файлов прайсов
-                                    round($raw->getRows()/$oldRaw->getRows(), 3), //отношение количества строк                                
-                                ],
-                            'output' => $oldRaw->getStatus(), //статус
-                           ];
-                        $i ++; //количество объектов
-                        //break;
-                    }
+        foreach ($suppliers as $supplierId){
+            $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findBy(['supplier' => $supplierId, 'status' => \Application\Entity\Raw::STATUS_PARSED]);
+            foreach ($raws as $raw){
+                if (!$raw->getRows()) continue;
+                 $oldRaws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                        ->findOldDeletedRaw($raw);
+                foreach ($oldRaws as $oldRaw){
+                    if (!$oldRaw->getRows()) continue;
+                    $result[] = [ 
+                        'input' => [
+                                similar_text($raw->getFilename(), $oldRaw->getFilename), //сравнение наименований файлов прайсов
+                                round($raw->getRows()/$oldRaw->getRows(), 3), //отношение количества строк                                
+                            ],
+                        'output' => $oldRaw->getStatus(), //статус
+                       ];
+                    $i ++; //количество объектов
+                    //break;
                 }
             }
         }

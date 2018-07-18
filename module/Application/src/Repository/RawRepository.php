@@ -59,7 +59,6 @@ class RawRepository extends EntityRepository
             ->join('c.supplier', 's')    
             //->leftJoin('c.rawprice', 'r', 'WITH', 'r.raw = c.id')
             //->groupBy('c.id')     
-            ->orderBy('c.id', 'DESC')
                 ;
         
         if ($status){
@@ -71,14 +70,19 @@ class RawRepository extends EntityRepository
         if ($supplier){
             $queryBuilder->andWhere('c.supplier = ?3')
             ->setParameter('3', $supplier->getId())    
+            ->addOrderBy('c.filename', 'DESC')        
                 ;                    
         }
 
         if ($exceptRaw){
             $queryBuilder->andWhere('c.id != ?4')
             ->setParameter('4', $exceptRaw->getId())    
+            ->addOrderBy('c.filename', 'DESC')        
                 ;                    
         }
+        
+        $queryBuilder->addOrderBy('c.id', 'DESC');
+        
 //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }        
