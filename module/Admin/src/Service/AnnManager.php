@@ -76,7 +76,7 @@ class AnnManager
     }
     
     /*
-     * Подготовка обучающей выбоки для решения по удалению старых прайсов
+     * Подготовка обучающей выборки для решения по удалению старых прайсов
      * @param array $suppliers - список постащиков для выборки
      * @return file - файл с данными для обучения в формате fann
      */
@@ -93,20 +93,18 @@ class AnnManager
                 foreach ($raws as $raw){
                     if (!$raw->getRows()) continue;
                      $oldRaws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                            ->findOldRaw($raw);
-        var_dump(count($oldRaws));
+                            ->findOldDeletedRaw($raw);
                     foreach ($oldRaws as $oldRaw){
                         if (!$oldRaw->getRows()) continue;
-                        if ($oldRaw->getStatus = \Application\Entity\Raw::STATUS_RETIRED){
-                            $result[] = [ 
-                                'input' => [
-                                        levenshtein($raw->getFilename(), $oldRaw->getFilename), //сравнение наименований файлов прайсов
-                                        round($raw->getRows()/$oldRow->getRows(), 3), //отношение количества строк                                
-                                    ],
-                                'output' => $oldRaw->getStatus(), //статус
-                               ];
-                            $i ++; //количество объектов
-                        }    
+                        $result[] = [ 
+                            'input' => [
+                                    similar_text($raw->getFilename(), $oldRaw->getFilename), //сравнение наименований файлов прайсов
+                                    round($raw->getRows()/$oldRaw->getRows(), 3), //отношение количества строк                                
+                                ],
+                            'output' => $oldRaw->getStatus(), //статус
+                           ];
+                        $i ++; //количество объектов
+                        //break;
                     }
                 }
             }

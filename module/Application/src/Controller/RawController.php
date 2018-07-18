@@ -140,7 +140,7 @@ class RawController extends AbstractActionController
             ->findAllRaw(null, $raw->getSupplier(), $raw)
             ->getResult()
                 ;
-
+        
         // Render the view template.
         return new ViewModel([
             'raw' => $raw,

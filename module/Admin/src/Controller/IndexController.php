@@ -306,7 +306,7 @@ class IndexController extends AbstractActionController
     public function trainAction()
     {
         $suppliers = [
-            7, //acs
+            33, //acs
 //            8, //sosed
 //            85,
 //            9,
