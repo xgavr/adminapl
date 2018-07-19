@@ -42,7 +42,7 @@ class StrSimilar extends AbstractFilter
     //сравнение строк
     public function filter($str1, $str2 = '')
     {
-       // setlocale(LC_ALL,'ru_RU.UTF-8');
+        setlocale(LC_ALL,'ru_RU.UTF-8');
         $per = null;
         similar_text($this->_strNormalize($str1), $this->_strNormalize($str2), $per);        
         return $per;
