@@ -143,6 +143,8 @@ class AnnManager
         $result = $this->createAndRun($data, "xor_float.net");
 
         printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $result[0]);
+        
+        return $result;
     }
     
     
