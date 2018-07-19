@@ -119,11 +119,11 @@ class AnnManager
     
     
     
-    public function deleteRaw($raw, $prevRaw)
+    public function createAndRun($data, $netFilename)
     {
-        $train_file = (self::DATA_DIR  . "deleteRaw.net");
+        $train_file = (self::DATA_DIR  . $netFilename);
         if (!is_file($train_file))
-            die("The file xor_float.net has not been created! Please run deleteRaw.php to generate it");
+            die("The file $netFilename has not been created! Please run $netFilename to generate it");
 
         $ann = fann_create_from_file(realpath($train_file));
         if (!$ann)
@@ -131,8 +131,10 @@ class AnnManager
 
         $input = array(11, 1);
         $calc_out = fann_run($ann, $input);
-        printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
+        //printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
         fann_destroy($ann);        
+        
+        return $calc_out;
     }
     
 }
