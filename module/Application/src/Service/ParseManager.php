@@ -262,8 +262,9 @@ class ParseManager {
     {
         $train_file = $this->annManager->getNetFile("deleteRaw.net");
         if (!is_file($train_file))
-            die("The file xor_float.net has not been created! Please run deleteRaw.php to generate it");
+            die("The file deleteRaw.net has not been created! Please run deleteRaw.php to generate it");
 
+        var_dump(realpath($train_file)); exit;
         $ann = fann_create_from_file(realpath($train_file));
         if (!$ann)
             die("ANN could not be created");
