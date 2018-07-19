@@ -262,7 +262,8 @@ class ParseManager {
     {
         $data = $this->compareRaw($raw, $oldRaw);
         
-        $calc_out = $this->annManager->createAndRun($data, "deleteRaw.net");
+//        $calc_out = $this->annManager->createAndRun($data, "deleteRaw.net");
+        $calc_out = $this->annManager->test2();
 
         return $calc_out[0];
     }
