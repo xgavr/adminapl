@@ -137,4 +137,14 @@ class AnnManager
         return $calc_out;
     }
     
+    public function test2()
+    {
+        $input = array(11, 1);
+        $result = $this->createAndRun($data, "xor_float.net");
+
+        printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $result[0]);
+    }
+    
+    
+    
 }

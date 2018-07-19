@@ -294,7 +294,7 @@ class IndexController extends AbstractActionController
 
     public function testAnnAction()
     {
-        $result = $this->annManager->test();
+        $result = $this->annManager->test2();
         var_dump($result);
         
         return new JsonModel([
