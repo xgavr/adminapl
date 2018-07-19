@@ -29,7 +29,7 @@ class AnnManager
     
     public function getNetFile($filename)
     {
-        $result = self::DATA_DIR.$filename;
+        $result = (self::DATA_DIR . $filename);
         if (file_exists($result)){
             return $result;
         }
