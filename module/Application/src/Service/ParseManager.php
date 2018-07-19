@@ -265,7 +265,7 @@ class ParseManager {
             die("The file deleteRaw.net has not been created! Please run deleteRaw.php to generate it");
 
         //var_dump($train_file); exit;
-        if (file_exists($filename)){
+        if (file_exists($train_file)){
             $ann = fann_create_from_file($train_file);
             if (!$ann)
                 die("ANN could not be created");
