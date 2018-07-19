@@ -264,7 +264,7 @@ class ParseManager {
         if (!is_file($train_file))
             die("The file xor_float.net has not been created! Please run deleteRaw.php to generate it");
 
-        $ann = fann_create_from_file(realpath($train_file));
+        $ann = fann_create_from_file($train_file);
         if (!$ann)
             die("ANN could not be created");
 
