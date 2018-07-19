@@ -39,7 +39,7 @@ class ParseManager {
   
     private $goodManager;
     
-    private $annManager;
+    protected $annManager;
   // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager, $producerManager, $goodManager, $annManager)
     {
@@ -262,7 +262,7 @@ class ParseManager {
     {
         $data = $this->compareRaw($raw, $oldRaw);
         
-        $calc_out = $this->annManager->createAndRun($data, "xor_float.net");
+        $calc_out = $this->annManager->createAndRun($data, "deleteRaw.net");
 
         return $calc_out[0];
     }
