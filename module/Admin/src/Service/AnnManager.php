@@ -119,7 +119,7 @@ class AnnManager
     
     
     
-    public function createAndRun($data, $netFilename)
+    public function createAndRun($input, $netFilename)
     {
         $train_file = (self::DATA_DIR  . $netFilename);
         if (!is_file($train_file))
@@ -129,7 +129,6 @@ class AnnManager
         if (!$ann)
             die("ANN could not be created");
 
-        $input = array(11, 1);
         $calc_out = fann_run($ann, $input);
         //printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
         fann_destroy($ann);        
@@ -140,7 +139,7 @@ class AnnManager
     public function test2()
     {
         $input = array(1, 1);
-        $result = $this->createAndRun($data, "deleteRaw.net");
+        $result = $this->createAndRun($input, "deleteRaw.net");
 
         printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $result[0]);
         

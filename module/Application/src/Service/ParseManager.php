@@ -39,7 +39,7 @@ class ParseManager {
   
     private $goodManager;
     
-    protected $annManager;
+    private $annManager;
   // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager, $producerManager, $goodManager, $annManager)
     {
