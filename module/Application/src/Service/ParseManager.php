@@ -264,18 +264,22 @@ class ParseManager {
         if (!is_file($train_file))
             die("The file deleteRaw.net has not been created! Please run deleteRaw.php to generate it");
 
-        var_dump(realpath($train_file)); exit;
-        $ann = fann_create_from_file(realpath($train_file));
-        if (!$ann)
-            die("ANN could not be created");
+        //var_dump($train_file); exit;
+        if (file_exists($filename)){
+            $ann = fann_create_from_file($train_file);
+            if (!$ann)
+                die("ANN could not be created");
 
-        $input = $this->compareRaw($raw, $prevRaw);
-        $calc_out = fann_run($ann, $input);
-       // printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
-        //var_dump($calc_out);
-        fann_destroy($ann);        
+            $input = $this->compareRaw($raw, $prevRaw);
+            $calc_out = fann_run($ann, $input);
+           // printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
+            //var_dump($calc_out);
+            fann_destroy($ann);        
+
+            return $calc_out[0];
+        }
         
-        return $calc_out[0];
+        return;
     }
 
 

@@ -31,7 +31,7 @@ class AnnManager
     {
         $result = (self::DATA_DIR . $filename);
         if (file_exists($result)){
-            return $result;
+            return realpath($result);
         }
         return;
     }
