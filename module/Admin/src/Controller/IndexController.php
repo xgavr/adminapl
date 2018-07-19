@@ -305,14 +305,8 @@ class IndexController extends AbstractActionController
     
     public function trainAction()
     {
-        $suppliers = [
-            33, //acs
-//            8, //sosed
-//            85,
-//            9,
-        ];
         
-        $result = $this->annManager->removeOldPricesTrain($suppliers);
+        $result = $this->annManager->deleteRawTrain();
         var_dump($result);
         
         return new JsonModel([

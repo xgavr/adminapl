@@ -13,6 +13,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ParseManager;
 use Application\Service\ProducerManager;
 use Application\Service\GoodsManager;
+use Admin\Service\AnnManager;
 
 /**
  * Description of PbManagerFactory
@@ -28,9 +29,10 @@ class ParseManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $producerManager = $container->get(ProducerManager::class);
         $goodManager = $container->get(GoodsManager::class);
+        $annManager = $container->get(AnnManager::class);
         
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ParseManager($entityManager, $producerManager, $goodManager);
+        return new ParseManager($entityManager, $producerManager, $goodManager, $annManager);
     }
 }

@@ -12,6 +12,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\RawController;
 use Application\Service\SupplierManager;
 use Application\Service\RawManager;
+use Application\Service\ParseManager;
 
 
 /**
@@ -27,8 +28,9 @@ class RawControllerFactory implements FactoryInterface {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $supplierManager = $container->get(SupplierManager::class);
         $rawManager = $container->get(RawManager::class);
+        $parseManager = $container->get(ParseManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new RawController($entityManager, $supplierManager, $rawManager);
+        return new RawController($entityManager, $supplierManager, $rawManager, $parseManager);
     }
 }

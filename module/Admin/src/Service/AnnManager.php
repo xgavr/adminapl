@@ -29,6 +29,15 @@ class AnnManager
         $this->entityManager = $entityManager;
     }
     
+    public function getNetFile($filename)
+    {
+        $result = self::DATA_DIR.$filename;
+        if (file_exists($result)){
+            return $result;
+        }
+        return;
+    }
+    
     public function simpleTrain()
     {
         $num_input = 2;
@@ -77,38 +86,55 @@ class AnnManager
     
     /*
      * Подготовка обучающей выборки для решения по удалению старых прайсов
-     * @param array $suppliers - список постащиков для выборки
      * @return file - файл с данными для обучения в формате fann
      */
-    public function removeOldPricesTrain()            
+    public function deleteRawTrain()            
     {
 
-        $filename = self::DATA_DIR . 'remove_old_prices.data';
-        $i = 0;
-        $result = [];
-        foreach ($suppliers as $supplierId){
-            $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findBy(['supplier' => $supplierId, 'status' => \Application\Entity\Raw::STATUS_PARSED]);
-            foreach ($raws as $raw){
-                if (!$raw->getRows()) continue;
-                 $oldRaws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                        ->findOldDeletedRaw($raw);
-                foreach ($oldRaws as $oldRaw){
-                    if (!$oldRaw->getRows()) continue;
-                    $result[] = [ 
-                        'input' => [
-                                similar_text($raw->getFilename(), $oldRaw->getFilename), //сравнение наименований файлов прайсов
-                                round($raw->getRows()/$oldRaw->getRows(), 3), //отношение количества строк                                
-                            ],
-                        'output' => $oldRaw->getStatus(), //статус
-                       ];
-                    $i ++; //количество объектов
-                    //break;
+        $num_input = 2;
+        $num_output = 1;
+        $num_layers = 3;
+        $num_neurons_hidden = 3;
+        $desired_error = 0.001;
+        $max_epochs = 500000;
+        $epochs_between_reports = 1000;
+        $ann = fann_create_standard($num_layers, $num_input, $num_neurons_hidden, $num_output);
+        if ($ann) {
+            fann_set_activation_function_hidden($ann, FANN_SIGMOID_SYMMETRIC);
+            fann_set_activation_function_output($ann, FANN_SIGMOID_SYMMETRIC);
+            $filename = realpath(self::DATA_DIR . "deleteRaw.data");
+            
+            if (file_exists($filename)){
+                $target = self::DATA_DIR . "deleteRaw.net";
+
+                if (!file_exists($target)){
+                    $fh = fopen($target, 'w') or die("Can't create file");
+                    fclose($fh);
                 }
-            }
-        }
-        
-        return $result;
+                if (fann_train_on_file($ann, $filename, $max_epochs, $epochs_between_reports, $desired_error))
+                    fann_save($ann, realpath($target));
+            }    
+            
+            fann_destroy($ann);
+        }        
+    }
+    
+    
+    
+    public function deleteRaw($raw, $prevRaw)
+    {
+        $train_file = (self::DATA_DIR  . "deleteRaw.net");
+        if (!is_file($train_file))
+            die("The file xor_float.net has not been created! Please run deleteRaw.php to generate it");
+
+        $ann = fann_create_from_file(realpath($train_file));
+        if (!$ann)
+            die("ANN could not be created");
+
+        $input = array(11, 1);
+        $calc_out = fann_run($ann, $input);
+        printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
+        fann_destroy($ann);        
     }
     
 }

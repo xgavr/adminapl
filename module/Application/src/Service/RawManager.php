@@ -14,7 +14,6 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Filter\RawToStr;
 use Application\Filter\CsvDetectDelimiterFilter;
-use Application\Filter\StrSimilar;
 use MvlabsPHPExcel\Service;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -512,28 +511,5 @@ class RawManager {
         
         $this->entityManager->remove($raw);
         $this->entityManager->flush();
-    }
-    
-    /*
-     * Сравнение прайсов
-     * @param $raw Application\Entity\Raw
-     * @param $prevRaw Aapplication\Entity\Raw
-     * 
-     * return array
-     */
-    public function compareRaw($raw, $prevRaw)
-    {
-        $result['strPer'] = 0;
-        $result['rowPer'] = 0;
-
-        if ($prevRaw){
-            $filter = new StrSimilar();
-            $result['strPer'] = round($filter->filter($raw->getFilename(), $prevRaw->getFilename()));
-            if ($prevRaw->getRows()){
-                $result['rowPer'] = round($raw->getRows()*100/$prevRaw->getRows());
-            }
-        }    
-        
-        return $result;
-    }
+    }    
 }

@@ -15,6 +15,7 @@ use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 use Application\Entity\PriceDescription;
 use Application\Form\PriceDescriptionForm;
+use Application\Filter\StrSimilar;
 
 
 
@@ -38,12 +39,14 @@ class ParseManager {
   
     private $goodManager;
     
+    private $annManager;
   // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $producerManager, $goodManager)
+    public function __construct($entityManager, $producerManager, $goodManager, $annManager)
     {
         $this->entityManager = $entityManager;
         $this->producerManager = $producerManager;
         $this->goodManager = $goodManager;
+        $this->annManager = $annManager;
     }
     
     /*
@@ -221,6 +224,60 @@ class ParseManager {
         return;
     }
     
+    
+    /*
+     * Сравнение прайсов
+     * @param $raw Application\Entity\Raw
+     * @param $prevRaw Aapplication\Entity\Raw
+     * 
+     * return array
+     */
+    public function compareRaw($raw, $prevRaw)
+    {
+        $result['strPer'] = 0;
+        $result['rowPer'] = 0;
+
+        if ($prevRaw){
+            $filter = new StrSimilar();
+            $result['strPer'] = round($filter->filter($raw->getFilename(), $prevRaw->getFilename())/100);
+            if ($prevRaw->getRows()){
+                $result['rowPer'] = round($raw->getRows()/$prevRaw->getRows());
+                if ($result['rowPer'] > 2){
+                    $result['rowPer'] = 0;
+                }
+            }
+        }    
+        
+        return $result;
+    }
+
+    /*
+     * Решение о пометке на удаление прайса
+     * @param $raw Application\Entity\Raw
+     * @param $prevRaw Aapplication\Entity\Raw
+     * 
+     * return bool
+     */
+    public function isDeleteRaw($raw, $oldRaw)
+    {
+        $train_file = $this->annManager->getNetFile("deleteRaw.net");
+        if (!is_file($train_file))
+            die("The file xor_float.net has not been created! Please run deleteRaw.php to generate it");
+
+        $ann = fann_create_from_file(realpath($train_file));
+        if (!$ann)
+            die("ANN could not be created");
+
+        $input = $this->compareRaw($raw, $prevRaw);
+        $calc_out = fann_run($ann, $input);
+       // printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
+        //var_dump($calc_out);
+        fann_destroy($ann);        
+        
+        return $calc_out[0];
+    }
+
+
     /*
      * Поиск и пометка старых прайсов на удаление
      * @var Application\Entity\Raw @raw
