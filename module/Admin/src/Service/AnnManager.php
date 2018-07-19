@@ -139,8 +139,8 @@ class AnnManager
     
     public function test2()
     {
-        $input = array(11, 1);
-        $result = $this->createAndRun($data, "xor_float.net");
+        $input = array(1, 1);
+        $result = $this->createAndRun($data, "deleteRaw.net");
 
         printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $result[0]);
         
