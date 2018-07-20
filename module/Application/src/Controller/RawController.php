@@ -148,7 +148,6 @@ class RawController extends AbstractActionController
             ->getResult()
                 ;
         
-        var_dump($output);
         // Render the view template.
         return new ViewModel([
             'raw' => $raw,
