@@ -87,7 +87,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <td><?= $this->escapeHtml($otherRaw->getDateCreated()); ?></td>
                                 <td>
                                     <?php $compareRaw = $parseManager->compareRaw($raw, $otherRaw); ?>
-                                    <?//= $compareRaw['strPer'].'/'.$compareRaw['rowPer'].' '.$parseManager->isDeleteRaw($raw, $otherRaw);?>
+                                    <?= $compareRaw['strPer'].'/'.$compareRaw['rowPer'].' '.$parseManager->isDeleteRaw($raw, $otherRaw);?>
                                 </td>
                                 <td>
                                     <button value="/raw/delete-form/<?= $otherRaw->getId() ?>" class="btn btn-danger btn-xs this-delete"

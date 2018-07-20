@@ -34,18 +34,17 @@ class ParseManager {
      * @var Doctrine\ORM\EntityManager
      */
     private $entityManager;
-  
-    private $producerManager;
-  
-    private $goodManager;
-    
+      
+    /**
+     * .
+     * @var Admin\Service\AnnManager
+     */
     private $annManager;
+    
   // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $producerManager, $goodManager, $annManager)
+    public function __construct($entityManager, $annManager)
     {
         $this->entityManager = $entityManager;
-        $this->producerManager = $producerManager;
-        $this->goodManager = $goodManager;
         $this->annManager = $annManager;
     }
     
