@@ -148,6 +148,8 @@ class RawController extends AbstractActionController
             ->getResult()
                 ;
         
+        $output = $this->parseManager->isDeleteRaw($raw, $otherRaws[0]);
+        var_dump($output);
         // Render the view template.
         return new ViewModel([
             'raw' => $raw,
