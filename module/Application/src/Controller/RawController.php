@@ -44,15 +44,18 @@ class RawController extends AbstractActionController
      * Менеджер.
      * @var Application\Service\ParseManager 
      */
-    private $parseManager;    
+    private $parseManager;  
+    
+    private $annManager;
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $supplierManager, $rawManager, $parseManager) 
+    public function __construct($entityManager, $supplierManager, $rawManager, $parseManager, $annManager) 
     {
         $this->entityManager = $entityManager;
         $this->supplierManager = $supplierManager;
         $this->rawManager = $rawManager;
         $this->parseManager = $parseManager;
+        $this->annManager = $annManager;
     }    
     
     public function indexAction()
@@ -148,7 +151,7 @@ class RawController extends AbstractActionController
             ->getResult()
                 ;
         
-        $output = $this->parseManager->isDeleteRaw($raw, $otherRaws[0]);
+        $output = $this->annManager->deleteRawTest();
         var_dump($output);
         // Render the view template.
         return new ViewModel([
