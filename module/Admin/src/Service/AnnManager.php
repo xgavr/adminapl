@@ -100,10 +100,10 @@ class AnnManager
         if ($ann) {
             fann_set_activation_function_hidden($ann, FANN_SIGMOID_SYMMETRIC);
             fann_set_activation_function_output($ann, FANN_SIGMOID_SYMMETRIC);
-            $filename = realpath(self::DATA_DIR . "deleteRaw.data");
+            $filename = realpath(self::DATA_DIR . "delete_raw.data");
             
             if (file_exists($filename)){
-                $target = self::DATA_DIR . "deleteRaw.net";
+                $target = self::DATA_DIR . "delete_raw.net";
 
                 if (!file_exists($target)){
                     $fh = fopen($target, 'w') or die("Can't create file");
