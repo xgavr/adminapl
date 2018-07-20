@@ -136,10 +136,10 @@ class AnnManager
         return $calc_out;
     }
     
-    public function test2()
+    public function deleteRawTest()
     {
         $input = array(1, 1);
-        $result = $this->createAndRun($input, "deleteRaw.net");
+        $result = $this->createAndRun($input, "delete_raw.net");
 
         printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $result[0]);
         

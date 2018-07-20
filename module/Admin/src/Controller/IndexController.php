@@ -281,29 +281,7 @@ class IndexController extends AbstractActionController
         ]);                
     }
     
-    public function testTrainAnnAction()
-    {
-        $result = $this->annManager->simpleTrain();
-        var_dump($result);
-        
-        return new JsonModel([
-            'ok'
-        ]);                
-        
-    }
-
-    public function testAnnAction()
-    {
-        $result = $this->annManager->test2();
-        var_dump($result);
-        
-        return new JsonModel([
-            'ok'
-        ]);                
-        
-    }
-    
-    public function trainAction()
+    public function trainAnnAction()
     {
         
         $result = $this->annManager->deleteRawTrain();
@@ -315,4 +293,15 @@ class IndexController extends AbstractActionController
                 
     }
 
+    public function testAnnAction()
+    {
+        $result = $this->annManager->deleteRawTest();
+        var_dump($result);
+        
+        return new JsonModel([
+            'ok'
+        ]);                
+        
+    }
+    
 }
