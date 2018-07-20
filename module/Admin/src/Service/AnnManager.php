@@ -27,15 +27,6 @@ class AnnManager
         $this->entityManager = $entityManager;
     }
     
-    public function getNetFile($filename)
-    {
-        $result = (self::DATA_DIR . $filename);
-        if (file_exists($result)){
-            return realpath($result);
-        }
-        return;
-    }
-    
     public function simpleTrain()
     {
         $num_input = 2;
@@ -121,7 +112,6 @@ class AnnManager
     
     public function createAndRun($input, $netFilename)
     {
-        setlocale(LC_ALL,'ru_RU.UTF-8');
         $train_file = (self::DATA_DIR  . $netFilename);
         if (!is_file($train_file))
             die("The file $netFilename has not been created! Please run $netFilename to generate it");
