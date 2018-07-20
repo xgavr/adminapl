@@ -259,6 +259,8 @@ class ParseManager {
      */
     public function isDeleteRaw($raw, $oldRaw)
     {
+        error_reporting(E_ALL & ~E_WARNING);
+        
         $data = $this->compareRaw($raw, $oldRaw);
         
 //        $calc_out = $this->annManager->createAndRun($data, "delete_raw.net");
@@ -267,7 +269,6 @@ class ParseManager {
         if (!is_file($train_file))
             die("The file $train_file has not been created! Please run $train_file to generate it");
 
-        var_dump(realpath($train_file));
         $ann = fann_create_from_file(realpath($train_file));
         if (!$ann)
             die("ANN could not be created");
