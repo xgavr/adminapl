@@ -259,7 +259,7 @@ class ParseManager {
      */
     public function isDeleteRaw($raw, $oldRaw)
     {
-        $data = $this->compareRaw($raw, $oldRaw);
+//        $data = $this->compareRaw($raw, $oldRaw);
         
 //        $calc_out = $this->annManager->createAndRun($data, "delete_raw.net");
 
