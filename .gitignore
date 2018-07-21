@@ -11,3 +11,4 @@ phpunit.xml
 /data/settings/
 /data/ann/
 /config/autoload/local-development.php
+/nbproject/private/

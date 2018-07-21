@@ -383,7 +383,7 @@ class RawManager {
                 foreach ($sheets as $sheet) { // PHPExcel_Worksheet
                     $excel_sheet_content = $sheet->toArray();
 
-                    if (count($sheet)){
+                    if (count($excel_sheet_content)){
                         foreach ($excel_sheet_content as $row){
                             $str = $filter->filter($row);
 
