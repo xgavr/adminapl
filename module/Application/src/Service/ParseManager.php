@@ -35,17 +35,11 @@ class ParseManager {
      */
     private $entityManager;
       
-    /**
-     * .
-     * @var Admin\Service\AnnManager
-     */
-    private $annManager;
     
   // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $annManager)
+    public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->annManager = $annManager;
     }
     
     /*
@@ -259,25 +253,9 @@ class ParseManager {
      */
     public function isDeleteRaw($raw, $oldRaw)
     {
-        error_reporting(E_ALL & ~E_WARNING);
         
         $data = $this->compareRaw($raw, $oldRaw);
-        
-//        $calc_out = $this->annManager->createAndRun($data, "delete_raw.net");
-
-        $train_file = './data/ann/delete_raw.net';
-        if (!is_file($train_file))
-            die("The file $train_file has not been created! Please run $train_file to generate it");
-
-        $ann = fann_create_from_file(realpath($train_file));
-        if (!$ann)
-            die("ANN could not be created");
-
-        $calc_out = fann_run($ann, $data);
-        //printf("xor test (%f,%f) -> %f\n", $input[0], $input[1], $calc_out[0]);
-        fann_destroy($ann);        
-        
-        return $calc_out[0];
+                
     }
 
 
