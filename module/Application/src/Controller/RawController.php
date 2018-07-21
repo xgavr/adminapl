@@ -342,5 +342,17 @@ class RawController extends AbstractActionController
         
         return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
         
-    }            
+    }    
+    
+    public function deleteRawTrainAction()
+    {
+        
+        $this->parseManager->deleteRawTrain($raw);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+
+    
 }

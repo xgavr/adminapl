@@ -17,6 +17,9 @@ use Application\Entity\PriceDescription;
 use Application\Form\PriceDescriptionForm;
 use Application\Filter\StrSimilar;
 
+use Phpml\Classification\KNearestNeighbors;
+use Phpml\ModelManager;
+
 
 
 /**
@@ -28,6 +31,7 @@ use Application\Filter\StrSimilar;
 class ParseManager {
         
     const ROW_BATCHSIZE    = 30000; // количество записей единовременной загруки строк прайса
+    const ML_DATA_PATH     = './data/ann/'; //путь к папке с моделями ml
 
     /**
      * Doctrine entity manager.
@@ -244,6 +248,18 @@ class ParseManager {
         return $result;
     }
 
+    public function deleteRawTrain()
+    {
+        $samples = [[0, 0], [0, 1], [1, 1], [1, 0]];
+        $labels = [false, true, true, false];
+
+        $classifier = new KNearestNeighbors();
+        $classifier->train($samples, $labels);
+
+        $filepath = (self::ML_DATA_PATH . 'delete_raw.net');
+        $modelManager = new ModelManager();
+        $modelManager->saveToFile($classifier, $filepath);
+    }
     /*
      * Решение о пометке на удаление прайса
      * @param $raw Application\Entity\Raw
@@ -253,9 +269,11 @@ class ParseManager {
      */
     public function isDeleteRaw($raw, $oldRaw)
     {
-        
+        $filepath = (self::ML_DATA_PATH . 'delete_raw.net');
+        $modelManager = new ModelManager();
+        $restoredClassifier = $modelManager->restoreFromFile($filepath);
         $data = $this->compareRaw($raw, $oldRaw);
-                
+        return $restoredClassifier->predict($data);        
     }
 
 
