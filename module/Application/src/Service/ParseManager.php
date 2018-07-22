@@ -275,8 +275,8 @@ class ParseManager {
         $modelManager = new ModelManager();
         $restoredClassifier = $modelManager->restoreFromFile($filepath);
         $data = $this->compareRaw($raw, $oldRaw);
-        var_dump($data);
-        return $restoredClassifier->predict($data);        
+        var_dump([$data['strPer'], $data['rowPer']]);
+        return $restoredClassifier->predict([$data['strPer'], $data['rowPer']]);        
     }
 
 
