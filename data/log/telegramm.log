@@ -1,0 +1,16 @@
+[2018-07-21 14:31:31] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 185.210.218.253...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* SOCKS5 request granted.
+* Connected to idpuw.teletype.live (185.210.218.253) port 1080 (#0)
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: d:/ospanel/modules/php/PHP-7.2-x64/cacert.pem
+  CApath: none
+* SSL certificate problem: self signed certificate
+* stopped the pause stream!
+* Closing connection 0
+
+ [] []

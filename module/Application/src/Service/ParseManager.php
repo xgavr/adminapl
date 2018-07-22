@@ -250,8 +250,10 @@ class ParseManager {
 
     public function deleteRawTrain()
     {
+        error_reporting(E_ALL & ~E_NOTICE);
+        
         $samples = [[0, 0], [0, 1], [1, 1], [1, 0]];
-        $labels = [false, true, true, false];
+        $labels = [0, 1, 1, 0];
 
         $classifier = new KNearestNeighbors();
         $classifier->train($samples, $labels);
