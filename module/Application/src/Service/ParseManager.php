@@ -293,39 +293,14 @@ class ParseManager {
             return;
         }
         
-        $batch_count = 101;
-        
         if ($raw){
-            $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                    ->findRawRawprice($raw, null, 100)
-                    ->getResult();
 
             $oldRaws = $this->entityManager->getRepository(Raw::class)
                     ->findOldRaw($raw);
             
             foreach ($oldRaws as $oldRaw){
-                
-                $i = 1;
-                $coincidence = 0;
-                foreach ($rawprices as $rawprice){
-                    if ($rawprice->getProducer() && $rawprice->getArticle()){
-                        $oldRawprices = $this->entityManager->getRepository(Rawprice::class)
-                                ->findBy(['raw' => $oldRaw->getId(), 'producer' => $rawprice->getProducer(), 'article' => $rawprice->getArticle()]);
-
-                        if ($oldRawprices){
-                            $coincidence++;
-                        }
-                        
-                        $i++;
-                        if ($i >= $batch_count){
-                            break;
-                        }
-                    }    
-                }
-
-            
-                
-                if (($coincidence *100/ $i) > 30){
+                                
+                if ($this->isDeleteRaw($raw, $oldRaw)){
                     $oldRaw->setStatus(Raw::STATUS_RETIRED);
                     $this->entityManager->persist($oldRaw);
                     $this->entityManager->flush($oldRaw);            
