@@ -10,7 +10,6 @@ namespace Bankapi\Service\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\Session\SessionManager;
 use Bankapi\Service\TochkaApi;
 
 /**
@@ -25,12 +24,12 @@ class TochkaApiFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         
-        $sessionManager = $container->get(SessionManager::class);
+        $sessionContainer = $container->get('ContainerNamespace');
         
         $config = $container->get('config');
         $authParams = $config['bankapi']['tochka'];
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new TochkaApi($sessionManager, $authParams);
+        return new TochkaApi($sessionContainer, $authParams);
     }
 }
