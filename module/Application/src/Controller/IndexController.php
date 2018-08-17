@@ -118,7 +118,8 @@ class IndexController extends AbstractActionController
     public function checkLoginAction()
     {
         return new JsonModel([
-            'ident' => $this->identity()
+            'ident' => $this->identity(),
+            'response' => 'ok',
         ]);
     }
     
