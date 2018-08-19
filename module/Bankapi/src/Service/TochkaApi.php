@@ -9,6 +9,9 @@ namespace Bankapi\Service;
 
 use Zend\Http\Client;
 use Zend\Json\Decoder;
+use Zend\Json\Encoder;
+use Zend\Log\Writer\Stream;
+use Zend\Log\Logger;
 
 /**
  * Description of Tochka
@@ -16,6 +19,16 @@ use Zend\Json\Decoder;
  * @author Администратор
  */
 class TochkaApi {
+    
+    const LOG_FOLDER = './data/log/'; //папка логов
+    const LOG_FILE = './data/log/bankapi_tochka.log'; //лог
+    
+    const URI_PRODUCTION = 'https://enter.tochka.com';
+    const URI_DEBUGGING = 'https://private-anon-b91c8e0e22-tochka.apiary-proxy.com';
+    const MODE_API = 'api';
+    const MODE_SANDBOX = 'sandbox';
+    
+    const VERSION = 'v1';
     
     /*
      * Adapter
@@ -38,11 +51,39 @@ class TochkaApi {
      */
     private $client_secret;
     
+    /*
+     * @var string
+     */
+    private $uri;
+    /*
+     * @var string
+     */
+    private $test_code;
+    
     public function __construct($sessionContainer, $authParams) 
     {
         $this->sessionContainer = $sessionContainer;
         $this->client_id = $authParams['client_id'];
         $this->client_secret = $authParams['client_secret'];
+        $this->test_code = $authParams['test_code'];
+
+        if ($authParams['debug']){
+            $this->uri = self::URI_DEBUGGING;
+        } else {
+            $this->uri = self::URI_PRODUCTION;
+        }
+
+        if ($authParams['mode'] == 'sandbox'){
+            $this->uri .= '/'.self::MODE_SANDBOX;
+        } else {
+            $this->uri .= '/'.self::MODE_API;
+        }
+        
+        $this->uri .= '/'.self::VERSION;
+        
+        if (!is_dir($this::LOG_FOLDER)){
+            mkdir($this::LOG_FOLDER);
+        }
     }
     
     /*
@@ -52,49 +93,53 @@ class TochkaApi {
      */    
     public function accessToken($code, $gran_type)
     {
+        
         $postParameters = [
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'grant_type' => $gran_type,            
         ];
         
+        if ($code == 'test') $code = $this->test_code;
+        
         if ($gran_type == 'authorization_code') $postParameters['code'] = $code;
         if ($gran_type == 'refresh_token') $postParameters['refresh_token'] = $code;
 
         $client = new Client();
-        $client->setUri('https://enter.tochka.com/api/v1/oauth2/token');
+        $client->setUri($this->uri.'/oauth2/token');
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('POST');
-        $client->setParameterPost($postParameters);
+        $client->setRawBody(Encoder::encode($postParameters));
 
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
-            'Content-Type: application/json',
+             'Content-Type: application/json',
         ]);
         
         $response = $client->send();
-        
+                
         if ($response->isSuccess()){
             $result = Decoder::decode($response->getBody());
             if ($gran_type == 'authorization_code'){
-                return $this->accessToken($result['refresh_token'], 'refresh_token');
+                return $this->accessToken($result->refresh_token, 'refresh_token');
             }    
             if ($gran_type == 'refresh_token'){
-                $this->sessionContainer->tochka_access_token = $result['access_token'];
+                $this->sessionContainer->tochka_access_token = $result->access_token;
                 return true;
             }
         }
         
-        return;
+        return $response->getContent();
     }
     
+
     /*
      * Получение доступа от клиента
      */
     public function authorize()
     {
         $client = new Client();
-        $client->setUri('https://enter.tochka.com/api/v1/authorize');
+        $client->setUri($this->uri.'/authorize');
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('GET');
         $client->setParameterGet([
@@ -105,10 +150,10 @@ class TochkaApi {
         $response = $client->send();
         
         if ($response->isSuccess()){
-            return $this->accessToken($response->getBody(), 'authorization_code');
+            return $response->getBody();
         }
         
-        return;
+        return $response->getStatusCode();
     }
     
     /*
@@ -118,9 +163,8 @@ class TochkaApi {
     public function isAuth()
     {
         if (!$this->sessionContainer->tochka_access_token){
-            if (!$this->authorize()){
-                throw new \Exception('Не удалось авторизироваться в Api Tochka');
-            }
+            $this->authorize();
+            throw new \Exception('Требуется авторизация в банке. Запрос отправлен!');
         }        
 
         return true;
@@ -134,7 +178,7 @@ class TochkaApi {
         $this->isAuth();
         
         $client = new Client();
-        $client->setUri('https://enter.tochka.com/api/v1/account/list');
+        $client->setUri($this->uri.'/account/list');
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('GET');
         
@@ -151,7 +195,7 @@ class TochkaApi {
         if ($response->isSuccess()){
             return Decoder::decode($response->getBody());            
         }
-        return;
+        return $response->getStatusCode();
     }
     
     /*
@@ -163,7 +207,7 @@ class TochkaApi {
         $this->isAuth();
         
         $client = new Client();
-        $client->setUri("https://enter.tochka.com/api/v1/statement/result/$request_id");
+        $client->setUri($this->uri.'/statement/result/'.$request_id);
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('GET');
         
@@ -180,7 +224,8 @@ class TochkaApi {
         if ($response->isSuccess()){
             return Decoder::decode($response->getBody()); 
         }
-        return;
+        
+        return $response->getStatusCode();
     }
     
     /*
@@ -191,7 +236,7 @@ class TochkaApi {
     {
         $this->isAuth();
         $client = new Client();
-        $client->setUri("https://enter.tochka.com/api/v1/statement/status/$request_id");
+        $client->setUri($this->uri.'/statement/status/'.$request_id);
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('GET');
         
@@ -207,17 +252,18 @@ class TochkaApi {
         
         if ($response->isSuccess()){
             $result = Decoder::decode($response->getBody()); 
-            if (isset($result['status'])){
-                if ($result['status'] == 'ready'){
+            if (isset($result->status)){
+                if ($result->status == 'ready'){
                     return $this->statementResult($request_id);
                 }
-                if ($result['status'] == 'queued'){
-                    sleep(10);
+                if ($result->status == 'queued'){
+                    sleep(5);
                     return $this->statementStatus($request_id);
                 }
             }
         }
-        return;
+        
+        return $response->getStatusCode();
     }
     
     /*
@@ -226,17 +272,19 @@ class TochkaApi {
      */
     public function statement($params)
     {
-        $this->isAuth();
-        $client = new Client();
-        $client->setUri('https://enter.tochka.com/api/v1/statement');
-        $client->setAdapter($this::HTTPS_ADAPTER);
-        $client->setMethod('POST');
-        $client->setParameterPost([
+        $postParameters = [
             'account_code' => $params['account_code'],
             'bank_code' => $params['bank_code'],
             'date_end' => $params['date_end'],
-            'date_start' => $params['date_start'],
-        ]);
+            'date_start' => $params['date_start'],            
+        ];
+        
+        $this->isAuth();
+        $client = new Client();
+        $client->setUri($this->uri.'/statement');
+        $client->setAdapter($this::HTTPS_ADAPTER);
+        $client->setMethod('POST');
+        $client->setRawBody(Encoder::encode($postParameters));
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
@@ -249,12 +297,13 @@ class TochkaApi {
         $response = $client->send();
         
         if ($response->isSuccess()){
-            $result = Decoder::decode($response->getBody());            
-            if (isset($result['request_id'])){
-                return $this->statementStatus($result['request_id']);
+            $result = Decoder::decode($response->getBody()); 
+            if (isset($result->request_id)){
+                return $this->statementStatus($result->request_id);
             }
         }
-        return;        
+        
+        return $response->getStatusCode();
     }
     
     /*
@@ -276,13 +325,14 @@ class TochkaApi {
                 $result[] = $this->statement([
                     'date_start' => $date_start,
                     'date_end' => $date_end,
-                    'bank_code' => $account['bank_code'],
-                    'account_code' => $account['code'],
+                    'bank_code' => $account->bank_code,
+                    'account_code' => $account->account_code,
                 ]);
             }
             
             return $result;
         }
+        
         return;
     }
 }

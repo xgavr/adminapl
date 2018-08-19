@@ -1,7 +1,6 @@
 <?php
 namespace Bankapi;
 
-use Zend\ServiceManager\Factory\InvokableFactory;
 use Zend\Router\Http\Segment;
 
 
@@ -9,10 +8,13 @@ return [
     'router' => [
         'routes' => [
             'bankapi' => [
-                'type'    => 'Literal',
+                'type'    => Segment::class,
                 'options' => [
-                    // Change this to something specific to your module
-                    'route'    => '/',
+                    'route'    => '/bankapi[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
                     'defaults' => [
                         'controller'    => Controller\IndexController::class,
                         'action'        => 'index',
@@ -24,22 +26,19 @@ return [
                     // route defined above here.
                 ],
             ],
-            'tochka' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/tochka[/:action]',
-                    'defaults' => [
-                        'controller' => Controller\TochkaController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-            ],
         ],
     ],
+    'access_filter' => [
+        'controllers' => [
+            Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '*'],
+            ],
+        ],
+    ],    
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
-            Controller\TochkaController::class => Controller\Factory\TochkaControllerFactory::class,
         ],
     ],
     'service_manager' => [

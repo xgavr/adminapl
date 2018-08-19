@@ -79,7 +79,7 @@
                 })
                     .done(function (data) { 
                         if (data){
-                            if (!data.ident){
+                            if (data.response == 'ok' && !data.ident){
                                 window.location.reload();
                             }
                         }    
