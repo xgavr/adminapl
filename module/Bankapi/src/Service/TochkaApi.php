@@ -174,6 +174,7 @@ class TochkaApi {
             throw new \Exception('Требуется авторизация в банке. Запрос отправлен!');
         }        
 
+//        return true;
         return $this->sessionContainer->tochka_access_token;
     }
     
