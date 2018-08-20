@@ -149,8 +149,8 @@ class TochkaApi {
         
         $response = $client->send();
         
-        if ($response->isSuccess()){
-            return $response->getBody();
+        if (!$response->isSuccess()){
+            return $response->getStatusCode().': '.$response->getContent();
         }
         
         return $response->getStatusCode();

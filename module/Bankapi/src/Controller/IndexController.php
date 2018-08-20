@@ -31,7 +31,7 @@ class IndexController extends AbstractActionController
     public function tochkaAuthAction()
     {
         $result = $this->tochkaApi->authorize();
-        echo 'ok';
+        echo $result;
         
         exit;
     }
