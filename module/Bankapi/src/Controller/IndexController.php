@@ -50,6 +50,15 @@ class IndexController extends AbstractActionController
         exit;
     }
     
+    public function tochkaIsAuthAction()
+    {
+        $result = $this->tochkaApi->isAuth();
+        
+        echo $result;
+        
+        exit;
+    }
+    
     public function tochkaAccountListAction()
     {
         $result = $this->tochkaApi->accountList();
