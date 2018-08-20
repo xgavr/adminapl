@@ -146,18 +146,16 @@ class TochkaApi {
     public function authorize()
     {
         $client = new Client();
-        $client->setUri($this->uri.'/authorize');
+        $client->setUri($this->uri.'/authorize?response_type=code&client_id='.$this->client_id);
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('GET');
-        $client->setParameterGet([
-            'response_type' => 'code',
-            'client_id' => $this->client_id,
-        ]);
+//        $client->setParameterGet([
+//            'response_type' => 'code',
+//            'client_id' => $this->client_id,
+//        ]);
         
-//        var_dump($this->client_id);
         $response = $client->send();
         
-        var_dump($client->getLastRawRequest());
         if ($response->isSuccess()){
             return $response->getStatusCode().': '.$response->getContent();
         }
