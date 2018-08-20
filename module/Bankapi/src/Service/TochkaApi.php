@@ -55,6 +55,12 @@ class TochkaApi {
      * @var string
      */
     private $uri;
+
+    /*
+     * @var string
+     */
+    private $mode;
+
     /*
      * @var string
      */
@@ -73,7 +79,8 @@ class TochkaApi {
             $this->uri = self::URI_PRODUCTION;
         }
 
-        if ($authParams['mode'] == 'sandbox'){
+        $this->mode = $authParams['mode'];
+        if ($this->mode == 'sandbox'){
             $this->uri .= '/'.self::MODE_SANDBOX;
         } else {
             $this->uri .= '/'.self::MODE_API;
@@ -100,7 +107,7 @@ class TochkaApi {
             'grant_type' => $gran_type,            
         ];
         
-        if ($code == 'test') $code = $this->test_code;
+        if ($code == 'test' && $this->mode == 'sandbox') $code = $this->test_code;
         
         if ($gran_type == 'authorization_code') $postParameters['code'] = $code;
         if ($gran_type == 'refresh_token') $postParameters['refresh_token'] = $code;
