@@ -154,7 +154,7 @@ class TochkaApi {
             'client_id' => $this->client_id,
         ]);
         
-        var_dump($client->getUri());
+        var_dump($this->client_id);
         $response = $client->send();
         
         if (!$response->isSuccess()){
