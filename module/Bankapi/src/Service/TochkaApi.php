@@ -145,7 +145,6 @@ class TochkaApi {
      */
     public function authorize()
     {
-        var_dump($this->uri.'/authorize');
         $client = new Client();
         $client->setUri($this->uri.'/authorize');
         $client->setAdapter($this::HTTPS_ADAPTER);
@@ -155,7 +154,7 @@ class TochkaApi {
             'client_id' => $this->client_id,
         ]);
         
-        var_dump($this->client_id);
+        var_dump($client->getUri());
         $response = $client->send();
         
         if (!$response->isSuccess()){
