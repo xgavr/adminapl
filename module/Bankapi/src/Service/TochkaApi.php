@@ -157,6 +157,7 @@ class TochkaApi {
 //        var_dump($this->client_id);
         $response = $client->send();
         
+        var_dump($client->getLastRawRequest());
         if ($response->isSuccess()){
             return $response->getStatusCode().': '.$response->getContent();
         }
