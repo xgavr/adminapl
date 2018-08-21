@@ -24,12 +24,10 @@ class TochkaApiFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         
-        $sessionContainer = $container->get('ContainerNamespace');
-        
         $config = $container->get('config');
         $authParams = $config['bankapi']['tochka'];
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new TochkaApi($sessionContainer, $authParams);
+        return new TochkaApi($authParams);
     }
 }

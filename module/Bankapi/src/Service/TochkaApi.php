@@ -22,6 +22,8 @@ class TochkaApi {
     
     const LOG_FOLDER = './data/log/'; //папка логов
     const LOG_FILE = './data/log/bankapi_tochka.log'; //лог
+    const TOKEN_FOLDER = './data/token/'; //папка 
+    const TOKEN_FILE = './data/token/bankapi_tochka.php'; //лог
     
     const URI_PRODUCTION = 'https://enter.tochka.com';
     const URI_DEBUGGING = 'https://private-anon-b91c8e0e22-tochka.apiary-proxy.com';
@@ -34,12 +36,6 @@ class TochkaApi {
      * Adapter
      */
     const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
-    
-    /*
-     * Менеджер сессий
-     * @var Zend\Seesion
-     */
-    private $sessionContainer;
     
     /*
      * @var string
@@ -61,17 +57,10 @@ class TochkaApi {
      */
     private $mode;
 
-    /*
-     * @var string
-     */
-    private $test_code;
-    
-    public function __construct($sessionContainer, $authParams) 
+    public function __construct($authParams) 
     {
-        $this->sessionContainer = $sessionContainer;
         $this->client_id = $authParams['client_id'];
         $this->client_secret = $authParams['client_secret'];
-        $this->test_code = $authParams['test_code'];
 
         if ($authParams['debug']){
             $this->uri = self::URI_DEBUGGING;
@@ -91,8 +80,47 @@ class TochkaApi {
         if (!is_dir($this::LOG_FOLDER)){
             mkdir($this::LOG_FOLDER);
         }
+        if (!is_dir($this::TOKEN_FOLDER)){
+            mkdir($this::TOKEN_FOLDER);
+        }
     }
     
+    /*
+     * Хранение кодов
+     * @var string $code
+     * @var string $gran_type
+     */
+    public function saveCode($code, $gran_type)
+    {
+        if (file_exists(self::TOKEN_FILE)){
+            $config = new \Zend\Config\Config(include self::TOKEN_FILE, true);
+        } else {
+            $config = new \Zend\Config\Config([], true);
+        }
+        
+        $config->$gran_type = $code;
+        
+        $writer = new \Zend\Config\Writer\PhpArray();
+        $writer->toFile(realpath(self::TOKEN_FILE), $config);
+        
+        return;
+    }
+    
+    /*
+     * Получить код доступа
+     *@var string @gran_type
+     */
+    public function readCode($gran_type)
+    {
+        if (file_exists(self::TOKEN_FILE)){
+            $config = new \Zend\Config\Config(include self::TOKEN_FILE);
+            return $config->$gran_type;
+        }
+        
+        return;
+    }
+
+
     /*
      * Обмен кода авторизации на access_token и refresh_token
      * @var string $code
@@ -106,8 +134,6 @@ class TochkaApi {
             'client_secret' => $this->client_secret,
             'grant_type' => $gran_type,            
         ];
-        
-        if ($code == 'test' && $this->mode == 'sandbox') $code = $this->test_code;
         
         if ($gran_type == 'authorization_code') $postParameters['code'] = $code;
         if ($gran_type == 'refresh_token') $postParameters['refresh_token'] = $code;
@@ -128,10 +154,11 @@ class TochkaApi {
         if ($response->isSuccess()){
             $result = Decoder::decode($response->getBody());
             if ($gran_type == 'authorization_code'){
+                $this->saveCode($code, 'authorization_code');
                 return $this->accessToken($result->refresh_token, 'refresh_token');
             }    
             if ($gran_type == 'refresh_token'){
-                $this->sessionContainer->tochka_access_token = $result->access_token;
+                $this->saveCode($result->access_token, 'access_token');
                 return true;
             }
         }
@@ -177,13 +204,12 @@ class TochkaApi {
      */
     public function isAuth()
     {
-        if (!$this->sessionContainer->tochka_access_token){
+        if (!$this->readCode('access_token')){
             //$this->authorize();
             throw new \Exception('Требуется авторизация в банке!');
         }        
 
-//        return true;
-        return $this->sessionContainer->tochka_access_token;
+        return true;
     }
     
     /*
@@ -201,7 +227,7 @@ class TochkaApi {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->sessionContainer->tochka_access_token,
+            'Authorization: Bearer '.$this->readCode('access_token'),
         ]);
 
         $client->setHeaders($headers);
@@ -230,7 +256,7 @@ class TochkaApi {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->sessionContainer->tochka_access_token,
+            'Authorization: Bearer '.$this->readCode('access_token'),
         ]);
 
         $client->setHeaders($headers);
@@ -259,7 +285,7 @@ class TochkaApi {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->sessionContainer->tochka_access_token,
+            'Authorization: Bearer '.$this->readCode('access_token'),
         ]);
 
         $client->setHeaders($headers);
@@ -305,7 +331,7 @@ class TochkaApi {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->sessionContainer->tochka_access_token,
+            'Authorization: Bearer '.$this->readCode('access_token'),
         ]);
 
         $client->setHeaders($headers);

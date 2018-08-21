@@ -8,6 +8,7 @@
 namespace Bankapi\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
@@ -36,14 +37,20 @@ class IndexController extends AbstractActionController
     
     public function tochkaAccessAction()
     {
-        $code = $this->params()->fromQuery('code', 'test');
+        $code = $this->params()->fromQuery('code');
         if ($code){
-            $result = $this->tochkaApi->accessToken($code, 'authorization_code');
+            $this->tochkaApi->accessToken($code, 'authorization_code');
         }    
         
-        echo 'ok';
+        try{
+            $ok = $this->tochkaApi->isAuth();
+        } catch (Exception $e){
+            $ok = false;
+        }    
         
-        exit;
+        return new ViewModel([
+                'ok' => $ok,
+            ]);
     }
     
     public function tochkaIsAuthAction()

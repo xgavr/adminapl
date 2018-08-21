@@ -12,3 +12,4 @@ phpunit.xml
 /data/ann/
 /config/autoload/local-development.php
 /nbproject/private/
+/data/token/
