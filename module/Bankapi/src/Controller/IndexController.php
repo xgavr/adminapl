@@ -44,7 +44,7 @@ class IndexController extends AbstractActionController
         
         try{
             $ok = $this->tochkaApi->isAuth();
-        } catch (Exception $e){
+        } catch (\Exception $e){
             $ok = false;
         }    
         
