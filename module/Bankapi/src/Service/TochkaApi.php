@@ -146,8 +146,7 @@ class TochkaApi {
     public function authorize()
     {
         $client = new Client();
-        $client->setUri($this->uri.'/user/login');
-//        $client->setUri($this->uri.'/authorize');
+        $client->setUri($this->uri.'/authorize');
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('GET');
         $client->setParameterGet([
@@ -162,7 +161,7 @@ class TochkaApi {
             return $response->getStatusCode().': '.$response->getContent();
         }
         
-        return $response->getStatusCode();
+        return $url;
     }
     
     /*
