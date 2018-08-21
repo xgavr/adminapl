@@ -172,8 +172,8 @@ class TochkaApi {
     public function isAuth()
     {
         if (!$this->sessionContainer->tochka_access_token){
-            $this->authorize();
-            throw new \Exception('Требуется авторизация в банке. Запрос отправлен!');
+            //$this->authorize();
+            throw new \Exception('Требуется авторизация в банке!');
         }        
 
 //        return true;
