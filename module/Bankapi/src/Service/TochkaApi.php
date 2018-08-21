@@ -101,7 +101,7 @@ class TochkaApi {
         $config->$gran_type = $code;
         
         $writer = new \Zend\Config\Writer\PhpArray();
-        $writer->toFile(realpath(self::TOKEN_FILE), $config);
+        $writer->toFile(self::TOKEN_FILE, $config);
         
         return;
     }
