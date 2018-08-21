@@ -139,6 +139,13 @@ class TochkaApi {
         return $response->getContent();
     }
     
+    /*
+     * Получить ссылку на вход для авторизации
+     */
+    public function authUrl()
+    {
+        return $this->uri.'/authorize?response_type=code&client_id='.$this->client_id;
+    }
 
     /*
      * Получение доступа от клиента

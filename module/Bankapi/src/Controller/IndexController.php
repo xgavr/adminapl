@@ -30,9 +30,8 @@ class IndexController extends AbstractActionController
     
     public function tochkaAuthAction()
     {
-        $result = $this->tochkaApi->authorize();        
-        \Zend\Debug\Debug::dump($result, "Ответ на авторизацию");
-        exit;
+        $url = $this->tochkaApi->authUrl();
+        $this->redirect()->toUrl($url);
     }
     
     public function tochkaAccessAction()
