@@ -14,7 +14,11 @@
                 <?= $this->escapeHtml($account['bank_code']);?>                
             </td>
             <td>
-                <?= $this->escapeHtml($account['account_code']);?>                
+                <?php if ($mode == 'sandbox'):?>
+                    <?= $this->escapeHtml($account['account_code']);?>                
+                <?php else: ?>
+                    <?= $this->escapeHtml($account['code']);?>                
+                <?php endif;?>
             </td>
         </tr>
     <?php endforeach;?>

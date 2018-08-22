@@ -59,7 +59,7 @@ class TochkaApi {
     /*
      * @var string
      */
-    private $mode;
+    public $mode;
 
     public function __construct($authParams) 
     {
@@ -389,12 +389,21 @@ class TochkaApi {
         $accounts = $this->accountList();
         if (is_array($accounts)){
             foreach ($accounts as $account){
-                $result['statements'][$account['bank_code']][$account['account_code']] = $this->statement([
-                    'date_start' => $date_start,
-                    'date_end' => $date_end,
-                    'bank_code' => $account['bank_code'],
-                    'account_code' => $account['account_code'],
-                ]);
+                if ($this->mode == 'sandbox'){ //в песочнице номер счета: account_code, в api - code
+                    $result['statements'][$account['bank_code']][$account['account_code']] = $this->statement([
+                        'date_start' => $date_start,
+                        'date_end' => $date_end,
+                        'bank_code' => $account['bank_code'],
+                        'account_code' => $account['account_code'],
+                    ]);
+                } else {
+                    $result['statements'][$account['bank_code']][$account['code']] = $this->statement([
+                        'date_start' => $date_start,
+                        'date_end' => $date_end,
+                        'bank_code' => $account['bank_code'],
+                        'account_code' => $account['code'],
+                    ]);                    
+                }    
             }
             
             return $result;

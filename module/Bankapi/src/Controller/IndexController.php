@@ -74,10 +74,11 @@ class IndexController extends AbstractActionController
         } catch (\Exception $e){
             return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access']);                
         }   
-        \Zend\Debug\Debug::dump($result);
+        //\Zend\Debug\Debug::dump($result);
         
         return new ViewModel([
                 'result' => $result,
+                'mode' => $this->tochkaApi->mode,
             ]);
     }
     
