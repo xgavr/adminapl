@@ -379,7 +379,8 @@ class TochkaApi {
      */
     public function statements($date_start = null, $date_end = null)
     {
-        if (!$date_start) $date_start = date('Y-m-d', strtotime("-1 days"));
+        if (!$date_start) $date_start = date('Y-m-d');
+//        if (!$date_start) $date_start = date('Y-m-d', strtotime("-1 days"));
         if (!$date_end) $date_end = date('Y-m-d');
         
         $result['date_start'] = $date_start;
