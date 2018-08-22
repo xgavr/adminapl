@@ -46,7 +46,8 @@
             "Admin\\":"module/Admin/src/",
             "Company\\":"module/Company/src/",
             "User\\":"module/User/src/",
-            "Bankapi\\":"module/Bankapi/src/"
+            "Bankapi\\":"module/Bankapi/src/",
+            "Bank\\":"module/Bank/src/"
         }
     },
     "autoload-dev": {
@@ -55,7 +56,8 @@
             "AdminTest\\":"module/Admin/test/",
             "CompanyTest\\":"module/Company/test/",
             "UserTest\\":"module/User/test/",
-            "BankapiTest\\":"module/Bankapi/test/"
+            "BankapiTest\\":"module/Bankapi/test/",
+            "BankTest\\":"module/Bank/test/"
         }
     },
     "extra": [],

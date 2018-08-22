@@ -37,4 +37,5 @@ return [
     'User',
     'Application',
     'Bankapi',
+    'Bank',
 ];
