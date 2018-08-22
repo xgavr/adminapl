@@ -38,9 +38,14 @@ class IndexController extends AbstractActionController
     public function tochkaAccessAction()
     {
         $code = $this->params()->fromQuery('code');
+
         if ($code){
-            $this->tochkaApi->accessToken($code, 'authorization_code');
-        }    
+            try{
+                $this->tochkaApi->accessToken($code, $this->tochkaApi::TOKEN_AUTH);
+            } catch(\Exception $e){
+            }    
+            return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access']);
+        }
         
         try{
             $ok = $this->tochkaApi->isAuth();
@@ -64,21 +69,27 @@ class IndexController extends AbstractActionController
     
     public function tochkaAccountListAction()
     {
-        $result = $this->tochkaApi->accountList();
-        var_dump($result);
+        try {
+            $result = $this->tochkaApi->accountList();
+        } catch (\Exception $e){
+            return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access']);                
+        }   
         
-        echo 'ok';
-        
-        exit;
+        return new ViewModel([
+                'result' => $result,
+            ]);
     }
     
     public function tochkaStatementsAction()
     {
-        $result = $this->tochkaApi->statements();
-        var_dump($result);
-        
-        echo 'ok';
-        
-        exit;
+        try {
+            $result = $this->tochkaApi->statements();
+        } catch (\Exception $e){
+            return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access']);                
+        }   
+//        \Zend\Debug\Debug::dump($result);
+        return new ViewModel([
+                'result' => $result,
+            ]);
     }    
 }

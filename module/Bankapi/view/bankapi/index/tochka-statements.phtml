@@ -1,0 +1,29 @@
+<div class="jumbotron">
+    <?= $this->partial('/bankapi/index/tochka-access-partial'); ?>
+</div>
+
+<h1>Период с <?= $this->escapeHtml(date('d-m-Y', strtotime($result['date_start'])))?> по <?= $this->escapeHtml(date('d-m-Y', strtotime($result['date_end'])))?></h1>
+<?php foreach($result['statements'] as $bank_code => $accounts): ?>
+    <h3><?= $this->escapeHtml($bank_code)?></h3>
+    <?php foreach($accounts as $account => $statement):?>
+        <h6><?= $this->escapeHtml($account)?> Остаток на начало периода: <?= $this->escapeHtml($statement['balance_opening'])?>, на конец периода: <?= $this->escapeHtml($statement['balance_closing'])?></h6>
+        <table class="table table-striped" style="font-size: xx-small">
+            <tr>
+                <?php foreach($statement['payments'][0] as $key => $value):?>
+                    <th>
+                        <?= $this->escapeHtml($key);?>
+                    </th>
+                <?php endforeach;?>
+            </tr>
+            <?php foreach($statement['payments'] as $payment):?>
+                <tr>
+                    <?php foreach($payment as $key => $value):?>
+                        <td>
+                            <?= $this->escapeHtml($value);?>
+                        </td>
+                    <?php endforeach;?>
+                </tr>
+            <?php endforeach;?>
+        </table>
+    <?php endforeach;?>
+<?php endforeach;?>

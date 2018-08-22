@@ -1,11 +1,6 @@
 <div class="jumbotron">
     <?php if($ok):?>
-        <h1>Есть доступ!</h1>
-        <p>Можно получать выписку, список счетов и делать платежки</p>
-        <p>
-            <a class="btn btn-primary btn-lg" href="<?= $this->url('bankapi', ['action' => 'tochka-statements'])?>" role="button">Получить выписку</a>
-            <a class="btn btn-primary btn-lg" href="<?= $this->url('bankapi', ['action' => 'tochka-account-list'])?>" role="button">Список счетов</a>
-        </p>
+        <?= $this->partial('/bankapi/index/tochka-access-partial'); ?>
     <?php else: ?>
         <h1>Нет доступа!</h1>
         <p>Требуется пройти авторизацию</p>

@@ -32,6 +32,10 @@ class TochkaApi {
     
     const VERSION = 'v1';
     
+    const TOKEN_AUTH = 'authorization_code';
+    const TOKEN_ACCESS = 'access_token';
+    const TOKEN_REFRESH = 'refresh_token';
+    
     /*
      * Adapter
      */
@@ -122,6 +126,25 @@ class TochkaApi {
 
 
     /*
+     * Обработка ошибок
+     * @var Zend\Http\Response
+     */
+    public function exception($response)
+    {
+        switch ($response->getStatusCode()) {
+            case 400: //Invalid code
+            case 401: //The access token is invalid or has expired
+                $this->saveCode('', self::TOKEN_AUTH);
+                $this->saveCode('', self::TOKEN_ACCESS);                
+            default:
+                $error = Decoder::decode($response->getContent());                
+                throw new \Exception($error->error.' ('.$response->getStatusCode().'): '.$error->error_description);
+        }
+        
+        throw new \Exception('Неопознаная ошибка');
+    }
+
+    /*
      * Обмен кода авторизации на access_token и refresh_token
      * @var string $code
      * @var string $gran_type
@@ -135,8 +158,8 @@ class TochkaApi {
             'grant_type' => $gran_type,            
         ];
         
-        if ($gran_type == 'authorization_code') $postParameters['code'] = $code;
-        if ($gran_type == 'refresh_token') $postParameters['refresh_token'] = $code;
+        if ($gran_type == self::TOKEN_AUTH) $postParameters['code'] = $code;
+        if ($gran_type == self::TOKEN_REFRESH) $postParameters['refresh_token'] = $code;
 
         $client = new Client();
         $client->setUri($this->uri.'/oauth2/token');
@@ -153,18 +176,17 @@ class TochkaApi {
                 
         if ($response->isSuccess()){
             $result = Decoder::decode($response->getBody());
-            if ($gran_type == 'authorization_code'){
-                $this->saveCode($code, 'authorization_code');
-                return $this->accessToken($result->refresh_token, 'refresh_token');
+            if ($gran_type == self::TOKEN_AUTH){
+                $this->saveCode($code, self::TOKEN_AUTH);
+                return $this->accessToken($result->refresh_token, self::TOKEN_REFRESH);
             }    
-            if ($gran_type == 'refresh_token'){
-                $this->saveCode($result->access_token, 'access_token');
+            if ($gran_type == self::TOKEN_REFRESH){
+                $this->saveCode($result->access_token, self::TOKEN_ACCESS);
                 return true;
             }
         }
         
-        $error = Decoder::decode($response->getContent());
-        throw new \Exception($error->error.' ('.$response->getStatusCode().'): '.$error->error_description);
+        return $this->exception($response);
     }
     
     /*
@@ -174,7 +196,7 @@ class TochkaApi {
     {
         return $this->uri.'/authorize?response_type=code&client_id='.$this->client_id;
     }
-
+    
     /*
      * Получение доступа от клиента
      */
@@ -205,8 +227,7 @@ class TochkaApi {
      */
     public function isAuth()
     {
-        if (!$this->readCode('access_token')){
-            //$this->authorize();
+        if (!$this->readCode(self::TOKEN_ACCESS)){
             throw new \Exception('Требуется авторизация в банке!');
         }        
 
@@ -228,7 +249,7 @@ class TochkaApi {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode('access_token'),
+            'Authorization: Bearer '.$this->readCode(self::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -236,11 +257,10 @@ class TochkaApi {
         $response = $client->send();
         
         if ($response->isSuccess()){
-            return Decoder::decode($response->getBody());            
+            return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
         }
-        
-        $error = Decoder::decode($response->getContent());
-        throw new \Exception($error->error.' ('.$response->getStatusCode().'): '.$error->error_description);
+
+        return $this->exception($response);
     }
     
     /*
@@ -259,7 +279,7 @@ class TochkaApi {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode('access_token'),
+            'Authorization: Bearer '.$this->readCode(self::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -267,11 +287,10 @@ class TochkaApi {
         $response = $client->send();
         
         if ($response->isSuccess()){
-            return Decoder::decode($response->getBody()); 
+            return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY); 
         }
         
-        $error = Decoder::decode($response->getContent());
-        throw new \Exception($error->error.' ('.$response->getStatusCode().'): '.$error->error_description);
+        return $this->exception($response);
     }
     
     /*
@@ -289,7 +308,7 @@ class TochkaApi {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode('access_token'),
+            'Authorization: Bearer '.$this->readCode(self::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -309,8 +328,7 @@ class TochkaApi {
             }
         }
         
-        $error = Decoder::decode($response->getContent());
-        throw new \Exception($error->error.' ('.$response->getStatusCode().'): '.$error->error_description);
+        return $this->exception($response);
     }
     
     /*
@@ -336,7 +354,7 @@ class TochkaApi {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode('access_token'),
+            'Authorization: Bearer '.$this->readCode(self::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -350,8 +368,7 @@ class TochkaApi {
             }
         }
         
-        $error = Decoder::decode($response->getContent());
-        throw new \Exception($error->error.' ('.$response->getStatusCode().'): '.$error->error_description);
+        return $this->exception($response);
     }
     
     /*
@@ -362,19 +379,21 @@ class TochkaApi {
      */
     public function statements($date_start = null, $date_end = null)
     {
-        if (!$date_start) $date_start = date('Y-m-d');
+        if (!$date_start) $date_start = date('Y-m-d', strtotime("-1 days"));
         if (!$date_end) $date_end = date('Y-m-d');
         
-        $result = [];
+        $result['date_start'] = $date_start;
+        $result['date_end'] = $date_end;
+        $result['statements'] = [];
         
         $accounts = $this->accountList();
         if (is_array($accounts)){
             foreach ($accounts as $account){
-                $result[] = $this->statement([
+                $result['statements'][$account['bank_code']][$account['account_code']] = $this->statement([
                     'date_start' => $date_start,
                     'date_end' => $date_end,
-                    'bank_code' => $account->bank_code,
-                    'account_code' => $account->account_code,
+                    'bank_code' => $account['bank_code'],
+                    'account_code' => $account['account_code'],
                 ]);
             }
             

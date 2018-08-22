@@ -1,0 +1,21 @@
+<div class="jumbotron">
+    <?= $this->partial('/bankapi/index/tochka-access-partial'); ?>
+</div>
+
+<table class="table table-striped">
+    <tr>
+        <th>БИК</th>
+        <th>Номер счета</th>
+    </tr>
+    
+    <?php foreach($result as $account):?>
+        <tr>
+            <td>
+                <?= $this->escapeHtml($account['bank_code']);?>                
+            </td>
+            <td>
+                <?= $this->escapeHtml($account['account_code']);?>                
+            </td>
+        </tr>
+    <?php endforeach;?>
+</table>
