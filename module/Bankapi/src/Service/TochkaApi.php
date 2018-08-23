@@ -138,7 +138,7 @@ class TochkaApi {
                 $this->saveCode('', self::TOKEN_ACCESS);                
             default:
                 $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);
-                var_dump($error); exit;
+                var_dump($response->getStatusCode()); exit;
                 throw new \Exception($error['error'].' ('.$response->getStatusCode().'): '.$error['error_description']);
         }
         
