@@ -134,12 +134,22 @@ class TochkaApi {
         switch ($response->getStatusCode()) {
             case 400: //Invalid code
             case 401: //The access token is invalid or has expired
+            case 403: //The access token is missing
                 $this->saveCode('', self::TOKEN_AUTH);
                 $this->saveCode('', self::TOKEN_ACCESS);                
             default:
                 $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);
-                var_dump($response->getStatusCode()); exit;
-                throw new \Exception($error['error'].' ('.$response->getStatusCode().'): '.$error['error_description']);
+                $error_msg = $response->getStatusCode();
+                if (isset($error['error'])){
+                    $error_msg .= ' ('.$error['error'].')';
+                }
+                if (isset($error['error_description'])){
+                    $error_msg .= ' '.$error['error_description'];
+                }
+                if (isset($error['message'])){
+                    $error_msg .= ' '.$error['message'];
+                }
+                throw new \Exception($error_msg);
         }
         
         throw new \Exception('Неопознаная ошибка');

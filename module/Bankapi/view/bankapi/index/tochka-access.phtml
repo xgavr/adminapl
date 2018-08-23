@@ -1,6 +1,6 @@
 <div class="jumbotron">
     <?php if($ok):?>
-        <?= $this->partial('/bankapi/index/tochka-access-partial'); ?>
+        <?= $this->partial('/bankapi/index/tochka-access-partial', ['error' => $error]); ?>
     <?php else: ?>
         <h1>Нет доступа!</h1>
         <p>Требуется пройти авторизацию</p>

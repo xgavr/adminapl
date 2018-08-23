@@ -38,6 +38,7 @@ class IndexController extends AbstractActionController
     public function tochkaAccessAction()
     {
         $code = $this->params()->fromQuery('code');
+        $error = $this->params()->fromQuery('error');
 
         if ($code){
             try{
@@ -55,6 +56,7 @@ class IndexController extends AbstractActionController
         
         return new ViewModel([
                 'ok' => $ok,
+                'error' => $error,
             ]);
     }
     
@@ -72,7 +74,7 @@ class IndexController extends AbstractActionController
         try {
             $result = $this->tochkaApi->accountList();
         } catch (\Exception $e){
-            return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access']);                
+            return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access'], ['query' => ['error' => $e->getMessage()]]);                
         }   
         //\Zend\Debug\Debug::dump($result);
         
@@ -87,7 +89,7 @@ class IndexController extends AbstractActionController
         try {
             $result = $this->tochkaApi->statements();
         } catch (\Exception $e){
-            return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access']);                
+            return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access'], ['query' => ['error' => $e->getMessage()]]);                
         }   
         \Zend\Debug\Debug::dump($result);
         return new ViewModel([
