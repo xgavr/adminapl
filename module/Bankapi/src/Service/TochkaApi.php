@@ -137,8 +137,8 @@ class TochkaApi {
                 $this->saveCode('', self::TOKEN_AUTH);
                 $this->saveCode('', self::TOKEN_ACCESS);                
             default:
-                $error = Decoder::decode($response->getContent());                
-                throw new \Exception($error->error.' ('.$response->getStatusCode().'): '.$error->error_description);
+                $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);                
+                throw new \Exception($error['error'].' ('.$response->getStatusCode().'): '.$error['error_description']);
         }
         
         throw new \Exception('Неопознаная ошибка');
