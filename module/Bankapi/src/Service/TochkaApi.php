@@ -131,14 +131,14 @@ class TochkaApi {
      */
     public function exception($response)
     {
-        var_dump($response->getStatusCode());
         switch ($response->getStatusCode()) {
             case 400: //Invalid code
             case 401: //The access token is invalid or has expired
                 $this->saveCode('', self::TOKEN_AUTH);
                 $this->saveCode('', self::TOKEN_ACCESS);                
             default:
-                $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);                
+                $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);
+                var_dump($error); exit;
                 throw new \Exception($error['error'].' ('.$response->getStatusCode().'): '.$error['error_description']);
         }
         
