@@ -131,6 +131,7 @@ class TochkaApi {
      */
     public function exception($response)
     {
+        var_dump($response->getStatusCode());
         switch ($response->getStatusCode()) {
             case 400: //Invalid code
             case 401: //The access token is invalid or has expired
