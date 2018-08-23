@@ -108,12 +108,19 @@ class BankManager
      * @param date $dateEnd дата конца периода
      * @param array $options другие опции
      */
-    public function tochkaStatemtn($dateStart, $dateEnd, $options = null)
+    public function tochkaStatement($dateStart, $dateEnd, $options = null)
     {
         $tochkaStatement = $this->tochkaApi->statements($dateStart, $dateEnd);
         
         if (is_array($tochkaStatement)){
-            
+            foreach ($tochkaStatement['statements'] as $bik => $accounts){
+                foreach ($accounts as $code => $account){
+                    $this->addNewOrUpdateBalance(['bik' => $bik, 'account' => $code, 'dateBalance' => $dateStart, 'balance' => $account['balance_opening']]);
+                    foreach($account['payments'] as $payment){
+                        $this->addNewStatement($payment);
+                    }
+                }
+            }
         }
     }
 }
