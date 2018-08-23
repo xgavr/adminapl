@@ -70,17 +70,17 @@ class Statement {
     protected $operationType;
    
     /**
-     * @ORM\Column(name="amount")   
+     * @ORM\Column(name="payment_amount")   
      */
     protected $amount;
    
     /** 
-     * @ORM\Column(name="bank_system_id")  
+     * @ORM\Column(name="payment_bank_system_id")  
      */
     protected $bankSystemId;
     
     /** 
-     * @ORM\Column(name="charge_date")  
+     * @ORM\Column(name="payment_charge_date")  
      */
     protected $chargeDate;
     
@@ -95,7 +95,7 @@ class Statement {
     protected $paymentNumber;
 
     /** 
-     * @ORM\Column(name="purpose")  
+     * @ORM\Column(name="payment_purpose")  
      */
     protected $purpose;
 
