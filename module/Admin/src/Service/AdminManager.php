@@ -11,8 +11,8 @@ namespace Admin\Service;
 use Zend\Config\Config;
 use Zend\Config\Writer\PhpArray;
 /**
- * Description of SmsManager
- * send sms from sms.ru
+ * Description of AdminManager
+ *
  * @author Daddy
  */
 class AdminManager {

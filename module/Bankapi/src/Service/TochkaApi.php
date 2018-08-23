@@ -36,27 +36,27 @@ class TochkaApi {
     const TOKEN_ACCESS = 'access_token';
     const TOKEN_REFRESH = 'refresh_token';
     
-    /*
+    /**
      * Adapter
      */
     const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
     
-    /*
+    /**
      * @var string
      */
     private $client_id;
     
-    /*
+    /**
      * @var string
      */
     private $client_secret;
     
-    /*
+    /**
      * @var string
      */
     private $uri;
 
-    /*
+    /**
      * @var string
      */
     public $mode;
@@ -89,10 +89,10 @@ class TochkaApi {
         }
     }
     
-    /*
+    /**
      * Хранение кодов
-     * @var string $code
-     * @var string $gran_type
+     * @param string $code код
+     * @param string $gran_type тип кода
      */
     public function saveCode($code, $gran_type)
     {
@@ -110,9 +110,9 @@ class TochkaApi {
         return;
     }
     
-    /*
+    /**
      * Получить код доступа
-     *@var string @gran_type
+     *@param string $gran_type тип кода
      */
     public function readCode($gran_type)
     {
@@ -125,9 +125,9 @@ class TochkaApi {
     }
 
 
-    /*
+    /**
      * Обработка ошибок
-     * @var Zend\Http\Response
+     * @param \Zend\Http\Response
      */
     public function exception($response)
     {
@@ -144,10 +144,10 @@ class TochkaApi {
         throw new \Exception('Неопознаная ошибка');
     }
 
-    /*
+    /**
      * Обмен кода авторизации на access_token и refresh_token
-     * @var string $code
-     * @var string $gran_type
+     * @param string $code код
+     * @param string $gran_type тип кода
      */    
     public function accessToken($code, $gran_type)
     {
@@ -189,15 +189,16 @@ class TochkaApi {
         return $this->exception($response);
     }
     
-    /*
+    /**
      * Получить ссылку на вход для авторизации
+     * @return string 
      */
     public function authUrl()
     {
         return $this->uri.'/authorize?response_type=code&client_id='.$this->client_id;
     }
     
-    /*
+    /**
      * Получение доступа от клиента
      */
     public function authorize()
@@ -221,9 +222,9 @@ class TochkaApi {
         return $url;
     }
     
-    /*
+    /**
      * Проверить авторизацию
-     *      * 
+     * @return bool
      */
     public function isAuth()
     {
@@ -234,8 +235,9 @@ class TochkaApi {
         return true;
     }
     
-    /*
-     * Список счетов
+    /**
+     * Получить список счетов
+     * @return array|\Exception
      */
     public function accountList()
     {
@@ -263,9 +265,10 @@ class TochkaApi {
         return $this->exception($response);
     }
     
-    /*
-     * Выписка
-     * @var string $request_id
+    /**
+     * Получить выписку за период
+     * @param string $request_id
+     * @return array|\Exception
      */
     public function statementResult($request_id)
     {
@@ -293,9 +296,10 @@ class TochkaApi {
         return $this->exception($response);
     }
     
-    /*
+    /**
      * Статус запроса выписки
-     * @var string $request_id
+     * @param string $request_id
+     * @return array|\Exception
      */
     public function statementStatus($request_id)
     {
@@ -331,9 +335,10 @@ class TochkaApi {
         return $this->exception($response);
     }
     
-    /*
+    /**
      * Запрос выписки
-     * $var array $params
+     * @param array $params
+     * 
      */
     public function statement($params)
     {
@@ -371,11 +376,11 @@ class TochkaApi {
         return $this->exception($response);
     }
     
-    /*
+    /**
      * Получить выписки по всем счетам за период
-     * @var date $date_start
-     * @var date $date_end
-     * @return array
+     * @param date $date_start
+     * @param date $date_end
+     * @return array|null
      */
     public function statements($date_start = null, $date_end = null)
     {

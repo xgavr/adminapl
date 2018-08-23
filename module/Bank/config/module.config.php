@@ -47,6 +47,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Service\BankManager::class => Service\Factory\BankManagerFactory::class,
         ],
     ],        
     'view_manager' => [

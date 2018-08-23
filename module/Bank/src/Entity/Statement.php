@@ -144,6 +144,11 @@ class Statement {
      */
     protected $xPaymentId;
     
+    /** 
+     * @ORM\Column(name="swap1")  
+     */
+    protected $swap1;
+    
     /**
      * Возвращает Id
      * @return int
@@ -209,7 +214,7 @@ class Statement {
 
     /**
      * Устанавливает расчетный счет
-     * @param string $account
+     * @param string $counterpartyAccountNumber
      */
     public function setCounterpartyAccountNumber($counterpartyAccountNumber) 
     {
@@ -227,7 +232,7 @@ class Statement {
 
     /**
      * Устанавливает БИК
-     * @param string $account
+     * @param string $counterpartyBankBik
      */
     public function setСounterpartyBankBik($counterpartyBankBik) 
     {
@@ -245,7 +250,7 @@ class Statement {
 
     /**
      * Устанавливает банк
-     * @param string $account
+     * @param string $counterpartyBankName
      */
     public function setСounterpartyBankName($counterpartyBankName) 
     {
@@ -263,7 +268,7 @@ class Statement {
 
     /**
      * Устанавливает инн
-     * @param string $account
+     * @param string $counterpartyInn
      */
     public function setСounterpartyInn($counterpartyInn) 
     {
@@ -574,6 +579,24 @@ class Statement {
     public function setXPaymentId($xPaymentId) 
     {
         $this->xPaymentId = $xPaymentId;
+    }     
+    
+    /**
+     * Возвращает флаг обмена 1.
+     * @return int
+     */
+    public function getSwap1() 
+    {
+        return $this->swap1;
+    }
+
+    /**
+     * Устанавливает флаг обмена 1
+     * @param int $swap1
+     */
+    public function setSwap1($swap1) 
+    {
+        $this->swap1 = $swap1;
     }     
     
 }

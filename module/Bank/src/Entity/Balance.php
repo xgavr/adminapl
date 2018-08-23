@@ -43,8 +43,7 @@ class Balance {
      * @ORM\Column(name="balance")  
      */
     protected $balance;
-    
-    
+        
     /**
      * Возвращает Id
      * @return int
@@ -116,4 +115,23 @@ class Balance {
     {
         $this->dateBalance = $dateBalance;
     }             
+
+    /**
+     * Возвращает остаток на начало дня.
+     * @return float
+     */
+    public function getBalance() 
+    {
+        return $this->balance;
+    }
+
+    /**
+     * Устанавливает остаток на начало дня
+     * @param float $balance
+     */
+    public function setBalanceStart($balance) 
+    {
+        $this->balance = $balance;
+    }     
+
 }
