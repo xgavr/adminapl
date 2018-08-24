@@ -109,7 +109,14 @@ class LegalManager
 
         $this->entityManager->flush();
     }    
-        
+       
+    /**
+     * Добавить банковский счет
+     * 
+     * @param \Company\Entity\Legal $legal
+     * @param array $data
+     * @param bool $flushnow
+     */
     public function addBankAccount($legal, $data, $flushnow = false)
     {                
         $bankAccount = new BankAccount();            
@@ -119,6 +126,7 @@ class LegalManager
         $bankAccount->setKs($data['ks']);            
         $bankAccount->setRs($data['rs']);            
         $bankAccount->setStatus($data['status']);            
+        $bankAccount->setApi($data['api']);            
 
         $currentDate = date('Y-m-d H:i:s');
         $bankAccount->setDateCreated($currentDate);
@@ -132,6 +140,13 @@ class LegalManager
         }
     }
    
+    /**
+     * Обновить банковский счет
+     * 
+     * @param \Company\Entity\BankAccount $bankAccount
+     * @param array $data
+     * @param bool $flushnow
+     */
     public function updateBankAccount($bankAccount, $data, $flushnow = false)
     {                
         $bankAccount->setName($data['name']);            
@@ -140,6 +155,7 @@ class LegalManager
         $bankAccount->setKs($data['ks']);            
         $bankAccount->setRs($data['rs']);            
         $bankAccount->setStatus($data['status']);            
+        $bankAccount->setApi($data['api']);            
 
         $this->entityManager->persist($bankAccount);
 
@@ -148,6 +164,11 @@ class LegalManager
         }
     }
     
+    /**
+     * Удалить банковский счет
+     * 
+     * @param \Company\Entity\BankAccount $bankAccount
+     */
     public function removeBankAccount($bankAccount)
     {
         $this->entityManager->remove($bankAccount);

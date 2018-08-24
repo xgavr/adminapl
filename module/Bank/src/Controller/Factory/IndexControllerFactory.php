@@ -10,6 +10,7 @@ namespace Bank\Controller\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Bank\Controller\IndexController;
+use Bank\Service\BankManager;
 
 
 /**
@@ -23,8 +24,9 @@ class IndexControllerFactory implements FactoryInterface {
                      $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $bankManager = $container->get(BankManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new IndexController($entityManager);
+        return new IndexController($entityManager, $bankManager);
     }
 }

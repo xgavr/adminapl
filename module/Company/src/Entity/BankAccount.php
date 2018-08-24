@@ -22,6 +22,8 @@ class BankAccount {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
    
+    const API_TOCHKA      = 1; // есть api банка точка.
+    const NO_API      = 2; // нет api.
     
     /**
      * @ORM\Id
@@ -34,6 +36,11 @@ class BankAccount {
      * @ORM\Column(name="status")  
      */
     protected $status;
+
+    /** 
+     * @ORM\Column(name="api")  
+     */
+    protected $api = 2;
 
     /** 
      * @ORM\Column(name="date_created")  
@@ -138,7 +145,7 @@ class BankAccount {
         $this->rs = $rs;
     }     
 
-        /**
+    /**
      * Returns status.
      * @return int     
      */
@@ -182,7 +189,52 @@ class BankAccount {
     }   
     
     /**
-     * Returns the date of user creation.
+     * Return api.
+     * @return int     
+     */
+    public function getApi() 
+    {
+        return $this->api;
+    }
+
+    /**
+     * Returns possible api as array.
+     * @return array
+     */
+    public static function getApiList() 
+    {
+        return [
+            self::API_TOCHKA => '<a href="/bankapi/tochka-access"
+                                    title="Доступ к Апи Точка" target="_blank">
+                                     API Точка</a>',
+            self::NO_API => 'Нет АПИ'
+        ];
+    }    
+    
+    /**
+     * Returns user api as string.
+     * @return string
+     */
+    public function getApiAsString()
+    {
+        $list = self::getApiList();
+        if (isset($list[$this->api]))
+            return $list[$this->api];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets api.
+     * @param int $api     
+     */
+    public function setApi($api) 
+    {
+        $this->api = $api;
+    }   
+    
+    /**
+     * Returns the date of bank account creation.
      * @return string     
      */
     public function getDateCreated() 
@@ -191,7 +243,7 @@ class BankAccount {
     }
     
     /**
-     * Sets the date when this user was created.
+     * Sets the date when this bank account was created.
      * @param string $dateCreated     
      */
     public function setDateCreated($dateCreated) 

@@ -184,6 +184,12 @@ class NavManager
                             'link' => $url('regions')
                         ];
                 
+                $companyDropdownItems[] = [
+                            'id' => 'bank',
+                            'label' => 'Банк',
+                            'link' => $url('bank', ['action' => 'statement'])
+                        ];
+                
                 if (count($companyDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'users',

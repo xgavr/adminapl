@@ -200,6 +200,12 @@
                 }        
             })    
 
+            //форматирование числа
+            numberFormat = function(value){
+                var res = parseFloat(value).toFixed(2);
+                res = res.replace('.',',');
+                return res.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1&nbsp;")
+            }
         </script>        
     </body>
 </html>

@@ -24,7 +24,6 @@ final class Version20180823155049 extends AbstractMigration
         $table->addColumn('counterparty_kpp', 'string', ['notnull' => false, 'length' => 9]);
         $table->addColumn('counterparty_name', 'string', ['notnull' => false, 'length' => 256]);
         $table->addColumn('operation_type', 'integer', ['notnull' => false, 'default' => 0]);
-        $table->addColumn('counterparty_kpp', 'string', ['notnull' => false, 'length' => 9]);
         $table->addColumn('payment_amount', 'float', ['notnull' => true, 'default' => 0]);
         $table->addColumn('payment_bank_system_id', 'string', ['notnull' => false, 'length' => 128]);
         $table->addColumn('payment_charge_date', 'date', ['notnull' => true]);
@@ -39,10 +38,10 @@ final class Version20180823155049 extends AbstractMigration
         $table->addColumn('tax_info_period', 'string', ['notnull' => false, 'length' => 32]);
         $table->addColumn('tax_info_reason_code', 'string', ['notnull' => false, 'length' => 32]);
         $table->addColumn('tax_info_status', 'string', ['notnull' => false, 'length' => 32]);
-        $table->addColumn('x_payment_id', 'string', ['notnull' => false, 'length' => 128]);
+        $table->addColumn('x_payment_id', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('swap1', 'integer', ['notnull' => true, 'default' => 0]);
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['bic', 'account', 'payment_charge_date'], 'bic_account_payment_charge_date_idx');
+        $table->addUniqueIndex(['bic', 'account', 'payment_charge_date', 'x_payment_id'], 'bic_account_payment_charge_date_x_payment_id_uidx');
         $table->addOption('engine' , 'InnoDB');
 
     }

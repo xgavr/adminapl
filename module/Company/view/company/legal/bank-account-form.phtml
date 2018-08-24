@@ -26,6 +26,12 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+if ($legal->isOfficeLegal()){
+    $form->get('api')->setAttributes([
+        'class'=>'form-control', 
+        ]);
+}    
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'bank-account-submit']);
 
 $form->prepare();
@@ -80,6 +86,14 @@ $form->prepare();
                             <?= $this->formElement($form->get('ks')); ?>
                             <?= $this->formElementErrors($form->get('ks')); ?>                  
                         </div>
+
+                        <?php if ($legal->isOfficeLegal()):?>
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('api')); ?>
+                                <?= $this->formElement($form->get('api')); ?>
+                                <?= $this->formElementErrors($form->get('api')); ?>                  
+                            </div>
+                        <?php endif; ?>
 
                         <div class="form-group">
                             <?= $this->formLabel($form->get('status')); ?>

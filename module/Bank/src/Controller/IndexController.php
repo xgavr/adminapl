@@ -22,15 +22,15 @@ class IndexController extends AbstractActionController
     private $entityManager;
 
     /**
-     * Точка Api.
-     * @var Bankapi\Service\TochkaApi
+     * Менеджер банк.
+     * @var Bank\Service\BankManager
      */
-    private $tochkaApi;
+    private $bankManager;
 
-    public function __construct($entityManager, $tochkaApi) 
+    public function __construct($entityManager, $bankManager) 
     {
         $this->entityManager = $entityManager;
-        $this->tochkaApi = $tochkaApi;
+        $this->bankManager = $bankManager;
     }   
 
     public function indexAction()
@@ -43,15 +43,15 @@ class IndexController extends AbstractActionController
         return new ViewModel([]);
     }
 
-        public function statementContentAction()
+    public function statementContentAction()
     {
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         
-        $query = $this->entityManager->getRepository(Statement::class)
-                        ->statement($q);
+        $query = $this->entityManager->getRepository(\Bank\Entity\Statement::class)
+                        ->findStatement($q);
         
         $total = count($query->getResult(2));
         
@@ -63,6 +63,16 @@ class IndexController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
+        ]);          
+    }
+
+    public function tochkaStatementUpdateAction()
+    {
+        	        
+        $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
+        
+        return new JsonModel([
+            'ok',
         ]);          
     }
 }

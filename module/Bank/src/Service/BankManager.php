@@ -42,7 +42,7 @@ class BankManager
     public function addNewOrUpdateBalance($data)
     {
         $balance = $this->entityManager->getRepository(Balance::class)
-                ->findOneBy(['bik' => $data['bik'], 'account' => $data['account'], 'dateBalace' => $data['dateBalance']]);
+                ->findOneBy(['bik' => $data['bik'], 'account' => $data['account'], 'dateBalance' => $data['dateBalance']]);
         
         if ($balance){
             $balance->setBalance($data['balance']);
@@ -72,16 +72,28 @@ class BankManager
     }
     
     /**
-     * Добавление строки выписки
+     * Добавление или обновление строки выписки
      * @param array $data
      * @return \Bank\Entity\Statement
      */
-    public function addNewStatement($data)
+    public function addNewOrUpdateStatement($data)
     {
-        $statement = new Statement();
+        $statement = $this->entityManager->getRepository(Statement::class)
+                ->findOneBy([
+                    'bik' => $data['bik'],
+                    'account' => $data['account'],
+                    'chargeDate' => date('Y-m-d', strtotime($data['payment_charge_date'])),
+                    'xPaymentId' => $data['x_payment_id'],
+                ]);
+        
+        if (!$statement){
+            $statement = new Statement();
+        }
+        
+        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
         $methods = get_class_methods($statement);
         foreach ($data as $key => $value){
-            $func = 'set'.ucfirst($key);
+            $func = 'set'.ucfirst($filter->filter($key));
             if (in_array($func, $methods)){
                 $statement->$func($value);
             }
@@ -110,17 +122,25 @@ class BankManager
      */
     public function tochkaStatement($dateStart, $dateEnd, $options = null)
     {
-        $tochkaStatement = $this->tochkaApi->statements($dateStart, $dateEnd);
+        try{
+            $tochkaStatement = $this->tochkaApi->statements($dateStart, $dateEnd);
+        } catch (\Exception $e){
+            return $e->getMessage();
+        }
         
         if (is_array($tochkaStatement)){
             foreach ($tochkaStatement['statements'] as $bik => $accounts){
                 foreach ($accounts as $code => $account){
                     $this->addNewOrUpdateBalance(['bik' => $bik, 'account' => $code, 'dateBalance' => $dateStart, 'balance' => $account['balance_opening']]);
                     foreach($account['payments'] as $payment){
-                        $this->addNewStatement($payment);
+                        $payment['bik'] = $bik;
+                        $payment['account'] = $code;
+                        $this->addNewOrUpdateStatement($payment);
                     }
                 }
             }
         }
+        
+        return true;
     }
 }

@@ -359,6 +359,20 @@ class Legal {
         $this->contacts[] = $contact;
 //        $contact->removeLegalAssociation($legal);
         $contact->addLegal($this);
-    }     
+    }
+    
+    /**
+     * Проверяет принадлежность к офису
+     */
+    public function isOfficeLegal()
+    {
+        foreach ($this->contacts as $contact){
+            if ($contact->getOffice()){
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
 }

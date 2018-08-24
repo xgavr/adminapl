@@ -111,6 +111,18 @@ return [
         ],
     ],
     'doctrine' => [        
+        // расширение функций DQL
+        'configuration' => [
+            'orm_default' => [
+                'string_functions' => [
+                    'match' => 'DoctrineExtensions\Query\Mysql\MatchAgainst',
+                ],
+                'numeric_functions' => [
+                    'round' => 'DoctrineExtensions\Query\Mysql\Round',
+                    'floor' => 'DoctrineExtensions\Query\Mysql\Floor',
+                ],
+            ],
+        ],
         // настройка миграций
         'migrations_configuration' => [
             'orm_default' => [

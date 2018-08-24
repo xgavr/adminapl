@@ -443,6 +443,7 @@ class LegalController extends AbstractActionController
                     'rs' => $bankAccount->getRs(),  
                     'ks' => $bankAccount->getKs(),  
                     'status' => $bankAccount->getStatus(),  
+                    'api' => $bankAccount->getApi(),  
                 ];
                 $form->setData($data);
             }    

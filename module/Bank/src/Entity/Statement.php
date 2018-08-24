@@ -11,7 +11,7 @@ namespace Bank\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Email
+ * Description of Bank
  * @ORM\Entity(repositoryClass="\Bank\Repository\BankRepository")
  * @ORM\Table(name="bank_statement")
  * @author Daddy
@@ -147,7 +147,7 @@ class Statement {
     /** 
      * @ORM\Column(name="swap1")  
      */
-    protected $swap1;
+    protected $swap1 = 0;
     
     /**
      * Возвращает Id
@@ -234,7 +234,16 @@ class Statement {
      * Устанавливает БИК
      * @param string $counterpartyBankBik
      */
-    public function setСounterpartyBankBik($counterpartyBankBik) 
+    public function setCounterpartyBankBik($counterpartyBankBik) 
+    {
+        $this->counterpartyBankBik = $counterpartyBankBik;
+    }     
+
+    /**
+     * Устанавливает БИК
+     * @param string $counterpartyBankBik
+     */
+    public function setCounterpartyBankBic($counterpartyBankBik) 
     {
         $this->counterpartyBankBik = $counterpartyBankBik;
     }     
@@ -251,8 +260,8 @@ class Statement {
     /**
      * Устанавливает банк
      * @param string $counterpartyBankName
-     */
-    public function setСounterpartyBankName($counterpartyBankName) 
+     */             
+    public function setCounterpartyBankName($counterpartyBankName) 
     {
         $this->counterpartyBankName = $counterpartyBankName;
     }     
@@ -270,7 +279,7 @@ class Statement {
      * Устанавливает инн
      * @param string $counterpartyInn
      */
-    public function setСounterpartyInn($counterpartyInn) 
+    public function setCounterpartyInn($counterpartyInn) 
     {
         $this->counterpartyInn = $counterpartyInn;
     }     
@@ -288,7 +297,7 @@ class Statement {
      * Устанавливает кпп
      * @param string $counterpartyKpp
      */
-    public function setСounterpartyKpp($counterpartyKpp) 
+    public function setCounterpartyKpp($counterpartyKpp) 
     {
         $this->counterpartyKpp = $counterpartyKpp;
     }     
@@ -306,7 +315,7 @@ class Statement {
      * Устанавливает имя
      * @param string $counterpartyName
      */
-    public function setСounterpartyName($counterpartyName) 
+    public function setCounterpartyName($counterpartyName) 
     {
         $this->counterpartyName = $counterpartyName;
     }     
@@ -324,7 +333,7 @@ class Statement {
      * Устанавливает тип операции
      * @param string $operationType
      */
-    public function setОperationType($operationType) 
+    public function setOperationType($operationType) 
     {
         $this->operationType = $operationType;
     }     
@@ -348,6 +357,15 @@ class Statement {
     }     
     
     /**
+     * Устанавливает сумму
+     * @param float $amount
+     */
+    public function setPaymentAmount($amount) 
+    {
+        $this->amount = $amount;
+    }     
+    
+    /**
      * Возвращает bankSystemId.
      * @return string
      */
@@ -361,6 +379,15 @@ class Statement {
      * @param string $bankSystemId
      */
     public function setBankSystemId($bankSystemId) 
+    {
+        $this->bankSystemId = $bankSystemId;
+    }     
+    
+    /**
+     * Устанавливает bankSystemId
+     * @param string $bankSystemId
+     */
+    public function setPaymentBankSystemId($bankSystemId) 
     {
         $this->bankSystemId = $bankSystemId;
     }     
@@ -380,7 +407,16 @@ class Statement {
      */
     public function setChargeDate($chargeDate) 
     {
-        $this->chargeDate = $chargeDate;
+        $this->chargeDate = date('Y-m-d', strtotime($chargeDate));
+    }     
+    
+    /**
+     * Устанавливает chargeDate
+     * @param date $chargeDate
+     */
+    public function setPaymentChargeDate($chargeDate) 
+    {
+        $this->chargeDate = date('Y-m-d', strtotime($chargeDate));
     }     
     
     /**
@@ -398,7 +434,7 @@ class Statement {
      */
     public function setPaymentDate($paymentDate) 
     {
-        $this->paymentDate = $paymentDate;
+        $this->paymentDate = date('Y-m-d', strtotime($paymentDate));
     }     
     
     /**
@@ -419,6 +455,33 @@ class Statement {
         $this->paymentNumber = $paymentNumber;
     }     
     
+    /**
+     * Возвращает назначение платежа.
+     * @return string
+     */
+    public function getPaymentPurpose() 
+    {
+        return $this->purpose;
+    }
+
+    /**
+     * Устанавливает назначение платежа
+     * @param string $purpose
+     */
+    public function setPurpose($purpose) 
+    {
+        $this->purpose = $purpose;
+    }     
+
+    /**
+     * Устанавливает назначение платежа
+     * @param string $purpose
+     */
+    public function setPaymentPurpose($purpose) 
+    {
+        $this->purpose = $purpose;
+    }     
+
     /**
      * Возвращает supplierBillId.
      * @return string

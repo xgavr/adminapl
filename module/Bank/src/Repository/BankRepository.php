@@ -11,13 +11,13 @@ namespace Bank\Repository;
 use Doctrine\ORM\EntityRepository;
 use Bank\Entity\Statement;
 /**
- * Description of SupplierRepository
+ * Description of BankRepository
  *
  * @author Daddy
  */
 class BankRepository extends EntityRepository
 {
-    public function statement($q = null)
+    public function findStatement($q = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -25,8 +25,23 @@ class BankRepository extends EntityRepository
 
         $queryBuilder->select('s')
             ->from(Statement::class, 's')
-           // ->orderBy('s.id')
+            ->orderBy('s.chargeDate', 'DESC')
                 ;
+        
+        if ($q){
+            $queryBuilder->where('s.counterpartyInn like ?1')
+                    ->orWhere('s.counterpartyName like ?1')
+                    ->orWhere('s.purpose like ?1')
+                    ->setParameter('1', '%' . $q . '%')
+                    ;
+            if (is_numeric($q)){
+                $queryBuilder->orWhere('FLOOR(s.amount) = ?2')
+                    ->orWhere('FLOOR(s.amount) = ?3')
+                    ->setParameter('2', floor($q))
+                    ->setParameter('3', -floor($q))
+                    ;                                     
+            }
+        }
         
         return $queryBuilder->getQuery();
     }        

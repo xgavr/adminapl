@@ -1,10 +1,11 @@
 <?php
-    $this->headTitle('Каталог');
-    $this->mainMenu()->setActiveItemId('shop');
+    $this->headTitle('Банк');
+    $this->mainMenu()->setActiveItemId('company');
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
-                'Каталог'=>$this->url('shop'),
-                ]);
+                'Предприятие'=>$this->url('company'),
+                'Банк'=>$this->url('bank', ['action' => 'statement']),
+            ]);
     
 $this->headLink()
 //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
@@ -17,38 +18,71 @@ $this->headScript()
             ;    
     
 ?>    
-<div id="toolbar">
-    <div class="form-inline" role="form">
-        <div class="form-group">
-            <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+<div class="row">
+    <div class="col-md-9">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск по ИНН,Контрагенту,Назначению,Сумме">
+                </div>
+                <button id="ok" type="submit" class="btn btn-default">OK</button>
+            </div>
         </div>
-        <button id="ok" type="submit" class="btn btn-default">OK</button>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/bank/statement-content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric">ID</th>
+                     <th data-field="chargeDate" data-formatter="formatDate">Дата</th>
+                     <th data-field="amount" data-formatter="amountIn" data-align='right'>Поступило</th>             
+                     <th data-field="amount" data-formatter="amountOut" data-align='right'>Списано</th>             
+                     <th data-field="purpose">Назначение платежа</th>
+                     <th data-field="counterpartyName">Контрагент</th>
+                     <th data-field="paymentNumber">Номер ПП</th>
+                     <th data-field="paymentDate" data-formatter="formatDate">Дата ПП</th>
+<!--                     <th data-field="bik">Счет</th>
+                     <th data-field="account">Счет</th>-->
+                 </tr>                
+            </thead>
+        </table>
     </div>
-</div>
-<table id="table" 
-    data-toggle="table" 
-    data-url="/bank/statement-content"
-    data-side-pagination="server"
-    data-pagination="true" 
-    data-page-list="[5, 10, 20, 50]"
-    data-toolbar="#toolbar"
-    data-show-refresh="true"
-    data-show-toggle="true"
-    data-query-params="queryParams"
-    data-response-handler="responseHandler"
-    >
-    <thead>
-        <tr>
-             <th data-field="id" data-type="numeric">ID</th>
-             <th data-field="name">Наименование</th>
-             <th data-field="code">Артикул</th>
-             <th data-field="producer" data-formatter="producerFormatter">Производитель</th>
-             <th data-field="price" data-align="right" data-formatter="priceFormatter">Цена</th>
-             <th data-field="num" data-formatter="numFormatter" data-align='rigth'>Количество</th>
-             <th data-field="incart" data-formatter="incartFormatter" data-align='center' da>Купить</th>             
-         </tr>                
-    </thead>
-</table>
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Обновить выписку банков
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Точка
+                        </div>
+                        <div class="pull-right">
+                            <button value="/bank/tochka-statement-update/" class="btn btn-info btn-xs refresh-button"
+                                    title="Обновить">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                            <a href="<?= $this->url('bankapi', ['action' => 'tochka-access']);?>" class="btn btn-info btn-xs"
+                                    title="Доступ к Апи">
+                                <span class="glyphicon glyphicon-piggy-bank" ></span>
+                            </a> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
 
 <script type="text/javascript">
     var $table = $('#table'),
@@ -75,61 +109,34 @@ $this->headScript()
         }    
         return params;
     }
+    
     function responseHandler(res) {
         return res;
     }
     
-    function incartFormatter(value, row){
-        btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn';
-        if (row.incart){
-            btn += ' btn-success"';  
+    function formatDate(value){
+        if (value){
+            var res = value.split("-");
+            return res[2]+'.'+res[1]+'.'+res[0];
         } else {
-            btn += ' btn-default"';
-        }
-        btn += ' aria-label="Left Align"'; 
-        btn += ' id="shop_index_add_cart_' + row.id+'"';
-        btn += ' onClick="addCart({good: '+row.id+', price: '+row.price+'})"';
-        if (row.available && row.price > 0){
-            btn += '>';
-        } else {
-            btn += ' disabled>';
-        }
-        btn += '<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>';
-        btn += '</button>';
-        return btn;
+            return '';
+        }    
     }
     
-    function numFormatter(value, row){
-       return '<input class="form-control input-sm" id="num'+row.id+'" style="width: 100px" min="1" type="number" value="1"/>'; 
+    
+    function amountIn(value, row){
+        if (value>0){            
+            return numberFormat(value);
+        } else
+            return '';
+    }
+
+    function amountOut(value, row){
+        if (value<0){
+            return numberFormat(-value);
+        } else
+            return '';
     }
     
-    function producerFormatter(value, row) {
-        return value.name;
-    }
     
-    function priceFormatter(value, row) {
-        return parseFloat(value).toFixed(2);
-    }
-    
-    var addCart = function(data){
-        data.num = $('#num'+data.good).val();
-        $.post(
-            '/shop/add-cart',
-            data,
-            addCartSuccess
-        );
-    };
-    
-    function addCartSuccess(data)
-    {
-        if (data.num){  
-            $('#nav_cart_badge').html(data.num);
-        }  
-        if (data.good){
-            $('#shop_index_add_cart_'+data.good).removeClass('btn-default');
-            $('#shop_index_add_cart_'+data.good).addClass('btn-success');
-        }
-    }
 </script>

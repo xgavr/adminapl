@@ -57,8 +57,18 @@
                         <div class="pull-left">
                              Банк: <?= $bankAccount->getName().' '.$bankAccount->getCity() ?><br/>
                              БИК: <?= $bankAccount->getBik()?><br/>
-                             Расчетный счет: <?= $bankAccount->getRs()?><br/>
+                             Расчетный счет: <?= $bankAccount->getRs()?>
+                             <?php if ($legal->isOfficeLegal()):?>
+                                <a href="/bank/statement?account=<?= $bankAccount->getRs() ?>" class="btn btn-default btn-xs"
+                                        title="Выписка" target="_blank">
+                                    <span class="glyphicon glyphicon-rub" ></span>
+                                </a>                                                    
+                             <?php endif;?>   
+                             <br/>
                              Корр. счет: <?= $bankAccount->getKs()?><br/>
+                             <?php if ($legal->isOfficeLegal()):?>
+                                Api: <?= $bankAccount->getApiAsString()?><br/>
+                             <?php endif;?>   
                              Статус: <?= $bankAccount->getStatusAsString()?><br/>                               
                         </div>
                          <div class="pull-right">

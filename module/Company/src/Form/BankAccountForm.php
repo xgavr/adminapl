@@ -98,6 +98,18 @@ class BankAccountForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'api',
+            'options' => [
+                'label' => 'API',
+                'value_options' => [
+                    1 => 'Точка api',
+                    2 => 'Нет api',                    
+                ]
+            ],
+        ]);
+        
         // Add the Submit button
         $this->add([
             'type'  => 'submit',
@@ -218,6 +230,17 @@ class BankAccountForm extends Form
         $inputFilter->add([
                 'name'     => 'status',
                 'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'api',
+                'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
                 ],                

@@ -113,7 +113,7 @@ class Balance {
      */
     public function setDateBalance($dateBalance) 
     {
-        $this->dateBalance = $dateBalance;
+        $this->dateBalance = date('Y-m-d', strtotime($dateBalance));
     }             
 
     /**
@@ -129,7 +129,7 @@ class Balance {
      * Устанавливает остаток на начало дня
      * @param float $balance
      */
-    public function setBalanceStart($balance) 
+    public function setBalance($balance) 
     {
         $this->balance = $balance;
     }     
