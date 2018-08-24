@@ -61,23 +61,37 @@ $this->headScript()
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Обновить выписку банков
+                        Банковские счета
                     </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Точка
+                    <? foreach($bankAccounts as $bankAccount): ?>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                <?= $this->escapeHtml($bankAccount->getName());?><br/>
+                                <?= $this->escapeHtml($bankAccount->getRs());?>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/legals/bank-account-form/<?= $bankAccount->getLegal()->getId() ?>?bankAccount=<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                    
+                               <button value="/legals/delete-bank-account-form/<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                       title="Удалить">
+                                   <span class="glyphicon glyphicon-remove" ></span>
+                               </button>                                                           
+                                <? if ($bankAccount->getApi() == $bankAccount::API_TOCHKA):?>
+                                    <br/>
+                                    <button value="/bank/tochka-statement-update/" class="btn btn-info btn-xs refresh-button"
+                                            title="Обновить">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button> 
+                                    <a href="<?= $this->url('bankapi', ['action' => 'tochka-access']);?>" class="btn btn-info btn-xs"
+                                            title="Доступ к Апи" target="_blank">
+                                        <span class="glyphicon glyphicon-piggy-bank" ></span>
+                                    </a> 
+                                <? endif;?>
+                            </div>
                         </div>
-                        <div class="pull-right">
-                            <button value="/bank/tochka-statement-update/" class="btn btn-info btn-xs refresh-button"
-                                    title="Обновить">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button> 
-                            <a href="<?= $this->url('bankapi', ['action' => 'tochka-access']);?>" class="btn btn-info btn-xs"
-                                    title="Доступ к Апи">
-                                <span class="glyphicon glyphicon-piggy-bank" ></span>
-                            </a> 
-                        </div>
-                    </div>
+                    <? endforeach;?>
                 </div>
             </div>
         </div>

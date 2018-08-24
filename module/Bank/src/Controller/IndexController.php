@@ -41,7 +41,12 @@ class IndexController extends AbstractActionController
     
     public function statementAction()
     {
-        return new ViewModel([]);
+        $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
+                ->findBy(['statement' => BankAccount::STATEMENT_ACTIVE, 'status' => BankAccount::STATUS_ACTIVE]);
+        
+        return new ViewModel([
+            'bankAccounts' => $bankAccounts,
+        ]);
     }
 
     public function statementContentAction()
@@ -71,9 +76,9 @@ class IndexController extends AbstractActionController
     {
         	        
         $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
-        
+
         return new JsonModel([
-            'ok',
+            $result,
         ]);          
     }
 }

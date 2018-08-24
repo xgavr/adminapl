@@ -148,6 +148,11 @@ class BankAccount {
         return $this->rs;
     }
 
+    public function getShortRs() 
+    {
+        return '***'.substr($this->rs, -4);
+    }
+
     public function setRs($rs) 
     {
         $this->rs = $rs;
