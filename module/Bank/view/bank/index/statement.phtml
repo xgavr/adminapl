@@ -66,8 +66,11 @@ $this->headScript()
                     <? foreach($bankAccounts as $bankAccount): ?>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                <?= $this->escapeHtml($bankAccount->getName());?><br/>
-                                <?= $this->escapeHtml($bankAccount->getRs());?>
+                                <input type="checkbox" id="a<?= $bankAccount->getId() ?>" onchange="refreshTable()" class="bankAccount" value="<?= $bankAccount->getRs() ?>" checked="true">
+                                <label class="font-weight-normal" for="a<?= $bankAccount->getId() ?>">
+                                    <?= $this->escapeHtml($bankAccount->getName());?><br/>
+                                    <?= $this->escapeHtml($bankAccount->getRs());?>                                                    
+                                </label>
                             </div>
                             <div class="pull-right">
                                 <button value="/legals/bank-account-form/<?= $bankAccount->getLegal()->getId() ?>?bankAccount=<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs"
@@ -99,6 +102,10 @@ $this->headScript()
 </div>    
 
 <script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
     var $table = $('#table'),
         $ok = $('#ok');
 
@@ -121,6 +128,16 @@ $this->headScript()
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
+        
+        var rs = new Array();
+        $('.bankAccount:checkbox:checked').each(function () {
+            rs.push($(this).val());
+        });
+        
+        if (rs.length){
+            params.rs = rs;
+        }
+        
         return params;
     }
     
