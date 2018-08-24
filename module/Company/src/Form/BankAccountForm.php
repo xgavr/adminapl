@@ -104,8 +104,20 @@ class BankAccountForm extends Form
             'options' => [
                 'label' => 'API',
                 'value_options' => [
-                    1 => 'Точка api',
                     2 => 'Нет api',                    
+                    1 => 'Точка api',
+                ]
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'statement',
+            'options' => [
+                'label' => 'Выписка по счету',
+                'value_options' => [
+                    2 => 'Недоступна',                    
+                    1 => 'Доступна',
                 ]
             ],
         ]);
@@ -248,6 +260,18 @@ class BankAccountForm extends Form
                     ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
                 ],
             ]); 
+
+        $inputFilter->add([
+                'name'     => 'statement',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
         
     }           
 }

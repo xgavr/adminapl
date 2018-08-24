@@ -30,6 +30,10 @@ if ($legal->isOfficeLegal()){
     $form->get('api')->setAttributes([
         'class'=>'form-control', 
         ]);
+
+    $form->get('statement')->setAttributes([
+        'class'=>'form-control', 
+        ]);
 }    
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'bank-account-submit']);
@@ -87,22 +91,31 @@ $form->prepare();
                             <?= $this->formElementErrors($form->get('ks')); ?>                  
                         </div>
 
-                        <?php if ($legal->isOfficeLegal()):?>
-                            <div class="form-group">
-                                <?= $this->formLabel($form->get('api')); ?>
-                                <?= $this->formElement($form->get('api')); ?>
-                                <?= $this->formElementErrors($form->get('api')); ?>                  
-                            </div>
-                        <?php endif; ?>
-
                         <div class="form-group">
                             <?= $this->formLabel($form->get('status')); ?>
                             <?= $this->formElement($form->get('status')); ?>
                             <?= $this->formElementErrors($form->get('status')); ?>                  
                         </div>
+                    </div>    
+
+                        <?php if ($legal->isOfficeLegal()):?>
+                        
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <?= $this->formLabel($form->get('statement')); ?>
+                                    <?= $this->formElement($form->get('statement')); ?>
+                                    <?= $this->formElementErrors($form->get('statement')); ?>                  
+                                </div>
+
+                                <div class="form-group">
+                                    <?= $this->formLabel($form->get('api')); ?>
+                                    <?= $this->formElement($form->get('api')); ?>
+                                    <?= $this->formElementErrors($form->get('api')); ?>                  
+                                </div>
+                            </div>
+                        <?php endif; ?>
 
                         <?= $this->formElement($form->get('csrf')); ?>
-                    </div>
                 </div>
             </div>    
                 

@@ -444,6 +444,7 @@ class LegalController extends AbstractActionController
                     'ks' => $bankAccount->getKs(),  
                     'status' => $bankAccount->getStatus(),  
                     'api' => $bankAccount->getApi(),  
+                    'statement' => $bankAccount->getStatement(),  
                 ];
                 $form->setData($data);
             }    

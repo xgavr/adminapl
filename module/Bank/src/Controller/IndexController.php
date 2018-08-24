@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Bank\Entity\Statement;
+use Company\Entity\BankAccount;
 
 class IndexController extends AbstractActionController
 {
@@ -50,7 +51,7 @@ class IndexController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         
-        $query = $this->entityManager->getRepository(\Bank\Entity\Statement::class)
+        $query = $this->entityManager->getRepository(Statement::class)
                         ->findStatement($q);
         
         $total = count($query->getResult(2));

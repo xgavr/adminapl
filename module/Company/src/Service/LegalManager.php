@@ -127,6 +127,7 @@ class LegalManager
         $bankAccount->setRs($data['rs']);            
         $bankAccount->setStatus($data['status']);            
         $bankAccount->setApi($data['api']);            
+        $bankAccount->setStatement($data['statement']);            
 
         $currentDate = date('Y-m-d H:i:s');
         $bankAccount->setDateCreated($currentDate);
@@ -156,6 +157,7 @@ class LegalManager
         $bankAccount->setRs($data['rs']);            
         $bankAccount->setStatus($data['status']);            
         $bankAccount->setApi($data['api']);            
+        $bankAccount->setStatement($data['statement']);            
 
         $this->entityManager->persist($bankAccount);
 

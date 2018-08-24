@@ -22,8 +22,11 @@ class BankAccount {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
    
+    const STATEMENT_ACTIVE       = 1; // получать выписку.
+    const STATEMENT_RETIRED      = 2; // не получать.
+
     const API_TOCHKA      = 1; // есть api банка точка.
-    const NO_API      = 2; // нет api.
+    const API_NO      = 2; // нет api.
     
     /**
      * @ORM\Id
@@ -41,6 +44,11 @@ class BankAccount {
      * @ORM\Column(name="api")  
      */
     protected $api = 2;
+
+    /** 
+     * @ORM\Column(name="statement")  
+     */
+    protected $statement = 2;
 
     /** 
      * @ORM\Column(name="date_created")  
@@ -207,7 +215,7 @@ class BankAccount {
             self::API_TOCHKA => '<a href="/bankapi/tochka-access"
                                     title="Доступ к Апи Точка" target="_blank">
                                      API Точка</a>',
-            self::NO_API => 'Нет АПИ'
+            self::API_NO => 'Нет АПИ'
         ];
     }    
     
@@ -233,6 +241,49 @@ class BankAccount {
         $this->api = $api;
     }   
     
+    /**
+     * Return statement.
+     * @return int     
+     */
+    public function getStatement() 
+    {
+        return $this->statement;
+    }
+
+    /**
+     * Returns possible statement as array.
+     * @return array
+     */
+    public static function getStatementList() 
+    {
+        return [
+            self::STATEMENT_ACTIVE => 'Доступна',
+            self::STATEMENT_RETIRED => 'Недоступна'
+        ];
+    }    
+    
+    /**
+     * Returns user statement as string.
+     * @return string
+     */
+    public function getStatementAsString()
+    {
+        $list = self::getStatementList();
+        if (isset($list[$this->statement]))
+            return $list[$this->statement];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets statement.
+     * @param int $statement     
+     */
+    public function setStatement($statement) 
+    {
+        $this->statement = $statement;
+    }   
+
     /**
      * Returns the date of bank account creation.
      * @return string     

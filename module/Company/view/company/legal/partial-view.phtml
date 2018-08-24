@@ -59,10 +59,10 @@
                              БИК: <?= $bankAccount->getBik()?><br/>
                              Расчетный счет: <?= $bankAccount->getRs()?>
                              <?php if ($legal->isOfficeLegal()):?>
-                                <a href="/bank/statement?account=<?= $bankAccount->getRs() ?>" class="btn btn-default btn-xs"
-                                        title="Выписка" target="_blank">
+                                <a href="/bank/statement?account=<?= $this->escapeHtml($bankAccount->getRs());?>"
+                                    title="Выписка по счету" target="_blank">
                                     <span class="glyphicon glyphicon-rub" ></span>
-                                </a>                                                    
+                                </a>
                              <?php endif;?>   
                              <br/>
                              Корр. счет: <?= $bankAccount->getKs()?><br/>

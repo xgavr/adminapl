@@ -15,6 +15,7 @@ final class Version20180824084540 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('bank_account');
         $table->addColumn('api', 'integer', ['notnull' => false, 'default' => 2]);
+        $table->addColumn('statement', 'integer', ['notnull' => false, 'default' => 2]);
 
     }
 
@@ -23,5 +24,6 @@ final class Version20180824084540 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('bank_account');
         $table->dropColumn('api');
+        $table->dropColumn('statement');
     }
 }
