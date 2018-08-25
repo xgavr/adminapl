@@ -57,7 +57,41 @@ class IndexController extends AbstractActionController
             'account' => $account,
             'currentBalances' => $curentBalances,
             'numberFormatFilter' => new \Zend\I18n\Filter\NumberFormat('ru-RU'),
+            'avatar' => new \LasseRafn\InitialAvatarGenerator\InitialAvatar(),
         ]);
+    }
+    
+    public function avatarAccountAction()
+    {
+        $account = $this->params()->fromRoute('id');
+        $imageSize = $this->params()->fromQuery('size', 24);
+
+        $name = 'NoName';
+        if ($account){
+            $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                    ->findOneBy(['rs' => $account]);
+            if ($bankAccount){
+                $name = $bankAccount->getName();
+            }
+        }
+        
+        $avatar = new \LasseRafn\InitialAvatarGenerator\InitialAvatar();
+        $colorFilter = new \Application\Filter\GenerateColorFromText();
+        $inverseColorFilter = new \Application\Filter\InverseColor();
+        $background = $colorFilter->filter($name);
+        $color = $inverseColorFilter->filter($background);
+        $image = $avatar->name($name)
+                        ->size($imageSize * 2)
+                        ->length(2)
+                        ->fontSize(0.5)
+                        ->background($background)
+                        ->color($color)
+                        ->generate()
+                        ;
+        
+        header("Content-Type: image/png");
+        echo $image->stream('png', 100);
+        exit;
     }
 
     public function statementContentAction()
