@@ -192,7 +192,8 @@ class BankAccountForm extends Form
                 'name'     => 'bik',
                 'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],                    
+                    ['name' => 'StringTrim'],
+                    ['name' => 'Digits'],
                 ],                
                 'validators' => [
                     [
@@ -210,6 +211,7 @@ class BankAccountForm extends Form
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    
+                    ['name' => 'Digits'],
                 ],                
                 'validators' => [
                     [
@@ -227,6 +229,7 @@ class BankAccountForm extends Form
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    
+                    ['name' => 'Digits'],
                 ],                
                 'validators' => [
                     [

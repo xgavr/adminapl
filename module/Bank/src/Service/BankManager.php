@@ -80,14 +80,18 @@ class BankManager
     {
         $statement = $this->entityManager->getRepository(Statement::class)
                 ->findOneBy([
-                    'bik' => $data['bik'],
                     'account' => $data['account'],
+                    'counterpartyInn' => $data['counterparty_inn'],
+                    'counterpartyAccountNumber' => $data['counterparty_account_number'],
+                    'paymentNumber' => $data['payment_number'],
+                    'paymentDate' => date('Y-m-d', strtotime($data['payment_date'])),
                     'chargeDate' => date('Y-m-d', strtotime($data['payment_charge_date'])),
-                    'xPaymentId' => $data['x_payment_id'],
                 ]);
         
-        if (!$statement){
-            $statement = new Statement();
+        if ($statement){
+            $data['swap1'] = $statement->getSwap1();
+        } else {
+            $statement = new Statement();            
         }
         
         $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');

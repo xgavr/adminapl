@@ -41,11 +41,22 @@ class IndexController extends AbstractActionController
     
     public function statementAction()
     {
+        $account = $this->params()->fromQuery('account');
+        
         $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
                 ->findBy(['statement' => BankAccount::STATEMENT_ACTIVE, 'status' => BankAccount::STATUS_ACTIVE]);
         
+        $curentBalances = [];
+        foreach ($bankAccounts as $bankAccount){
+            $curentBalances[$bankAccount->getRs()] = $this->entityManager->getRepository(Statement::class)
+                    ->currentBalance($bankAccount->getRs());
+        }
+                
         return new ViewModel([
             'bankAccounts' => $bankAccounts,
+            'account' => $account,
+            'currentBalances' => $curentBalances,
+            'numberFormatFilter' => new \Zend\I18n\Filter\NumberFormat('ru-RU'),
         ]);
     }
 
@@ -53,17 +64,18 @@ class IndexController extends AbstractActionController
     {
         	        
         $q = $this->params()->fromQuery('search');
+        $rs = $this->params()->fromQuery('rs');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         
         $query = $this->entityManager->getRepository(Statement::class)
-                        ->findStatement($q);
+                        ->findStatement($q, $rs);
         
         $total = count($query->getResult(2));
         
         if ($offset) $query->setFirstResult( $offset );
         if ($limit) $query->setMaxResults( $limit );
-        
+
         $result = $query->getResult(2);
         
         return new JsonModel([
@@ -77,8 +89,16 @@ class IndexController extends AbstractActionController
         	        
         $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
 
+        $message = '';
+        $ok = 'ok-reload';
+        if ($result !== true){
+            $message = '<p>'.$result.'</p><p><a href="/bankapi/tochka-access">Проверить доступ к api</a></p>';
+            $ok = 'error';
+        }
+        
         return new JsonModel([
-            $result,
+            'result' => $ok,
+            'message' => $message,
         ]);          
     }
 }

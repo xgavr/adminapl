@@ -11,6 +11,7 @@ namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Zend\Filter\Digits;
 
 /**
  * Description of Legal
@@ -146,7 +147,8 @@ class Legal {
 
     public function setInn($inn) 
     {
-        $this->inn = $inn;
+        $filter = new Digits();
+        $this->inn = $filter->filter($inn);
     }     
 
     public function getKpp() 
@@ -156,7 +158,8 @@ class Legal {
 
     public function setKpp($kpp) 
     {
-        $this->kpp = $kpp;
+        $filter = new Digits();
+        $this->kpp = $filter->filter($kpp);
     }     
 
     public function getOgrn() 

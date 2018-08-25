@@ -41,7 +41,7 @@ final class Version20180823155049 extends AbstractMigration
         $table->addColumn('x_payment_id', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('swap1', 'integer', ['notnull' => true, 'default' => 0]);
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['bic', 'account', 'payment_charge_date', 'x_payment_id'], 'bic_account_payment_charge_date_x_payment_id_uidx');
+        $table->addUniqueIndex(['account', 'counterparty_inn', 'counterparty_account_number', 'payment_charge_date', 'payment_number', 'payment_date'], 'bank_statement_uidx');
         $table->addOption('engine' , 'InnoDB');
 
     }

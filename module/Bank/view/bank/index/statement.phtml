@@ -59,43 +59,47 @@ $this->headScript()
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Банковские счета
-                    </div>
-                    <? foreach($bankAccounts as $bankAccount): ?>
-                        <div class="panel-body">                        
+                <?php foreach($bankAccounts as $bankAccount): ?>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <input type="checkbox" id="a<?= $bankAccount->getId() ?>" 
+                                   onchange="refreshTable()" class="bankAccount" 
+                                   value="<?= $bankAccount->getRs() ?>" 
+                                   <?= ($bankAccount->getRs() == $account) ? 'checked':'' ?>>                                
+                            <label class="" for="a<?= $bankAccount->getId() ?>">
+                                <?= $this->escapeHtml($bankAccount->getName());?>                                                   
+                            </label>
+                        </div>
+                        <div class="panel-body">
                             <div class="pull-left">
-                                <input type="checkbox" id="a<?= $bankAccount->getId() ?>" onchange="refreshTable()" class="bankAccount" value="<?= $bankAccount->getRs() ?>" checked="true">
-                                <label class="font-weight-normal" for="a<?= $bankAccount->getId() ?>">
-                                    <?= $this->escapeHtml($bankAccount->getName());?><br/>
-                                    <?= $this->escapeHtml($bankAccount->getRs());?>                                                    
-                                </label>
+                                <?php
+                                    $gravatar = $this->gravatar();
+                                    $gravatar->setEmail('dsumin@inbox.ru');
+                                    $gravatar->setImgSize(40);
+                                    $gravatar->setDefaultImg( \Zend\View\Helper\Gravatar::DEFAULT_WAVATAR );
+                                    echo $gravatar->getImgTag();
+                                ?>
+                                <?= $numberFormatFilter->filter($currentBalances[$bankAccount->getRs()]);?>
                             </div>
                             <div class="pull-right">
+                                <?php if ($bankAccount->getApi() == $bankAccount::API_TOCHKA):?>
+                                        <button value="/bank/tochka-statement-update/" class="btn btn-info btn-xs refresh-table-button"
+                                                title="Обновить">
+                                            <span class="glyphicon glyphicon-refresh" ></span>
+                                        </button> 
+                                        <a href="<?= $this->url('bankapi', ['action' => 'tochka-access']);?>" class="btn btn-info btn-xs"
+                                                title="Доступ к Апи" target="_blank">
+                                            <span class="glyphicon glyphicon-piggy-bank" ></span>
+                                        </a> 
+                                <?php endif;?>                                    
                                 <button value="/legals/bank-account-form/<?= $bankAccount->getLegal()->getId() ?>?bankAccount=<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs"
                                         data-toggle="modal" data-target="#modal-dialog" title="Изменить">
                                     <span class="glyphicon glyphicon-edit" ></span>
-                                </button>                    
-                               <button value="/legals/delete-bank-account-form/<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                       title="Удалить">
-                                   <span class="glyphicon glyphicon-remove" ></span>
-                               </button>                                                           
-                                <? if ($bankAccount->getApi() == $bankAccount::API_TOCHKA):?>
-                                    <br/>
-                                    <button value="/bank/tochka-statement-update/" class="btn btn-info btn-xs refresh-button"
-                                            title="Обновить">
-                                        <span class="glyphicon glyphicon-refresh" ></span>
-                                    </button> 
-                                    <a href="<?= $this->url('bankapi', ['action' => 'tochka-access']);?>" class="btn btn-info btn-xs"
-                                            title="Доступ к Апи" target="_blank">
-                                        <span class="glyphicon glyphicon-piggy-bank" ></span>
-                                    </a> 
-                                <? endif;?>
+                                </button>                                            
                             </div>
                         </div>
-                    <? endforeach;?>
-                </div>
+                    </div>    
+                <? endforeach;?>                
             </div>
         </div>
     </div>

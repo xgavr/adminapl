@@ -200,6 +200,41 @@
                 }        
             })    
 
+            $('.refresh-table-button').on('click', function(e) {
+                var url = e.currentTarget.value;
+
+                if (url){
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                        closeButton: false
+                    });
+
+                    $.ajax({
+                        type: 'GET',
+                        url: url
+                    })
+                        .done(function (data) {
+                            dialog.modal('hide');
+                            if (data.result == 'ok'){
+                                //bootbox.alert("Ок!");
+                                $('#table').bootstrapTable('refresh');
+                            } else if (data.result == 'ok-reload'){
+                                //bootbox.alert("Ок!");
+                                window.location.reload();
+                            } else {
+                                dialog = bootbox.dialog({
+                                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+data.message+'</p>',
+                                    closeButton: true
+                                });
+                            }    
+                        })
+                        .fail(function () {
+                            dialog.modal('hide');
+                            bootbox.alert("Произошла ошибка при выполнении операции.");
+                        });        
+                }        
+            })    
+
             //форматирование числа
             numberFormat = function(value){
                 var res = parseFloat(value).toFixed(2);

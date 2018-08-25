@@ -9,6 +9,7 @@
 namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Filter\Digits;
 
 /**
  * Description of BankAccount
@@ -110,7 +111,8 @@ class BankAccount {
 
     public function setBik($bik) 
     {
-        $this->bik = $bik;
+        $filter = new Digits();
+        $this->bik = $filter->filter($bik);
     }     
 
     public function getName() 
@@ -140,7 +142,8 @@ class BankAccount {
 
     public function setKs($ks) 
     {
-        $this->ks = $ks;
+        $filter = new Digits();
+        $this->ks = $filter->filter($ks);
     }     
 
     public function getRs() 
@@ -155,7 +158,8 @@ class BankAccount {
 
     public function setRs($rs) 
     {
-        $this->rs = $rs;
+        $filter = new Digits();
+        $this->rs = $filter->filter($rs);
     }     
 
     /**
