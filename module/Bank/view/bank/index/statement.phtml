@@ -76,7 +76,7 @@ $this->headScript()
                                     $gravatar = $this->gravatar();
                                     $gravatar->setEmail('prytkova@tochka.com');
                                     $gravatar->setImgSize(40);
-                                    $gravatar->setDefaultImg( \Zend\View\Helper\Gravatar::DEFAULT_WAVATAR );
+                                    $gravatar->setDefaultImg( \Zend\View\Helper\Gravatar::DEFAULT_IDENTICON );
                                     echo $gravatar->getImgTag();
                                 ?>
                                 <?= $numberFormatFilter->filter($currentBalances[$bankAccount->getRs()]);?>
