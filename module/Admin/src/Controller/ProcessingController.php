@@ -75,10 +75,16 @@ class ProcessingController extends AbstractActionController
      */
     private $parseManager;    
 
+    /**
+     * BankManager manager.
+     * @var Bank\Service\BankManager
+     */
+    private $bankManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
-            $parseManager) 
+            $parseManager, $bankManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -90,6 +96,7 @@ class ProcessingController extends AbstractActionController
         $this->supplierManager = $supplierManager;
         $this->adminManager = $adminManager;
         $this->parseManager = $parseManager;
+        $this->bankManager = $bankManager;
     }   
 
     
@@ -201,7 +208,7 @@ class ProcessingController extends AbstractActionController
         );
     }
     
-    /*
+    /**
      * Удаление старых прайсов
      */
     public function deleteOldPricesAction()
@@ -220,4 +227,27 @@ class ProcessingController extends AbstractActionController
         );
     }
     
+    /**
+     * Обновление выписки банка
+     */
+    public function statementUpdateAction()
+    {
+        $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
+        
+        $ok = 'ok-reload';
+        if ($result !== true){
+            $data['text'] = '<p>Потерян доступ к банку Точка для обновления выписки</p>';
+            $data['text'] .= '<p>'.$result.'</p>';
+            $data['text'] .= '<p><a href="http://adminapl.ru/bankapi/tochka-access">Проверить доступ к api</a></p>';
+            
+            $this->aplService->sendTelegramMessage($data);            
+            $ok = 'error';
+        }
+        
+        return new JsonModel([
+            'result' => $ok,
+            'message' => $data['text'],
+        ]);          
+        
+    }
 }
