@@ -9,6 +9,8 @@ namespace Bank\Service;
 
 use Bank\Entity\Balance;
 use Bank\Entity\Statement;
+use Company\Entity\BankAccount;
+
 /**
  * Description of BankManager
  *
@@ -16,6 +18,7 @@ use Bank\Entity\Statement;
  */
 class BankManager 
 {
+    
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -31,7 +34,7 @@ class BankManager
     public function __construct($entityManager, $tochkaApi)
     {
         $this->entityManager = $entityManager;
-        $this->tochkaApi = $tochkaApi;
+        $this->tochkaApi = $tochkaApi;        
     }
 
     /**

@@ -79,7 +79,7 @@ class IndexController extends AbstractActionController
         $colorFilter = new \Application\Filter\GenerateColorFromText();
         $inverseColorFilter = new \Application\Filter\InverseColor();
         $background = $colorFilter->filter($name);
-        $color = $inverseColorFilter->filter($background);
+        $color = \InvertColor\Color::fromHex($background)->invert(true);
         $image = $avatar->name($name)
                         ->size($imageSize * 2)
                         ->length(2)
