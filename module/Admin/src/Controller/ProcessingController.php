@@ -235,6 +235,7 @@ class ProcessingController extends AbstractActionController
         $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
         
         $ok = 'ok-reload';
+        $data['text'] = '';
         if ($result !== true){
             $data['text'] = '<p>Потерян доступ к банку Точка для обновления выписки</p>';
             $data['text'] .= '<p>'.$result.'</p>';
