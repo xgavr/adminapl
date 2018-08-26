@@ -20,6 +20,7 @@ class AdminManager {
     const SETTINGS_DIR       = './data/settings/'; // папка с настройками
     const SETTINGS_FILE       = './data/settings/config.php'; // файл с настройками общими
     const PRICE_SETTINGS_FILE       = './data/settings/price_config.php'; // файл с настройками загрузки прайсов
+    const BANK_SETTINGS_FILE       = './data/settings/bank_config.php'; // файл с настройками обмена с банком
     
     /**
      * Doctrine entity manager.
@@ -88,7 +89,7 @@ class AdminManager {
     }
 
     
-    /*
+    /**
      * Получить настройки загрузки прайсов
      * @return array 
      */
@@ -104,9 +105,9 @@ class AdminManager {
         return $config->price;
     }
         
-    /*
+    /**
      * Настройки загрузки прайсов
-     * @array $data
+     * @param array $data
      */
     public function setPriceSettings($data)
     {
@@ -133,6 +134,52 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::PRICE_SETTINGS_FILE, $config);
+    }
+    
+    /**
+     * Получить настройки обмена с банком
+     * @return array 
+     */
+    public function getBankTransferSettings()
+    {
+        if (file_exists(self::BANK_SETTINGS_FILE)){
+            $config = new Config(include self::BANK_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->bank = [];
+        }   
+        
+        return $config->bank;
+    }
+        
+    /**
+     * Настройки обмена с банком
+     * @param array $data
+     */
+    public function setBankTransferSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::BANK_SETTINGS_FILE)){
+            $config = new Config(include self::BANK_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->bank = [];
+        }
+        
+        if (!isset($config->bank)){
+            $config->bank = [];
+        }
+        
+        $config->bank->statement_by_api = $data['statement_by_api']; //получать выписки по апи
+        $config->bank->statement_by_file = $data['statement_by_file']; //получать выписки из файла
+        $config->bank->doc_by_api = $data['doc_by_api']; //отправлять платжки в банк по апи
+        $config->bank->tarnsfer_apl = $data['tarnsfer_apl']; //обмен а АПЛ
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::BANK_SETTINGS_FILE, $config);
     }
     
 }

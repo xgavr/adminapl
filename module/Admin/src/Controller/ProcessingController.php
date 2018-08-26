@@ -232,18 +232,23 @@ class ProcessingController extends AbstractActionController
      */
     public function statementUpdateAction()
     {
-        $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
+        $settings = $this->adminManager->getBankTransferSettings();
+
+        if ($settings['statement_by_api'] == 1){
         
-        $ok = 'ok-reload';
-        $data['text'] = '';
-        if ($result !== true){
-            $data['text'] = '<p>Потерян доступ к банку Точка для обновления выписки</p>';
-            $data['text'] .= '<p>'.$result.'</p>';
-            $data['text'] .= '<p><a href="http://adminapl.ru/bankapi/tochka-access">Проверить доступ к api</a></p>';
-            
-            $this->aplService->sendTelegramMessage($data);            
-            $ok = 'error';
-        }
+            $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
+
+            $ok = 'ok-reload';
+            $data['text'] = '';
+            if ($result !== true){
+                $data['text'] = '<p>Потерян доступ к банку Точка для обновления выписки</p>';
+                $data['text'] .= '<p>'.$result.'</p>';
+                $data['text'] .= '<p><a href="http://adminapl.ru/bankapi/tochka-access">Проверить доступ к api</a></p>';
+
+                $this->aplService->sendTelegramMessage($data);            
+                $ok = 'error';
+            }
+        }    
         
         return new JsonModel([
             'result' => $ok,

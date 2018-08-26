@@ -244,12 +244,32 @@ class NavManager
             
             if ($this->rbacManager->isGranted(null, 'admin.manage')) {
                 
-                $adminDropdownItems[] = [
+                $settingsDropDownItems[] = [
                     'id' => 'settings',
-                    'label' => 'Настройки',
-                    'link'  => $url('settings')
+                    'label' => 'Общие',
+                    'link'  => $url('settings')                    
                 ];
                 
+                $settingsDropDownItems[] = [
+                    'id' => 'raw',
+                    'label' => 'Настройи загрузки прайсов',
+                    'link'  => $url('admin', ['action' => 'price-settings'])                    
+                ];
+                
+                $settingsDropDownItems[] = [
+                    'id' => 'bank',
+                    'label' => 'Настройи обмена с банком',
+                    'link'  => $url('admin', ['action' => 'bank-settings'])                    
+                ];
+
+                if (count($settingsDropDownItems)!=0) {
+                    $items[] = [
+                        'id' => 'settings',
+                        'label' => 'Настройки',
+                        'dropdown' => $settingsDropDownItems
+                    ];
+                }            
+
                 $adminDropdownItems[] = [
                     'id' => 'post',
                     'label' => 'Проверка почты',

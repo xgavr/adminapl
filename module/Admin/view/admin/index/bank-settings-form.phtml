@@ -1,0 +1,100 @@
+<?php
+$form = $this->form;
+
+$form->get('statement_by_api')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('statement_by_file')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('doc_by_api')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('tarnsfer_apl')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Настройки обмена с банком</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+
+<div class="row">
+    <div class="col-md-12">
+        <?= $this->form()->openTag($form); ?>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('statement_by_api')); ?>
+            <?= $this->formElement($form->get('statement_by_api')); ?>
+            <?= $this->formElementErrors($form->get('statement_by_api')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('statement_by_file')); ?>
+            <?= $this->formElement($form->get('statement_by_file')); ?>
+            <?= $this->formElementErrors($form->get('statement_by_file')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('doc_by_api')); ?>
+            <?= $this->formElement($form->get('doc_by_api')); ?>
+            <?= $this->formElementErrors($form->get('doc_by_api')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('tarnsfer_apl')); ?>
+            <?= $this->formElement($form->get('tarnsfer_apl')); ?>
+            <?= $this->formElementErrors($form->get('tarnsfer_apl')); ?>                  
+        </div>
+                        
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            <button type="button" class="btn btn-primary" id="bank-settings-submit">Загрузить</button>
+        </div>
+        <?= $this->form()->closeTag(); ?>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    $('#bank-settings-submit').on('click', function() {
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите ...</p>',
+            closeButton: false
+        });
+        
+        var file_data = $('#file').prop('files')[0];   
+        var form_data = new FormData();                  
+        form_data.append('name', file_data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/admin/bank-settings-form',
+            contentType: false,
+            processData: false,
+            data: form_data
+        })
+            .done(function (data) {
+                dialog.modal('hide');
+                if (data == 'ok'){
+                    window.location.reload();
+                } else {
+                }    
+            })
+            .fail(function () {
+                dialog.modal('hide');
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });
+    })    
+</script>

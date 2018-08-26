@@ -1,0 +1,84 @@
+<?php
+$this->headTitle('Настройки обмена с банком');
+
+$this->mainMenu()->setActiveItemId('');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Настройки обмена с банком'=>$this->url('settings', ['action' => 'bank-settings']),
+            ]);
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<?php
+$form = $this->form;
+
+$form->get('statement_by_api')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('statement_by_file')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('doc_by_api')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('tarnsfer_apl')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Настройки обмена с банком</h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<?= $this->form()->openTag($form); ?>
+<div class="row">
+    <div class="col-md-8">
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('statement_by_api')); ?>
+            <?= $this->formElement($form->get('statement_by_api')); ?>
+            <?= $this->formElementErrors($form->get('statement_by_api')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('statement_by_file')); ?>
+            <?= $this->formElement($form->get('statement_by_file')); ?>
+            <?= $this->formElementErrors($form->get('statement_by_file')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('doc_by_api')); ?>
+            <?= $this->formElement($form->get('doc_by_api')); ?>
+            <?= $this->formElementErrors($form->get('doc_by_api')); ?>                  
+        </div>        
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('tarnsfer_apl')); ?>
+            <?= $this->formElement($form->get('tarnsfer_apl')); ?>
+            <?= $this->formElementErrors($form->get('tarnsfer_apl')); ?>                  
+        </div>        
+    </div>   
+    <div class="col-sm-3" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active">
+                <?= $this->formElement($form->get('submit')); ?>
+            </li>
+        </ul>
+    </div>    
+    
+</div>   
+
+<?= $this->form()->closeTag(); ?>
