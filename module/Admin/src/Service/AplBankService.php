@@ -10,7 +10,7 @@ namespace Admin\Service;
 
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
-use Zend\Json\Encoder;
+use Zend\Http\Client;
 
 
 /**
