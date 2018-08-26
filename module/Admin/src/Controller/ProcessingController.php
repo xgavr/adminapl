@@ -252,7 +252,7 @@ class ProcessingController extends AbstractActionController
                 $message .= '<p>'.$result.'</p>';
                 $message .= '<p><a href="http://adminapl.ru/bankapi/tochka-access">Проверить доступ к api</a></p>';
 
-                $this->telegrammManager->sendMessage(['text' => $message]);
+                $this->telegramManager->sendMessage(['text' => $message]);
                 $ok = 'error';
             } else {
                 $this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
