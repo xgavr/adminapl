@@ -69,7 +69,7 @@ class BankSettingsForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'select',
             'name' => 'doc_by_api',
             'options' => [
-                'label' => 'Платжки в банк по апи',
+                'label' => 'Платежки в банк по апи',
                 'value_options' => [
                     1 => 'Отправлять',
                     2 => 'Не отправлять',                    

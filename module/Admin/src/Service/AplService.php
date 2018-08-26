@@ -509,15 +509,18 @@ class AplService {
         
     public function sendTelegramMessage($params)
     {
-        if ($params['api_key'] == $this->aplApiKey()){
-        
-            return $this->telegramManager->sendMessage([
-                'chat_id' => $params['chat_id'], 
-                'text' => $params['text'],
-            ]);
-        
+        if (is_array($params)){
+            if (isset($params['api_key'])){
+                if ($params['api_key'] == $this->aplApiKey()){
+
+                    return $this->telegramManager->sendMessage([
+                        'chat_id' => $params['chat_id'], 
+                        'text' => $params['text'],
+                    ]);
+
+                }
+            }    
         }
-        
         return;
     }
 }
