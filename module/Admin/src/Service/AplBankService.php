@@ -71,6 +71,7 @@ class AplBankService {
         
         if ($statement->getАmount() > 0){ //Поступление на счет
             
+            $result['dc'] = 0;
             $result['payerAcc']          = $statement->getCounterpartyAccountNumber(); //ПлательщикРасчСчет
             $result['payerINN']          = $statement->getСounterpartyInn();           //ПлательщикИНН
             $result['payerKPP']          = $statement->getСounterpartyKpp();           //ПлательщикКПП
@@ -89,6 +90,7 @@ class AplBankService {
             
         } else { //Списание со счета
             
+            $result['dc'] = 1;
             $result['payeeAcc']          = $statement->getCounterpartyAccountNumber(); //ПлательщикРасчСчет
             $result['payeeINN']          = $statement->getСounterpartyInn();           //ПлательщикИНН
             $result['payeeKPP']          = $statement->getСounterpartyKpp();           //ПлательщикКПП
