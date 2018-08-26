@@ -402,7 +402,7 @@ class Statement {
      * Возвращает chargeDat.
      * @return date
      */
-    public function getChargeDat() 
+    public function getChargeDate() 
     {
         return $this->chargeDate;
     }
