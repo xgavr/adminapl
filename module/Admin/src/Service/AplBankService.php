@@ -32,7 +32,7 @@ class AplBankService {
      */
     private $adminManager;
 
-    public function __construct($entityManager)
+    public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
