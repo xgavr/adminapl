@@ -125,7 +125,7 @@ class AplBankService {
 
             $response = $client->send();
 
-            if ($response->isSuccess()){
+            if ($response->isOk()){
                 $statement->setSwap1(Statement::SWAP1_TRANSFERED);
                 $this->entityManager->persist($statement);
                 $this->entityManager->flush($statement);
