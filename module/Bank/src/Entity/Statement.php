@@ -153,7 +153,7 @@ class Statement {
     /** 
      * @ORM\Column(name="swap1")  
      */
-    protected $swap1 = 0;
+    protected $swap1 = self::SWAP1_TO_TRANSFER;
     
     /**
      * Возвращает Id
