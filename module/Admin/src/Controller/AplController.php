@@ -85,7 +85,7 @@ class AplController extends AbstractActionController
     
     public function transBankAction()
     {
-        $this->aplService->sendBankStatement();
+        $this->aplBankService->sendBankStatement();
         return new JsonModel([
             'ok'
         ]);
