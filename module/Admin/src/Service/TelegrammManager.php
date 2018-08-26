@@ -164,6 +164,12 @@ class TelegrammManager {
                     ]));
                 }    
                 
+                if (isset($params['chat_id'])){
+                    $chatId = $params['chat_id'];
+                } else {
+                    $chatId = $settings['telegram_admin_chat_id'];
+                }    
+                
                 $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
             } catch (Longman\TelegramBot\Exception\TelegramException $e){
                 $logger->error($e->getMessage());

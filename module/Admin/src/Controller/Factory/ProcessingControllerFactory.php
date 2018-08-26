@@ -14,6 +14,7 @@ use Admin\Service\PostManager;
 use Admin\Service\AutoruManager;
 use Admin\Service\TelegrammManager;
 use Admin\Service\AplService;
+use Admin\Service\AplBankService;
 use Application\Service\PriceManager;
 use Application\Service\RawManager;
 use Application\Service\SupplierManager;
@@ -37,6 +38,7 @@ class ProcessingControllerFactory implements FactoryInterface {
         $autoruManager = $container->get(AutoruManager::class);
         $telegramManager = $container->get(TelegrammManager::class);
         $aplService = $container->get(AplService::class);
+        $aplBankService = $container->get(AplBankService::class);
         $priceManager = $container->get(PriceManager::class);
         $rawManager = $container->get(RawManager::class);
         $supplierManager = $container->get(SupplierManager::class);
@@ -47,6 +49,6 @@ class ProcessingControllerFactory implements FactoryInterface {
         // Инстанцируем контроллер и внедряем зависимости.
         return new ProcessingController($entityManager, $postManager, $autoruManager, 
                 $telegramManager, $aplService, $priceManager, $rawManager, $supplierManager, 
-                $adminManager, $parseManager, $bankManager);
+                $adminManager, $parseManager, $bankManager, $aplBankService);
     }
 }

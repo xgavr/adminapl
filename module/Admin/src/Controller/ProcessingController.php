@@ -46,6 +46,12 @@ class ProcessingController extends AbstractActionController
     private $aplService;    
 
     /**
+     * AplBankService manager.
+     * @var Admin\Service\AplBankService
+     */
+    private $aplBankService;    
+
+    /**
      * PriceManager manager.
      * @var Application\Service\PriceManager
      */
@@ -84,13 +90,14 @@ class ProcessingController extends AbstractActionController
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
-            $parseManager, $bankManager) 
+            $parseManager, $bankManager, $aplBankService) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
         $this->autoruManager = $autoruManager;
         $this->telegramManager = $telegramManager;
         $this->aplService = $aplService;
+        $this->aplBankService = $aplBankService;
         $this->priceManager = $priceManager;
         $this->rawManager = $rawManager;
         $this->supplierManager = $supplierManager;
@@ -239,20 +246,22 @@ class ProcessingController extends AbstractActionController
             $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
 
             $ok = 'ok-reload';
-            $data['text'] = '';
+            $message = '';
             if ($result !== true){
-                $data['text'] = '<p>Потерян доступ к банку Точка для обновления выписки</p>';
-                $data['text'] .= '<p>'.$result.'</p>';
-                $data['text'] .= '<p><a href="http://adminapl.ru/bankapi/tochka-access">Проверить доступ к api</a></p>';
+                $message = '<p>Потерян доступ к банку Точка для обновления выписки</p>';
+                $message .= '<p>'.$result.'</p>';
+                $message .= '<p><a href="http://adminapl.ru/bankapi/tochka-access">Проверить доступ к api</a></p>';
 
-                $this->aplService->sendTelegramMessage($data);            
+                $this->telegrammManager->sendMessage(['text' => $message]);
                 $ok = 'error';
+            } else {
+                $this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
             }
         }    
         
         return new JsonModel([
             'result' => $ok,
-            'message' => $data['text'],
+            'message' => $message,
         ]);          
         
     }
