@@ -108,7 +108,7 @@ class AplBankService {
             $result['payerBankCorrAcc']  = $bankAccount->getKs();               //ПолучательКорсчет
             
         }            
-        return $result;
+        return ['statement' => $result];
     }
     
     public function dispathBankStatement($statement)
@@ -120,14 +120,8 @@ class AplBankService {
     
             $client = new Client();
             $client->setUri($url);
-            $client->setAdapter($this::HTTPS_ADAPTER);
             $client->setMethod('POST');
-            $client->setRawBody(Encoder::encode($transferData));
-
-            $headers = $client->getRequest()->getHeaders();
-            $headers->addHeaders([
-                 'Content-Type: application/json',
-            ]);
+            $client->setParameterPost($transferData);
 
             $response = $client->send();
 
