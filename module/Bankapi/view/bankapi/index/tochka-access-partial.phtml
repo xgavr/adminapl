@@ -1,4 +1,4 @@
-<?php if ($error):?>
+<?php if (isset($error)):?>
     <h1>В доступе отказано :(</h1>
     <p><?= $this->escapeHtml($error)?></p>
 <?php else:?>

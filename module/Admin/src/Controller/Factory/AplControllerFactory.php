@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Admin\Controller\AplController;
 use Admin\Service\AplService;
+use Admin\Service\AplBankService;
 
 
 /**
@@ -24,8 +25,9 @@ class AplControllerFactory implements FactoryInterface {
                      $requestedName, array $options = null)
     {
         $aplService = $container->get(AplService::class);
+        $aplBankService = $container->get(AplBankService::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new AplController($aplService);
+        return new AplController($aplService, $aplBankService);
     }
 }

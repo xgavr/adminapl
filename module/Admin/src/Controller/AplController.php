@@ -21,10 +21,17 @@ class AplController extends AbstractActionController
      */
     private $aplService;    
     
+    /**
+     * AplBankService manager.
+     * @var Admin\Service\AplBankService
+     */
+    private $aplBankService;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($aplService) 
+    public function __construct($aplService, $aplBankService) 
     {
         $this->aplService = $aplService;        
+        $this->aplBankService = $aplBankService;        
     }   
 
     
@@ -74,5 +81,13 @@ class AplController extends AbstractActionController
         return new JsonModel(
             $data
         );
+    }
+    
+    public function transBankAction()
+    {
+        $this->aplService->sendBankStatement();
+        return new JsonModel([
+            'ok'
+        ]);
     }
 }

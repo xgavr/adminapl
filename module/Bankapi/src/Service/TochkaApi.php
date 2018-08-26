@@ -10,8 +10,6 @@ namespace Bankapi\Service;
 use Zend\Http\Client;
 use Zend\Json\Decoder;
 use Zend\Json\Encoder;
-use Zend\Log\Writer\Stream;
-use Zend\Log\Logger;
 
 /**
  * Description of Tochka

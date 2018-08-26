@@ -17,6 +17,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Daddy
  */
 class Statement {
+    
+
+    const SWAP1_TRANSFERED = 1; //данные переданы
+    const SWAP1_TO_TRANSFER = 2; //данные не перданы
+    
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
