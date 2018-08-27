@@ -90,12 +90,12 @@ class RawManager {
         
     }
     
-    /*
+    /**
      * 
      * Проверка папки с прайсами. Если в папке есть прайс то загружаем его
      * 
-     * @var Application\Entity\Supplier $supplier
-     * @var string $folderName
+     * @param Application\Entity\Supplier $supplier
+     * @param string $folderName
      * 
      */
     public function checkPriceFolder($supplier, $folderName)

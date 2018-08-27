@@ -135,4 +135,10 @@ class IndexController extends AbstractActionController
             'message' => $message,
         ]);          
     }
+    
+    public function loadStatementFileAction()
+    {
+        $this->bankManager->checkStatementFolder();
+        exit;
+    }
 }

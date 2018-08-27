@@ -96,6 +96,67 @@ class BankManager
         }     
     }
     
+    /**
+     * Преобразует выписку в формате 1с в xml
+     * https://stackoverflow.com/questions/13219658/convert-text-file-to-xml-in-php
+     * @param string $statementFile
+     * 
+     * @return string
+     */
+    public function convert1cStatementToXml($statementFile)
+    {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        
+        $text = file_get_contents($statementFile);
+        $text = iconv('Windows-1251', 'UTF-8', $text);
+        $lines = explode(PHP_EOL, $text);
+        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><points/>');
+        
+        \Zend\Debug\Debug::dump($text);
+        $i = 0;
+        foreach ($lines as $line){
+            $i++;
+            if (mb_substr($line, 0, 6)=='Секция'){
+                list($key, $value) = explode('=', str_replace('Секция', '', $line), 2);
+                $node = $xml->addChild($key.$i, trim($value));
+            } elseif (mb_substr($line, 0, 5)=='Конец'){
+                unset($node);
+                continue;
+            }else{
+                list($key, $value) = explode('=', $line, 2);
+                if ($node){
+                    $node->addChild($key, trim($value));
+                } else {
+                    $xml->addChild($key, trim($value));
+                }    
+            }
+        }
+        
+       //\Zend\Debug\Debug::dump($xml); exit;
+       
+        $dom = new \DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML($xml->asXML());
+
+        return $dom->saveXML();
+    }
+    
+    public function checkStatementFolder()
+    {            
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        
+        foreach (new \DirectoryIterator(self::STAEMENTS_DIR) as $fileInfo) {
+            if ($fileInfo->isDot()) continue;
+            if ($fileInfo->isFile()){
+                $xml = $this->convert1cStatementToXml($fileInfo->getPathname());
+                \Zend\Debug\Debug::dump($xml);
+            }
+        }
+
+        return;
+    }    
+    
     public function readStatementFormat1c($statement_file)
     {
         $text = explode("\n", file_get_contents($statement_file));
