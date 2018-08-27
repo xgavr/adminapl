@@ -29,6 +29,9 @@ class PriceGetting {
     const ORDER_PRICE_FILE_TO_APL       = 1; // Закачивать полученый прайс на сервер АПЛ.
     const NO_ORDER_PRICE_FILE_TO_APL    = 2; // Не закачивать полученый прайс на сервер АПЛ.
     
+    const MAILBOX_CHECKED = 1; //Почтовый ящик проверен
+    const MAILBOX_TO_CHECK = 2; //Почтовый ящик не проверен
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -100,6 +103,11 @@ class PriceGetting {
      * @ORM\Column(name="order_to_apl")  
      */
     protected $orderToApl;    
+       
+    /**
+     * @ORM\Column(name="mailbox_check")  
+     */
+    protected $mailBoxCheck = self::MAILBOX_TO_CHECK;    
        
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="priceGettings") 
@@ -323,7 +331,7 @@ class PriceGetting {
     
     /**
      * Sets status.
-     * @param int $status     
+     * @param int $statusFilename     
      */
     public function setStatusFilename($statusFilename) 
     {
@@ -374,6 +382,49 @@ class PriceGetting {
         $this->orderToApl = $order;
     }   
 
+    /**
+     * Returns MailBoxCheck.
+     * @return int     
+     */
+    public function getMailBoxCheck() 
+    {
+        return $this->mailBoxCheck;
+    }
+
+    
+    /**
+     * Returns possible mailBoxCheck as array.
+     * @return array
+     */
+    public static function getMailBoxCheckList() 
+    {
+        return [
+            self::MAILBOX_CHECKED => 'Почтовый ящик проверен',
+            self::MAILBOX_TO_CHECK => 'Надо проверить почтовый ящик'
+        ];
+    }    
+    
+    /**
+     * Returns mailBoxCheck as string.
+     * @return string
+     */
+    public function getMailBoxCheckAsString()
+    {
+        $list = self::getMailBoxCheckList();
+        if (isset($list[$this->mailBoxCheck]))
+            return $list[$this->mailBoxCheck];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets mailBoxCheck.
+     * @param int $mailBoxCheck     
+     */
+    public function setMailBoxCheck($mailBoxCheck) 
+    {
+        $this->mailBoxCheck = $mailBoxCheck;
+    }   
     /*
      * Возвращает связанный supplier.
      * @return \Application\Entity\Supplier

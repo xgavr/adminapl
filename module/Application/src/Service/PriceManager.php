@@ -115,7 +115,7 @@ class PriceManager {
     
     /**
      * Проверка почты в ящике поставщика
-     * @var Application\Entity\PriceGettting $priceGetting
+     * @param Application\Entity\PriceGettting $priceGetting
      */
     public function getPriceByMail($priceGetting)
     {
@@ -161,10 +161,39 @@ class PriceManager {
         
         return;
     }
+    
+    /**
+     * Прочитать очередной ящик
+     */
+    public function readQueyeMailBox()
+    {
+        $priceGetting = $this->entityManager->getRepository(PriceGetting::class)
+                ->findOneBy(['status' => PriceGetting::STATUS_ACTIVE, 'mailBoxCheck' => PriceGetting::MAILBOX_TO_CHECK]);
+        
+        if ($priceGetting){
+            $this->getPriceByMail($priceGetting);
+            
+            $priceGetting->setMailBoxCheck(PriceGetting::MAILBOX_CHECKED);
+            $this->entityManager->persist($priceGetting);
+            $this->entityManager->flush($priceGetting);
+        } else {
+            $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
+                    ->findBy(['status' => PriceGetting::STATUS_ACTIVE, 'mailBoxCheck' => PriceGetting::MAILBOX_CHECKED]);
+            
+            foreach ($priceGettings as $priceGetting){
+                $priceGetting->setMailBoxCheck(PriceGetting::MAILBOX_TO_CHECK);
+                $this->entityManager->persist($priceGetting);                
+            }
+            $this->entityManager->flush();
+            
+            $this->readQueyeMailBox();
+        }           
+    }
+    
 
-    /*
+    /**
      * Получить прайс по ссылке
-     * @var Application\Entity\PriceGettting $priceGetting
+     * @param Application\Entity\PriceGettting $priceGetting
      */
     public function getPriceByLink($priceGetting)
     {

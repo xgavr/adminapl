@@ -161,12 +161,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['receiving_mail'] == 1){
-            $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
-                    ->findBy(['status' => PriceGetting::STATUS_ACTIVE]);
-
-            foreach ($priceGettings as $priceGetting){
-                $this->priceManager->getPriceByMail($priceGetting);
-            }
+            $this->priceManager->readQueyeMailBox();
         }    
         
         return new JsonModel(
