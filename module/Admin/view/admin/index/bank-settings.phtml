@@ -32,6 +32,14 @@ $form->get('tarnsfer_apl')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('statement_email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('statement_email_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -45,7 +53,7 @@ $form->prepare();
 
 <?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-5">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('statement_by_api')); ?>
@@ -71,7 +79,20 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('tarnsfer_apl')); ?>                  
         </div>        
     </div>   
-    <div class="col-sm-3" id="side-nav" >
+    <div class="col-md-5">
+        <div class="form-group">
+            <?= $this->formLabel($form->get('statement_email')); ?>
+            <?= $this->formElement($form->get('statement_email')); ?>
+            <?= $this->formElementErrors($form->get('statement_email')); ?>                  
+        </div>        
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('statement_email_password')); ?>
+            <?= $this->formElement($form->get('statement_email_password')); ?>
+            <?= $this->formElementErrors($form->get('statement_email_password')); ?>                  
+        </div>                
+    </div>
+    <div class="col-md-2" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
             <li class="active">
                 <?= $this->formElement($form->get('submit')); ?>

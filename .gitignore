@@ -14,3 +14,4 @@ phpunit.xml
 /nbproject/private/
 /data/token/
 /data/image/
+/data/statements/

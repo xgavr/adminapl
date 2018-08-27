@@ -176,6 +176,8 @@ class AdminManager {
         $config->bank->statement_by_file = $data['statement_by_file']; //получать выписки из файла
         $config->bank->doc_by_api = $data['doc_by_api']; //отправлять платжки в банк по апи
         $config->bank->tarnsfer_apl = $data['tarnsfer_apl']; //обмен а АПЛ
+        $config->bank->statement_email = $data['statement_email']; //Email для получения выписок
+        $config->bank->statement_email_password = $data['statement_email_password']; //Пароль на email для выписок
         
         $writer = new PhpArray();
         

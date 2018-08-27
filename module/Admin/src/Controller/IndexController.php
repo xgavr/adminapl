@@ -247,6 +247,9 @@ class IndexController extends AbstractActionController
     
         $settings = $this->adminManager->getBankTransferSettings();
         
+        if ($settings){
+            $form->setData($settings);
+        }    
         // Проверяем, является ли пост POST-запросом.
         if ($this->getRequest()->isPost()) {
             
@@ -271,10 +274,6 @@ class IndexController extends AbstractActionController
                 $this->flashMessenger()->addInfoMessage(
                         'Настройки не сохранены.');                
             }
-        } else {
-            if ($settings){
-                $form->setData($settings);
-            }    
         }
         
         // Визуализируем шаблон представления.

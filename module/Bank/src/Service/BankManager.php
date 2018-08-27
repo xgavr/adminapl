@@ -18,6 +18,8 @@ use Company\Entity\BankAccount;
  */
 class BankManager 
 {
+    const STAEMENTS_DIR       = './data/statements/'; // папка с файлами выписок
+    const STAEMENTS_ARCH_DIR       = './data/statements/arch'; // папка с архивом файлами выписок
     
     /**
      * Doctrine entity manager.
@@ -31,10 +33,111 @@ class BankManager
      */
     private $tochkaApi;
     
-    public function __construct($entityManager, $tochkaApi)
+    /**
+     * AdminManager manager
+     * @var Admin\Service\AdminManager
+     */
+    private $adminManager;
+
+    /**
+     * PostManager manager
+     * @var Admin\Service\PostManager
+     */
+    private $postManager;
+
+    public function __construct($entityManager, $tochkaApi, $adminManager, $postManager)
     {
         $this->entityManager = $entityManager;
-        $this->tochkaApi = $tochkaApi;        
+        $this->tochkaApi = $tochkaApi;    
+        $this->adminManager = $adminManager;
+        $this->postManager = $postManager;
+        
+        if (!is_dir(self::STAEMENTS_DIR)){
+            mkdir(self::STAEMENTS_DIR);
+        }
+
+        if (!is_dir(self::STAEMENTS_ARCH_DIR)){
+            mkdir(self::STAEMENTS_ARCH_DIR);
+        }
+    }
+
+    /**
+     * Получение выписок по почте
+     */    
+    public function getStatementsByEmail()
+    {
+        $bankSettings = $this->adminManager->getBankTransferSettings();
+        
+        if ($bankSettings['statement_email'] && $bankSettings['statement_email_password']){
+            $box = [
+                'host' => 'imap.yandex.ru',
+                'server' => '{imap.yandex.ru:993/imap/ssl}',
+                'user' => $bankSettings['statement_email'],
+                'password' => $bankSettings['statement_email_password'],
+                'leave_message' => true,
+            ];
+
+            $mailList = $this->postManager->readImap($box);
+
+            if (count($mailList)){
+                foreach ($mailList as $mail){
+                    if (isset($mail['attachment'])){
+                        foreach($mail['attachment'] as $attachment){
+                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                                $target = self::STAEMENTS_DIR.'/'.$attachment['filename'];
+                                if (copy($attachment['temp_file'], $target)){
+                                    unlink($attachment['temp_file']);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }     
+    }
+    
+    public function readStatementFormat1c($statement_file)
+    {
+        $text = explode("\n", file_get_contents($statement_file));
+        
+        $rsult = [];
+        foreach ($text as $line){
+            $str = explode('=', iconv('Windows-1251', 'UTF-8', $line));
+            
+            if (trim($str[0]) == 'СекцияДокумент'){
+                $doc = [];					
+            }
+            if (trim($strs[0]) == 'КонецДокумента'){
+                $result[] = $doc;					
+            }
+            if (trim($str[0]) == 'ДатаПоступило')       $doc['payment_charge_date'] = date('Y-m-d', strtotime(trim($str[1])));
+            if (trim($str[0]) == 'ДатаСписано')         $doc['payment_charge_date'] = date('Y-m-d', strtotime(trim($str[1])));					
+
+            if (trim($str[0]) == 'Номер')               $doc['payment_number'] = trim($str[1]);					
+            if (trim($str[0]) == 'Дата')                $doc['payment_date'] = date('Y-m-d', strtotime(trim($str[1])));					
+            if (trim($str[0]) == 'Сумма')               $doc['payment_amount'] = trim($str[1]);	
+            if (trim($str[0]) == 'НазначениеПлатежа')   $doc['payment_purpose'] = trim($str[1]);	
+
+            if (trim($str[0]) == 'ПлательщикРасчСчет')  $doc['payerAcc'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПлательщикИНН') 		$doc['payerINN'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПлательщикКПП') 		$doc['payerKPP'] = trim($str[1]);					
+            if (trim($str[0]) == 'Плательщик1') 		$doc['payerName'] = trim($str[1]);					
+            if (trim($str[0]) == 'Плательщик') 		$doc['payerName'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПлательщикБанк1') 	$doc['payerBankName'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПлательщикБИК') 		$doc['payerBankBic'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПлательщикКорсчет') 	$doc['payerBankCorrAcc'] = trim($str[1]);					
+
+            if (trim($str[0]) == 'ПолучательРасчСчет') $doc['payeeAcc'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПолучательИНН') 		$doc['payeeINN'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПолучательКПП') 		$doc['payeeKPP'] = trim($str[1]);					
+            if (trim($str[0]) == 'Получатель1') 		$doc['payeeName'] = trim($str[1]);					
+            if (trim($str[0]) == 'Получатель') 		$doc['payeeName'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПолучательБанк1') 	$doc['payeeBankName'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПолучательБИК') 		$doc['payeeBankBic'] = trim($str[1]);					
+            if (trim($str[0]) == 'ПолучательКорсчет') 	$doc['payeeBankCorrAcc'] = trim($str[1]);									
+        }        
+        
+        return $result;
     }
 
     /**

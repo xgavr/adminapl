@@ -89,6 +89,28 @@ class BankSettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'email',
+            'name' => 'statement_email',
+            'attributes' => [
+                'id' => 'statement_email'
+            ],
+            'options' => [
+                'label' => 'Email для получения выписок',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'statement_email_password',
+            'attributes' => [
+                'id' => 'statement_email_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на email для выписок',
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -150,6 +172,48 @@ class BankSettingsForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]); 
         
+        $inputFilter->add([
+                'name'     => 'statement_email',
+                'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'statement_email_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
     }    
     
     public function setObjectManager(ObjectManager $objectManager)
