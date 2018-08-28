@@ -44,7 +44,7 @@ class Statement1cToArray extends AbstractFilter
         $lines = explode(PHP_EOL, $text);
         
         $statement = [];
-        $section = null;
+        $section = '';
         $i = 0;
         foreach ($lines as $line){
             
@@ -58,8 +58,13 @@ class Statement1cToArray extends AbstractFilter
                 $section = 'account';
                 continue;
             }
-
-            list($key, $value) = explode('=', $line, 2);
+            
+            if (strpos($line, '=')){
+                list($key, $value) = explode('=', $line, 2);
+            } else {
+                $key = $line;
+                $value = '';
+            }    
             
             if ('СекцияДокумент' == trim($key)){
                 $section = 'doc';
