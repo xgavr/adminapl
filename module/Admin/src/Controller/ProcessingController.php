@@ -273,5 +273,8 @@ class ProcessingController extends AbstractActionController
             $this->bankManager->checkStatementFolder();//проверить папку с файлами
             $this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
         }
+        return new JsonModel(
+            ['ok']
+        );
     }
 }
