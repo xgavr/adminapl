@@ -241,6 +241,11 @@ class BankManager
                         $this->saveStatementFromStatement1c($bankAccount, $statement);
                         
                     }
+                    if (is_dir(self::STAEMENTS_ARCH_DIR)){
+                        if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+                            unlink($fileInfo->getPathname());
+                        }
+                    }
                 }
             }
         }

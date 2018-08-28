@@ -230,7 +230,7 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
-     * Обновление выписки банка
+     * Обновление выписки банка Точка ро api
      */
     public function statementUpdateAction()
     {
@@ -259,5 +259,19 @@ class ProcessingController extends AbstractActionController
             'message' => $message,
         ]);          
         
+    }
+    
+    /**
+     * Получение выписки по почте
+     */
+    public function statementFromPost()
+    {
+        $settings = $this->adminManager->getBankTransferSettings();
+
+        if ($settings['statement_by_file'] == 1){
+            $this->bankManager->getStatementsByEmail(); //проверить почту
+            $this->bankManager->checkStatementFolder();//проверить папку с файлами
+            $this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
+        }
     }
 }
