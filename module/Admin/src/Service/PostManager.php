@@ -436,8 +436,9 @@ class PostManager {
                                                 } else {
                                                     $message = $this->getBody($connection, $messageNumber, $part->encoding);
                                                 }    
-
-                                                $message = iconv($charset, 'utf-8', $message);
+                                                if (trim(strtoupper($charset)) != 'UTF-8'){
+                                                    $message = iconv($charset, 'UTF-8//IGNORE', $message);
+                                                }    
                                                 // now do something with the message, e.g. render it
                                                 $result[$messageNumber]['content'][$part->subtype] = $message;
 
