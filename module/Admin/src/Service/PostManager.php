@@ -396,8 +396,10 @@ class PostManager {
 
                             if (isset($headers[0])){
                                 $result[$messageNumber]['from'] = $headers[0]->from;
-                                $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);
                                 $result[$messageNumber]['date'] = $headers[0]->date;
+                                if (isset($headers[0]->subject)){
+                                    $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);                                    
+                                }
                             }    
 
 //                            var_dump($headers); exit;                            
