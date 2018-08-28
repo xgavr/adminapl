@@ -264,7 +264,7 @@ class ProcessingController extends AbstractActionController
     /**
      * Получение выписки по почте
      */
-    public function statementFromPost()
+    public function statementFromPostAction()
     {
         $settings = $this->adminManager->getBankTransferSettings();
 
