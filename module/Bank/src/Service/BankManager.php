@@ -169,7 +169,7 @@ class BankManager
                     if (isset($mail['attachment'])){
                         foreach($mail['attachment'] as $attachment){
                             if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                                $target = self::STAEMENTS_DIR.'/'.rand().$attachment['filename'];
+                                $target = self::STAEMENTS_DIR.'/'.rand().'_'.$attachment['filename'];
                                 if (copy($attachment['temp_file'], $target)){
                                     unlink($attachment['temp_file']);
                                 }

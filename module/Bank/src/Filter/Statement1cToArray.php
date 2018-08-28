@@ -49,7 +49,7 @@ class Statement1cToArray extends AbstractFilter
         foreach ($lines as $line){
             
             if (mb_substr(trim($line), 0, 5) == 'Конец'){
-                unset($section);
+                $section = '';
                 $i++;
                 continue;
             }

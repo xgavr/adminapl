@@ -9,7 +9,6 @@
 namespace Bank\Filter;
 
 use Zend\Filter\AbstractFilter;
-use Company\Entity\BankAccount;
 
 /**
  * Возвращает массив полей Bank\Entity\Statement преобразованный из полей документа выписки 1с
