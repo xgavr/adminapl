@@ -66,7 +66,7 @@ class AplBankService {
         $result['valueDate']         = $statement->getChargeDate();     //ДатаСписано ДатаПоступило
         $result['docNum']            = $statement->getPaymentNumber();  //Номер
         $result['docDate']           = $statement->getPaymentDate();    //Дата
-        $result['docSum']            = number_format(abs($statement->getАmount()), 2, '.', ''); //Сумма
+        $result['docSum']            = number_format(abs($statement->getАmount()), 2, ',', ''); //Сумма
         $result['purpose']           = $statement->getPaymentPurpose(); //НазначениеПлатежа
         
         if ($statement->getАmount() > 0){ //Поступление на счет
