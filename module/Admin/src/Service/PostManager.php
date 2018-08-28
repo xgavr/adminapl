@@ -343,7 +343,7 @@ class PostManager {
      * -trash str - папка "Удаленные"
      * -user str
      * -password str
-     * -leave_message str - не удалять сообщение
+     * -leave_message bool - не удалять сообщение если true
      * 
      * return array 
      */

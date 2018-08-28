@@ -159,7 +159,7 @@ class BankManager
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $bankSettings['statement_email'],
                 'password' => $bankSettings['statement_email_password'],
-                'leave_message' => true,
+                'leave_message' => false,
             ];
 
             $mailList = $this->postManager->readImap($box);
@@ -169,7 +169,7 @@ class BankManager
                     if (isset($mail['attachment'])){
                         foreach($mail['attachment'] as $attachment){
                             if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                                $target = self::STAEMENTS_DIR.'/'.$attachment['filename'];
+                                $target = self::STAEMENTS_DIR.'/'.rand().$attachment['filename'];
                                 if (copy($attachment['temp_file'], $target)){
                                     unlink($attachment['temp_file']);
                                 }
