@@ -10,6 +10,8 @@ namespace Bank\Service;
 use Bank\Entity\Balance;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
+use Bank\Filter\Statement1cToArray;
+use Bank\Filter\ConvertStatement1c;
 
 /**
  * Description of BankManager
@@ -59,146 +61,6 @@ class BankManager
         if (!is_dir(self::STAEMENTS_ARCH_DIR)){
             mkdir(self::STAEMENTS_ARCH_DIR);
         }
-    }
-
-    /**
-     * Получение выписок по почте
-     */    
-    public function getStatementsByEmail()
-    {
-        $bankSettings = $this->adminManager->getBankTransferSettings();
-        
-        if ($bankSettings['statement_email'] && $bankSettings['statement_email_password']){
-            $box = [
-                'host' => 'imap.yandex.ru',
-                'server' => '{imap.yandex.ru:993/imap/ssl}',
-                'user' => $bankSettings['statement_email'],
-                'password' => $bankSettings['statement_email_password'],
-                'leave_message' => true,
-            ];
-
-            $mailList = $this->postManager->readImap($box);
-
-            if (count($mailList)){
-                foreach ($mailList as $mail){
-                    if (isset($mail['attachment'])){
-                        foreach($mail['attachment'] as $attachment){
-                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                                $target = self::STAEMENTS_DIR.'/'.$attachment['filename'];
-                                if (copy($attachment['temp_file'], $target)){
-                                    unlink($attachment['temp_file']);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }     
-    }
-    
-    /**
-     * Преобразует выписку в формате 1с в xml
-     * https://stackoverflow.com/questions/13219658/convert-text-file-to-xml-in-php
-     * @param string $statementFile
-     * 
-     * @return string
-     */
-    public function convert1cStatementToXml($statementFile)
-    {
-        setlocale(LC_ALL,'ru_RU.UTF-8');
-        
-        $text = file_get_contents($statementFile);
-        $text = iconv('Windows-1251', 'UTF-8', $text);
-        $lines = explode(PHP_EOL, $text);
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><points/>');
-        
-        \Zend\Debug\Debug::dump($text);
-        $i = 0;
-        foreach ($lines as $line){
-            $i++;
-            if (mb_substr($line, 0, 6)=='Секция'){
-                list($key, $value) = explode('=', str_replace('Секция', '', $line), 2);
-                $node = $xml->addChild($key.$i, trim($value));
-            } elseif (mb_substr($line, 0, 5)=='Конец'){
-                unset($node);
-                continue;
-            }else{
-                list($key, $value) = explode('=', $line, 2);
-                if ($node){
-                    $node->addChild($key, trim($value));
-                } else {
-                    $xml->addChild($key, trim($value));
-                }    
-            }
-        }
-        
-       //\Zend\Debug\Debug::dump($xml); exit;
-       
-        $dom = new \DOMDocument('1.0');
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
-        $dom->loadXML($xml->asXML());
-
-        return $dom->saveXML();
-    }
-    
-    public function checkStatementFolder()
-    {            
-        setlocale(LC_ALL,'ru_RU.UTF-8');
-        
-        foreach (new \DirectoryIterator(self::STAEMENTS_DIR) as $fileInfo) {
-            if ($fileInfo->isDot()) continue;
-            if ($fileInfo->isFile()){
-                $xml = $this->convert1cStatementToXml($fileInfo->getPathname());
-                \Zend\Debug\Debug::dump($xml);
-            }
-        }
-
-        return;
-    }    
-    
-    public function readStatementFormat1c($statement_file)
-    {
-        $text = explode("\n", file_get_contents($statement_file));
-        
-        $rsult = [];
-        foreach ($text as $line){
-            $str = explode('=', iconv('Windows-1251', 'UTF-8', $line));
-            
-            if (trim($str[0]) == 'СекцияДокумент'){
-                $doc = [];					
-            }
-            if (trim($strs[0]) == 'КонецДокумента'){
-                $result[] = $doc;					
-            }
-            if (trim($str[0]) == 'ДатаПоступило')       $doc['payment_charge_date'] = date('Y-m-d', strtotime(trim($str[1])));
-            if (trim($str[0]) == 'ДатаСписано')         $doc['payment_charge_date'] = date('Y-m-d', strtotime(trim($str[1])));					
-
-            if (trim($str[0]) == 'Номер')               $doc['payment_number'] = trim($str[1]);					
-            if (trim($str[0]) == 'Дата')                $doc['payment_date'] = date('Y-m-d', strtotime(trim($str[1])));					
-            if (trim($str[0]) == 'Сумма')               $doc['payment_amount'] = trim($str[1]);	
-            if (trim($str[0]) == 'НазначениеПлатежа')   $doc['payment_purpose'] = trim($str[1]);	
-
-            if (trim($str[0]) == 'ПлательщикРасчСчет')  $doc['payerAcc'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПлательщикИНН') 		$doc['payerINN'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПлательщикКПП') 		$doc['payerKPP'] = trim($str[1]);					
-            if (trim($str[0]) == 'Плательщик1') 		$doc['payerName'] = trim($str[1]);					
-            if (trim($str[0]) == 'Плательщик') 		$doc['payerName'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПлательщикБанк1') 	$doc['payerBankName'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПлательщикБИК') 		$doc['payerBankBic'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПлательщикКорсчет') 	$doc['payerBankCorrAcc'] = trim($str[1]);					
-
-            if (trim($str[0]) == 'ПолучательРасчСчет') $doc['payeeAcc'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПолучательИНН') 		$doc['payeeINN'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПолучательКПП') 		$doc['payeeKPP'] = trim($str[1]);					
-            if (trim($str[0]) == 'Получатель1') 		$doc['payeeName'] = trim($str[1]);					
-            if (trim($str[0]) == 'Получатель') 		$doc['payeeName'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПолучательБанк1') 	$doc['payeeBankName'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПолучательБИК') 		$doc['payeeBankBic'] = trim($str[1]);					
-            if (trim($str[0]) == 'ПолучательКорсчет') 	$doc['payeeBankCorrAcc'] = trim($str[1]);									
-        }        
-        
-        return $result;
     }
 
     /**
@@ -283,6 +145,109 @@ class BankManager
         $this->entityManager->remove($statement);
         $this->entityManager->flush();
     }
+
+    /**
+     * Получение выписок по почте
+     */    
+    public function getStatementsByEmail()
+    {
+        $bankSettings = $this->adminManager->getBankTransferSettings();
+        
+        if ($bankSettings['statement_email'] && $bankSettings['statement_email_password']){
+            $box = [
+                'host' => 'imap.yandex.ru',
+                'server' => '{imap.yandex.ru:993/imap/ssl}',
+                'user' => $bankSettings['statement_email'],
+                'password' => $bankSettings['statement_email_password'],
+                'leave_message' => true,
+            ];
+
+            $mailList = $this->postManager->readImap($box);
+
+            if (count($mailList)){
+                foreach ($mailList as $mail){
+                    if (isset($mail['attachment'])){
+                        foreach($mail['attachment'] as $attachment){
+                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                                $target = self::STAEMENTS_DIR.'/'.$attachment['filename'];
+                                if (copy($attachment['temp_file'], $target)){
+                                    unlink($attachment['temp_file']);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }     
+    }
+    
+    /**
+     * Записать отсатки на счетах из выписки 1с
+     * 
+     * @param Bank\Entity\BankAccount
+     * @param array $statement
+     */
+    public function saveBalanceFromStatement1c($bankAccount, $statement)
+    {
+        if (is_array($statement)){            
+            foreach ($statement['accounts'] as $account){
+                $data['bik'] = $bankAccount->getBik();
+                $data['account'] = $account['РасчСчет'];
+                $data['dateBalance'] = date('Y-m-d', strtotime($account['ДатаНачала']));
+                $data['balance'] = $account['НачальныйОстаток'];
+                    
+                $this->addNewOrUpdateBalance($data);
+            }            
+        }
+        
+        return;
+    }
+    
+    /**
+     * Запись документов из выписки 1с
+     * 
+     * @param Bank\Entity\BankAccount $bankAccount
+     * @param array $statement
+     */
+    public function saveStatementFromStatement1c($bankAccount, $statement)
+    {
+        if (is_array($statement)){
+            $converFilter = new ConvertStatement1c($bankAccount);
+            foreach ($statement['docs'] as $doc){
+                $data = $converFilter->filter($doc);
+                $this->addNewOrUpdateStatement($data);
+            }            
+        }
+        
+        return;        
+    }
+    
+    public function checkStatementFolder()
+    {            
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        
+        foreach (new \DirectoryIterator(self::STAEMENTS_DIR) as $fileInfo) {
+            if ($fileInfo->isDot()) continue;
+            if ($fileInfo->isFile()){
+                if (strtolower($fileInfo->getExtension()) == 'txt'){
+                    $convetFilter = new Statement1cToArray();
+                    $statement = $convetFilter->filter($fileInfo->getPathname());
+
+                    $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                        ->findOneByRs($statement['РасчСчет']);
+            
+                    if ($bankAccount){
+                        $this->saveBalanceFromStatement1c($bankAccount, $statement);
+                        $this->saveStatementFromStatement1c($bankAccount, $statement);
+                        
+                    }
+                }
+            }
+        }
+
+        return;
+    }    
+    
     
     /**
      * Получение выписки из банка Точка
