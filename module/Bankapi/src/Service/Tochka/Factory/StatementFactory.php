@@ -6,28 +6,28 @@
  * and open the template in the editor.
  */
 
-namespace Bankapi\Service\Factory;
+namespace Bankapi\Service\Tochka\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Bankapi\Service\TochkaApi;
+use Bankapi\Service\Tochka\Authenticate;
+use Bankapi\Service\Tochka\Statement;
 
 /**
  * Description of ShopManagerFactory
  *
  * @author Daddy
  */
-class TochkaApiFactory  implements FactoryInterface
+class StatementFactory  implements FactoryInterface
 {
                    
     public function __invoke(ContainerInterface $container, 
                     $requestedName, array $options = null)
     {
         
-        $config = $container->get('config');
-        $authParams = $config['bankapi']['tochka'];
+        $auth = $container->get(Authenticate::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new TochkaApi($authParams);
+        return new Statement($auth);
     }
 }

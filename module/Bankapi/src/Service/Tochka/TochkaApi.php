@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Bankapi\Service;
+namespace Bankapi\Service\Tochka;
 
 use Zend\Http\Client;
 use Zend\Json\Decoder;

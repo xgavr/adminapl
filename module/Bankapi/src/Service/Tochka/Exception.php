@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Bankapi\Service;
+namespace Bankapi\Service\Tochka;
 
 use Zend\Json\Decoder;
 
@@ -17,7 +17,7 @@ use Zend\Json\Decoder;
  * @author Daddy
  */
 class Exception {
-    //put your code here
+    
     /**
      * Обработка ошибок
      * @param \Zend\Http\Response $response

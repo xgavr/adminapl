@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Bankapi\Service;
+namespace Bankapi\Service\Tochka;
 
 use Zend\Json\Decoder;
 
@@ -18,22 +18,32 @@ use Zend\Json\Decoder;
 class Statement {
 
     /**
+     * @var bankapi\Service\Tochka\Authenticate
+     */
+    private $auth;
+    
+    public function __construct($auth) 
+    {
+        $this->auth = $auth;
+    }
+    
+    /**
      * Получить список счетов
      * @return array|\Exception
      */
     public function accountList()
     {
-        $this->isAuth();
+        $this->auth->isAuth();
         
         $client = new Client();
-        $client->setUri($this->uri.'/account/list');
-        $client->setAdapter($this::HTTPS_ADAPTER);
+        $client->setUri($this->auth->getUri().'/account/list');
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode(self::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->readCode($this->auth::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -57,14 +67,14 @@ class Statement {
         $this->isAuth();
         
         $client = new Client();
-        $client->setUri($this->uri.'/statement/result/'.$request_id);
-        $client->setAdapter($this::HTTPS_ADAPTER);
+        $client->setUri($this->auth->getUri().'/statement/result/'.$request_id);
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode(self::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->readCode($this->auth::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -87,14 +97,14 @@ class Statement {
     {
         $this->isAuth();
         $client = new Client();
-        $client->setUri($this->uri.'/statement/status/'.$request_id);
-        $client->setAdapter($this::HTTPS_ADAPTER);
+        $client->setUri($this->auth->getUri().'/statement/status/'.$request_id);
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode(self::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->readCode($this->auth::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -133,15 +143,15 @@ class Statement {
         
         $this->isAuth();
         $client = new Client();
-        $client->setUri($this->uri.'/statement');
-        $client->setAdapter($this::HTTPS_ADAPTER);
+        $client->setUri($this->auth->getUri().'/statement');
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('POST');
         $client->setRawBody(Encoder::encode($postParameters));
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode(self::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->readCode($this->auth::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);

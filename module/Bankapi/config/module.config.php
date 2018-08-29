@@ -43,7 +43,9 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            Service\TochkaApi::class => Service\Factory\TochkaApiFactory::class,
+            Service\Tochka\TochkaApi::class => Service\Tochka\Factory\TochkaApiFactory::class,
+            Service\Tochka\Authenticate::class => Service\Tochka\Factory\AuthenticateFactory::class,
+            Service\Tochka\Statement::class => Service\Tochka\Factory\StatementFactory::class,
         ],
     ],    
     'view_manager' => [

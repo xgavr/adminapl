@@ -6,32 +6,28 @@
  * and open the template in the editor.
  */
 
-namespace Bank\Service\Factory;
+namespace Bankapi\Service\Tochka\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Bank\Service\BankManager;
 use Bankapi\Service\Tochka\TochkaApi;
-use Admin\Service\AdminManager;
-use Admin\Service\PostManager;
-
 
 /**
- * Description of BankManagerFactory
+ * Description of ShopManagerFactory
  *
  * @author Daddy
  */
-class BankManagerFactory implements FactoryInterface
+class TochkaApiFactory  implements FactoryInterface
 {
+                   
     public function __invoke(ContainerInterface $container, 
                     $requestedName, array $options = null)
     {
-        $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $tochkaApi = $container->get(TochkaApi::class);
-        $adminManager = $container->get(AdminManager::class);
-        $postManager = $container->get(PostManager::class);
+        
+        $config = $container->get('config');
+        $authParams = $config['bankapi']['tochka'];
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new BankManager($entityManager, $tochkaApi, $adminManager, $postManager);
+        return new TochkaApi($authParams);
     }
 }

@@ -19,9 +19,23 @@ class IndexController extends AbstractActionController
      */
     private $tochkaApi;    
 
-    public function __construct($tochkaApi) 
+    /**
+     * Authentication manager.
+     * @var Bankapi\Service\Tochka\Authenticate
+     */
+    private $tochkaAuth;    
+
+    /**
+     * Statement manager.
+     * @var Bankapi\Service\Tochka\Statement
+     */
+    private $tochkaStatement;    
+
+    public function __construct($tochkaApi, $tochkaAuth, $tochkaStatement) 
     {
-        $this->tochkaApi = $tochkaApi;        
+        $this->tochkaApi = $tochkaApi;     
+        $this->tochkaAuth = $tochkaAuth;
+        $this->tochkaStatement = $tochkaStatement;        
     }   
     
     public function indexAction()
@@ -31,7 +45,7 @@ class IndexController extends AbstractActionController
     
     public function tochkaAuthAction()
     {
-        $url = $this->tochkaApi->authUrl();
+        $url = $this->tochkaAuth->authUrl();
         $this->redirect()->toUrl($url);
     }
     
@@ -42,14 +56,14 @@ class IndexController extends AbstractActionController
 
         if ($code){
             try{
-                $this->tochkaApi->accessToken($code, $this->tochkaApi::TOKEN_AUTH);
+                $this->tochkaAuth->accessToken($code, $this->tochkaAuth::TOKEN_AUTH);
             } catch(\Exception $e){
             }    
             return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access']);
         }
         
         try{
-            $ok = $this->tochkaApi->isAuth();
+            $ok = $this->tochkaAuth->isAuth();
         } catch (\Exception $e){
             $ok = false;
         }    
@@ -62,7 +76,7 @@ class IndexController extends AbstractActionController
     
     public function tochkaIsAuthAction()
     {
-        $result = $this->tochkaApi->isAuth();
+        $result = $this->tochkaAuth->isAuth();
         
         echo $result;
         
@@ -72,7 +86,7 @@ class IndexController extends AbstractActionController
     public function tochkaAccountListAction()
     {
         try {
-            $result = $this->tochkaApi->accountList();
+            $result = $this->tochkaStatement->accountList();
         } catch (\Exception $e){
             return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access'], ['query' => ['error' => $e->getMessage()]]);                
         }   
@@ -80,18 +94,18 @@ class IndexController extends AbstractActionController
         
         return new ViewModel([
                 'result' => $result,
-                'mode' => $this->tochkaApi->mode,
+                'mode' => $this->tochkaAuth->mode,
             ]);
     }
     
     public function tochkaStatementsAction()
     {
         try {
-            $result = $this->tochkaApi->statements();
+            $result = $this->tochkaStatement->statements();
         } catch (\Exception $e){
             return $this->redirect()->toRoute('bankapi', ['action'=>'tochka-access'], ['query' => ['error' => $e->getMessage()]]);                
         }   
-        \Zend\Debug\Debug::dump($result);
+        //\Zend\Debug\Debug::dump($result);
         return new ViewModel([
                 'result' => $result,
             ]);
