@@ -125,7 +125,7 @@ class TochkaApi {
 
     /**
      * Обработка ошибок
-     * @param \Zend\Http\Response
+     * @param \Zend\Http\Response $response
      */
     public function exception($response)
     {
@@ -205,30 +205,6 @@ class TochkaApi {
     public function authUrl()
     {
         return $this->uri.'/authorize?response_type=code&client_id='.$this->client_id;
-    }
-    
-    /**
-     * Получение доступа от клиента
-     */
-    public function authorize()
-    {
-        $client = new Client();
-        $client->setUri($this->uri.'/authorize');
-        $client->setAdapter($this::HTTPS_ADAPTER);
-        $client->setMethod('GET');
-        $client->setParameterGet([
-            'response_type' => 'code',
-            'client_id' => $this->client_id,
-        ]);
-        
-//        var_dump($this->client_id);
-        $response = $client->send();
-        
-        if ($response->isSuccess()){
-            return $response->getStatusCode().': '.$response->getContent();
-        }
-        
-        return $url;
     }
     
     /**
@@ -349,7 +325,7 @@ class TochkaApi {
      * @param array $params
      * 
      */
-    public function statement($params)
+    public function statementRequest($params)
     {
         $postParameters = [
             'account_code' => $params['account_code'],
@@ -386,6 +362,30 @@ class TochkaApi {
     }
     
     /**
+     * Получить выписку по счету за период
+     * 
+     * @param string $bank_code БИК
+     * @param string $account_code Номер счета
+     * @param date $date_start
+     * @param date $date_end
+     * 
+     * @return array|null
+     */
+    public function statement($bank_code, $account_code, $date_start = null, $date_end = null)
+    {
+//        if (!$date_start) $date_start = date('Y-m-d');
+        if (!$date_start) $date_start = date('Y-m-d', strtotime("-1 days"));
+        if (!$date_end) $date_end = date('Y-m-d');
+
+        return $this->statementRequest([
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'bank_code' => $bank_code,
+            'account_code' => $account_code,
+        ]);
+    }
+    
+    /**
      * Получить выписки по всем счетам за период
      * @param date $date_start
      * @param date $date_end
@@ -405,19 +405,19 @@ class TochkaApi {
         if (is_array($accounts)){
             foreach ($accounts as $account){
                 if ($this->mode == 'sandbox'){ //в песочнице номер счета: account_code, в api - code
-                    $result['statements'][$account['bank_code']][$account['account_code']] = $this->statement([
-                        'date_start' => $date_start,
-                        'date_end' => $date_end,
-                        'bank_code' => $account['bank_code'],
-                        'account_code' => $account['account_code'],
-                    ]);
+                    $result['statements'][$account['bank_code']][$account['account_code']] = $this->statement(
+                        $account['bank_code'],
+                        $account['account_code'],
+                        $date_start,
+                        $date_end
+                    );
                 } else {
-                    $result['statements'][$account['bank_code']][$account['code']] = $this->statement([
-                        'date_start' => $date_start,
-                        'date_end' => $date_end,
-                        'bank_code' => $account['bank_code'],
-                        'account_code' => $account['code'],
-                    ]);                    
+                    $result['statements'][$account['bank_code']][$account['code']] = $this->statement(
+                        $account['bank_code'],
+                        $account['code'],
+                        $date_start,
+                        $date_end
+                    );                    
                 }    
             }
             
