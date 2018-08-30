@@ -245,7 +245,7 @@ class Authenticate {
         
         $response = $client->send();
                 
-        if ($response->isSuccess()){
+        if ($response->isOk()){
             $result = Decoder::decode($response->getBody());
             if ($gran_type == self::TOKEN_AUTH){
                 $this->saveCode($code, self::TOKEN_AUTH);

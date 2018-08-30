@@ -52,7 +52,7 @@ class Statement {
         
         $response = $client->send();
         
-        if ($response->isSuccess()){
+        if ($response->isOk()){
             return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
         }
 
@@ -83,7 +83,7 @@ class Statement {
         
         $response = $client->send();
         
-        if ($response->isSuccess()){
+        if ($response->isOk()){
             return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY); 
         }
         
@@ -113,7 +113,7 @@ class Statement {
         
         $response = $client->send();
         
-        if ($response->isSuccess()){
+        if ($response->isOk()){
             $result = Decoder::decode($response->getBody()); 
             if (isset($result->status)){
                 if ($result->status == 'ready'){
@@ -160,7 +160,7 @@ class Statement {
         
         $response = $client->send();
         
-        if ($response->isSuccess()){
+        if ($response->isOk()){
             $result = Decoder::decode($response->getBody()); 
             if (isset($result->request_id)){
                 return $this->statementStatus($result->request_id);
