@@ -10,98 +10,102 @@ $this->pageBreadcrumbs()->setItems([
             ]);
 
 $this->headLink()
-    ->appendStylesheet($this->basePath('js/x-editable/bootstrap3-editable/css/bootstrap-editable.css'))        
-    ->appendStylesheet($this->basePath('js/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css'))        
+//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
         ;
 
 $this->headScript()
-    ->appendFile($this->basePath('js/x-editable/bootstrap3-editable/js/bootstrap-editable.js'))
-    ->appendFile($this->basePath('js/x-editable/inputs-ext/typeaheadjs/lib/typeahead.js'))
-    ->appendFile($this->basePath('js/x-editable/inputs-ext/typeaheadjs/typeaheadjs.js'))
-            ;
-        
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+            ;    
 ?>
 
-<h1>Неизвестные производители</h1>
-<form method="GET">
-    <div class="row">
-        <div class="col-lg-7">
-            <div class="input-group">
-                <span class="input-group-btn">
-                    <a class="btn btn-default <?= ($ua ? 'active':'')?>" href="
-                        <?= $this->url('producer', ['action'=>'unknown'], ['query' => ['ua' => 1]]); ?>">
-                        Не привязанные
-                    </a>
-                    <a class="btn btn-default <?= ($ua ? '':'active')?>" href="
-                        <?= $this->url('producer', ['action'=>'unknown']); ?>">
-                        Все
-                    </a>
-                </span>    
-                <input type="text" class="form-control" aria-label="..." name="q" value="<?= $q ?>">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit">Найти</button>
-                </span>
-            </div>    
-        </div>  
+<div class="row">
+    <div class="col-md-9">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                </div>
+                <button id="ok" type="submit" class="btn btn-default">OK</button>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/producer/unknown-content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric">ID</th>
+                     <th data-field="name">Неизвестный</th>
+                     <th data-field="producer">Известный</th>             
+                 </tr>                
+            </thead>
+        </table>
     </div>
-</form>
-
-<table class="table table-striped">
-
-   <tr>
-        <th>ID</th>
-        <th>Известный</th>
-        <th>Неизвестный</th>
-        <th>Действие</th>
-    </tr>
-    
-    <?php foreach ($producer as $row): ?>
-    <tr>
-        <td><?= $this->escapeHtml($row->getId()); ?></td>
-        <td>
-            <?php if ($row->getProducer()): ?>    
-                <a href="#" class="editable" data-type="typeaheadjs" data-pk="<?= $row->getId() ?>" data-url="<?= $this->url('producer', ['action' => 'editable-unknown'])?>"><?= $row->getProducer()->getName(); ?></a>
-            <?php else: ?>    
-                <a href="#" class="editable" data-type="typeaheadjs" data-pk="<?= $row->getId() ?>" data-url="<?= $this->url('producer', ['action' => 'editable-unknown'])?>"></a>
-            <?php endif; ?>
-        </td>
-        <td><?= $row->getName(); ?></td>        
-        <td>
-            <?php if ($row->getProducer()): ?>
-            <?php else: ?>
-                <a class="btn btn-info" href="<?= $this->url('producer', 
-                        ['action'=>'from-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page, 'ua' => $ua, 'q' => $q]]); ?>">
-                    <span class="glyphicon glyphicon-pencil" ></span>Добавить
-                </a>
-            <?php endif; ?>
-            <a class="btn btn-danger" href="<?= $this->url('producer',
-                    ['action'=>'delete-unknown', 'id'=>$row->getId()], ['query' => ['page' => $page, 'ua' => $ua, 'q' => $q]]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>   
-    
-</table>
-<?= $this->paginationControl($producer,
-            'Sliding',
-            'application/partial/paginator', 
-            ['route' => array('route' => 'producer', 'action' => 'unknown', 'query' => $q)]); ?>
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/update-from-rawprice/" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить из прайсов">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                                Обновить из прайсов
+                            </button> 
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>    
 
 <script type="text/javascript">
-    $(function(){
-        $('.editable').editable({
-            title: 'Выбрать производителя',
-            emptytext: 'Не привязан',
-            typeahead: {
-                remote: {
-                    url: '/producer/search-assistant/?q=%QUERY'
-                },
-                template: function(item) {                        
-                    return item.value + ' (' + item.text + ')'; 
-                }             
-            }    
-        });        
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var $table = $('#table'),
+        $ok = $('#ok');
+
+    $(function () {
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
+        });
     });
+    
+    function queryParams() {
+        var params = {offset: 0, limit: 10};
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function responseHandler(res) {
+        return res;
+    }    
 </script>

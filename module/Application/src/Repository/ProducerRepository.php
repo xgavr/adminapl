@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Country;
 use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
+use Application\Entity\Rawprice;
 
 /**
  * Description of RbRepository
@@ -19,6 +20,47 @@ use Application\Entity\UnknownProducer;
  */
 class ProducerRepository  extends EntityRepository{
 
+    /**
+     * Выборка производителей из прайса
+     */
+    public function findRawpriceUnknownProducer()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+            ->from(Rawprice::class, 'r')
+            ->where('r.unknownProducer is null')    
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    public function findAllUnknownProducer($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(UnknownProducer::class, 'c')
+            ->orderBy('c.name')
+                ;
+        
+        if (is_array($params)){
+            if ($params['unattached']){
+                $queryBuilder->where('c.producer is null');
+            }
+            if ($params['q']){
+                $queryBuilder->where('c.name like :search')
+                    ->setParameter('search', '%' . $params['q'] . '%')
+                        ;
+            }
+        }
+
+        return $queryBuilder->getQuery();
+    }    
+        
     public function findAllCountry()
     {
         $entityManager = $this->getEntityManager();
@@ -43,31 +85,6 @@ class ProducerRepository  extends EntityRepository{
             ->from(Producer::class, 'c')
             ->orderBy('c.name')
                 ;
-
-        return $queryBuilder->getQuery();
-    }    
-    
-    public function findAllUnknownProducer($params = null)
-    {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('c')
-            ->from(UnknownProducer::class, 'c')
-            ->orderBy('c.name')
-                ;
-        
-        if (is_array($params)){
-            if ($params['unattached']){
-                $queryBuilder->where('c.producer is null');
-            }
-            if ($params['q']){
-                $queryBuilder->where('c.name like :search')
-                    ->setParameter('search', '%' . $params['q'] . '%')
-                        ;
-            }
-        }
 
         return $queryBuilder->getQuery();
     }    

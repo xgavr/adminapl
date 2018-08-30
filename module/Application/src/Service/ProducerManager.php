@@ -7,8 +7,6 @@
  */
 namespace Application\Service;
 
-use Zend\ServiceManager\ServiceManager;
-use Application\Entity\Tax;
 use Application\Entity\Country;
 use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
@@ -153,17 +151,19 @@ class ProducerManager
         
     }        
     
-    
-    /*
-     * @var Application\Entity\Rawprice $rawprice
+    /**
+     * Добавление нового неизвестного производителя
+     * 
+     * @param Application\Entity\Rawprice $rawprice
+     * @param bool $flush
      */
-    public function addNewUnknownProducerFromRawprice($rawprice) 
+    public function addNewUnknownProducerFromRawprice($rawprice, $flush = true) 
     {
         $producername = $rawprice->getProducer();
         
-        if ($producername){
+        if ($producerName){
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneByName($producername);
+                        ->findOneByName($producerName);
 
             if ($unknownProducer == null){
 
@@ -173,20 +173,42 @@ class ProducerManager
 
                 $currentDate = date('Y-m-d H:i:s');
                 $unknownProducer->setDateCreated($currentDate);
+            }    
+            
+            // Добавляем сущность в менеджер сущностей.
+            $this->entityManager->persist($unknownProducer);
 
-                $producer = new Producer();
+            $rawprice->setUnknownProducer($unknownProducer);
 
-                $unknownProducer->setProducer($producer);
-
-                // Добавляем сущность в менеджер сущностей.
-                $this->entityManager->persist($unknownProducer);
-
-                // Применяем изменения к базе данных.
-                $this->entityManager->flush();
+            if ($flush){
+            // Применяем изменения к базе данных.
+                $this->entityManager->flush($unknownProducer);
             }    
         }    
-    }   
+    }  
     
+    /**
+     * Выборка производителей из прайсов и добавление их в неизвестные производители
+     */
+    public function grabUnknownProducerFromRawprice()
+    {
+        $startTime = time();
+        $rawprices = $this->entityManager->getRepository(Producer::class)
+                ->findRawpriceUnknownProducer();
+        foreach ($rawprices as $rawprice){
+            $this->addNewUnknownProducerFromRawprice($rawprice, false);
+            if (time() > $startTime + 20) break; //выйти через 20 сек
+        }
+        $this->entityManager->flush();
+    }
+    
+
+    /**
+     * Обновление неизвестного производителя
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param array $data
+     */
     public function updateUnknownProducer($unknownProducer, $data) 
     {
         if ($data['producer']){    

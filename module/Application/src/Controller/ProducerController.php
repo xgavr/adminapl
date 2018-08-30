@@ -210,6 +210,38 @@ class ProducerController extends AbstractActionController
         ]);  
     }
     
+    public function unknownContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(Producer::class)
+                        ->findAllUnknownProducer($q);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
+    public function updateFromRawpriceAction()
+    {
+        $this->producerManager->grabUnknownProducerFromRawprice();
+                
+        return new JsonModel([
+            'ok'
+        ]);          
+    }
+    
     public function searchAssistantAction()
     {
         $q = $this->params()->fromQuery('q', '');
