@@ -44,6 +44,7 @@ return [
     'service_manager' => [
         'factories' => [
             Service\Tochka\Authenticate::class => Service\Tochka\Factory\AuthenticateFactory::class,
+            Service\Tochka\Payment::class => Service\Tochka\Factory\PaymentFactory::class,
             Service\Tochka\Statement::class => Service\Tochka\Factory\StatementFactory::class,
         ],
     ],    
