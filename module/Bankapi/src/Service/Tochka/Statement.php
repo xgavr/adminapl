@@ -8,7 +8,9 @@
 
 namespace Bankapi\Service\Tochka;
 
+use Zend\Http\Client;
 use Zend\Json\Decoder;
+use Zend\Json\Encoder;
 
 /**
  * Description of Statement
@@ -18,7 +20,7 @@ use Zend\Json\Decoder;
 class Statement {
 
     /**
-     * @var bankapi\Service\Tochka\Authenticate
+     * @var Bankapi\Service\Tochka\Authenticate
      */
     private $auth;
     
@@ -43,7 +45,7 @@ class Statement {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode($this->auth::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -54,7 +56,7 @@ class Statement {
             return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
         }
 
-        return $this->exception($response);
+        return $this->auth->exception($response);
     }
     
     /**
@@ -64,7 +66,7 @@ class Statement {
      */
     public function statementResult($request_id)
     {
-        $this->isAuth();
+        $this->auth->isAuth();
         
         $client = new Client();
         $client->setUri($this->auth->getUri().'/statement/result/'.$request_id);
@@ -74,7 +76,7 @@ class Statement {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode($this->auth::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -95,7 +97,7 @@ class Statement {
      */
     public function statementStatus($request_id)
     {
-        $this->isAuth();
+        $this->auth->isAuth();
         $client = new Client();
         $client->setUri($this->auth->getUri().'/statement/status/'.$request_id);
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
@@ -104,7 +106,7 @@ class Statement {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode($this->auth::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -124,7 +126,7 @@ class Statement {
             }
         }
         
-        return $this->exception($response);
+        return $this->auth->exception($response);
     }
     
     /**
@@ -141,7 +143,7 @@ class Statement {
             'date_start' => $params['date_start'],            
         ];
         
-        $this->isAuth();
+        $this->auth->isAuth();
         $client = new Client();
         $client->setUri($this->auth->getUri().'/statement');
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
@@ -151,7 +153,7 @@ class Statement {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->readCode($this->auth::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
         ]);
 
         $client->setHeaders($headers);
@@ -165,7 +167,7 @@ class Statement {
             }
         }
         
-        return $this->exception($response);
+        return $this->auth->exception($response);
     }
     
     /**
@@ -211,7 +213,7 @@ class Statement {
         $accounts = $this->accountList();
         if (is_array($accounts)){
             foreach ($accounts as $account){
-                if ($this->mode == 'sandbox'){ //в песочнице номер счета: account_code, в api - code
+                if ($this->auth->getMode() == 'sandbox'){ //в песочнице номер счета: account_code, в api - code
                     $result['statements'][$account['bank_code']][$account['account_code']] = $this->statement(
                         $account['bank_code'],
                         $account['account_code'],

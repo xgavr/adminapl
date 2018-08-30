@@ -30,10 +30,10 @@ class BankManager
     private $entityManager;
     
     /**
-     * TochkaApi manager
-     * @var Bankapi\Service\TochkaApi
+     * Tochka Statetment manager
+     * @var Bankapi\Service\Tochka\Statement
      */
-    private $tochkaApi;
+    private $tochkaStatement;
     
     /**
      * AdminManager manager
@@ -47,10 +47,10 @@ class BankManager
      */
     private $postManager;
 
-    public function __construct($entityManager, $tochkaApi, $adminManager, $postManager)
+    public function __construct($entityManager, $tochkaStatement, $adminManager, $postManager)
     {
         $this->entityManager = $entityManager;
-        $this->tochkaApi = $tochkaApi;    
+        $this->tochkaStatement = $tochkaStatement;    
         $this->adminManager = $adminManager;
         $this->postManager = $postManager;
         
@@ -264,7 +264,7 @@ class BankManager
     public function tochkaStatement($dateStart, $dateEnd, $options = null)
     {
         try{
-            $tochkaStatement = $this->tochkaApi->statements($dateStart, $dateEnd);
+            $tochkaStatement = $this->tochkaStatement->statements($dateStart, $dateEnd);
         } catch (\Exception $e){
             return $e->getMessage();
         }

@@ -4,7 +4,6 @@ namespace Bankapi\Controller\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Bankapi\Controller\IndexController;
-use Bankapi\Service\Tochka\TochkaApi;
 use Bankapi\Service\Tochka\Authenticate;
 use Bankapi\Service\Tochka\Statement;
 /**
@@ -15,11 +14,10 @@ class IndexControllerFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $tochkaApi = $container->get(TochkaApi::class);
         $authManager = $container->get(Authenticate::class);
-        $statementMaanger = $container->get(Statement::class);
+        $statementManager = $container->get(Statement::class);
         
         // Instantiate the controller and inject dependencies
-        return new IndexController($tochkaApi, $authmanager, $statementMaanger);
+        return new IndexController($authManager, $statementManager);
     }
 }

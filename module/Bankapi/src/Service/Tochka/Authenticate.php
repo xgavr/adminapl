@@ -8,6 +8,10 @@
 
 namespace Bankapi\Service\Tochka;
 
+use Zend\Http\Client;
+use Zend\Json\Decoder;
+use Zend\Json\Encoder;
+
 /**
  * Description of Authenticate
  *
@@ -51,17 +55,18 @@ class Authenticate {
     /**
      * @var string
      */
-    public $mode;
+    private $mode;
 
     /**
      * @var string
      */
-    public $token_dir;
+    private $token_dir;
 
     /**
      * @var string
      */
-    public $token_filename;
+    private $token_filename;
+    
 
     public function __construct($authParams) 
     {
@@ -88,7 +93,7 @@ class Authenticate {
             mkdir($this->token_dir);
         }
         
-        $this->token_filename = $this->token_dir.self::TOKEN_FILENAME;
+        $this->token_filename = $this->token_dir.self::TOKEN_FILENAME;        
     }
     
     /**
@@ -99,6 +104,16 @@ class Authenticate {
     public function getUri()
     {
         return $this->uri;
+    }
+    
+    /**
+     * Получить режим
+     * 
+     * @return string 
+     */
+    public function getMode()
+    {
+        return $this->mode;
     }
     
     /**
@@ -135,6 +150,70 @@ class Authenticate {
         
         return;
     }
+    
+    /**
+     * Получить ссылку на вход для авторизации
+     * @return string 
+     */
+    public function authUrl()
+    {
+        return $this->uri.'/authorize?response_type=code&client_id='.$this->client_id;
+    }
+    
+    /**
+     * Проверить авторизацию
+     * @return bool
+     */
+    public function isAuth()
+    {
+        if (!$this->readCode(self::TOKEN_ACCESS)){
+            throw new \Exception('Требуется авторизация в банке!');
+        }        
+
+        return true;
+    }
+
+    /**
+     * Удаление токенов
+     * @return void
+     */
+    public function reAuth()
+    {
+        $this->saveCode('', self::TOKEN_AUTH);
+        $this->saveCode('', self::TOKEN_ACCESS);                
+        
+        return;
+    }
+    
+    /**
+     * Обработка ошибок
+     * @param \Zend\Http\Response $response
+     */
+    public function exception($response)
+    {
+        switch ($response->getStatusCode()) {
+            case 400: //Invalid code
+            case 401: //The access token is invalid or has expired
+            case 403: //The access token is missing
+                $this->reAuth();
+            default:
+                $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);
+                $error_msg = $response->getStatusCode();
+                if (isset($error['error'])){
+                    $error_msg .= ' ('.$error['error'].')';
+                }
+                if (isset($error['error_description'])){
+                    $error_msg .= ' '.$error['error_description'];
+                }
+                if (isset($error['message'])){
+                    $error_msg .= ' '.$error['message'];
+                }
+                throw new \Exception($error_msg);
+        }
+        
+        throw new \Exception('Неопознаная ошибка');
+    }    
+
 
     /**
      * Обмен кода авторизации на access_token и refresh_token
@@ -179,27 +258,5 @@ class Authenticate {
         }
         
         return $this->exception($response);
-    }
-    
-    /**
-     * Получить ссылку на вход для авторизации
-     * @return string 
-     */
-    public function authUrl()
-    {
-        return $this->uri.'/authorize?response_type=code&client_id='.$this->client_id;
-    }
-    
-    /**
-     * Проверить авторизацию
-     * @return bool
-     */
-    public function isAuth()
-    {
-        if (!$this->readCode(self::TOKEN_ACCESS)){
-            throw new \Exception('Требуется авторизация в банке!');
-        }        
-
-        return true;
-    }
+    }    
 }

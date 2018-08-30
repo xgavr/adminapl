@@ -11,7 +11,7 @@ namespace Bank\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Bank\Service\BankManager;
-use Bankapi\Service\Tochka\TochkaApi;
+use Bankapi\Service\Tochka\Statement;
 use Admin\Service\AdminManager;
 use Admin\Service\PostManager;
 
@@ -27,11 +27,11 @@ class BankManagerFactory implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $tochkaApi = $container->get(TochkaApi::class);
+        $tochkaStatement = $container->get(Statement::class);
         $adminManager = $container->get(AdminManager::class);
         $postManager = $container->get(PostManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new BankManager($entityManager, $tochkaApi, $adminManager, $postManager);
+        return new BankManager($entityManager, $tochkaStatement, $adminManager, $postManager);
     }
 }

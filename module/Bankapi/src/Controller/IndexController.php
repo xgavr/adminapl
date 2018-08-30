@@ -14,12 +14,6 @@ class IndexController extends AbstractActionController
 {
 
     /**
-     * TochkaApi manager.
-     * @var Bankapi\Service\TochkaApi
-     */
-    private $tochkaApi;    
-
-    /**
      * Authentication manager.
      * @var Bankapi\Service\Tochka\Authenticate
      */
@@ -31,9 +25,8 @@ class IndexController extends AbstractActionController
      */
     private $tochkaStatement;    
 
-    public function __construct($tochkaApi, $tochkaAuth, $tochkaStatement) 
+    public function __construct($tochkaAuth, $tochkaStatement) 
     {
-        $this->tochkaApi = $tochkaApi;     
         $this->tochkaAuth = $tochkaAuth;
         $this->tochkaStatement = $tochkaStatement;        
     }   
@@ -45,6 +38,7 @@ class IndexController extends AbstractActionController
     
     public function tochkaAuthAction()
     {
+        $this->tochkaAuth->reAuth();
         $url = $this->tochkaAuth->authUrl();
         $this->redirect()->toUrl($url);
     }
@@ -94,7 +88,7 @@ class IndexController extends AbstractActionController
         
         return new ViewModel([
                 'result' => $result,
-                'mode' => $this->tochkaAuth->mode,
+                'mode' => $this->tochkaAuth->getMode(),
             ]);
     }
     
