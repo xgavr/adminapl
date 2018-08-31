@@ -289,7 +289,7 @@ class ProcessingController extends AbstractActionController
     /**
      * Обновление неизвестных производителей из прайса
      */
-    public function unknownProducerFromRawprice()
+    public function unknownProducerFromRawpriceAction()
     {
         $this->producerManager->grabUnknownProducerFromRawprice();
                 
