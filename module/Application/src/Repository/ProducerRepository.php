@@ -21,7 +21,7 @@ use Application\Entity\Rawprice;
 class ProducerRepository  extends EntityRepository{
 
     /**
-     * Выборка производителей из прайса
+     * Выборка не привязанных производителей из прайса
      */
     public function findRawpriceUnknownProducer()
     {
@@ -30,7 +30,8 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
-            ->where('r.unknownProducer is null')    
+            ->where('r.unknownProducer is null')
+            ->setMaxResults(1000)    
                 ;
         
         return $queryBuilder->getQuery()->getResult();

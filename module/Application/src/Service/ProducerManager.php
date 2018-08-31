@@ -159,7 +159,7 @@ class ProducerManager
      */
     public function addNewUnknownProducerFromRawprice($rawprice, $flush = true) 
     {
-        $producername = $rawprice->getProducer();
+        $producerName = $rawprice->getProducer();
         
         if ($producerName){
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
@@ -169,21 +169,19 @@ class ProducerManager
 
                 // Создаем новую сущность UnknownProducer.
                 $unknownProducer = new UnknownProducer();
-                $unknownProducer->setName($producername);
+                $unknownProducer->setName($producerName);
 
                 $currentDate = date('Y-m-d H:i:s');
                 $unknownProducer->setDateCreated($currentDate);
+
+                $this->entityManager->persist($unknownProducer);
+
             }    
             
-            // Добавляем сущность в менеджер сущностей.
-            $this->entityManager->persist($unknownProducer);
-
             $rawprice->setUnknownProducer($unknownProducer);
+            $this->entityManager->persist($rawprice);
 
-            if ($flush){
-            // Применяем изменения к базе данных.
-                $this->entityManager->flush($unknownProducer);
-            }    
+            $this->entityManager->flush();
         }    
     }  
     
@@ -195,6 +193,7 @@ class ProducerManager
         $startTime = time();
         $rawprices = $this->entityManager->getRepository(Producer::class)
                 ->findRawpriceUnknownProducer();
+        
         foreach ($rawprices as $rawprice){
             $this->addNewUnknownProducerFromRawprice($rawprice, false);
             if (time() > $startTime + 20) break; //выйти через 20 сек

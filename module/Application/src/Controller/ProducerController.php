@@ -238,7 +238,8 @@ class ProducerController extends AbstractActionController
         $this->producerManager->grabUnknownProducerFromRawprice();
                 
         return new JsonModel([
-            'ok'
+            'result' => 'ok-reload',
+            'message' => 'ok',
         ]);          
     }
     
