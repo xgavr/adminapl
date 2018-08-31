@@ -87,10 +87,16 @@ class ProcessingController extends AbstractActionController
      */
     private $bankManager;    
 
+    /**
+     * ProducerManager manager.
+     * @var Application\Service\ProducerManager
+     */
+    private $producerManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
-            $parseManager, $bankManager, $aplBankService) 
+            $parseManager, $bankManager, $aplBankService, $producerManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -104,6 +110,7 @@ class ProcessingController extends AbstractActionController
         $this->adminManager = $adminManager;
         $this->parseManager = $parseManager;
         $this->bankManager = $bankManager;
+        $this->producerManager = $producerManager;
     }   
 
     
@@ -276,5 +283,19 @@ class ProcessingController extends AbstractActionController
         return new JsonModel(
             ['ok']
         );
+    }
+    
+    
+    /**
+     * Обновление неизвестных производителей из прайса
+     */
+    public function unknownProducerFromRawprice()
+    {
+        $this->producerManager->grabUnknownProducerFromRawprice();
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
     }
 }
