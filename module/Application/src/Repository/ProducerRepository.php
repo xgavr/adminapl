@@ -12,6 +12,7 @@ use Application\Entity\Country;
 use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Rawprice;
+use Application\Entity\Raw;
 
 /**
  * Description of RbRepository
@@ -30,8 +31,13 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
+            ->join(Raw::class, 'w', 'WITH')    
             ->where('r.unknownProducer is null')
+            ->andWhere('r.status = ?1')
+            ->andWhere('w.status = ?2')
             ->setMaxResults(1000)    
+            ->setParameter('1', Rawprice::STATUS_PARSE)    
+            ->setParameter('2', Raw::STATUS_PARSED)    
                 ;
         
         return $queryBuilder->getQuery()->getResult();

@@ -123,7 +123,7 @@ class IndexController extends AbstractActionController
         	        
         $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
 
-        $message = '';
+        $message = 'ok!';
         $ok = 'ok-reload';
         if ($result !== true){
             $message = '<p>'.$result.'</p><p><a href="/bankapi/tochka-access">Проверить доступ к api</a></p>';
