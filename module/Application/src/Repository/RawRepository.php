@@ -62,7 +62,7 @@ class RawRepository extends EntityRepository
     {
         $data = ['status' => $status];
         //var_dump($data); exit;
-        return $this->getEntityManager()->getConnection()->update('rawprice', $data, ['raw' => $raw->getId()]);
+        return $this->getEntityManager()->getConnection()->update('rawprice', $data, ['raw_id' => $raw->getId()]);
     }
     
     public function findAllRaw($status = null, $supplier = null, $exceptRaw = null)
