@@ -116,6 +116,7 @@ class ProcessingController extends AbstractActionController
     
     public function indexAction()
     {
+        set_time_limit(180);
         $this->autoruManager->postOrder();
         
         return [];
@@ -165,6 +166,8 @@ class ProcessingController extends AbstractActionController
      */
     public function pricesByMailAction()
     {
+        set_time_limit(180);
+        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['receiving_mail'] == 1){
