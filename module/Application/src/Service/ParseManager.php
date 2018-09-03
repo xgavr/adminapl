@@ -306,7 +306,7 @@ class ParseManager {
                     $this->entityManager->flush($oldRaw);            
 
                     $this->entityManager->getRepository(Raw::class)
-                            ->updateAllRawpriceStatus($raw, Rawprice::STATUS_RETIRED);
+                            ->updateAllRawpriceStatus($oldRaw, Rawprice::STATUS_RETIRED);
                 }                      
             }    
             

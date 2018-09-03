@@ -31,13 +31,10 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
-            ->join(Raw::class, 'w', 'WITH')    
             ->where('r.unknownProducer is null')
             ->andWhere('r.status = ?1')
-            ->andWhere('w.status = ?2')
-            ->setMaxResults(1000)    
+            ->setMaxResults(3000)    
             ->setParameter('1', Rawprice::STATUS_PARSED)    
-            ->setParameter('2', Raw::STATUS_PARSED)    
                 ;
         
         return $queryBuilder->getQuery()->getResult();

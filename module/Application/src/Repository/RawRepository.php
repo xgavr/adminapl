@@ -18,8 +18,10 @@ use Application\Entity\Rawprice;
  */
 class RawRepository extends EntityRepository
 {
-    /*
+    /**
      * Быстрая вставка строки прайса
+     * @param array $row 
+     * @return integer
      */
     public function insertRawprice($row)
     {
@@ -28,6 +30,8 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрое обновлеие строки прайса
+     * @param Application\Entity\Rawprice $rawprice
+     * @return integer
      */
     public function updateRawprice($rawprice)
     {
@@ -50,6 +54,9 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрое обновлеие статуса всех строк прайса
+     * @param Application\Entity\Raw $raw
+     * @param integer $status 
+     * @return integer
      */
     public function updateAllRawpriceStatus($raw, $status)
     {
@@ -97,9 +104,9 @@ class RawRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }        
 
-    /*
-     * @var Apllication\Entity\Raw
-     * $var int status
+    /**
+     * @param Apllication\Entity\Raw
+     * @param int status
      */
     public function findRawRawprice($raw, $status = null, $limit = 0)
     {
