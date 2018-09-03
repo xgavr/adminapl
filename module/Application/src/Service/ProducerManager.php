@@ -196,7 +196,7 @@ class ProducerManager
         
         foreach ($rawprices as $rawprice){
             $this->addNewUnknownProducerFromRawprice($rawprice, false);
-            if (time() > $startTime + 20) break; //выйти через 20 сек
+            if (time() > $startTime + 25) break; //выйти через 20 сек
         }
         $this->entityManager->flush();
     }
