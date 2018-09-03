@@ -190,13 +190,13 @@ class ProducerManager
      */
     public function grabUnknownProducerFromRawprice()
     {
-        $startTime = time();
+        //$startTime = time();
         $rawprices = $this->entityManager->getRepository(Producer::class)
                 ->findRawpriceUnknownProducer();
         
         foreach ($rawprices as $rawprice){
             $this->addNewUnknownProducerFromRawprice($rawprice, false);
-            if (time() > $startTime + 25) break; //выйти через 20 сек
+            //if (time() > $startTime + 25) break; //выйти через 20 сек
         }
         $this->entityManager->flush();
     }

@@ -61,7 +61,6 @@ class RawRepository extends EntityRepository
     public function updateAllRawpriceStatus($raw, $status)
     {
         $data = ['status' => $status];
-        //var_dump($data); exit;
         return $this->getEntityManager()->getConnection()->update('rawprice', $data, ['raw_id' => $raw->getId()]);
     }
     
