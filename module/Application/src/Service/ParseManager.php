@@ -134,7 +134,7 @@ class ParseManager {
      * @var bool $flushnow
      */
     
-    public function updateRawprice($rawprice, $priceDescriptionFunc = null, $flushnow = true, $status = Rawprice::STATUS_PARSE)
+    public function updateRawprice($rawprice, $priceDescriptionFunc = null, $flushnow = true, $status = Rawprice::STATUS_PARSED)
     {
         $data = $this->parseRawdata($rawprice, $priceDescriptionFunc);
         
@@ -304,6 +304,9 @@ class ParseManager {
                     $oldRaw->setStatus(Raw::STATUS_RETIRED);
                     $this->entityManager->persist($oldRaw);
                     $this->entityManager->flush($oldRaw);            
+
+                    $this->entityManager->getRepository(Raw::class)
+                            ->updateAllRawpriceStatus($raw, Rawprice::STATUS_RETIRED);
                 }                      
             }    
             
@@ -340,7 +343,7 @@ class ParseManager {
                 foreach ($rawprices as $rawprice){
 
                     if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
-                        $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSE);
+                        $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSED);
                     }    
                 }
                 
@@ -365,54 +368,6 @@ class ParseManager {
         }    
         
         return;
-    }
-    
-    /*
-     * Собрать неизвестных поставщиков
-     * @var Application\Entity\Rawprice
-     * 
-     */
-    public function unknownProducerRawprice($rawprice, $flushnow = true)
-    {
-        if ($rawprice->getProducer()){
-            $unknownProducer = $this->producerManager->addUnknownProducer($rawprice->getProducer(), false);
-            $rawprice->setUnknownProducer($unknownProducer);
-            $this->entityManager->persist($rawprice);        
-        }
-        if ($flushnow){        
-            $this->entityManager->flush();
-        }    
-    }
-
-    /*
-     * Выбрать и добавить уникальных производителей
-     * @var Application\Entity\Raw @raw
-     * 
-     */    
-    public function addNewUnknownProducerRaw($raw)
-    {
-        $producers = $this->entityManager->getRepository(Raw::class)
-                ->findProducerRawprice($raw);
-        foreach ($producers as $producer){
-            if (is_string($producer['producer']) && $producer['producer']){
-                $this->producerManager->addUnknownProducer($producer['producer'], false);
-            }    
-        }
-        $this->entityManager->flush();
-    }
-    
-    /*
-     * Парсить все записи
-     * @var Application\Entity\Raw @raw
-     * 
-     */
-    public function unknownProducerRaw($raw)
-    {
-        foreach ($raw->getRawprice() as $rawprice){
-            $this->unknownProducerRawprice($rawprice, false);
-        }
-        
-        $this->entityManager->flush();
     }
     
     

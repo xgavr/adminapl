@@ -26,7 +26,7 @@ class RawRepository extends EntityRepository
         return $this->getEntityManager()->getConnection()->insert('rawprice', $row);
     }
     
-    /*
+    /**
      * Быстрое обновлеие строки прайса
      */
     public function updateRawprice($rawprice)
@@ -46,6 +46,16 @@ class RawRepository extends EntityRepository
         
         //var_dump($data); exit;
         return $this->getEntityManager()->getConnection()->update('rawprice', $data, ['id' => $rawprice->getId()]);
+    }
+    
+    /**
+     * Быстрое обновлеие статуса всех строк прайса
+     */
+    public function updateAllRawpriceStatus($raw, $status)
+    {
+        $data = ['status' => $status];
+        //var_dump($data); exit;
+        return $this->getEntityManager()->getConnection()->update('rawprice', $data, ['raw' => $raw->getId()]);
     }
     
     public function findAllRaw($status = null, $supplier = null, $exceptRaw = null)

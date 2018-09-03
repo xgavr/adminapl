@@ -36,7 +36,7 @@ class ProducerRepository  extends EntityRepository{
             ->andWhere('r.status = ?1')
             ->andWhere('w.status = ?2')
             ->setMaxResults(1000)    
-            ->setParameter('1', Rawprice::STATUS_PARSE)    
+            ->setParameter('1', Rawprice::STATUS_PARSED)    
             ->setParameter('2', Raw::STATUS_PARSED)    
                 ;
         

@@ -20,8 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
 class Rawprice {
            
     const STATUS_NEW       = 1; // только что загрузили
-    const STATUS_PARSE      = 2; // прошел разборку.    
-    
+    const STATUS_PARSED    = 2; // прошел разборку.
+    const STATUS_RETIRED   = 3; //строка не актуальна
+
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -190,7 +192,8 @@ class Rawprice {
     {
         return [
             self::STATUS_NEW => 'Новый',
-            self::STATUS_PARSE => 'Разобран'
+            self::STATUS_PARSED => 'Разобран',
+            self::STATUS_RETIRED => 'Устарело',
         ];
     }    
     
