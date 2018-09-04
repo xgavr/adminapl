@@ -45,7 +45,7 @@ $this->headScript()
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric">ID</th>
-                     <th data-field="name">Неизвестный</th>
+                     <th data-field="name" data-formatter="linkFormatter">Неизвестный</th>
                      <th data-field="producer">Известный</th>             
                  </tr>                
             </thead>
@@ -104,6 +104,14 @@ $this->headScript()
         
         return params;
     }
+    
+    function linkFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/unknown-view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
     
     function responseHandler(res) {
         return res;

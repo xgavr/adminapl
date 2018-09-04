@@ -36,13 +36,13 @@ class UnknownProducer {
     protected $dateCreated;        
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="unknown_producer") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="unknownProducer") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
      */
     protected $producer;    
 
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Rawprice", mappedBy="unknown_producer")
+    * @ORM\OneToMany(targetEntity="Application\Entity\Rawprice", mappedBy="unknownProducer")
     * @ORM\JoinColumn(name="id", referencedColumnName="unknown_producer_id")
      */
     private $rawprice;

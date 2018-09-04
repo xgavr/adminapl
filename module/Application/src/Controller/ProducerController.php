@@ -233,6 +233,29 @@ class ProducerController extends AbstractActionController
         ]);          
     }    
     
+    public function unknownViewAction() 
+    {       
+        $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($unknownProducerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findOneById($unknownProducerId);
+        
+        if ($unknownProducer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        // Render the view template.
+        return new ViewModel([
+            'unknownProducer' => $unknownProducer,
+        ]);
+    }
+    
     public function updateFromRawpriceAction()
     {
         $this->producerManager->grabUnknownProducerFromRawprice();

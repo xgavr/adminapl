@@ -1,0 +1,20 @@
+<?php
+$this->headTitle($unknownProducer->getName());
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Неизвестные производители'=>$this->url('producer', ['action' => 'unknown']),
+            $unknownProducer->getName()=>$this->url('producer', ['action'=>'unknown-view', 'id'=>$unknownProducer->getId()])
+            ]);
+
+?>
+<h1>
+    <?= $this->escapeHtml($unknownProducer->getName()); ?>    
+</h1>
+
+
+<p>
+    Количество товаров: <?= count($unknownProducer->getRawprice())?>
+</p>
