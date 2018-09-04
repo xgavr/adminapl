@@ -255,7 +255,7 @@ class ProcessingController extends AbstractActionController
             if ($result !== true){
                 $message = 'Потерян доступ к банку Точка для обновления выписки'.PHP_EOL;
                 $message .= $result.PHP_EOL;
-                $message .= '<a href="http://adminapl.ru/bankapi/tochka-access">Проверить доступ к api</a>';
+                $message .= 'Проверить доступ к api:'.PHP_EOL.'http://adminapl.ru/bankapi/tochka-access';
 
                 $this->telegramManager->sendMessage(['text' => $message]);
                 $ok = 'error';
