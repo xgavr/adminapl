@@ -40,6 +40,30 @@ class ProducerRepository  extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();
     }
     
+    /**
+     * Количество записей в прайсах с этим неизвестным производителем
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     */
+    public function rawpriceCount($unknownProducer)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('count(r.id) as rawpriceCount')
+            ->from(Rawprice::class, 'r')
+            ->where('r.unknownProducer = ?1')
+            ->andWhere('r.status = ?2')
+            ->groupBy('r.unknownProducer')    
+            ->setParameter('1', $unknownProducer->getId())    
+            ->setParameter('2', Rawprice::STATUS_PARSED)    
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+
+
     public function findAllUnknownProducer($params = null)
     {
         $entityManager = $this->getEntityManager();
