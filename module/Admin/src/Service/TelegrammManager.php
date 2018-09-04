@@ -170,7 +170,7 @@ class TelegrammManager {
                     $chatId = $settings['telegram_admin_chat_id'];
                 }    
                 
-                $result = Request::sendMessage(['chat_id' => $params['chat_id'], 'text' => $params['text']]);         
+                $result = Request::sendMessage(['chat_id' => $chatId, 'text' => $params['text']]);         
             } catch (Longman\TelegramBot\Exception\TelegramException $e){
                 $logger->error($e->getMessage());
             }    
