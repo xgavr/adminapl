@@ -224,12 +224,25 @@ class ProducerManager
         $this->entityManager->flush();
     }    
     
+    /**
+     * Удаление неизвестного производителя
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     */
     public function removeUnknownProducer($unknownProducer) 
     {   
         $this->entityManager->remove($unknownProducer);
         
         $this->entityManager->flush();
     }    
+    
+    /**
+     * Поиск и удаление неизвестных производителей не привязаных к строкам прайсов
+     */
+    public function findEmptyUnknownProducer()
+    {
+        
+    }
     
     public function searchProducerNameAssistant($search)
     {

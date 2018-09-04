@@ -218,7 +218,7 @@ class ProducerController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         
         $query = $this->entityManager->getRepository(Producer::class)
-                        ->findAllUnknownProducer($q);
+                        ->findAllUnknownProducer(['q' => $q]);
         
         $total = count($query->getResult(2));
         

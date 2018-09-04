@@ -41,6 +41,25 @@ class ProducerRepository  extends EntityRepository{
     }
     
     /**
+     * Выборка не связанных с прайсом производителей
+     */
+    public function findEmptyUnknownProducer()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(UnknownProducer::class, 'u')
+            ->leftJoin(Rawprice::class, 'r')    
+            ->where('r.unknownProducer is null')
+            ->andWhere('r.status = ?1')
+            ->setParameter('1', Rawprice::STATUS_PARSED)    
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
      * Количество записей в прайсах с этим неизвестным производителем
      * 
      * @param Application\Entity\UnknownProducer $unknownProducer
