@@ -133,6 +133,19 @@ class ProducerRepository  extends EntityRepository{
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
+            if ($params['next1']){
+                $queryBuilder->where('c.name > ?1')
+                    ->setParameter('1', $params['next1'])
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if ($params['prev1']){
+                $queryBuilder->where('c.name < ?1')
+                    ->setParameter('1', $params['prev1'])
+                    ->orderBy('c.name', 'DESC')
+                    ->setMaxResults(1)    
+                 ;
+            }
         }
 
         return $queryBuilder->getQuery();
