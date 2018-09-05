@@ -13,19 +13,19 @@ $this->pageBreadcrumbs()->setItems([
 <h1>
     <?= $this->escapeHtml($unknownProducer->getName()); ?>    
 </h1>
-<div>
-    <span>
-        <?php if ($prev):?>
-        <a href="/producer/unknown-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
-        <?php endif;?>            
-    </span>
-    <span>
-        <?php if ($next):?>
-            <a href="/producer/unknown-view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
-        <?php endif;?>                
-    </span>    
-</div>
 <table class="table table-striped">
+    <tr>
+        <td>            
+            <?php if ($prev):?>
+                <a href="/producer/unknown-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
+            <?php endif;?>            
+        </td>
+        <td align="right">
+            <?php if ($next):?>
+                <a href="/producer/unknown-view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
+            <?php endif;?>                            
+        </td>
+    </tr>
     <tr>
         <th>
             Поставщик
