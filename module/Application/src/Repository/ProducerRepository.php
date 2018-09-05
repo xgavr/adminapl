@@ -157,21 +157,21 @@ class ProducerRepository  extends EntityRepository{
                 ;
         
         if (is_array($params)){
-            if ($params['unattached']){
+            if (isset($params['unattached'])){
                 $queryBuilder->where('c.producer is null');
             }
-            if ($params['q']){
+            if (isset($params['q'])){
                 $queryBuilder->where('c.name like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
-            if ($params['next1']){
+            if (isset($params['next1'])){
                 $queryBuilder->where('c.name > ?1')
                     ->setParameter('1', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
-            if ($params['prev1']){
+            if (isset($params['prev1'])){
                 $queryBuilder->where('c.name < ?1')
                     ->setParameter('1', $params['prev1'])
                     ->orderBy('c.name', 'DESC')
