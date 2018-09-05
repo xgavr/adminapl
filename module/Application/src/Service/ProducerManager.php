@@ -237,6 +237,17 @@ class ProducerManager
     }    
     
     /**
+     * Случайная выборка из прайсов по id неизвестного производителя и id поставщика 
+     * @param array $params
+     * @return object      
+     */
+    public function randRawpriceBy($params)
+    {
+        return $this->entityManager->getRepository(UnknownProducer::class)
+                ->randRawpriceBy($params);
+    }
+    
+    /**
      * Поиск и удаление неизвестных производителей не привязаных к строкам прайсов
      */
     public function findEmptyUnknownProducer()

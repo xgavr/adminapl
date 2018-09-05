@@ -44,6 +44,29 @@ $this->pageBreadcrumbs()->setItems([
                 <?= $row['rawpriceCount']?>            
             </td>
         </tr>
+        <?php $randRawprices = $producerManager->randRawpriceBy(['unknownProducer' => $unknownProducer->getId(), 'supplier' => $row['supplierId']]);?>
+        <tr>
+            <td colspan="2">
+                <table class="table" style="font-size: x-small">
+                    <?php foreach($randRawprices as $randRawprice):?>
+                        <tr>
+                            <td>
+                                <?= $randRawprice->getArticle();?>
+                            </td>
+                            <td>
+                                <?= $randRawprice->getGoodname();?>
+                            </td>
+                            <td align="right">
+                                <?= $randRawprice->getPrice();?>
+                            </td>
+                            <td>
+                                <?= $randRawprice->getRest();?>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>                    
+                </table>
+            </td>
+        </tr>
         <?php $totalRawpriceCount += $row['rawpriceCount']; ?>
     <?php endforeach;?>        
     <tr>

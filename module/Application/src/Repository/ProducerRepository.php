@@ -89,6 +89,8 @@ class ProducerRepository  extends EntityRepository{
      * в разрезе поставщиков
      * 
      * @param Application\Entity\UnknownProducer $unknownProducer
+     * 
+     * @return object
      */
     public function rawpriceCountBySupplier($unknownProducer)
     {
@@ -108,11 +110,41 @@ class ProducerRepository  extends EntityRepository{
             ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
         //var_dump($queryBuilder->getQuery()->getDQL());
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult();    
+    }
+    
+    /**
+     * Случайная выборка из прайсов по id неизвестного производителя и id поставщика 
+     * @param array $params
+     * @return object
+     */
+    public function randRawpriceBy($params)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+            ->from(Rawprice::class, 'r')
+            ->join('r.raw', 'w')    
+            ->where('r.unknownProducer = ?1')
+            ->andWhere('w.supplier = ?2')
+            ->andWhere('r.status = ?3')
+            ->setParameter('1', $params['unknownProducer'])    
+            ->setParameter('2', $params['supplier'])    
+            ->setParameter('3', Rawprice::STATUS_PARSED)
+            ->setMaxResults(5)
+            //->orderBy('rand()')    
+                ;
+        return $queryBuilder->getQuery()->getResult();    
         
     }
 
-
+    /**
+     * Запрос по неизвестным производителям по разным параметрам
+     * 
+     * @param array $params
+     * @return object
+     */
     public function findAllUnknownProducer($params = null)
     {
         $entityManager = $this->getEntityManager();

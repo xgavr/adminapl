@@ -265,7 +265,8 @@ class ProducerController extends AbstractActionController
             'unknownProducer' => $unknownProducer,
             'rawpriceCountBySupplier' => $rawpriceCountBySupplier,
             'prev' => $prevQuery->getResult(), 
-            'next' => $nextQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
+            'producerManager' => $this->producerManager,
         ]);
     }
     
