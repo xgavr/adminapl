@@ -35,6 +35,7 @@ class BankRepository extends EntityRepository
         $queryBuilder->select('s')
             ->from(Statement::class, 's')
             ->orderBy('s.chargeDate', 'DESC')
+            ->addOrderBy('s.id', 'DESC')    
                 ;
         
         if (is_array($rs)){
