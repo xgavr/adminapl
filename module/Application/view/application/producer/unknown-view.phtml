@@ -14,7 +14,33 @@ $this->pageBreadcrumbs()->setItems([
     <?= $this->escapeHtml($unknownProducer->getName()); ?>    
 </h1>
 
-
-<p>
-    Количество записей в прайсах с этим производителем: <?= $rawpriceCount[0]['rawpriceCount'] ?>
-</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            Поставщик
+        </th>
+        <th>
+            Количество записей
+        </th>
+    </tr>
+    <?php $totalRawpriceCount = 0; ?>
+    <?php    foreach ($rawpriceCountBySupplier as $row):?>
+        <tr>
+            <td>
+                <?= $row['supplierName'];?>
+            </td>
+            <td align="right">
+                <?= $row['rawpriceCount']?>            
+            </td>
+        </tr>
+        <?php $totalRawpriceCount += $row['rawpriceCount']; ?>
+    <?php endforeach;?>        
+    <tr>
+        <th>
+            Всего
+        </th>
+        <td align="right">
+            <b><?= $totalRawpriceCount ?></b>
+        </td>
+    </tr>
+</table>

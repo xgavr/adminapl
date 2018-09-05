@@ -13,6 +13,8 @@ use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Rawprice;
 use Application\Entity\Raw;
+use Application\Entity\Supplier;
+
 
 /**
  * Description of RbRepository
@@ -70,7 +72,7 @@ class ProducerRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('count(r.id) as rawpriceCount')
-            ->from(Rawprice::class, 'r')
+            ->from(Rawprice::class, 'r')                
             ->where('r.unknownProducer = ?1')
             ->andWhere('r.status = ?2')
             ->groupBy('r.unknownProducer')    
@@ -78,6 +80,34 @@ class ProducerRepository  extends EntityRepository{
             ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
         
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+
+    /**
+     * Количество записей в прайсах с этим неизвестным производителем
+     * в разрезе поставщиков
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     */
+    public function rawpriceCountBySupplier($unknownProducer)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('count(r.id) as rawpriceCount')
+            ->from(Rawprice::class, 'r')
+            ->join('r.raw', 'w')    
+            ->join('w.supplier', 's')
+            ->addSelect('s.id as supplierId', 's.name as supplierName')    
+            ->where('r.unknownProducer = ?1')
+            ->andWhere('r.status = ?2')
+            ->groupBy('r.unknownProducer')    
+            ->addGroupBy('s.id')    
+            ->setParameter('1', $unknownProducer->getId())    
+            ->setParameter('2', Rawprice::STATUS_PARSED)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getDQL());
         return $queryBuilder->getQuery()->getResult();
         
     }
