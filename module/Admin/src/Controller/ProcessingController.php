@@ -260,7 +260,7 @@ class ProcessingController extends AbstractActionController
                 $this->telegramManager->sendMessage(['text' => $message]);
                 $ok = 'error';
             } else {
-                $this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
+                //$this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
             }
         }    
         
