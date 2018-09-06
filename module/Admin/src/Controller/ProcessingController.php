@@ -301,4 +301,17 @@ class ProcessingController extends AbstractActionController
         );
         
     }
+
+    /**
+     * Удаление пустых неизвестных производителей
+     */
+    public function deleteUnknownProducerAction()
+    {
+        $this->producerManager->removeEmptyUnknownProducer();
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
 }
