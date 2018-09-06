@@ -256,7 +256,7 @@ class ProducerManager
                 ->findUnknownProducerForDelete();
 
         foreach ($unknownProducersForDelete as $row){
-            var_dump($row[0]); exit;
+            var_dump($row[0]->getName()); exit;
             //$this->removeUnknownProducer($unknownProducer);
         }
         
