@@ -233,7 +233,7 @@ class ProducerManager
     {   
         $this->entityManager->remove($unknownProducer);
         
-        $this->entityManager->flush();
+        $this->entityManager->flush($unknownProducer);
     }    
     
     /**
@@ -256,8 +256,7 @@ class ProducerManager
                 ->findUnknownProducerForDelete();
 
         foreach ($unknownProducersForDelete as $row){
-            var_dump($row[0]->getName()); exit;
-            //$this->removeUnknownProducer($unknownProducer);
+            $this->removeUnknownProducer($row[0]);
         }
         
         return count($unknownProducersForDelete);
