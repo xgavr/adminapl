@@ -254,7 +254,7 @@ class ProducerManager
     {
         $unknownProducersForDelete = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findUnknownProducerForDelete();
-        
+        var_dump(count($unknownProducersForDelete)); exit;
         foreach ($unknownProducersForDelete as $row){
             $row[0]->getName();
             //$this->removeUnknownProducer($unknownProducer);
