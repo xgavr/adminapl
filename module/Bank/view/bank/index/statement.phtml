@@ -43,14 +43,12 @@ $this->headScript()
             <thead>
                 <tr>
                      <th data-field="id" data-formatter="avatar"></th>
-                     <th data-field="id" data-type="numeric">ID</th>
-                     <th data-field="chargeDate" data-formatter="formatDate">Дата</th>
+                     <th data-field="chargeDate" data-formatter="formatDateId">Дата/ID</th>
                      <th data-field="amount" data-formatter="amountIn" data-align='right'>Поступило</th>             
                      <th data-field="amount" data-formatter="amountOut" data-align='right'>Списано</th>             
                      <th data-field="purpose">Назначение платежа</th>
                      <th data-field="counterpartyName">Контрагент</th>
-                     <th data-field="paymentNumber">Номер ПП</th>
-                     <th data-field="paymentDate" data-formatter="formatDate">Дата ПП</th>
+                     <th data-field="paymentDate" data-formatter="formatDateNumber">Дата/Номер ПП</th>
 <!--                     <th data-field="bik">Счет</th>
                      <th data-field="account">Счет</th>-->
                  </tr>                
@@ -155,6 +153,14 @@ $this->headScript()
         } else {
             return '';
         }    
+    }
+    
+    function formatDateId(value, row){
+        return formatDate(value) + '<br/>' + row.id;
+    }
+    
+    function formatDateNumber(value, row){
+        return formatDate(value) + '<br/>' + row.paymentNumber;
     }
     
     
