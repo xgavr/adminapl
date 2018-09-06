@@ -188,25 +188,10 @@ class ProducerController extends AbstractActionController
     
     public function unknownAction()
     {
-        $page = $this->params()->fromQuery('page', 1);
-        $unattached = $this->params()->fromQuery('ua', 0);
-        $q = trim($this->params()->fromQuery('q', null));
-        
-        $query = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findAllUnknownProducer(['unattached' => $unattached, 'q' => trim($q)]);
-                
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
-        // Визуализируем шаблон представления.
-        
+        $bind = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findBindNoBindRawprice();
         return new ViewModel([
-            'producer' => $paginator,
-            'page' => $page,
-            'producerManager' => $this->producerManager,
-            'ua' => $unattached,
-            'q' => $q,
+            'binds' => $bind,
         ]);  
     }
     
@@ -258,7 +243,7 @@ class ProducerController extends AbstractActionController
         $prevQuery = $this->entityManager->getRepository(Producer::class)
                         ->findAllUnknownProducer(['prev1' => $unknownProducer->getName()]);
         $nextQuery = $this->entityManager->getRepository(Producer::class)
-                        ->findAllUnknownProducer(['next1' => $unknownProducer->getName()]);
+                        ->findAllUnknownProducer(['next1' => $unknownProducer->getName()]);        
 
         // Render the view template.
         return new ViewModel([

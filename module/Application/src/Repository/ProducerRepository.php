@@ -138,6 +138,25 @@ class ProducerRepository  extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();    
         
     }
+    
+    /**
+     * Количество привязанных строка прайсов к неизвестним поставщикам и не привязанных
+     * 
+     * @return array
+     */
+    public function findBindNoBindRawprice()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('case when r.unknownProducer is null then 0 else 1 end as bind, COUNT(r.id) as bindCount')
+            ->from(Rawprice::class, 'r')
+            ->where('r.status = ?1')
+            ->groupBy('bind')    
+            ->setParameter('1', Rawprice::STATUS_PARSED)
+                ;
+        return $queryBuilder->getQuery()->getResult();            
+    }
 
     /**
      * Запрос по неизвестным производителям по разным параметрам
