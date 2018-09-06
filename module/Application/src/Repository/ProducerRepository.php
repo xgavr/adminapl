@@ -171,7 +171,7 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder->select('u')
             ->addSelect('count(r.id) as rawpriceCount')    
             ->from(UnknownProducer::class, 'u')
-            ->leftJoin('u.rawprice', 'r')
+            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.unknownProducer = u.id')
             ->groupBy('u.id')
             ->having('rawpriceCount = 0')    
             //->setParameter('1', Rawprice::STATUS_PARSED)
