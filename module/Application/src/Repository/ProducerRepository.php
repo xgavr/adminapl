@@ -176,7 +176,7 @@ class ProducerRepository  extends EntityRepository{
             ->having('rawpriceCount = 0')    
             ->setParameter('1', Rawprice::STATUS_PARSED)
                 ;
-        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 
