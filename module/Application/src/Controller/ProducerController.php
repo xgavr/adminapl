@@ -265,6 +265,16 @@ class ProducerController extends AbstractActionController
         ]);          
     }
     
+    public function deleteEmptyUnknownProducerAction()
+    {
+        $deleted = $this->producerManager->removeEmptyUnknownProducer();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }
+    
     public function searchAssistantAction()
     {
         $q = $this->params()->fromQuery('q', '');

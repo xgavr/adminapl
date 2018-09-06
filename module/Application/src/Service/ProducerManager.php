@@ -250,9 +250,17 @@ class ProducerManager
     /**
      * Поиск и удаление неизвестных производителей не привязаных к строкам прайсов
      */
-    public function findEmptyUnknownProducer()
+    public function removeEmptyUnknownProducer()
     {
+        $unknownProducersForDelete = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findUnknownProducerForDelete();
         
+        foreach ($unknownProducersForDelete as $row){
+            var_dump($row); exit;
+            //$this->removeUnknownProducer($unknownProducer);
+        }
+        
+        return count($unknownProducersForDelete);
     }
     
     public function searchProducerNameAssistant($search)

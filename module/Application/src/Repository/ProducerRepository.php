@@ -159,6 +159,28 @@ class ProducerRepository  extends EntityRepository{
     }
 
     /**
+     * Найти неизвестных производителей для удаления
+     * 
+     * @return object
+     */
+    public function findUnknownProducerForDelete()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->addSelect('count(r.id) as rawpriceCount')    
+            ->from(UnknownProducer::class, 'u')
+            ->leftJoin('u.rawprice', 'r', 'WITH', 'r.status = ?1')
+            ->groupBy('u.id')
+            ->having('rawpriceCount = 0')    
+            ->setParameter('1', Rawprice::STATUS_PARSED)
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
+    /**
      * Запрос по неизвестным производителям по разным параметрам
      * 
      * @param array $params
