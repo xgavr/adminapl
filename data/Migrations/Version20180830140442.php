@@ -16,14 +16,14 @@ final class Version20180830140442 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->createTable('article');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
-        $table->addColumn('code', 'string', ['notnull'=>false, 'length' => 24]);        
-        $table->addColumn('fullcode', 'string', ['notnull'=>false, 'length' => 36]);        
+        $table->addColumn('code', 'string', ['notnull'=>true, 'length' => 24]);        
+        $table->addColumn('fullcode', 'string', ['notnull'=>true, 'length' => 36]);        
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['code'], 'code_idx');
         $table->addOption('engine' , 'InnoDB');
         
         $table = $schema->getTable('rawprice');
-        $table->addColumn('article_id', 'integer', ['notnull' => true]);
+        $table->addColumn('article_id', 'integer', ['notnull' => false]);
         $table->addIndex(['status'], 'status_idx'); 
     }
 
