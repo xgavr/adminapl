@@ -8,12 +8,8 @@
 
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\Country;
-use Application\Entity\Producer;
-use Application\Entity\UnknownProducer;
+use Application\Entity\Article;
 use Application\Entity\Rawprice;
-use Application\Entity\Raw;
-use Application\Entity\Supplier;
 
 
 /**
@@ -24,18 +20,18 @@ use Application\Entity\Supplier;
 class ArticleRepository  extends EntityRepository{
 
     /**
-     * Выборка не привязанных производителей из прайса
+     * Выборка не привязанных артикулов из прайса
      */
-    public function findRawpriceUnknownProducer()
+    public function findRawpriceArticle()
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
-            ->where('r.unknownProducer is null')
+            ->where('r.code is null')
             ->andWhere('r.status = ?1')
-            ->setMaxResults(3000)    
+            ->setMaxResults(10000)    
             ->setParameter('1', Rawprice::STATUS_PARSED)    
                 ;
         
@@ -43,17 +39,17 @@ class ArticleRepository  extends EntityRepository{
     }
     
     /**
-     * Выборка не связанных с прайсом производителей
+     * Выборка не связанных с прайсом артикулов
      */
-    public function findEmptyUnknownProducer()
+    public function findEmptyArticle()
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('u')
-            ->from(UnknownProducer::class, 'u')
+            ->from(Article::class, 'u')
             ->leftJoin(Rawprice::class, 'r')    
-            ->where('r.unknownProducer is null')
+            ->where('r.code is null')
             ->andWhere('r.status = ?1')
             ->setParameter('1', Rawprice::STATUS_PARSED)    
                 ;
@@ -62,21 +58,21 @@ class ArticleRepository  extends EntityRepository{
     }
     
     /**
-     * Количество записей в прайсах с этим неизвестным производителем
+     * Количество записей в прайсах с этим артикулом
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param Application\Entity\Article $article
      */
-    public function rawpriceCount($unknownProducer)
+    public function rawpriceCount($article)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('count(r.id) as rawpriceCount')
             ->from(Rawprice::class, 'r')                
-            ->where('r.unknownProducer = ?1')
+            ->where('r.code = ?1')
             ->andWhere('r.status = ?2')
-            ->groupBy('r.unknownProducer')    
-            ->setParameter('1', $unknownProducer->getId())    
+            ->groupBy('r.code')    
+            ->setParameter('1', $article->getId())    
             ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
         
@@ -85,14 +81,14 @@ class ArticleRepository  extends EntityRepository{
     }
 
     /**
-     * Количество записей в прайсах с этим неизвестным производителем
+     * Количество записей в прайсах с этим артикулом
      * в разрезе поставщиков
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param Application\Entity\Article $article
      * 
      * @return object
      */
-    public function rawpriceCountBySupplier($unknownProducer)
+    public function rawpriceCountBySupplier($article)
     {
         $entityManager = $this->getEntityManager();
 
@@ -102,11 +98,11 @@ class ArticleRepository  extends EntityRepository{
             ->join('r.raw', 'w')    
             ->join('w.supplier', 's')
             ->addSelect('s.id as supplierId', 's.name as supplierName')    
-            ->where('r.unknownProducer = ?1')
+            ->where('r.code = ?1')
             ->andWhere('r.status = ?2')
-            ->groupBy('r.unknownProducer')    
+            ->groupBy('r.code')    
             ->addGroupBy('s.id')    
-            ->setParameter('1', $unknownProducer->getId())    
+            ->setParameter('1', $article->getId())    
             ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
         //var_dump($queryBuilder->getQuery()->getDQL());
@@ -114,7 +110,7 @@ class ArticleRepository  extends EntityRepository{
     }
     
     /**
-     * Случайная выборка из прайсов по id неизвестного производителя и id поставщика 
+     * Случайная выборка из прайсов по id артикула и id поставщика 
      * @param array $params
      * @return object
      */
@@ -126,10 +122,10 @@ class ArticleRepository  extends EntityRepository{
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
             ->join('r.raw', 'w')    
-            ->where('r.unknownProducer = ?1')
+            ->where('r.article = ?1')
             ->andWhere('w.supplier = ?2')
             ->andWhere('r.status = ?3')
-            ->setParameter('1', $params['unknownProducer'])    
+            ->setParameter('1', $params['article'])    
             ->setParameter('2', $params['supplier'])    
             ->setParameter('3', Rawprice::STATUS_PARSED)
             ->setMaxResults(5)
@@ -140,7 +136,7 @@ class ArticleRepository  extends EntityRepository{
     }
     
     /**
-     * Количество привязанных строка прайсов к неизвестним поставщикам и не привязанных
+     * Количество привязанных строк прайсов к артикулу и не привязанных
      * 
      * @return array
      */
@@ -149,7 +145,7 @@ class ArticleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('case when r.unknownProducer is null then 0 else 1 end as bind, COUNT(r.id) as bindCount')
+        $queryBuilder->select('case when r.code is null then 0 else 1 end as bind, COUNT(r.id) as bindCount')
             ->from(Rawprice::class, 'r')
             ->where('r.status = ?1')
             ->groupBy('bind')    
@@ -159,19 +155,19 @@ class ArticleRepository  extends EntityRepository{
     }
 
     /**
-     * Найти неизвестных производителей для удаления
+     * Найти артикулы для удаления
      * 
      * @return object
      */
-    public function findUnknownProducerForDelete()
+    public function findArticlesForDelete()
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('u')
             ->addSelect('count(r.id) as rawpriceCount')    
-            ->from(UnknownProducer::class, 'u')
-            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.unknownProducer = u.id and r.status = ?1')
+            ->from(Article::class, 'u')
+            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.code = u.id and r.status = ?1')
             ->groupBy('u.id')
             ->having('rawpriceCount = 0')    
             ->setParameter('1', Rawprice::STATUS_PARSED)
@@ -186,34 +182,34 @@ class ArticleRepository  extends EntityRepository{
      * @param array $params
      * @return object
      */
-    public function findAllUnknownProducer($params = null)
+    public function findAllArticle($params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('c')
-            ->from(UnknownProducer::class, 'c')
+            ->from(Article::class, 'c')
             ->orderBy('c.name')
                 ;
         
         if (is_array($params)){
             if (isset($params['unattached'])){
-                $queryBuilder->where('c.producer is null');
+                $queryBuilder->where('c.good is null');
             }
             if (isset($params['q'])){
-                $queryBuilder->where('c.name like :search')
+                $queryBuilder->where('c.code like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('c.name > ?1')
+                $queryBuilder->where('c.code > ?1')
                     ->setParameter('1', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('c.name < ?1')
+                $queryBuilder->where('c.code < ?1')
                     ->setParameter('1', $params['prev1'])
                     ->orderBy('c.name', 'DESC')
                     ->setMaxResults(1)    

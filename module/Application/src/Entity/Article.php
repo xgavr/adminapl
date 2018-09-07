@@ -76,12 +76,12 @@ class Article {
         $this->code = trim($code);
     }     
 
-    public function getFullcode() 
+    public function getFullCode() 
     {
         return $this->fullcode;
     }
 
-    public function setFullcode($fullcode) 
+    public function setFullCode($fullcode) 
     {
         $this->fullcode = trim($fullcode);
     }     

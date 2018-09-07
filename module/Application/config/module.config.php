@@ -252,6 +252,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Service\ArticleManager::class => Service\Factory\ArticleManagerFactory::class,
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
