@@ -77,7 +77,7 @@ final class Version20180830140442 extends AbstractMigration
         
         
         $table = $schema->getTable('rawprice');
-        $table->addColumn('article_id', 'integer', ['notnull' => true, 'default' => 0]);
+        $table->addColumn('article_id', 'integer', ['notnull' => false]);
         $table->addForeignKeyConstraint('article', ['article_id'], ['id'], 
                 ['onUpdate'=>'CASCADE'], 'article_id_rawprice_article_id_fk');
     }

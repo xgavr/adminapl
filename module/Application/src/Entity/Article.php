@@ -17,7 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="article")
  * @author Daddy
  */
-class UnknownProducer {
+class Article {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
