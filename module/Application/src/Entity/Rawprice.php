@@ -173,7 +173,7 @@ class Rawprice {
      * @ORM\ManyToOne(targetEntity="Application\Entity\Article", inversedBy="rawprice") 
      * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
      */
-    private $code = 0;
+    private $code;
     
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="rawprice") 
