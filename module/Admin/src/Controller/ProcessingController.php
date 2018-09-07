@@ -294,7 +294,11 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerFromRawpriceAction()
     {
-        $this->producerManager->grabUnknownProducerFromRawprice();
+        $settings = $this->adminManager->getBankTransferSettings();
+
+        if ($settings['parse_producer'] == 1){
+            $this->producerManager->grabUnknownProducerFromRawprice();
+        }    
                 
         return new JsonModel(
             ['ok']
@@ -307,7 +311,11 @@ class ProcessingController extends AbstractActionController
      */
     public function deleteUnknownProducerAction()
     {
-        $this->producerManager->removeEmptyUnknownProducer();
+        $settings = $this->adminManager->getBankTransferSettings();
+
+        if ($settings['parse_producer'] == 1){
+            $this->producerManager->removeEmptyUnknownProducer();
+        }    
                 
         return new JsonModel(
             ['ok']

@@ -89,6 +89,30 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'parse_producer',
+            'options' => [
+                'label' => 'Разборка поставщиков из прайсов',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'parse_article',
+            'options' => [
+                'label' => 'Разборка артикулов из прайсов',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -141,6 +165,39 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'parse_raw',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'parse_raw',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'parse_producer',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'parse_article',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
