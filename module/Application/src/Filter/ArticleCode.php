@@ -34,7 +34,8 @@ class ArticleCode extends AbstractFilter
     
     public function filter($value)
     {
-        $result = $value;
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        $result = mb_strtoupper(preg_replace("/[^a-zA-ZА-Яа-я0-9\s]/","", $value));
         
         return $result;
     }

@@ -57,7 +57,7 @@ class ArticleManager
                 $this->entityManager->flush($article);
             }    
         } else {
-            if (strlen($article)->getFullCode() < strlen(trim($code))){
+            if (mb_strlen($article)->getFullCode() < mb_strlen(trim($code))){
                 $article->setFullCode(trim($code));                
                 $this->entityManager->persist($article);
                 if ($flushnow){
