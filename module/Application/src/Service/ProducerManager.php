@@ -161,28 +161,26 @@ class ProducerManager
     {
         $producerName = $rawprice->getProducer();
         
-        if ($producerName){
-            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneByName($producerName);
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneByName($producerName);
 
-            if ($unknownProducer == null){
+        if ($unknownProducer == null){
 
-                // Создаем новую сущность UnknownProducer.
-                $unknownProducer = new UnknownProducer();
-                $unknownProducer->setName($producerName);
+            // Создаем новую сущность UnknownProducer.
+            $unknownProducer = new UnknownProducer();
+            $unknownProducer->setName($producerName);
 
-                $currentDate = date('Y-m-d H:i:s');
-                $unknownProducer->setDateCreated($currentDate);
+            $currentDate = date('Y-m-d H:i:s');
+            $unknownProducer->setDateCreated($currentDate);
 
-                $this->entityManager->persist($unknownProducer);
+            $this->entityManager->persist($unknownProducer);
 
-            }    
-            
-            $rawprice->setUnknownProducer($unknownProducer);
-            $this->entityManager->persist($rawprice);
-
-            $this->entityManager->flush();
         }    
+
+        $rawprice->setUnknownProducer($unknownProducer);
+        $this->entityManager->persist($rawprice);
+
+        $this->entityManager->flush();
     }  
     
     /**
