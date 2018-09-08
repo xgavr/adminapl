@@ -18,6 +18,10 @@ $this->pageBreadcrumbs()->setItems([
                 <h3 class="panel-title">Данные из файла</h3>
             </div>
             <div class="panel-body">
+                <?= $this->paginationControl($rawprice,
+                            'Sliding',
+                            'application/partial/paginator', 
+                            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId(), ['query' => ['status' => $status]])]); ?>
                 <table class="table table-striped">
 
                    <tr>
