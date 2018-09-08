@@ -133,9 +133,41 @@ class RawRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }
     
-    /*
+    /**
+     * Выбрать записи с непривязанным неизвестным производителем
+     * 
+     * @param Apllication\Entity\Raw $raw
+     * @return object
+     */
+    public function findUnknownProducerRawprice($raw, $limit = 0)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Rawprice::class, 'c')
+            ->where('c.raw = ?1')
+            ->andWhere('c.unknownProducer is null')    
+            ->setParameter('1', $raw->getId())    
+                ;
+        
+        if ($status){
+            $queryBuilder->andWhere('c.status = ?2')
+            ->setParameter('2', (int) $status)    
+                ;                    
+        }
+
+        if ($limit){
+            $queryBuilder->setMaxResults($limit);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
      * Выбрать уникальных производителей из прайса
-     * @var Apllication\Entity\Raw
+     * @param Apllication\Entity\Raw $raw
      */
     public function findProducerRawprice($raw)
     {

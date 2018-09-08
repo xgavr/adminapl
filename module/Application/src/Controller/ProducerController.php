@@ -376,9 +376,25 @@ class ProducerController extends AbstractActionController
         ]);          
     }
     
-    public function updateFromRawpriceAction()
+    public function updateFromRawAction()
     {
-        $this->producerManager->grabUnknownProducerFromRawprice();
+        set_time_limit(0);
+        $rawId = $this->params()->fromRoute('id', -1);
+
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findOneById($rawId);
+
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->producerManager->grabUnknownProducerFromRaw($raw);
                 
         return new JsonModel([
             'result' => 'ok-reload',

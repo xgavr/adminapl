@@ -219,7 +219,7 @@ class Raw {
     public static function getParseStageList() 
     {
         return [
-            self::STAGE_NOT => 'Поля не разобраны',
+            self::STAGE_NOT => 'Производители не разобраны',
             self::STAGE_PRODUCER_PARSED => 'Производители разобраны',
             self::STAGE_ARTICLE_PARSED => 'Артикулы разобраны разобраны',
         ];
@@ -231,7 +231,7 @@ class Raw {
      */
     public function getParseStageAsString()
     {
-        $list = self::getParseProducerList();
+        $list = self::getParseStageList();
         if (isset($list[$this->parseStage]))
             return $list[$this->parseStage];
         

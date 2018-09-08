@@ -83,6 +83,36 @@ class ProducerRepository  extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();
         
     }
+    
+    /**
+     * Выборка неизвестных производителей из прайса
+     * 
+     * @param Application\Entity\Raw $raw
+     * @return object
+     */
+    public function findUnknownProducerFromRaw($raw)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r.producer')
+                ->from(Rawprice::class, 'r')
+                ->distinct()
+                ->where('r.raw = ?1')
+                ->setParameter('1', $raw->getId())
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
+     * Быстрая вставка неизвестного производителя
+     * @param array $row 
+     * @return integer
+     */
+    public function insertUnknownProducer($row)
+    {
+        return $this->getEntityManager()->getConnection()->insert('unknown_producer', $row);
+    }    
 
     /**
      * Количество записей в прайсах с этим неизвестным производителем

@@ -52,6 +52,14 @@ $this->pageBreadcrumbs()->setItems([
                         </td>    
                         <td>
                             <?= $this->escapeHtml($row->getStatusAsString())?>
+                            <br/>
+                            <?php if ($row->getUnknownProducer()):?>
+                                <a href="/producer/unknown-view/<?= $row->getUnknownProducer()->getId();?>"><?=$row->getUnknownProducer()->getName()?></a>                            
+                            <?php endif?>
+                            <br/>
+                            <?php if ($row->getCode()):?>
+                                <a href="/producer/article-view/<?= $row->getCode()->getId();?>"><?=$row->getCode()->getCode()?></a>                            
+                            <?php endif?>
                         </td>    
                     </tr>
 
@@ -192,7 +200,26 @@ $this->pageBreadcrumbs()->setItems([
                         </div>
                             
                     <?php endforeach;?>
-                </div>                
+                </div>    
+                <?php if ($raw->getStatus() == $raw::STATUS_PARSED):?>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Разборка полей прайса
+                            <div class="clearfix"></div>
+                        </div>    
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                <?= $raw->getParseStageAsString(); ?>
+                            </div>    
+                            <div class="pull-right">
+                                <button value="/producer/update-from-raw/<?= $raw->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                        title="Разобрать">
+                                    <span class="glyphicon glyphicon-wrench" ></span>
+                                </button> 
+                            </div>    
+                        </div>    
+                    </div>
+                <?php endif;?>
             </div>
         </div>
     </div>    

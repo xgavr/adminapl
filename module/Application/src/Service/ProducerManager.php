@@ -10,6 +10,8 @@ namespace Application\Service;
 use Application\Entity\Country;
 use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
+use Application\Entity\Raw;
+use Application\Entity\Rawprice;
 
 /**
  * Description of RbService
@@ -185,18 +187,53 @@ class ProducerManager
     
     /**
      * Выборка производителей из прайсов и добавление их в неизвестные производители
+     * привязка к строкам прайса
+     * 
+     * @param Application\Entity\Raw $raw
      */
-    public function grabUnknownProducerFromRawprice()
+    public function grabUnknownProducerFromRaw($raw)
     {
-        //$startTime = time();
-        $rawprices = $this->entityManager->getRepository(Producer::class)
-                ->findRawpriceUnknownProducer();
+
+        $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findUnknownProducerFromRaw($raw);
         
-        foreach ($rawprices as $rawprice){
-            $this->addNewUnknownProducerFromRawprice($rawprice, false);
-            //if (time() > $startTime + 25) break; //выйти через 20 сек
+        foreach ($unknownProducers as $row){
+            $unknownProducerName = trim($row['producer']);
+            $data = [
+                'name' => $unknownProducerName,
+                'date_created' => date('Y-m-d H:i:s'),
+            ];
+            try{
+                $this->entityManager->getRepository(UnknownProducer::class)
+                        ->insertUnknownProducer($data);
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                //дубликат
+            }   
+            
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneByName($unknownProducerName);
+            
+            if ($unknownProducer){
+                $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                        ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer']]);
+                
+                foreach ($rawprices as $rawprice){
+                    $rawprice->setUnknownProducer($unknownProducer);
+                    $this->entityManager->persist($rawprice);
+                }
+            }            
         }
+        
         $this->entityManager->flush();
+        
+        $rawprices = $this->entityManager->getRepository(Raw::class)
+                ->findUnknownProducerRawprice($raw);
+        
+        if (count($rawprices) === 0){
+            $raw->setParseStage(Raw::STAGE_PRODUCER_PARSED);
+            $this->entityManager->persist($raw);
+            $this->entityManager->flush($raw);
+        }        
     }
     
 

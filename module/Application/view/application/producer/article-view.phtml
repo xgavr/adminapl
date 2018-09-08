@@ -5,7 +5,7 @@ $this->mainMenu()->setActiveItemId('rb');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Артикулы'=>$this->url('producer', ['action' => 'article']),
+            'Артикулы производителей'=>$this->url('producer', ['action' => 'article']),
             $article->getCode()=>$this->url('producer', ['action'=>'article-view', 'id'=>$article->getId()])
             ]);
 
