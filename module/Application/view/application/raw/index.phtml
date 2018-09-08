@@ -50,7 +50,7 @@ $this->headScript()
                      <th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>
                      <th data-field="filename"  data-formatter="filenameFormatter">Файл</th>
                      <th data-field="rows">Строк</th>
-                     <th data-field="status" data-formatter="statusFormatter">Состояние</th>
+                     <th data-field="status" data-formatter="statusStageFormatter">Состояние</th>
                      <th data-field="dateCreated" data-formatter="dateCreatedFormatter">Дата</th>
                      <th data-field="" data-formatter="activeFormatter">Действие</th>
                  </tr>                
@@ -159,6 +159,20 @@ $this->headScript()
             case '5': return 'Разбирается'; 
             default: return 'Новый';    
         }
+    }
+    
+    function statusStageFormatter(value, row) {
+        var status = statusFormatter(value);
+        var stage = '';
+        if (value == '3'){
+            switch (row.parseStage){
+                case '1': stage = '<br/> Производители не разобраны'; break;
+                case '2': stage =  '<br/> Производители разобраны'; break;
+                case '3': stage =  '<br/> Артикулы разобраны разобраны'; break;
+                default: stage =  '<br/> Неизвестно';                  
+            }
+        }    
+        return status+stage;
     }
     
     function dateCreatedFormatter(value, row) {

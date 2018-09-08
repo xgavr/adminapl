@@ -58,7 +58,9 @@ $this->pageBreadcrumbs()->setItems([
                             <?php endif?>
                             <br/>
                             <?php if ($row->getCode()):?>
-                                <a href="/producer/article-view/<?= $row->getCode()->getId();?>"><?=$row->getCode()->getCode()?></a>                            
+                                <?php if ($row->getCode()->getId()):?>
+                                    <a href="/producer/article-view/<?= $row->getCode()->getId();?>"><?=$row->getCode()->getCode()?></a>                            
+                                <?php endif?>
                             <?php endif?>
                         </td>    
                     </tr>

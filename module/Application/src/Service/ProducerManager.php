@@ -215,6 +215,10 @@ class ProducerManager
                     ->findOneByName($unknownProducerName);
             
             if ($unknownProducer){
+                
+//                $rawprices = $this->entityManager->getRepository(Rawprice::class)
+//                        ->updateRawpriceUnknownProducer($raw, $row['producer'], $unknownProducer);
+//                
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
                         ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer']]);
                 
