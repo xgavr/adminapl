@@ -294,10 +294,18 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerFromRawpriceAction()
     {
-        $settings = $this->adminManager->getBankTransferSettings();
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_producer'] == 1){
-            $this->producerManager->grabUnknownProducerFromRawprice();
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_NOT]);
+            
+            if ($raw){
+                $this->producerManager->grabUnknownProducerFromRaw($raw);
+            }    
         }    
                 
         return new JsonModel(
@@ -311,7 +319,7 @@ class ProcessingController extends AbstractActionController
      */
     public function deleteUnknownProducerAction()
     {
-        $settings = $this->adminManager->getBankTransferSettings();
+        $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_producer'] == 1){
             $this->producerManager->removeEmptyUnknownProducer();
