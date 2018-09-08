@@ -164,12 +164,6 @@ class RawRepository extends EntityRepository
             ->andWhere('c.unknownProducer is null')    
             ->setParameter('1', $raw->getId())    
                 ;
-        
-        if ($status){
-            $queryBuilder->andWhere('c.status = ?2')
-            ->setParameter('2', (int) $status)    
-                ;                    
-        }
 
         if ($limit){
             $queryBuilder->setMaxResults($limit);
