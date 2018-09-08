@@ -70,14 +70,11 @@ $this->pageBreadcrumbs()->setItems([
                             <td>
                                 <?= $this->escapeHtml($rawdata); ?>
                             </td>
-                            <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
-                                <td>
-                                    <?= $this->escapeHtml($priceDescription->getFieldLabel($col + 1));?>
-                                </td>
-                            <?php endforeach;?>
+                            <td>
+                                <?= $this->escapeHtml($rawprice->getPriceDescription()->getFieldLabel($col + 1));?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>    
-
                 </table>
             </div>
         </div> 
@@ -86,7 +83,19 @@ $this->pageBreadcrumbs()->setItems([
                 <button value="/rawprice/parse/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
                         title="Разобрать">
                         Разобрать
-                </button>                            
+                </button>
+                <?php if ($rawprice->getStatus() == $rawprice::STATUS_PARSED):?>
+                    <button value="/producer/parse-unknown-producer/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                            title="Разобрать">
+                            Производитель
+                    </button>
+                    <?php if ($rawprice->getUnknownProducer()):?>
+                        <button value="/producer/parse-article/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Разобрать">
+                                Артикул
+                        </button>
+                    <?php endif;?>    
+                <?php endif; ?>
             </div>
             <div class="panel-body">
                 <table class="table table-striped">
@@ -100,7 +109,13 @@ $this->pageBreadcrumbs()->setItems([
                     <tr>
                         <?php foreach($rawprice->getFieldValues() as $key => $value):?>
                             <td>
-                                <?= $this->escapeHtml($value)?>
+                                <?php if ($key == 'Производитель' && $rawprice->getUnknownProducer()):?>
+                                    <a href="/producer/unknown-view/<?= $rawprice->getUnknownProducer()->getId();?>"><?=$rawprice->getUnknownProducer()->getName()?></a>
+                                <?php elseif ($key == 'Артикул товара' && $rawprice->getCode()):?>
+                                    <a href="/producer/article-view/<?= $rawprice->getCode()->getId();?>"><?=$rawprice->getCode()->getCode()?></a>
+                                <?php else:?>
+                                    <?= $this->escapeHtml($value)?>
+                                <?php endif;?>
                             </td>
                         <?php endforeach;?>
                     </tr>    

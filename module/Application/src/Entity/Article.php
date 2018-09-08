@@ -42,6 +42,12 @@ class Article {
     protected $good;    
 
     /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\UnknownProducer", inversedBy="code") 
+     * @ORM\JoinColumn(name="unknown_producer_id", referencedColumnName="id")
+     */
+    protected $unknownProducer;    
+        
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Rawprice", mappedBy="code")
     * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
      */
@@ -123,5 +129,27 @@ class Article {
     {
         $this->rawprice[] = $rawprice;
     }
+      
+    /**
+     * Возвращает связанный unknownProducer.
+     * @return \Application\Entity\UnknownProducer
+     */    
+    public function getUnknownProducer() 
+    {
+        return $this->unknownProducer;
+    }
+
+    /**
+     * Задает связанный unknownProducer.
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     */    
+    public function setUnknownProducer($unknownProducer) 
+    {
+        $this->unknownProducer = $unknownProducer;
+        if ($unknownProducer){
+            $unknownProducer->addCode($this);
+        }    
+    }     
+    
       
 }

@@ -46,6 +46,13 @@ class UnknownProducer {
     * @ORM\JoinColumn(name="id", referencedColumnName="unknown_producer_id")
      */
     private $rawprice;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Application\Entity\Article", mappedBy="unknownProducer") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="unknown_producer_id")
+     */
+    private $code;
+    
         
     /**
      * Constructor.
@@ -53,6 +60,7 @@ class UnknownProducer {
     public function __construct() 
     {
         $this->rawprice = new ArrayCollection();
+        $this->code = new ArrayCollection();
     }
     
 
@@ -124,4 +132,22 @@ class UnknownProducer {
         $this->rawprice[] = $rawprice;
     }
       
+    /*
+     * Возвращает связанный article.
+     * @return \Application\Entity\Article
+     */    
+    public function getCode() 
+    {
+        return $this->code;
+    }
+
+    /**
+     * Задает связанный code.
+     * @param \Application\Entity\Article $code
+     */    
+    public function addCode($code) 
+    {
+        $this->code[] = $code;
+    }     
+    
 }

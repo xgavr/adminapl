@@ -27,6 +27,10 @@ class Raw {
     const STATUS_PARSE       = 5; //Разбирается
     const STATUS_PARSED       = 3; //Разобран
     
+    const STAGE_NOT                 = 1; //поля не разобраны
+    const STAGE_PRODUCER_PARSED     = 2; //производители разобраны 
+    const STAGE_ARTICLE_PARSED      = 3; //артикулы разобраны 
+    
            
     /**
      * @ORM\Id
@@ -55,6 +59,10 @@ class Raw {
      */
     protected $status;
     
+    /** 
+     * @ORM\Column(name="parse_stage")  
+     */
+    protected $parseStage = self::STAGE_NOT;
 
     /** 
      * @ORM\Column(name="date_created")  
@@ -180,6 +188,7 @@ class Raw {
         return self::STATUS_ACTIVE;
     }        
     
+    
     public function getStatusRetired()
     {
         return self::STATUS_RETIRED;
@@ -194,6 +203,59 @@ class Raw {
         $this->status = $status;
     }   
     
+    /**
+     * Returns parseStage.
+     * @return int     
+     */
+    public function getParseStage() 
+    {
+        return $this->parseStage;
+    }
+
+    /**
+     * Returns possible parseStage as array.
+     * @return array
+     */
+    public static function getParseStageList() 
+    {
+        return [
+            self::STAGE_NOT => 'Поля не разобраны',
+            self::STAGE_PRODUCER_PARSED => 'Производители разобраны',
+            self::STAGE_ARTICLE_PARSED => 'Артикулы разобраны разобраны',
+        ];
+    }    
+    
+    /**
+     * Returns parseStage as string.
+     * @return string
+     */
+    public function getParseStageAsString()
+    {
+        $list = self::getParseProducerList();
+        if (isset($list[$this->parseStage]))
+            return $list[$this->parseStage];
+        
+        return 'Unknown';
+    }    
+    
+    public function getParseStageName($parseSatge)
+    {
+        $list = self::getParseStageList();
+        if (isset($list[$parseStage]))
+            return $list[$parseStage];
+        
+        return 'Unknown';        
+    }
+        
+    /**
+     * Sets parseStage.
+     * @param int $parseStage     
+     */
+    public function setParseStage($parseStage) 
+    {
+        $this->parseStage = $parseStage;
+    }   
+
     /**
      * Returns the date of user creation.
      * @return string     

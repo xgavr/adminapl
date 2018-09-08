@@ -32,15 +32,16 @@ class ArticleManager
      * Добавить новый артикул
      * 
      * @param string $code
+     * @param Application\Entity\UnknownProducer $unknownProducer
      * @param bool $flushnow
      */
-    public function addArticle($code, $flushnow = true)
+    public function addArticle($code, $unknownProducer, $flushnow = true)
     {
         $filter = new \Application\Filter\ArticleCode();
         $filteredCode = $filter->filter($code);
         
         $article = $this->entityManager->getRepository(Article::class)
-                    ->findOneByCode($filteredCode);
+                    ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $unknownProducer->getId()]);
 
         if ($article == null){
 
@@ -48,13 +49,14 @@ class ArticleManager
             $article = new Article();
             $article->setCode($filteredCode);            
             $article->setFullCode($code);
+            $article->setUnknownProducer($unknownProducer);
 
             // Добавляем сущность в менеджер сущностей.
             $this->entityManager->persist($article);
 
             // Применяем изменения к базе данных.
             if ($flushnow){
-                $this->entityManager->flush($article);
+                $this->entityManager->flush();
             }    
         } else {
             if (mb_strlen($article)->getFullCode() < mb_strlen(trim($code))){
@@ -77,15 +79,17 @@ class ArticleManager
      */
     public function addNewArticleFromRawprice($rawprice, $flush = true) 
     {
-        $article = $this->addArticle($rawprice->getArticle(), $flush);
-        
-        if ($article){
-            
-            $rawprice->setCode($article);
-            $this->entityManager->persist($rawprice);
+        if ($rawprice->getUnknownProducer()){
+            $article = $this->addArticle($rawprice->getArticle(), $rawprice->getUnknownProducer(), $flush);
 
-            $this->entityManager->flush();
-        }   
+            if ($article){
+
+                $rawprice->setCode($article);
+                $this->entityManager->persist($rawprice);
+
+                $this->entityManager->flush();
+            }   
+        }    
         
         return;
     }  
@@ -131,4 +135,17 @@ class ArticleManager
         
         return count($articlesForDelete);
     }    
+    
+    /**
+     * Случайная выборка из прайсов по id артикля и id поставщика 
+     * @param array $params
+     * @return object      
+     */
+    public function randRawpriceBy($params)
+    {
+        return $this->entityManager->getRepository(Article::class)
+                ->randRawpriceBy($params);
+    }
+    
+    
 }

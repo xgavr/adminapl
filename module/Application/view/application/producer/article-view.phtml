@@ -1,28 +1,28 @@
 <?php
-$this->headTitle($unknownProducer->getName());
+$this->headTitle($article->getCode());
 
 $this->mainMenu()->setActiveItemId('rb');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Неизвестные производители'=>$this->url('producer', ['action' => 'unknown']),
-            $unknownProducer->getName()=>$this->url('producer', ['action'=>'unknown-view', 'id'=>$unknownProducer->getId()])
+            'Артикулы'=>$this->url('producer', ['action' => 'article']),
+            $article->getCode()=>$this->url('producer', ['action'=>'article-view', 'id'=>$article->getId()])
             ]);
 
 ?>
 <h1>
-    <?= $this->escapeHtml($unknownProducer->getName()); ?>    
+    <?= $this->escapeHtml($article->getFullCode()); ?>    
 </h1>
 <table class="table table-striped">
     <tr>
         <td>            
             <?php if ($prev):?>
-                <a href="/producer/unknown-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
+                <a href="/producer/article-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getFullCode()?></a>
             <?php endif;?>            
         </td>
         <td align="right">
             <?php if ($next):?>
-                <a href="/producer/unknown-view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
+                <a href="/producer/article-view/<?= $next[0]->getId()?>"><?= $next[0]->getFullCode()?>&rarr;</a>
             <?php endif;?>                            
         </td>
     </tr>
@@ -44,20 +44,19 @@ $this->pageBreadcrumbs()->setItems([
                 <?= $row['rawpriceCount']?>            
             </td>
         </tr>
-        <?php $randRawprices = $producerManager->randRawpriceBy(['unknownProducer' => $unknownProducer->getId(), 'supplier' => $row['supplierId']]);?>
+        <?php $randRawprices = $articleManager->randRawpriceBy(['article' => $article->getId(), 'supplier' => $row['supplierId']]);?>
         <tr>
             <td colspan="2">
                 <table class="table" style="font-size: x-small">
                     <?php foreach($randRawprices as $randRawprice):?>
                         <tr>
                             <td>
-                                <?php if ($randRawprice->getCode()):?>
-                                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $randRawprice->getCode()->getId()]);?>">
-                                    <?= $randRawprice->getCode()->getCode();?>
-                                </a>    
-                                <?php else:?>
-                                    <?= $randRawprice->getArticle();?>
-                                <?php endif; ?>
+                                <?= $randRawprice->getArticle();?>
+                            </td>
+                            <td>
+                                <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $randRawprice->getUnknownProducer()->getId()]);?>">
+                                    <?= $randRawprice->getUnknownProducer()->getName();?>
+                                </a>   
                             </td>
                             <td>
                                 <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $randRawprice->getId()]);?>">

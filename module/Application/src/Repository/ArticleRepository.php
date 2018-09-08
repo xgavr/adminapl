@@ -122,7 +122,7 @@ class ArticleRepository  extends EntityRepository{
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
             ->join('r.raw', 'w')    
-            ->where('r.article = ?1')
+            ->where('r.code = ?1')
             ->andWhere('w.supplier = ?2')
             ->andWhere('r.status = ?3')
             ->setParameter('1', $params['article'])    
@@ -190,7 +190,7 @@ class ArticleRepository  extends EntityRepository{
 
         $queryBuilder->select('c')
             ->from(Article::class, 'c')
-            ->orderBy('c.name')
+            ->orderBy('c.code')
                 ;
         
         if (is_array($params)){
@@ -211,7 +211,7 @@ class ArticleRepository  extends EntityRepository{
             if (isset($params['prev1'])){
                 $queryBuilder->where('c.code < ?1')
                     ->setParameter('1', $params['prev1'])
-                    ->orderBy('c.name', 'DESC')
+                    ->orderBy('c.code', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }

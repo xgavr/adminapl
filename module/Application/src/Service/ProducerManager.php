@@ -162,13 +162,13 @@ class ProducerManager
         $producerName = $rawprice->getProducer();
         
         $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneByName($producerName);
+                    ->findOneByName(trim($producerName));
 
         if ($unknownProducer == null){
 
             // Создаем новую сущность UnknownProducer.
             $unknownProducer = new UnknownProducer();
-            $unknownProducer->setName($producerName);
+            $unknownProducer->setName(trim($producerName));
 
             $currentDate = date('Y-m-d H:i:s');
             $unknownProducer->setDateCreated($currentDate);
@@ -229,6 +229,9 @@ class ProducerManager
      */
     public function removeUnknownProducer($unknownProducer) 
     {   
+        foreach ($unknownProducer->getCode() as $article){
+            $this->entityManager->remove($article);
+        }
         $this->entityManager->remove($unknownProducer);
         
         $this->entityManager->flush($unknownProducer);

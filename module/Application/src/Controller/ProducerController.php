@@ -9,11 +9,10 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Application\Entity\Country;
 use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
+use Application\Entity\Article;
 use Application\Form\ProducerForm;
-use Zend\Session\Container;
 use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -30,16 +29,23 @@ class ProducerController extends AbstractActionController
     private $entityManager;
     
     /**
-     * Менеджер справочников.
-     * @var Application\Service\RbManager 
+     * Менеджер производителей.
+     * @var Application\Service\ProducerManager 
      */
     private $producerManager;    
     
+    /**
+     * Менеджер артикулов производителей.
+     * @var Application\Service\ArticleManager 
+     */
+    private $articleManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $producerManager) 
+    public function __construct($entityManager, $producerManager, $articleManager) 
     {
         $this->entityManager = $entityManager;
         $this->producerManager = $producerManager;
+        $this->articleManager = $articleManager;
     }    
     
     public function indexAction()
@@ -253,6 +259,121 @@ class ProducerController extends AbstractActionController
             'next' => $nextQuery->getResult(),
             'producerManager' => $this->producerManager,
         ]);
+    }
+    
+    public function articleAction()
+    {
+        $bind = $this->entityManager->getRepository(Article::class)
+                ->findBindNoBindRawprice();
+        return new ViewModel([
+            'binds' => $bind,
+        ]);  
+    }
+    
+    public function articleContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(Article::class)
+                        ->findAllArticle(['q' => $q]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
+    public function articleViewAction() 
+    {       
+        $articleId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($articleId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $article = $this->entityManager->getRepository(Article::class)
+                ->findOneById($articleId);
+        
+        if ($article == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+//        $rawpriceCount = $this->entityManager->getRepository(UnknownProducer::class)
+//                ->rawpriceCount($unknownProducer);
+        $rawpriceCountBySupplier = $this->entityManager->getRepository(Article::class)
+                ->rawpriceCountBySupplier($article);
+        
+        $prevQuery = $this->entityManager->getRepository(Article::class)
+                        ->findAllArticle(['prev1' => $article->getCode()]);
+        $nextQuery = $this->entityManager->getRepository(Article::class)
+                        ->findAllArticle(['next1' => $article->getCode()]);        
+
+        // Render the view template.
+        return new ViewModel([
+            'article' => $article,
+            'rawpriceCountBySupplier' => $rawpriceCountBySupplier,
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
+            'articleManager' => $this->articleManager,
+        ]);
+    }
+    
+    public function parseUnknownProducerAction()
+    {
+        $rawpriceId = (int)$this->params()->fromRoute('id', -1);
+        if ($rawpriceId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $rawprice = $this->entityManager->getRepository(\Application\Entity\Rawprice::class)
+                ->findOneById($rawpriceId);
+        
+        if ($rawprice == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->producerManager->addNewUnknownProducerFromRawprice($rawprice);
+        
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
+    
+    public function parseArticleAction()
+    {
+        $rawpriceId = (int)$this->params()->fromRoute('id', -1);
+        if ($rawpriceId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $rawprice = $this->entityManager->getRepository(\Application\Entity\Rawprice::class)
+                ->findOneById($rawpriceId);
+        
+        if ($rawprice == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->articleManager->addNewArticleFromRawprice($rawprice);
+        
+        return new JsonModel([
+            'ok',
+        ]);          
     }
     
     public function updateFromRawpriceAction()
