@@ -214,10 +214,18 @@ $this->pageBreadcrumbs()->setItems([
                                 <?= $raw->getParseStageAsString(); ?>
                             </div>    
                             <div class="pull-right">
-                                <button value="/producer/update-from-raw/<?= $raw->getId() ?>" class="btn btn-info btn-xs refresh-button"
-                                        title="Разобрать">
-                                    <span class="glyphicon glyphicon-wrench" ></span>
-                                </button> 
+                                <?php if ($raw->getParseStage() == $raw::STAGE_NOT):?>
+                                    <button value="/producer/update-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Разобрать производителй">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                <?php endif;?>
+                                <?php if ($raw->getParseStage() == $raw::STAGE_PRODUCER_PARSED):?>
+                                    <button value="/producer/update-article-from-raw/<?= $raw->getId() ?>" class="btn btn-secondary btn-xs refresh-button"
+                                            title="Разобрать артикулы">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                <?php endif;?>
                             </div>    
                         </div>    
                     </div>

@@ -19,6 +19,18 @@ use Application\Entity\Rawprice;
  */
 class ArticleRepository  extends EntityRepository{
 
+    
+    /**
+     * Быстрая вставка артикула
+     * @param array $row 
+     * @return integer
+     */
+    public function insertUnknownProducer($row)
+    {
+        return $this->getEntityManager()->getConnection()->insert('article', $row);
+    }    
+
+    
     /**
      * Выборка не привязанных артикулов из прайса
      */
@@ -80,6 +92,28 @@ class ArticleRepository  extends EntityRepository{
         
     }
 
+    /**
+     * Выборка артикулов из прайса
+     * 
+     * @param Application\Entity\Raw $raw
+     * @return object
+     */
+    public function findArticleFromRaw($raw)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r.code, r.unknownProducer')
+                ->from(Rawprice::class, 'r')
+                ->distinct()
+                ->where('r.raw = ?1')
+                ->andWhere('r.unknownProducer is not null')
+                ->setParameter('1', $raw->getId())
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    
     /**
      * Количество записей в прайсах с этим артикулом
      * в разрезе поставщиков

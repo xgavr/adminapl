@@ -397,8 +397,32 @@ class ProducerController extends AbstractActionController
         $this->producerManager->grabUnknownProducerFromRaw($raw);
                 
         return new JsonModel([
-            'result' => 'ok-reload',
-            'message' => 'ok',
+            'ok',
+        ]);          
+    }
+    
+    public function updateArticleFromRawAction()
+    {
+        set_time_limit(0);
+        $rawId = $this->params()->fromRoute('id', -1);
+
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findOneById($rawId);
+
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->articleManager->grabArticleFromRaw($raw);
+                
+        return new JsonModel([
+            'ok',
         ]);          
     }
     

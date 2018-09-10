@@ -93,10 +93,16 @@ class ProcessingController extends AbstractActionController
      */
     private $producerManager;    
 
+    /**
+     * ArticleManager manager.
+     * @var Application\Service\ProducerManager
+     */
+    private $articleManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
-            $parseManager, $bankManager, $aplBankService, $producerManager) 
+            $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -111,6 +117,7 @@ class ProcessingController extends AbstractActionController
         $this->parseManager = $parseManager;
         $this->bankManager = $bankManager;
         $this->producerManager = $producerManager;
+        $this->articleManager = $articleManager;
     }   
 
     
@@ -330,4 +337,30 @@ class ProcessingController extends AbstractActionController
         );
         
     }
+
+    /**
+     * Обновление артикулов из прайса
+     */
+    public function articleFromRawpriceAction()
+    {
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_article'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_PARSED]);
+            
+            if ($raw){
+                $this->articleManager->grabArticleFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
 }

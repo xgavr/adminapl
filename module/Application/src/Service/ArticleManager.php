@@ -8,6 +8,10 @@
 namespace Application\Service;
 
 use Application\Entity\Article;
+use Application\Entity\UnknownProducer;
+use Application\Entity\Raw;
+use Application\Entity\Rawprice;
+
 /**
  * Description of RbService
  *
@@ -45,6 +49,9 @@ class ArticleManager
 
         if ($article == null){
 
+            if (mb_strlen($code, 'utf-8') > 36){
+               $result = 'moreThan36';
+            }
             // Создаем новую сущность UnknownProducer.
             $article = new Article();
             $article->setCode($filteredCode);            
@@ -55,9 +62,7 @@ class ArticleManager
             $this->entityManager->persist($article);
 
             // Применяем изменения к базе данных.
-            if ($flushnow){
-                $this->entityManager->flush();
-            }    
+            $this->entityManager->flush($article);
         } else {
             if (mb_strlen($article->getFullCode()) < mb_strlen(trim($code))){
                 $article->setFullCode(trim($code));                
@@ -87,7 +92,9 @@ class ArticleManager
                 $rawprice->setCode($article);
                 $this->entityManager->persist($rawprice);
 
-                $this->entityManager->flush();
+                if ($flush){
+                    $this->entityManager->flush();
+                }    
             }   
         }    
         
@@ -95,17 +102,27 @@ class ArticleManager
     }  
     
     /**
-     * Выборка артиклей из прайсов и добавление их в артиклулы
+     * Выборка артиклей из прайса и добавление их в артиклулы
      */
-    public function grabArticleFromRawprice()
+    public function grabArticleFromRaw($raw)
     {
-        $rawprices = $this->entityManager->getRepository(Producer::class)
-                ->findRawpriceUnknownProducer();
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->findBy(['raw' => $raw->getId(), 'code' => null]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewArticleFromRawprice($rawprice, false);
         }
         $this->entityManager->flush();
+        
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->findBy(['raw' => $raw->getId(), 'code' => null]);
+        
+        if (count($rawprices) === 0){
+            $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
+            $this->entityManager->persist($raw);
+            $this->entityManager->flush($raw);
+        }        
+        
     }
     
 
@@ -147,5 +164,69 @@ class ArticleManager
                 ->randRawpriceBy($params);
     }
     
+    /**
+     * Выборка артикулов из прайсов и добавление их в артикулы
+     * привязка к строкам прайса
+     * 
+     * @param Application\Entity\Raw $raw
+     */
+    public function grabArticleFromRaw2($raw)
+    {
+        ini_set('memory_limit', '2048M');
+
+        $articles = $this->entityManager->getRepository(Article::class)
+                ->findArticleFromRaw($raw);
+
+        $filter = new \Application\Filter\ArticleCode();
+
+        foreach ($articles as $row){
+
+            $filteredCode = $filter->filter($row['code']);        
+            $unknownProducerId = $row['unknownProducer'];
+            
+            $data = [
+                'code' => $filteredCode,
+                'fullcode' => trim($row['code']),
+                'unknown_producer_id' => $unknownProducerId,
+            ];
+            try{
+                $this->entityManager->getRepository(UnknownProducer::class)
+                        ->insertUnknownProducer($data);
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                //дубликат
+            }   
+            
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $unknownProducerId]);
+            
+            if ($article){
+                
+                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                        ->findOneById($unknownProducerId);
+                
+                $article->setUnknownProducer($unknownProducer);
+                $this->entityManager->persist($article);
+                
+                $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                        ->findBy(['raw' => $raw->getId(), 'unknownProducer' => $unknownProducerId, 'code' => $article->getId()]);
+                
+                foreach ($rawprices as $rawprice){
+                    $rawprice->setCode($article);
+                    $this->entityManager->persist($rawprice);
+                }
+            }            
+        }
+        
+        $this->entityManager->flush();
+        
+        $rawprices = $this->entityManager->getRepository(Raw::class)
+                ->findCodeRawprice($raw);
+        
+        if (count($rawprices) === 0){
+            $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
+            $this->entityManager->persist($raw);
+            $this->entityManager->flush($raw);
+        }        
+    }
     
 }

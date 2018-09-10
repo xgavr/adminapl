@@ -221,7 +221,7 @@ class Raw {
         return [
             self::STAGE_NOT => 'Производители не разобраны',
             self::STAGE_PRODUCER_PARSED => 'Производители разобраны',
-            self::STAGE_ARTICLE_PARSED => 'Артикулы разобраны разобраны',
+            self::STAGE_ARTICLE_PARSED => 'Артикулы разобраны',
         ];
     }    
     

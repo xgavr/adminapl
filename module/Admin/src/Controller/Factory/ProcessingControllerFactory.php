@@ -22,6 +22,7 @@ use Admin\Service\AdminManager;
 use Application\Service\ParseManager;
 use Bank\Service\BankManager;
 use Application\Service\ProducerManager;
+use Application\Service\ArticleManager;
 
 
 /**
@@ -47,10 +48,12 @@ class ProcessingControllerFactory implements FactoryInterface {
         $parseManager = $container->get(ParseManager::class);
         $bankManager = $container->get(BankManager::class);
         $producerManager = $container->get(ProducerManager::class);
+        $articleManager = $container->get(ArticleManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new ProcessingController($entityManager, $postManager, $autoruManager, 
                 $telegramManager, $aplService, $priceManager, $rawManager, $supplierManager, 
-                $adminManager, $parseManager, $bankManager, $aplBankService, $producerManager);
+                $adminManager, $parseManager, $bankManager, $aplBankService, $producerManager,
+                $articleManager);
     }
 }

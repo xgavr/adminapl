@@ -146,9 +146,7 @@ class Article {
     public function setUnknownProducer($unknownProducer) 
     {
         $this->unknownProducer = $unknownProducer;
-        if ($unknownProducer){
-            $unknownProducer->addCode($this);
-        }    
+        $unknownProducer->addCode($this);
     }     
     
       

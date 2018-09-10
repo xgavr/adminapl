@@ -173,6 +173,32 @@ class RawRepository extends EntityRepository
     }
     
     /**
+     * Выбрать записи с непривязанным артикулом
+     * 
+     * @param Apllication\Entity\Raw $raw
+     * @return object
+     */
+    public function findCodeRawprice($raw, $limit = 0)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Rawprice::class, 'c')
+            ->where('c.raw = ?1')
+            ->andWhere('c.code is null')    
+            ->setParameter('1', $raw->getId())    
+                ;
+
+        if ($limit){
+            $queryBuilder->setMaxResults($limit);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
      * Выбрать уникальных производителей из прайса
      * @param Apllication\Entity\Raw $raw
      */
