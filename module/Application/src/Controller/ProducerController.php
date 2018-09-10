@@ -272,7 +272,7 @@ class ProducerController extends AbstractActionController
     
     public function articleContentAction()
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '1024M');
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
