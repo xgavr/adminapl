@@ -253,4 +253,28 @@ class ArticleRepository  extends EntityRepository{
 
         return $queryBuilder->getQuery();
     }            
+    
+    /**
+     * Найти артикулы производителей для удаления
+     * 
+     * @return object
+     */
+    public function findArticleForDelete()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->addSelect('count(r.id) as rawpriceCount')    
+            ->from(Article::class, 'u')
+            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.code = u.id and r.status = ?1')
+            ->groupBy('u.id')
+            ->having('rawpriceCount = 0')    
+            ->setParameter('1', Rawprice::STATUS_PARSED)
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
+    
 }
