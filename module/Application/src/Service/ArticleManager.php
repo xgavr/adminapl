@@ -106,6 +106,8 @@ class ArticleManager
      */
     public function grabArticleFromRaw($raw)
     {
+        ini_set('memory_limit', '2048M');
+        
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'code' => null]);
         
