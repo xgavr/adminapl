@@ -228,6 +228,13 @@ class ArticleRepository  extends EntityRepository{
             ->orderBy('c.code')                
                 ;
         
+        if (!isset($params['q'])){
+            $params['q'] = '   ';
+        }
+        if (strlen($params['q']) < 3){
+            $params['q'] = '   ';
+        }
+        
         if (is_array($params)){
             if (isset($params['unattached'])){
                 $queryBuilder->where('c.good is null');

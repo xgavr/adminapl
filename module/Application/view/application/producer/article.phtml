@@ -25,7 +25,7 @@ $this->headScript()
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск по артикулу (не менее 3-х символов)">
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
             </div>
@@ -71,12 +71,22 @@ $this->headScript()
                                 </div>
                             <?php endif;?>
                         <?php endforeach;?>
-                    </div>    
+                    </div>
+                </div>    
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Всего артикулов
+                    </div>
                     <div class="panel-body">
-                        <button value="/producer/delete-empty-article/" class="btn btn-warning btn-xs refresh-table-button"
-                                title="Удаление пустых">
-                            <span class="glyphicon glyphicon-remove" ></span>
-                        </button> 
+                        <div class="pull-left">
+                            <?= $total?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/delete-empty-article/" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Удаление пустых">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </button>                             
+                        </div>
                     </div>
                 </div>    
             </div>

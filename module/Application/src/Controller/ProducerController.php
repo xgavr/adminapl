@@ -265,14 +265,18 @@ class ProducerController extends AbstractActionController
     {
         $bind = $this->entityManager->getRepository(Article::class)
                 ->findBindNoBindRawprice();
+        $total = $this->entityManager->getRepository(Article::class)
+                ->count([]);
+                
         return new ViewModel([
             'binds' => $bind,
+            'total' => $total,
         ]);  
     }
     
     public function articleContentAction()
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '512M');
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
@@ -280,7 +284,7 @@ class ProducerController extends AbstractActionController
         
         $query = $this->entityManager->getRepository(Article::class)
                         ->findAllArticle(['q' => $q]);
-        $query->useResultCache(true);
+
         $total = count($query->getResult(2));
         
         if ($offset) $query->setFirstResult( $offset );
