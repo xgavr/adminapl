@@ -201,10 +201,10 @@ class ArticleRepository  extends EntityRepository{
         $queryBuilder->select('u')
             ->addSelect('count(r.id) as rawpriceCount')    
             ->from(Article::class, 'u')
-            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.code = u.id and r.status = ?1')
+            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.code = u.id')
             ->groupBy('u.id')
             ->having('rawpriceCount = 0')    
-            ->setParameter('1', Rawprice::STATUS_PARSED)
+            //->setParameter('1', Rawprice::STATUS_PARSED)
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
@@ -282,7 +282,6 @@ class ArticleRepository  extends EntityRepository{
             ->having('rawpriceCount = 0')    
                 ;
         
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 
