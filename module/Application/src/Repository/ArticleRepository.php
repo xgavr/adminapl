@@ -228,12 +228,13 @@ class ArticleRepository  extends EntityRepository{
             ->orderBy('c.code')                
                 ;
         
-        if (!isset($params['q'])){
+        if (!is_array($params)){
             $params['q'] = 'moreThan';
-        }
-        if (strlen($params['q']) < 3){
-            $params['q'] = 'moreThan';
-        }
+        } else {
+            if (strlen($params['q']) < 3){
+                $params['q'] = 'moreThan';
+            }
+        }    
         
         if (is_array($params)){
             if (isset($params['unattached'])){
