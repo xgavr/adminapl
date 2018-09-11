@@ -230,7 +230,7 @@ class ArticleRepository  extends EntityRepository{
         
         if (!is_array($params)){
             $params['q'] = 'moreThan';
-        } else {
+        } elseif (isset($params['q'])){ 
             if (strlen($params['q']) < 3){
                 $params['q'] = 'moreThan';
             }
@@ -254,7 +254,7 @@ class ArticleRepository  extends EntityRepository{
             }
             if (isset($params['prev1'])){
                 $queryBuilder->where('c.code < ?2')
-                    ->setParameter('1', $params['prev1'])
+                    ->setParameter('2', $params['prev1'])
                     ->orderBy('c.code', 'DESC')
                     ->setMaxResults(1)    
                  ;

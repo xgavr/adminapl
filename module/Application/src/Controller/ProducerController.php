@@ -319,8 +319,6 @@ class ProducerController extends AbstractActionController
             return;                        
         }        
         
-//        $rawpriceCount = $this->entityManager->getRepository(UnknownProducer::class)
-//                ->rawpriceCount($unknownProducer);
         $rawpriceCountBySupplier = $this->entityManager->getRepository(Article::class)
                 ->rawpriceCountBySupplier($article);
         
@@ -333,8 +331,8 @@ class ProducerController extends AbstractActionController
         return new ViewModel([
             'article' => $article,
             'rawpriceCountBySupplier' => $rawpriceCountBySupplier,
-            'prev' => null, //$prevQuery->getResult(), 
-            'next' => null, //$nextQuery->getResult(),
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
         ]);
     }
