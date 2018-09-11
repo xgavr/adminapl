@@ -225,7 +225,7 @@ class ArticleRepository  extends EntityRepository{
         $queryBuilder->select('c, u')
             ->from(Article::class, 'c')
             ->join('c.unknownProducer', 'u')    
-            ->orderBy('c.code')
+            ->orderBy('c.code')                
                 ;
         
         if (is_array($params)){

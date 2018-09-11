@@ -280,7 +280,7 @@ class ProducerController extends AbstractActionController
         
         $query = $this->entityManager->getRepository(Article::class)
                         ->findAllArticle(['q' => $q]);
-        
+        $query->useResultCache(true);
         $total = count($query->getResult(2));
         
         if ($offset) $query->setFirstResult( $offset );
