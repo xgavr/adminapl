@@ -252,7 +252,7 @@ class ArticleRepository  extends EntityRepository{
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('c.code < ?1')
+                $queryBuilder->where('c.code < ?2')
                     ->setParameter('1', $params['prev1'])
                     ->orderBy('c.code', 'DESC')
                     ->setMaxResults(1)    
