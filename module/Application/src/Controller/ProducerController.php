@@ -333,7 +333,7 @@ class ProducerController extends AbstractActionController
         return new ViewModel([
             'article' => $article,
             'rawpriceCountBySupplier' => $rawpriceCountBySupplier,
-            'prev' => $prevQuery->getResult(), 
+            'prev' => null, //$prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
         ]);
