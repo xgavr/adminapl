@@ -272,7 +272,7 @@ class ProducerController extends AbstractActionController
     
     public function articleContentAction()
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
@@ -281,7 +281,7 @@ class ProducerController extends AbstractActionController
         $query = $this->entityManager->getRepository(Article::class)
                         ->findAllArticle(['q' => $q]);
         
-        $total = count($query->getResult());
+        $total = count($query->getResult(2));
         
         if ($offset) $query->setFirstResult( $offset );
         if ($limit) $query->setMaxResults( $limit );
