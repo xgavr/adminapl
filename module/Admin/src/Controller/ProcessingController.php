@@ -363,4 +363,21 @@ class ProcessingController extends AbstractActionController
         
     }
 
+    /**
+     * Удаление пустых артикулов производителей
+     */
+    public function deleteArticleAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_article'] == 1){
+            $this->articleManager->removeEmptyArticles();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
 }
