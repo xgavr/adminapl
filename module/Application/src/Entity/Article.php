@@ -84,7 +84,7 @@ class Article {
 
     public function getFullCode() 
     {
-        return $this->fullcode;
+        return trim($this->fullcode, ' `');
     }
 
     public function setFullCode($fullcode) 
