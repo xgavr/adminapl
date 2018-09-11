@@ -47,7 +47,7 @@ $this->headScript()
                      <th data-field="amount" data-formatter="amountIn" data-align='right'>Поступило</th>             
                      <th data-field="amount" data-formatter="amountOut" data-align='right'>Списано</th>             
                      <th data-field="purpose">Назначение платежа</th>
-                     <th data-field="counterpartyName">Контрагент</th>
+                     <th data-field="counterpartyName" data-formatter="formatCounterparty">Контрагент</th>
                      <th data-field="paymentDate" data-formatter="formatDateNumber">Дата/Номер ПП</th>
 <!--                     <th data-field="bik">Счет</th>
                      <th data-field="account">Счет</th>-->
@@ -163,6 +163,16 @@ $this->headScript()
         return formatDate(value) + '<br/>' + row.paymentNumber;
     }
     
+    function formatCounterparty(value, row){
+        var result = value;
+        if (row.counterpartyInn){
+            result += '<br/>' + row.counterpartyInn;
+        }
+        if (row.counterpartyKpp){
+            result += '<br/>' + row.counterpartyKpp;
+        }
+        return result;
+    }
     
     function amountIn(value, row){
         if (value>0){            
