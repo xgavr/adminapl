@@ -46,8 +46,8 @@ $this->headScript()
                 <tr>
                      <th data-field="id" data-type="numeric">ID</th>
                      <th data-field="code" data-formatter="linkFormatter">Код</th>
-                     <th data-field="fullCode">Артикул</th>             
-                     <th data-field="unknownProducer">Производитель</th>             
+                     <th data-field="fullcode">Артикул</th>             
+                     <th data-field="unknownProducer" data-formatter="unknownProducerFormatter">Производитель</th>             
                  </tr>                
             </thead>
         </table>
@@ -73,13 +73,7 @@ $this->headScript()
                         <?php endforeach;?>
                     </div>    
                     <div class="panel-body">
-                        <button value="/producer/update-from-rawprice/" class="btn btn-info btn-xs refresh-table-button"
-                                title="Обновить из прайсов">
-                            <span class="glyphicon glyphicon-refresh" ></span>
-                            
-                        </button> 
-                        
-                        <button value="/producer/delete-empty-unknown-producer/" class="btn btn-warning btn-xs refresh-table-button"
+                        <button value="/producer/delete-empty-article/" class="btn btn-warning btn-xs refresh-table-button"
                                 title="Удаление пустых">
                             <span class="glyphicon glyphicon-remove" ></span>
                         </button> 
@@ -128,6 +122,14 @@ $this->headScript()
             '</div>'
         ].join(''); 
     }    
+    
+    function unknownProducerFormatter(value){
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/unknown-view/' + value.id + '" target="_blank">' + value.name + '</a>',
+            '</div>'
+        ].join('');         
+    }
     
     function responseHandler(res) {
         return res;

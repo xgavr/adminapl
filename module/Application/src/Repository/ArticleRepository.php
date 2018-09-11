@@ -222,8 +222,9 @@ class ArticleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
+        $queryBuilder->select('c, u')
             ->from(Article::class, 'c')
+            ->join('c.unknownProducer', 'u')    
             ->orderBy('c.code')
                 ;
         

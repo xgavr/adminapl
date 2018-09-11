@@ -281,7 +281,7 @@ class ProducerController extends AbstractActionController
         $query = $this->entityManager->getRepository(Article::class)
                         ->findAllArticle(['q' => $q]);
         
-        $total = count($query->getResult(2));
+        $total = count($query->getResult());
         
         if ($offset) $query->setFirstResult( $offset );
         if ($limit) $query->setMaxResults( $limit );
@@ -430,6 +430,16 @@ class ProducerController extends AbstractActionController
     public function deleteEmptyUnknownProducerAction()
     {
         $deleted = $this->producerManager->removeEmptyUnknownProducer();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }
+    
+    public function deleteEmptyArticleAction()
+    {
+        $deleted = $this->articleManager->removeEmptyArticles();
                 
         return new JsonModel([
             'result' => 'ok-reload',
