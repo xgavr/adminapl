@@ -280,7 +280,8 @@ class ArticleRepository  extends EntityRepository{
             ->groupBy('u.id')
             ->having('rawpriceCount = 0')    
                 ;
-        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 
