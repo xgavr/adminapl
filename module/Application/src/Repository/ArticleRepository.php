@@ -261,6 +261,7 @@ class ArticleRepository  extends EntityRepository{
             }
         }
 
+        var_dump($queryBuilder->getDQL()); exit;
         return $queryBuilder->getQuery();
     }            
     
