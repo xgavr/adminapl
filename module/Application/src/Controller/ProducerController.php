@@ -196,8 +196,12 @@ class ProducerController extends AbstractActionController
     {
         $bind = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findBindNoBindRawprice();
+        $total = $this->entityManager->getRepository(UnknownProducer::class)
+                ->count([]);
+        
         return new ViewModel([
             'binds' => $bind,
+            'total' => $total,
         ]);  
     }
     

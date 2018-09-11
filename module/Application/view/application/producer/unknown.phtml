@@ -72,10 +72,22 @@ $this->headScript()
                         <?php endforeach;?>
                     </div>    
                     <div class="panel-body">
-                        <button value="/producer/delete-empty-unknown-producer/" class="btn btn-warning btn-xs refresh-table-button"
-                                title="Удаление пустых">
-                            <span class="glyphicon glyphicon-remove" ></span>
-                        </button> 
+                    </div>
+                </div>    
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Всего наименований
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <?= $total?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/delete-empty-unknown-producer/" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Удаление пустых">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </button> 
+                        </div>
                     </div>
                 </div>    
             </div>
