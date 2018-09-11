@@ -229,10 +229,10 @@ class ArticleRepository  extends EntityRepository{
                 ;
         
         if (!isset($params['q'])){
-            $params['q'] = '   ';
+            $params['q'] = 'moreThan';
         }
         if (strlen($params['q']) < 3){
-            $params['q'] = '   ';
+            $params['q'] = 'moreThan';
         }
         
         if (is_array($params)){
@@ -240,8 +240,9 @@ class ArticleRepository  extends EntityRepository{
                 $queryBuilder->where('c.good is null');
             }
             if (isset($params['q'])){
+                $filter = new \Application\Filter\ArticleCode();
                 $queryBuilder->where('c.code like :search')
-                    ->setParameter('search', '%' . $params['q'] . '%')
+                    ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
                         ;
             }
             if (isset($params['next1'])){
