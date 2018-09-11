@@ -145,6 +145,8 @@ class ArticleManager
      */
     public function removeEmptyArticles()
     {
+        ini_set('memory_limit', '2048M');
+        
         $articlesForDelete = $this->entityManager->getRepository(Article::class)
                 ->findArticlesForDelete();
 
