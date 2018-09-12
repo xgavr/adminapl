@@ -70,9 +70,17 @@ $this->pageBreadcrumbs()->setItems([
                             <td>
                                 <?= $this->escapeHtml($rawdata); ?>
                             </td>
-                            <td>
-                                <?= $this->escapeHtml($rawprice->getPriceDescription()->getFieldLabel($col + 1));?>
-                            </td>
+                            <?php if ($rawprice->getPriceDescription()):?>
+                                <td>
+                                    <?= $this->escapeHtml($rawprice->getPriceDescription()->getFieldLabel($col + 1));?>
+                                </td>
+                            <?php else:?>
+                                <?php foreach($rawprice->getRaw()->getSupplier()->getPriceDescriptions() as $priceDescription):?>
+                                    <td>
+                                        <?= $this->escapeHtml($priceDescription->getFieldLabel($col + 1));?>
+                                    </td>
+                                <?php endforeach;?>
+                            <?php endif;?>        
                         </tr>
                     <?php endforeach; ?>    
                 </table>
