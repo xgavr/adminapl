@@ -15,7 +15,7 @@ $this->pageBreadcrumbs()->setItems([
 </h1>
 <table class="table table-striped">
     <tr>
-        <td>            
+        <td colspan="4">            
             <?php if ($prev):?>
                 <a href="/producer/article-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getFullCode()?></a>
             <?php endif;?>            
@@ -27,7 +27,7 @@ $this->pageBreadcrumbs()->setItems([
         </td>
     </tr>
     <tr>
-        <th>
+        <th colspan="4">
             Поставщик
         </th>
         <th>
@@ -37,7 +37,7 @@ $this->pageBreadcrumbs()->setItems([
     <?php $totalRawpriceCount = 0; ?>
     <?php    foreach ($rawpriceCountBySupplier as $row):?>
         <tr>
-            <td>
+            <td colspan="4">
                 <?= $row['supplierName'];?>
             </td>
             <td align="right">
@@ -45,39 +45,35 @@ $this->pageBreadcrumbs()->setItems([
             </td>
         </tr>
         <?php $randRawprices = $articleManager->randRawpriceBy(['article' => $article->getId(), 'supplier' => $row['supplierId']]);?>
-        <tr>
-            <td colspan="2">
-                <table class="table" style="font-size: x-small">
-                    <?php foreach($randRawprices as $randRawprice):?>
-                        <tr>
-                            <td>
-                                <?= $randRawprice->getArticle();?>
-                            </td>
-                            <td>
-                                <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $randRawprice->getUnknownProducer()->getId()]);?>">
-                                    <?= $randRawprice->getUnknownProducer()->getName();?>
-                                </a>   
-                            </td>
-                            <td>
-                                <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $randRawprice->getId()]);?>">
-                                    <?= $randRawprice->getGoodname();?>
-                                </a>    
-                            </td>
-                            <td align="right">
-                                <?= $randRawprice->getPrice();?>
-                            </td>
-                            <td>
-                                <?= $randRawprice->getRest();?>
-                            </td>
-                        </tr>
-                    <?php endforeach;?>                    
-                </table>
-            </td>
-        </tr>
+            <tbody class="table" style="font-size: x-small">
+                <?php foreach($randRawprices as $randRawprice):?>
+                    <tr>
+                        <td>
+                            <?= $randRawprice->getArticle();?>
+                        </td>
+                        <td>
+                            <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $randRawprice->getUnknownProducer()->getId()]);?>">
+                                <?= $randRawprice->getUnknownProducer()->getName();?>
+                            </a>   
+                        </td>
+                        <td>
+                            <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $randRawprice->getId()]);?>">
+                                <?= $randRawprice->getGoodname();?>
+                            </a>    
+                        </td>
+                        <td align="right">
+                            <?= $randRawprice->getPrice();?>
+                        </td>
+                        <td>
+                            <?= $randRawprice->getRest();?>
+                        </td>
+                    </tr>
+                <?php endforeach;?>                    
+            </tbody>
         <?php $totalRawpriceCount += $row['rawpriceCount']; ?>
     <?php endforeach;?>        
     <tr>
-        <th>
+        <th colspan="4">
             Всего
         </th>
         <td align="right">
