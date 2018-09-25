@@ -14,15 +14,15 @@ final class Version20180924142700 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('unknown_producer');
-        $table->addColumn('train', 'integer', ['default' => 3, 'notnull' => true]);
-        $table->addColumn('prediction', 'integer', ['default' => 3, 'notnull' => true]);
+        $table->addColumn('rawprice_count', 'integer', ['default' => 0, 'notnull' => true]);
+        $table->addColumn('supplier_count', 'integer', ['default' => 0, 'notnull' => true]);
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('unknown_producer');
-        $table->dropColumn('train');
-        $table->dropColumn('prediction');
+        $table->dropColumn('rawprice_count');
+        $table->dropColumn('supplier_count');
     }
 }

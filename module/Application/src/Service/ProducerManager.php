@@ -216,9 +216,6 @@ class ProducerManager
             
             if ($unknownProducer){
                 
-//                $rawprices = $this->entityManager->getRepository(Rawprice::class)
-//                        ->updateRawpriceUnknownProducer($raw, $row['producer'], $unknownProducer);
-//                
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
                         ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer']]);
                 
@@ -263,6 +260,25 @@ class ProducerManager
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
     }    
+
+    /**
+     * Обновление количества поставщиков и товара у неизвестного производителя
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param bool $flush
+     */
+    public function updateUnknownProducerRawpriceCount($unknownProducer, $flush)
+    {
+        $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
+                ->count(['unknownProducer' => $unknownProducer->getId(), 'status' => Rawprice::STATUS_PARSED]);
+        
+        $unknownProducer->setRawpriceCount($rawpriceCount);
+        $this->entityManager->persist($unknownProducer);
+        
+        if ($flush){
+            $this->entityManager->flush($unknownProducer);
+        }
+    }
     
     /**
      * Удаление неизвестного производителя

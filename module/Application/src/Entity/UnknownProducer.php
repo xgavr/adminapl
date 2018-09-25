@@ -47,6 +47,16 @@ class UnknownProducer {
     protected $dateCreated;        
 
     /**
+     * @ORM\Column(name="rawprice_count")
+     */
+    protected $rawpriceCount = 0;
+    
+    /**
+     * @ORM\Column(name="supplier_count")
+     */
+    protected $supplierCount = 0;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="unknownProducer") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
      */
@@ -105,6 +115,26 @@ class UnknownProducer {
         $this->dateCreated = $dateCreated;
     }     
     
+    public function getRawpriceCount() 
+    {
+        return $this->rawpriceCount;
+    }
+
+    public function setRawpriceCount($rawpriceCount) 
+    {
+        $this->rawpriceCount = $rawpriceCount;
+    }     
+
+    public function getSupplierCount() 
+    {
+        return $this->supplierCount;
+    }
+
+    public function setSupplierCount($supplierCount) 
+    {
+        $this->supplierCount = $supplierCount;
+    }     
+
     /*
      * Возвращает связанный producer.
      * @return \Application\Entity\Producer

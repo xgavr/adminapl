@@ -33,7 +33,8 @@ $this->pageBreadcrumbs()->setItems([
                 <b><?= $row[0]->getSupplier()->getName();?></b>
             </td>
             <td align="right">
-                <?= $row['rawpriceCount']?>            
+                <?= $row['rawpriceCount']?> /
+                <?= $unknownProducer->getRawpriceCount()?>
             </td>
         </tr>
         <?php $randRawprices = $producerManager->randRawpriceBy(['unknownProducer' => $unknownProducer->getId(), 'raw' => $row[0]->getId()]);?>
