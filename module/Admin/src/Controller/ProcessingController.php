@@ -320,6 +320,29 @@ class ProcessingController extends AbstractActionController
         );
         
     }
+    
+    /**
+     * Обноаление количестка товаров у неизвестного производителя
+     */
+    public function unknownProducerRawpriceCountAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_producer'] == 1){
+            
+            $unknownProducers = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
+                    ->findBy([]);
+            
+            foreach ($unknownProducers as $unknownProducer){
+                $this->producerManager->updateUnknownProducerRawpriceCount($unknownProducer, false);
+            }   
+            $this->entityManager->flush();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
 
     /**
      * Удаление пустых неизвестных производителей

@@ -267,7 +267,7 @@ class ProducerManager
      * @param Application\Entity\UnknownProducer $unknownProducer
      * @param bool $flush
      */
-    public function updateUnknownProducerRawpriceCount($unknownProducer, $flush)
+    public function updateUnknownProducerRawpriceCount($unknownProducer, $flush = true)
     {
         $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
                 ->count(['unknownProducer' => $unknownProducer->getId(), 'status' => Rawprice::STATUS_PARSED]);
