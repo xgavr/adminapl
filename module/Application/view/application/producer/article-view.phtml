@@ -27,11 +27,8 @@ $this->pageBreadcrumbs()->setItems([
         </td>
     </tr>
     <tr>
-        <th colspan="4">
+        <th colspan="5">
             Поставщик
-        </th>
-        <th>
-            Количество записей
         </th>
     </tr>
     <?php $totalRawpriceCount = 0; ?>
@@ -63,7 +60,7 @@ $this->pageBreadcrumbs()->setItems([
                     <td align="right">
                         <?= $randRawprice->getPrice();?>
                     </td>
-                    <td>
+                    <td align="right">
                         <?= $randRawprice->getRest();?>
                     </td>
                 </tr>
