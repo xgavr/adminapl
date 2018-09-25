@@ -36,7 +36,7 @@ $this->pageBreadcrumbs()->setItems([
                 <?= $row['rawpriceCount']?>            
             </td>
         </tr>
-        <?php $randRawprices = $producerManager->randRawpriceBy(['unknownProducer' => $unknownProducer->getId(), 'supplier' => $row[0]->getSupplier()->getId()]);?>
+        <?php $randRawprices = $producerManager->randRawpriceBy(['unknownProducer' => $unknownProducer->getId(), 'raw' => $row[0]->getId()]);?>
         <?php foreach($randRawprices as $randRawprice):?>
             <tr style="font-size: x-small">
                 <td>
