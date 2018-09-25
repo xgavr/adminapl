@@ -129,15 +129,14 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('count(r.id) as rawpriceCount')
             ->from(Rawprice::class, 'r')
-            ->join('r.raw', 'w')    
-            ->join('w.supplier', 's')
-            ->addSelect('s.id as supplierId', 's.name as supplierName')    
+            ->join(Raw::class, 'w', 'WITH', 'w.id = r.raw')    
+            ->addSelect('w')    
             ->where('r.unknownProducer = ?1')
-            ->andWhere('r.status = ?2')
+            ->andWhere('w.status = ?2')
             ->groupBy('r.unknownProducer')    
-            ->addGroupBy('s.id')    
+            ->addGroupBy('w.id')    
             ->setParameter('1', $unknownProducer->getId())    
-            ->setParameter('2', Rawprice::STATUS_PARSED)    
+            ->setParameter('2', Raw::STATUS_PARSED)    
                 ;
         //var_dump($queryBuilder->getQuery()->getDQL());
         return $queryBuilder->getQuery()->getResult();    
