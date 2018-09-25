@@ -26,19 +26,11 @@ $this->pageBreadcrumbs()->setItems([
             <?php endif;?>                            
         </td>
     </tr>
-    <tr>
-        <th colspan="5">
-            Поставщик
-        </th>
-    </tr>
     <?php $totalRawpriceCount = 0; ?>
     <?php    foreach ($rawpriceCountBySupplier as $row):?>
         <tr>
-            <td colspan="4">
+            <td colspan="5">
                 <b><?= $row['supplierName'];?></b>
-            </td>
-            <td align="right">
-                <?= $row['rawpriceCount']?>            
             </td>
         </tr>
         <?php $randRawprices = $articleManager->randRawpriceBy(['article' => $row['articleId'], 'supplier' => $row['supplierId']]);?>
