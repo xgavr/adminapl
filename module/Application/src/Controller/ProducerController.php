@@ -245,7 +245,9 @@ class ProducerController extends AbstractActionController
             return;                        
         }        
         
-        $this->producerManager->updateUnknownProducerRawpriceCount($unknownProducer, true);
+        if (!$unknownProducer->getRawpriceCount()){
+            $this->producerManager->updateUnknownProducerRawpriceCount($unknownProducer, true);
+        }    
                 
 //        $rawpriceCount = $this->entityManager->getRepository(UnknownProducer::class)
 //                ->rawpriceCount($unknownProducer);
