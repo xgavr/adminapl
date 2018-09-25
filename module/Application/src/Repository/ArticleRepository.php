@@ -127,16 +127,18 @@ class ArticleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('count(r.id) as rawpriceCount')
-            ->from(Rawprice::class, 'r')
+        $queryBuilder->select('a.id as articleId')
+            ->from(Article::class, 'a')
+            ->join('a.rawprice', 'r')    
+            ->addSelect('count(r.id) as rawpriceCount')
             ->join('r.raw', 'w')    
             ->join('w.supplier', 's')
             ->addSelect('s.id as supplierId', 's.name as supplierName')    
-            ->where('r.code = ?1')
+            ->where('a.code = ?1')
             ->andWhere('r.status = ?2')
-            ->groupBy('r.code')    
+            ->groupBy('a.id')    
             ->addGroupBy('s.id')    
-            ->setParameter('1', $article->getId())    
+            ->setParameter('1', $article->getCode())    
             ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
         //var_dump($queryBuilder->getQuery()->getDQL());
