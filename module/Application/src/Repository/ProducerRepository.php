@@ -168,6 +168,31 @@ class ProducerRepository  extends EntityRepository{
     }
     
     /**
+     * Количество поставщиков данного неизвестного производителя
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @return int
+     */
+    public function unknownProducerSupplierCount($unknownProducer)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('identity(w.supplier)')
+                ->distinct()
+                ->from(Rawprice::class, 'r')
+                ->join('r.raw', 'w')
+                ->where('r.unknownProducer = ?1')
+                ->andWhere('r.status = ?2')
+                //->groupBy('r.unknownProducer')
+                ->setParameter('1', $unknownProducer->getId())    
+                ->setParameter('2', Rawprice::STATUS_PARSED)
+                ;
+        $result = count($queryBuilder->getQuery()->getResult());
+        
+        return $result;
+    }
+    
+    /**
      * Количество привязанных строка прайсов к неизвестним поставщикам и не привязанных
      * 
      * @return array

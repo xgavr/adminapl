@@ -20,6 +20,8 @@ $this->pageBreadcrumbs()->setItems([
         </th>
         <td align="right">
             <b><?= $unknownProducer->getRawpriceCount() ?></b>
+            /
+            <?= $unknownProducer->getSupplierCount() ?>
         </td>
     </tr>
     <tr>

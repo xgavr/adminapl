@@ -251,6 +251,10 @@ class ProducerController extends AbstractActionController
             $this->producerManager->updateUnknownProducerRawpriceCount($unknownProducer, true);
         }    
                 
+        if (!$unknownProducer->getSupplierCount()){
+            $this->producerManager->updateUnknownProducerSupplierCount($unknownProducer, true);
+        }    
+                
 //        $rawpriceCount = $this->entityManager->getRepository(UnknownProducer::class)
 //                ->rawpriceCount($unknownProducer);
         $rawpriceCountBySupplier = $this->entityManager->getRepository(UnknownProducer::class)
@@ -456,6 +460,21 @@ class ProducerController extends AbstractActionController
 
         foreach ($unknownProducers as $unknownProducer){
             $this->producerManager->updateUnknownProducerRawpriceCount($unknownProducer, false);
+        }   
+        $this->entityManager->flush();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
+    public function supplierCountUnknownProducerAction()
+    {
+        $unknownProducers = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
+                ->findBy([]);
+
+        foreach ($unknownProducers as $unknownProducer){
+            $this->producerManager->updateUnknownProducerSupplierCount($unknownProducer, false);
         }   
         $this->entityManager->flush();
                 
