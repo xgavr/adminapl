@@ -42,11 +42,17 @@ class CsvDetectDelimiterFilter extends AbstractFilter
         );
 
         $handle = fopen($value, "r");
-        $firstLine = fgets($handle);
+        $i = 0;
+        while ($i < 10) {
+            $line = fgets($handle);
+            if ($line){
+                foreach ($delimiters as $delimiter => &$count) {
+                    $count = count(str_getcsv($line, $delimiter));
+                }
+            }    
+            $i++;
+        }    
         fclose($handle); 
-        foreach ($delimiters as $delimiter => &$count) {
-            $count = count(str_getcsv($firstLine, $delimiter));
-        }
 
         return array_search(max($delimiters), $delimiters);    
         

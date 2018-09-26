@@ -326,6 +326,8 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerRawpriceCountAction()
     {
+        set_time_limit(1200);
+        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_producer'] == 1){
