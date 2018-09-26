@@ -47,13 +47,13 @@ class CsvDetectDelimiterFilter extends AbstractFilter
             $line = fgets($handle);
             if ($line){
                 foreach ($delimiters as $delimiter => &$count) {
-                    $count = count(str_getcsv($line, $delimiter));
+                    $count += count(str_getcsv($line, $delimiter));
                 }
             }    
             $i++;
         }    
         fclose($handle); 
-
+        //var_dump($delimiters); exit;
         return array_search(max($delimiters), $delimiters);    
         
     }
