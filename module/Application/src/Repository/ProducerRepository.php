@@ -221,8 +221,8 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('c')
-            ->from(UnknownProducer::class, 'c')
-            ->orderBy('c.name')
+            ->from(UnknownProducer::class, 'c')            
+            ->orderBy('c.name');
                 ;
         
         if (is_array($params)){
@@ -247,6 +247,9 @@ class ProducerRepository  extends EntityRepository{
                     ->setMaxResults(1)    
                  ;
             }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
+            }            
         }
 
         return $queryBuilder->getQuery();

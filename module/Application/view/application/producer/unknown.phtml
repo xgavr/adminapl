@@ -44,9 +44,10 @@ $this->headScript()
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-type="numeric">ID</th>
-                     <th data-field="name" data-formatter="linkFormatter">Неизвестный</th>
+                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                     <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Неизвестный</th>
                      <th data-field="producer">Известный</th>             
+                     <th data-field="rawpriceCount" data-align='right' data-sortable="true">Строк в прайсах</th>             
                  </tr>                
             </thead>
         </table>
@@ -90,6 +91,22 @@ $this->headScript()
                         </div>
                     </div>
                 </div>    
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Пересчеты
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Количество товара 
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/rawprice-count-unknown-producer/" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Обновить количество товара">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                </div>    
             </div>
         </div>
     </div>
@@ -109,8 +126,7 @@ $this->headScript()
         });
     });
     
-    function queryParams() {
-        var params = {offset: 0, limit: 10};
+    function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });

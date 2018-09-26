@@ -211,9 +211,11 @@ class ProducerController extends AbstractActionController
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
         
         $query = $this->entityManager->getRepository(Producer::class)
-                        ->findAllUnknownProducer(['q' => $q]);
+                        ->findAllUnknownProducer(['q' => $q, 'sort' => $sort, 'order' => $order]);
         
         $total = count($query->getResult(2));
         
@@ -444,6 +446,21 @@ class ProducerController extends AbstractActionController
         return new JsonModel([
             'result' => 'ok-reload',
             'message' => $deleted.' удалено!',
+        ]);          
+    }
+    
+    public function rawpriceCountUnknownProducerAction()
+    {
+        $unknownProducers = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
+                ->findBy([]);
+
+        foreach ($unknownProducers as $unknownProducer){
+            $this->producerManager->updateUnknownProducerRawpriceCount($unknownProducer, false);
+        }   
+        $this->entityManager->flush();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
         ]);          
     }
     
