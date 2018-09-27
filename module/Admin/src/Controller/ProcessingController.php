@@ -322,7 +322,7 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
-     * Обноаление количестка товаров у неизвестного производителя
+     * Обновление количестка товаров у неизвестного производителя
      */
     public function unknownProducerRawpriceCountAction()
     {
@@ -337,6 +337,31 @@ class ProcessingController extends AbstractActionController
             
             foreach ($unknownProducers as $unknownProducer){
                 $this->producerManager->updateUnknownProducerRawpriceCount($unknownProducer, false);
+            }   
+            $this->entityManager->flush();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+
+    /**
+     * Обновление количестка поставщиков у неизвестного производителя
+     */
+    public function unknownProducerSupplierCountAction()
+    {
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_producer'] == 1){
+            
+            $unknownProducers = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
+                    ->findBy([]);
+            
+            foreach ($unknownProducers as $unknownProducer){
+                $this->producerManager->updateUnknownProducerSupplierCount($unknownProducer, false);
             }   
             $this->entityManager->flush();
         }    

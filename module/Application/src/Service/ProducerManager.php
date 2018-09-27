@@ -262,7 +262,7 @@ class ProducerManager
     }    
 
     /**
-     * Обновление количества поставщиков и товара у неизвестного производителя
+     * Обновление количества товара у неизвестного производителя
      * 
      * @param Application\Entity\UnknownProducer $unknownProducer
      * @param bool $flush
@@ -273,6 +273,25 @@ class ProducerManager
                 ->count(['unknownProducer' => $unknownProducer->getId(), 'status' => Rawprice::STATUS_PARSED]);
         
         $unknownProducer->setRawpriceCount($rawpriceCount);
+        $this->entityManager->persist($unknownProducer);
+        
+        if ($flush){
+            $this->entityManager->flush($unknownProducer);
+        }
+    }
+    
+    /**
+     * Обновление количества поставщиков у неизвестного производителя
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param bool $flush
+     */
+    public function updateUnknownProducerSupplierCount($unknownProducer, $flush = true)
+    {
+        $supplierCount = $this->entityManager->getRepository(UnknownProducer::class)
+                ->unknownProducerSupplierCount($unknownProducer);
+
+        $unknownProducer->setSupplierCount($supplierCount);
         $this->entityManager->persist($unknownProducer);
         
         if ($flush){

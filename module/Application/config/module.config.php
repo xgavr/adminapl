@@ -258,6 +258,7 @@ return [
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
             Service\NavManager::class => Service\Factory\NavManagerFactory::class,
+            Service\OemManager::class => Service\Factory\OemManagerFactory::class,
             Service\OrderManager::class => Service\Factory\OrderManagerFactory::class,
             Service\ParseManager::class => Service\Factory\ParseManagerFactory::class,
             Service\PriceManager::class => Service\Factory\PriceManagerFactory::class,

@@ -48,6 +48,7 @@ $this->headScript()
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Неизвестный</th>
                      <th data-field="producer">Известный</th>             
                      <th data-field="rawpriceCount" data-align='right' data-sortable="true">Строк в прайсах</th>             
+                     <th data-field="supplierCount" data-align='right' data-sortable="true">Поставщиков</th>             
                  </tr>                
             </thead>
         </table>
@@ -93,15 +94,26 @@ $this->headScript()
                 </div>    
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        Пересчеты
+                        Пересчет количества
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            Количество товара 
+                            <span>товаров</span>
                         </div>
                         <div class="pull-right">
                             <button value="/producer/rawprice-count-unknown-producer/" class="btn btn-warning btn-xs refresh-table-button"
                                     title="Обновить количество товара">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <span>поставщиков</span>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/supplier-count-unknown-producer/" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Обновить количество поставщиков">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button> 
                         </div>

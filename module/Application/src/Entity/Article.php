@@ -54,11 +54,18 @@ class Article {
     private $rawprice;
         
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\OemRaw", mappedBy="article")
+    * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
+     */
+    private $oemRaw;
+        
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->rawprice = new ArrayCollection();
+        $this->oemRaw = new ArrayCollection();
     }
     
 
@@ -128,6 +135,23 @@ class Article {
     public function addRawprice($rawprice)
     {
         $this->rawprice[] = $rawprice;
+    }
+      
+    /**
+     * Returns the array of contacts assigned to this.
+     * @return array
+     */
+    public function getOemRaw()
+    {
+        return $this->oemRaw;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addOemRaw($oemRaw)
+    {
+        $this->oemRaw[] = $oemRaw;
     }
       
     /**
