@@ -84,14 +84,10 @@ class OemManager
      */
     public function addNewOemRawFromRawprice($rawprice, $flush = true) 
     {
-        if ($rawprice->getUnknownProducer()){
-            $article = $this->addArticle($rawprice->getArticle(), $rawprice->getUnknownProducer(), $flush);
+        if ($rawprice->getArticle()){
+            $oem = $this->addOemRaw($rawprice->getOem(), $rawprice->getArticle(), $flush);
 
-            if ($article){
-
-                $rawprice->setCode($article);
-                $this->entityManager->persist($rawprice);
-
+            if ($oem){
                 if ($flush){
                     $this->entityManager->flush();
                 }    
@@ -104,7 +100,7 @@ class OemManager
     /**
      * Выборка артиклей из прайса и добавление их в артиклулы
      */
-    public function grabArticleFromRaw($raw)
+    public function grabOemFromRaw($raw)
     {
         ini_set('memory_limit', '2048M');
         
@@ -166,71 +162,5 @@ class OemManager
     {
         return $this->entityManager->getRepository(Article::class)
                 ->randRawpriceBy($params);
-    }
-    
-    /**
-     * Выборка артикулов из прайсов и добавление их в артикулы
-     * привязка к строкам прайса
-     * 
-     * @param Application\Entity\Raw $raw
-     */
-    public function grabArticleFromRaw2($raw)
-    {
-        ini_set('memory_limit', '2048M');
-
-        $articles = $this->entityManager->getRepository(Article::class)
-                ->findArticleFromRaw($raw);
-
-        $filter = new \Application\Filter\ArticleCode();
-
-        foreach ($articles as $row){
-
-            $filteredCode = $filter->filter($row['code']);        
-            $unknownProducerId = $row['unknownProducer'];
-            
-            $data = [
-                'code' => $filteredCode,
-                'fullcode' => trim($row['code']),
-                'unknown_producer_id' => $unknownProducerId,
-            ];
-            try{
-                $this->entityManager->getRepository(UnknownProducer::class)
-                        ->insertUnknownProducer($data);
-            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                //дубликат
-            }   
-            
-            $article = $this->entityManager->getRepository(Article::class)
-                    ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $unknownProducerId]);
-            
-            if ($article){
-                
-                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneById($unknownProducerId);
-                
-                $article->setUnknownProducer($unknownProducer);
-                $this->entityManager->persist($article);
-                
-                $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                        ->findBy(['raw' => $raw->getId(), 'unknownProducer' => $unknownProducerId, 'code' => $article->getId()]);
-                
-                foreach ($rawprices as $rawprice){
-                    $rawprice->setCode($article);
-                    $this->entityManager->persist($rawprice);
-                }
-            }            
-        }
-        
-        $this->entityManager->flush();
-        
-        $rawprices = $this->entityManager->getRepository(Raw::class)
-                ->findCodeRawprice($raw);
-        
-        if (count($rawprices) === 0){
-            $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
-            $this->entityManager->persist($raw);
-            $this->entityManager->flush($raw);
-        }        
-    }
-    
+    }   
 }
