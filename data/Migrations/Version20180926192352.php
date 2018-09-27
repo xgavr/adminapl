@@ -85,7 +85,7 @@ final class Version20180926192352 extends AbstractMigration
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_oem_raw_oem_raw_id_oem_raw_id_fk');
         $table->addForeignKeyConstraint('rawprice', ['rawprice_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_oem_raw_rawprice_id_rawprice_id_fk');
-        $table->addOption('engine' , 'InnoDB');
+        $table->addOption('engine' , 'InnoDB'); 
         
     }
 
