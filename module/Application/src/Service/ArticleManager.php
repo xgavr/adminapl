@@ -133,11 +133,18 @@ class ArticleManager
      * 
      * @param Application\Entity\Article $article
      */
-    public function removeArticle($article) 
+    public function removeArticle($article, $flush = true) 
     {   
+        $oemRaws = $article->getOemRaw();
+        foreach ($oemRaws as $oemRaw){
+            $this->entityManager->remove($oemRaw);
+        }
+        
         $this->entityManager->remove($article);
         
-        $this->entityManager->flush($article);
+        if ($flush){
+            $this->entityManager->flush();
+        }    
     }    
     
     /**
@@ -151,8 +158,10 @@ class ArticleManager
                 ->findArticlesForDelete();
 
         foreach ($articlesForDelete as $row){
-            $this->removeArticle($row[0]);
+            $this->removeArticle($row[0], false);
         }
+        
+        $this->entityManager->flush();
         
         return count($articlesForDelete);
     }    

@@ -119,6 +119,20 @@ return [
                     ],
                 ],
             ],        
+            'oem' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/oem[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\OemController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'price' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -239,6 +253,7 @@ return [
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
+            Controller\OemController::class => Controller\Factory\OemControllerFactory::class,
             Controller\OrderController::class => Controller\Factory\OrderControllerFactory::class,
             Controller\PriceController::class => Controller\Factory\PriceControllerFactory::class,
             Controller\PricesettingsController::class => Controller\Factory\PricesettingsControllerFactory::class,
@@ -293,6 +308,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\OemController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

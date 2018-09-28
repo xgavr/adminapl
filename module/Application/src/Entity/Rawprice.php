@@ -10,6 +10,7 @@ namespace Application\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Application\Filter\OemDetectDelimiterFilter;
 
 /**
  * Description of Customer
@@ -315,15 +316,26 @@ class Rawprice {
         $this->rest = (string) $rest;
     }     
     
+    public function setOem($oem) 
+    {
+        $this->oem = $oem;
+    }     
+
     public function getOem() 
     {
         return $this->oem;
     }
 
-    public function setOem($oem) 
+    public function getOemAsArray() 
     {
-        $this->oem = $oem;
-    }     
+        $filter = new OemDetectDelimiterFilter();
+        $oemDelimeter = $filter->filter($this->oem);
+        $oem = explode($oemDelimeter, $this->oem);
+        $vendorDelimeter = $filter->filter($this->vendor);
+        $vendor = explode($vendorDelimeter, $this->vendor);
+        var_dump($oem + $vendor); exit;
+        return array_filter($oem + $vendor);
+    }
 
     public function getBrand() 
     {

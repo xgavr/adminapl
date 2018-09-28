@@ -103,6 +103,12 @@ $this->pageBreadcrumbs()->setItems([
                                 Артикул
                         </button>
                     <?php endif;?>    
+                    <?php if ($rawprice->getCode()):?>
+                        <button value="/oem/parse/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Разобрать">
+                                Номера замен
+                        </button>
+                    <?php endif;?>    
                 <?php endif; ?>
             </div>
             <div class="panel-body">
@@ -120,7 +126,11 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php if ($key == 'Производитель' && $rawprice->getUnknownProducer()):?>
                                     <a href="/producer/unknown-view/<?= $rawprice->getUnknownProducer()->getId();?>"><?=$rawprice->getUnknownProducer()->getName()?></a>
                                 <?php elseif ($key == 'Артикул товара' && $rawprice->getCode()):?>
-                                    <a href="/producer/article-view/<?= $rawprice->getCode()->getId();?>"><?=$rawprice->getCode()->getCode()?></a>
+                                    <?php if ($rawprice->getCode()->getId()):?>
+                                        <a href="/producer/article-view/<?= $rawprice->getCode()->getId();?>"><?=$rawprice->getCode()->getCode()?></a>
+                                    <?php else:?>
+                                        <?= $this->escapeHtml($value)?>
+                                    <?php endif;?>    
                                 <?php else:?>
                                     <?= $this->escapeHtml($value)?>
                                 <?php endif;?>

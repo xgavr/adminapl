@@ -85,20 +85,27 @@ class OemManager
     public function addNewOemRawFromRawprice($rawprice, $flush = true) 
     {
         if ($rawprice->getArticle()){
-            $oem = $this->addOemRaw($rawprice->getOem(), $rawprice->getArticle(), $flush);
-
-            if ($oem){
-                if ($flush){
-                    $this->entityManager->flush();
+            $oems = $rawprice->getOemAsArray();
+            var_dump($oems); exit;
+            if (is_array($oems)){
+                foreach ($oems as $oemCode){
+                    $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
+                    if ($oem){
+                        $oem->addRawprice($rawprice);
+                        $this->entityManager->persist($oem);
+                        if ($flush){
+                            $this->entityManager->flush();
+                        }    
+                    }   
                 }    
-            }   
+            }    
         }    
         
         return;
     }  
     
     /**
-     * Выборка артиклей из прайса и добавление их в артиклулы
+     * Выборка оригинальных номеров из прайса и добавление их в таблицу оригинальных номеров
      */
     public function grabOemFromRaw($raw)
     {
@@ -108,7 +115,7 @@ class OemManager
                 ->findBy(['raw' => $raw->getId(), 'code' => null]);
         
         foreach ($rawprices as $rawprice){
-            $this->addNewArticleFromRawprice($rawprice, false);
+            $this->addNewOemRawFromRawprice($rawprice, false);
         }
         $this->entityManager->flush();
         
@@ -116,7 +123,7 @@ class OemManager
                 ->findBy(['raw' => $raw->getId(), 'code' => null]);
         
         if (count($rawprices) === 0){
-            $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
+            $raw->setParseStage(Raw::STAGE_OEM_PARSED);
             $this->entityManager->persist($raw);
             $this->entityManager->flush($raw);
         }        
@@ -125,36 +132,19 @@ class OemManager
     
 
     /**
-     * Удаление артикула
+     * Удаление кода
      * 
-     * @param Application\Entity\Article $article
+     * @param Application\Entity\OemRaw $oemRaw
      */
-    public function removeArticle($article) 
+    public function removeOemRaw($oemRaw) 
     {   
-        $this->entityManager->remove($article);
+        $this->entityManager->remove($oemRaw);
         
-        $this->entityManager->flush($article);
+        $this->entityManager->flush($oemRaw);
     }    
     
     /**
-     * Поиск и удаление артикулов не привязаных к строкам прайсов
-     */
-    public function removeEmptyArticles()
-    {
-        ini_set('memory_limit', '2048M');
-        
-        $articlesForDelete = $this->entityManager->getRepository(Article::class)
-                ->findArticlesForDelete();
-
-        foreach ($articlesForDelete as $row){
-            $this->removeArticle($row[0]);
-        }
-        
-        return count($articlesForDelete);
-    }    
-    
-    /**
-     * Случайная выборка из прайсов по id артикля и id поставщика 
+     * Выборка из прайсов по id артикля и id поставщика 
      * @param array $params
      * @return object      
      */
