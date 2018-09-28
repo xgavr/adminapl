@@ -86,16 +86,15 @@ class OemManager
     {
         if ($rawprice->getArticle()){
             $oems = $rawprice->getOemAsArray();
-            var_dump($oems); exit;
             if (is_array($oems)){
                 foreach ($oems as $oemCode){
                     $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
                     if ($oem){
-                        $oem->addRawprice($rawprice);
-                        $this->entityManager->persist($oem);
-                        if ($flush){
+//                        $oem->addRawprice($rawprice);
+//                        $this->entityManager->persist($oem);
+//                        if ($flush){
                             $this->entityManager->flush();
-                        }    
+//                        }    
                     }   
                 }    
             }    

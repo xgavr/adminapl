@@ -76,16 +76,16 @@ final class Version20180926192352 extends AbstractMigration
         $table->addOption('engine' , 'InnoDB');
 
 
-        $table = $schema->createTable('rawprice_oem_raw');
-        $table->addColumn('id', 'integer', ['autoincrement'=>true]);
-        $table->addColumn('rawprice_id', 'bigint', ['notnull'=>true]);
-        $table->addColumn('oem_raw_id', 'integer', ['notnull'=>true]);
-        $table->setPrimaryKey(['id']);
-        $table->addForeignKeyConstraint('oem_raw', ['oem_raw_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_oem_raw_oem_raw_id_oem_raw_id_fk');
-        $table->addForeignKeyConstraint('rawprice', ['rawprice_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_oem_raw_rawprice_id_rawprice_id_fk');
-        $table->addOption('engine' , 'InnoDB'); 
+//        $table = $schema->createTable('rawprice_oem_raw');
+//        $table->addColumn('id', 'integer', ['autoincrement'=>true]);
+//        $table->addColumn('rawprice_id', 'bigint', ['notnull'=>true]);
+//        $table->addColumn('oem_raw_id', 'integer', ['notnull'=>true]);
+//        $table->setPrimaryKey(['id']);
+//        $table->addForeignKeyConstraint('oem_raw', ['oem_raw_id'], ['id'], 
+//                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_oem_raw_oem_raw_id_oem_raw_id_fk');
+//        $table->addForeignKeyConstraint('rawprice', ['rawprice_id'], ['id'], 
+//                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_oem_raw_rawprice_id_rawprice_id_fk');
+//        $table->addOption('engine' , 'InnoDB'); 
         
     }
 

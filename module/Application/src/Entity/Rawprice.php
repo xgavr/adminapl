@@ -333,8 +333,7 @@ class Rawprice {
         $oem = explode($oemDelimeter, $this->oem);
         $vendorDelimeter = $filter->filter($this->vendor);
         $vendor = explode($vendorDelimeter, $this->vendor);
-        var_dump($oem + $vendor); exit;
-        return array_filter($oem + $vendor);
+        return array_filter(array_unique(array_merge($oem, $vendor)));
     }
 
     public function getBrand() 

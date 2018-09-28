@@ -42,7 +42,7 @@ class OemDetectDelimiterFilter extends AbstractFilter
         $delimiters = array(
             ';' => 0,
             ',' => 0,
-            "\t" => 0,
+            "\t" => 0, // из Application\Filter\RawToStr
             "|" => 0,
             "/" => 0,
             "\\" => 0,

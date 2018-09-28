@@ -75,7 +75,7 @@ class OemRaw {
 
     public function setCode($code) 
     {
-        $this->code = trim($code);
+        $this->code = mb_strcut(trim($code), 0, 24, 'UTF-8');
     }     
 
     public function getFullCode() 
@@ -85,7 +85,7 @@ class OemRaw {
 
     public function setFullCode($fullcode) 
     {
-        $this->fullcode = trim($fullcode);
+        $this->fullcode = mb_strcut(trim($fullcode), 0, 36, 'UTF-8');
     }     
 
     /**

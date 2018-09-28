@@ -46,7 +46,7 @@ class RawToStr extends AbstractFilter
             $result = [];
             foreach ($value as $key=>$row){
                 if (is_scalar($row)){
-                    $result[] = str_replace(';', ' ', $row);
+                    $result[] = str_replace(';', "\t", $row);
                 } else {
                     $result[] = '';
                 }            
