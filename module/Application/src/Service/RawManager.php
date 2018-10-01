@@ -495,6 +495,7 @@ class RawManager {
      */
     public function removeRawprice($rawprice)
     {
+        $rawprice->getOemRaw()->clear();
         $this->entityManager->remove($rawprice);
         $this->entityManager->flush();        
     }

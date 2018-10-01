@@ -288,7 +288,7 @@ class OemController extends AbstractActionController
         ]);          
     }
     
-    public function updateArticleFromRawAction()
+    public function updateOemFromRawAction()
     {
         set_time_limit(0);
         $rawId = $this->params()->fromRoute('id', -1);
@@ -306,14 +306,14 @@ class OemController extends AbstractActionController
             return;                        
         }        
 
-        $this->articleManager->grabArticleFromRaw($raw);
+        $this->oemManager->grabOemFromRaw($raw);
                 
         return new JsonModel([
             'ok',
         ]);          
     }
     
-    public function deleteEmptyArticleAction()
+    public function deleteEmptyOemAction()
     {
         $deleted = $this->articleManager->removeEmptyArticles();
                 

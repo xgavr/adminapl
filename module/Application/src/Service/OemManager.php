@@ -84,17 +84,19 @@ class OemManager
      */
     public function addNewOemRawFromRawprice($rawprice, $flush = true) 
     {
+        $rawprice->getOemRaw()->clear();
+
         if ($rawprice->getArticle()){
             $oems = $rawprice->getOemAsArray();
             if (is_array($oems)){
                 foreach ($oems as $oemCode){
                     $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
                     if ($oem){
-//                        $oem->addRawprice($rawprice);
-//                        $this->entityManager->persist($oem);
-//                        if ($flush){
+                        $rawprice->addOemRaw($oem);
+                        $this->entityManager->persist($rawprice);
+                        if ($flush){
                             $this->entityManager->flush();
-//                        }    
+                        }    
                     }   
                 }    
             }    
@@ -111,22 +113,16 @@ class OemManager
         ini_set('memory_limit', '2048M');
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'code' => null]);
+                ->findBy(['raw' => $raw->getId()]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewOemRawFromRawprice($rawprice, false);
         }
+        
+        $raw->setParseStage(Raw::STAGE_OEM_PARSED);
+        $this->entityManager->persist($raw);
+        
         $this->entityManager->flush();
-        
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'code' => null]);
-        
-        if (count($rawprices) === 0){
-            $raw->setParseStage(Raw::STAGE_OEM_PARSED);
-            $this->entityManager->persist($raw);
-            $this->entityManager->flush($raw);
-        }        
-        
     }
     
 

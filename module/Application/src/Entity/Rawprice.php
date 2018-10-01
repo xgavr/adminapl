@@ -10,6 +10,7 @@ namespace Application\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Application\Filter\OemDetectDelimiterFilter;
 
 /**
@@ -182,6 +183,24 @@ class Rawprice {
      */
     private $good;
     
+    
+     /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\OemRaw")
+     * @ORM\JoinTable(name="rawprice_oem_raw",
+     *      joinColumns={@ORM\JoinColumn(name="rawprice_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="oem_raw_id", referencedColumnName="id")}
+     *      )
+     */
+    private $oemRaw;
+    
+    /**
+     * Constructor.
+     */
+    public function __construct() 
+    {
+        $this->oemRaw = new ArrayCollection();
+    }
+   
     /**
      * Returns status.
      * @return int     
@@ -606,6 +625,25 @@ class Rawprice {
         $this->good = $good;
         $good->addRawprice($this);
     }     
+    
+    /**
+     * Returns the array of oemRaw assigned to this rawprice.
+     * @return array
+     */
+    public function getOemRaw()
+    {
+        return $this->oemRaw;
+    }    
+    
+    /**
+     * 
+     * @param Application\Entity\OemRaw $oemRaw
+     */
+    public function addOemRaw($oemRaw)
+    {
+        $this->oemRaw->add($oemRaw);
+    }
+
     
     /*
      * Получить поля со значениями и заголовками

@@ -41,23 +41,6 @@ class OemRaw {
      */
     protected $article;    
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Rawprice")
-     * @ORM\JoinTable(name="rawprice_oem_raw",
-     *      joinColumns={@ORM\JoinColumn(name="oem_raw_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="rawprice_id", referencedColumnName="id")}
-     *      )
-     */
-    private $rawprice;
-    
-    /**
-     * Constructor.
-     */
-    public function __construct() 
-    {
-        $this->rawprice = new ArrayCollection();
-    }
-
     public function getId() 
     {
         return $this->id;
@@ -106,22 +89,5 @@ class OemRaw {
         $this->article = $article;
         $article->addOemRaw($this);
     }           
-    
-    /**
-     * Returns the array of rawprice assigned to this oem.
-     * @return array
-     */
-    public function getRawprice()
-    {
-        return $this->rawprice;
-    }
-    
-    /**
-     * Assigns a rawprice to oem.
-     */
-    public function addRawprice($rawprice)
-    {
-        $this->rawprice->add($rawprice);
-    }
     
 }
