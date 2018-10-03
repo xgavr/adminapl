@@ -21,11 +21,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Raw {
     
      // Supplier status constants.
-    const STATUS_LOAD       = 4; //В процессе загрузки
     const STATUS_ACTIVE       = 1; // Active raw.
     const STATUS_RETIRED      = 2; // Retired raw.
-    const STATUS_PARSE       = 5; //Разбирается
     const STATUS_PARSED       = 3; //Разобран
+    const STATUS_LOAD       = 4; //В процессе загрузки
+    const STATUS_PARSE       = 5; //Разбирается
+    const STATUS_FAILED      = 6; // Не удалось загрузить.
     
     const STAGE_NOT                 = 1; //поля не разобраны
     const STAGE_PRODUCER_PARSED     = 2; //производители разобраны 
@@ -159,6 +160,7 @@ class Raw {
             self::STATUS_PARSED => 'Разобран',
             self::STATUS_PARSE => 'Разбирается',
             self::STATUS_LOAD => 'Загружается',
+            self::STATUS_FAILED => 'Не удалось загрзить',
         ];
     }    
     

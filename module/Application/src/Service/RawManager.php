@@ -287,10 +287,15 @@ class RawManager {
                     $reader = IOFactory::createReaderForFile($filename);
                 } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
                     //попытка прочитать файл старым способом
-                    var_dump($e->getCode()); 
-                    var_dump($e->getLine()); 
-                    var_dump($e->getMessage()); exit;
-                    return $this->uploadRawpriceXls2($supplier, $filename);
+                    $raw->setName($e->getMessage());
+                    if ($e->getMessage() == 'Unable to identify a reader for this file'){
+                        $raw->setStatus(Raw::STATUS_FAILED);
+                        $this->entityManager->persist($raw);
+                        $this->entityManager->flush($raw);                    
+                        return;
+                    } else {
+                        return $this->uploadRawpriceXls2($supplier, $filename);
+                    }    
                 }    
                 $filterSubset = new \Application\Filter\ExcelColumn();
                 $reader->setReadFilter($filterSubset);
