@@ -364,7 +364,7 @@ class RawManager {
                 $mvexcel = new Service\PhpExcelService();
                 try {
                     $excel = $mvexcel->createPHPExcelObject($filename);
-                } catch (\PHPExcel_Exception $e){
+                } catch (\PHPExcel_Reader_Exception $e){
                     //попытка прочитать файл не удалась
                     return;
                 }    
