@@ -287,6 +287,7 @@ class RawManager {
                     $reader = IOFactory::createReaderForFile($filename);
                 } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
                     //попытка прочитать файл старым способом
+                    var_dump($e); exit;
                     return $this->uploadRawpriceXls2($supplier, $filename);
                 }    
                 $filterSubset = new \Application\Filter\ExcelColumn();
