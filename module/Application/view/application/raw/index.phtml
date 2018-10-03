@@ -143,7 +143,7 @@ $this->headScript()
         return btn;
     }
     
-    function supplierFormatter(value, row) {
+    function supplierFormatter(value) {
         return '<a href="/supplier/view/'+value.id+'">'+value.name+'</a>';
     }
     
@@ -163,7 +163,7 @@ $this->headScript()
     }
     
     function statusStageFormatter(value, row) {
-        var status = statusFormatter(value);
+        var status = statusFormatter(value, row);
         var stage = '';
         if (value == '3'){
             switch (row.parseStage){
