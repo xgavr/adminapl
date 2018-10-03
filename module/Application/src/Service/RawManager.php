@@ -362,7 +362,12 @@ class RawManager {
                 $basenameFilter = new Basename();
                 
                 $mvexcel = new Service\PhpExcelService();
-                $excel = $mvexcel->createPHPExcelObject($filename);
+                try {
+                    $excel = $mvexcel->createPHPExcelObject($filename);
+                } catch (\PHPExcel_Exception $e){
+                    //попытка прочитать файл не удалась
+                    return;
+                }    
 
                 $rows = 0;
                 $raw = new Raw();
