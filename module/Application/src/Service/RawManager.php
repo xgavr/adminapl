@@ -289,7 +289,7 @@ class RawManager {
                     //попытка прочитать файл старым способом
                     var_dump($e->getCode()); 
                     var_dump($e->getLine()); 
-                    var_dump($e->getTraceAsString()); exit;
+                    var_dump($e->getMessage()); exit;
                     return $this->uploadRawpriceXls2($supplier, $filename);
                 }    
                 $filterSubset = new \Application\Filter\ExcelColumn();
