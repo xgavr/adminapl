@@ -292,6 +292,7 @@ class RawManager {
                         $raw->setStatus(Raw::STATUS_FAILED);
                         $this->entityManager->persist($raw);
                         $this->entityManager->flush($raw);                    
+                        $this->renameToArchive($supplier, $filename);
                         return;
                     } else {
                         return $this->uploadRawpriceXls2($supplier, $filename);
