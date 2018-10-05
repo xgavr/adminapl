@@ -288,15 +288,15 @@ class RawManager {
                 } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
                     //попытка прочитать файл старым способом
                     $raw->setName($e->getMessage());
-                    if ($e->getMessage() == 'Unable to identify a reader for this file'){
-                        $raw->setStatus(Raw::STATUS_FAILED);
-                        $this->entityManager->persist($raw);
-                        $this->entityManager->flush($raw);                    
-                        $this->renameToArchive($supplier, $filename);
-                        return;
-                    } else {
-                        return $this->uploadRawpriceXls2($supplier, $filename);
-                    }    
+                    $raw->setStatus(Raw::STATUS_FAILED);
+                    $this->entityManager->persist($raw);
+                    $this->entityManager->flush($raw);                    
+                    return $this->uploadRawpriceXls2($supplier, $filename);
+                    
+                    //if ($e->getMessage() == 'Unable to identify a reader for this file'){
+                        //$this->renameToArchive($supplier, $filename);
+                        //return;
+                    //}    
                 }    
                 $filterSubset = new \Application\Filter\ExcelColumn();
                 $reader->setReadFilter($filterSubset);
@@ -375,6 +375,11 @@ class RawManager {
                     $excel = $mvexcel->createPHPExcelObject($filename);
                 } catch (\PHPExcel_Reader_Exception $e){
                     //попытка прочитать файл не удалась
+                    $raw->setName($e->getMessage());
+                    $raw->setStatus(Raw::STATUS_FAILED);
+                    $this->entityManager->persist($raw);
+                    $this->entityManager->flush($raw);                    
+                    $this->renameToArchive($supplier, $filename);
                     return;
                 }    
 

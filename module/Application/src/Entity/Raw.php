@@ -160,7 +160,7 @@ class Raw {
             self::STATUS_PARSED => 'Разобран',
             self::STATUS_PARSE => 'Разбирается',
             self::STATUS_LOAD => 'Загружается',
-            self::STATUS_FAILED => 'Не удалось загрзить',
+            self::STATUS_FAILED => 'Не удалось загрузить',
         ];
     }    
     
