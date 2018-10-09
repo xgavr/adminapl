@@ -84,24 +84,25 @@ class OemManager
      */
     public function addNewOemRawFromRawprice($rawprice, $flush = true) 
     {
-        $rawprice->getOemRaw()->clear();
+        if (!$rawprice->getOemRaw()->count()){
+            $rawprice->getOemRaw()->clear();
 
-        if ($rawprice->getArticle()){
-            $oems = $rawprice->getOemAsArray();
-            if (is_array($oems)){
-                foreach ($oems as $oemCode){
-                    $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
-                    if ($oem){
-                        $rawprice->addOemRaw($oem);
-                        $this->entityManager->persist($rawprice);
-                        if ($flush){
-                            $this->entityManager->flush();
-                        }    
-                    }   
+            if ($rawprice->getArticle()){
+                $oems = $rawprice->getOemAsArray();
+                if (is_array($oems)){
+                    foreach ($oems as $oemCode){
+                        $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
+                        if ($oem){
+                            $rawprice->addOemRaw($oem);
+                            $this->entityManager->persist($rawprice);
+                            if ($flush){
+                                $this->entityManager->flush();
+                            }    
+                        }   
+                    }    
                 }    
             }    
-        }    
-        
+        }
         return;
     }  
     
@@ -112,12 +113,17 @@ class OemManager
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(600);
+        $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId()]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewOemRawFromRawprice($rawprice, false);
+            if ($time > $startTime + 400){
+                $this->entityManager->flush();
+                return;
+            }
         }
         
         $raw->setParseStage(Raw::STAGE_OEM_PARSED);
