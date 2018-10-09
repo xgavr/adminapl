@@ -25,6 +25,8 @@ class Rawprice {
     const STATUS_PARSED    = 2; // прошел разборку.
     const STATUS_RETIRED   = 3; //строка не актуальна
 
+    const OEM_NEW       = 1; // только что загрузили
+    const OEM_PARSED    = 2; // прошел разборку.
 
     /**
      * @ORM\Id
@@ -154,6 +156,11 @@ class Rawprice {
     protected $status;    
 
     /**
+     * @ORM\Column(name="status_oem")   
+     */
+    protected $statusOem = self::OEM_NEW;    
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
      * @ORM\JoinColumn(name="raw_id", referencedColumnName="id")
      */
@@ -254,6 +261,57 @@ class Rawprice {
         $this->status = $status;
     }   
     
+    /**
+     * Returns statusOem.
+     * @return int     
+     */
+    public function getStatusOem() 
+    {
+        return $this->statusOem;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusOemList() 
+    {
+        return [
+            self::OEM_NEW => 'OEM новый',
+            self::OEM_PARSED => 'OEM разобран',
+        ];
+    }    
+    
+    /**
+     * Returns user statusOem as string.
+     * @return string
+     */
+    public function getStatusOemAsString()
+    {
+        $list = self::getStatusOemList();
+        if (isset($list[$this->statusOem]))
+            return $list[$this->statusOem];
+        
+        return 'Unknown';
+    }  
+    
+    public function getStatusOemName($statusOem)
+    {
+        $list = self::getStatusOemList();
+        if (isset($list[$statusOem]))
+            return $list[$statusOem];
+        
+        return 'Unknown';        
+    }
+    
+    /**
+     * Sets statusOem.
+     * @param int $statusOem     
+     */
+    public function setStatusOem($statusOem) 
+    {
+        $this->statusOem = $statusOem;
+    }   
     
     public function getId() 
     {

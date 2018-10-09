@@ -84,25 +84,24 @@ class OemManager
      */
     public function addNewOemRawFromRawprice($rawprice, $flush = true) 
     {
-        if (!$rawprice->getOemRaw()->count()){
-            $rawprice->getOemRaw()->clear();
+        $rawprice->getOemRaw()->clear();
 
-            if ($rawprice->getArticle()){
-                $oems = $rawprice->getOemAsArray();
-                if (is_array($oems)){
-                    foreach ($oems as $oemCode){
-                        $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
-                        if ($oem){
-                            $rawprice->addOemRaw($oem);
-                            $this->entityManager->persist($rawprice);
-                            if ($flush){
-                                $this->entityManager->flush();
-                            }    
-                        }   
-                    }    
+        if ($rawprice->getArticle()){
+            $oems = $rawprice->getOemAsArray();
+            if (is_array($oems)){
+                foreach ($oems as $oemCode){
+                    $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
+                    if ($oem){
+                        $rawprice->addOemRaw($oem);
+                        $rawprice->setStatusOem(Rawprice::OEM_PARSED);
+                        $this->entityManager->persist($rawprice);
+                        if ($flush){
+                            $this->entityManager->flush();
+                        }    
+                    }   
                 }    
             }    
-        }
+        }    
         return;
     }  
     
@@ -116,7 +115,7 @@ class OemManager
         $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId()]);
+                ->findBy(['raw' => $raw->getId(), 'statusOem' => Rawprice::OEM_NEW]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewOemRawFromRawprice($rawprice, false);
