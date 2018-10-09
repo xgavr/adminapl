@@ -42,7 +42,7 @@ class OemManager
     public function addOemRaw($code, $article, $flushnow = true)
     {
         $filter = new \Application\Filter\ArticleCode();
-        $filteredCode = $filter->filter($code);
+        $filteredCode = mb_strcut(trim($filter->filter($code)), 0, 24, 'UTF-8');
         
         $oem = $this->entityManager->getRepository(OemRaw::class)
                     ->findOneBy(['code' => $filteredCode, 'article' => $article->getId()]);
