@@ -110,7 +110,8 @@ class OemManager
      */
     public function grabOemFromRaw($raw)
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
+        set_time_limit(600);
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId()]);
