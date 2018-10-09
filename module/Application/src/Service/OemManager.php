@@ -93,14 +93,14 @@ class OemManager
                     $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
                     if ($oem){
                         $rawprice->addOemRaw($oem);
-                        $rawprice->setStatusOem(Rawprice::OEM_PARSED);
-                        $this->entityManager->persist($rawprice);
-                        if ($flush){
-                            $this->entityManager->flush();
-                        }    
                     }   
                 }    
             }    
+        }    
+        $rawprice->setStatusOem(Rawprice::OEM_PARSED);
+        $this->entityManager->persist($rawprice);
+        if ($flush){
+            $this->entityManager->flush();
         }    
         return;
     }  
