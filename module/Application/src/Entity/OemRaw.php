@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Producer
- * @ORM\Entity(repositoryClass="\Application\Repository\OemRepository")
+ * @ORM\Entity(repositoryClass="\Application\Repository\ArticleRepository")
  * @ORM\Table(name="oem_raw")
  * @author Daddy
  */
