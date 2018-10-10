@@ -40,6 +40,10 @@ $form->get('parse_article')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('parse_oem')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -87,6 +91,11 @@ $form->prepare();
             <?= $this->formLabel($form->get('parse_article')); ?>
             <?= $this->formElement($form->get('parse_article')); ?>
             <?= $this->formElementErrors($form->get('parse_article')); ?>                  
+        </div>        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('parse_oem')); ?>
+            <?= $this->formElement($form->get('parse_oem')); ?>
+            <?= $this->formElementErrors($form->get('parse_oem')); ?>                  
         </div>        
     </div>   
     <div class="col-sm-3" id="side-nav" >

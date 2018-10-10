@@ -95,14 +95,21 @@ class ProcessingController extends AbstractActionController
 
     /**
      * ArticleManager manager.
-     * @var Application\Service\ProducerManager
+     * @var Application\Service\ArticleManager
      */
     private $articleManager;    
+
+    /**
+     * OemManager manager.
+     * @var Application\Service\OemManager
+     */
+    private $oemManager;    
 
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
-            $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager) 
+            $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
+            $oemManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -118,6 +125,7 @@ class ProcessingController extends AbstractActionController
         $this->bankManager = $bankManager;
         $this->producerManager = $producerManager;
         $this->articleManager = $articleManager;
+        $this->oemManager = $oemManager;
     }   
 
     
@@ -430,4 +438,45 @@ class ProcessingController extends AbstractActionController
         
     }
 
+    /**
+     * Обновление номеров из прайса
+     */
+    public function oemFromRawpriceAction()
+    {
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_oem'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_ARTICLE_PARSED]);
+            
+            if ($raw){
+                $this->oemManager->grabOemFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
+     * Удаление пустых номеров производителей
+     */
+    public function deleteOemAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_oem'] == 1){
+            $this->articleManager->removeEmptyOem();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
 }
