@@ -9,6 +9,7 @@
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Article;
+use Application\Entity\OemRaw;
 use Application\Entity\Rawprice;
 
 
@@ -271,15 +272,15 @@ class OemRepository  extends EntityRepository{
      * 
      * @return object
      */
-    public function findArticleForDelete()
+    public function findOemForDelete()
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('u')
             ->addSelect('count(r.id) as rawpriceCount')    
-            ->from(Article::class, 'u')
-            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.code = u.id')
+            ->from(OemRaw::class, 'u')
+            ->leftJoin('rawprice_oem_raw', 'r', 'WITH', 'r.code = u.id')
             ->groupBy('u.id')
             ->having('rawpriceCount = 0')    
                 ;

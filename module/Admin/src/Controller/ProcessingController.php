@@ -471,7 +471,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_oem'] == 1){
-            $this->articleManager->removeEmptyOem();
+            $this->oemManager->removeEmptyOem();
         }    
                 
         return new JsonModel(
