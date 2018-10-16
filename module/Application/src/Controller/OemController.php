@@ -9,10 +9,10 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Application\Entity\Producer;
+use Application\Entity\Rawprice;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Article;
-use Application\Form\ProducerForm;
+use Application\Entity\OemRaw;
 use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -51,162 +51,21 @@ class OemController extends AbstractActionController
     
     public function indexAction()
     {
-        $page = $this->params()->fromQuery('page', 1);
-        
-        $query = $this->entityManager->getRepository(Producer::class)
-                    ->findAllProducer();
-                
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
-        // Визуализируем шаблон представления.
-        
-        return new ViewModel([
-            'producer' => $paginator,
-            'producerManager' => $this->producerManager,
-        ]);  
-    }
-    
-    public function addAction() 
-    {     
-        // Создаем форму.
-        $form = new ProducerForm($this->entityManager);
-                
-        // Проверяем, является ли пост POST-запросом.        
-        if ($this->getRequest()->isPost()) {
-            
-            // Получаем POST-данные.
-            $data = $this->params()->fromPost();
-                        
-            // Заполняем форму данными.
-            $form->setData($data);
-            if ($form->isValid()) {
-                                
-                // Получаем валидированные данные формы.
-                $data = $form->getData();
-                
-                // Используем менеджер для добавления нового producer в базу данных.                
-                $this->producerManager->addNewProducer($data);
-                
-                // Перенаправляем пользователя на страницу "producer".
-                return $this->redirect()->toRoute('producer', []);
-            }
-        }        
-
-        // Визуализируем шаблон представления.
-        return new ViewModel([
-            'form' => $form,
-        ]);
-    }   
-    
-   public function editAction()
-   {
-        // Создаем форму.
-        $form = new ProducerForm($this->entityManager);
-
-        // Получаем ID producer.    
-        $producerId = $this->params()->fromRoute('id', -1);
-    
-        // Находим существующий пост в базе данных.    
-        $producer = $this->entityManager->getRepository(Producer::class)
-                ->findOneById($producerId);  
-        	
-        if ($producer == null) {
-            $this->getResponse()->setStatusCode(401);
-            return;                        
-        } 
-        
-        // Проверяем, является ли пост POST-запросом.
-        if ($this->getRequest()->isPost()) {
-            
-            // Получаем POST-данные.
-            $data = $this->params()->fromPost();
-            
-            // Заполняем форму данными.
-            $form->setData($data);
-            if ($form->isValid()) {
-                                
-                // Получаем валидированные данные формы.
-                $data = $form->getData();
-                
-                // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
-                $this->producerManager->updateProducer($producer, $data);
-
-                // Перенаправляем пользователя на страницу "producer".
-                return $this->redirect()->toRoute('producer', []);
-            }
-        } else {
-            $data = [
-               'name' => $producer->getName(),
-               'country' => $producer->getCountry(),
-            ];
-            
-            $form->setData($data);
-        }
-        
-        // Визуализируем шаблон представления.
-        return new ViewModel([
-            'form' => $form,
-        ]);  
-    }    
-    
-    public function deleteAction()
-    {
-        $producerId = $this->params()->fromRoute('id', -1);
-        
-        $producer = $this->entityManager->getRepository(Producer::class)
-                ->findOneById($producerId);        
-        if ($producer == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        $this->producerManager->removeProducer($producer);
-        
-        // Перенаправляем пользователя на страницу "producer".
-        return $this->redirect()->toRoute('producer', []);
-    }    
-
-    public function viewAction() 
-    {       
-        $producerId = (int)$this->params()->fromRoute('id', -1);
-        
-        // Validate input parameter
-        if ($producerId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        // Find the tax by ID
-        $producer = $this->entityManager->getRepository(Producer::class)
-                ->findOneById($producerId);
-        
-        if ($producer == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        // Render the view template.
-        return new ViewModel([
-            'producer' => $producer,
-        ]);
-    }
-    
-    public function articleAction()
-    {
-        $bind = $this->entityManager->getRepository(Article::class)
-                ->findBindNoBindRawprice();
-        $total = $this->entityManager->getRepository(Article::class)
+        $bind = $this->entityManager->getRepository(Rawprice::class)
+                ->count(['status' => Rawprice::STATUS_PARSED, 'statusOem' => Rawprice::OEM_PARSED]);
+        $noBind = $this->entityManager->getRepository(Rawprice::class)
+                ->count(['status' => Rawprice::STATUS_PARSED, 'statusOem' => Rawprice::OEM_NEW]);
+        $total = $this->entityManager->getRepository(OemRaw::class)
                 ->count([]);
                 
         return new ViewModel([
-            'binds' => $bind,
+            'bind' => $bind,
+            'noBind' => $noBind,
             'total' => $total,
         ]);  
     }
     
-    public function articleContentAction()
+    public function contentAction()
     {
         ini_set('memory_limit', '512M');
         	        
@@ -214,8 +73,8 @@ class OemController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         
-        $query = $this->entityManager->getRepository(Article::class)
-                        ->findAllArticle(['q' => $q]);
+        $query = $this->entityManager->getRepository(OemRaw::class)
+                        ->findAllOem(['q' => $q]);
 
         $total = count($query->getResult(2));
         
@@ -230,7 +89,7 @@ class OemController extends AbstractActionController
         ]);          
     }    
     
-    public function articleViewAction() 
+    public function viewAction() 
     {       
         $articleId = (int)$this->params()->fromRoute('id', -1);
 

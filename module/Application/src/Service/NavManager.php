@@ -148,6 +148,12 @@ class NavManager
                         ];
                 
                 $rbDropdownItems[] = [
+                            'id' => 'oem',
+                            'label' => 'Кроссы',
+                            'link' => $url('oem', ['action'=>'index'])
+                        ];
+                
+                $rbDropdownItems[] = [
                             'id' => 'currency',
                             'label' => 'Валюты',
                             'link' => $url('currency')

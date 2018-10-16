@@ -214,20 +214,20 @@ class OemRepository  extends EntityRepository{
     }
 
     /**
-     * Запрос по неизвестным производителям по разным параметрам
+     * Запрос по кроссам по разным параметрам
      * 
      * @param array $params
      * @return object
      */
-    public function findAllArticle($params = null)
+    public function findAllOem($params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c, u')
-            ->from(Article::class, 'c')
-            ->join('c.unknownProducer', 'u')    
+        $queryBuilder->select('c')
+            ->from(OemRaw::class, 'c')
+            //->join('c.unknownProducer', 'u')    
             ->orderBy('c.code')                
                 ;
         
@@ -240,9 +240,6 @@ class OemRepository  extends EntityRepository{
         }    
         
         if (is_array($params)){
-            if (isset($params['unattached'])){
-                $queryBuilder->where('c.good is null');
-            }
             if (isset($params['q'])){
                 $filter = new \Application\Filter\ArticleCode();
                 $queryBuilder->where('c.code like :search')
