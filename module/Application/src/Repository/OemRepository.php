@@ -116,30 +116,32 @@ class OemRepository  extends EntityRepository{
     
     
     /**
-     * Количество записей в прайсах с этим артикулом
+     * Количество записей в прайсах с этим номером
      * в разрезе поставщиков
      * 
-     * @param Application\Entity\Article $article
+     * @param Application\Entity\Article $oem
      * 
      * @return object
      */
-    public function rawpriceCountBySupplier($article)
+    public function rawpriceCountBySupplier($oem)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('a.id as articleId')
-            ->from(Article::class, 'a')
+        $queryBuilder->select('o.id as oemId')
+            ->from(OemRaw::class, 'o')
+            ->join('o.article', 'a')    
+            ->addSelect('count(a.id) as articleCount')
             ->join('a.rawprice', 'r')    
             ->addSelect('count(r.id) as rawpriceCount')
             ->join('r.raw', 'w')    
             ->join('w.supplier', 's')
             ->addSelect('s.id as supplierId', 's.name as supplierName')    
-            ->where('a.code = ?1')
+            ->where('o.code = ?1')
             ->andWhere('r.status = ?2')
-            ->groupBy('a.id')    
+            ->groupBy('o.id')    
             ->addGroupBy('s.id')    
-            ->setParameter('1', $article->getCode())    
+            ->setParameter('1', $oem->getCode())    
             ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
         //var_dump($queryBuilder->getQuery()->getDQL());

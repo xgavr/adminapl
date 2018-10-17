@@ -151,7 +151,7 @@ class OemManager
      */
     public function randRawpriceBy($params)
     {
-        return $this->entityManager->getRepository(Article::class)
+        return $this->entityManager->getRepository(OemRaw::class)
                 ->randRawpriceBy($params);
     }   
 }

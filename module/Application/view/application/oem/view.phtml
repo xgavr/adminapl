@@ -1,5 +1,5 @@
 <?php
-$this->headTitle($article->getCode());
+$this->headTitle($oem->getCode());
 
 $this->mainMenu()->setActiveItemId('rb');
 
@@ -33,7 +33,7 @@ $this->pageBreadcrumbs()->setItems([
                 <b><?= $row['supplierName'];?></b>
             </td>
         </tr>
-        <?php $randRawprices = $articleManager->randRawpriceBy(['article' => $row['articleId'], 'supplier' => $row['supplierId']]);?>
+        <?php $randRawprices = $oemManager->randRawpriceBy(['article' => $row['articleId'], 'supplier' => $row['supplierId']]);?>
             <?php foreach($randRawprices as $randRawprice):?>
                 <tr>
                     <td>
