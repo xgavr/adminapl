@@ -47,6 +47,7 @@ $this->headScript()
                      <th data-field="code" data-formatter="oemFormatter">Номер</th>
                      <th data-field="fullcode">Полный номер</th>             
                      <th data-field="article" data-formatter="linkFormatter">Артикул</th>            
+                     <th data-field="unknownProducer" data-formatter="unknownProducerFormatter">Производитель</th>            
                  </tr>                
             </thead>
         </table>
@@ -135,10 +136,10 @@ $this->headScript()
         ].join(''); 
     }    
     
-    function unknownProducerFormatter(value){
+    function unknownProducerFormatter(value, row){
         return [
             '<div class="pull-left">',
-            '<a href="/producer/unknown-view/' + value.id + '" target="_blank">' + value.name + '</a>',
+            '<a href="/producer/unknown-view/' + row.article.unknownProducer.id + '" target="_blank">' + row.article.unknownProducer.name + '</a>',
             '</div>'
         ].join('');         
     }

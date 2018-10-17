@@ -225,9 +225,10 @@ class OemRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('o, a')
+        $queryBuilder->select('o, a, u')
             ->from(OemRaw::class, 'o')
-            ->join('o.article', 'a')    
+            ->join('o.article', 'a') 
+            ->join('a.unknownProducer', 'u')    
             ->orderBy('o.code')                
                 ;
         
