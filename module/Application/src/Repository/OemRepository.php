@@ -219,16 +219,16 @@ class OemRepository  extends EntityRepository{
      * @param array $params
      * @return object
      */
-    public function findAllOem($params = null)
+    public function findAllOemRaw($params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(OemRaw::class, 'c')
-            //->join('c.unknownProducer', 'u')    
-            ->orderBy('c.code')                
+        $queryBuilder->select('o, a')
+            ->from(OemRaw::class, 'o')
+            ->join('o.article', 'a')    
+            ->orderBy('o.code')                
                 ;
         
         if (!is_array($params)){
@@ -242,20 +242,20 @@ class OemRepository  extends EntityRepository{
         if (is_array($params)){
             if (isset($params['q'])){
                 $filter = new \Application\Filter\ArticleCode();
-                $queryBuilder->where('c.code like :search')
+                $queryBuilder->where('o.code like :search')
                     ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('c.code > ?1')
+                $queryBuilder->where('o.code > ?1')
                     ->setParameter('1', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('c.code < ?2')
+                $queryBuilder->where('o.code < ?2')
                     ->setParameter('2', $params['prev1'])
-                    ->orderBy('c.code', 'DESC')
+                    ->orderBy('o.code', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }

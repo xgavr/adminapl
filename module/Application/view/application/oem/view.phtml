@@ -5,24 +5,24 @@ $this->mainMenu()->setActiveItemId('rb');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Артикулы производителей'=>$this->url('producer', ['action' => 'article']),
-            $article->getCode()=>$this->url('producer', ['action'=>'article-view', 'id'=>$article->getId()])
+            'Кроссы'=>$this->url('oem'),
+            $oem->getCode()=>$this->url('oem', ['action'=>'view', 'id'=>$oem->getId()])
             ]);
 
 ?>
 <h1>
-    <?= $this->escapeHtml($article->getFullCode()); ?>    
+    <?= $this->escapeHtml($oem->getFullCode()); ?>    
 </h1>
 <table class="table table-striped">
     <tr>
         <td colspan="4">            
             <?php if ($prev):?>
-                <a href="/producer/article-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getFullCode()?></a>
+                <a href="/oem/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getFullCode()?></a>
             <?php endif;?>            
         </td>
         <td align="right">
             <?php if ($next):?>
-                <a href="/producer/article-view/<?= $next[0]->getId()?>"><?= $next[0]->getFullCode()?>&rarr;</a>
+                <a href="/oem/view/<?= $next[0]->getId()?>"><?= $next[0]->getFullCode()?>&rarr;</a>
             <?php endif;?>                            
         </td>
     </tr>

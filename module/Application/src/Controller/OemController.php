@@ -74,7 +74,7 @@ class OemController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         
         $query = $this->entityManager->getRepository(OemRaw::class)
-                        ->findAllOem(['q' => $q]);
+                        ->findAllOemRaw(['q' => $q]);
 
         $total = count($query->getResult(2));
         
@@ -91,36 +91,36 @@ class OemController extends AbstractActionController
     
     public function viewAction() 
     {       
-        $articleId = (int)$this->params()->fromRoute('id', -1);
+        $oemId = (int)$this->params()->fromRoute('id', -1);
 
-        if ($articleId<0) {
+        if ($oemId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
-        $article = $this->entityManager->getRepository(Article::class)
-                ->findOneById($articleId);
+        $oem = $this->entityManager->getRepository(OemRaw::class)
+                ->findOneById($oemId);
         
-        if ($article == null) {
+        if ($oem == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $rawpriceCountBySupplier = $this->entityManager->getRepository(Article::class)
-                ->rawpriceCountBySupplier($article);
+        $rawpriceCountBySupplier = $this->entityManager->getRepository(OemRaw::class)
+                ->rawpriceCountBySupplier($oem);
         
-        $prevQuery = $this->entityManager->getRepository(Article::class)
-                        ->findAllArticle(['prev1' => $article->getCode()]);
-        $nextQuery = $this->entityManager->getRepository(Article::class)
-                        ->findAllArticle(['next1' => $article->getCode()]);        
+        $prevQuery = $this->entityManager->getRepository(OemRaw::class)
+                        ->findAllOemRaw(['prev1' => $oem->getCode()]);
+        $nextQuery = $this->entityManager->getRepository(OemRaw::class)
+                        ->findAllOemRaw(['next1' => $oem->getCode()]);        
 
         // Render the view template.
         return new ViewModel([
-            'article' => $article,
+            'oem' => $oem,
             'rawpriceCountBySupplier' => $rawpriceCountBySupplier,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
-            'articleManager' => $this->articleManager,
+            'oemManager' => $this->oemManager,
         ]);
     }
     

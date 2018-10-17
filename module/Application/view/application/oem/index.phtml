@@ -44,9 +44,9 @@ $this->headScript()
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric">ID</th>
-                     <th data-field="code" data-formatter="linkFormatter">Номер</th>
+                     <th data-field="code" data-formatter="oemFormatter">Номер</th>
                      <th data-field="fullcode">Полный номер</th>             
-                     <!--<th data-field="unknownProducer" data-formatter="unknownProducerFormatter">Производитель</th>-->             
+                     <th data-field="article" data-formatter="linkFormatter">Артикул</th>            
                  </tr>                
             </thead>
         </table>
@@ -119,10 +119,18 @@ $this->headScript()
         return params;
     }
     
+    function oemFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/oem/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
     function linkFormatter(value, row){
         return [
             '<div class="pull-left">',
-            '<a href="/producer/article-view/' + row.id + '" target="_blank">' + value + '</a>',
+            '<a href="/producer/article-view/' + row.article.id + '" target="_blank">' + row.article.code + '</a>',
             '</div>'
         ].join(''); 
     }    
