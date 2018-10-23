@@ -37,7 +37,9 @@ $this->pageBreadcrumbs()->setItems([
             <?php foreach($randRawprices as $randRawprice):?>
                 <tr>
                     <td>
-                        <?= $randRawprice->getArticle();?>
+                        <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $randRawprice->getCode()->getId()]);?>">
+                            <?= $randRawprice->getArticle();?>
+                        </a>   
                     </td>
                     <td>
                         <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $randRawprice->getUnknownProducer()->getId()]);?>">
