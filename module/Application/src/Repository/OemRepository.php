@@ -139,8 +139,8 @@ class OemRepository  extends EntityRepository{
             ->addSelect('s.id as supplierId', 's.name as supplierName')    
             ->where('o.code = ?1')
             ->andWhere('r.status = ?2')
-            ->groupBy('o.id')    
-            ->addGroupBy('s.id')    
+            ->groupBy('s.id')    
+            ->addGroupBy('o.id')    
             ->setParameter('1', $oem->getCode())    
             ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
