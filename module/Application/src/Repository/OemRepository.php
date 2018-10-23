@@ -131,7 +131,7 @@ class OemRepository  extends EntityRepository{
         $queryBuilder->select('o.id as oemId')
             ->from(OemRaw::class, 'o')
             ->join('o.article', 'a')    
-            ->addSelect('count(a.id) as articleCount')
+            ->addSelect('a.id as articleId')
             ->join('a.rawprice', 'r')    
             ->addSelect('count(r.id) as rawpriceCount')
             ->join('r.raw', 'w')    
