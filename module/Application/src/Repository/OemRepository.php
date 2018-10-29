@@ -194,20 +194,20 @@ class OemRepository  extends EntityRepository{
     }
 
     /**
-     * Найти артикулы для удаления
+     * Найти номера для удаления
      * 
      * @return object
      */
-    public function findArticlesForDelete()
+    public function findOemRawForDelete()
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('u')
+        $queryBuilder->select('o')
             ->addSelect('count(r.id) as rawpriceCount')    
-            ->from(Article::class, 'u')
-            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.code = u.id')
-            ->groupBy('u.id')
+            ->from(OemRaw::class, 'o')
+            ->leftJoin('o.rawprice', 'r')
+            ->groupBy('o.id')
             ->having('rawpriceCount = 0')    
             //->setParameter('1', Rawprice::STATUS_PARSED)
                 ;

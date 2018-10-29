@@ -172,35 +172,13 @@ class OemController extends AbstractActionController
         ]);          
     }
     
-    public function deleteEmptyOemAction()
+    public function deleteEmptyAction()
     {
-        $deleted = $this->articleManager->removeEmptyArticles();
+        $deleted = $this->oemManager->removeEmpty();
                 
         return new JsonModel([
             'result' => 'ok-reload',
             'message' => $deleted.' удалено!',
         ]);          
-    }
-    
-    
-    public function deleteUnknownAction()
-    {
-        $page = $this->params()->fromQuery('page', 1);
-
-        $unknownProducerId = $this->params()->fromRoute('id', -1);
-        
-        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                ->findOneById($unknownProducerId);        
-        if ($unknownProducer == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        $this->producerManager->removeUnknownProducer($unknownProducer);
-        
-        // Перенаправляем пользователя на страницу "producer".
-        return $this->redirect()->toRoute('producer', ['action' => 'unknown'], ['query' => ['page' => $page]]);
     }    
-
-    
 }

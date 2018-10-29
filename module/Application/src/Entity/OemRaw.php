@@ -40,6 +40,16 @@ class OemRaw {
      * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
      */
     protected $article;    
+    
+     /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Rawprice")
+     * @ORM\JoinTable(name="rawprice_oem_raw",
+     *      joinColumns={@ORM\JoinColumn(name="oem_raw_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="rawprice_id", referencedColumnName="id")}
+     *      )
+     */
+    private $rawprice;  
+    
 
     public function getId() 
     {
@@ -90,4 +100,12 @@ class OemRaw {
         $article->addOemRaw($this);
     }           
     
+    /**
+     * Returns the array of rawprice assigned to this oemRaw.
+     * @return array
+     */
+    public function getRawprice()
+    {
+        return $this->rawprice;
+    }        
 }

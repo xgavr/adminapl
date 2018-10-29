@@ -131,7 +131,6 @@ class OemManager
         $this->entityManager->flush();
     }
     
-
     /**
      * Удаление кода
      * 
@@ -144,6 +143,26 @@ class OemManager
         $this->entityManager->flush($oemRaw);
     }    
     
+    /**
+     * Поиск и удаление номеров не привязаных к строкам прайсов
+     */
+    public function removeEmpty()
+    {
+        ini_set('memory_limit', '2048M');
+        
+        $oemForDelete = $this->entityManager->getRepository(OemRaw::class)
+                ->findOemRawForDelete();
+
+        foreach ($oemForDelete as $row){
+            $this->removeOemRaw($row[0], false);
+        }
+        
+        $this->entityManager->flush();
+        
+        return count($oemForDelete);
+    }    
+    
+
     /**
      * Выборка из прайсов по id артикля и id поставщика 
      * @param array $params
