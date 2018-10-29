@@ -15,3 +15,4 @@ phpunit.xml
 /data/token/
 /data/image/
 /data/statements/
+/data/session/
