@@ -124,6 +124,26 @@ class OemController extends AbstractActionController
         ]);
     }
     
+    public function viewOnCodeAction() 
+    {       
+        $oemCode = $this->params()->fromRoute('id', -1);
+
+        if ($oemCode<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $oem = $this->entityManager->getRepository(OemRaw::class)
+                ->findOneByCode($oemCode);
+        
+        if ($oem == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }   
+        
+        $this->redirect()->toUrl('/oem/view/'.$oem->getId());
+    }
+    
     public function parseAction()
     {
         $rawpriceId = (int)$this->params()->fromRoute('id', -1);
