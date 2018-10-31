@@ -131,7 +131,7 @@ $this->pageBreadcrumbs()->setItems([
                                     <?php else:?>
                                         <?= $this->escapeHtml($value)?>
                                     <?php endif;?>    
-                                <?php elseif ($key == 'Номер замены' && $rawprice->getStatusOem() == $rawprice::OEM_PARSED):?>
+                                <?php elseif ($key == 'Номер замены' || $key == 'Оригинальный номер' && $rawprice->getStatusOem() == $rawprice::OEM_PARSED):?>
                                     <?php $oems = $rawprice->getOemAsArray();?>
                                     <?php if(count($oems)):?>    
                                         <?php foreach($oems as $oemCode):?>
