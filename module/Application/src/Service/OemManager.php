@@ -111,7 +111,7 @@ class OemManager
     public function grabOemFromRaw($raw)
     {
         ini_set('memory_limit', '4096M');
-        set_time_limit(600);
+        set_time_limit(1200);
         $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
@@ -119,7 +119,7 @@ class OemManager
         
         foreach ($rawprices as $rawprice){
             $this->addNewOemRawFromRawprice($rawprice, false);
-            if (time() > $startTime + 400){
+            if (time() > $startTime + 600){
                 $this->entityManager->flush();
                 return;
             }
