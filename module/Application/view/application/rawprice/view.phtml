@@ -135,7 +135,7 @@ $this->pageBreadcrumbs()->setItems([
                                     <?php $oems = $rawprice->getOemAsArray();?>
                                     <?php if(count($oems)):?>    
                                         <?php foreach($oems as $oemCode):?>
-                                            <span><a href="/oem/view-on-code/<?=$oemCode?>"><?= $oemCode ?></a></span>
+                                            <span><a href="/oem/view-on-code/<?= trim($oemCode) ?>"><?= $oemCode ?></a></span>
                                         <?php endforeach;?>
                                     <?php else:?>
                                         <?= $this->escapeHtml($value)?>
