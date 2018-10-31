@@ -126,15 +126,16 @@ class OemController extends AbstractActionController
     
     public function viewOnCodeAction() 
     {       
-        $oemCode = $this->params()->fromRoute('id', -1);
+        $oemCode = $this->params()->fromQuery('code');
 
-        if ($oemCode<0) {
+        if (!$oemCode) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         $filter = new \Application\Filter\ArticleCode();
+
         $oem = $this->entityManager->getRepository(OemRaw::class)
-                ->findOneByCode($filter->filter(trim($oemCode)));
+                ->findOneByCode($filter->filter($oemCode));
         
         if ($oem == null) {
             $this->getResponse()->setStatusCode(404);
