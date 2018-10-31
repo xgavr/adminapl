@@ -119,7 +119,7 @@ class OemManager
         
         foreach ($rawprices as $rawprice){
             $this->addNewOemRawFromRawprice($rawprice, false);
-            if (time() > $startTime + 600){
+            if (time() > $startTime + 400){
                 $this->entityManager->flush();
                 return;
             }
