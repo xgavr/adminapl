@@ -132,9 +132,9 @@ class OemController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }
-        
+        $filter = new \Application\Filter\ArticleCode();
         $oem = $this->entityManager->getRepository(OemRaw::class)
-                ->findOneByCode($oemCode);
+                ->findOneByCode($filter->filter($oemCode));
         
         if ($oem == null) {
             $this->getResponse()->setStatusCode(404);
