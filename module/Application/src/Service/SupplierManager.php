@@ -358,7 +358,7 @@ class SupplierManager
                         break;  
                     case 'oe':
 			$result .= '                    $oes = $desc["col'.$value.'"];'.PHP_EOL;
-			$result .= '                    $oes = str_replace(array(",", "\\", "/", "+", "|", "\t"), ";", $oes);'.PHP_EOL;
+			$result .= '                    $oes = str_replace(array(",", "\\\", "/", "+", "|", "\t"), ";", $oes);'.PHP_EOL;
 			$result .= '                    $oes = explode(";", $oes);'.PHP_EOL;
 			$result .= '                    $newoes = array();'.PHP_EOL;
 			$result .= '                    foreach ($oes as $oe){'.PHP_EOL;
@@ -372,7 +372,7 @@ class SupplierManager
                     case 'rest': 
                         $result .= '                    $result["presence"]  = (trim($desc["col'.$value.'"]) && trim($desc["col'.$value.'"]) != "-") ? 1:0;'.PHP_EOL;
                     default :
-                        $result .= '                    $result["'.$key.'"] = trim($desc["col'.$value.'"])'.PHP_EOL;
+                        $result .= '                    $result["'.$key.'"] = trim($desc["col'.$value.'"]);'.PHP_EOL;
                         break;
                 }
             }    
