@@ -1046,6 +1046,26 @@ class SupplierController extends AbstractActionController
         return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
     }
     
+    public function parsPriceListTextAction()
+    {
+        $priceDescriptionId = $this->params()->fromRoute('id', -1);
+        
+        $priceDescription = $this->entityManager->getRepository(PriceDescription::class)
+                ->findOneById($priceDescriptionId);
+        
+        if ($priceDescription == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+                
+        $text = '<pre>'.nl2br($this->supplierManager->parsPriceListText($priceDescription)).'</pre>';
+        return new JsonModel(
+           ['text' => $text]
+        );           
+        
+        exit;        
+    }
+    
     public function uploadPriceFormAction()
     {
         $supplierId = (int)$this->params()->fromRoute('id', -1);

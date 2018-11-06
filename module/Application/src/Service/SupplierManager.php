@@ -339,6 +339,32 @@ class SupplierManager
         $this->entityManager->flush();
     }
     
+    /**
+     * Описание полей прайса для ParsPriceList
+     * @param Application\Entity\PriceDescription $priceDescription
+     * 
+     * @return string
+     */
+    public function parsPriceListText($priceDescription)
+    {
+        $aplLabels = $priceDescription->getAplLabels();
+        if (count($aplLabels)){
+            $result  = '            if ($this->_supplier === '.$priceDescription->getSupplier()->getAplId().'){ //'.$priceDescription->getSupplier()->getName().PHP_EOL;
+            $result .= '                if ($this->_datatype == "price"){'.PHP_EOL;
+            foreach ($aplLabels as $key => $value){
+                switch ($key){
+                    default :
+                        $result .= '                    $result["'.$key.'"] = trim($desc["col'.$value.'"])'.PHP_EOL;
+                        break;
+                }
+            }    
+            $result .= '                }'.PHP_EOL;
+            $result .= '            }'.PHP_EOL;
+        }
+        
+        return $result;
+    }
+    
     public function addNewPriceGetting($supplier, $data)
     {
         $priceGetting = new PriceGetting();

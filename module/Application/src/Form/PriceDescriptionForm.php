@@ -59,6 +59,7 @@ class PriceDescriptionForm extends Form
             ],
             'options' => [
                 'label' => 'Артикул товара',
+                'aplLabel' => 'art',
             ],
         ]);
         
@@ -83,6 +84,7 @@ class PriceDescriptionForm extends Form
             ],
             'options' => [
                 'label' => 'Производитель',
+                'aplLabel' => 'makername',
             ],
         ]);
         
@@ -118,6 +120,7 @@ class PriceDescriptionForm extends Form
             ],
             'options' => [
                 'label' => 'Наименование товара',
+                'aplLabel' => 'artname',
             ],
         ]);
         
@@ -152,6 +155,7 @@ class PriceDescriptionForm extends Form
             ],
             'options' => [
                 'label' => 'Цена',
+                'aplLabel' => 'price',
             ],
         ]);
         
@@ -186,6 +190,7 @@ class PriceDescriptionForm extends Form
             ],
             'options' => [
                 'label' => 'Наличие, остаток',
+                'aplLabel' => 'rest',
             ],
         ]);
         
@@ -219,6 +224,7 @@ class PriceDescriptionForm extends Form
             ],
             'options' => [
                 'label' => 'Оригинальный номер',
+                'aplLabel' => 'oe',
             ],
         ]);
         
@@ -241,6 +247,7 @@ class PriceDescriptionForm extends Form
             ],
             'options' => [
                 'label' => 'Мин. количество',
+                'aplLabel' => 'comp',
             ],
         ]);
         

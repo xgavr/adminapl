@@ -420,7 +420,7 @@ class PriceDescription {
         $this->dateCreated = $dateCreated;
     }     
     
-    /*
+    /**
      * Получить поле по значению
      */
     public function getFieldLabel($value)
@@ -438,6 +438,30 @@ class PriceDescription {
             }
         }
         return;
+    }
+    
+    /**
+     * Получить aplLabels
+     * @return array
+     */
+    public function getAplLabels()
+    {
+        $result = [];
+        
+        $form = new \Application\Form\PriceDescriptionForm();
+        $elements = $form->getElements();
+        foreach ($elements as $element){
+            if(in_array($element->getName(), ['name', 'status', 'type', 'defaultProducer'])) continue;
+            $func = 'get'.ucfirst($element->getName());
+            if (method_exists($this, $func)){
+                $options = $element->getOptions();
+                $value = $this->$func();
+                if($value && $options['aplLabel']){
+                    $result[$options['aplLabel']] = $value;
+                }
+            }
+        }
+        return $result;
     }
     
     
