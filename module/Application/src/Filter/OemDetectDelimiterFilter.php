@@ -46,6 +46,7 @@ class OemDetectDelimiterFilter extends AbstractFilter
             "|" => 0,
             "/" => 0,
             "\\" => 0,
+            "+" => 0,
         );
 
         foreach ($delimiters as $delimiter => &$count) {

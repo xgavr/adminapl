@@ -353,6 +353,24 @@ class SupplierManager
             $result .= '                if ($this->_datatype == "price"){'.PHP_EOL;
             foreach ($aplLabels as $key => $value){
                 switch ($key){
+                    case 'price': 
+                        $result .= '                    $result["'.$key.'"] = $this->_getPrice($desc["col'.$value.'"]);'.PHP_EOL;
+                        break;  
+                    case 'oe':
+			$result .= '                    $oes = $desc["col'.$value.'"];'.PHP_EOL;
+			$result .= '                    $oes = str_replace(array(",", "\\", "/", "+", "|", "\t"), ";", $oes);'.PHP_EOL;
+			$result .= '                    $oes = explode(";", $oes);'.PHP_EOL;
+			$result .= '                    $newoes = array();'.PHP_EOL;
+			$result .= '                    foreach ($oes as $oe){'.PHP_EOL;
+			$result .= '                        $newoes[] = $this->_preg_oe($oe);'.PHP_EOL;
+			$result .= '                    }'.PHP_EOL;					
+			$result .= '                    $sourse_oe = implode(";", $newoes);'.PHP_EOL;
+			$result .= '                    $result["oe"] = $sourse_oe;'.PHP_EOL;
+			$result .= '                    $firstsp = trim($newoes[0]);'.PHP_EOL;
+			$result .= '                    $result["source_oe"] = trim($firstsp);'.PHP_EOL;
+                        break;
+                    case 'rest': 
+                        $result .= '                    $result["presence"]  = (trim($desc["col'.$value.'"]) && trim($desc["col'.$value.'"]) != "-") ? 1:0;'.PHP_EOL;
                     default :
                         $result .= '                    $result["'.$key.'"] = trim($desc["col'.$value.'"])'.PHP_EOL;
                         break;

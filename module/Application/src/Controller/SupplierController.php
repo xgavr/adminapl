@@ -1058,7 +1058,7 @@ class SupplierController extends AbstractActionController
             return;                        
         }        
                 
-        $text = '<pre>'.nl2br($this->supplierManager->parsPriceListText($priceDescription)).'</pre>';
+        $text = '<pre>'.$this->supplierManager->parsPriceListText($priceDescription).'</pre>';
         return new JsonModel(
            ['text' => $text]
         );           
