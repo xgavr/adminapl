@@ -60,6 +60,12 @@ class Article {
     private $oemRaw;
         
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\NameRaw", mappedBy="article")
+    * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
+     */
+    private $nameRaw;
+        
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -152,6 +158,23 @@ class Article {
     public function addOemRaw($oemRaw)
     {
         $this->oemRaw[] = $oemRaw;
+    }
+      
+    /**
+     * Returns the array of contacts assigned to this.
+     * @return array
+     */
+    public function getNameRaw()
+    {
+        return $this->nameRaw;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addNameRaw($nameRaw)
+    {
+        $this->nameRaw[] = $nameRaw;
     }
       
     /**

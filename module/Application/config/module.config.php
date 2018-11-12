@@ -272,6 +272,7 @@ return [
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
+            Service\NameManager::class => Service\Factory\NameManagerFactory::class,
             Service\NavManager::class => Service\Factory\NavManagerFactory::class,
             Service\OemManager::class => Service\Factory\OemManagerFactory::class,
             Service\OrderManager::class => Service\Factory\OrderManagerFactory::class,

@@ -132,6 +132,7 @@ class AdminManager {
         $config->price->parse_producer = $data['parse_producer']; //разбирать производителей из прайсов
         $config->price->parse_article = $data['parse_article']; //разбирать артикулы из прайсов
         $config->price->parse_oem = $data['parse_oem']; //разбирать номера из прайсов
+        $config->price->parse_name = $data['parse_name']; //разбирать наименования из прайсов
         
         $writer = new PhpArray();
         

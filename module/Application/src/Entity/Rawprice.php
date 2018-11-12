@@ -208,12 +208,22 @@ class Rawprice {
      */
     private $oemRaw;
     
+     /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\NameRaw")
+     * @ORM\JoinTable(name="rawprice_name_raw",
+     *      joinColumns={@ORM\JoinColumn(name="rawprice_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="name_raw_id", referencedColumnName="id")}
+     *      )
+     */
+    private $nameRaw;
+    
     /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->oemRaw = new ArrayCollection();
+        $this->nameRaw = new ArrayCollection();
     }
    
     /**
@@ -325,7 +335,7 @@ class Rawprice {
      * Returns statusName.
      * @return int     
      */
-    public function getStatusName() 
+    public function getStatusNameRaw() 
     {
         return $this->statusName;
     }
@@ -420,7 +430,7 @@ class Rawprice {
 
     public function setGoodname($goodname) 
     {
-        $this->goodname = mb_substr($title, 0, 200);
+        $this->goodname = mb_substr($goodname, 0, 200);
     }     
     
     public function getTitle() 
@@ -760,6 +770,24 @@ class Rawprice {
     public function addOemRaw($oemRaw)
     {
         $this->oemRaw->add($oemRaw);
+    }
+    
+    /**
+     * Returns the array of nameRaw assigned to this rawprice.
+     * @return array
+     */
+    public function getNameRaw()
+    {
+        return $this->nameRaw;
+    }    
+    
+    /**
+     * 
+     * @param Application\Entity\NameRaw $nameRaw
+     */
+    public function addNameRaw($nameRaw)
+    {
+        $this->nameRaw->add($nameRaw);
     }
 
     
