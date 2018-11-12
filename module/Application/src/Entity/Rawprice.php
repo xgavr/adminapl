@@ -28,6 +28,9 @@ class Rawprice {
     const OEM_NEW       = 1; // только что загрузили
     const OEM_PARSED    = 2; // прошел разборку.
 
+    const NAME_NEW       = 1; // только что загрузили
+    const NAME_PARSED    = 2; // прошел разборку.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -159,6 +162,11 @@ class Rawprice {
      * @ORM\Column(name="status_oem")   
      */
     protected $statusOem = self::OEM_NEW;    
+
+    /**
+     * @ORM\Column(name="status_name")   
+     */
+    protected $statusName = self::NAME_NEW;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
@@ -313,6 +321,58 @@ class Rawprice {
         $this->statusOem = $statusOem;
     }   
     
+    /**
+     * Returns statusName.
+     * @return int     
+     */
+    public function getStatusName() 
+    {
+        return $this->statusName;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusNameList() 
+    {
+        return [
+            self::NAME_NEW => 'Наименование новое',
+            self::NAME_PARSED => 'Наименование разобрано',
+        ];
+    }    
+    
+    /**
+     * Returns user statusName as string.
+     * @return string
+     */
+    public function getStatusNameAsString()
+    {
+        $list = self::getStatusNameList();
+        if (isset($list[$this->statusName]))
+            return $list[$this->statusName];
+        
+        return 'Unknown';
+    }  
+    
+    public function getStatusNameName($statusName)
+    {
+        $list = self::getStatusNameList();
+        if (isset($list[$statusName]))
+            return $list[$statusName];
+        
+        return 'Unknown';        
+    }
+    
+    /**
+     * Sets statusName.
+     * @param int $statusName     
+     */
+    public function setStatusName($statusName) 
+    {
+        $this->statusName = $statusName;
+    }   
+
     public function getId() 
     {
         return $this->id;

@@ -32,6 +32,7 @@ class Raw {
     const STAGE_PRODUCER_PARSED     = 2; //производители разобраны 
     const STAGE_ARTICLE_PARSED      = 3; //артикулы разобраны 
     const STAGE_OEM_PARSED          = 4; //номера замен разобраны
+    const STAGE_NAME_PARSED          = 4; //номера замен разобраны
     
            
     /**
@@ -226,6 +227,7 @@ class Raw {
             self::STAGE_PRODUCER_PARSED => 'Производители разобраны',
             self::STAGE_ARTICLE_PARSED => 'Артикулы разобраны',
             self::STAGE_OEM_PARSED => 'Номера замен разобраны',
+            self::STAGE_NAME_PARSED => 'Наименования разобраны',
         ];
     }    
     
