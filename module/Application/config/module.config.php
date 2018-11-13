@@ -253,6 +253,7 @@ return [
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
+            Controller\NameController::class => Controller\Factory\NameControllerFactory::class,
             Controller\OemController::class => Controller\Factory\OemControllerFactory::class,
             Controller\OrderController::class => Controller\Factory\OrderControllerFactory::class,
             Controller\PriceController::class => Controller\Factory\PriceControllerFactory::class,

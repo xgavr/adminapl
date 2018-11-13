@@ -66,12 +66,13 @@ final class Version20181112154946 extends AbstractMigration
         $table = $schema->createTable('name_raw');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);
         $table->addColumn('lemma', 'string', ['notnull'=>true, 'length' => 24]);        
-        $table->addColumn('pos', 'integer', ['notnull'=>true]);        
+        $table->addColumn('stemm', 'string', ['notnull'=>true, 'length' => 24]);        
+        $table->addColumn('pos', 'integer', ['notnull'=>true, 'default' => 0]);        
         $table->addColumn('article_id', 'integer', ['notnull' => true]);
         $table->addForeignKeyConstraint('article', ['article_id'], ['id'], 
-                ['onUpdate'=>'CASCADE'], 'article_id_oem_raw_article_id_fk');
+                ['onUpdate'=>'CASCADE'], 'article_id_name_raw_article_id_fk');
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['code', 'article_id'], 'code_article_id');
+        $table->addUniqueIndex(['article_id', 'lemma', 'stemm'], 'lemma_article_id');
         $table->addOption('engine' , 'InnoDB');
 
 
