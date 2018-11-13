@@ -119,6 +119,20 @@ return [
                     ],
                 ],
             ],        
+            'name' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/name[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\NameController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'oem' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -310,6 +324,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\NameController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

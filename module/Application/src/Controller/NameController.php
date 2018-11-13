@@ -40,13 +40,19 @@ class NameController extends AbstractActionController
      */
     private $articleManager;    
     
+    /**
+     * Менеджер наименований товаров.
+     * @var Application\Service\NameManager 
+     */
+    private $nameManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $producerManager, $articleManager, $oemManager) 
+    public function __construct($entityManager, $producerManager, $articleManager, $nameManager) 
     {
         $this->entityManager = $entityManager;
         $this->producerManager = $producerManager;
         $this->articleManager = $articleManager;
-        $this->oemManager = $oemManager;
+        $this->nameManager = $nameManager;
     }    
     
     public function indexAction()
@@ -63,6 +69,17 @@ class NameController extends AbstractActionController
             'noBind' => $noBind,
             'total' => $total,
         ]);  
+    }
+    
+    public function wordsAction()
+    {
+        $text = 'Колодки тормозные перед LEXUS GX470/460/TOYOTA LAND CRUISER PRADO 120/150 02-';
+        $article = new \Mystem\Article($text);
+        foreach ($article->words as $word) {
+            echo $word." ";
+        }
+        
+        exit;
     }
     
     public function contentAction()

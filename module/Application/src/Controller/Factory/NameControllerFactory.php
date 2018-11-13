@@ -18,7 +18,7 @@ use Application\Service\NameManager;
  *
  * @author Daddy
  */
-class OemControllerFactory implements FactoryInterface {
+class NameControllerFactory implements FactoryInterface {
     
     public function __invoke(ContainerInterface $container, 
                      $requestedName, array $options = null)
@@ -30,6 +30,6 @@ class OemControllerFactory implements FactoryInterface {
         $nameManager = $container->get(NameManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new NameController($entityManager, $producerManager, $articleManager, $oemManager);
+        return new NameController($entityManager, $producerManager, $articleManager, $nameManager);
     }
 }
