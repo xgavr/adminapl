@@ -192,16 +192,20 @@ $this->pageBreadcrumbs()->setItems([
                             </div>
                             <div>
                                 <i><?= $priceDescription->getName() ?></i><br/>
-                                
+                                <?php $elements = []; ?>
                                 <?php foreach($priceDescriptionElements as $element):?>
                                     <?php if(in_array($element->getName(), ['name', 'status', 'type'])) continue; ?>
                                     <?php $func = 'get'.ucfirst($element->getName()); ?>
                                     <?php if (method_exists($priceDescription, $func)):?>
                                         <?php if($priceDescription->$func()):?>
-                                            <b><?= $priceDescription->$func()?></b>: <?= $element->getLabel()?> <br/>
+                                            <?php $elements[$priceDescription->$func()] = $element->getLabel()?>
                                         <?php endif;?>    
                                     <?php endif;?>
                                 <?php endforeach; ?>
+                                <?php ksort($elements);?>
+                                <?php foreach ($elements as $key => $value):?>
+                                    <b><?= $key?></b>: <?= $value?> <br/>                                    
+                                <?php endforeach;?>            
                             </div>
                         </div>
                             
