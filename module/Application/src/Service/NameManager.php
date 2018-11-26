@@ -47,7 +47,7 @@ class NameManager
         $titles = [];
         $rawprices = $article->getRawprice();
         foreach ($rawprices as $rawprice){
-            $titles[] = $rawprice->getTitle();
+            $titles[] = mb_strtolower($rawprice->getTitle(), 'UTF-8');
         }
         
         $vectorizer = new TokenCountVectorizer(new WhitespaceTokenizer());
@@ -57,7 +57,7 @@ class NameManager
         $vectorizer2->fit($titles);
         $vacabulary2 = $vectorizer2->getVocabulary();
         
-        return $vacabulary;
+        return ['WhitespaceTokenizer' => $vacabulary, 'WordTokenizer' => $vacabulary2];
     }
     
     /**
