@@ -416,4 +416,10 @@ return [
             ]
         ]
     ],    
+    'providers' => [
+        cijic\phpMorphy\MorphyServiceProvider::class,
+    ],
+    'aliases' => [
+        'Morphy'    => cijic\phpMorphy\Facade\Morphy::class,
+    ],    
 ];

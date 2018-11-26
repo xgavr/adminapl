@@ -16,6 +16,8 @@ use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\Tokenization\WordTokenizer;
 
+use cijic\phpMorphy\Morphy;
+
 /**
  * Description of RbService
  *
@@ -57,7 +59,13 @@ class NameManager
         $vectorizer2->fit($titles);
         $vacabulary2 = $vectorizer2->getVocabulary();
         
-        return ['WhitespaceTokenizer' => $vacabulary, 'WordTokenizer' => $vacabulary2];
+        $morphy = new Morphy('ru');
+        $morph = [];
+        foreach ($vacabulary as $word){
+            $morph[] = $morphy->getPseudoRoot($word);
+        }
+        
+        return ['WhitespaceTokenizer' => $vacabulary, 'WordTokenizer' => $vacabulary2, 'morph' => $morph];
     }
     
     /**
