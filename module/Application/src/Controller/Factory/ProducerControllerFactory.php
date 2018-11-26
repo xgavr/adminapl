@@ -12,6 +12,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\ProducerController;
 use Application\Service\ProducerManager;
 use Application\Service\ArticleManager;
+use Application\Service\NameManager;
 /**
  * Description of RbControllerFactory
  *
@@ -25,8 +26,9 @@ class ProducerControllerFactory implements FactoryInterface {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $producerManager = $container->get(ProducerManager::class);
         $articleManager = $container->get(ArticleManager::class);
+        $nameManager = $container->get(NameManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ProducerController($entityManager, $producerManager, $articleManager);
+        return new ProducerController($entityManager, $producerManager, $articleManager, $nameManager);
     }
 }

@@ -20,7 +20,7 @@ $this->pageBreadcrumbs()->setItems([
                 <a href="/producer/article-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getFullCode()?></a>
             <?php endif;?>            
         </td>
-        <td align="right">
+        <td colspan="2" align="right">
             <?php if ($next):?>
                 <a href="/producer/article-view/<?= $next[0]->getId()?>"><?= $next[0]->getFullCode()?>&rarr;</a>
             <?php endif;?>                            
@@ -68,8 +68,10 @@ $this->pageBreadcrumbs()->setItems([
         <th colspan="4">
             Всего
         </th>
-        <td align="right">
+        <td colspan="2" align="right">
             <b><?= $totalRawpriceCount ?></b>
         </td>
     </tr>
 </table>
+
+<?php print_r($vacabulary)?>

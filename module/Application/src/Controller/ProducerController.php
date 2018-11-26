@@ -38,14 +38,21 @@ class ProducerController extends AbstractActionController
      * Менеджер артикулов производителей.
      * @var Application\Service\ArticleManager 
      */
-    private $articleManager;    
+    private $articleManager; 
+    
+    /**
+     * Менеджер наименований товаров
+     * @var Application\Service\NameManager
+     */
+    private $nameManager;
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $producerManager, $articleManager) 
+    public function __construct($entityManager, $producerManager, $articleManager, $nameManager) 
     {
         $this->entityManager = $entityManager;
         $this->producerManager = $producerManager;
         $this->articleManager = $articleManager;
+        $this->nameManager = $nameManager;
     }    
     
     public function indexAction()
@@ -344,6 +351,7 @@ class ProducerController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
+            'vacabulary' => $this->nameManager->tokenArticle($article),
         ]);
     }
     

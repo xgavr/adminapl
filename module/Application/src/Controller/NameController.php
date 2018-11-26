@@ -82,6 +82,11 @@ class NameController extends AbstractActionController
         exit;
     }
     
+    public function tokenArticleAction()
+    {
+        
+    }
+    
     public function contentAction()
     {
         ini_set('memory_limit', '512M');
