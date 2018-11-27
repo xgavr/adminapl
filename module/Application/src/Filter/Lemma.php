@@ -54,13 +54,13 @@ class Lemma extends AbstractFilter
         if(function_exists('iconv')) {
             foreach($value as &$word) {
                 $word = mb_strtoupper($word, 'utf-8');        
-                //$word = iconv('windows-1251', 'utf-8', $upperWord);
             }
             unset($word);
         }        
         
         $morphy = new phpMorphy($this->dictsPath, $lang, $this->options);
         
+        $result = [];
         foreach ($value as $word){
             $base = $morphy->getBaseForm($word);
             $all = $morphy->getAllForms($word);
@@ -75,40 +75,41 @@ class Lemma extends AbstractFilter
             $collection = $morphy->findWord($word);
 
             if(false === $collection) {
-                return $value;
+                $result[] = $word;
+                continue;
             }
 
-            echo $is_predicted ? '-' : '+', $word, "\n";
-            echo 'lemmas: ', implode(', ', $base), "\n";
-            echo 'all: ', implode(', ', $all), "\n";
-            echo 'poses: ', implode(', ', $part_of_speech), "\n";
+//            echo $is_predicted ? '-' : '+', $word, "\n";
+//            echo 'lemmas: ', implode(', ', $base), "\n";
+//            echo 'all: ', implode(', ', $all), "\n";
+//            echo 'poses: ', implode(', ', $part_of_speech), "\n";
 
             // TODO: $collection->getByPartOfSpeech(...);
             foreach($collection as $paradigm) {
-                // TODO: $paradigm->getBaseForm();
+                $result[] = $paradigm->getBaseForm();
                 // TODO: $paradigm->getAllForms();
                 // TODO: $paradigm->hasGrammems(array('', ''));
                 // TODO: $paradigm->getWordFormsByGrammems(array('', ''));
                 // TODO: $paradigm->hasPartOfSpeech('');
                 // TODO: $paradigm->getWordFormsByPartOfSpeech('');
 
-                echo "lemma: ", $paradigm[0]->getWord(), "\n";
-                foreach($paradigm->getFoundWordForm() as $found_word_form) {
-                    echo
-                        $found_word_form->getWord(), ' ',
-                        $found_word_form->getPartOfSpeech(), ' ',
-                        '(', implode(', ', $found_word_form->getGrammems()), ')',
-                        "\n";
-                }
-                echo "\n";
+//                echo "lemma: ", $paradigm[0]->getWord(), "\n";
+//                foreach($paradigm->getFoundWordForm() as $found_word_form) {
+//                    echo
+//                        $found_word_form->getWord(), ' ',
+//                        $found_word_form->getPartOfSpeech(), ' ',
+//                        '(', implode(', ', $found_word_form->getGrammems()), ')',
+//                        "\n";
+//                }
+//                echo "\n";
 
-                foreach($paradigm as $word_form) {
+//                foreach($paradigm as $word_form) {
                     // TODO: $word_form->getWord();
                     // TODO: $word_form->getFormNo();
                     // TODO: $word_form->getGrammems();
                     // TODO: $word_form->getPartOfSpeech();
                     // TODO: $word_form->hasGrammems(array('', ''));
-                }
+//                }
             }
         }    
         

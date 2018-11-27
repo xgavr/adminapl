@@ -46,15 +46,17 @@ class NameTokenizer implements Tokenizer
     
     public function tokenize($value): array
     {
-        //$text = mb_strtolower(str_replace($this->searchReplace, '', $value), 'utf-8');
+        $text = str_replace($this->searchReplace, ' ', $value);
         
-        $result = preg_split('/[\pZ\pC]+/u', $value, -1, PREG_SPLIT_NO_EMPTY);
+        //$result = preg_split('/[\pZ\pC]+/u', $text, -1, PREG_SPLIT_NO_EMPTY);
+//        if ($result === false) {
+//            throw new InvalidArgumentException('preg_split failed on: '.$text);
+//        }
 
-        if ($result === false) {
-            throw new InvalidArgumentException('preg_split failed on: '.$text);
-        }
+        $tokens = [];
+        preg_match_all('/\w\w+/u', $text, $tokens);
         
-        return $this->lemmaFilter->filter($result);
+        return $this->lemmaFilter->filter($tokens[0]);
     }
     
 }

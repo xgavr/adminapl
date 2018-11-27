@@ -14,7 +14,6 @@ use Application\Entity\Rawprice;
 
 use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Application\Filter\NameTokenizer;
-use cijic\phpMorphy\Morphy;
 
 /**
  * Description of RbService
@@ -54,6 +53,8 @@ class NameManager
         $vectorizer->fit($titles);
         $vacabulary = $vectorizer->getVocabulary();
         
+        $vectorizer->transform($titles);
+        \Zend\Debug\Debug::dump($titles);
         return ['NameTokenizer' => $vacabulary];
     }
     
