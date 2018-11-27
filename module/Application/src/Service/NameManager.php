@@ -13,9 +13,7 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 
 use Phpml\FeatureExtraction\TokenCountVectorizer;
-use Phpml\Tokenization\WhitespaceTokenizer;
-use Phpml\Tokenization\WordTokenizer;
-
+use Application\Filter\NameTokenizer;
 use cijic\phpMorphy\Morphy;
 
 /**
@@ -49,23 +47,14 @@ class NameManager
         $titles = [];
         $rawprices = $article->getRawprice();
         foreach ($rawprices as $rawprice){
-            $titles[] = mb_strtolower($rawprice->getTitle(), 'UTF-8');
+            $titles[] = $rawprice->getTitle();
         }
         
-        $vectorizer = new TokenCountVectorizer(new WhitespaceTokenizer());
-        $vectorizer2 = new TokenCountVectorizer(new WordTokenizer());
+        $vectorizer = new TokenCountVectorizer(new NameTokenizer());
         $vectorizer->fit($titles);
         $vacabulary = $vectorizer->getVocabulary();
-        $vectorizer2->fit($titles);
-        $vacabulary2 = $vectorizer2->getVocabulary();
         
-        $morphy = new Morphy('ru');
-        $morph = [];
-        foreach ($vacabulary as $word){
-            $morph[] = $morphy->getPseudoRoot($word);
-        }
-        
-        return ['WhitespaceTokenizer' => $vacabulary, 'WordTokenizer' => $vacabulary2, 'morph' => $morph];
+        return ['NameTokenizer' => $vacabulary];
     }
     
     /**
