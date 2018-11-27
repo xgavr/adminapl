@@ -38,7 +38,7 @@ class NameManager
     /**
      * Разбивает наименование товара на токены
      * 
-     * @param Application\Entity\Rawprice $rawprice
+     * @param Application\Entity\Article $article
      * @return array
      */
     public function tokenArticle($article)
@@ -46,16 +46,22 @@ class NameManager
         $titles = [];
         $rawprices = $article->getRawprice();
         foreach ($rawprices as $rawprice){
-            $titles[] = $rawprice->getTitle();
+            if ($rawprice->getStatus() == $rawprice::STATUS_PARSED){
+                $titles[] = $rawprice->getTitle();
+            }    
         }
         
-        $vectorizer = new TokenCountVectorizer(new NameTokenizer());
-        $vectorizer->fit($titles);
-        $vacabulary = $vectorizer->getVocabulary();
+        if (count($titles)){
+            $vectorizer = new TokenCountVectorizer(new NameTokenizer());
+            $vectorizer->fit($titles);
+            $vacabulary = $vectorizer->getVocabulary();
+
+            $vectorizer->transform($titles);
+            //\Zend\Debug\Debug::dump($titles);
+            return ['NameTokenizer' => $vacabulary];
+        }
         
-        $vectorizer->transform($titles);
-        \Zend\Debug\Debug::dump($titles);
-        return ['NameTokenizer' => $vacabulary];
+        return;
     }
     
     /**
