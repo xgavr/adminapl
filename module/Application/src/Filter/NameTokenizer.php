@@ -54,10 +54,12 @@ class NameTokenizer implements Tokenizer
 //            throw new InvalidArgumentException('preg_split failed on: '.$text);
 //        }
 
-            $tokens = [];
-            preg_match_all('/\w+/u', $text, $tokens);
+        $tokens = [];
+        preg_match_all('/\w+/u', $text, $tokens);
 
-        return $this->lemmaFilter->filter($tokens[0]);
+        $lemms = $this->lemmaFilter->filter($tokens[0]);
+
+        return array_merge($lemms[1], $lemms[0]);
     }
     
 }
