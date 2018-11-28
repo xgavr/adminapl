@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace Application\Filter;
 
-#use Zend\Filter\AbstractFilter;
 use Phpml\Exception\InvalidArgumentException;
 use Phpml\Tokenization\Tokenizer;
+use Application\Filter\Tokenizer as TokenizerFilter;
 use Application\Filter\Lemma;
 
 
@@ -29,9 +29,9 @@ class NameTokenizer implements Tokenizer
     protected $options = [
     ];  
     
-    protected $searchReplace = ['(', ')', '_', '/', '\\'];
-    
     protected $lemmaFilter;
+
+    protected $tokenFilter;
 
     // Конструктор.
     public function __construct($options = null) 
@@ -41,23 +41,13 @@ class NameTokenizer implements Tokenizer
             $this->options = $options;
         }    
         
+        $this->tokenFilter = new TokenizerFilter();
         $this->lemmaFilter = new Lemma();
     }
     
     public function tokenize($value): array
     {
-        $text = str_replace($this->searchReplace, ' ', $value);        
-        
-        //$words = preg_split('/[\pZ\pC]+/u', $text, -1, PREG_SPLIT_NO_EMPTY);
-//        $result = preg_split('/[^А-ЯЁA-Z0-9.,->]/u', mb_strtoupper($text, 'utf-8'), -1, PREG_SPLIT_NO_EMPTY);
-//        if ($result === false) {
-//            throw new InvalidArgumentException('preg_split failed on: '.$text);
-//        }
-
-        $tokens = [];
-        preg_match_all('/\w+/u', $text, $tokens);
-
-        $lemms = $this->lemmaFilter->filter($tokens[0]);
+        $lemms = $this->lemmaFilter->filter($this->tokenFilter->filter($value));
 
         return array_merge($lemms[1], $lemms[0]);
     }

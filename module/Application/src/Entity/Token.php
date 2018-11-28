@@ -14,10 +14,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Description of Producer
  * @ORM\Entity(repositoryClass="\Application\Repository\NameRepository")
- * @ORM\Table(name="name_raw")
+ * @ORM\Table(name="token")
  * @author Daddy
  */
-class NameRaw {
+class Token {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,20 +31,20 @@ class NameRaw {
     protected $lemma;
     
     /**
-     * @ORM\Column(name="pos")  
+     * @ORM\Column(name="status")  
      */
-    protected $position;        
+    protected $status;        
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Article", inversedBy="nameRaw") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Article", inversedBy="tokens") 
      * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
      */
     protected $article;    
     
      /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rawprice")
-     * @ORM\JoinTable(name="rawprice_oem_raw",
-     *      joinColumns={@ORM\JoinColumn(name="name_raw_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="rawprice_token",
+     *      joinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="rawprice_id", referencedColumnName="id")}
      *      )
      */
@@ -71,14 +71,14 @@ class NameRaw {
         $this->lemma = mb_strcut(trim($lemma), 0, 24, 'UTF-8');
     }     
 
-    public function getPosition() 
+    public function getStatus() 
     {
-        return $this->position;
+        return $this->status;
     }
 
-    public function setPosition($position) 
+    public function setStatus($status) 
     {
-        $this->position = $position;
+        $this->status = $status;
     }     
 
     /**
@@ -97,7 +97,7 @@ class NameRaw {
     public function setArticle($article) 
     {
         $this->article = $article;
-        $article->addNameRaw($this);
+        $article->addToken($this);
     }           
     
     /**

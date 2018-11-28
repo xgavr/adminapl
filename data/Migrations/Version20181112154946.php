@@ -63,27 +63,27 @@ final class Version20181112154946 extends AbstractMigration
     {
         
         // this up() migration is auto-generated, please modify it to your needs
-        $table = $schema->createTable('name_raw');
+        $table = $schema->createTable('token');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);
         $table->addColumn('stem', 'string', ['notnull'=>true, 'length' => 24]);        
-        $table->addColumn('pos', 'integer', ['notnull'=>true, 'default' => 0]);        
+        $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => 1]);        
         $table->addColumn('article_id', 'integer', ['notnull' => true]);
         $table->addForeignKeyConstraint('article', ['article_id'], ['id'], 
-                ['onUpdate'=>'CASCADE'], 'article_id_name_raw_article_id_fk');
+                ['onUpdate'=>'CASCADE'], 'article_id_token_article_id_fk');
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['article_id', 'stem'], 'stem_article_id');
         $table->addOption('engine' , 'InnoDB');
 
 
-        $table = $schema->createTable('rawprice_name_raw');
+        $table = $schema->createTable('rawprice_token');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);
         $table->addColumn('rawprice_id', 'bigint', ['notnull'=>true]);
-        $table->addColumn('name_raw_id', 'integer', ['notnull'=>true]);
+        $table->addColumn('token_id', 'integer', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
-        $table->addForeignKeyConstraint('name_raw', ['name_raw_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_name_raw_name_raw_id_name_raw_id_fk');
+        $table->addForeignKeyConstraint('token', ['token_id'], ['id'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_token_token_id_token_id_fk');
         $table->addForeignKeyConstraint('rawprice', ['rawprice_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_name_raw_rawprice_id_rawprice_id_fk');
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rawprice_token_rawprice_id_rawprice_id_fk');
         $table->addOption('engine' , 'InnoDB'); 
         
     }
@@ -91,7 +91,7 @@ final class Version20181112154946 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $schema->dropTable('rawprice_name_raw');        
+        $schema->dropTable('rawprice_token');        
         $schema->dropTable('name_raw');        
     }
 }

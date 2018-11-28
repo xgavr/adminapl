@@ -28,8 +28,8 @@ class Rawprice {
     const OEM_NEW       = 1; // только что загрузили
     const OEM_PARSED    = 2; // прошел разборку.
 
-    const NAME_NEW       = 1; // только что загрузили
-    const NAME_PARSED    = 2; // прошел разборку.
+    const TOKEN_NEW       = 1; // только что загрузили
+    const TOKEN_PARSED    = 2; // прошел разборку.
 
     /**
      * @ORM\Id
@@ -164,9 +164,9 @@ class Rawprice {
     protected $statusOem = self::OEM_NEW;    
 
     /**
-     * @ORM\Column(name="status_name")   
+     * @ORM\Column(name="status_token")   
      */
-    protected $statusName = self::NAME_NEW;    
+    protected $statusToken = self::TOKEN_NEW;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
@@ -209,13 +209,13 @@ class Rawprice {
     private $oemRaw;
     
      /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\NameRaw")
-     * @ORM\JoinTable(name="rawprice_name_raw",
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Token")
+     * @ORM\JoinTable(name="rawprice_token",
      *      joinColumns={@ORM\JoinColumn(name="rawprice_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="name_raw_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")}
      *      )
      */
-    private $nameRaw;
+    private $tokens;
     
     /**
      * Constructor.
@@ -332,55 +332,55 @@ class Rawprice {
     }   
     
     /**
-     * Returns statusName.
+     * Returns statusToken.
      * @return int     
      */
-    public function getStatusNameRaw() 
+    public function getStatusToken() 
     {
-        return $this->statusName;
+        return $this->statusToken;
     }
 
     /**
      * Returns possible statuses as array.
      * @return array
      */
-    public static function getStatusNameList() 
+    public static function getStatusTokenList() 
     {
         return [
-            self::NAME_NEW => 'Наименование новое',
-            self::NAME_PARSED => 'Наименование разобрано',
+            self::TOKEN_NEW => 'Наименование новое',
+            self::TOKEN_PARSED => 'Наименование разобрано',
         ];
     }    
     
     /**
-     * Returns user statusName as string.
+     * Returns user statusToken as string.
      * @return string
      */
-    public function getStatusNameAsString()
+    public function getStatusTokenAsString()
     {
-        $list = self::getStatusNameList();
-        if (isset($list[$this->statusName]))
-            return $list[$this->statusName];
+        $list = self::getStatusTokenList();
+        if (isset($list[$this->statusToken]))
+            return $list[$this->statusToken];
         
         return 'Unknown';
     }  
     
-    public function getStatusNameName($statusName)
+    public function getStatusTokenName($statusToken)
     {
-        $list = self::getStatusNameList();
-        if (isset($list[$statusName]))
-            return $list[$statusName];
+        $list = self::getStatusTokenList();
+        if (isset($list[$statusToken]))
+            return $list[$statusToken];
         
         return 'Unknown';        
     }
     
     /**
-     * Sets statusName.
+     * Sets statusToken.
      * @param int $statusName     
      */
-    public function setStatusName($statusName) 
+    public function setStatusName($statusToken) 
     {
-        $this->statusName = $statusName;
+        $this->statusToken = $statusToken;
     }   
 
     public function getId() 
@@ -773,21 +773,21 @@ class Rawprice {
     }
     
     /**
-     * Returns the array of nameRaw assigned to this rawprice.
+     * Returns the array of tokens assigned to this rawprice.
      * @return array
      */
-    public function getNameRaw()
+    public function getTokens()
     {
-        return $this->nameRaw;
+        return $this->tokens;
     }    
     
     /**
      * 
-     * @param Application\Entity\NameRaw $nameRaw
+     * @param Application\Entity\Token $tokens
      */
-    public function addNameRaw($nameRaw)
+    public function addToken($token)
     {
-        $this->nameRaw->add($nameRaw);
+        $this->tokens->add($token);
     }
 
     
