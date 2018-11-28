@@ -55,7 +55,7 @@ class NameTokenizer implements Tokenizer
 //        }
 
             $tokens = [];
-            preg_match_all('/\w+/u', $value, $tokens);
+            preg_match_all('/\w+/u', $text, $tokens);
 
         return $this->lemmaFilter->filter($tokens[0]);
     }
