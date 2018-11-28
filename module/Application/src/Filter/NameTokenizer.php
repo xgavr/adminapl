@@ -29,7 +29,7 @@ class NameTokenizer implements Tokenizer
     protected $options = [
     ];  
     
-    protected $searchReplace = ['(', ')'];
+    protected $searchReplace = ['(', ')', '_', '/', '\\'];
     
     protected $lemmaFilter;
 
@@ -46,17 +46,20 @@ class NameTokenizer implements Tokenizer
     
     public function tokenize($value): array
     {
-        $text = str_replace($this->searchReplace, ' ', $value);
+        $text = str_replace($this->searchReplace, ' ', $value);        
         
-        //$result = preg_split('/[\pZ\pC]+/u', $text, -1, PREG_SPLIT_NO_EMPTY);
-//        if ($result === false) {
-//            throw new InvalidArgumentException('preg_split failed on: '.$text);
-//        }
+        //$words = preg_split('/[\pZ\pC]+/u', $text, -1, PREG_SPLIT_NO_EMPTY);
+        $result = preg_split('/[^А-ЯЁA-Z0-9.,->]/u', mb_strtoupper($text, 'utf-8'), -1, PREG_SPLIT_NO_EMPTY);
+        if ($result === false) {
+            throw new InvalidArgumentException('preg_split failed on: '.$text);
+        }
 
-        $tokens = [];
-        preg_match_all('/\w\w+/u', $text, $tokens);
-        
-        return $this->lemmaFilter->filter($tokens[0]);
+//        foreach ($words as $word){
+//            $tokens = [];
+//            preg_match_all('/\w\w+/u', $value, $tokens);
+//        }    
+
+        return $this->lemmaFilter->filter($result);
     }
     
 }
