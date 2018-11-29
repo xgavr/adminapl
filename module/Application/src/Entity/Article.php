@@ -60,19 +60,12 @@ class Article {
     private $oemRaw;
         
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Token", mappedBy="article")
-    * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
-     */
-    private $tokens;
-        
-    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->rawprice = new ArrayCollection();
         $this->oemRaw = new ArrayCollection();
-        $this->tokens = new ArrayCollection();
     }
     
 
@@ -159,23 +152,6 @@ class Article {
     public function addOemRaw($oemRaw)
     {
         $this->oemRaw[] = $oemRaw;
-    }
-      
-    /**
-     * Returns the array of contacts assigned to this.
-     * @return array
-     */
-    public function geTokens()
-    {
-        return $this->tokens;
-    }
-        
-    /**
-     * Assigns.
-     */
-    public function addToken($token)
-    {
-        $this->tokens[] = $token;
     }
       
     /**

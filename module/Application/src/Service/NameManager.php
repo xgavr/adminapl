@@ -7,7 +7,7 @@
  */
 namespace Application\Service;
 
-use Application\Entity\Name;
+use Application\Entity\Token;
 use Application\Entity\Article;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
@@ -71,22 +71,20 @@ class NameManager
      * @param Application\Entity\Article $article
      * @param bool $flushnow
      */
-    public function addOemRaw($code, $article, $flushnow = true)
+    public function addToken($word, $article, $flushnow = true)
     {
-        $filter = new \Application\Filter\ArticleCode();
-        $filteredCode = mb_strcut(trim($filter->filter($code)), 0, 24, 'UTF-8');
         
-        $oem = $this->entityManager->getRepository(OemRaw::class)
-                    ->findOneBy(['code' => $filteredCode, 'article' => $article->getId()]);
+        $token = $this->entityManager->getRepository(Token::class)
+                    ->findOneBy(['stem' => $word]);
 
-        if ($oem == null){
+        if ($token == null){
 
             if (mb_strlen($code, 'utf-8') > 36){
                $result = 'moreThan36';
             }
             // Создаем новую сущность UnknownProducer.
-            $oem = new OemRaw();
-            $oem->setCode($filteredCode);            
+            $token = new Token();
+            $token->setStem($word);            
             $oem->setFullCode($code);
             $oem->setArticle($article);
 

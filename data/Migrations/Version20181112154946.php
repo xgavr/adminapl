@@ -63,20 +63,18 @@ final class Version20181112154946 extends AbstractMigration
     {
         
         // this up() migration is auto-generated, please modify it to your needs
+
         $table = $schema->createTable('token');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);
         $table->addColumn('stem', 'string', ['notnull'=>true, 'length' => 24]);        
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => 1]);        
-        $table->addColumn('article_id', 'integer', ['notnull' => true]);
-        $table->addForeignKeyConstraint('article', ['article_id'], ['id'], 
-                ['onUpdate'=>'CASCADE'], 'article_id_token_article_id_fk');
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['article_id', 'stem'], 'stem_article_id');
+        $table->addUniqueIndex(['stem'], 'stem_indx');
         $table->addOption('engine' , 'InnoDB');
 
 
         $table = $schema->createTable('rawprice_token');
-        $table->addColumn('id', 'integer', ['autoincrement'=>true]);
+        $table->addColumn('id', 'bigint', ['autoincrement'=>true]);
         $table->addColumn('rawprice_id', 'bigint', ['notnull'=>true]);
         $table->addColumn('token_id', 'integer', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);

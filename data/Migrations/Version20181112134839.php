@@ -14,7 +14,7 @@ final class Version20181112134839 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('rawprice');
-        $table->addColumn('status_name', 'integer', ['notnull' => true, 'default' => 1]);
+        $table->addColumn('status_token', 'integer', ['notnull' => true, 'default' => 1]);
 
     }
 
@@ -22,7 +22,7 @@ final class Version20181112134839 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('rawprice');
-        $table->dropColumn('status_name');
+        $table->dropColumn('status_token');
 
     }
 }
