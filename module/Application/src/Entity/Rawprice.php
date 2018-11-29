@@ -376,7 +376,7 @@ class Rawprice {
     
     /**
      * Sets statusToken.
-     * @param int $statusName     
+     * @param int $statusToken     
      */
     public function setStatusName($statusToken) 
     {
