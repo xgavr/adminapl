@@ -32,7 +32,7 @@ class Raw {
     const STAGE_PRODUCER_PARSED     = 2; //производители разобраны 
     const STAGE_ARTICLE_PARSED      = 3; //артикулы разобраны 
     const STAGE_OEM_PARSED          = 4; //номера замен разобраны
-    const STAGE_NAME_PARSED          = 4; //номера замен разобраны
+    const STAGE_TOKEN_PARSED        = 5; //наименования разобраны
     
            
     /**

@@ -18,6 +18,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Daddy
  */
 class Token {
+    
+    const STATUS_UNKNOWN   = 1; // слово неизвестно словарю.
+    const STATUS_DICT      = 2; // слово из словаря
+
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -35,12 +40,6 @@ class Token {
      */
     protected $status;        
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Article", inversedBy="tokens") 
-     * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
-     */
-    protected $article;    
-    
      /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rawprice")
      * @ORM\JoinTable(name="rawprice_token",
@@ -68,38 +67,61 @@ class Token {
 
     public function setLemma($lemma) 
     {
-        $this->lemma = mb_strcut(trim($lemma), 0, 24, 'UTF-8');
+        $this->lemma = mb_strcut(trim($lemma), 0, 64, 'UTF-8');
     }     
 
+    /**
+     * Returns status.
+     * @return int     
+     */
     public function getStatus() 
     {
         return $this->status;
     }
 
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_UNKNOWN => 'Неизвестно',
+            self::STATUS_DICT => 'Словарь',
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }  
+    
+    public function getStatusName($status)
+    {
+        $list = self::getStatusList();
+        if (isset($list[$status]))
+            return $list[$status];
+        
+        return 'Unknown';        
+    }
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
     public function setStatus($status) 
     {
         $this->status = $status;
-    }     
-
-    /**
-     * Возвращает связанный article.
-     * @return \Application\Entity\Article
-     */    
-    public function getArticle() 
-    {
-        return $this->article;
-    }
-
-    /**
-     * Задает связанный article.
-     * @param \Application\Entity\Article $article
-     */    
-    public function setArticle($article) 
-    {
-        $this->article = $article;
-        $article->addToken($this);
-    }           
-    
+    }   
+        
     /**
      * Returns the array of rawprice assigned to this oemRaw.
      * @return array

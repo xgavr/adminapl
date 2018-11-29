@@ -66,10 +66,10 @@ final class Version20181112154946 extends AbstractMigration
 
         $table = $schema->createTable('token');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);
-        $table->addColumn('stem', 'string', ['notnull'=>true, 'length' => 24]);        
+        $table->addColumn('lemma', 'string', ['notnull'=>true, 'length' => 64]);        
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => 1]);        
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['stem'], 'stem_indx');
+        $table->addUniqueIndex(['lemma'], 'lemma_indx');
         $table->addOption('engine' , 'InnoDB');
 
 
@@ -90,6 +90,6 @@ final class Version20181112154946 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('rawprice_token');        
-        $schema->dropTable('name_raw');        
+        $schema->dropTable('token');        
     }
 }

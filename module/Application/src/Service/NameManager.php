@@ -65,13 +65,12 @@ class NameManager
     }
     
     /**
-     * Добавить новый код
+     * Добавить новый токен
      * 
-     * @param string $code
-     * @param Application\Entity\Article $article
+     * @param string $word
      * @param bool $flushnow
      */
-    public function addToken($word, $article, $flushnow = true)
+    public function addToken($word, $flushnow = true)
     {
         
         $token = $this->entityManager->getRepository(Token::class)
@@ -79,45 +78,31 @@ class NameManager
 
         if ($token == null){
 
-            if (mb_strlen($code, 'utf-8') > 36){
-               $result = 'moreThan36';
-            }
-            // Создаем новую сущность UnknownProducer.
             $token = new Token();
-            $token->setStem($word);            
-            $oem->setFullCode($code);
-            $oem->setArticle($article);
+            $token->setLemms($word);            
 
             // Добавляем сущность в менеджер сущностей.
-            $this->entityManager->persist($oem);
+            $this->entityManager->persist($token);
 
             // Применяем изменения к базе данных.
-            $this->entityManager->flush($oem);
-        } else {
-            if (mb_strlen($oem->getFullCode()) < mb_strlen(trim($code))){
-                $oem->setFullCode(trim($code));                
-                $this->entityManager->persist($oem);
-                if ($flushnow){
-                    $this->entityManager->flush($oem);
-                }    
-            }
-        }  
+            $this->entityManager->flush($token);
+        }
         
-        return $oem;        
+        return $token;        
     }        
     
     /**
-     * Добавление нового кода из прайса
+     * Добавление нового слова из прайса
      * 
      * @param Application\Entity\Rawprice $rawprice
      * @param bool $flush
      */
-    public function addNewOemRawFromRawprice($rawprice, $flush = true) 
+    public function addNewTokenFromRawprice($rawprice, $flush = true) 
     {
-        $rawprice->getOemRaw()->clear();
+        $rawprice->getTokens()->clear();
 
         if ($rawprice->getArticle()){
-            $oems = $rawprice->getOemAsArray();
+            $title = $rawprice->getTitle();
             if (is_array($oems)){
                 foreach ($oems as $oemCode){
                     $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
