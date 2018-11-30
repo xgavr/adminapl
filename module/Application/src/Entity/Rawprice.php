@@ -378,7 +378,7 @@ class Rawprice {
      * Sets statusToken.
      * @param int $statusToken     
      */
-    public function setStatusName($statusToken) 
+    public function setStatusToken($statusToken) 
     {
         $this->statusToken = $statusToken;
     }   

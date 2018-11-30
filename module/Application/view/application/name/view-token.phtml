@@ -1,0 +1,72 @@
+<?php
+$this->headTitle($token->getLemma());
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Токены'=>$this->url('name', ['action' => 'index-token']),
+            $token->getLemma()=>$this->url('name', ['action'=>'view-token', 'id'=>$token->getId()])
+            ]);
+
+?>
+<h1>
+    <?= $this->escapeHtml($token->getLemma()); ?>    
+</h1>
+<table class="table table-striped">
+    <tr>
+        <td colspan="4">            
+            <?php if ($prev):?>
+                <a href="/name/view-token/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getLemma()?></a>
+            <?php endif;?>            
+        </td>
+        <td align="right">
+            <?php if ($next):?>
+                <a href="/name/view-token/<?= $next[0]->getId()?>"><?= $next[0]->getLemma()?>&rarr;</a>
+            <?php endif;?>                            
+        </td>
+    </tr>
+    <?php    foreach ($token->getRawprice() as $rawprice):?>
+        <tr>
+            <td>
+                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
+                    <?= $rawprice->getArticle();?>
+                </a>   
+            </td>
+            <td>
+                <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
+                    <?= $rawprice->getUnknownProducer()->getName();?>
+                </a>   
+            </td>
+            <td>
+                <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
+                    <?= $rawprice->getGoodname();?>
+                </a>    
+                <?php $tokens = $rawprice->getTokens(); ?>
+                <?php if(count($tokens)):?>  
+                    <div>    
+                        <?php foreach($tokens as $token):?>
+                            <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::STATUS_DICT) ? 'bold':'normal' ?>">
+                                <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
+                            </span>
+                        <?php endforeach;?>
+                    </div>        
+                <?php endif;?>                                                
+            </td>
+            <td align="right">
+                <?= $rawprice->getPrice();?>
+            </td>
+            <td align="right">
+                <?= $rawprice->getRest();?>
+            </td>
+        </tr>
+    <?php endforeach;?>        
+    <tr>
+        <th colspan="4">
+            Всего
+        </th>
+        <td align="right">
+            <b><?= $totalRawpriceCount ?></b>
+        </td>
+    </tr>
+</table>

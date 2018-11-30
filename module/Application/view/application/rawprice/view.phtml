@@ -109,6 +109,12 @@ $this->pageBreadcrumbs()->setItems([
                                 Номера замен
                         </button>
                     <?php endif;?>    
+                    <?php if ($rawprice->getCode()):?>
+                        <button value="/name/parse/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Разобрать">
+                                Токены
+                        </button>
+                    <?php endif;?>    
                 <?php endif; ?>
             </div>
             <div class="panel-body">
@@ -140,6 +146,18 @@ $this->pageBreadcrumbs()->setItems([
                                     <?php else:?>
                                         <?= $this->escapeHtml($value)?>
                                     <?php endif;?>    
+                                <?php elseif ($key == 'Наименование товара' && $rawprice->getStatusToken() == $rawprice::TOKEN_PARSED):?>
+                                    <?= $this->escapeHtml($value)?>
+                                    <?php $tokens = $rawprice->getTokens(); ?>
+                                    <?php if(count($tokens)):?>  
+                                        <div>    
+                                            <?php foreach($tokens as $token):?>
+                                                <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::STATUS_DICT) ? 'bold':'normal' ?>">
+                                                    <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
+                                                </span>
+                                            <?php endforeach;?>
+                                        </div>        
+                                    <?php endif;?>                                                
                                 <?php else:?>
                                     <?= $this->escapeHtml($value)?>
                                 <?php endif;?>

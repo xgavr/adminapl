@@ -227,7 +227,7 @@ class Raw {
             self::STAGE_PRODUCER_PARSED => 'Производители разобраны',
             self::STAGE_ARTICLE_PARSED => 'Артикулы разобраны',
             self::STAGE_OEM_PARSED => 'Номера замен разобраны',
-            self::STAGE_NAME_PARSED => 'Наименования разобраны',
+            self::STAGE_TOKEN_PARSED => 'Наименования разобраны',
         ];
     }    
     

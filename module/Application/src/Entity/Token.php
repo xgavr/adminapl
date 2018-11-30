@@ -13,14 +13,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Producer
- * @ORM\Entity(repositoryClass="\Application\Repository\NameRepository")
+ * @ORM\Entity(repositoryClass="\Application\Repository\TokenRepository")
  * @ORM\Table(name="token")
  * @author Daddy
  */
 class Token {
     
-    const STATUS_UNKNOWN   = 1; // слово неизвестно словарю.
-    const STATUS_DICT      = 2; // слово из словаря
+    const STATUS_UNKNOWN   = 9; // слово неизвестно словарю.
+    const STATUS_DICT      = 1; // слово из словаря
 
     
     /**
@@ -38,7 +38,7 @@ class Token {
     /**
      * @ORM\Column(name="status")  
      */
-    protected $status;        
+    protected $status = self::STATUS_UNKNOWN;        
 
      /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rawprice")

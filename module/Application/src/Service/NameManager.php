@@ -14,6 +14,8 @@ use Application\Entity\Rawprice;
 
 use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Application\Filter\NameTokenizer;
+use Application\Filter\Lemma;
+use Application\Filter\Tokenizer;
 
 /**
  * Description of RbService
@@ -70,16 +72,17 @@ class NameManager
      * @param string $word
      * @param bool $flushnow
      */
-    public function addToken($word, $flushnow = true)
+    public function addToken($data, $flushnow = true)
     {
         
         $token = $this->entityManager->getRepository(Token::class)
-                    ->findOneBy(['stem' => $word]);
+                    ->findOneBy(['lemma' => $data['word']]);
 
         if ($token == null){
 
             $token = new Token();
-            $token->setLemms($word);            
+            $token->setLemma($data['word']);            
+            $token->setStatus($data['status']);            
 
             // Добавляем сущность в менеджер сущностей.
             $this->entityManager->persist($token);
@@ -101,18 +104,31 @@ class NameManager
     {
         $rawprice->getTokens()->clear();
 
-        if ($rawprice->getArticle()){
-            $title = $rawprice->getTitle();
-            if (is_array($oems)){
-                foreach ($oems as $oemCode){
-                    $oem = $this->addOemRaw($oemCode, $rawprice->getCode(), $flush);
-                    if ($oem){
-                        $rawprice->addOemRaw($oem);
+        $title = $rawprice->getTitle();
+            
+        if ($title){
+            $lemmaFilter = new Lemma();
+            $tokenFilter = new Tokenizer();
+            
+            $lemms = $lemmaFilter->filter($tokenFilter->filter($title));
+            
+            if (is_array($lemms)){
+                foreach ($lemms[1] as $lemma){
+                    $token = $this->addToken(['word' => $lemma, 'status' => Token::STATUS_DICT], $flush);
+                    if ($token){
+                        $rawprice->addToken($token);
+                    }   
+                }    
+                foreach ($lemms[0] as $lemma){
+                    $token = $this->addToken(['word' => $lemma, 'status' => Token::STATUS_UNKNOWN], $flush);
+                    if ($token){
+                        $rawprice->addToken($token);
                     }   
                 }    
             }    
-        }    
-        $rawprice->setStatusOem(Rawprice::OEM_PARSED);
+        }  
+        
+        $rawprice->setStatusToken(Rawprice::TOKEN_PARSED);
         $this->entityManager->persist($rawprice);
         if ($flush){
             $this->entityManager->flush();
@@ -121,71 +137,54 @@ class NameManager
     }  
     
     /**
-     * Выборка оригинальных номеров из прайса и добавление их в таблицу оригинальных номеров
+     * Выборка токенов из прайса и добавление их в таблицу токенов
+     * @param Appllication\Entity\Raw $raw
      */
-    public function grabOemFromRaw($raw)
+    public function grabTokenFromRaw($raw)
     {
-        ini_set('memory_limit', '4096M');
-        set_time_limit(1200);
-        $startTime = time();
+        ini_set('memory_limit', '512M');
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'statusOem' => Rawprice::OEM_NEW]);
+                ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_NEW]);
         
         foreach ($rawprices as $rawprice){
-            $this->addNewOemRawFromRawprice($rawprice, false);
-            if (time() > $startTime + 400){
-                $this->entityManager->flush();
-                return;
-            }
+            $this->addNewTokenFromRawprice($rawprice, false);
         }
         
-        $raw->setParseStage(Raw::STAGE_OEM_PARSED);
+        $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
         $this->entityManager->persist($raw);
         
         $this->entityManager->flush();
     }
     
     /**
-     * Удаление кода
+     * Удаление токена
      * 
-     * @param Application\Entity\OemRaw $oemRaw
+     * @param Application\Entity\Token $token
      */
-    public function removeOemRaw($oemRaw) 
+    public function removeToken($token) 
     {   
-        $this->entityManager->remove($oemRaw);
+        $this->entityManager->remove($token);
         
         $this->entityManager->flush($oemRaw);
     }    
     
     /**
-     * Поиск и удаление номеров не привязаных к строкам прайсов
+     * Поиск и удаление токенов не привязаных к строкам прайсов
      */
-    public function removeEmpty()
+    public function removeEmptyToken()
     {
         ini_set('memory_limit', '2048M');
         
-        $oemForDelete = $this->entityManager->getRepository(OemRaw::class)
-                ->findOemRawForDelete();
+        $tokenForDelete = $this->entityManager->getRepository(Token::class)
+                ->findTokenForDelete();
 
-        foreach ($oemForDelete as $row){
-            $this->removeOemRaw($row[0], false);
+        foreach ($tokenForDelete as $row){
+            $this->removeToken($row[0], false);
         }
         
         $this->entityManager->flush();
         
-        return count($oemForDelete);
+        return count($tokenForDelete);
     }    
-    
-
-    /**
-     * Выборка из прайсов по id артикля и id поставщика 
-     * @param array $params
-     * @return object      
-     */
-    public function randRawpriceBy($params)
-    {
-        return $this->entityManager->getRepository(OemRaw::class)
-                ->randRawpriceBy($params);
-    }   
 }
