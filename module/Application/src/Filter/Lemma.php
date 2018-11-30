@@ -94,7 +94,7 @@ class Lemma extends AbstractFilter
                     $result[Token::IS_RU_1][] = $ruWord;
                 } else {
                 
-                    $collectionRU = $morphyRU->findWord($ruWord);
+                    $collectionRU = $morphyRU->findWord($ruWord, phpMorphy::IGNORE_PREDICT);
 
                     if (false === $collectionRU) {
                         $result[Token::IS_RU][] = $ruWord;                    
@@ -111,7 +111,7 @@ class Lemma extends AbstractFilter
                     $result[Token::IS_EN_1][] = $enWord;
                 } else {
                 
-                    $collectionEN = $morphyEN->findWord($enWord);
+                    $collectionEN = $morphyEN->findWord($enWord, phpMorphy::IGNORE_PREDICT);
 
                     if (false === $collectionEN) {
                         $result[Token::IS_EN][] = $enWord;                    
