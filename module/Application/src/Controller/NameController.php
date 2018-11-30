@@ -288,7 +288,7 @@ class NameController extends AbstractActionController
     
     public function deleteEmptyAction()
     {
-        $deleted = $this->oemManager->removeEmpty();
+        $deleted = $this->nameManager->removeEmptyToken();
                 
         return new JsonModel([
             'result' => 'ok-reload',

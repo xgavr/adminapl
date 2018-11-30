@@ -72,14 +72,15 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('t')
+        $queryBuilder->select('o')
             ->addSelect('count(r.id) as rawpriceCount')    
-            ->from(Token::class, 't')
-            ->leftJoin('rawprice_token', 'r', 'WITH', 'r.token_id = t.id')
-            ->groupBy('t.id')
+            ->from(Token::class, 'o')
+            ->leftJoin('o.rawprice', 'r')
+            ->groupBy('o.id')
             ->having('rawpriceCount = 0')    
+            //->setParameter('1', Rawprice::STATUS_PARSED)
                 ;
-        
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 
