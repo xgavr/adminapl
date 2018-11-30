@@ -92,7 +92,23 @@ class NameManager
         }
         
         return $token;        
-    }        
+    }  
+    
+    /**
+     * Добавление нового слова со статусом
+     * 
+     */
+    public function addLemms($rawprice, $lemms, $status, $flush)
+    {
+        if (is_array($lemms)){
+            foreach ($lemms as $lemma){
+                $token = $this->addToken(['word' => $lemma, 'status' => $status], $flush);
+                if ($token){
+                    $rawprice->addToken($token);
+                }   
+            }
+        }    
+    }
     
     /**
      * Добавление нового слова из прайса
@@ -112,19 +128,8 @@ class NameManager
             
             $lemms = $lemmaFilter->filter($tokenFilter->filter($title));
             
-            if (is_array($lemms)){
-                foreach ($lemms[1] as $lemma){
-                    $token = $this->addToken(['word' => $lemma, 'status' => Token::STATUS_DICT], $flush);
-                    if ($token){
-                        $rawprice->addToken($token);
-                    }   
-                }    
-                foreach ($lemms[0] as $lemma){
-                    $token = $this->addToken(['word' => $lemma, 'status' => Token::STATUS_UNKNOWN], $flush);
-                    if ($token){
-                        $rawprice->addToken($token);
-                    }   
-                }    
+            foreach ($lemms as $key => $words){
+                $this->addLemms($rawprice, $words, $key, $flush);
             }    
         }  
         

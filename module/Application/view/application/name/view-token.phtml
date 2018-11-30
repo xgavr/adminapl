@@ -46,7 +46,7 @@ $this->pageBreadcrumbs()->setItems([
                 <?php if(count($tokens)):?>  
                     <div>    
                         <?php foreach($tokens as $token):?>
-                            <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::STATUS_DICT) ? 'bold':'normal' ?>">
+                            <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
                                 <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
                             </span>
                         <?php endforeach;?>

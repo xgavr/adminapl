@@ -19,8 +19,18 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Token {
     
-    const STATUS_UNKNOWN   = 9; // слово неизвестно словарю.
-    const STATUS_DICT      = 1; // слово из словаря
+    const IS_DICT      = 1; // RU
+    const IS_RU        = 2; // RU, не в словаре
+    const IS_RU_1      = 3; // RU, 1 буква
+    const IS_RU_ABBR   = 4; // RU, аббревиатура
+
+    const IS_EN_DICT   = 11; // EN из словаря
+    const IS_EN        = 12; // EN
+    const IS_EN_1      = 13; // EN, 1 буква
+    const IS_EN_ABBR   = 14; // EN, аббревиатура
+
+    const IS_NUMERIC   = 21; // число
+    const IS_UNKNOWN   = 99; // слово неизвестно словарю
 
     
     /**
@@ -38,7 +48,7 @@ class Token {
     /**
      * @ORM\Column(name="status")  
      */
-    protected $status = self::STATUS_UNKNOWN;        
+    protected $status = self::IS_UNKNOWN;        
 
      /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rawprice")
@@ -86,8 +96,18 @@ class Token {
     public static function getStatusList() 
     {
         return [
+            self::IS_DICT => 'RU словарь',
+            self::IS_RU => 'RU',
+            self::IS_RU_1 => 'RU, 1 буква',
+            self::IS_RU_ABBR => 'RU, аббревиатура',
+            
+            self::IS_EN_DICT => 'EN словарь',
+            self::IS_EN => 'EN',
+            self::IS_EN_1 => 'EN, 1 буква',
+            self::IS_ABBR => 'EN, аббревиатура',
+            
+            self::IS_NUMERIC => 'Число',
             self::STATUS_UNKNOWN => 'Неизвестно',
-            self::STATUS_DICT => 'Словарь',
         ];
     }    
     

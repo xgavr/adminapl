@@ -229,14 +229,20 @@ $this->pageBreadcrumbs()->setItems([
                                     </button>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == $raw::STAGE_PRODUCER_PARSED):?>
-                                    <button value="/producer/update-article-from-raw/<?= $raw->getId() ?>" class="btn btn-secondary btn-xs refresh-button"
+                                    <button value="/producer/update-article-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Разобрать артикулы">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == $raw::STAGE_ARTICLE_PARSED):?>
-                                    <button value="/oem/update-oem-from-raw/<?= $raw->getId() ?>" class="btn btn-secondary btn-xs refresh-button"
+                                    <button value="/oem/update-oem-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Разобрать номера">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                <?php endif;?>
+                                <?php if ($raw->getParseStage() == $raw::STAGE_OEM_PARSED):?>
+                                    <button value="/name/update-token-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Разобрать наименования">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                 <?php endif;?>

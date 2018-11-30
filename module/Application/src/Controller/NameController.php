@@ -261,7 +261,7 @@ class NameController extends AbstractActionController
         ]);          
     }
     
-    public function updateOemFromRawAction()
+    public function updateTokenFromRawAction()
     {
         set_time_limit(0);
         $rawId = $this->params()->fromRoute('id', -1);
@@ -279,7 +279,7 @@ class NameController extends AbstractActionController
             return;                        
         }        
 
-        $this->oemManager->grabOemFromRaw($raw);
+        $this->nameManager->grabTokenFromRaw($raw);
                 
         return new JsonModel([
             'ok',

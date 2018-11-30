@@ -105,11 +105,17 @@ class ProcessingController extends AbstractActionController
      */
     private $oemManager;    
 
+    /**
+     * NameManager manager.
+     * @var Application\Service\NameManager
+     */
+    private $nameManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
-            $oemManager) 
+            $oemManager, $nameManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -126,6 +132,7 @@ class ProcessingController extends AbstractActionController
         $this->producerManager = $producerManager;
         $this->articleManager = $articleManager;
         $this->oemManager = $oemManager;
+        $this->nameManager = $nameManager;
     }   
 
     
@@ -479,4 +486,47 @@ class ProcessingController extends AbstractActionController
         );
         
     }
+    
+    /**
+     * Обновление токенов из прайса
+     */
+    public function tokenFromRawpriceAction()
+    {
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_OEM_PARSED]);
+            
+            if ($raw){
+                $this->nameManager->grabTokenFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
+     * Удаление пустых номеров производителей
+     */
+    public function deleteTokenAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            $this->nameManager->removeEmptyToken();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }

@@ -9,6 +9,7 @@
 namespace Application\Filter;
 
 use Zend\Filter\AbstractFilter;
+use Application\Entity\Token;
 use phpMorphy;
 
 /**
@@ -49,8 +50,6 @@ class Lemma extends AbstractFilter
     public function filter($value)
     {
         
-        $lang = 'ru_RU';
-        
         if(function_exists('iconv')) {
             foreach($value as &$word) {
                 $word = mb_strtoupper($word, 'utf-8');        
@@ -58,24 +57,71 @@ class Lemma extends AbstractFilter
             unset($word);
         }        
         
-        $morphy = new phpMorphy($this->dictsPath, $lang, $this->options);
+        $morphyRU = new phpMorphy($this->dictsPath, 'ru_RU', $this->options);
+        $morphyEN = new phpMorphy($this->dictsPath, 'en_EN', $this->options);
         
         $result = [
-            0 => [],
-            1 => [],
+            Token::IS_DICT => [], //ru словарь
+            Token::IS_RU => [], //ru не словарь
+            Token::IS_RU_1 => [], //ru 1 буква
+            Token::IS_RU_ABBR => [], //ru аббревиатура
+            Token::IS_EN_DICT => [], //en словарь
+            Token::IS_EN => [], //en 
+            Token::IS_EN_1 => [], //en 1 
+            Token::IS_EN_ABBR => [], //en abbr 
+            Token::IS_NUMERIC => [], //число 
+            Token::IS_UNKNOWN => [], //нечто 
         ];
         
         foreach ($value as $word){
-            $collection = $morphy->findWord($word);
-
-            if (false === $collection) {
-                $result[0][] = $word;
-                continue;
+            
+            $ruWord = mb_ereg_replace('[^А-ЯЁ]', '', $word);
+            $enWord = mb_ereg_replace('[^A-Z]', '', $word);
+            $nuWord = mb_ereg_replace('[^1-9]', '', $word);
+            $unWord = mb_ereg_replace('[A-ZА-ЯЁ1-9]', '', $word);
+            
+            if (is_numeric($unWord)){
+                $result[Token::IS_UNKNOWN][] = $unWord;
             }
-
-            foreach($collection as $paradigm) {                
-                $result[1][] = $paradigm->getBaseForm();
+            
+            if (is_numeric($nuWord)){
+                $result[Token::IS_NUMERIC][] = $nuWord;
             }
+            
+            if ($ruWord){
+                
+                if (mb_strlen($ruWord, 'utf-8') === 1){
+                    $result[Token::IS_RU_1][] = $ruWord;
+                } else {
+                
+                    $collectionRU = $morphyRU->findWord($ruWord);
+
+                    if (false === $collectionRU) {
+                        $result[Token::IS_RU][] = $ruWord;                    
+                    } else {
+                        foreach($collectionRU as $paradigm) {                
+                            $result[Token::IS_DICT][] = $paradigm->getBaseForm();
+                        }
+                    }
+                }    
+            }    
+            if ($enWord){
+                
+                if (mb_strlen($enWord, 'utf-8') === 1){
+                    $result[Token::IS_EN_1][] = $enWord;
+                } else {
+                
+                    $collectionEN = $morphyEN->findWord($enWord);
+
+                    if (false === $collectionEN) {
+                        $result[Token::IS_EN][] = $enWord;                    
+                    } else {
+                        foreach($collectionEN as $paradigm) {                
+                            $result[Token::IS_EN_DICT][] = $paradigm->getBaseForm();
+                        }
+                    }
+                }    
+            }    
         }    
         
         return $result;

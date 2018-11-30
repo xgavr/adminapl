@@ -48,8 +48,15 @@ class NameTokenizer implements Tokenizer
     public function tokenize($value): array
     {
         $lemms = $this->lemmaFilter->filter($this->tokenFilter->filter($value));
+        
+        $result = [];
+        foreach ($lemms as $key => $words){
+            if (count($words)){
+                $result = array_merge($result, $words);
+            }
+        }
 
-        return array_merge($lemms[1], $lemms[0]);
+        return $result;
     }
     
 }
