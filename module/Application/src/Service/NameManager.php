@@ -171,7 +171,7 @@ class NameManager
     {   
         $this->entityManager->remove($token);
         
-        $this->entityManager->flush($oemRaw);
+        $this->entityManager->flush($token);
     }    
     
     /**
