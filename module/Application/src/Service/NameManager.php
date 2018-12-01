@@ -147,13 +147,19 @@ class NameManager
      */
     public function grabTokenFromRaw($raw)
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1200);
+        $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_NEW]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewTokenFromRawprice($rawprice, false);
+            if (time() > $startTime + 400){
+                $this->entityManager->flush();
+                return;
+            }
         }
         
         $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
