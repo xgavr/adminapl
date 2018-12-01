@@ -77,8 +77,8 @@ class Lemma extends AbstractFilter
             
             $ruWord = mb_ereg_replace('[^А-ЯЁ]', '', $word);
             $enWord = mb_ereg_replace('[^A-Z]', '', $word);
-            $nuWord = mb_ereg_replace('[^1-9]', '', $word);
-            $unWord = mb_ereg_replace('[A-ZА-ЯЁ1-9]', '', $word);
+            $nuWord = mb_ereg_replace('[^0-9]', '', $word);
+            $unWord = mb_ereg_replace('[A-ZА-ЯЁ0-9]', '', $word);
             
             if (is_numeric($unWord)){
                 $result[Token::IS_UNKNOWN][] = $unWord;
