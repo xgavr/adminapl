@@ -181,6 +181,32 @@ class NameController extends AbstractActionController
             'nameManager' => $this->nameManager,
         ]);
     }
+    
+    public function tokenFlagAction()
+    {
+        $tokenId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($tokenId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $token = $this->entityManager->getRepository(Token::class)
+                ->findOneById($tokenId);
+        
+        if ($token == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $flag = $this->params()->fromQuery('flag', 1);
+        
+        $this->nameManager->updateTokenFlag($token, $flag);
+        
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
 
     public function viewAction() 
     {       

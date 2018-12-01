@@ -29,9 +29,13 @@ class Token {
     const IS_EN_1      = 13; // EN, 1 буква
     const IS_EN_ABBR   = 14; // EN, аббревиатура
 
-    const IS_NUMERIC   = 21; // число
+    const IS_NUMERIC   = 21; // число    
     const IS_UNKNOWN   = 99; // слово неизвестно словарю
 
+    const WHITE_LIST   = 1; // белый список 
+    const GRAY_LIST    = 8; // серый список 
+    const BLACK_LIST   = 9; // черный список 
+    
     
     /**
      * @ORM\Id
@@ -49,6 +53,11 @@ class Token {
      * @ORM\Column(name="status")  
      */
     protected $status = self::IS_UNKNOWN;        
+
+    /**
+     * @ORM\Column(name="flag")  
+     */
+    protected $flag = self::WHITE_LIST;        
 
      /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rawprice")
@@ -140,6 +149,59 @@ class Token {
     public function setStatus($status) 
     {
         $this->status = $status;
+    }   
+        
+    /**
+     * Returns flag.
+     * @return int     
+     */
+    public function getFlag() 
+    {
+        return $this->flag;
+    }
+
+    /**
+     * Returns possible flags as array.
+     * @return array
+     */
+    public static function getFlagList() 
+    {
+        return [
+            self::WHITE_LIST => 'Белый список',
+            self::GRAY_LIST  => 'Серый список',
+            self::BLACK_LIST => 'Черный список',
+        ];
+    }    
+    
+    /**
+     * Returns lemma flag as string.
+     * @return string
+     */
+    public function getFlagAsString()
+    {
+        $list = self::getFlagList();
+        if (isset($list[$this->flag]))
+            return $list[$this->flag];
+        
+        return 'Unknown';
+    }  
+    
+    public function getFlagName($flag)
+    {
+        $list = self::getFlagList();
+        if (isset($list[$flag]))
+            return $list[$flag];
+        
+        return 'Unknown';        
+    }
+
+    /**
+     * Sets flag.
+     * @param int $flag     
+     */
+    public function setFlag($flag) 
+    {
+        $this->flag = $flag;
     }   
         
     /**

@@ -46,6 +46,7 @@ $this->headScript()
                      <th data-field="id" data-type="numeric">ID</th>
                      <th data-field="lemma" data-formatter="tokenFormatter">Токен</th>
                      <th data-field="status" data-formatter="statusFormatter">Статус</th>             
+                     <th data-field="flag" data-formatter="flagFormatter">Список</th>             
                  </tr>                
             </thead>
         </table>
@@ -137,6 +138,15 @@ $this->headScript()
             case '13': return 'EN 1'; 
             case '14': return 'EN Аббревиатура'; 
             case '21': return 'Число'; 
+            default: return 'Неизвестно';    
+        }
+    }
+    
+    function flagFormatter(value, row){
+        switch (value){
+            case '1': return 'Белый'; 
+            case '2': return 'Серый'; 
+            case '3': return 'Черный'; 
             default: return 'Неизвестно';    
         }
     }

@@ -75,13 +75,15 @@ class NameManager
     public function addToken($data, $flushnow = true)
     {
         
+        $word = mb_strcut(trim($data['word']), 0, 64, 'UTF-8');
+        
         $token = $this->entityManager->getRepository(Token::class)
-                    ->findOneBy(['lemma' => $data['word']]);
+                    ->findOneBy(['lemma' => $word]);
 
         if ($token == null){
 
             $token = new Token();
-            $token->setLemma($data['word']);            
+            $token->setLemma($word);            
             $token->setStatus($data['status']);            
 
             // Добавляем сущность в менеджер сущностей.
@@ -93,6 +95,19 @@ class NameManager
         
         return $token;        
     }  
+    
+    /**
+     * Обновить флаг токена
+     * 
+     * @param Application\Entity\Token $token
+     * @param integer $flag
+     */
+    public function updateTokenFlag($token, $flag)
+    {
+        $token->setFlag($flag);
+        $this->entityManager->persist($token);
+        $this->entityManager->flush($token);
+    }
     
     /**
      * Добавление нового слова со статусом
