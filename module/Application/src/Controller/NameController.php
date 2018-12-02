@@ -183,7 +183,8 @@ class NameController extends AbstractActionController
         $paginator->setDefaultItemCountPerPage(10);        
         $paginator->setCurrentPageNumber($page);
 
-        $totalRawpriceCount = count($rawpriceQuery->getResult());
+        $totalRawpriceCount = $paginator->getTotalItemCount();
+        
 
         // Render the view template.
         return new ViewModel([
