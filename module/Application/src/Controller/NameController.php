@@ -154,6 +154,7 @@ class NameController extends AbstractActionController
     public function viewTokenAction() 
     {       
         $tokenId = (int)$this->params()->fromRoute('id', -1);
+        $page = $this->params()->fromQuery('page', 1);
 
         if ($tokenId<0) {
             $this->getResponse()->setStatusCode(404);
@@ -171,14 +172,26 @@ class NameController extends AbstractActionController
         $prevQuery = $this->entityManager->getRepository(Token::class)
                         ->findAllToken(['prev1' => $token->getLemma()]);
         $nextQuery = $this->entityManager->getRepository(Token::class)
-                        ->findAllToken(['next1' => $token->getLemma()]);        
+                        ->findAllToken(['next1' => $token->getLemma()]); 
+        
+        
+        $rawpriceQuery = $this->entityManager->getRepository(Token::class)
+                        ->findTokenRawprice($token);
+//        $totalRawpriceCount = count($rawpriceQuery->getResult(2));
+
+        $adapter = new DoctrineAdapter(new ORMPaginator($rawpriceQuery, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setCurrentPageNumber($page);
 
         // Render the view template.
         return new ViewModel([
             'token' => $token,
+            'rawprices' => $paginator,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'nameManager' => $this->nameManager,
+//            'totalRawpriceCount' => $totalRawpriceCount,
         ]);
     }
     
@@ -241,27 +254,6 @@ class NameController extends AbstractActionController
             'next' => $nextQuery->getResult(),
             'oemManager' => $this->oemManager,
         ]);
-    }
-    
-    public function viewOnCodeAction() 
-    {       
-        $oemCode = $this->params()->fromQuery('code');
-
-        if (!$oemCode) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        $filter = new \Application\Filter\ArticleCode();
-
-        $oem = $this->entityManager->getRepository(OemRaw::class)
-                ->findOneByCode($filter->filter($oemCode));
-        
-        if ($oem == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }   
-        
-        $this->redirect()->toUrl('/oem/view/'.$oem->getId());
     }
     
     public function parseAction()

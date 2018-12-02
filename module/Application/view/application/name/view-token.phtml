@@ -26,7 +26,16 @@ $this->pageBreadcrumbs()->setItems([
             <?php endif;?>                            
         </td>
     </tr>
-    <?php    foreach ($token->getRawprice() as $rawprice):?>
+    <tr>
+        <td colspan="5">
+            <?= $this->paginationControl($rawprices,
+                        'Sliding',
+                        'application/partial/paginator', 
+                        ['route' => array('route' => 'name', 'action' => 'view-token', 'id' => $token->getId())]); ?>
+            
+        </td>
+    </tr>
+    <?php    foreach ($rawprices as $rawprice):?>
         <tr>
             <td>
                 <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
@@ -62,11 +71,12 @@ $this->pageBreadcrumbs()->setItems([
         </tr>
     <?php endforeach;?>        
     <tr>
-        <th colspan="4">
-            Всего
-        </th>
-        <td align="right">
-            <b><?//= $totalRawpriceCount ?></b>
+        <td colspan="5">
+            <?= $this->paginationControl($rawprices,
+                        'Sliding',
+                        'application/partial/paginator', 
+                        ['route' => array('route' => 'name', 'action' => 'view-token', 'id' => $token->getId())]); ?>
+            
         </td>
     </tr>
 </table>

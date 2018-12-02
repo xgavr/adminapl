@@ -63,6 +63,29 @@ class TokenRepository  extends EntityRepository
     }            
     
     /**
+     * Найти строки прайсов токена
+     * 
+     * @param Application\Entity\Token $token
+     * @return object
+     */
+    public function findTokenRawprice($token)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+            ->from(Rawprice::class, 'r')
+            ->join('r.tokens', 't')
+            ->where('t.id = ?1')    
+            ->andWhere('r.status = ?2')    
+            ->setParameter('1', $token->getId())
+            ->setParameter('2', Rawprice::STATUS_PARSED)
+            ;
+        
+        return $queryBuilder->getQuery();            
+    }
+
+    /**
      * Найти токены для удаления
      * 
      * @return object
