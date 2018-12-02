@@ -54,9 +54,9 @@ $this->pageBreadcrumbs()->setItems([
                 <?php $tokens = $rawprice->getTokens(); ?>
                 <?php if(count($tokens)):?>  
                     <div>    
-                        <?php foreach($tokens as $token):?>
-                            <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
-                                <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
+                        <?php foreach($tokens as $tokenraw):?>
+                            <span style="font-size: xx-small; font-weight: <?= ($tokenraw->getStatus() == $tokenraw::IS_DICT) ? 'bold':'normal' ?>">
+                                <a href="/name/view-token/<?= $tokenraw->getId() ?>"><?= $tokenraw->getLemma() ?></a>
                             </span>
                         <?php endforeach;?>
                     </div>        
