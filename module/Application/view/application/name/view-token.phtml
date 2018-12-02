@@ -20,22 +20,22 @@ $this->pageBreadcrumbs()->setItems([
                 <a href="/name/view-token/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getLemma()?></a>
             <?php endif;?>            
         </td>
-        <td align="right">
-            <b><?= $totalRawpriceCount?></b>
-        </td>
-        <td  colspan="2" align="right">
+        <td  colspan="3" align="right">
             <?php if ($next):?>
                 <a href="/name/view-token/<?= $next[0]->getId()?>"><?= $next[0]->getLemma()?>&rarr;</a>
             <?php endif;?>                            
         </td>
     </tr>
     <tr>
-        <td colspan="5">
+        <td colspan="4">
             <?= $this->paginationControl($rawprices,
                         'Sliding',
                         'application/partial/paginator', 
                         ['route' => array('route' => 'name', 'action' => 'view-token', 'id' => $token->getId())]); ?>
             
+        </td>
+        <td align="right" valign="center">
+            <b><?= $totalRawpriceCount?></b>
         </td>
     </tr>
     <?php    foreach ($rawprices as $rawprice):?>
