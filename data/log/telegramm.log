@@ -14,3 +14,11 @@
 * Closing connection 0
 
  [] []
+[2018-12-03 18:45:26] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 185.246.185.153...
+* TCP_NODELAY set
+* Connection timed out after 10000 milliseconds
+* stopped the pause stream!
+* Closing connection 0
+
+ [] []

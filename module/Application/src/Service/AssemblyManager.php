@@ -11,6 +11,7 @@ use Application\Entity\Token;
 use Application\Entity\Article;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Entity\Goods;
 
 use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Application\Filter\NameTokenizer;
@@ -186,18 +187,23 @@ class AssemblyManager
             return;
         }
         
-        if ($title){
-            $lemmaFilter = new Lemma();
-            $tokenFilter = new Tokenizer();
-            
-            $lemms = $lemmaFilter->filter($tokenFilter->filter($title));
-            
-            foreach ($lemms as $key => $words){
-                $this->addLemms($rawprice, $words, $key, $flush);
-            }    
-        }  
+        $producer = $rawprice->getUnknownProducer()->getProducer();
         
-        $rawprice->setStatusToken(Rawprice::TOKEN_PARSED);
+        if (!$producer){
+            
+        }
+        
+        $code = $rawprice->getCode()->getCode();
+        $good = $this->entityManager->getRpository(Goods::class)
+                ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+        
+        if ($good){
+            
+        } else {
+            
+        }
+        
+
         $this->entityManager->persist($rawprice);
         if ($flush){
             $this->entityManager->flush();
