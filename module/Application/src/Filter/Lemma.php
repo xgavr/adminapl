@@ -70,6 +70,8 @@ class Lemma extends AbstractFilter
             Token::IS_EN_1 => [], //en 1 
             Token::IS_EN_ABBR => [], //en abbr 
             Token::IS_NUMERIC => [], //число 
+            Token::IS_PRODUCER => [], //производитель 
+            Token::IS_ARTICLE => [], //артикул 
             Token::IS_UNKNOWN => [], //нечто 
         ];
         

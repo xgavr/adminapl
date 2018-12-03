@@ -71,22 +71,6 @@ class NameController extends AbstractActionController
         ]);  
     }
     
-    public function wordsAction()
-    {
-        $text = 'Колодки тормозные перед LEXUS GX470/460/TOYOTA LAND CRUISER PRADO 120/150 02-';
-        $article = new \Mystem\Article($text);
-        foreach ($article->words as $word) {
-            echo $word." ";
-        }
-        
-        exit;
-    }
-    
-    public function tokenArticleAction()
-    {
-        
-    }
-    
     public function contentAction()
     {
         ini_set('memory_limit', '512M');

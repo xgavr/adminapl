@@ -448,6 +448,14 @@ class Rawprice {
         return $this->price;
     }
 
+    public function getRealPrice() 
+    {
+        if (is_numeric($this->price)){
+            return (float) $this->price;
+        }        
+        return;
+    }
+
     public function setPrice($price) 
     {
         $this->price = (string) $price;
@@ -455,6 +463,14 @@ class Rawprice {
     
     public function getRest() 
     {
+        return $this->rest;
+    }
+
+    public function getRealRest() 
+    {
+        if (is_numeric($this->rest)){
+            return (float) $this->rest;
+        }        
         return $this->rest;
     }
 

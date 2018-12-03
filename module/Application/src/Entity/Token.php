@@ -30,6 +30,10 @@ class Token {
     const IS_EN_ABBR   = 14; // EN, аббревиатура
 
     const IS_NUMERIC   = 21; // число    
+    
+    const IS_PRODUCER  = 31; // производитель    
+    const IS_ARTICLE   = 32; // артикул производителя    
+    
     const IS_UNKNOWN   = 99; // слово неизвестно словарю
 
     const WHITE_LIST   = 1; // белый список 
@@ -116,6 +120,10 @@ class Token {
             self::IS_ABBR => 'EN, аббревиатура',
             
             self::IS_NUMERIC => 'Число',
+
+            self::IS_PRODUCER => 'Производитель',
+            self::IS_ARTICLE => 'Артикул',
+
             self::STATUS_UNKNOWN => 'Неизвестно',
         ];
     }    

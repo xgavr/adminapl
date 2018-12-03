@@ -11,7 +11,6 @@ use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Goods;
 use Application\Entity\Producer;
 use Application\Entity\Tax;
-use MvlabsPHPExcel\Service;
 use Zend\Config\Config;
 use Zend\Config\Writer\PhpArray;
 
@@ -23,9 +22,6 @@ use Zend\Config\Writer\PhpArray;
 class GoodsManager
 {
     
-    const SETTINGS_DIR       = './data/settings/'; // папка с настройками
-    const SETTINGS_FILE       = './data/settings/config.php'; // файл с настройками
-
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -37,37 +33,7 @@ class GoodsManager
     {
         $this->entityManager = $entityManager;
     }
-    
-    public function getSettings()
-    {
-        if (file_exists(self::SETTINGS_FILE)){
-            $config = new Config(include self::SETTINGS_FILE);
-        }  else {
-            $config = new Config([], true);
-            $config->good = [];
-        }   
-        return $config->good;
-    }
-    
-    public function setSettings($data)
-    {
-        if (!is_dir(self::SETTINGS_DIR)){
-            mkdir(self::SETTINGS_DIR);
-        }        
-        if (file_exists(self::SETTINGS_FILE)){
-            $config = new Config(include self::SETTINGS_FILE, true);
-        }  else {
-            $config = new Config([], true);
-            $config->good = [];
-        }
         
-        $config->good->defaultTax = $data['defaultTax'];
-        
-        $writer = new PhpArray();
-        
-        $writer->toFile(self::SETTINGS_FILE, $config);
-    }
-    
     public function addNewGoods($data, $flushnow=true) 
     {
         // Создаем новую сущность Goods.
@@ -149,17 +115,7 @@ class GoodsManager
         
         $this->entityManager->flush();
     }    
+    
+    
 
-    public function getMaxPrice($good)
-    {
-        $result = $this->entityManager->getRepository(Goods::class)
-                ->getMaxPrice($good);
-//        var_dump($result);
-        if (is_array($result) && count($result)){
-            if (array_key_exists('price', $result[0])){    
-                return $result[0]['price'];
-            }
-        }    
-        return 0;
-    } 
 }

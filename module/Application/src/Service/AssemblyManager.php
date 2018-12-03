@@ -18,11 +18,12 @@ use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
 
 /**
- * Description of RbService
+ * Description of AssemblyManager
+ * Создание карточек товаров
  *
  * @author Daddy
  */
-class NameManager
+class AssemblyManager
 {
     
     /**
@@ -36,6 +37,8 @@ class NameManager
     {
         $this->entityManager = $entityManager;
     }
+    
+    
     
     /**
      * Разбивает наименование товара на токены
@@ -126,20 +129,63 @@ class NameManager
     }
     
     /**
-     * Добавление нового слова из прайса
+     * Проверка строки прайса на возможность создания товара
+     * @param Application\Entity\Rawprice $rawprice
+     * @return bool
+     */
+    
+    public function checkRawprice($rawprice)
+    {
+        if (!$rawprice->getCode()) {
+            return false;
+        }    
+        
+        if (strlen($rawprice->getCode()->getCode()) < 4) {
+            return false;
+        }    
+        
+        if (!$rawprice->getUnknownProducer()) {
+            return false;
+        }    
+        
+        if (!$rawprice->getTitle()) {
+            return false;
+        }    
+        
+        if (!$rawprice->getRealPrice()) {
+            return false;
+        }    
+        
+        if (!$rawprice->getReatRest()) {
+            return false;
+        }           
+        
+        return true;
+    }
+    
+    /**
+     * Привязка производителя
+     * 
+     * @param Application\Entity\Rawprice $rawprice
+     * 
+     * @return Application\Entity\Producer
+     */
+    public function producer($rawprice)
+    {
+    }
+    
+    /**
+     * Добавление нового товара из прайса
      * 
      * @param Application\Entity\Rawprice $rawprice
      * @param bool $flush
      */
-    public function addNewTokenFromRawprice($rawprice, $flush = true) 
+    public function addNewGoodFromRawprice($rawprice, $flush = true) 
     {
-        $rawprice->getTokens()->clear();
-
-        $title = $rawprice->getTitle();
+        if (!$this->checkRawprice($rawprice)){
+            return;
+        }
         
-        $producer = $rawprice->getProducer();
-        $article = $rawprice->getArticle();
-            
         if ($title){
             $lemmaFilter = new Lemma();
             $tokenFilter = new Tokenizer();
@@ -160,27 +206,27 @@ class NameManager
     }  
     
     /**
-     * Выборка токенов из прайса и добавление их в таблицу токенов
+     * Сьорка товаров по прайсу
      * @param Appllication\Entity\Raw $raw
      */
-    public function grabTokenFromRaw($raw)
+    public function assemplyGoodFromRaw($raw)
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(1200);
         $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_NEW]);
+                ->findBy(['raw' => $raw->getId(), 'good' => null]);
         
         foreach ($rawprices as $rawprice){
-            $this->addNewTokenFromRawprice($rawprice, false);
+            $this->addNewGoodFromRawprice($rawprice, false);
             if (time() > $startTime + 400){
                 $this->entityManager->flush();
                 return;
             }
         }
         
-        $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
+        $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
         $this->entityManager->persist($raw);
         
         $this->entityManager->flush();
