@@ -209,10 +209,20 @@ class AssemblyManager
             $this->entityManager->flush();
         }    
         return;
-    }  
+    }
     
     /**
-     * Сьорка товаров по прайсу
+     * Данные для анализа и выбора производителя
+     * 
+     */
+    public function trainData($rawprice)
+    {
+        
+    }
+            
+    
+    /**
+     * Сборка товаров по прайсу
      * @param Appllication\Entity\Raw $raw
      */
     public function assemplyGoodFromRaw($raw)
