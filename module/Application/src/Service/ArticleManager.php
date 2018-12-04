@@ -293,7 +293,7 @@ class ArticleManager
         }
         
         if (count($result)){
-            return array_sum($result)/count($result);
+            return sqrt(array_sum($result)/count($result));
         } else {
             return 0;
         }    
