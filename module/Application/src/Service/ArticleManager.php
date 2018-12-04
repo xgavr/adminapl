@@ -250,18 +250,24 @@ class ArticleManager
      */
     public function meanPrice($article)
     {
-        $result = [];
-        foreach($article->getRawprice() as $rawprice){
-            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
-                $result[] = $rawprice->getRealPrice();
-            }    
+        if (is_numeric($article)){
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneById($article);
         }
         
-        if (count($result)){
-            return array_sum($result)/count($result);
-        } else {
-            return 0;
+        if ($article){
+            $result = [];
+            foreach($article->getRawprice() as $rawprice){
+                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
+                    $result[] = $rawprice->getRealPrice();
+                }    
+            }
+
+            if (count($result)){
+                return array_sum($result)/count($result);
+            }    
         }    
+        return 0;
     }
     
     /**
@@ -272,6 +278,11 @@ class ArticleManager
      */
     public function dispersionPrice($article)
     {
+        if (is_numeric($article)){
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneById($article);
+        }
+        
         $mean = $this->meanPrice($article);
         
         $result = [];

@@ -27,7 +27,21 @@ $this->pageBreadcrumbs()->setItems([
         </td>
     </tr>
     <?php $totalRawpriceCount = 0; ?>
+    <?php $articleId = 0?>
     <?php    foreach ($rawpriceCountBySupplier as $row):?>
+        <?php if ($articleId != $row['articleId']): ?>
+            <?php $articleId = $row['articleId']?>
+            <tr>
+                <th colspan="4">
+                </th>
+                <td align="right">
+                    <b><?= number_format($articleManager->meanPrice($articleId), 2, '.', '') ?></b>
+                    (<?= number_format($articleManager->dispersionPrice($articleId), 2, '.', '') ?>)
+                </td>
+                <td align="right">
+                </td>
+            </tr>
+        <?php endif; ?>    
         <tr>
             <td colspan="6">
                 <b><?= $row['supplierName'];?></b>
@@ -69,7 +83,6 @@ $this->pageBreadcrumbs()->setItems([
             Всего
         </th>
         <td align="right">
-            <b><?= number_format($articleManager->meanPrice($article), 2, '.', '') ?></b>
         </td>
         <td align="right">
             <b><?= $totalRawpriceCount ?></b>
