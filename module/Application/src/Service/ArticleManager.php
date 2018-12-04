@@ -252,7 +252,9 @@ class ArticleManager
     {
         $result = [];
         foreach($article->getRawprice() as $rawprice){
-            $result[] = $rawprice->getRealPrice();
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
+                $result[] = $rawprice->getRealPrice();
+            }    
         }
         
         if (count($result)){
