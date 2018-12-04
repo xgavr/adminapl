@@ -55,7 +55,7 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </td>
                     <td align="right">
-                        <?= $randRawprice->getRealPrice();?>
+                        <?= number_format($randRawprice->getRealPrice());?>
                     </td>
                     <td align="right">
                         <?= $randRawprice->getRest();?>
