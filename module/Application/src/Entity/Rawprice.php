@@ -450,10 +450,8 @@ class Rawprice {
 
     public function getRealPrice() 
     {
-        if (is_numeric($this->price)){
-            return (float) $this->price;
-        }        
-        return;
+        $filter = new \Application\Filter\ToFloat();
+        return $filter->filter($this->price);
     }
 
     public function setPrice($price) 
