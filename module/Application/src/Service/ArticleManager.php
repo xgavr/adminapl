@@ -264,4 +264,27 @@ class ArticleManager
         }    
     }
     
+    /**
+     * Разброс цен строки прайса в артикуле
+     * 
+     * @param Application\Entity\Article $article
+     * @return float
+     */
+    public function dispersionPrice($article)
+    {
+        $mean = $this->meanPrice($article);
+        
+        $result = [];
+        foreach($article->getRawprice() as $rawprice){
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
+                $result[] = pow($rawprice->getRealPrice() - $mean, 2);
+            }    
+        }
+        
+        if (count($result)){
+            return array_sum($result)/count($result);
+        } else {
+            return 0;
+        }    
+    }
 }
