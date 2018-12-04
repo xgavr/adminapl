@@ -242,4 +242,24 @@ class ArticleManager
         }        
     }
     
+    /**
+     * Вычисление средней цены 
+     * 
+     * @param Application\Entity\Article
+     * @return float 
+     */
+    public function meanPrice($article)
+    {
+        $result = [];
+        foreach($article->getRawprice() as $rawprice){
+            $result[] = $rawprice->getRealPrice();
+        }
+        
+        if (count($result)){
+            return array_sum($result)/count($result);
+        } else {
+            return 0;
+        }    
+    }
+    
 }

@@ -68,7 +68,10 @@ $this->pageBreadcrumbs()->setItems([
         <th colspan="4">
             Всего
         </th>
-        <td colspan="2" align="right">
+        <td align="right">
+            <b><?= number_format($articleManager->meanPrice($article), 2, '.', '') ?></b>
+        </td>
+        <td align="right">
             <b><?= $totalRawpriceCount ?></b>
         </td>
     </tr>
