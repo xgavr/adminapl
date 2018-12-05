@@ -15,12 +15,12 @@ $this->pageBreadcrumbs()->setItems([
 </h1>
 <table class="table table-striped">
     <tr>
-        <td colspan="4">            
+        <td colspan="3">            
             <?php if ($prev):?>
                 <a href="/producer/article-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getFullCode()?></a>
             <?php endif;?>            
         </td>
-        <td colspan="2" align="right">
+        <td colspan="3" align="right">
             <?php if ($next):?>
                 <a href="/producer/article-view/<?= $next[0]->getId()?>"><?= $next[0]->getFullCode()?>&rarr;</a>
             <?php endif;?>                            
