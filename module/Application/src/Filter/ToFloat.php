@@ -34,6 +34,7 @@ class ToFloat extends AbstractFilter
     
     public function filter($value)
     {
+        $value = htmlentities($value);
         $value = str_replace([' ', '&nbsp;'], "", $value); //  
 
         if(strstr($value, ",")) { 
