@@ -25,11 +25,18 @@ class ArticleManager
      * @var Doctrine\ORM\EntityManager
      */
     private $entityManager;
+    
+    /**
+     *
+     * @var Application\Service\NameManager
+     */
+    private $nameManager;
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $nameManager)
     {
         $this->entityManager = $entityManager;
+        $this->nameManager = $nameManager;
     }
     
     /**
@@ -321,5 +328,71 @@ class ArticleManager
         $maxPrice = $meanPrice + 3*$dispersion;
         
         return $price >= $minPrice && $price <= $maxPrice;
+    }
+    
+    /**
+     * Получить токены артикула
+     * 
+     * @param Application\Entity\Article|integer $article
+     * @param integer $rawpriceDiff Исключение
+     * 
+     * @return array
+     */
+    public function getTokens($article, $rawpriceDiff = 0)
+    {
+        if (is_numeric($article)){
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneById($article);
+        }
+        
+        if ($article){
+            $result = [];
+            foreach ($article->getRawprice() as $rawprice){
+                if ($rawprice->getStatus() == $rawprice::STATUS_PARSED && $rawprice->getId() != $rawpriceDiff){
+                    if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
+                        $this->nameManager->addNewTokenFromRawprice($rawprice);
+                        return $this->getTokens($article, $rawpriceDiff);
+                    }
+                    foreach ($rawprice->getTokens() as $token){
+                        $result[$token->getId()] += 1;
+                    }            
+                }
+            }
+
+            return $result;
+        }
+        
+        return;
+    }
+    
+    /**
+     * Сравнить токены артикула и строки прайса
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Rawprice $rawprice
+     * 
+     * @return bool|null
+     */
+    public function tokenIntersect($article, $rawprice)
+    {
+       $articleTokens = $this->getTokens($article, $rawprice->getId());
+       
+       if (count($articleTokens)){
+            
+           if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
+                $this->nameManager->addNewTokenFromRawprice($rawprice);
+                return $this->tokenIntersect($article, $rawprice);
+            }
+
+            $rawpriceTokens = [];
+            foreach ($rawprice->getTokens() as $token){
+                $rawpriceTokens[$token->getId()] += 1;
+            }
+            
+            $inersect = array_intersect_key($articleTokens, $rawpriceTokens);
+            return count($inersect) > 0;
+       }
+       
+       return true;
     }
 }

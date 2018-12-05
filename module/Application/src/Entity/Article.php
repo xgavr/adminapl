@@ -171,7 +171,5 @@ class Article {
     {
         $this->unknownProducer = $unknownProducer;
         $unknownProducer->addCode($this);
-    }     
-    
-      
+    }         
 }

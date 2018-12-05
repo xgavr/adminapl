@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ArticleManager;
+use Application\Service\NameManager;
 /**
  * Description of PbManagerFactory
  *
@@ -23,8 +24,9 @@ class ArticleManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $nameManager = $container->get(NameManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ArticleManager($entityManager);
+        return new ArticleManager($entityManager, $nameManager);
     }
 }
