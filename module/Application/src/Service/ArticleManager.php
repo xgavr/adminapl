@@ -257,14 +257,16 @@ class ArticleManager
         
         if ($article){
             $result = [];
+            $rest = 0;
             foreach($article->getRawprice() as $rawprice){
-                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
-                    $result[] = $rawprice->getRealPrice();
+                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
+                    $result[] = $rawprice->getRealPrice() * $rawprice->getRealRest();
+                    $rest += $rawprice->getRealRest();
                 }    
             }
 
-            if (count($result)){
-                return array_sum($result)/count($result);
+            if ($rest){
+                return array_sum($result)/$rest;
             }    
         }    
         return 0;
@@ -283,19 +285,25 @@ class ArticleManager
                     ->findOneById($article);
         }
         
-        $mean = $this->meanPrice($article);
-        
-        $result = [];
-        foreach($article->getRawprice() as $rawprice){
-            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
-                $result[] = pow($rawprice->getRealPrice() - $mean, 2);
-            }    
+        if ($article){
+            $mean = $this->meanPrice($article);
+
+            $result = [];
+            $rest = 0;
+            foreach($article->getRawprice() as $rawprice){
+                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
+                    $result[] = pow(($rawprice->getRealPrice() - $mean)*$rawprice->getRealRest(), 2);
+                    $rest += $rawprice->getRealRest();
+                }    
+            }
+
+            if ($rest){
+                return sqrt(array_sum($result)/$rest);
+            } else {
+                return 0;
+            } 
         }
         
-        if (count($result)){
-            return sqrt(array_sum($result)/count($result));
-        } else {
-            return 0;
-        }    
+        return;
     }
 }
