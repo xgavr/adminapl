@@ -65,11 +65,11 @@ $this->pageBreadcrumbs()->setItems([
                     </a>   
                 </td>
                 <td>
-                    <span style="color: <?= ($articleManager->tokenIntersect($articleId, $randRawprice) ? 'inherit':'red')?>">
-                        <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $randRawprice->getId()]);?>">
+                    <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $randRawprice->getId()]);?>">
+                        <span style="color: <?= ($articleManager->tokenIntersect($articleId, $randRawprice) ? 'inherit':'red')?>">
                                 <?= $randRawprice->getGoodname();?>
-                        </a>    
-                    </span>
+                        </span>
+                    </a>    
                     <?php $tokens = $randRawprice->getTokens(); ?>
                     <?php if(count($tokens)):?>  
                         <div>    
