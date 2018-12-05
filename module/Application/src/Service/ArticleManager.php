@@ -306,4 +306,20 @@ class ArticleManager
         
         return;
     }
+    
+    /**
+     * Проверка цены на попадание в диапазон цен
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Rawprice $rawprice
+     * 
+     * @return bool
+     */
+    public function inSigma3($price, $meanPrice, $dispersion)
+    {
+        $minPrice = $meanPrice - 3*$dispersion;
+        $maxPrice = $meanPrice + 3*$dispersion;
+        
+        return $price >= $minPrice && $price <= $maxPrice;
+    }
 }

@@ -27,7 +27,7 @@ $this->pageBreadcrumbs()->setItems([
         </td>
     </tr>
     <?php $totalRawpriceCount = 0; ?>
-    <?php $articleId = 0?>
+    <?php $articleId = $meanPrice = $dispersion = 0?>
     <?php    foreach ($rawpriceCountBySupplier as $row):?>
         <?php $randRawprices = $articleManager->randRawpriceBy(['article' => $row['articleId'], 'supplier' => $row['supplierId']]);?>
         <?php if ($articleId != $row['articleId']): ?>
@@ -40,8 +40,10 @@ $this->pageBreadcrumbs()->setItems([
                     <?= $randRawprices[0]->getUnknownProducer()->getName()?>
                 </th>
                 <td colspan="3" align="right">
-                    <b><?= number_format($articleManager->meanPrice($articleId), 2, '.', '') ?></b>
-                    (<?= number_format($articleManager->dispersionPrice($articleId), 2, '.', '') ?>)
+                    <?php $meanPrice = $articleManager->meanPrice($articleId);?>
+                    <?php $dispersion = $articleManager->dispersionPrice($articleId);?>
+                    <b><?= number_format($meanPrice, 2, '.', '') ?></b>
+                    (<?= number_format($dispersion, 2, '.', '') ?>)
                 </td>
                 <td align="right">
                 </td>
@@ -73,7 +75,9 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endforeach;?>
                 </td>
                 <td align="right">
-                    <?= number_format($randRawprice->getRealPrice(), 2, '.', '');?>
+                    <span style="color: <?= ($this->articleManager->inSigma3($randRawprice->getRealPrice(), $meanPrice, $dispersion)) ? 'inherit':'red'?>">
+                        <?= number_format($randRawprice->getRealPrice(), 2, '.', '');?>
+                    </span>
                 </td>
                 <td align="right">
                     <?= $randRawprice->getRealRest();?>
