@@ -390,7 +390,7 @@ class ArticleManager
             }
             
             $inersect = array_intersect_key($articleTokens, $rawpriceTokens);
-            var_dump(count($inersect) > 0);
+            //var_dump(count($inersect) > 0);
             return count($inersect) > 0;
        }
        
