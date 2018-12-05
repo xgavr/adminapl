@@ -475,7 +475,7 @@ class ArticleManager
             }
             
             $inersect = array_intersect_key($articleOem, $rawpriceOem);
-            //var_dump(count($inersect) > 0);
+            var_dump($inersect);
             return $inersect;
        }
        
