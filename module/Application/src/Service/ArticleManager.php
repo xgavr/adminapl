@@ -402,4 +402,40 @@ class ArticleManager
        
        return true;
     }
+    
+    /**
+     * Получить номера артикула
+     * 
+     * @param Application\Entity\Article|integer $article
+     * @param integer $rawpriceDiff Исключение
+     * 
+     * @return array
+     */
+    public function getOemRaw($article, $rawpriceDiff = 0)
+    {
+        if (is_numeric($article)){
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneById($article);
+        }
+        
+        if ($article){
+            $result = [];
+            foreach ($article->getRawprice() as $rawprice){
+                if ($rawprice->getStatus() == $rawprice::STATUS_PARSED && $rawprice->getId() != $rawpriceDiff){
+                    if ($rawprice->getStatusOem() != $rawprice::OEM_PARSED){
+                        $this->oemManager->addNewOemRawFromRawprice($rawprice);
+                        return $this->getOemRaw($article, $rawpriceDiff);
+                    }
+                    foreach ($rawprice->getOemRaw() as $oem){
+                        $result[$oem->getCode()] += 1;
+                    }            
+                }
+            }
+
+            return $result;
+        }
+        
+        return;
+        
+    }
 }
