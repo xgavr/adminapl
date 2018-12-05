@@ -324,6 +324,12 @@ class ArticleManager
      */
     public function inSigma3($price, $meanPrice, $dispersion)
     {
+        if ($meanPrice){
+            if ($dispersion/$meanPrice < 0.01){
+                return true;
+            }
+        }        
+        
         $minPrice = $meanPrice - 3*$dispersion;
         $maxPrice = $meanPrice + 3*$dispersion;
         
