@@ -85,7 +85,9 @@ $this->pageBreadcrumbs()->setItems([
                 <td>
                     <?php $oemIntersect = $articleManager->oemIntersect($articleId, $randRawprice); ?>
                     <?php foreach($randRawprice->getOemRaw() as $oemRaw): ?>
-                        <span style="font-size: xx-small; color: <?= (in_array($oemRaw->getCode(), $oemIntersect)) ? 'green':'inherit' ?>"><?= $oemRaw->getCode()?></span>
+                        <a href="<?= $this->url('oem', ['action' => 'view-on-code'], ['query' => ['code' => $oemRaw->getCode()]]);?>">
+                            <span style="font-size: xx-small; color: <?= (in_array($oemRaw->getCode(), $oemIntersect)) ? 'green':'inherit' ?>"><?= $oemRaw->getCode()?></span>
+                        </a>    
                     <?php endforeach;?>
                 </td>
                 <td align="right">
