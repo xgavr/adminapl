@@ -44,6 +44,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php $dispersion = $articleManager->dispersionPrice($articleId);?>
                     <b><?= number_format($meanPrice, 2, '.', '') ?></b>
                     (<?= number_format($dispersion, 2, '.', '') ?>)
+                    (<?= number_format($dispersion/$meanPrice, 2, '.', '') ?>)
                 </td>
                 <td align="right">
                 </td>
