@@ -292,7 +292,7 @@ class ArticleManager
             $rest = 0;
             foreach($article->getRawprice() as $rawprice){
                 if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
-                    $result[] = pow(($rawprice->getRealPrice() - $mean)*$rawprice->getRealRest(), 2);
+                    $result[] = pow(($rawprice->getRealPrice() - $mean), 2)*$rawprice->getRealRest();
                     $rest += $rawprice->getRealRest();
                 }    
             }
