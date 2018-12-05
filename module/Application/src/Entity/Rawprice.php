@@ -466,10 +466,14 @@ class Rawprice {
 
     public function getRealRest() 
     {
-        if (is_numeric($this->rest)){
-            return (float) $this->rest;
-        }        
-        return $this->rest;
+        if ($this->rest){
+            if (is_numeric($this->rest)){
+                return (float) $this->rest;
+            } else {
+                return 1;
+            }
+        }    
+        return 0;
     }
 
     public function setRest($rest) 

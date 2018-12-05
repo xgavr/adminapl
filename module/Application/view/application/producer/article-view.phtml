@@ -32,9 +32,9 @@ $this->pageBreadcrumbs()->setItems([
         <?php if ($articleId != $row['articleId']): ?>
             <?php $articleId = $row['articleId']?>
             <tr>
-                <th colspan="4">
+                <th>
                 </th>
-                <td align="right">
+                <td colspan="4" align="right">
                     <b><?= number_format($articleManager->meanPrice($articleId), 2, '.', '') ?></b>
                     (<?= number_format($articleManager->dispersionPrice($articleId), 2, '.', '') ?>)
                 </td>
@@ -72,7 +72,7 @@ $this->pageBreadcrumbs()->setItems([
                         <?= number_format($randRawprice->getRealPrice(), 2, '.', '');?>
                     </td>
                     <td align="right">
-                        <?= $randRawprice->getRest();?>
+                        <?= $randRawprice->getRealRest();?>
                     </td>
                 </tr>
             <?php endforeach;?>                    
