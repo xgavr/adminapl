@@ -34,7 +34,7 @@ class ToFloat extends AbstractFilter
     
     public function filter($value)
     {
-        $value = str_replace(" ", "", $value); //  
+        $value = str_replace(array(' ', '&nbsp;'), "", $value); //  
 
         if(strstr($value, ",")) { 
             $value = str_replace(".", "", $value); // replace dots (thousand seps) with blancs 
