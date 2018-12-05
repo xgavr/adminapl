@@ -434,7 +434,7 @@ class ArticleManager
                         return $this->getOemRaw($article, $rawpriceDiff);
                     }
                     foreach ($rawprice->getOemRaw() as $oem){
-                        $result[$oem->getCode()] += 1;
+                        $result[] = $oem->getCode();
                     }            
                 }
             }
@@ -474,8 +474,7 @@ class ArticleManager
                 return;
             }
             
-            $inersect = array_intersect_key($articleOem, $rawpriceOem);
-            var_dump($inersect);
+            $inersect = array_intersect($articleOem, $rawpriceOem);
             return $inersect;
        }
        
