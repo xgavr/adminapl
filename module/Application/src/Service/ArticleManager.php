@@ -32,11 +32,18 @@ class ArticleManager
      */
     private $nameManager;
   
+    /**
+     *
+     * @var Application\Service\OemManager
+     */
+    private $oemManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $nameManager)
+    public function __construct($entityManager, $nameManager, $oemManager)
     {
         $this->entityManager = $entityManager;
         $this->nameManager = $nameManager;
+        $this->oemManager = $oemManager;
     }
     
     /**
@@ -438,4 +445,41 @@ class ArticleManager
         return;
         
     }
+
+    /**
+     * Сравнить номера артикула и строки прайса
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Rawprice $rawprice
+     * 
+     * @return bool|null
+     */
+    public function oemIntersect($article, $rawprice)
+    {
+       $articleOem = $this->getOemRaw($article, $rawprice->getId());
+       
+       if (count($articleOem)){
+            
+           if ($rawprice->getStatusOem() != $rawprice::OEM_PARSED){
+                $this->nameManager->addNewOemRawFromRawprice($rawprice);
+                return $this->oemIntersect($article, $rawprice);
+            }
+
+            $rawpriceOem = [];
+            foreach ($rawprice->getOemRaw() as $oem){
+                $rawpriceOem[] = $oem->getCode();
+            }
+            
+            if (!count($rawpriceOem)){
+                return;
+            }
+            
+            $inersect = array_intersect_key($articleOem, $rawpriceOem);
+            //var_dump(count($inersect) > 0);
+            return $inersect;
+       }
+       
+       return;
+    }
+    
 }
