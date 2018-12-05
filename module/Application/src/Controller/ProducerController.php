@@ -351,7 +351,6 @@ class ProducerController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
-            'vacabulary' => $this->nameManager->tokenArticle($article),
         ]);
     }
     

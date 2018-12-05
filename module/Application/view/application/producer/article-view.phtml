@@ -68,6 +68,16 @@ $this->pageBreadcrumbs()->setItems([
                     <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $randRawprice->getId()]);?>">
                         <?= $randRawprice->getGoodname();?>
                     </a>    
+                    <?php $tokens = $randRawprice->getTokens(); ?>
+                    <?php if(count($tokens)):?>  
+                        <div>    
+                            <?php foreach($tokens as $token):?>
+                                <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
+                                    <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
+                                </span>
+                            <?php endforeach;?>
+                        </div>        
+                    <?php endif;?>                                                
                 </td>
                 <td>
                     <?php foreach($randRawprice->getOemRaw() as $oemRaw): ?>
@@ -97,5 +107,3 @@ $this->pageBreadcrumbs()->setItems([
         </td>
     </tr>
 </table>
-
-<?php print_r($vacabulary)?>
