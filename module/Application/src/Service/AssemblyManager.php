@@ -33,12 +33,41 @@ class AssemblyManager
      */
     private $entityManager;
   
+    /**
+     * Менеджер артикулов
+     * 
+     * @var Application\Service\ArticleManager 
+     */
+    private $articleManager;
+    
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $articleManager)
     {
         $this->entityManager = $entityManager;
+        $this->articleManager = $articleManager;
     }
     
+    /**
+     * Добавление новой карточки товара
+     * 
+     * @param string $code
+     * @param Application\Entity\Producer $producer
+     * @return Goods
+     */
+    public function addNewGood($code, $producer) 
+    {
+        // Создаем новую сущность Goods.
+        $good = new Goods();
+        $good->setCode($code);
+        $good->setProducer($producer);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($good);
+        
+        $this->entityManager->flush($good);
+        
+        return $good;
+    }   
     
     
     /**
@@ -181,7 +210,7 @@ class AssemblyManager
      * @param Application\Entity\Rawprice $rawprice
      * @param bool $flush
      */
-    public function addNewGoodFromRawprice($rawprice, $flush = true) 
+    public function addNewGoodFromRawprice($rawprice) 
     {
         if (!$this->checkRawprice($rawprice)){
             return;
@@ -198,16 +227,11 @@ class AssemblyManager
                 ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
         
         if ($good){
-            
-        } else {
-            
+            $rawprice->setGood($good);
+            $this->entityManager->persist($rawprice);
+            $this->entityManager->flush();
         }
         
-
-        $this->entityManager->persist($rawprice);
-        if ($flush){
-            $this->entityManager->flush();
-        }    
         return;
     }
     

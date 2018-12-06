@@ -30,6 +30,12 @@ class Rawprice {
 
     const TOKEN_NEW       = 1; // только что загрузили
     const TOKEN_PARSED    = 2; // прошел разборку.
+    
+    const GOOD_NEW        = 1; //только что загрузили
+    const GOOD_OK         = 2; //товар создан
+    const GOOD_MISSING_DATA = 3; //не все данные
+    const GOOD_NO_TITLE   = 4; //не совпадает по наименованию
+    const GOOD_NO_PRICE   = 5; //не совпадает по цене
 
     /**
      * @ORM\Id
@@ -167,6 +173,11 @@ class Rawprice {
      * @ORM\Column(name="status_token")   
      */
     protected $statusToken = self::TOKEN_NEW;    
+
+    /**
+     * @ORM\Column(name="status_good")   
+     */
+    protected $statusGood = self::GOOD_NEW;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
@@ -381,6 +392,61 @@ class Rawprice {
     public function setStatusToken($statusToken) 
     {
         $this->statusToken = $statusToken;
+    }   
+
+    /**
+     * Returns statusGood.
+     * @return int     
+     */
+    public function getStatusGood() 
+    {
+        return $this->statusGood;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusGoodList() 
+    {
+        return [
+            self::GOOD_NEW => 'Новые данные',
+            self::GOOD_OK => 'Карточка создана',
+            self::GOOD_MISSING_DATA => 'Не все данные',
+            self::GOOD_NO_TITLE => 'Выпадает по наименованию',
+            self::GOOD_NO_PRICE => 'Выпадает по цене',
+        ];
+    }    
+    
+    /**
+     * Returns user statusGood as string.
+     * @return string
+     */
+    public function getStatusGoodAsString()
+    {
+        $list = self::getStatusGoodList();
+        if (isset($list[$this->statusGood]))
+            return $list[$this->statusGood];
+        
+        return 'Unknown';
+    }  
+    
+    public function getStatusGoodName($statusGood)
+    {
+        $list = self::getStatusGoodList();
+        if (isset($list[$statusGood]))
+            return $list[$statusGood];
+        
+        return 'Unknown';        
+    }
+    
+    /**
+     * Sets statusGood.
+     * @param int $statusGood     
+     */
+    public function setStatusGood($statusGood) 
+    {
+        $this->statusGood = $statusGood;
     }   
 
     public function getId() 

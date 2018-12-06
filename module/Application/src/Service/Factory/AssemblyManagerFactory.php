@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\AssemblyManager;
+use Application\Service\ArticleManager;
 /**
  * Description of AssemblyManagerFactory
  *
@@ -23,8 +24,9 @@ class AssemblyManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $articleManager = $container->get(ArticleManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new AssemblyManager($entityManager);
+        return new AssemblyManager($entityManager, $articleManager);
     }
 }
