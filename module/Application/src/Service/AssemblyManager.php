@@ -211,6 +211,36 @@ class AssemblyManager
     }
     
     /**
+     * Получить все возможные артикулы по строке прайса
+     * 
+     * @param Apprlication\Entity\Rawprice $rawprice
+     * @return array
+     */
+    public function getArticles($rawprice)
+    {
+        $code = $rawprice->getCode->getCode();
+        
+        return $this->entityManager->getRepository(Article::class)
+                ->findByCode($code);
+    }
+    
+    /**
+     * Получить все возможные неизвестные производители по строке прайса 
+     * 
+     * @param Application\Entity\Rawprice $rawprice
+     * @return array
+     */
+    public function getUnknownProducers($rawprice)
+    {
+        $result = [];
+        $articles = $this->getArticles($rawprice);
+        foreach ($articles as $article){
+            $result[] = $artcle->getUnknownProducer();
+        }
+        return $result;
+    }
+    
+    /**
      * Поиск товара по артикулу
      * 
      * @param type $rawprice
