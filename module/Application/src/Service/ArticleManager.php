@@ -427,7 +427,7 @@ class ArticleManager
             
            if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
                 $this->nameManager->addNewTokenFromRawprice($rawprice);
-                return $this->tokenIntersect($article, $rawprice);
+                return $this->tokenRawpricesIntersect($rawprices, $rawprice);
             }
 
             $rawpriceTokens = [];
@@ -479,7 +479,7 @@ class ArticleManager
             if ($rawprice->getStatus() == $rawprice::STATUS_PARSED && $rawprice->getId() != $rawpriceDiff){
                 if ($rawprice->getStatusOem() != $rawprice::OEM_PARSED){
                     $this->oemManager->addNewOemRawFromRawprice($rawprice);
-                    return $this->getOemRaw($article, $rawpriceDiff);
+                    return $this->getOemRawRawprices($rawprices, $rawpriceDiff);
                 }
                 foreach ($rawprice->getOemRaw() as $oem){
                     $result[] = $oem->getCode();
