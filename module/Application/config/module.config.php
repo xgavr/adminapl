@@ -119,6 +119,20 @@ return [
                     ],
                 ],
             ],        
+            'ml' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/ml[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\MlController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'name' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -267,6 +281,7 @@ return [
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
+            Controller\MlController::class => Controller\Factory\MlControllerFactory::class,
             Controller\NameController::class => Controller\Factory\NameControllerFactory::class,
             Controller\OemController::class => Controller\Factory\OemControllerFactory::class,
             Controller\OrderController::class => Controller\Factory\OrderControllerFactory::class,
@@ -288,6 +303,7 @@ return [
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
+            Service\MlManager::class => Service\Factory\MlManagerFactory::class,
             Service\NameManager::class => Service\Factory\NameManagerFactory::class,
             Service\NavManager::class => Service\Factory\NavManagerFactory::class,
             Service\OemManager::class => Service\Factory\OemManagerFactory::class,
@@ -325,6 +341,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\MlController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

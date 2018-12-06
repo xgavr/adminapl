@@ -102,7 +102,11 @@ class ProducerManager
            $this->entityManager->persist($unknownProducer);
            
            $this->entityManager->flush();
+           
+           return $producer;
        } 
+       
+       return;
     }
     
     /*
@@ -110,7 +114,7 @@ class ProducerManager
      */
     public function bindUnknownProducer($unknownProducer, $producer)
     {
-        if ($unknownProducer->getName()){
+       if ($unknownProducer->getName() && !$unknownProducer->getProducer()){
             
            $unknownProducer->setProducer($producer);
            $this->entityManager->persist($unknownProducer);

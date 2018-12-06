@@ -13,11 +13,6 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 
-use Phpml\FeatureExtraction\TokenCountVectorizer;
-use Application\Filter\NameTokenizer;
-use Application\Filter\Lemma;
-use Application\Filter\Tokenizer;
-
 /**
  * Description of AssemblyManager
  * Создание карточек товаров
@@ -40,11 +35,27 @@ class AssemblyManager
      */
     private $articleManager;
     
+    /**
+     * Менеджер ml
+     * 
+     * @var Application\Service\MlManager 
+     */
+    private $mlManager;
+
+    /**
+     * Менеджер producer
+     * 
+     * @var Application\Service\ProducerManager 
+     */
+    private $producerManager;
+
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $articleManager)
+    public function __construct($entityManager, $articleManager, $mlManager, $producerManager)
     {
         $this->entityManager = $entityManager;
         $this->articleManager = $articleManager;
+        $this->mlManager = $mlManager;
+        $this->producerManager = $producerManager;
     }
     
     /**
@@ -69,95 +80,7 @@ class AssemblyManager
         return $good;
     }   
     
-    
-    /**
-     * Разбивает наименование товара на токены
-     * 
-     * @param Application\Entity\Article $article
-     * @return array
-     */
-    public function tokenArticle($article)
-    {
-        $titles = [];
-        $rawprices = $article->getRawprice();
-        foreach ($rawprices as $rawprice){
-            if ($rawprice->getStatus() == $rawprice::STATUS_PARSED){
-                $titles[] = $rawprice->getTitle();
-            }    
-        }
         
-        if (count($titles)){
-            $vectorizer = new TokenCountVectorizer(new NameTokenizer());
-            $vectorizer->fit($titles);
-            $vacabulary = $vectorizer->getVocabulary();
-
-            $vectorizer->transform($titles);
-            //\Zend\Debug\Debug::dump($titles);
-            return ['NameTokenizer' => $vacabulary];
-        }
-        
-        return;
-    }
-    
-    /**
-     * Добавить новый токен
-     * 
-     * @param string $word
-     * @param bool $flushnow
-     */
-    public function addToken($data, $flushnow = true)
-    {
-        
-        $word = mb_strcut(trim($data['word']), 0, 64, 'UTF-8');
-        
-        $token = $this->entityManager->getRepository(Token::class)
-                    ->findOneBy(['lemma' => $word]);
-
-        if ($token == null){
-
-            $token = new Token();
-            $token->setLemma($word);            
-            $token->setStatus($data['status']);            
-
-            // Добавляем сущность в менеджер сущностей.
-            $this->entityManager->persist($token);
-
-            // Применяем изменения к базе данных.
-            $this->entityManager->flush($token);
-        }
-        
-        return $token;        
-    }  
-    
-    /**
-     * Обновить флаг токена
-     * 
-     * @param Application\Entity\Token $token
-     * @param integer $flag
-     */
-    public function updateTokenFlag($token, $flag)
-    {
-        $token->setFlag($flag);
-        $this->entityManager->persist($token);
-        $this->entityManager->flush($token);
-    }
-    
-    /**
-     * Добавление нового слова со статусом
-     * 
-     */
-    public function addLemms($rawprice, $lemms, $status, $flush)
-    {
-        if (is_array($lemms)){
-            foreach ($lemms as $lemma){
-                $token = $this->addToken(['word' => $lemma, 'status' => $status], $flush);
-                if ($token){
-                    $rawprice->addToken($token);
-                }   
-            }
-        }    
-    }
-    
     /**
      * Проверка строки прайса на возможность создания товара
      * @param Application\Entity\Rawprice $rawprice
@@ -166,31 +89,39 @@ class AssemblyManager
     
     public function checkRawprice($rawprice)
     {
+        $result = true;
+        
         if (!$rawprice->getCode()) {
-            return false;
+            $result = false;
         }    
         
         if (strlen($rawprice->getCode()->getCode()) < 4) {
-            return false;
+            $result = false;
         }    
         
         if (!$rawprice->getUnknownProducer()) {
-            return false;
+            $result = false;
         }    
         
         if (!$rawprice->getTitle()) {
-            return false;
+            $result = false;
         }    
         
         if (!$rawprice->getRealPrice()) {
-            return false;
+            $result = false;
         }    
         
         if (!$rawprice->getReatRest()) {
-            return false;
-        }           
+            $result = false;
+        }       
         
-        return true;
+        if (!$result){
+            $rawprise->setStatusGood(Rawprice::GOOD_MISSING_DATA);
+            $this->entityManager->persist($rawprice);
+            $this->entityManager->flush($rawprice);
+        }    
+        
+        return $result;
     }
     
     /**
@@ -216,7 +147,7 @@ class AssemblyManager
      * @param Apprlication\Entity\Rawprice $rawprice
      * @return array
      */
-    public function getArticles($rawprice)
+    public function findArticles($rawprice)
     {
         $code = $rawprice->getCode->getCode();
         
@@ -230,7 +161,7 @@ class AssemblyManager
      * @param Application\Entity\Rawprice $rawprice
      * @return array
      */
-    public function getUnknownProducers($rawprice)
+    public function findUnknownProducers($rawprice)
     {
         $result = [];
         $articles = $this->getArticles($rawprice);
@@ -238,6 +169,62 @@ class AssemblyManager
             $result[] = $artcle->getUnknownProducer();
         }
         return $result;
+    }
+    
+    /**
+     * Найти артикулы с известным производителем
+     * 
+     * @param Applcation\Entity\rawprice $rawprice
+     * @return array 
+     */
+    public function findArticlesProducers($rawprice)
+    {
+        $result = [];
+        $articles = $this->findArticles($rawprice);
+        
+        foreach ($articles as $article){
+            if ($article->getUnknownProducer()->getProducer){
+                $result[] = $article;
+            }
+        }
+    }
+    
+    /**
+     * Сравнение артикула и строки прайса
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Rawprice $rawprice
+     */
+    public function matchingArticle($article, $rawprice)
+    {
+        //сопоставление токенов
+        $tokenIntersect = $this->articleManager->tokenIntersect($article, $rawprice);
+        $oemIntersect = $this->articleManager->oemIntersect($article, $rawprice);
+        $priceMatching = $this->articleManager->priceMatching($article, $rawprice);
+        
+        return $this->mlManager([(int) count($tokenIntersect) > 0, (int) $priceMatching, (int) count($oemIntersect)>0]);
+    }
+    
+    /**
+     * Выбор лучшего артикула
+     * 
+     * @param Application\Entity\Rawprice $rawprice
+     */
+    public function findBestArticle($rawprice)
+    {
+        $articles = $this->findArticles($rawprice);
+        
+        if (count($articles === 1)){
+            return $rawprice->getCode();
+        }
+        
+        foreach ($articles as $article){
+            if ($this->matchingArticle($article, $rawprice)){
+                return $article; 
+            }
+        }
+        
+        return;
     }
     
     /**
@@ -266,21 +253,26 @@ class AssemblyManager
     public function addNewGoodFromRawprice($rawprice) 
     {
         if (!$this->checkRawprice($rawprice)){
-            $rawprise->setStatusGood(Rawprice::GOOD_MISSING_DATA);
-            $this->entityManager->persist($rawprice);
-            $this->entityManager->flush($rawprice);
             return;
         }
         
-        $producer = $rawprice->getUnknownProducer()->getProducer();
+        $article = $this->findBestArticle($rawprice);
+        
+        $producer = $article->getUnknownProducer()->getProducer();
         
         if (!$producer){
-            
+            $producer = $this->producerManager->addProducerFromUnknownProducer($article->getUnknownProducer());
         }
+
+        $this->producerManager->bindUnknownProducer($rawprice->getUnknownProducer(), $producer);
         
         $code = $rawprice->getCode()->getCode();
         $good = $this->entityManager->getRpository(Goods::class)
                 ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+        
+        if (!$good){
+            $good = $this->addNewGood($code, $producer);
+        }
         
         if ($good){
             $rawprice->setGood($good);
@@ -293,10 +285,10 @@ class AssemblyManager
     }
     
     /**
-     * Данные для анализа и выбора производителя
+     * Данные для анализа и выбора артикула
      * 
      */
-    public function trainData($rawprice)
+    public function trainMatchingRawprice()
     {
         
     }

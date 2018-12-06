@@ -365,6 +365,22 @@ class ArticleManager
     }
     
     /**
+     * Сравнение цены строки прайса с артикулом
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\entity\Rawprice $rawprice
+     * 
+     * @return bool
+     */
+    public function priceMatching($article, $rawprice)
+    {
+        $meanPrice = $this->meanPrice($article);
+        $dispersion = $this->dispersionPrice($article);
+        
+        return $this->inSigma3($rawprice->getRealPrice(), $meanPrice, $dispersion);
+    }
+    
+    /**
      * Получить токены списка строк прайса
      * 
      * @param Doctrine\Common\Collections\ArrayCollection $rawprices
