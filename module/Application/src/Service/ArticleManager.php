@@ -11,6 +11,7 @@ use Application\Entity\Article;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Validator\Sigma3;
 
 /**
  * Description of RbService
@@ -257,6 +258,30 @@ class ArticleManager
     }
     
     /**
+     * Средняя цена по строкам прайса
+     * 
+     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
+     * @return float
+     */
+    public function rawpricesMeanPrice($rawprices)
+    {
+        $result = [];
+        $rest = 0;
+        foreach($rawprices as $rawprice){
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
+                $result[] = $rawprice->getRealPrice() * $rawprice->getRealRest();
+                $rest += $rawprice->getRealRest();
+            }    
+        }
+
+        if ($rest){
+            return array_sum($result)/$rest;
+        }    
+        
+        return 0;
+    }
+    
+    /**
      * Вычисление средней цены 
      * 
      * @param Application\Entity\Article
@@ -270,22 +295,40 @@ class ArticleManager
         }
         
         if ($article){
-            $result = [];
-            $rest = 0;
-            foreach($article->getRawprice() as $rawprice){
-                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
-                    $result[] = $rawprice->getRealPrice() * $rawprice->getRealRest();
-                    $rest += $rawprice->getRealRest();
-                }    
-            }
-
-            if ($rest){
-                return array_sum($result)/$rest;
-            }    
+            return $this->rawpricesMeanPrice($article->getRawprice());
         }    
         return 0;
     }
     
+    
+    /**
+     * Разброс цены по строкам по набору строк прайса 
+     * 
+     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
+     * @return float|null
+     */
+    public function rawpricesDispersion($rawprices)
+    {
+        $mean = $this->rawpricesMeanPrice($rawprices);
+
+        $result = [];
+        $rest = 0;
+        foreach($rawprices as $rawprice){
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
+                $result[] = pow(($rawprice->getRealPrice() - $mean), 2)*$rawprice->getRealRest();
+                $rest += $rawprice->getRealRest();
+            }    
+        }
+
+        if ($rest){
+            return sqrt(array_sum($result)/$rest);
+        } else {
+            return 0;
+        } 
+        
+        return;
+    }
+
     /**
      * Разброс цен строки прайса в артикуле
      * 
@@ -300,22 +343,7 @@ class ArticleManager
         }
         
         if ($article){
-            $mean = $this->meanPrice($article);
-
-            $result = [];
-            $rest = 0;
-            foreach($article->getRawprice() as $rawprice){
-                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
-                    $result[] = pow(($rawprice->getRealPrice() - $mean), 2)*$rawprice->getRealRest();
-                    $rest += $rawprice->getRealRest();
-                }    
-            }
-
-            if ($rest){
-                return sqrt(array_sum($result)/$rest);
-            } else {
-                return 0;
-            } 
+            return $this->rawpricesDispersion($article->getRawprice());
         }
         
         return;
@@ -331,16 +359,34 @@ class ArticleManager
      */
     public function inSigma3($price, $meanPrice, $dispersion)
     {
-        if ($meanPrice){
-            if ($dispersion/$meanPrice < 0.01){
-                return true;
+        $validator = new Sigma3();
+        
+        return $validator->isValid($price, $meanPrice, $dispersion);
+    }
+    
+    /**
+     * Получить токены списка строк прайса
+     * 
+     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
+     * @param integer $rawpriceDiff
+     * @return array
+     */
+    public function getRawpricesTokens($rawprices, $rawpriceDiff = 0)
+    {
+        $result = [];
+        foreach ($rawprices as $rawprice){
+            if ($rawprice->getStatus() == $rawprice::STATUS_PARSED && $rawprice->getId() != $rawpriceDiff){
+                if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
+                    $this->nameManager->addNewTokenFromRawprice($rawprice);
+                    return $this->getRawpricesTokens($rawprices, $rawpriceDiff);
+                }
+                foreach ($rawprice->getTokens() as $token){
+                    $result[$token->getId()] += 1;
+                }            
             }
-        }        
-        
-        $minPrice = $meanPrice - 3*$dispersion;
-        $maxPrice = $meanPrice + 3*$dispersion;
-        
-        return $price >= $minPrice && $price <= $maxPrice;
+        }
+
+        return $result;        
     }
     
     /**
@@ -349,7 +395,7 @@ class ArticleManager
      * @param Application\Entity\Article|integer $article
      * @param integer $rawpriceDiff Исключение
      * 
-     * @return array
+     * @return array|null
      */
     public function getTokens($article, $rawpriceDiff = 0)
     {
@@ -359,23 +405,42 @@ class ArticleManager
         }
         
         if ($article){
-            $result = [];
-            foreach ($article->getRawprice() as $rawprice){
-                if ($rawprice->getStatus() == $rawprice::STATUS_PARSED && $rawprice->getId() != $rawpriceDiff){
-                    if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
-                        $this->nameManager->addNewTokenFromRawprice($rawprice);
-                        return $this->getTokens($article, $rawpriceDiff);
-                    }
-                    foreach ($rawprice->getTokens() as $token){
-                        $result[$token->getId()] += 1;
-                    }            
-                }
-            }
-
-            return $result;
+            return $this->getRawpricesTokens($article->getRawprice(), $rawpriceDiff);
         }
         
         return;
+    }
+    
+    /**
+     * Сравнить токены списка строк прайсов и строки прайса
+     * 
+     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
+     * @param Application\Entity\Rawprice $rawprice
+     * 
+     * @return bool
+     */
+    public function tokenRawpricesIntersect($rawprices, $rawprice)
+    {
+       $rawpricesTokens = $this->getRawpricesTokens($rawprices, $rawprice->getId());
+       
+       if (count($rawpricesTokens)){
+            
+           if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
+                $this->nameManager->addNewTokenFromRawprice($rawprice);
+                return $this->tokenIntersect($article, $rawprice);
+            }
+
+            $rawpriceTokens = [];
+            foreach ($rawprice->getTokens() as $token){
+                $rawpriceTokens[$token->getId()] += 1;
+            }
+            
+            $inersect = array_intersect_key($rawpricesTokens, $rawpriceTokens);
+            //var_dump(count($inersect) > 0);
+            return count($inersect) > 0;
+       }    
+        
+       return true;
     }
     
     /**
@@ -388,26 +453,41 @@ class ArticleManager
      */
     public function tokenIntersect($article, $rawprice)
     {
-       $articleTokens = $this->getTokens($article, $rawprice->getId());
-       
-       if (count($articleTokens)){
-            
-           if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
-                $this->nameManager->addNewTokenFromRawprice($rawprice);
-                return $this->tokenIntersect($article, $rawprice);
-            }
+        if (is_numeric($article)){
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneById($article);
+        }
 
-            $rawpriceTokens = [];
-            foreach ($rawprice->getTokens() as $token){
-                $rawpriceTokens[$token->getId()] += 1;
+        if ($article){
+            return $this->tokenRawpricesIntersect($article->getRawprice(), $rawprice);
+        }
+        
+        return;
+    }
+    
+    /**
+     * Получить номера из списка строка прайса
+     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
+     * @param integer $rawpriceDiff;
+     * 
+     * @return array
+     */
+    public function getOemRawRawprices($rawprices, $rawpriceDiff = 0)
+    {
+        $result = [];
+        foreach ($rawprices as $rawprice){
+            if ($rawprice->getStatus() == $rawprice::STATUS_PARSED && $rawprice->getId() != $rawpriceDiff){
+                if ($rawprice->getStatusOem() != $rawprice::OEM_PARSED){
+                    $this->oemManager->addNewOemRawFromRawprice($rawprice);
+                    return $this->getOemRaw($article, $rawpriceDiff);
+                }
+                foreach ($rawprice->getOemRaw() as $oem){
+                    $result[] = $oem->getCode();
+                }            
             }
-            
-            $inersect = array_intersect_key($articleTokens, $rawpriceTokens);
-            //var_dump(count($inersect) > 0);
-            return count($inersect) > 0;
-       }
-       
-       return true;
+        }
+
+        return $result;        
     }
     
     /**
@@ -416,7 +496,7 @@ class ArticleManager
      * @param Application\Entity\Article|integer $article
      * @param integer $rawpriceDiff Исключение
      * 
-     * @return array
+     * @return array|null
      */
     public function getOemRaw($article, $rawpriceDiff = 0)
     {
@@ -426,43 +506,27 @@ class ArticleManager
         }
         
         if ($article){
-            $result = [];
-            foreach ($article->getRawprice() as $rawprice){
-                if ($rawprice->getStatus() == $rawprice::STATUS_PARSED && $rawprice->getId() != $rawpriceDiff){
-                    if ($rawprice->getStatusOem() != $rawprice::OEM_PARSED){
-                        $this->oemManager->addNewOemRawFromRawprice($rawprice);
-                        return $this->getOemRaw($article, $rawpriceDiff);
-                    }
-                    foreach ($rawprice->getOemRaw() as $oem){
-                        $result[] = $oem->getCode();
-                    }            
-                }
-            }
-
-            return $result;
+            return $this->getOemRawRawprices($article->getRawprice(), $rawpriceDiff);
         }
         
-        return;
-        
+        return;        
     }
 
     /**
-     * Сравнить номера артикула и строки прайса
      * 
-     * @param Application\Entity\Article $article
+     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
      * @param Application\Entity\Rawprice $rawprice
-     * 
-     * @return bool|null
+     * @return array|null
      */
-    public function oemIntersect($article, $rawprice)
+    public function oemRawpricesIntersect($rawprices, $rawprice)
     {
-       $articleOem = $this->getOemRaw($article, $rawprice->getId());
+       $rawpricesOem = $this->getOemRawRawprices($rawprices, $rawprice->getId());
        
-       if (count($articleOem)){
+       if ($rawpricesOem){
             
            if ($rawprice->getStatusOem() != $rawprice::OEM_PARSED){
-                $this->nameManager->addNewOemRawFromRawprice($rawprice);
-                return $this->oemIntersect($article, $rawprice);
+                $this->oemManager->addNewOemRawFromRawprice($rawprice);
+                return $this->oemRawpricesIntersect($rawprices, $rawprice);
             }
 
             $rawpriceOem = [];
@@ -474,11 +538,30 @@ class ArticleManager
                 return;
             }
             
-            $inersect = array_intersect($articleOem, $rawpriceOem);
+            $inersect = array_intersect($rawpricesOem, $rawpriceOem);
             return $inersect;
        }
        
        return;
+        
+    }
+    
+    /**
+     * Сравнить номера артикула и строки прайса
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Rawprice $rawprice
+     * 
+     * @return array|null
+     */
+    public function oemIntersect($article, $rawprice)
+    {
+        if (is_numeric($article)){
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneById($article);
+        }
+
+        return $this->oemRawpricesIntersect($article->getRawprice(), $rawprice);
     }
     
 }

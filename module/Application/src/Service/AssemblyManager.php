@@ -204,6 +204,29 @@ class AssemblyManager
     {
     }
     
+    
+    public function tokenIntersect($good)
+    {
+        
+    }
+    
+    /**
+     * Поиск товара по артикулу
+     * 
+     * @param type $rawprice
+     * @return Application\Entity\Goods|null
+     */
+    public function findGoodByCode($rawprice)
+    {
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findByCode($rawprice->getCode()->getCode());
+        
+        foreach ($goods as $good){
+            
+        }
+        
+        return;
+    }
     /**
      * Добавление нового товара из прайса
      * 
@@ -213,6 +236,9 @@ class AssemblyManager
     public function addNewGoodFromRawprice($rawprice) 
     {
         if (!$this->checkRawprice($rawprice)){
+            $rawprise->setStatusGood(Rawprice::GOOD_MISSING_DATA);
+            $this->entityManager->persist($rawprice);
+            $this->entityManager->flush($rawprice);
             return;
         }
         
@@ -228,6 +254,7 @@ class AssemblyManager
         
         if ($good){
             $rawprice->setGood($good);
+            $rawprice->setStatusGood(Rawprice::GOOD_OK);
             $this->entityManager->persist($rawprice);
             $this->entityManager->flush();
         }
