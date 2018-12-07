@@ -248,7 +248,7 @@ class AssemblyManager
             }
         }
         
-        $rawprise->setStatusGood(Rawprice::GOOD_NO_MATCH);
+        $rawprice->setStatusGood(Rawprice::GOOD_NO_MATCH);
         $this->entityManager->persist($rawprice);
         $this->entityManager->flush($rawprice);
 
