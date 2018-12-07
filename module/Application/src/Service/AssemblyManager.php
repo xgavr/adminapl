@@ -237,7 +237,7 @@ class AssemblyManager
     public function findBestArticle($rawprice)
     {
         $articles = $this->findArticles($rawprice);
-        var_dump(count($articles));
+
         if (count($articles) === 1){
             return $rawprice->getCode();
         }
@@ -268,7 +268,7 @@ class AssemblyManager
         }
         
         $article = $this->findBestArticle($rawprice);
-        
+
         if ($article){
             $producer = $article->getUnknownProducer()->getProducer();
 
