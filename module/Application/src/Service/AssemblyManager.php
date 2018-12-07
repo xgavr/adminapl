@@ -121,7 +121,7 @@ class AssemblyManager
         }       
         
         if (!$result){
-            $rawprise->setStatusGood(Rawprice::GOOD_MISSING_DATA);
+            $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
             $this->entityManager->persist($rawprice);
             $this->entityManager->flush($rawprice);
         }    
@@ -169,10 +169,29 @@ class AssemblyManager
     public function findUnknownProducers($rawprice)
     {
         $result = [];
-        $articles = $this->findArticles($rawprice);
+        $articles = $this->findArticles($rawprice);        
         foreach ($articles as $article){
             $result[] = $article->getUnknownProducer();
         }
+        return $result;
+    }
+    
+    /**
+     * Выбрать лучшего неизвестно производителя из списка
+     * 
+     * @param array $unknownProducers
+     * 
+     * @return Application\Entity\UnknownProducer
+     */
+    public function findBestUnknownProducer($unknownProducers)
+    {
+        $result = $unknownProducers[0];
+        foreach ($unknownProducers as $unknownProducer){
+            if ($unknownProducer->getRawpriceCount() > $result->getRawpriceCount()){
+                $result = $unknownProducer->getRawpriceCount();
+            }
+        }
+        
         return $result;
     }
     
@@ -188,7 +207,7 @@ class AssemblyManager
         $articles = $this->findArticles($rawprice);
         
         foreach ($articles as $article){
-            if ($article->getUnknownProducer()->getProducer){
+            if ($article->getUnknownProducer()->getProducer()){
                 $result[] = $article;
             }
         }
@@ -218,7 +237,7 @@ class AssemblyManager
     public function findBestArticle($rawprice)
     {
         $articles = $this->findArticles($rawprice);
-        
+        var_dump(count($articles));
         if (count($articles) === 1){
             return $rawprice->getCode();
         }
