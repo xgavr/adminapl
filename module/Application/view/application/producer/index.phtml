@@ -1,14 +1,24 @@
 <?php
-$this->headTitle('Производители');
+    $this->headTitle('Производители');
 
-$this->mainMenu()->setActiveItemId('rb');
+    $this->mainMenu()->setActiveItemId('rb');
 
-$this->pageBreadcrumbs()->setItems([
-            'Главная'=>$this->url('home'),
-            'Производители'=>$this->url('producer'),
-            ]);
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Производители'=>$this->url('producer'),
+                ]);
 
+    $this->headLink()
+    //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+        ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+            ;
+
+    $this->headScript()
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+                ;    
 ?>
+
 
 <h1>Производители</h1>
 <p>
@@ -18,50 +28,109 @@ $this->pageBreadcrumbs()->setItems([
 </a>
 </p>
 
-<table class="table table-striped">
+<div class="row">
+    <div class="col-md-9">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                </div>
+                <button id="ok" type="submit" class="btn btn-default">OK</button>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/producer/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                     <th data-field="aplId" data-type="numeric" data-sortable="true">AplId</th>
+                     <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                    </div>
+                    <div class="panel-body">
+                    </div>    
+                    <div class="panel-body">
+                    </div>
+                </div>    
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Всего наименований
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <?= $total?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/delete-empty-producer/" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Удаление пустых">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>    
 
-   <tr>
-        <th>ID</th>
-        <th>Наименование</th>
-        <th>Страна</th>
-        <th>Действие</th>
-    </tr>
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var $table = $('#table'),
+        $ok = $('#ok');
+
+    $(function () {
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
+        });
+    });
     
-    <?php foreach ($producer as $row): ?>
-    <?
-        //var_dump($row->getCountry());
-    ?>
-    <tr>
-        <td><?= $this->escapeHtml($row->getId()); ?></td>
-        <td>
-            <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$row->getId()]); ?>">
-                <?= $this->escapeHtml($row->getName()); ?>
-            </a> 
-        </td>
-        <td>
-            <?php if ($row->getCountry()):?>
-                <?= $row->getCountry()->getName(); ?>
-            <?php else: ?>
-                неуказана
-            <?php endif;?>
-        </td>        
-        <td>
-            <a class="btn btn-info" href="<?= $this->url('producer', 
-                    ['action'=>'edit', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-            </a>
-            <a class="btn btn-danger" href="<?= $this->url('producer',
-                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
-        </td>    
-    </tr>
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
         
-    <?php endforeach; ?>   
+        return params;
+    }
     
-</table>
-<?= $this->paginationControl($producer,
-            'Sliding',
-            'application/partial/paginator', 
-            ['route' => array('route' => 'producer')]); ?>
+    function linkFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
 

@@ -11,6 +11,9 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\GoodsController;
 use Application\Service\GoodsManager;
+use Application\Service\AssemblyManager;
+use Application\Service\ArticleManager;
+
 /**
  * Description of GoodsControllerFactory
  *
@@ -23,8 +26,10 @@ class GoodsControllerFactory implements FactoryInterface {
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $goodsManager = $container->get(GoodsManager::class);
+        $assemblyManager = $container->get(AssemblyManager::class);
+        $articleManager = $container->get(ArticleManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new GoodsController($entityManager, $goodsManager);
+        return new GoodsController($entityManager, $goodsManager, $assemblyManager, $articleManager);
     }
 }

@@ -34,6 +34,11 @@ class Goods {
     protected $id;
     
     /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId = 0;
+    
+    /**
      * @ORM\Column(name="name")   
      */
     protected $name;
@@ -102,6 +107,16 @@ class Goods {
     public function setId($id) 
     {
         $this->id = $id;
+    }     
+
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
     }     
 
     public function getName() 

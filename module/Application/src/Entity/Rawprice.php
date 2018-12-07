@@ -34,8 +34,7 @@ class Rawprice {
     const GOOD_NEW        = 1; //только что загрузили
     const GOOD_OK         = 2; //товар создан
     const GOOD_MISSING_DATA = 3; //не все данные
-    const GOOD_NO_TITLE   = 4; //не совпадает по наименованию
-    const GOOD_NO_PRICE   = 5; //не совпадает по цене
+    const GOOD_NO_MATCH   = 4; //не совпадает по наименованию или цене
 
     /**
      * @ORM\Id
@@ -413,8 +412,7 @@ class Rawprice {
             self::GOOD_NEW => 'Новые данные',
             self::GOOD_OK => 'Карточка создана',
             self::GOOD_MISSING_DATA => 'Не все данные',
-            self::GOOD_NO_TITLE => 'Выпадает по наименованию',
-            self::GOOD_NO_PRICE => 'Выпадает по цене',
+            self::GOOD_NO_MATCH => 'Выпадает по наименованию или цене',
         ];
     }    
     

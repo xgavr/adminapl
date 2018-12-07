@@ -478,7 +478,7 @@ class ArticleManager
             return $this->tokenRawpricesIntersect($article->getRawprice(), $rawprice);
         }
         
-        return;
+        return false;
     }
     
     /**
@@ -551,14 +551,14 @@ class ArticleManager
             }
             
             if (!count($rawpriceOem)){
-                return;
+                return [];
             }
             
             $inersect = array_intersect($rawpricesOem, $rawpriceOem);
             return $inersect;
        }
        
-       return;
+       return [];
         
     }
     

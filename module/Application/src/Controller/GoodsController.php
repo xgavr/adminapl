@@ -9,7 +9,9 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use Application\Entity\Goods;
+use Application\Entity\Rawprice;
 use Application\Form\GoodsForm;
 use Application\Form\GoodSettingsForm;
 
@@ -32,13 +34,50 @@ class GoodsController extends AbstractActionController
      */
     private $goodsManager;    
     
+    /**
+     * Менеджер создания товаров.
+     * @var Application\Service\AssemblyManager 
+     */
+    private $assemblyManager;
+    
+    /**
+     * Менеджер создания товаров.
+     * @var Application\Service\ArticleManager 
+     */
+    private $articleManager;
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $goodsManager) 
+    public function __construct($entityManager, $goodsManager, $assemblyManager, $articleManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
-
-    }    
+        $this->assemblyManager = $assemblyManager;
+        $this->articleManager = $articleManager;
+    }  
+    
+    public function assemblyAction()
+    {
+        $rawpriceId = $this->params()->fromRoute('id', -1);
+        
+        if ($rawpriceId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $rawprice = $this->entityManager->getRepository(Rawprice::class)
+                ->findOneById($rawpriceId);
+        
+        if ($rawprice == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->assemblyManager->addNewGoodFromRawprice($rawprice);
+                
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
     
     public function settingsAction()
     {
@@ -93,6 +132,32 @@ class GoodsController extends AbstractActionController
             'goodsManager' => $this->goodsManager
         ]);  
     }
+    
+    public function contentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->findAllGoods(['q' => $q, 'sort' => $sort, 'order' => $order]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
     
     public function addAction() 
     {     
@@ -209,7 +274,6 @@ class GoodsController extends AbstractActionController
             return;
         }
         
-        // Find the tax by ID
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->findOneById($goodsId);
         
@@ -218,9 +282,22 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
         
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                ->rawprices($goods);
+        
+        $prevQuery = $this->entityManager->getRepository(Goods::class)
+                        ->findAllGoods(['prev1' => $goods->getCode()]);
+        $nextQuery = $this->entityManager->getRepository(Goods::class)
+                        ->findAllGoods(['next1' => $goods->getCode()]);        
+
         // Render the view template.
         return new ViewModel([
             'goods' => $goods,
+            'rawprices' => $rawprices,
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
+            'articleManager' => $this->articleManager,
+            'goodsManager' => $this->goodsManager,
         ]);
     }      
 }

@@ -1,40 +1,133 @@
 <?php
 $this->headTitle($goods->getName());
-$this->mainMenu()->setActiveItemId('goods');
 
-$breadcrumbs_items = ['Главная' => $this->url('home')];
-if ($this->access('good.manage')){
-    $breadcrumbs_items['Товары'] = $this->url('goods');
-} else {
-    $breadcrumbs_items['Каталог'] = $this->url('shop');    
-}
-$breadcrumbs_items[$goods->getName()] = $this->url('goods', ['action' => 'view', 'id' => $goods->getId()]);
+$this->mainMenu()->setActiveItemId('rb');
 
-$this->pageBreadcrumbs()->setItems($breadcrumbs_items);        
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Товары'=>$this->url('goods'),
+            $goods->getName()=>$this->url('goods', ['action'=>'view', 'id'=>$goods->getId()])
+            ]);
+
 ?>
-
 <h1>
     <?= $this->escapeHtml($goods->getName()); ?>    
 </h1>
 
 
-<p>    
-    <?= $this->escapeHtml($goods->getCode()); ?>
-</p>
+<span>
+    <a href="/producer/article-view/?code=<?=$goods->getCode()?>">
+        <?= $goods->getCode();?>
+    </a>
+</span>
+<span>
+    <a href="/producer/view/<?=$goods->getProducer()->getId()?>">
+        <?= $goods->getProducer()->getName();?>
+    </a>
+</span>
 
-<p>    
-    <?= $this->escapeHtml($goods->getProducer()->getName()); ?>
-</p>
+<table class="table table-striped">
+    <tr>
+        <td colspan="3">            
+            <?php if ($prev):?>
+                <a href="/goods/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getCode()?></a>
+            <?php endif;?>            
+        </td>
+        <td colspan="3" align="right">
+            <?php if ($next):?>
+                <a href="/goods/view/<?= $next[0]->getId()?>"><?= $next[0]->getCode()?>&rarr;</a>
+            <?php endif;?>                            
+        </td>
+    </tr>
+    <tr>
+        <th>
 
-<p>    
-    <?= $this->escapeHtml($goods->getTax()->getName()); ?>
-</p>
-
-<p>    
-    <?= $this->escapeHtml($goods->getAvailable()); ?>
-</p>
-
-<p>    
-    <?= $this->escapeHtml($goods->getDescription()); ?>
-</p>
+        </th>
+        <th>
+            <?//= $randRawprices[0]->getUnknownProducer()->getName()?>
+        </th>
+        <td colspan="3" align="right">
+            <?php $meanPrice = $articleManager->rawpricesMeanPrice($rawprices);?>
+            <?php $dispersion = $articleManager->rawpricesDispersion($rawprices);?>
+            <b><?= number_format($meanPrice, 2, '.', '') ?></b>
+            (<?= number_format($dispersion, 2, '.', '') ?>)
+            (<?= number_format($dispersion/$meanPrice, 2, '.', '') ?>)
+        </td>
+        <td align="right">
+        </td>
+    </tr>
+    <?php $totalRawpriceCount = 0; ?>
+    <?php foreach ($rawprices as $rawprice):?>
+        <tr>
+            <td>
+                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
+                    <?= $rawprice->getArticle();?>
+                </a>
+                <div>
+                    <?php if ($rawprice->getStatusToken() == $rawprice::TOKEN_PARSED):?>
+                        <button value="/goods/assembly/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Создать">
+                                Товар
+                        </button>
+                    <?php endif;?>                        
+                </div>
+            </td>
+            <td>
+                <div>
+                    <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rawprice->getRaw()->getSupplier()->getId()]);?>">
+                        <?= $rawprice->getRaw()->getSupplier()->getName();?>
+                    </a>                       
+                </div>
+                <div>
+                    <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
+                        <?= $rawprice->getUnknownProducer()->getName();?>
+                    </a>                       
+                </div>
+            </td>
+            <td>
+                <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
+                    <span style="color: <?= ($articleManager->tokenRawpricesIntersect($rawprices, $rawprice) ? 'inherit':'red')?>">
+                            <?= $rawprice->getGoodname();?>
+                    </span>
+                </a>    
+                <?php $tokens = $rawprice->getTokens(); ?>
+                <?php if(count($tokens)):?>  
+                    <div>    
+                        <?php foreach($tokens as $token):?>
+                            <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
+                                <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
+                            </span>
+                        <?php endforeach;?>
+                    </div>        
+                <?php endif;?>                                                
+            </td>
+            <td>
+                <?php $oemIntersect = $articleManager->oemRawpricesIntersect($rawprices, $rawprice); ?>
+                <?php foreach($rawprice->getOemRaw() as $oemRaw): ?>
+                    <a href="<?= $this->url('oem', ['action' => 'view-on-code'], ['query' => ['code' => $oemRaw->getCode()]]);?>">
+                        <span style="font-size: xx-small; color: <?= (in_array($oemRaw->getCode(), $oemIntersect)) ? 'green':'inherit' ?>"><?= $oemRaw->getCode()?></span>
+                    </a>    
+                <?php endforeach;?>
+            </td>
+            <td align="right">
+                <span style="color: <?= ($this->articleManager->inSigma3($rawprice->getRealPrice(), $meanPrice, $dispersion)) ? 'inherit':'red'?>">
+                    <?= number_format($rawprice->getRealPrice(), 2, '.', '');?>
+                </span>
+            </td>
+            <td align="right">
+                <?= $rawprice->getRealRest();?>
+            </td>
+        </tr>
+    <?php endforeach;?>        
+    <tr>
+        <th colspan="4">
+            Всего
+        </th>
+        <td align="right">
+        </td>
+        <td align="right">
+            <b><?//= $totalRawpriceCount ?></b>
+        </td>
+    </tr>
+</table>
 

@@ -74,6 +74,31 @@ class ProducerController extends AbstractActionController
         ]);  
     }
     
+    public function contentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(Producer::class)
+                        ->findAllProducer(['q' => $q, 'sort' => $sort, 'order' => $order]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
     public function addAction() 
     {     
         // Создаем форму.
@@ -324,8 +349,18 @@ class ProducerController extends AbstractActionController
         $articleId = (int)$this->params()->fromRoute('id', -1);
 
         if ($articleId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
+            $code = $this->params()->fromQuery('code');
+            
+            if ($code){
+                $article = $this->entityManager->getRepository(Article::class)
+                        ->findOneByCode($code);
+                if ($article){
+                    $articleId = $article->getId();
+                }                            
+            } else {
+                $this->getResponse()->setStatusCode(404);
+                return;
+            }    
         }
         
         $article = $this->entityManager->getRepository(Article::class)

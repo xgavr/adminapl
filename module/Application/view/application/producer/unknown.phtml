@@ -5,7 +5,6 @@ $this->mainMenu()->setActiveItemId('rb');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Производители'=>$this->url('producer'),
             'Неизвестные производители'=>$this->url('producer', ['action'=>'unknown'])
             ]);
 
@@ -46,7 +45,7 @@ $this->headScript()
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Неизвестный</th>
-                     <th data-field="producer">Известный</th>             
+                     <th data-field="producer" data-formatter="producerFormatter">Известный</th>             
                      <th data-field="rawpriceCount" data-align='right' data-sortable="true">Строк в прайсах</th>             
                      <th data-field="supplierCount" data-align='right' data-sortable="true">Поставщиков</th>             
                  </tr>                
@@ -160,6 +159,17 @@ $this->headScript()
             '<a href="/producer/unknown-view/' + row.id + '" target="_blank">' + value + '</a>',
             '</div>'
         ].join(''); 
+    }    
+    
+    function producerFormatter(value, row){
+        if (value){
+            return [
+                '<div class="pull-left">',
+                '<a href="/producer/view/' + value.id + '" target="_blank">' + value.name + '</a>',
+                '</div>'
+            ].join(''); 
+        }
+        return;
     }    
     
     function responseHandler(res) {

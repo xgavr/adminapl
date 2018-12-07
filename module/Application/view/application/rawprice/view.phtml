@@ -115,6 +115,12 @@ $this->pageBreadcrumbs()->setItems([
                                 Токены
                         </button>
                     <?php endif;?>    
+                    <?php if ($rawprice->getStatusToken() == $rawprice::TOKEN_PARSED):?>
+                        <button value="/goods/assembly/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Создать">
+                                Товар
+                        </button>
+                    <?php endif;?>    
                 <?php endif; ?>
             </div>
             <div class="panel-body">

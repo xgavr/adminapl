@@ -23,3 +23,11 @@ $this->pageBreadcrumbs()->setItems([
         неуказана
     <?php endif;?>
 </p>
+
+<?php foreach($producer->getUnknownProducer() as $unknownProducer):?>
+    <span>
+        <a href="/producer/unknown-view/<?=$unknownProducer->getId()?>">
+            <?= $unknownProducer->getName();?>
+        </a>
+    </span>
+<?php endforeach; ?>

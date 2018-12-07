@@ -243,8 +243,9 @@ class ProducerRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(UnknownProducer::class, 'c')            
+        $queryBuilder->select('c', 'p')
+            ->from(UnknownProducer::class, 'c')
+            ->leftJoin('c.producer', 'p', 'WITH')    
             ->orderBy('c.name');
                 ;
         
@@ -292,7 +293,7 @@ class ProducerRepository  extends EntityRepository{
         return $queryBuilder->getQuery();
     }    
     
-    public function findAllProducer()
+    public function findAllProducer($params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -300,8 +301,32 @@ class ProducerRepository  extends EntityRepository{
 
         $queryBuilder->select('c')
             ->from(Producer::class, 'c')
-            ->orderBy('c.name')
+            ->orderBy('c.name');
                 ;
+        
+        if (is_array($params)){
+            if (isset($params['q'])){
+                $queryBuilder->where('c.name like :search')
+                    ->setParameter('search', '%' . $params['q'] . '%')
+                        ;
+            }
+            if (isset($params['next1'])){
+                $queryBuilder->where('c.name > ?1')
+                    ->setParameter('1', $params['next1'])
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['prev1'])){
+                $queryBuilder->where('c.name < ?1')
+                    ->setParameter('1', $params['prev1'])
+                    ->orderBy('c.name', 'DESC')
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
+            }            
+        }
 
         return $queryBuilder->getQuery();
     }    

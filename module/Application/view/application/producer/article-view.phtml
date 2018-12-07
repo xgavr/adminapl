@@ -59,6 +59,12 @@ $this->pageBreadcrumbs()->setItems([
             <tr>
                 <td>
                     <?= $randRawprice->getArticle();?>
+                    <?php if ($randRawprice->getStatusToken() == $randRawprice::TOKEN_PARSED):?>
+                        <button value="/goods/assembly/<?= $randRawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Создать">
+                                Товар
+                        </button>
+                    <?php endif;?>    
                 </td>
                 <td>
                     <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $randRawprice->getUnknownProducer()->getId()]);?>">

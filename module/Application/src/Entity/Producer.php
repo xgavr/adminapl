@@ -19,12 +19,18 @@ use Application\Entity\Country;
  * @author Daddy
  */
 class Producer {
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(name="id")   
      */
     protected $id;
+    
+    /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId = 0;
     
     /**
      * @ORM\Column(name="name")   
@@ -46,6 +52,16 @@ class Producer {
     public function setId($id) 
     {
         $this->id = $id;
+    }     
+
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
     }     
 
     public function getName() 
