@@ -62,6 +62,13 @@ $this->pageBreadcrumbs()->setItems([
                                     <a href="/producer/article-view/<?= $row->getCode()->getId();?>"><?=$row->getCode()->getCode()?></a>                            
                                 <?php endif?>
                             <?php endif?>
+                            <br/>
+                            <?php if ($row->getGood()):?>
+                                <?php if ($row->getGood()->getId()):?>
+                                    <a href="/goods/view/<?= $row->getGood()->getId();?>"><?=$row->getGood()->getCode()?></a>                            
+                                    <a href="/producer/view/<?= $row->getGood()->getProducer()->getId();?>"><?=$row->getGood()->getProducer()->getName()?></a>                            
+                                <?php endif?>
+                            <?php endif?>
                         </td>    
                     </tr>
 
