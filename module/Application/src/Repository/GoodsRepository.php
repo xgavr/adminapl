@@ -38,9 +38,6 @@ class GoodsRepository extends EntityRepository{
                 ;
         
         if (is_array($params)){
-            if (isset($params['unattached'])){
-                $queryBuilder->where('c.producer is null');
-            }
             if (isset($params['q'])){
                 $queryBuilder->where('c.code like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
@@ -55,7 +52,7 @@ class GoodsRepository extends EntityRepository{
             if (isset($params['prev1'])){
                 $queryBuilder->where('c.code < ?1')
                     ->setParameter('1', $params['prev1'])
-                    ->orderBy('c.name', 'DESC')
+                    ->orderBy('c.code', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }
