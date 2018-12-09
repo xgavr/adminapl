@@ -397,11 +397,13 @@ class ArticleManager
                     return $this->getRawpricesTokens($rawprices, $rawpriceDiff);
                 }
                 foreach ($rawprice->getTokens() as $token){
-                    if (array_key_exists($token->getId(), $result)){
-                        $result[$token->getId()] += 1;                        
-                    } else {
-                        $result[$token->getId()] = 1;                        
-                    }
+                    if ($token->isIntersectLemma()){
+                        if (array_key_exists($token->getId(), $result)){
+                            $result[$token->getId()] += 1;                        
+                        } else {
+                            $result[$token->getId()] = 1;                        
+                        }
+                    }    
                 }            
             }
         }
@@ -452,11 +454,13 @@ class ArticleManager
 
             $rawpriceTokens = [];
             foreach ($rawprice->getTokens() as $token){
-                if (array_key_exists($token->getId(), $rawpriceTokens)){
-                    $rawpriceTokens[$token->getId()] += 1;                        
-                } else {
-                    $rawpriceTokens[$token->getId()] = 1;                        
-                }
+                if ($token->isIntersectLemma()){
+                    if (array_key_exists($token->getId(), $rawpriceTokens)){
+                        $rawpriceTokens[$token->getId()] += 1;                        
+                    } else {
+                        $rawpriceTokens[$token->getId()] = 1;                        
+                    }
+                }    
             }
             
             $inersect = array_intersect_key($rawpricesTokens, $rawpriceTokens);

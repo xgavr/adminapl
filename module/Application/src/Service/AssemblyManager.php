@@ -323,34 +323,4 @@ class AssemblyManager
         $this->entityManager->flush();
     }
     
-    /**
-     * Удаление токена
-     * 
-     * @param Application\Entity\Token $token
-     */
-    public function removeToken($token) 
-    {   
-        $this->entityManager->remove($token);
-        
-        $this->entityManager->flush($token);
-    }    
-    
-    /**
-     * Поиск и удаление токенов не привязаных к строкам прайсов
-     */
-    public function removeEmptyToken()
-    {
-        ini_set('memory_limit', '2048M');
-        
-        $tokenForDelete = $this->entityManager->getRepository(Token::class)
-                ->findTokenForDelete();
-
-        foreach ($tokenForDelete as $row){
-            $this->removeToken($row[0], false);
-        }
-        
-        $this->entityManager->flush();
-        
-        return count($tokenForDelete);
-    }    
 }

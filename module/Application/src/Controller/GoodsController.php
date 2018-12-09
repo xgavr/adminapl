@@ -12,6 +12,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Goods;
 use Application\Entity\Rawprice;
+use Application\Entity\Raw;
 use Application\Form\GoodsForm;
 use Application\Form\GoodSettingsForm;
 
@@ -73,6 +74,29 @@ class GoodsController extends AbstractActionController
         }        
         
         $this->assemblyManager->addNewGoodFromRawprice($rawprice);
+                
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
+    
+    public function assemblyRawAction()
+    {
+        $rawId = $this->params()->fromRoute('id', -1);
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $raw = $this->entityManager->getRepository(Raw::class)
+                ->findOneById($rawId);
+        
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->assemblyManager->assemplyGoodFromRaw($raw);
                 
         return new JsonModel([
             'ok',

@@ -246,6 +246,12 @@ $this->pageBreadcrumbs()->setItems([
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                 <?php endif;?>
+                                <?php if ($raw->getParseStage() == $raw::STAGE_TOKEN_PARSED):?>
+                                    <button value="/goods/assembly-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Собрать товары">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                <?php endif;?>
                             </div>    
                         </div>    
                     </div>

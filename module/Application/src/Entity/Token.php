@@ -87,6 +87,19 @@ class Token {
     {
         return $this->lemma;
     }
+    
+    public function isIntersectLemma()
+    {
+        if (is_numeric($this->lemma)){
+            return false;
+        }
+
+        if (strlen($this->lemma)<3){
+            return false;
+        }        
+        
+        return true;
+    }
 
     public function setLemma($lemma) 
     {
