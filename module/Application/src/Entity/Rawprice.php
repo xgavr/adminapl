@@ -429,11 +429,11 @@ class Rawprice {
         return 'Unknown';
     }  
     
-    public function getStatusGoodName($statusGood)
+    public function getStatusGoodName()
     {
         $list = self::getStatusGoodList();
-        if (isset($list[$statusGood]))
-            return $list[$statusGood];
+        if (isset($list[$this->statusGood]))
+            return $list[$this->statusGood];
         
         return 'Unknown';        
     }

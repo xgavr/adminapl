@@ -67,16 +67,20 @@ $this->pageBreadcrumbs()->setItems([
                                 Товар
                         </button>
                     <?php endif;?>
-                    <?php if ($randRawprice->getGood()):?>
                     <div style="font-size: xx-small">
+                        <?php if ($randRawprice->getGood()):?>
                             <a href="/goods/view/<?= $randRawprice->getGood()->getId()?>">
                                 <?= $randRawprice->getGood()->getCode()?>
                             </a>
                             <a href="/producer/view/<?= $randRawprice->getGood()->getProducer()->getId()?>">
                                 <?= $randRawprice->getGood()->getProducer()->getName()?>
                             </a>
-                        </div>                         
-                    <?php endif;?>
+                        <?php else:?>
+                        <span color=''>
+                            <?= $randRawprice->getStatusGoodName();?>                            
+                        </span>
+                        <?php endif;?>
+                    </div>                         
                 </td>
                 <td>
                     <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $randRawprice->getUnknownProducer()->getId()]);?>">

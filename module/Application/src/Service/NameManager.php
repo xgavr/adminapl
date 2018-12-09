@@ -173,11 +173,13 @@ class NameManager
                 ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_NEW]);
         
         foreach ($rawprices as $rawprice){
-            $this->addNewTokenFromRawprice($rawprice, false);
-            if (time() > $startTime + 400){
-                $this->entityManager->flush();
-                return;
-            }
+            if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
+                $this->addNewTokenFromRawprice($rawprice, false);
+                if (time() > $startTime + 400){
+                    $this->entityManager->flush();
+                    return;
+                }
+            }    
         }
         
         $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);

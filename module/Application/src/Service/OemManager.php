@@ -118,11 +118,13 @@ class OemManager
                 ->findBy(['raw' => $raw->getId(), 'statusOem' => Rawprice::OEM_NEW]);
         
         foreach ($rawprices as $rawprice){
-            $this->addNewOemRawFromRawprice($rawprice, false);
-            if (time() > $startTime + 400){
-                $this->entityManager->flush();
-                return;
-            }
+            if ($rawprice->getStatusOem() != $rawprice::OEM_PARSED){
+                $this->addNewOemRawFromRawprice($rawprice, false);
+                if (time() > $startTime + 400){
+                    $this->entityManager->flush();
+                    return;
+                }
+            }    
         }
         
         $raw->setParseStage(Raw::STAGE_OEM_PARSED);
