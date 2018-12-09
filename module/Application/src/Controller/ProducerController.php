@@ -10,6 +10,7 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Producer;
+use Application\Entity\Goods;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Article;
 use Application\Form\ProducerForm;
@@ -202,6 +203,8 @@ class ProducerController extends AbstractActionController
     public function viewAction() 
     {       
         $producerId = (int)$this->params()->fromRoute('id', -1);
+        $page = $this->params()->fromQuery('page', 1);
+        $unknownProducerId = $this->params()->fromQuery('unknownProducer');
         
         // Validate input parameter
         if ($producerId<0) {
@@ -218,9 +221,30 @@ class ProducerController extends AbstractActionController
             return;                        
         }        
         
+        if ($unknownProducerId){
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneById($unknownProducerId);            
+        }
+        
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
+                        ->findAllGoods(['producer' => $producer, 'unknownProducer' => $unknownProducer]);
+
+        $adapter = new DoctrineAdapter(new ORMPaginator($goodsQuery, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setCurrentPageNumber($page);
+
+        $totalGoodsCount = $paginator->getTotalItemCount();
+
         // Render the view template.
         return new ViewModel([
             'producer' => $producer,
+            'unknownProducerQuery' => $unknownProducer,
+            'goods' => $paginator,
+//            'prev' => $prevQuery->getResult(), 
+//            'next' => $nextQuery->getResult(),
+            'producerManager' => $this->producerManager,
+            'totalGoodsCount' => $totalGoodsCount,
         ]);
     }
     

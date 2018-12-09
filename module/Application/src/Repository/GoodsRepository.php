@@ -33,25 +33,37 @@ class GoodsRepository extends EntityRepository{
 
         $queryBuilder->select('c', 'p')
             ->from(Goods::class, 'c')
-            ->leftJoin('c.producer', 'p', 'WITH')    
+            ->join('c.producer', 'p', 'WITH')    
             ->orderBy('c.code');
                 ;
-        
+
         if (is_array($params)){
+            if (isset($params['producer'])){
+                $queryBuilder->where('c.producer = ?1')
+                    ->setParameter('1', $params['producer']->getId())
+                        ;
+            }
+            if (isset($params['unknownProducer'])){
+                $queryBuilder
+                    ->join('c.rawprice', 'r', 'WITH')
+                    ->andWhere('r.unknownProducer = ?2')
+                    ->setParameter('2', $params['unknownProducer']->getId())
+                        ;
+            }
             if (isset($params['q'])){
-                $queryBuilder->where('c.code like :search')
+                $queryBuilder->andWhere('c.code like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('c.code > ?1')
-                    ->setParameter('1', $params['next1'])
+                $queryBuilder->andWhere('c.code > ?3')
+                    ->setParameter('3', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('c.code < ?1')
-                    ->setParameter('1', $params['prev1'])
+                $queryBuilder->andWhere('c.code < ?4')
+                    ->setParameter('4', $params['prev1'])
                     ->orderBy('c.code', 'DESC')
                     ->setMaxResults(1)    
                  ;
@@ -60,7 +72,7 @@ class GoodsRepository extends EntityRepository{
                 $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
             }            
         }
-
+//var_dump($queryBuilder->getQuery()->getDQL()); exit;
         return $queryBuilder->getQuery();
     }
     

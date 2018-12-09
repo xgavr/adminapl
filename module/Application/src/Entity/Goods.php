@@ -77,7 +77,7 @@ class Goods {
     protected $description;
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Rawprice", mappedBy="goods")
+    * @ORM\OneToMany(targetEntity="Application\Entity\Rawprice", mappedBy="good")
     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
      */
     private $rawprice;

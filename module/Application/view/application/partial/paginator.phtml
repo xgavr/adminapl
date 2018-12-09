@@ -11,14 +11,23 @@
     if (array_key_exists('action', $this->route)){
         $action = $this->route['action'];
     }
-    if (array_key_exists('q', $this->route)){
-        $querystr = $this->route['q'];
+    
+    $routeQuery = $this->route['query'];
+    if (!array_key_exists('page', $routeQuery)){
+        $routeQuery['page'] = 1;
     }
+    
+    
+    $preRouteQuery = $this->route['query'];
+    $preRouteQuery['page'] = $this->previous;
+    $nextRouteQuery = $this->route['query'];
+    $nextRouteQuery['page'] = $this->next;
 ?>    
 <!-- Previous page link -->
 <?php if (isset($this->previous)): ?>
+    <?php $routeQuery['page'] = $this->previous;?>
     <li>
-      <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=> ['q' => $querystr, 'page'=>$this->previous]]); ?>" aria-label="Previous">
+      <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=> $routeQuery]); ?>" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>  
@@ -30,9 +39,10 @@
 
 <!-- Numbered page links -->
 <?php foreach ($this->pagesInRange as $page): ?>
+    <?php $routeQuery['page'] = $page;?>
   <?php if ($page != $this->current): ?>
     <li>
-        <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['q' => $querystr, 'page'=>$page]]); ?>"><?= $this->escapeHtml($page); ?></a>
+        <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>$routeQuery]); ?>"><?= $this->escapeHtml($page); ?></a>
     </li>    
   <?php else: ?>
     <li>
@@ -43,8 +53,9 @@
 
 <!-- Next page link -->
 <?php if (isset($this->next)): ?>
+    <?php $routeQuery['page'] = $this->next;?>
     <li>
-      <a href="<?php echo $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['q' => $querystr, 'page'=>$this->next]]); ?>" aria-label="Next">
+      <a href="<?php echo $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['page'=>$routeQuery]]); ?>" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>  
