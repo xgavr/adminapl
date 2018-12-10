@@ -9,6 +9,10 @@ $this->pageBreadcrumbs()->setItems([
             $producer->getName()=>$this->url('producer', ['action'=>'view', 'id'=>$producer->getId()])
             ]);
 
+if ($unknownProducerQuery){
+    $unknownProducerQueryId = $unknownProducerQuery->getId();
+}    
+
 ?>
 <h1>
     <?= $this->escapeHtml($producer->getName()); ?>    
@@ -31,7 +35,7 @@ $this->pageBreadcrumbs()->setItems([
                 <?= $unknownProducer->getName();?>
             </a>
         <?php else:?>
-            <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$producer->getId()], ['query' => ['unknownProducer' => $unknownProducerQuery->getId()]])?>">
+            <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$producer->getId()], ['query' => ['unknownProducer' => $unknownProducerQueryId]])?>">
                 <?= $unknownProducer->getName();?>
             </a>
         <?php endif; ?>
@@ -55,7 +59,7 @@ $this->pageBreadcrumbs()->setItems([
             <?= $this->paginationControl($goods,
                         'Sliding',
                         'application/partial/paginator', 
-                        ['route' => ['route' => 'producer', 'action' => 'view', 'id' => $producer->getId(), 'query' => ['unknownProducer' => $unknownProducerQuery->getId()]]]); ?>
+                        ['route' => ['route' => 'producer', 'action' => 'view', 'id' => $producer->getId(), 'query' => ['unknownProducer' => $unknownProducerQueryId]]]); ?>
             
         </td>
         <td align="right" valign="center">
