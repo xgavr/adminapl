@@ -11,6 +11,8 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ProducerManager;
+use Application\Service\GoodsManager;
+
 /**
  * Description of PbManagerFactory
  *
@@ -23,8 +25,8 @@ class ProducerManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        
+        $goodsManager = $container->get(GoodsManager::class);
         // Инстанцируем сервис и внедряем зависимости.
-        return new ProducerManager($entityManager);
+        return new ProducerManager($entityManager, $goodsManager);
     }
 }

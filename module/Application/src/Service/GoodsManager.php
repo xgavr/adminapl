@@ -107,7 +107,7 @@ class GoodsManager
      * @param Application\Entity\Goods $good
      * @return boolean
      */
-    public function allowDelete($good)
+    public function allowRemove($good)
     {
         return true;
     }
@@ -117,16 +117,10 @@ class GoodsManager
      * 
      * @param Application\Entity\Goods $good
      */
-    public function removeGoods($good) 
+    public function removeGood($good) 
     {   
-//        $rawprices = $this->entityManager->getRepository(Goods::class)
-//                    ->findGoodRawprice($good);
-        
-//        foreach ($rawprices as $rawprice){
-//            $rawprice->setGood(null);
-//            $this->entityManager->persist($rawprice);
-//        }
-        if (!$this->allowDelete($good)){
+
+        if (!$this->allowRemove($good)){
             return false;
         }
         

@@ -27,10 +27,17 @@ class ProducerManager
      */
     private $entityManager;
   
+    /**
+     * Goods manager.
+     * @var Application\Entity\GoodsManager
+     */
+    private $goodsManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $goodsManager)
     {
         $this->entityManager = $entityManager;
+        $this->goodsManager = $goodsManager;
     }
     
     public function addNewProducer($data) 
@@ -72,15 +79,24 @@ class ProducerManager
     
     public function removeProducer($producer) 
     {   
-        $newProducer = new Producer();
+        foreach ($producer->getGoods() as $good){
+            if (!$this->goodsManager->allowRemove($good)){
+                return false;
+            }
+            $this->goodsManager->removeGood($good);
+        }
+        
         foreach ($producer->getUnknownProducer() as $unknownProducer){
-            $unknownProducer->setProducer($newProducer);
+            $unknownProducer->setProducer(null);
             $this->entityManager->persist($unknownProducer);
         }
+        $this->entityManager->flush();
         
         $this->entityManager->remove($producer);
         
-        $this->entityManager->flush();
+        $this->entityManager->flush($producer);
+        
+        return true;
     }    
     
     /*

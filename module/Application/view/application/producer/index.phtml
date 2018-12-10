@@ -55,6 +55,7 @@
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
                      <th data-field="aplId" data-type="numeric" data-sortable="true">AplId</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
+                     <th data-field="" data-formatter="activeFormatter"></th>
                  </tr>                
             </thead>
         </table>
@@ -127,6 +128,19 @@
             '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
             '</div>'
         ].join(''); 
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/producer/delete-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
     }    
     
     function responseHandler(res) {

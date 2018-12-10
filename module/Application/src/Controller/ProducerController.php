@@ -200,6 +200,26 @@ class ProducerController extends AbstractActionController
         return $this->redirect()->toRoute('producer', []);
     }    
 
+    public function deleteFormAction()
+    {
+        $producerId = $this->params()->fromRoute('id', -1);
+        
+        $producer = $this->entityManager->getRepository(Producer::class)
+                ->findOneById($producerId);   
+        
+        if ($producer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->producerManager->removeProducer($producer);
+        
+        // Перенаправляем пользователя на страницу "producer".
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+
     public function viewAction() 
     {       
         $producerId = (int)$this->params()->fromRoute('id', -1);

@@ -299,7 +299,7 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
         
-        $this->goodsManager->removeGoods($goods);
+        $this->goodsManager->removeGood($goods);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel(
