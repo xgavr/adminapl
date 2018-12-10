@@ -122,12 +122,18 @@ class ArticleManager
     public function grabArticleFromRaw($raw)
     {
         ini_set('memory_limit', '2048M');
+        set_time_limit(1200);
+        $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'code' => null]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewArticleFromRawprice($rawprice, false);
+            if (time() > $startTime + 400){
+                $this->entityManager->flush();
+                return;
+            }
         }
         $this->entityManager->flush();
         
