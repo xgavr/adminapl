@@ -12,16 +12,15 @@
         $action = $this->route['action'];
     }
     
-    $routeQuery = $this->route['query'];
+    
+    if (array_key_exists('query', $this->route)){
+        $routeQuery = $this->route['query'];
+    } else {
+        $routeQuery = [];
+    }
     if (!array_key_exists('page', $routeQuery)){
         $routeQuery['page'] = 1;
-    }
-    
-    
-    $preRouteQuery = $this->route['query'];
-    $preRouteQuery['page'] = $this->previous;
-    $nextRouteQuery = $this->route['query'];
-    $nextRouteQuery['page'] = $this->next;
+    }    
 ?>    
 <!-- Previous page link -->
 <?php if (isset($this->previous)): ?>
