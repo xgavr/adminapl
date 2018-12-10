@@ -83,8 +83,8 @@ class ProducerManager
             if (!$this->goodsManager->allowRemove($good)){
                 return false;
             }
-            $this->goodsManager->removeGood($good);
-            $this->entityManager->persist($producer);
+            $this->goodsManager->removeRawpriceAssociation($good);
+            $this->entityManager->remove($good);
         }
         
         foreach ($producer->getUnknownProducer() as $unknownProducer){

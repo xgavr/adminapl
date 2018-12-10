@@ -113,6 +113,22 @@ class GoodsManager
     }
     
     /**
+     * Удаление связи со строками прайса
+     * 
+     * @param Application\Entity|goods $good
+     */
+    public function removeRawpriceAssociation($good)
+    {
+        foreach ($good->getRawprice() as $rawprice){
+            $rawprice->setGood(null);
+            $rawprice->setStatusGood($rawprice::GOOD_NEW);
+            $this->entityManager->persist($rawprice);            
+        }
+        
+        $this->entityManager->flush();        
+    }
+
+    /**
      * Удалене карточки товара
      * 
      * @param Application\Entity\Goods $good
@@ -124,13 +140,7 @@ class GoodsManager
             return false;
         }
         
-        foreach ($good->getRawprice() as $rawprice){
-            $rawprice->setGood(null);
-            $rawprice->setStatusGood($rawprice::GOOD_NEW);
-            $this->entityManager->persist($rawprice);            
-        }
-        
-        $this->entityManager->flush();
+        $this->removeRawpriceAssociation($good);
         
         $this->entityManager->remove($good);
         
