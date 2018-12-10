@@ -140,6 +140,20 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php elseif ($key == 'Артикул товара' && $rawprice->getCode()):?>
                                     <?php if ($rawprice->getCode()->getId()):?>
                                         <a href="/producer/article-view/<?= $rawprice->getCode()->getId();?>"><?=$rawprice->getCode()->getCode()?></a>
+                                        <div style="font-size: xx-small">
+                                            <?php if ($rawprice->getGood()):?>
+                                                <a href="/goods/view/<?= $rawprice->getGood()->getId()?>">
+                                                    <?= $rawprice->getGood()->getCode()?>
+                                                </a>
+                                                <a href="/producer/view/<?= $rawprice->getGood()->getProducer()->getId()?>">
+                                                    <?= $rawprice->getGood()->getProducer()->getName()?>
+                                                </a>
+                                            <?php else:?>
+                                            <span color=''>
+                                                <?= $rawprice->getStatusGoodName();?>                            
+                                            </span>
+                                            <?php endif;?>
+                                        </div>                         
                                     <?php else:?>
                                         <?= $this->escapeHtml($value)?>
                                     <?php endif;?>    

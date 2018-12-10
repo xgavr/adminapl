@@ -264,7 +264,26 @@ class ArticleRepository  extends EntityRepository{
         }
 
         return $queryBuilder->getQuery();
-    }            
+    }
+    
+    public function findArticleForAssemblyByRaw($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('a, count(r.id) as rawpriceCount')
+                ->from(Article::class, 'a')
+                ->join('a.rawprice', 'r', 'WITH')
+                ->where('r.raw = ?1')
+                ->andWhere('r.statusGood = ?2')
+                ->groupBy('a.id')
+                ->orderBy('rawpriceCount')
+                ->setParameter('1', $raw->getId())
+                ->setParameter('2', Rawprice::GOOD_NEW)
+                ;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();                    
+    }
     
     /**
      * Найти артикулы производителей для удаления

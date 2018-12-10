@@ -77,6 +77,12 @@ class ProducerManager
         $this->entityManager->flush();
     }    
     
+    /**
+     * Удаление производителя
+     * 
+     * @param Application\Entity\Producer $producer
+     * @return boolean
+     */
     public function removeProducer($producer) 
     {   
         foreach ($producer->getGoods() as $good){
