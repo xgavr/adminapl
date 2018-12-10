@@ -288,6 +288,25 @@ class GoodsController extends AbstractActionController
         return $this->redirect()->toRoute('goods', []);
     }    
 
+    public function deleteFormAction()
+    {
+        $goodsId = $this->params()->fromRoute('id', -1);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->goodsManager->removeGoods($goods);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+
     public function viewAction() 
     {       
         $goodsId = (int)$this->params()->fromRoute('id', -1);

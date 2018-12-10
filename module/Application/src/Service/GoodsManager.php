@@ -101,19 +101,48 @@ class GoodsManager
         return $goods;
     }    
     
+    /**
+     * Проверка возможности удаления товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @return boolean
+     */
+    public function allowDelete($good)
+    {
+        return true;
+    }
+    
+    /**
+     * Удалене карточки товара
+     * 
+     * @param Application\Entity\Goods $good
+     */
     public function removeGoods($good) 
     {   
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                    ->findGoodRawprice($good);
+//        $rawprices = $this->entityManager->getRepository(Goods::class)
+//                    ->findGoodRawprice($good);
         
-        foreach ($rawprices as $rawprice){
-            $rawprice->setGood(null);
-            $this->entityManager->persist($rawprice);
+//        foreach ($rawprices as $rawprice){
+//            $rawprice->setGood(null);
+//            $this->entityManager->persist($rawprice);
+//        }
+        if (!$this->allowDelete($good)){
+            return false;
         }
+        
+        foreach ($good->getRawprice() as $rawprice){
+            $rawprice->setGood(null);
+            $rawprice->setStatusGood($rawprice::GOOD_NEW);
+            $this->entityManager->persist($rawprice);            
+        }
+        
+        $this->entityManager->flush();
         
         $this->entityManager->remove($good);
         
-        $this->entityManager->flush();
+        $this->entityManager->flush($good);
+        
+        return true;
     }    
     
     

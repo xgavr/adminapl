@@ -147,8 +147,8 @@ class GoodsRepository extends EntityRepository{
         return $this->searchByName($search)->getResult();
     }  
     
-    /*
-     * @var Apllication\Entity\Goods $good
+    /**
+     * @param Apllication\Entity\Goods $good
      */
     public function findGoodRawprice($good)
     {
