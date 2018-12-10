@@ -35,7 +35,7 @@ if ($unknownProducerQuery){
                 <?= $unknownProducer->getName();?>
             </a>
         <?php else:?>
-            <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$producer->getId()], ['query' => ['unknownProducer' => $unknownProducerQueryId]])?>">
+            <a href="<?= $this->url('producer', ['action'=>'view', 'id'=>$producer->getId()], ['query' => ['unknownProducer' => $unknownProducer->getId()]])?>">
                 <?= $unknownProducer->getName();?>
             </a>
         <?php endif; ?>
@@ -88,7 +88,7 @@ if ($unknownProducerQuery){
             <?= $this->paginationControl($goods,
                         'Sliding',
                         'application/partial/paginator', 
-                        ['route' => ['route' => 'producer', 'action' => 'view', 'id' => $producer->getId(), 'query' => ['unknownProducer' => $unknownProducer->getId()]]]); ?>
+                        ['route' => ['route' => 'producer', 'action' => 'view', 'id' => $producer->getId(), 'query' => ['unknownProducer' => $unknownProducerQueryId]]]); ?>
             
         </td>
     </tr>
