@@ -85,6 +85,7 @@ class ProducerManager
             }
             $this->goodsManager->removeGood($good);
         }
+        $this->entityManager->flush();
         
         foreach ($producer->getUnknownProducer() as $unknownProducer){
             $unknownProducer->setProducer(null);
