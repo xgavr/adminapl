@@ -35,24 +35,15 @@ class Sigma3 extends AbstractValidator
      */
     public function isValid($price, $meanPrice = 0, $dispersion = 0)
     {
-        var_dump($price);
-        var_dump($meanPrice);
-        var_dump($dispersion);
-        
         if ($meanPrice){
             if ($dispersion/$meanPrice < 0.01){
                 return true;
-            }
-            if ($dispersion/$meanPrice > 0.4){
-                return false;
             }
         }        
         
         $minPrice = $meanPrice - 3*$dispersion;
         $maxPrice = $meanPrice + 3*$dispersion;
         
-        var_dump($minPrice);
-        var_dump($maxPrice);
         return $price >= $minPrice && $price <= $maxPrice;
     }
     
