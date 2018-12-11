@@ -380,8 +380,17 @@ class ArticleManager
      */
     public function priceMatching($article, $rawprice)
     {
-        $meanPrice = $this->meanPrice($article);
-        $dispersion = $this->dispersionPrice($article);
+        $rawprices = [];
+        foreach ($article->getRawprice() as $row){
+            $rawprices[$row->getId()] = $row;
+        }
+        
+        if (!array_key_exists($rawprice->getId(), $rawprices)){
+            $rawprices[$rawprices->getId()] = $rawprices;
+        }
+        
+        $meanPrice = $this->rawpricesMeanPrice($rawprices);
+        $dispersion = $this->rawpricesDispersion($rawprices);
         
         return $this->inSigma3($rawprice->getRealPrice(), $meanPrice, $dispersion);
     }
