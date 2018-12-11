@@ -386,7 +386,7 @@ class ArticleManager
         }
         
         if (!array_key_exists($rawprice->getId(), $rawprices)){
-            $rawprices[$rawprices->getId()] = $rawprices;
+            $rawprices[$rawprice->getId()] = $rawprices;
         }
         
         $meanPrice = $this->rawpricesMeanPrice($rawprices);
