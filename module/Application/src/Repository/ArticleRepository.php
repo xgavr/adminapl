@@ -271,15 +271,10 @@ class ArticleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('a, count(r.id) as rawpriceCount')
+        $queryBuilder->select('a.code, count(a.unknownProducer) as unknownProducerCount')
                 ->from(Article::class, 'a')
-                ->join('a.rawprice', 'r', 'WITH')
-                ->where('r.raw = ?1')
-                ->andWhere('r.statusGood = ?2')
-                ->groupBy('a.id')
-                ->orderBy('rawpriceCount')
-                ->setParameter('1', $raw->getId())
-                ->setParameter('2', Rawprice::GOOD_NEW)
+                ->groupBy('a.code')
+                ->having('unknownProducerCount > 1')
                 ;
         var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();                    
