@@ -52,7 +52,7 @@ class MlManager
             [1, 0, 0],
         ];
         
-        $labels = [1, 1, 0, 0, 0, 1, 1, 0, 0];
+        $labels = [1, 1, 0, 0, 0, 1, 0, 0, 0];
 
         $classifier = new KNearestNeighbors();
         $classifier->train($samples, $labels);
