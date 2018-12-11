@@ -35,7 +35,7 @@ class Sigma3 extends AbstractValidator
      */
     public function isValid($price, $meanPrice = 0, $dispersion = 0)
     {
-        if ($meanPrice){
+        if ($meanPrice && $dispersion){
             if ($dispersion/$meanPrice < 0.01){
                 return true;
             }
