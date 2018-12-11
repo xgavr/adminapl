@@ -140,6 +140,7 @@ return [
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,
             Service\TamTamManager::class => Service\Factory\TamTamManagerFactory::class,
+            Service\TelefonistkaManager::class => Service\Factory\TelefonistkaManagerFactory::class,
             Service\TelegrammManager::class => Service\Factory\TelegrammManagerFactory::class,
         ],
     ],    

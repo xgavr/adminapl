@@ -531,6 +531,11 @@ class Rawprice {
     public function getRealRest() 
     {
         if ($this->rest){
+            
+            if (in_array($this->rest, ['+'])){
+                return 1;
+            }
+            
             $filter = new \Application\Filter\ToFloat();
             $rest = $filter->filter($this->rest);
             if (is_numeric($rest)){

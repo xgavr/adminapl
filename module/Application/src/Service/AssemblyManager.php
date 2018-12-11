@@ -99,8 +99,7 @@ class AssemblyManager
         if (!$rawprice->getCode()) {
             $result = false;
         }    
-        
-        if (strlen($rawprice->getCode()->getCode()) < 4) {
+        if (strlen($rawprice->getCode()->getCode()) < 4 || strlen($rawprice->getCode()->getCode()) > 24) {
             $result = false;
         }    
         
@@ -270,13 +269,8 @@ class AssemblyManager
         $article = $this->findBestArticle($rawprice);
 
         if ($article){
-            $producer = $article->getUnknownProducer()->getProducer();
-
-            if (!$producer){
-                $producer = $this->producerManager->addProducerFromUnknownProducer($article->getUnknownProducer());
-            }
-
-            $this->producerManager->bindUnknownProducer($rawprice->getUnknownProducer(), $producer);
+            
+            $producer = $this->producerManager->addProducerFromArticle($article);
 
             $code = $rawprice->getCode()->getCode();
             $good = $this->entityManager->getRepository(Goods::class)

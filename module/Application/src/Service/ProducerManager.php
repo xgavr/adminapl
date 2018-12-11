@@ -42,39 +42,58 @@ class ProducerManager
     
     public function addNewProducer($data) 
     {
+        
+        $producer = $this->entityManager->getRepository(Producer::class)
+                ->findOneByName(trim($data['name']));
+        
+        if ($producer){
+            return $producer;
+        }
+        
         // Создаем новую сущность Producer.
         $producer = new Producer();
         $producer->setName($data['name']);
 
-        $country = $this->entityManager->getRepository(Country::class)
-                    ->findOneById($data['country']);
-        if ($country == null){
-            $country = new Country();
-        }
-
-        $producer->setCountry($country);
+//        $country = $this->entityManager->getRepository(Country::class)
+//                    ->findOneById($data['country']);
+//        if ($country == null){
+//            $country = new Country();
+//        }
+//
+//        $producer->setCountry($country);
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($producer);
         
         // Применяем изменения к базе данных.
-        $this->entityManager->flush();
+        $this->entityManager->flush($producer);
+        
+        return $producer;
     }   
     
     public function updateProducer($producer, $data) 
     {
+        $producerByName = $this->entityManager->getRepository(Producer::class)
+                ->findOneByName(trim($data['name']));
+        
+        if ($producerByName){
+            throw new \Exception('Уже есть производитель с наименованием '.$data['name']);
+        }
+
         $producer->setName($data['name']);
         
-        $country = $this->entityManager->getRepository(Country::class)
-                    ->findOneById($data['country']);
-        if ($country == null){
-            $country = new Country();
-        }
-        
-        $producer->setCountry($country);
+//        $country = $this->entityManager->getRepository(Country::class)
+//                    ->findOneById($data['country']);
+//        if ($country == null){
+//            $country = new Country();
+//        }
+//        
+//        $producer->setCountry($country);
                
         // Применяем изменения к базе данных.
-        $this->entityManager->flush();
+        $this->entityManager->flush($producer);
+        
+        return $producer;
     }    
     
     /**
@@ -130,6 +149,11 @@ class ProducerManager
        } 
        
        return;
+    }
+    
+    public function addProducerFromArticle($article)
+    {
+        return $this->addNewProducer(['name' => $article->getUnknownProducer()->getName()]);        
     }
     
     /*
