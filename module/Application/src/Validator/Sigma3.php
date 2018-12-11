@@ -39,6 +39,9 @@ class Sigma3 extends AbstractValidator
             if ($dispersion/$meanPrice < 0.01){
                 return true;
             }
+            if ($dispersion/$meanPrice > 0.3){
+                return false;
+            }
         }        
         
         $minPrice = $meanPrice - 3*$dispersion;
