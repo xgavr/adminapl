@@ -266,7 +266,7 @@ class ArticleManager
     /**
      * Средняя цена по строкам прайса
      * 
-     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
+     * @param array $rawprices
      * @return float
      */
     public function rawpricesMeanPrice($rawprices)
@@ -381,12 +381,12 @@ class ArticleManager
     public function priceMatching($article, $rawprice)
     {
         $rawprices = [];
-        foreach ($article->getRawprice() as $row){
-            $rawprices[$row->getId()] = $row;
+        foreach ($article->getRawprice() as $articleRawprice){
+            $rawprices[$articleRawprice->getId()] = $articleRawprice;
         }
         
         if (!array_key_exists($rawprice->getId(), $rawprices)){
-            $rawprices[$rawprice->getId()] = $rawprices;
+            $rawprices[$rawprice->getId()] = $rawprice;
         }
         
         $meanPrice = $this->rawpricesMeanPrice($rawprices);
