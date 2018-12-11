@@ -370,6 +370,17 @@ class ArticleManager
         return $validator->isValid($price, $meanPrice, $dispersion);
     }
     
+    
+    public function getArticleGood($article)
+    {
+        foreach ($article->getRawprice() as $rawprice){
+            if ($rawprice->getGood()){
+                return $rawprice->getGood();
+            }
+        }
+        
+        return;
+    }
     /**
      * Сравнение цены строки прайса с артикулом
      * 
@@ -383,6 +394,15 @@ class ArticleManager
         $rawprices = [];
         foreach ($article->getRawprice() as $articleRawprice){
             $rawprices[$articleRawprice->getId()] = $articleRawprice;
+        }
+        
+        $good = $this->getArticleGood($article);
+        if ($good){
+            foreach($good->getRawprice() as $goodRawprice){
+                if (!array_key_exists($goodRawprice->getId(), $rawprices)){
+                    $rawprices[$goodRawprice->getId()] = $goodRawprice;
+                }                
+            }
         }
         
         if (!array_key_exists($rawprice->getId(), $rawprices)){
