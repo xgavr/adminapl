@@ -22,19 +22,19 @@ $this->pageBreadcrumbs()->setItems([
     <?php foreach($intersects as $intrsect):?>
         <? 
             $diff = 0;
-            if ($unknownProducer->getRawpriceCount() + $intrsect['unknown_producer_rawprice_count']){
-                $diff = $intrsect['countCode']/($unknownProducer->getRawpriceCount() + $intrsect['unknown_producer_rawprice_count']);
+            if ($unknownProducer->getRawpriceCount()){
+                $diff = $intrsect['countCode']/($unknownProducer->getRawpriceCount());
             } else {
                 continue;
             }            
         ?>
-        <span style="font-weight: <?= ($diff>0.05)? 'bold':'normal'?>">
+        <span style="font-weight: <?= ($diff>0.25)? 'bold':'normal'?>">
             <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $intrsect['unknown_producer_id']])?>">
                 <?= $intrsect['unknown_producer_name']?>
             </a>
         </span>    
-        <span style="font-weight: <?= ($diff>0.05)? 'bold':'normal'?>">
-            (<?= $intrsect['countCode']?>/<?= $intrsect['unknown_producer_rawprice_count'] ?>/<?= round($diff, 2)?>)
+        <span style="font-weight: <?= ($diff>0.25)? 'bold':'normal'?>">
+            (<?= $intrsect['countCode']?>/<?= round($diff, 2)?>)
         </span>
     <?php endforeach;?>    
 </div>
