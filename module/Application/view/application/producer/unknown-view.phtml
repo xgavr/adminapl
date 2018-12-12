@@ -22,8 +22,8 @@ $this->pageBreadcrumbs()->setItems([
     <?php foreach($intersects as $intrsect):?>
         <? 
             $diff = 0;
-            if ($unknownProducer->getRawpriceCount()){
-                $diff = $intrsect['countCode']/$unknownProducer->getRawpriceCount();
+            if ($unknownProducer->getRawpriceCount() + $intrsect['unknown_producer_rawprice_count']){
+                $diff = $intrsect['countCode']/($unknownProducer->getRawpriceCount() + $intrsect['unknown_producer_rawprice_count']);
             } else {
                 continue;
             }            

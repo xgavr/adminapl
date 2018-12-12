@@ -420,7 +420,10 @@ class ProducerRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 //        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
 
-        $sql = 'select t.unknown_producer_intersect as unknown_producer_id, u.name as unknown_producer_name, count(t.code) as countCode '
+        $sql = 'select t.unknown_producer_intersect as unknown_producer_id, '
+                . 'u.name as unknown_producer_name, '
+                . 'u.rawprice_count as unknown_producer_rawprice_count, '
+                . 'count(t.code) as countCode '
                 . 'from unknown_producer_intersect as t '
                 . 'inner join unknown_producer as u on t.unknown_producer_intersect = u.id '                
                 . 'where t.unknown_producer = :unknownProducer'
