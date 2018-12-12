@@ -34,7 +34,7 @@ $this->pageBreadcrumbs()->setItems([
             </a>
         </span>    
         <span style="font-weight: <?= ($diff>0.3)? 'bold':'normal'?>">
-            (<?= $intrsect['countCode']?>/<?= round($diff, 2)?>)
+            (<?= $intrsect['countCode']?>/<?= $intrsect['unknown_producer_rawprice_count'] ?>/<?= round($diff, 2)?>)
         </span>
     <?php endforeach;?>    
 </div>
