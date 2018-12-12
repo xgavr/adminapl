@@ -569,6 +569,16 @@ class ProducerController extends AbstractActionController
         ]);          
     }
     
+    public function unknownProducerIntersectAction()
+    {
+        
+        $this->producerManager->updateUnknownProducerIntersect();
+                
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
+    
     public function deleteEmptyArticleAction()
     {
         $deleted = $this->articleManager->removeEmptyArticles();

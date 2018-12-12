@@ -349,5 +349,63 @@ class ProducerRepository  extends EntityRepository{
     public function searchNameForSearchAssistant($search)
     {        
         return $this->searchByName($search)->getResult();
-    }      
+    }
+    
+    
+    public function unknownProducerByCodeIntersect($code)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(a.unknownProducer) as unknownProducerId')
+                ->from(\Application\Entity\Article::class, 'a')
+                ->distinct()
+                ->where('a.code = ?1')
+                ->setParameter('1', $code)
+                ;
+        return $queryBuilder->getQuery()->getResult(2);        
+    }
+    
+    /**
+     * Заполнить таблицу пересечения незвестных производителей
+     * 
+     * @return null
+     */
+    public function articleUnknownProducerIntersect()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('a.code, count(a.unknownProducer) as unknownProducerCount')
+                ->from(\Application\Entity\Article::class, 'a')
+                ->where('length(a.code) > 0')                
+                ->andWhere('length(a.code) < 24')
+                ->groupBy('a.code')
+                ->having('unknownProducerCount > 1')
+                ;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        $codeRows = $queryBuilder->getQuery()->getResult(2);
+        
+        $this->getEntityManager()->getConnection()->query('delete from unknown_producer_intersect where 1');
+        
+        foreach ($codeRows as $codeRow){
+            $unknownProducerRows = $this->unknownProducerByCodeIntersect($codeRow['code']);
+            foreach ($unknownProducerRows as $unknownProducerRow){
+                foreach ($unknownProducerRows as $unknownProducerRowIntersect){
+                    if ($unknownProducerRow['unknownProducerId'] != $unknownProducerRowIntersect['unknownProducerId']){
+                        $data = [
+                            'code' => $codeRow['code'],
+                            'unknown_producer' => $unknownProducerRow['unknownProducerId'],
+                            'unknown_producer_intersect' => $unknownProducerRowIntersect['unknownProducerId'],
+                        ];
+                        $this->getEntityManager()->getConnection()->insert('unknown_producer_intersect', $data);
+                    }    
+                }
+            }
+        }
+        
+        return;
+    }
 }

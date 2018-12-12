@@ -350,6 +350,13 @@ class ProducerManager
         }
     }
     
+    public function updateUnknownProducerIntersect()
+    {
+        $this->entityManager->getRepository(Producer::class)
+                ->articleUnknownProducerIntersect();
+        return;
+    }
+    
     /**
      * Удаление неизвестного производителя
      * 
