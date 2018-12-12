@@ -424,7 +424,8 @@ class ProducerRepository  extends EntityRepository{
                 . 'from unknown_producer_intersect as t '
                 . 'inner join unknown_producer as u on t.unknown_producer_intersect = u.id '                
                 . 'where t.unknown_producer = :unknownProducer'
-                . ' group by t.unknown_producer, t.unknown_producer_intersect';
+                . ' group by t.unknown_producer, t.unknown_producer_intersect '
+                . 'order by countCode DESC';
         
 //        $query = $entityManager->createNativeQuery($sql, $rsm);
 //        $query->setParameter(1, $unknownProducer->getId());
