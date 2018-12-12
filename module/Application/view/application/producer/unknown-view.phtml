@@ -27,7 +27,7 @@ $this->pageBreadcrumbs()->setItems([
                 continue;
             }            
         ?>
-        <span>
+        <span style="font-weight: <?= ($diff>0.2)? 'bold':'normal'?>">
             <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $intrsect['unknown_producer_id']])?>">
                 <?= $intrsect['unknown_producer_name']?>
             </a>
