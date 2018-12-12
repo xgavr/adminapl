@@ -418,16 +418,23 @@ class ProducerRepository  extends EntityRepository{
     public function unknownProducerIntersect($unknownProducer)
     {
         $entityManager = $this->getEntityManager();
-        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
+//        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
 
-        $sql = 'select t.unknown_producer_intersect, count(t.code) as countCode '
-                . 'from unknown_producer_intersect as t where t.unknown_producer = ?'
+        $sql = 'select t.unknown_producer_intersect as unknown_producer_id, u.name as unknown_producer_name, count(t.code) as countCode '
+                . 'from unknown_producer_intersect as t '
+                . 'inner join unknown_producer as u on t.unknown_producer_intersect = u.id '                
+                . 'where t.unknown_producer = :unknownProducer'
                 . ' group by t.unknown_producer, t.unknown_producer_intersect';
         
-        $query = $entityManager->createNativeQuery($sql, $rsm);
-        $query->setParameter(1, $unknownProducer->getId());
+//        $query = $entityManager->createNativeQuery($sql, $rsm);
+//        $query->setParameter(1, $unknownProducer->getId());
         
-        return $query->getResult();
+//        var_dump($sql); exit;
+        
+        $stmt = $entityManager->getConnection()->prepare($sql);
+        $stmt->execute(['unknownProducer' => $unknownProducer->getId()]);
+        
+        return $stmt->fetchAll();
         
     }
 }

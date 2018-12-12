@@ -18,7 +18,19 @@ $this->pageBreadcrumbs()->setItems([
         <?php endif;?>        
     </sup>
 </h1>
-    
+<div>
+    <?php foreach($intersects as $intrsect):?>
+        <span>
+            <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $intrsect['unknown_producer_id']])?>">
+                <?= $intrsect['unknown_producer_name']?>
+            </a>
+        </span>    
+        <span>
+            (<?= $intrsect['countCode']?>/<?= round($intrsect['countCode']/$unknownProducer->getRawpriceCount(), 2)?>)
+        </span>
+    <?php endforeach;?>    
+</div>
+
 <table class="table table-striped">
     <tr>
         <th colspan="2">
