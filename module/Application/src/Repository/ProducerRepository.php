@@ -382,8 +382,10 @@ class ProducerRepository  extends EntityRepository{
                 ->from(\Application\Entity\Article::class, 'a')
                 ->where('length(a.code) > 0')                
                 ->andWhere('length(a.code) < 24')
+                ->andWhere('a.code not like ?1')
                 ->groupBy('a.code')
                 ->having('unknownProducerCount > 1')
+                ->setParameter('1', '%_pk_%')
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $codeRows = $queryBuilder->getQuery()->getResult(2);
