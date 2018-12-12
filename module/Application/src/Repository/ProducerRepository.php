@@ -366,7 +366,7 @@ class ProducerRepository  extends EntityRepository{
                 ;
         return $queryBuilder->getQuery()->getResult(2);        
     }
-    
+        
     /**
      * Заполнить таблицу пересечения незвестных производителей
      * 
@@ -407,5 +407,27 @@ class ProducerRepository  extends EntityRepository{
         }
         
         return;
+    }
+    
+    /**
+     * Количество и частота пересекающихся неизвестных производителей
+     * 
+     * @param Application\Entity\UnknownProducer $nknownProducer
+     * @return type
+     */
+    public function unknownProducerIntersect($unknownProducer)
+    {
+        $entityManager = $this->getEntityManager();
+        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
+
+        $sql = 'select t.unknown_producer_intersect, count(t.code) as countCode '
+                . 'from unknown_producer_intersect as t where t.unknown_producer = ?'
+                . ' group by t.unknown_producer, t.unknown_producer_intersect';
+        
+        $query = $entityManager->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $unknownProducer->getId());
+        
+        return $query->getResult();
+        
     }
 }

@@ -339,7 +339,10 @@ class ProducerController extends AbstractActionController
         $prevQuery = $this->entityManager->getRepository(Producer::class)
                         ->findAllUnknownProducer(['prev1' => $unknownProducer->getName()]);
         $nextQuery = $this->entityManager->getRepository(Producer::class)
-                        ->findAllUnknownProducer(['next1' => $unknownProducer->getName()]);        
+                        ->findAllUnknownProducer(['next1' => $unknownProducer->getName()]); 
+        
+        $intersects = $this->entityManager->getRepository(Producer::class)
+                ->unknownProducerIntersect($unknownProducer);
 
         // Render the view template.
         return new ViewModel([
