@@ -254,6 +254,40 @@ class AssemblyManager
         return;
     }
     
+    
+    public function intersectUnknownProducer($unknownProducer)
+    {
+        $intersects = $this->entityManager->getRepository(Producer::class)
+                        ->unknownProducerIntersect($unknownProducer);
+
+        if (count($intersects)){
+            
+        }   
+        
+        return;
+    }
+    
+    
+    public function addProducerFromUnknownProducer($unknownProducer)
+    {
+        $producer = null;
+        
+        $unknownProducer->setProducer($producer);
+        $this->entityManager->persist($unknownProducer);
+        $this->entityManager->flush($unknownProducer);
+        
+        if ($unknownProducer->getSupplierCount() && $unknownProducer->getRawpriceCount() && $unknownProducer->getName()){
+            
+            $producer = intersectUnknownProducer($unknownProducer);
+            
+            if (!$producer){
+                $producer = $this->producerManager->addProducerFromUnknownProducer($unknownProducer);
+            }
+        }
+        
+        return $producer;
+    }
+       
     /**
      * Добавление нового товара из прайса
      * 

@@ -19,15 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class UnknownProducer {
     
-     // Train constants.
-    const TRAIN_TRUE      = 1; // Учитель - это производитель.
-    const TRAIN_FALSE     = 0; // Учитель - это не производитель.
-    const TRAIN_NONE      = 3; // без учителя.
-    
-     // Prediction constants.
-    const PREDICTION_TRUE      = 1; // Предсказано - это производитель.
-    const PREDICTION_FALSE     = 0; // Предсказано - это не производитель.
-    const PREDICTION_NONE      = 3; // не предсказано.
+    const INTERSECT_COEF = 0.25; // коэффициент отсечение при пересечении.
     
     /**
      * @ORM\Id

@@ -422,25 +422,33 @@ class ProducerRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 //        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
 
-        $sql = 'select t.unknown_producer_intersect as unknown_producer_id, '
-                . 'u.name as unknown_producer_name, '
-                . 'u.rawprice_count as unknown_producer_rawprice_count, '
-                . 'count(t.code) as countCode '
-                . 'from unknown_producer_intersect as t '
-                . 'inner join unknown_producer as u on t.unknown_producer_intersect = u.id '                
-                . 'where t.unknown_producer = :unknownProducer'
-                . ' group by t.unknown_producer, t.unknown_producer_intersect '
-                . 'order by countCode DESC';
+        if ($unknownProducer->getRawpriceCount()){
+            $sql = 'select t.unknown_producer_intersect as unknown_producer_id, '
+                    . ' u.name as unknown_producer_name, '
+                    . ' u.rawprice_count as unknown_producer_rawprice_count, '
+                    . ' count(t.code) as countCode '
+                    . ' from unknown_producer_intersect as t '
+                    . ' inner join unknown_producer as u on t.unknown_producer_intersect = u.id '                
+                    . ' where t.unknown_producer = :unknownProducer'
+                    . ' group by t.unknown_producer, t.unknown_producer_intersect '
+                    . ' having countCode/:rawpriceCount > :intersect_coef'
+                    . ' order by countCode DESC';
+
+    //        $query = $entityManager->createNativeQuery($sql, $rsm);
+    //        $query->setParameter(1, $unknownProducer->getId());
+
+    //        var_dump($sql); exit;
+
+            $stmt = $entityManager->getConnection()->prepare($sql);
+            $stmt->execute([
+                    'unknownProducer' => $unknownProducer->getId(),
+                    'rawpriceCount' => $unknownProducer->getRawpriceCount(),
+                    'intersect_coef' => $unknownProducer::INTERSECT_COEF,
+                ]);
+
+            return $stmt->fetchAll();
+        }    
         
-//        $query = $entityManager->createNativeQuery($sql, $rsm);
-//        $query->setParameter(1, $unknownProducer->getId());
-        
-//        var_dump($sql); exit;
-        
-        $stmt = $entityManager->getConnection()->prepare($sql);
-        $stmt->execute(['unknownProducer' => $unknownProducer->getId()]);
-        
-        return $stmt->fetchAll();
-        
+        return [];
     }
 }

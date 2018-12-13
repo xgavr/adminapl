@@ -396,18 +396,18 @@ class ArticleManager
             $rawprices[$articleRawprice->getId()] = $articleRawprice;
         }
         
-        $good = $this->getArticleGood($article);
-        if ($good){
-            foreach($good->getRawprice() as $goodRawprice){
-                if (!array_key_exists($goodRawprice->getId(), $rawprices)){
-                    $rawprices[$goodRawprice->getId()] = $goodRawprice;
-                }                
-            }
-        }
+//        $good = $this->getArticleGood($article);
+//        if ($good){
+//            foreach($good->getRawprice() as $goodRawprice){
+//                if (!array_key_exists($goodRawprice->getId(), $rawprices)){
+//                    $rawprices[$goodRawprice->getId()] = $goodRawprice;
+//                }                
+//            }
+//        }
         
-        if (!array_key_exists($rawprice->getId(), $rawprices)){
-            $rawprices[$rawprice->getId()] = $rawprice;
-        }
+//        if (!array_key_exists($rawprice->getId(), $rawprices)){
+//            $rawprices[$rawprice->getId()] = $rawprice;
+//        }
         
         $meanPrice = $this->rawpricesMeanPrice($rawprices);
         $dispersion = $this->rawpricesDispersion($rawprices);

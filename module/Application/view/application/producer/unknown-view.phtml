@@ -28,12 +28,12 @@ $this->pageBreadcrumbs()->setItems([
                 continue;
             }            
         ?>
-        <span style="font-weight: <?= ($diff>0.25)? 'bold':'normal'?>">
+        <span>
             <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $intrsect['unknown_producer_id']])?>">
                 <?= $intrsect['unknown_producer_name']?>
             </a>
         </span>    
-        <span style="font-weight: <?= ($diff>0.25)? 'bold':'normal'?>">
+        <span>
             (<?= $intrsect['countCode']?>/<?= round($diff, 2)?>)
         </span>
     <?php endforeach;?>    
