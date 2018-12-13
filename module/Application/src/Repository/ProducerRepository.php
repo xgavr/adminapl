@@ -451,4 +451,31 @@ class ProducerRepository  extends EntityRepository{
         
         return [];
     }
+    
+    /**
+     * Получить артикулы пеерсекающихся производителей
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param Application\Entity\UnknownProducer $intersectUnknownProducer
+     * @return array
+     */
+    public function intersectesCode($unknownProducer, $intersectUnknownProducer)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $sql = 'select t.code, '
+                . ' from unknown_producer_intersect as t '
+                . ' where t.unknown_producer_intersect = :unknownProducerIntersect'
+                . ' and t.unknown_producer = :unknownProducer'
+                ;
+
+        $stmt = $entityManager->getConnection()->prepare($sql);
+        $stmt->execute([
+                'unknownProducer' => $unknownProducer->getId(),
+                'unknownProducerIntersect' => $intersectUnknownProducer->getId(),
+            ]);
+
+        return $stmt->fetchAll();
+        
+    }
 }

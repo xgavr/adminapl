@@ -8,6 +8,8 @@
 namespace Application\Service;
 
 use Application\Entity\Token;
+use Application\Entity\Producer;
+use Application\Entity\UnknownProducer;
 use Application\Entity\Article;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
@@ -254,20 +256,66 @@ class AssemblyManager
         return;
     }
     
+    /**
+     * Сравнение пересекающихся производителей
+     * 
+     * @param Application\Entity\UnknownProducer $intersectUnknownProducer
+     * @param Application\Entity\Unknownproducer $unknownProducer
+     * @param integer $intersectCountCode
+     */
+    public function matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)
+    {
+        if ($intersectCountCode <= 10){
+            $codeRaws = $this->entityManager->getRepository(Producer::class)
+                    ->intersectesCode($unknownProducer, $intersectUnknownProducer);
+            if (!count($codeRaws)){
+                return false;
+            }
+            
+            foreach ($codeRaws as $code){
+                
+            }
+        }
+        return true;
+    }
     
+    /**
+     * Получить производителя из пересечения неизвестных производителей
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @return Application\Entity\Producer|null
+     */
     public function intersectUnknownProducer($unknownProducer)
     {
         $intersects = $this->entityManager->getRepository(Producer::class)
                         ->unknownProducerIntersect($unknownProducer);
 
         if (count($intersects)){
+            $intersectUnknownProducerId = $intersects[0]['unknown_producer_id'];
+            $intersectUnknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneById($intersectUnknownProducerId);
             
+            if ($intersectUnknownProducer){                
+                if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)){
+                    $producer = $intersectUnknownProducer->getProducer();
+                    if ($producer){
+                        return $producer;
+                    } else {
+                        return $this->addProducerFromUnknownProducer($intersectUnknownProducer);
+                    }
+                }    
+            }
         }   
         
         return;
     }
     
-    
+    /**
+     * Создать производителя из неизвестного производителя с проверками
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @return Application\Entity\Producer|null
+     */
     public function addProducerFromUnknownProducer($unknownProducer)
     {
         $producer = null;
