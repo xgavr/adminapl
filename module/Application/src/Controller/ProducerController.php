@@ -616,6 +616,23 @@ class ProducerController extends AbstractActionController
         ]);          
     }
     
+    public function assemblyProducersAction()
+    {
+
+        set_time_limit(300);
+        
+        $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findBy([], ['rawpriceCount' => 'DESC']);
+        
+        foreach ($unknownProducers as $unknownProducer){
+            $this->assemblyManager->addProducerFromUnknownProducer($unknownProducer);
+        }    
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+
     public function deleteEmptyArticleAction()
     {
         $deleted = $this->articleManager->removeEmptyArticles();
