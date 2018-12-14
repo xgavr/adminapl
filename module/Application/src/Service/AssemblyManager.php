@@ -96,32 +96,38 @@ class AssemblyManager
     
     public function checkRawprice($rawprice)
     {
-        $result = true;
-        
-        if (!$rawprice->getCode()) {
-            $result = false;
-        }    
-        if (strlen($rawprice->getCode()->getCode()) < 4 || strlen($rawprice->getCode()->getCode()) > 24) {
-            $result = false;
-        }    
         
         if (!$rawprice->getUnknownProducer()) {
-            $result = false;
+            return false;
+        }    
+        
+        if (!$rawprice->getCode()) {
+            return false;
+        }    
+
+        try{
+            $code = $rawprice->getCode()->getCode();
+        } catch (\Doctrine\ORM\EntityNotFoundException $ex) {
+            return false;
+        }
+        
+        if (strlen($code) < 4 || strlen($code) > 24) {
+            return false;
         }    
         
         if (!$rawprice->getTitle()) {
-            $result = false;
+            return false;
         }    
         
         if (!$rawprice->getRealPrice()) {
-            $result = false;
+            return false;
         }    
         
         if (!$rawprice->getRealRest()) {
-            $result = false;
+            return false;
         }       
         
-        return $result;
+        return true;
     }
     
     /**
