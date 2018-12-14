@@ -624,7 +624,7 @@ class ProducerController extends AbstractActionController
     public function assemblyProducersAction()
     {
 
-        set_time_limit(1200);
+        set_time_limit(2400);
         
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findBy([], ['rawpriceCount' => 'DESC']);
