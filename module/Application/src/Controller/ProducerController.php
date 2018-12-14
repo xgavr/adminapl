@@ -79,6 +79,7 @@ class ProducerController extends AbstractActionController
         return new ViewModel([
             'producer' => $paginator,
             'producerManager' => $this->producerManager,
+            'total' => $paginator->getTotalItemCount(),
         ]);  
     }
     

@@ -65,19 +65,17 @@
             <div class="panel-group">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                    </div>
-                    <div class="panel-body">
-                    </div>    
-                    <div class="panel-body">
-                    </div>
-                </div>    
-                <div class="panel panel-info">
-                    <div class="panel-heading">
                         Всего наименований
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
                             <?= $total?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/assemble-producers/" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Генерация производителей">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </button> 
                         </div>
                         <div class="pull-right">
                             <button value="/producer/delete-empty-producer/" class="btn btn-warning btn-xs refresh-table-button"
