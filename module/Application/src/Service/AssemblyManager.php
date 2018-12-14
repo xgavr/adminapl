@@ -241,11 +241,13 @@ class AssemblyManager
     {
         $result = 0;
         foreach ($articleForMatching->getRawprice() as $rawprice){
-            if ($this->matchingArticle($article, $rawprice)){
-                $result += 1;
-            } else {
-                $result -= 1;
-            }
+            if ($rawprice->getCode()){
+                if ($this->matchingArticle($article, $rawprice)){
+                    $result += 1;
+                } else {
+                    $result -= 1;
+                }
+            }    
         }
         
         return $result > 0;
@@ -292,7 +294,7 @@ class AssemblyManager
      */
     public function matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)
     {
-        if ($intersectCountCode <= 10){
+        if ($intersectCountCode <= max(10, $unknownProducer->getSupplierCount() * 2)){
             $codeRaws = $this->entityManager->getRepository(Producer::class)
                     ->intersectesCode($unknownProducer, $intersectUnknownProducer);
             if (!count($codeRaws)){
@@ -352,7 +354,7 @@ class AssemblyManager
      */
     public function checkUnknownProducer($unknownProducer)
     {
-        if ($unknownProducer->getRawpriceCount() > 10){
+        if ($unknownProducer->getRawpriceCount() > max(10, $unknownProducer->getSupplierCount() * 2)){
             return true;
         }
         
