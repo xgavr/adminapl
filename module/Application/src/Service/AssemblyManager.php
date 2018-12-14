@@ -325,6 +325,7 @@ class AssemblyManager
                         ->unknownProducerIntersect($unknownProducer);
 
         if (count($intersects)){
+            var_dump($intersects); exit;
             $intersectUnknownProducerId = $intersects[0]['unknown_producer_id'];
             $intersectUnknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                     ->findOneById($intersectUnknownProducerId);
