@@ -264,13 +264,18 @@ class ProducerController extends AbstractActionController
 
         $totalGoodsCount = $paginator->getTotalItemCount();
 
+        $prevQuery = $this->entityManager->getRepository(Producer::class)
+                        ->findAllProducer(['prev1' => $producer->getName()]);
+        $nextQuery = $this->entityManager->getRepository(Producer::class)
+                        ->findAllProducer(['next1' => $producer->getName()]); 
+
         // Render the view template.
         return new ViewModel([
             'producer' => $producer,
             'unknownProducerQuery' => $unknownProducer,
             'goods' => $paginator,
-//            'prev' => $prevQuery->getResult(), 
-//            'next' => $nextQuery->getResult(),
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
             'producerManager' => $this->producerManager,
             'totalGoodsCount' => $totalGoodsCount,
         ]);
@@ -619,7 +624,7 @@ class ProducerController extends AbstractActionController
     public function assemblyProducersAction()
     {
 
-        set_time_limit(600);
+        set_time_limit(1200);
         
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findBy([], ['rawpriceCount' => 'DESC']);
