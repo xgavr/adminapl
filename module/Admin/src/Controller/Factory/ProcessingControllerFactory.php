@@ -25,6 +25,7 @@ use Application\Service\ProducerManager;
 use Application\Service\ArticleManager;
 use Application\Service\OemManager;
 use Application\Service\NameManager;
+use Application\Service\AssemblyManager;
 
 
 /**
@@ -53,11 +54,12 @@ class ProcessingControllerFactory implements FactoryInterface {
         $articleManager = $container->get(ArticleManager::class);
         $oemManager = $container->get(OemManager::class);
         $nameManager = $container->get(NameManager::class);
+        $assemblyManager = $container->get(AssemblyManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new ProcessingController($entityManager, $postManager, $autoruManager, 
                 $telegramManager, $aplService, $priceManager, $rawManager, $supplierManager, 
                 $adminManager, $parseManager, $bankManager, $aplBankService, $producerManager,
-                $articleManager, $oemManager, $nameManager);
+                $articleManager, $oemManager, $nameManager, $assemblyManager);
     }
 }

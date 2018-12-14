@@ -281,6 +281,18 @@ class ProducerController extends AbstractActionController
         ]);
     }
     
+    
+    public function deleteEmptyProducerAction()
+    {
+        $deleted = $this->producerManager->removeEmptyProducer();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }
+    
+    
     public function unknownAction()
     {
         $bind = $this->entityManager->getRepository(UnknownProducer::class)
@@ -624,7 +636,8 @@ class ProducerController extends AbstractActionController
     public function assemblyProducersAction()
     {
 
-        set_time_limit(2400);
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1200);
         
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findBy([], ['rawpriceCount' => 'DESC']);

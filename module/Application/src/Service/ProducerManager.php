@@ -125,6 +125,22 @@ class ProducerManager
         return true;
     }    
     
+    /**
+     * Поиск и удаление производителей не привязаных к товарам и неизвестным производителям
+     */
+    public function removeEmptyProducer()
+    {
+        $producersForDelete = $this->entityManager->getRepository(Producer::class)
+                ->findProducerForDelete();
+
+        foreach ($producersForDelete as $row){
+            $this->removeProducer($row[0]);
+        }
+        
+        return count($producersForDelete);
+    }
+    
+    
     /*
      * Создать производителя из неизвестного производителя
      *@var Application\Entity\UnknownProducer $unknownProducer

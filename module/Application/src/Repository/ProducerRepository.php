@@ -478,4 +478,28 @@ class ProducerRepository  extends EntityRepository{
         return $stmt->fetchAll();
         
     }
+
+    /**
+     * Найти производителей для удаления
+     * 
+     * @return object
+     */
+    public function findProducerForDelete()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('p')
+            ->addSelect('count(u.id) as unknownProducerCount')    
+            ->addSelect('count(g.id) as goodsCount')    
+            ->from(Producer::class, 'p')
+            ->leftJoin(UnknownProducer::class, 'u', 'WITH', 'u.producer = p.id')
+            ->leftJoin(\Application\Entity\Goods::class, 'g', 'WITH', 'g.producer = p.id')
+            ->groupBy('p.id')
+            ->having('unknownProducerCount = 0 and goodsCount = 0')
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
 }

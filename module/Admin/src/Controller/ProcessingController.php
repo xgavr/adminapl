@@ -111,11 +111,17 @@ class ProcessingController extends AbstractActionController
      */
     private $nameManager;    
 
+    /**
+     * AssemblyManager manager.
+     * @var Application\Service\AssemblyManager
+     */
+    private $assemblyManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
-            $oemManager, $nameManager) 
+            $oemManager, $nameManager, $assemblyManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -133,6 +139,7 @@ class ProcessingController extends AbstractActionController
         $this->articleManager = $articleManager;
         $this->oemManager = $oemManager;
         $this->nameManager = $nameManager;
+        $this->assemblyManager = $assemblyManager;
     }   
 
     
@@ -521,6 +528,48 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['parse_name'] == 1){
             $this->nameManager->removeEmptyToken();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    /**
+     * Обновление производителей из неизвестных производителей
+     */
+    public function producerFromUnknownProducerAction()
+    {
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_producer'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_OEM_PARSED]);
+            
+            if ($raw){
+                $this->assemblyManager->grabTokenFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
+     * Удаление пустых производителей
+     */
+    public function deleteProducerAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_producer'] == 1){
+            $this->producerManager->removeEmptyProducer();
         }    
                 
         return new JsonModel(
