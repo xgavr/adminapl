@@ -16,6 +16,10 @@ $this->pageBreadcrumbs()->setItems([
         <?php if ($unknownProducer->getProducer()):?>
             <a style="font-size: calc" href="<?= $this->url('producer', ['action'=>'view', 'id'=>$unknownProducer->getProducer()->getId()]); ?>" target="_balnk"><?= $unknownProducer->getProducer()->getName()?></a>
         <?php endif;?>        
+        <button value="/producer/assembly-producer/<?= $unknownProducer->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                title="Создать производителя">
+            <span class="glyphicon glyphicon-refresh" ></span>
+        </button> 
     </sup>
 </h1>
 <div>

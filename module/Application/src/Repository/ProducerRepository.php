@@ -463,7 +463,7 @@ class ProducerRepository  extends EntityRepository{
     {
         $entityManager = $this->getEntityManager();
 
-        $sql = 'select t.code, '
+        $sql = 'select t.code '
                 . ' from unknown_producer_intersect as t '
                 . ' where t.unknown_producer_intersect = :unknownProducerIntersect'
                 . ' and t.unknown_producer = :unknownProducer'

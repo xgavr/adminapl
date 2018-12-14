@@ -13,6 +13,7 @@ use Application\Controller\ProducerController;
 use Application\Service\ProducerManager;
 use Application\Service\ArticleManager;
 use Application\Service\NameManager;
+use Application\Service\AssemblyManager;
 /**
  * Description of RbControllerFactory
  *
@@ -27,8 +28,9 @@ class ProducerControllerFactory implements FactoryInterface {
         $producerManager = $container->get(ProducerManager::class);
         $articleManager = $container->get(ArticleManager::class);
         $nameManager = $container->get(NameManager::class);
+        $assemblyManager = $container->get(AssemblyManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ProducerController($entityManager, $producerManager, $articleManager, $nameManager);
+        return new ProducerController($entityManager, $producerManager, $articleManager, $nameManager, $assemblyManager);
     }
 }

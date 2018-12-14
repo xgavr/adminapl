@@ -133,19 +133,8 @@ class ProducerManager
     
     public function addProducerFromUnknownProducer($unknownProducer)
     {
-       if ($unknownProducer->getName() && !$unknownProducer->getProducer()){
-           
-           $producer = new Producer();
-           $producer->setName($unknownProducer->getName());
-           
-           $this->entityManager->persist($producer);
-           
-           $unknownProducer->setProducer($producer);
-           $this->entityManager->persist($unknownProducer);
-           
-           $this->entityManager->flush();
-           
-           return $producer;
+       if ($unknownProducer->getName()){           
+            return $this->addNewProducer(['name' => $unknownProducer->getName()]);        
        } 
        
        return;
@@ -161,13 +150,10 @@ class ProducerManager
      */
     public function bindUnknownProducer($unknownProducer, $producer)
     {
-       if ($unknownProducer->getName() && !$unknownProducer->getProducer()){
-            
-           $unknownProducer->setProducer($producer);
-           $this->entityManager->persist($unknownProducer);
-           
-           $this->entityManager->flush();            
-        }
+        $unknownProducer->setProducer($producer);
+        $this->entityManager->persist($unknownProducer);
+
+        $this->entityManager->flush();            
     }        
     
     /*

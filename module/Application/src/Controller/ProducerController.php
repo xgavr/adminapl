@@ -47,13 +47,20 @@ class ProducerController extends AbstractActionController
      */
     private $nameManager;
     
+    /**
+     * Менеджер создания товаров
+     * @var Application\Service\AssemblyManager
+     */
+    private $assemblyManager;
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $producerManager, $articleManager, $nameManager) 
+    public function __construct($entityManager, $producerManager, $articleManager, $nameManager, $assemblyManager) 
     {
         $this->entityManager = $entityManager;
         $this->producerManager = $producerManager;
         $this->articleManager = $articleManager;
         $this->nameManager = $nameManager;
+        $this->assemblyManager = $assemblyManager;
     }    
     
     public function indexAction()
@@ -581,6 +588,30 @@ class ProducerController extends AbstractActionController
                 
         return new JsonModel([
             'ok',
+        ]);          
+    }
+    
+    public function assemblyProducerAction()
+    {
+        
+        $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($unknownProducerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findOneById($unknownProducerId);
+        
+        if ($unknownProducer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        $this->assemblyManager->addProducerFromUnknownProducer($unknownProducer);
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
         ]);          
     }
     

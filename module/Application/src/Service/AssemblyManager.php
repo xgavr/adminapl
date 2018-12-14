@@ -231,6 +231,27 @@ class AssemblyManager
     }
     
     /**
+     * Сравнение артикулов
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Article $articleForMatching
+     * @return bool
+     */
+    public function matchingArticles($article, $articleForMatching)
+    {
+        $result = 0;
+        foreach ($articleForMatching->getRawprice() as $rawprice){
+            if ($this->matchingArticle($article, $rawprice)){
+                $result += 1;
+            } else {
+                $result -= 1;
+            }
+        }
+        
+        return $result > 0;
+    }
+    
+    /**
      * Выбор лучшего артикула
      * 
      * @param Application\Entity\Rawprice $rawprice
@@ -256,11 +277,17 @@ class AssemblyManager
         return;
     }
     
+    public function findArticleByCodeUnknownProducer($code, $unknownProducer)
+    {
+        return $this->entityManager->getRepository(Article::class)
+                ->findOneBy(['code' => $code, 'unknownProducer' => $unknownProducer]);
+    }
+    
     /**
      * Сравнение пересекающихся производителей
      * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
      * @param Application\Entity\UnknownProducer $intersectUnknownProducer
-     * @param Application\Entity\Unknownproducer $unknownProducer
      * @param integer $intersectCountCode
      */
     public function matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)
@@ -271,10 +298,17 @@ class AssemblyManager
             if (!count($codeRaws)){
                 return false;
             }
-            
+
+            $result = 0;
             foreach ($codeRaws as $code){
-                
+                if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
+                    $result += 1;
+                } else {
+                    $result -= 1;
+                }
             }
+            
+            return $result > 0;
         }
         return true;
     }
@@ -317,20 +351,17 @@ class AssemblyManager
      * @return Application\Entity\Producer|null
      */
     public function addProducerFromUnknownProducer($unknownProducer)
-    {
+    {        
         $producer = null;
-        
-        $unknownProducer->setProducer($producer);
-        $this->entityManager->persist($unknownProducer);
-        $this->entityManager->flush($unknownProducer);
         
         if ($unknownProducer->getSupplierCount() && $unknownProducer->getRawpriceCount() && $unknownProducer->getName()){
             
-            $producer = intersectUnknownProducer($unknownProducer);
+            $producer = $this->intersectUnknownProducer($unknownProducer);
             
             if (!$producer){
                 $producer = $this->producerManager->addProducerFromUnknownProducer($unknownProducer);
             }
+            $this->producerManager->bindUnknownProducer($unknownProducer, $producer);
         }
         
         return $producer;

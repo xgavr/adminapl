@@ -405,9 +405,9 @@ class ArticleManager
 //            }
 //        }
         
-//        if (!array_key_exists($rawprice->getId(), $rawprices)){
-//            $rawprices[$rawprice->getId()] = $rawprice;
-//        }
+        if (!array_key_exists($rawprice->getId(), $rawprices)){
+            $rawprices[$rawprice->getId()] = $rawprice;
+        }
         
         $meanPrice = $this->rawpricesMeanPrice($rawprices);
         $dispersion = $this->rawpricesDispersion($rawprices);
