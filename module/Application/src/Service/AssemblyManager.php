@@ -121,12 +121,6 @@ class AssemblyManager
             $result = false;
         }       
         
-        if (!$result){
-            $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
-            $this->entityManager->persist($rawprice);
-            $this->entityManager->flush($rawprice);
-        }    
-        
         return $result;
     }
     
@@ -330,7 +324,7 @@ class AssemblyManager
                     ->findOneById($intersectUnknownProducerId);
             
             if ($intersectUnknownProducer){                
-                if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)){
+                if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersects[0]['countCode'])){
                     $producer = $intersectUnknownProducer->getProducer();
                     if ($producer){
                         return $producer;
@@ -345,6 +339,29 @@ class AssemblyManager
     }
     
     /**
+     * Проверка записей в прайсах неизвестного производителя
+     * 
+     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @return boolean
+     */
+    public function checkUnknownProducer($unknownProducer)
+    {
+        if ($unknownProducer->getRawpriceCount() > 10){
+            return true;
+        }
+        
+        $result = 0;        
+        foreach ($unknownProducer->getRawprice() as $rawprice){
+            if ($this->checkRawprice($rawprice)){
+                $result += 1;
+            } else {
+                $result -= 1;
+            }            
+        }
+        
+        return $result > 0;
+    }
+    /**
      * Создать производителя из неизвестного производителя с проверками
      * 
      * @param Application\Entity\UnknownProducer $unknownProducer
@@ -356,13 +373,17 @@ class AssemblyManager
         
         if ($unknownProducer->getSupplierCount() && $unknownProducer->getRawpriceCount() && $unknownProducer->getName()){
             
-            $producer = $this->intersectUnknownProducer($unknownProducer);
+            if ($this->checkUnknownProducer($unknownProducer)){
             
-            if (!$producer){
-                $producer = $this->producerManager->addProducerFromUnknownProducer($unknownProducer);
-            }
-            $this->producerManager->bindUnknownProducer($unknownProducer, $producer);
+                $producer = $this->intersectUnknownProducer($unknownProducer);
+
+                if (!$producer){
+                    $producer = $this->producerManager->addProducerFromUnknownProducer($unknownProducer);
+                }
+            }    
         }
+
+        $this->producerManager->bindUnknownProducer($unknownProducer, $producer);
         
         return $producer;
     }
@@ -376,6 +397,9 @@ class AssemblyManager
     public function addNewGoodFromRawprice($rawprice) 
     {
         if (!$this->checkRawprice($rawprice)){
+            $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
+            $this->entityManager->persist($rawprice);
+            $this->entityManager->flush($rawprice);
             return;
         }
         
