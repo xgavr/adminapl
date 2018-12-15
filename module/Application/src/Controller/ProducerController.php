@@ -249,6 +249,7 @@ class ProducerController extends AbstractActionController
             return;                        
         }        
         
+        $unknownProducer = null;
         if ($unknownProducerId){
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                     ->findOneById($unknownProducerId);            
