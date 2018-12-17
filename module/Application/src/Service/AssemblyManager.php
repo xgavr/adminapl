@@ -333,7 +333,7 @@ class AssemblyManager
                         ->findOneById($intersectUnknownProducerId);
 
                 if ($intersectUnknownProducer){                
-                    if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersects[0]['countCode'])){
+                    if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersect['countCode'])){
                         $producer = $intersectUnknownProducer->getProducer();
                         if ($producer){
                             return $producer;
