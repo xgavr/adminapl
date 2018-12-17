@@ -412,11 +412,9 @@ class AssemblyManager
             return;
         }
         
-        $article = $this->findBestArticle($rawprice);
-
-        if ($article){
-            
-            $producer = $this->producerManager->addProducerFromArticle($article);
+        $producer = $rawprice->getUnknownProducer()->getProducer();
+        
+        if ($producer){
 
             $code = $rawprice->getCode()->getCode();
             $good = $this->entityManager->getRepository(Goods::class)
