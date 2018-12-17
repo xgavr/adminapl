@@ -297,13 +297,14 @@ class AssemblyManager
         if ($intersectCountCode <= max(10, $unknownProducer->getSupplierCount() * 2)){
             $codeRaws = $this->entityManager->getRepository(Producer::class)
                     ->intersectesCode($unknownProducer, $intersectUnknownProducer);
-            var_dump($codeRaws);
             if (!count($codeRaws)){
                 return false;
             }
 
             $result = 0;
             foreach ($codeRaws as $code){
+                var_dump($code);
+                var_dump($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer)));
                 if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
                     $result += 1;
                 } else {
