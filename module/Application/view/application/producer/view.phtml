@@ -16,18 +16,27 @@ if ($unknownProducerQuery){
 
 ?>
 <h1>
-    <?= $this->escapeHtml($producer->getName()); ?>    
+    <?= $this->escapeHtml($producer->getName()); ?>
+    <sub style="font-size: small">
+        <?php foreach($producer->getUnknownProducer() as $unknownProducer):?>    
+            <span>
+                <a href="<?= $this->url('producer', ['action'=>'unknown-view', 'id'=>$unknownProducer->getId()]) ?>">
+                    <?= $unknownProducer->getName();?>
+                </a>
+            </span>
+        <?php endforeach; ?>            
+    </sub>
 </h1>
 
 
-<p>    
+<!--<p>    
     Страна 
     <?php if ($producer->getCountry()):?>
         <?= $this->escapeHtml($producer->getCountry()->getName()); ?>
     <?php else: ?>
         неуказана
     <?php endif;?>
-</p>
+</p>-->
 
 <?php foreach($producer->getUnknownProducer() as $unknownProducer):?>    
     <span>
