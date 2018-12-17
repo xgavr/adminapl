@@ -502,7 +502,7 @@ class ProducerRepository  extends EntityRepository{
                 ->setFirstResult($start)
                 ;
         
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();        
     }
 
