@@ -259,6 +259,9 @@ $this->pageBreadcrumbs()->setItems([
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                 <?php endif;?>
+                                <?php if ($raw->getParseStage() == $raw::STAGE_GOOD_ASSEMBLY):?>
+                                    Товары собраны
+                                <?php endif;?>
                             </div>    
                         </div>    
                     </div>

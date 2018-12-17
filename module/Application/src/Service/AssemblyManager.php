@@ -444,12 +444,9 @@ class AssemblyManager
         set_time_limit(1200);
         $startTime = time();
         
-//        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-//                ->findBy(['raw' => $raw->getId(), 'good' => null, 'statusGood' => Rawprice::GOOD_NEW]);
-        $rawprices = $this->entityManager->getRepository(Article::class)
-                ->findArticleForAssemblyByRaw($raw);
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->findBy(['raw' => $raw->getId(), 'good' => null, 'statusGood' => Rawprice::GOOD_NEW]);
         
-        exit;
         foreach ($rawprices as $rawprice){
             $this->addNewGoodFromRawprice($rawprice, false);
             if (time() > $startTime + 400){

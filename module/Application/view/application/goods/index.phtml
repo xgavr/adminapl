@@ -57,15 +57,6 @@ $this->headScript()
             <div class="panel-group">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        Строки прайсов
-                    </div>
-                    <div class="panel-body">
-                    </div>    
-                    <div class="panel-body">
-                    </div>
-                </div>    
-                <div class="panel panel-info">
-                    <div class="panel-heading">
                         Всего наименований
                     </div>
                     <div class="panel-body">
@@ -73,7 +64,11 @@ $this->headScript()
                             <?= $total?>
                         </div>
                         <div class="pull-right">
-                            <button value="/goods/delete-empty/" class="btn btn-warning btn-xs refresh-table-button"
+                            <button value="/goods/assembly/" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Генерация товаров">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                            <button value="/goods/delete-empty/" class="btn btn-danger btn-xs refresh-table-button"
                                     title="Удаление пустых">
                                 <span class="glyphicon glyphicon-remove" ></span>
                             </button> 
