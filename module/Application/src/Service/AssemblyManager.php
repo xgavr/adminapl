@@ -297,6 +297,7 @@ class AssemblyManager
         if ($intersectCountCode <= max(10, $unknownProducer->getSupplierCount() * 2)){
             $codeRaws = $this->entityManager->getRepository(Producer::class)
                     ->intersectesCode($unknownProducer, $intersectUnknownProducer);
+            var_dump($codeRaws);
             if (!count($codeRaws)){
                 return false;
             }
@@ -331,7 +332,7 @@ class AssemblyManager
                 $intersectUnknownProducerId = $intersect['unknown_producer_id'];
                 $intersectUnknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                         ->findOneById($intersectUnknownProducerId);
-
+                var_dump($intersectUnknownProducerId);
                 if ($intersectUnknownProducer){                
                     if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersect['countCode'])){
                         $producer = $intersectUnknownProducer->getProducer();
@@ -382,7 +383,7 @@ class AssemblyManager
         $producer = null;
         
         if ($unknownProducer->getSupplierCount() && $unknownProducer->getRawpriceCount() && $unknownProducer->getName()){
-            var_dump($this->checkUnknownProducer($unknownProducer));
+
             if ($this->checkUnknownProducer($unknownProducer)){
             
                 $producer = $this->intersectUnknownProducer($unknownProducer);
