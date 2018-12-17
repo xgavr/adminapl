@@ -490,7 +490,7 @@ class ProducerRepository  extends EntityRepository{
                 ->count([]);
         
         $limit = intdiv($unknowProducerCount, 12);
-        $start = date('g') * $limit;
+        $start = (date('g') - 1) * $limit;
         
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
