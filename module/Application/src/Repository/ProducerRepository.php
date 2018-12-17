@@ -478,6 +478,33 @@ class ProducerRepository  extends EntityRepository{
         return $stmt->fetchAll();
         
     }
+    
+    /**
+     * Выбрать неизвестных производителей для создания производителей
+     * 
+     * @return array
+     */
+    public function findUnknownProducerForAssembly()
+    {
+        $unknowProducerCount = $this->getEntityManager()->getRepository(UnknownProducer::class)
+                ->count([]);
+        
+        $limit = intdiv($unknowProducerCount, 12);
+        $start = date('g') * $limit;
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder
+                ->select('u')
+                ->from(UnknownProducer::class, 'u')
+                ->orderBy('u.rawpriceCount')
+                ->setMaxResults($limit + 10)
+                ->setFirstResult($start)
+                ;
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();        
+    }
 
     /**
      * Найти производителей для удаления

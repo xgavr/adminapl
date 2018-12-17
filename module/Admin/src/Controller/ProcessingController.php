@@ -563,17 +563,18 @@ class ProcessingController extends AbstractActionController
      */
     public function producerFromUnknownProducerAction()
     {
-        set_time_limit(1200);
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
         
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['assembly_producer'] == 1){
             
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_OEM_PARSED]);
-            
-            if ($raw){
-                $this->assemblyManager->grabTokenFromRaw($raw);
+            $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findUnknownProducerForAssembly();
+
+            foreach ($unknownProducers as $unknownProducer){
+                $this->assemblyManager->addProducerFromUnknownProducer($unknownProducer);
             }    
         }    
                 

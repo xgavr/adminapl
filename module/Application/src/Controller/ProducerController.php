@@ -637,11 +637,11 @@ class ProducerController extends AbstractActionController
     public function assemblyProducersAction()
     {
 
-        ini_set('memory_limit', '2048M');
-        set_time_limit(1200);
+        ini_set('memory_limit', '1024M');
+        set_time_limit(300);
         
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
-                ->findBy([], ['rawpriceCount' => 'DESC']);
+                ->findUnknownProducerForAssembly();
         
         foreach ($unknownProducers as $unknownProducer){
             $this->assemblyManager->addProducerFromUnknownProducer($unknownProducer);
