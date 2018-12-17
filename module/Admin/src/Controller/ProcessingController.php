@@ -570,7 +570,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['assembly_producer'] == 1){
             
-            $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+            $unknownProducers = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
                     ->findUnknownProducerForAssembly();
 
             foreach ($unknownProducers as $unknownProducer){
