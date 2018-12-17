@@ -327,20 +327,22 @@ class AssemblyManager
                         ->unknownProducerIntersect($unknownProducer);
 
         if (count($intersects)){
-            $intersectUnknownProducerId = $intersects[0]['unknown_producer_id'];
-            $intersectUnknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneById($intersectUnknownProducerId);
-            
-            if ($intersectUnknownProducer){                
-                if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersects[0]['countCode'])){
-                    $producer = $intersectUnknownProducer->getProducer();
-                    if ($producer){
-                        return $producer;
-                    } else {
-                        return $this->producerManager->addProducerFromUnknownProducer($intersectUnknownProducer);
-                    }
-                }    
-            }
+            foreach ($intersects as $intersect){
+                $intersectUnknownProducerId = $intersect['unknown_producer_id'];
+                $intersectUnknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                        ->findOneById($intersectUnknownProducerId);
+
+                if ($intersectUnknownProducer){                
+                    if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersects[0]['countCode'])){
+                        $producer = $intersectUnknownProducer->getProducer();
+                        if ($producer){
+                            return $producer;
+                        } else {
+                            return $this->producerManager->addProducerFromUnknownProducer($intersectUnknownProducer);
+                        }
+                    }    
+                }
+            }    
         }   
         
         return;
