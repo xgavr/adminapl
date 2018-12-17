@@ -382,7 +382,7 @@ class AssemblyManager
         $producer = null;
         
         if ($unknownProducer->getSupplierCount() && $unknownProducer->getRawpriceCount() && $unknownProducer->getName()){
-            
+            var_dump($this->checkUnknownProducer($unknownProducer));
             if ($this->checkUnknownProducer($unknownProducer)){
             
                 $producer = $this->intersectUnknownProducer($unknownProducer);
