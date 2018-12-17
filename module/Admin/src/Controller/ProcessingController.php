@@ -537,6 +537,28 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * Обовление пересечения производителей
+     * 
+     * @return JsonModel
+     */
+    public function unknownProducerIntersectAction()
+    {
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_producer'] == 1){
+            
+            $this->producerManager->updateUnknownProducerIntersect();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+                
+    }
+    
+    /**
      * Обновление производителей из неизвестных производителей
      */
     public function producerFromUnknownProducerAction()
