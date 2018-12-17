@@ -250,7 +250,7 @@ class AssemblyManager
             }    
         }
         
-        return $result > 0;
+        return $result >= 0;
     }
     
     /**
@@ -303,8 +303,6 @@ class AssemblyManager
 
             $result = 0;
             foreach ($codeRaws as $code){
-                var_dump($code);
-                var_dump($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer)));
                 if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
                     $result += 1;
                 } else {
@@ -312,7 +310,7 @@ class AssemblyManager
                 }
             }
             
-            return $result > 0;
+            return $result >= 0;
         }
         return true;
     }
@@ -333,7 +331,6 @@ class AssemblyManager
                 $intersectUnknownProducerId = $intersect['unknown_producer_id'];
                 $intersectUnknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                         ->findOneById($intersectUnknownProducerId);
-                var_dump($intersectUnknownProducerId);
                 if ($intersectUnknownProducer){                
                     if ($this->matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersect['countCode'])){
                         $producer = $intersectUnknownProducer->getProducer();
