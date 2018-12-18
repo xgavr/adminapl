@@ -117,11 +117,17 @@ class ProcessingController extends AbstractActionController
      */
     private $assemblyManager;    
 
+    /**
+     * GoodsManager manager.
+     * @var Application\Service\GoodsManager
+     */
+    private $goodsManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
-            $oemManager, $nameManager, $assemblyManager) 
+            $oemManager, $nameManager, $assemblyManager, $goodsManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -140,6 +146,7 @@ class ProcessingController extends AbstractActionController
         $this->oemManager = $oemManager;
         $this->nameManager = $nameManager;
         $this->assemblyManager = $assemblyManager;
+        $this->goodsManager = $goodsManager;
     }   
 
     
