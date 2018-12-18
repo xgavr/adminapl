@@ -383,6 +383,7 @@ class AplService {
         }    
     }
    
+    //** 
     //put your code here
     public function getStaffs()
     {
@@ -523,4 +524,33 @@ class AplService {
         }
         return;
     }
+    
+    /**
+     * Получить код товара
+     * @param Application\Entity\Goods $good
+     */ 
+    public function getGoodAplId($good)
+    {
+        foreach ($good->getRawprice() as $rawprice){
+            
+            $key = md5($rawprice->getSupplier()->getAplId().":".$rawprice->getCode()->getCode().":".$rawprice->getUnknownProducer()->getName());
+            
+            $url = $this->aplApi().'get-good-id?key='.$key.'api='.$this->aplApiKey();
+
+            $data = file_get_contents($url);
+            if (is_numeric($data)){
+                $good->setAplId($data);
+                $this->entityManager->persist($good);
+                $this->entityManager->flush($good);
+                return;
+            }
+
+            $items = $data['items'];
+            if (count($items)){
+            }        
+        }
+        
+        return;
+    }
+    
 }

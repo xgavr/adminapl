@@ -14,17 +14,27 @@ $this->pageBreadcrumbs()->setItems([
     <?= $this->escapeHtml($goods->getName()); ?>    
 </h1>
 
-
-<span>
-    <a href="/producer/article-view/?code=<?=$goods->getCode()?>">
-        <?= $goods->getCode();?>
-    </a>
-</span>
-<span>
-    <a href="/producer/view/<?=$goods->getProducer()->getId()?>">
-        <?= $goods->getProducer()->getName();?>
-    </a>
-</span>
+<div>
+    <span>
+        <a href="/producer/article-view/?code=<?=$goods->getCode()?>">
+            <?= $goods->getCode();?>
+        </a>
+    </span>
+    <span>
+        <a href="/producer/view/<?=$goods->getProducer()->getId()?>">
+            <?= $goods->getProducer()->getName();?>
+        </a>
+    </span>    
+</div>
+<div>
+    <span>
+        AplId: <?= $goods->getAplId()?>
+    </span> 
+    <button value="/apl/good-id/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+            title="Обновить АПЛ Ид">
+        <span class="glyphicon glyphicon-refresh" ></span>
+    </button> 
+</div>
 
 <table class="table table-striped">
     <tr>
