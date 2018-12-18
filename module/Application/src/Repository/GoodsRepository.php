@@ -49,7 +49,7 @@ class GoodsRepository extends EntityRepository{
                     ->setParameter('2', $params['unknownProducer']->getId())
                         ;
             }
-            if (isset($params['q'])){
+            if (isset($params['q']) && $params['q']){
                 $queryBuilder->andWhere('c.code like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
@@ -70,11 +70,6 @@ class GoodsRepository extends EntityRepository{
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
             }            
-        } else {
-            $queryBuilder    
-                ->orderBy('c.id', 'DESC')
-                ->setMaxResults(10) 
-                    ;
         }
 //var_dump($queryBuilder->getQuery()->getDQL()); exit;
         return $queryBuilder->getQuery();
