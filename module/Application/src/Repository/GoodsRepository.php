@@ -34,7 +34,7 @@ class GoodsRepository extends EntityRepository{
         $queryBuilder->select('c', 'p')
             ->from(Goods::class, 'c')
             ->join('c.producer', 'p', 'WITH')    
-            ->orderBy('c.code')
+            //->orderBy('c.code')
                 ;
 
         if (is_array($params)){
