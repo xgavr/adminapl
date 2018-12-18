@@ -34,7 +34,6 @@ class GoodsRepository extends EntityRepository{
         $queryBuilder->select('c', 'p')
             ->from(Goods::class, 'c')
             ->join('c.producer', 'p', 'WITH')    
-            //->orderBy('c.code')
                 ;
 
         if (is_array($params)){
@@ -71,6 +70,10 @@ class GoodsRepository extends EntityRepository{
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
             }            
+        } else {
+            $queryBuilder    
+                ->orderBy('c.id', 'DESC')
+                ->setMaxResults(10)            
         }
 //var_dump($queryBuilder->getQuery()->getDQL()); exit;
         return $queryBuilder->getQuery();
