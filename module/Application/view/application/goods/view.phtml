@@ -48,10 +48,12 @@ $this->pageBreadcrumbs()->setItems([
         </th>
         <td colspan="3" align="right">
             <?php $meanPrice = $articleManager->rawpricesMeanPrice($rawprices);?>
-            <?php $dispersion = $articleManager->rawpricesDispersion($rawprices);?>
-            <b><?= number_format($meanPrice, 2, '.', '') ?></b>
-            (<?= number_format($dispersion, 2, '.', '') ?>)
-            (<?= number_format($dispersion/$meanPrice, 2, '.', '') ?>)
+            <?php if ($meanPrice):?>
+                <?php $dispersion = $articleManager->rawpricesDispersion($rawprices);?>
+                <b><?= number_format($meanPrice, 2, '.', '') ?></b>
+                (<?= number_format($dispersion, 2, '.', '') ?>)
+                (<?= number_format($dispersion/$meanPrice, 2, '.', '') ?>)
+            <?php endif; ?>    
         </td>
         <td align="right">
         </td>
