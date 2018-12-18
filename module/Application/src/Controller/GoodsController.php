@@ -175,6 +175,8 @@ class GoodsController extends AbstractActionController
     public function contentAction()
     {
         	        
+        ini_set('memory_size', '512M');
+        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
