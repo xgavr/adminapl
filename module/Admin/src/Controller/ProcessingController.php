@@ -601,4 +601,44 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    /**
+     * Обновление товаров из прайса
+     */
+    public function goodFromRawAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_good'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
+            
+            if ($raw){
+                $this->assemblyManager->assemblyGoodFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }    
+    
+    /**
+     * Удаление пустых товаров
+     */
+    public function deleteGoodsAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_good'] == 1){
+            $this->goodsManager->removeEmpty();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }

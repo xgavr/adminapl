@@ -96,10 +96,24 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
         
-        $this->assemblyManager->assemplyGoodFromRaw($raw);
+        $this->assemblyManager->assemblyGoodFromRaw($raw);
                 
         return new JsonModel([
             'ok',
+        ]);                  
+    }
+    
+    public function assemblyQueueAction()
+    {
+        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
+
+        if ($raw){
+            $this->assemblyManager->assemblyGoodFromRaw($raw);
+        }    
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
         ]);                  
     }
     
@@ -344,4 +358,16 @@ class GoodsController extends AbstractActionController
             'goodsManager' => $this->goodsManager,
         ]);
     }      
+    
+    public function deleteEmptyAction()
+    {
+        $deleted = $this->goodsManager->removeEmpty();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }
+    
+    
 }

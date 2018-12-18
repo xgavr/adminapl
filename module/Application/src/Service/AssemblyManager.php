@@ -428,7 +428,7 @@ class AssemblyManager
                 $rawprice->setGood($good);
                 $rawprice->setStatusGood(Rawprice::GOOD_OK);
                 $this->entityManager->persist($rawprice);
-                $this->entityManager->flush();
+                $this->entityManager->flush($rawprice);
             }
         }
         return;
@@ -438,7 +438,7 @@ class AssemblyManager
      * Сборка товаров по прайсу
      * @param Appllication\Entity\Raw $raw
      */
-    public function assemplyGoodFromRaw($raw)
+    public function assemblyGoodFromRaw($raw)
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(1200);
@@ -448,9 +448,8 @@ class AssemblyManager
                 ->findBy(['raw' => $raw->getId(), 'good' => null, 'statusGood' => Rawprice::GOOD_NEW]);
         
         foreach ($rawprices as $rawprice){
-            $this->addNewGoodFromRawprice($rawprice, false);
+            $this->addNewGoodFromRawprice($rawprice);
             if (time() > $startTime + 400){
-                $this->entityManager->flush();
                 return;
             }
         }

@@ -184,4 +184,26 @@ class GoodsRepository extends EntityRepository{
         
     }
        
+    /**
+     * Найти товары для удаления
+     * 
+     * @return object
+     */
+    public function findGoodsForDelete()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->addSelect('count(r.id) as rawpriceCount')    
+            ->from(Goods::class, 'g')
+            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.good = g.id')
+            ->groupBy('g.id')
+            ->having('rawpriceCount = 0')
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
+    
 }

@@ -150,5 +150,21 @@ class GoodsManager
     }    
     
     
+    /**
+     * Поиск и удаление товаров не привязаных к прайсам
+     */
+    public function removeEmpty()
+    {
+        $goodsForDelete = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForDelete();
+
+        foreach ($goodsForDelete as $row){
+            $this->removeGood($row[0]);
+        }
+        
+        return count($goodsForDelete);
+    }
+    
+    
 
 }
