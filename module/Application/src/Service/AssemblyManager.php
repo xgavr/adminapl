@@ -303,6 +303,7 @@ class AssemblyManager
         $codeRaws = $this->entityManager->getRepository(Producer::class)
                 ->intersectesCode($unknownProducer, $intersectUnknownProducer);
 
+        var_dump(count($codeRaws));
         if (!count($codeRaws)){
             return false;
         }
@@ -315,11 +316,10 @@ class AssemblyManager
                 $result -= 1;
             }
             
-            $i++;
-            
             if ($i > $maxCheck){
                 break;
             }
+            $i++;            
         }
 
         return $result >= 0;
