@@ -558,4 +558,27 @@ class AplService {
         return;
     }
     
+    /**
+     * Обновление AplId в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodAplId()
+    {
+        set_time_limit(600);
+        $startTime = time();
+        
+        $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findGoodsForUpdateAplId();
+        
+        foreach ($goods as $good){
+            $this->getGoodAplId($good);
+            if (time() > $startTime + 500){
+                return;
+            }
+            usleep(100);
+        }
+        return;
+    }
+    
 }
