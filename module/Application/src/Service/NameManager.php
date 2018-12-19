@@ -113,17 +113,15 @@ class NameManager
      * Добавление нового слова со статусом
      * 
      */
-    public function addLemms($rawprice, $lemms, $status, $flush, $exclusions = [])
+    public function addLemms($rawprice, $lemms, $status, $flush)
     {
         
         if (is_array($lemms)){
             foreach ($lemms as $lemma){
-                if (!in_array($lemma, $exclusions)){                
-                    $token = $this->addToken(['word' => $lemma, 'status' => $status], $flush);
-                    if ($token){
-                        $rawprice->addToken($token);
-                    }   
-                }    
+                $token = $this->addToken(['word' => $lemma, 'status' => $status], $flush);
+                if ($token){
+                    $rawprice->addToken($token);
+                }   
             }
         }    
     }
@@ -140,12 +138,6 @@ class NameManager
 
         $title = $rawprice->getTitle();
         
-        $exclusions = [
-            mb_strtoupper($rawprice->getProducer(), 'utf-8'),
-            mb_strtoupper($rawprice->getArticle(), 'utf-8'),
-            mb_strtoupper($rawprice->getCode()->getCode(), 'utf-8'),
-        ];
-        
         if ($title){
             $lemmaFilter = new Lemma();
             $tokenFilter = new Tokenizer();
@@ -153,7 +145,7 @@ class NameManager
             $lemms = $lemmaFilter->filter($tokenFilter->filter($title));
             
             foreach ($lemms as $key => $words){
-                $this->addLemms($rawprice, $words, $key, $flush, $exclusions);
+                $this->addLemms($rawprice, $words, $key, $flush);
             }    
         }  
         

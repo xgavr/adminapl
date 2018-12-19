@@ -506,9 +506,9 @@ class ArticleManager
             }
             
             $inersect = array_intersect_key($rawpricesTokens, $rawpriceTokens);
-            if (count($inersect)){
-                var_dump($inersect);
-            }    
+//            if (count($inersect)){
+//                var_dump($inersect);
+//            }    
             return count($inersect) > 0;
        }    
         
