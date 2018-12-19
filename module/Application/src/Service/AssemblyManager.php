@@ -226,6 +226,9 @@ class AssemblyManager
         $tokenIntersect = $this->articleManager->tokenIntersect($article, $rawprice);
         $oemIntersect = $this->articleManager->oemIntersect($article, $rawprice);
         $priceMatching = $this->articleManager->priceMatching($article, $rawprice);
+        var_dump((int) $tokenIntersect);
+        var_dump((int) $priceMatching);
+        var_dump(count($oemIntersect));
 
         return $this->mlManager->matchingRawprice([(int) $tokenIntersect, (int) $priceMatching, (int) count($oemIntersect)>0]);
     }
