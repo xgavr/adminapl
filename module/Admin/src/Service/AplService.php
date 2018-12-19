@@ -544,6 +544,7 @@ class AplService {
                 var_dump($ex->getMessage());
                 return;
             }
+            var_dump($url); exit;
 //            var_dump($data); exit;
             if (is_numeric($data->parent)){
                 $good->setAplId($data->parent);
