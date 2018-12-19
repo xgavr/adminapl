@@ -346,8 +346,8 @@ class AssemblyManager
 
         $result = $i = 0;
         foreach ($codeRaws as $code){
-//            if ($this->matchingArticlesTokens($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
-            if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
+            if ($this->matchingArticlesTokens($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
+//            if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
 //                var_dump($code);
                 $result += 1;
             } else {
