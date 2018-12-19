@@ -243,7 +243,7 @@ class AssemblyManager
         foreach ($articleForMatching->getRawprice() as $rawprice){
             if ($rawprice->getCode()){
                 var_dump($article->getCode());
-                var_dump($rawprice->getArticle);
+                var_dump($rawprice->getArticle());
                 if ($this->matchingArticle($article, $rawprice)){
                     $result += 1;
                    var_dump('+1');
@@ -303,7 +303,6 @@ class AssemblyManager
         $codeRaws = $this->entityManager->getRepository(Producer::class)
                 ->intersectesCode($unknownProducer, $intersectUnknownProducer);
 
-        var_dump(count($codeRaws));
         if (!count($codeRaws)){
             return false;
         }
