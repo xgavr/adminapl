@@ -496,7 +496,7 @@ class ArticleManager
 
             $rawpriceTokens = [];
             foreach ($rawprice->getTokens() as $token){
-                if ($token->isIntersectLemma() && !in_array($token, $exclusions)){
+                if ($token->isIntersectLemma() && !in_array($token->getLemma(), $exclusions)){
                     if (array_key_exists($token->getId(), $rawpriceTokens)){
                         $rawpriceTokens[$token->getId()] += 1;                        
                     } else {
@@ -506,7 +506,7 @@ class ArticleManager
             }
             
             $inersect = array_intersect_key($rawpricesTokens, $rawpriceTokens);
-            //var_dump(count($inersect) > 0);
+            var_dump($inersect);
             return count($inersect) > 0;
        }    
         
