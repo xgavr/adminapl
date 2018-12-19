@@ -113,14 +113,17 @@ class NameManager
      * Добавление нового слова со статусом
      * 
      */
-    public function addLemms($rawprice, $lemms, $status, $flush)
+    public function addLemms($rawprice, $lemms, $status, $flush, $exclusions = [])
     {
+        
         if (is_array($lemms)){
             foreach ($lemms as $lemma){
-                $token = $this->addToken(['word' => $lemma, 'status' => $status], $flush);
-                if ($token){
-                    $rawprice->addToken($token);
-                }   
+                if (!in_array($lemma, $exclusions)){                
+                    $token = $this->addToken(['word' => $lemma, 'status' => $status], $flush);
+                    if ($token){
+                        $rawprice->addToken($token);
+                    }   
+                }    
             }
         }    
     }
@@ -137,9 +140,12 @@ class NameManager
 
         $title = $rawprice->getTitle();
         
-        $producer = $rawprice->getProducer();
-        $article = $rawprice->getArticle();
-            
+        $exclusions = [
+            mb_strtoupper($rawprice->getProducer(), 'utf-8'),
+            mb_strtoupper($rawprice->getArticle(), 'utf-8'),
+            mb_strtoupper($rawprice->getCode()->getCode(), 'utf-8'),
+        ];
+        
         if ($title){
             $lemmaFilter = new Lemma();
             $tokenFilter = new Tokenizer();
@@ -147,7 +153,7 @@ class NameManager
             $lemms = $lemmaFilter->filter($tokenFilter->filter($title));
             
             foreach ($lemms as $key => $words){
-                $this->addLemms($rawprice, $words, $key, $flush);
+                $this->addLemms($rawprice, $words, $key, $flush, $exclusions);
             }    
         }  
         
