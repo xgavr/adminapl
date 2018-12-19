@@ -255,6 +255,7 @@ class AssemblyManager
                    var_dump('-1');
                 }
             }    
+            exit;
         }
         
         return $result >= 0;
