@@ -294,25 +294,32 @@ class AssemblyManager
      */
     public function matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)
     {
-        if ($intersectCountCode <= max(10, $unknownProducer->getSupplierCount() * 2)){
-            $codeRaws = $this->entityManager->getRepository(Producer::class)
-                    ->intersectesCode($unknownProducer, $intersectUnknownProducer);
-            if (!count($codeRaws)){
-                return false;
-            }
+        $maxCheck = max(10, $unknownProducer->getSupplierCount() * 2);
+        
+        $codeRaws = $this->entityManager->getRepository(Producer::class)
+                ->intersectesCode($unknownProducer, $intersectUnknownProducer);
 
-            $result = 0;
-            foreach ($codeRaws as $code){
-                if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
-                    $result += 1;
-                } else {
-                    $result -= 1;
-                }
+        if (!count($codeRaws)){
+            return false;
+        }
+
+        $result = $i = 0;
+        foreach ($codeRaws as $code){
+            if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
+                $result += 1;
+            } else {
+                $result -= 1;
             }
             
-            return $result >= 0;
+            $i++;
+            
+            if ($i > $maxCheck){
+                break;
+            }
         }
-        return true;
+
+        return $result >= 0;
+
     }
     
     /**
@@ -355,24 +362,18 @@ class AssemblyManager
      */
     public function checkUnknownProducer($unknownProducer)
     {
-//        if ($unknownProducer->getRawpriceCount() > max(10, $unknownProducer->getSupplierCount() * 2)){
-//            return true;
-//        }
+        if ($unknownProducer->getRawpriceCount() > max(10, $unknownProducer->getSupplierCount() * 2)){
+            return true;
+        }
         
-        $result = $i = 0;
-        $maxRow = max(10, $unknownProducer->getSupplierCount() * 2);
+        $result = 0;
         
         foreach ($unknownProducer->getRawprice() as $rawprice){
-            var_dump($rawprice->getCode()->getCode());
             if ($this->checkRawprice($rawprice)){
                 $result += 1;
             } else {
                 $result -= 1;
             }  
-            $i++;
-            if ($i > $maxRow){
-                break;
-            }
         }
         
         return $result > 0;
