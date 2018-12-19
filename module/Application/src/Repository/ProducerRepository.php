@@ -443,8 +443,8 @@ class ProducerRepository  extends EntityRepository{
             $stmt->execute([
                     'unknownProducer' => $unknownProducer->getId(),
                     'rawpriceCount' => $unknownProducer->getRawpriceCount(),
-//                    'intersect_coef' => $unknownProducer::INTERSECT_COEF,
-                    'intersect_coef' => 0,
+                    'intersect_coef' => $unknownProducer::INTERSECT_COEF,
+//                    'intersect_coef' => 0,
                 ]);
 
             return $stmt->fetchAll();

@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class UnknownProducer {
     
-    const INTERSECT_COEF = 0.25; // коэффициент отсечение при пересечении.
+    const INTERSECT_COEF = 0.2; // коэффициент отсечение при пересечении.
     
     /**
      * @ORM\Id
