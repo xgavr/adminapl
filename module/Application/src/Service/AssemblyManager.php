@@ -291,7 +291,6 @@ class AssemblyManager
                 }
             }    
         }
-        var_dump($result);
         return $result >= 0;        
     }
     
@@ -348,6 +347,7 @@ class AssemblyManager
         $result = $i = 0;
         foreach ($codeRaws as $code){
             if ($this->matchingArticlesTokens($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
+                var_dump($code);
                 $result += 1;
             } else {
                 $result -= 1;
