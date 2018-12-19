@@ -267,7 +267,6 @@ class AssemblyManager
                     $result -= 1;
                 }
             }    
-            exit;
         }
         
         return $result >= 0;
@@ -291,7 +290,6 @@ class AssemblyManager
                     $result -= 1;
                 }
             }    
-            exit;
         }
         
         return $result >= 0;        
