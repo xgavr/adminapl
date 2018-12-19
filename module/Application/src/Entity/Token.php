@@ -94,7 +94,7 @@ class Token {
             return false;
         }
 
-        if (strlen($this->lemma) < 4){
+        if (mb_strlen($this->lemma, 'utf-8') < 4){
             return false;
         }        
         
