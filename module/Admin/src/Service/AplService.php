@@ -533,7 +533,7 @@ class AplService {
     {
         foreach ($good->getRawprice() as $rawprice){
             
-            $key = md5($rawprice->getRaw()->getSupplier()->getAplId().":".$rawprice->getArticle().":".$rawprice->getUnknownProducer()->getName());
+            $key = md5($rawprice->getRaw()->getSupplier()->getAplId().":".$rawprice->getArticle().":".mb_strtoupper($rawprice->getUnknownProducer()->getName(), 'utf-8'));
             
             $url = $this->aplApi().'get-good-id?key='.$key.'&api='.$this->aplApiKey();
 
