@@ -242,10 +242,14 @@ class AssemblyManager
         $result = 0;
         foreach ($articleForMatching->getRawprice() as $rawprice){
             if ($rawprice->getCode()){
+                var_dump($article->getCode());
+                var_dump($rawprice->getArticle);
                 if ($this->matchingArticle($article, $rawprice)){
                     $result += 1;
+                   var_dump('+1');
                 } else {
                     $result -= 1;
+                   var_dump('-1');
                 }
             }    
         }
