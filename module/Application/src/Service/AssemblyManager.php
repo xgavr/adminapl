@@ -291,7 +291,7 @@ class AssemblyManager
                 }
             }    
         }
-        
+        var_dump($result);
         return $result >= 0;        
     }
     
@@ -344,7 +344,7 @@ class AssemblyManager
         if (!count($codeRaws)){
             return false;
         }
-var_dump($maxCheck);
+
         $result = $i = 0;
         foreach ($codeRaws as $code){
             if ($this->matchingArticlesTokens($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
