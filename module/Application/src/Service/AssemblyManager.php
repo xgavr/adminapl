@@ -355,17 +355,22 @@ class AssemblyManager
      */
     public function checkUnknownProducer($unknownProducer)
     {
-        if ($unknownProducer->getRawpriceCount() > max(10, $unknownProducer->getSupplierCount() * 2)){
-            return true;
-        }
+//        if ($unknownProducer->getRawpriceCount() > max(10, $unknownProducer->getSupplierCount() * 2)){
+//            return true;
+//        }
         
-        $result = 0;        
+        $result = $i = 0;
+        $maxRow = max(10, $unknownProducer->getSupplierCount() * 2);
+        
         foreach ($unknownProducer->getRawprice() as $rawprice){
             if ($this->checkRawprice($rawprice)){
                 $result += 1;
             } else {
                 $result -= 1;
-            }            
+            }  
+            if ($i > $maxRow){
+                break;
+            }
         }
         
         return $result > 0;
