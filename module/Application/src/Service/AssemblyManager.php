@@ -369,6 +369,7 @@ class AssemblyManager
             } else {
                 $result -= 1;
             }  
+            $i++;
             if ($i > $maxRow){
                 break;
             }
