@@ -533,21 +533,24 @@ class AplService {
     {
         foreach ($good->getRawprice() as $rawprice){
             
-            $key = md5($rawprice->getSupplier()->getAplId().":".$rawprice->getCode()->getCode().":".$rawprice->getUnknownProducer()->getName());
+            $key = md5($rawprice->getRaw()->getSupplier()->getAplId().":".$rawprice->getArticle().":".$rawprice->getUnknownProducer()->getName());
             
-            $url = $this->aplApi().'get-good-id?key='.$key.'api='.$this->aplApiKey();
+            $url = $this->aplApi().'get-good-id?key='.$key.'&api='.$this->aplApiKey();
 
-            $data = file_get_contents($url);
-            if (is_numeric($data)){
-                $good->setAplId($data);
+            $response = file_get_contents($url);
+            try {
+                $data = Json::decode($response);
+            } catch (Exception $ex) {
+                return;
+            }
+//            var_dump($data); exit;
+            if (is_numeric($data->parent)){
+                $good->setAplId($data->parent);
                 $this->entityManager->persist($good);
                 $this->entityManager->flush($good);
                 return;
             }
 
-            $items = $data['items'];
-            if (count($items)){
-            }        
         }
         
         return;

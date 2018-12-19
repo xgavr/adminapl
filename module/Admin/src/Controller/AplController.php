@@ -16,6 +16,12 @@ class AplController extends AbstractActionController
 {
     
     /**
+     * Менеджер сущностей.
+     * @var Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
+    
+    /**
      * AplService manager.
      * @var Admin\Service\AplService
      */
@@ -28,8 +34,9 @@ class AplController extends AbstractActionController
     private $aplBankService;    
 
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($aplService, $aplBankService) 
+    public function __construct($entityManager, $aplService, $aplBankService) 
     {
+        $this->entityManager = $entityManager;
         $this->aplService = $aplService;        
         $this->aplBankService = $aplBankService;        
     }   

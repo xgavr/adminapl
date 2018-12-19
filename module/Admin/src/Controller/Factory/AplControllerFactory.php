@@ -24,10 +24,11 @@ class AplControllerFactory implements FactoryInterface {
     public function __invoke(ContainerInterface $container, 
                      $requestedName, array $options = null)
     {
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $aplService = $container->get(AplService::class);
         $aplBankService = $container->get(AplBankService::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new AplController($aplService, $aplBankService);
+        return new AplController($entityManager, $aplService, $aplBankService);
     }
 }
