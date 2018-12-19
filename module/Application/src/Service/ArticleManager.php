@@ -486,10 +486,17 @@ class ArticleManager
                 $this->nameManager->addNewTokenFromRawprice($rawprice);
                 return $this->tokenRawpricesIntersect($rawprices, $rawprice);
             }
+            
+            $exclusions = [
+                mb_strtoupper($rawprice->getProducer(), 'utf-8'),
+                mb_strtoupper($rawprice->getArticle(), 'utf-8'),
+                mb_strtoupper($rawprice->getCode()->getCode(), 'utf-8'),
+            ];
+            
 
             $rawpriceTokens = [];
             foreach ($rawprice->getTokens() as $token){
-                if ($token->isIntersectLemma()){
+                if ($token->isIntersectLemma() && !in_array($token, $exclusions)){
                     if (array_key_exists($token->getId(), $rawpriceTokens)){
                         $rawpriceTokens[$token->getId()] += 1;                        
                     } else {
