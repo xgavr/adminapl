@@ -94,7 +94,7 @@ class Token {
             return false;
         }
 
-        if (strlen($this->lemma)<4){
+        if (strlen($this->lemma) < 4){
             return false;
         }        
         
