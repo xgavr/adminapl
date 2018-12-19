@@ -541,6 +541,7 @@ class AplService {
             try {
                 $data = Json::decode($response);
             } catch (Exception $ex) {
+                var_dump($ex->getMessage());
                 return;
             }
 //            var_dump($data); exit;
