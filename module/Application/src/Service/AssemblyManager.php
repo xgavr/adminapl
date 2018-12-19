@@ -387,7 +387,12 @@ class AssemblyManager
                         } else {
                             return $this->producerManager->addProducerFromUnknownProducer($intersectUnknownProducer);
                         }
-                    }    
+                    } else {                        
+                        if ($unknownProducer->getProducer()->getId() == $intersectUnknownProducer->getProducer()->getId()){
+                            // отвязать неизвестного производителя от производителя
+                            $this->producerManager->bindUnknownProducer($unknownProducer, null);
+                        }
+                    }   
                 }
             }    
         }   
