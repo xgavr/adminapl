@@ -244,7 +244,7 @@ class AssemblyManager
     {
         //сопоставление токенов
         $tokenIntersect = $this->articleManager->tokenIntersect($article, $rawprice);
-        var_dump($tokenIntersect);
+
         return $tokenIntersect;
     }
     
