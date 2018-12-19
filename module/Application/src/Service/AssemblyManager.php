@@ -338,7 +338,7 @@ class AssemblyManager
      */
     public function matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)
     {
-        $maxCheck = max(10, $unknownProducer->getSupplierCount() * 2);
+        $maxCheck = max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * 2);
         
         $codeRaws = $this->entityManager->getRepository(Producer::class)
                 ->intersectesCode($unknownProducer, $intersectUnknownProducer);
@@ -349,7 +349,7 @@ class AssemblyManager
 
         $result = $i = 0;
         foreach ($codeRaws as $code){
-            if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
+            if ($this->matchingArticlesTokens($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
                 $result += 1;
             } else {
                 $result -= 1;
@@ -405,7 +405,7 @@ class AssemblyManager
      */
     public function checkUnknownProducer($unknownProducer)
     {
-        if ($unknownProducer->getRawpriceCount() > max(10, $unknownProducer->getSupplierCount() * 2)){
+        if ($unknownProducer->getRawpriceCount() > max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * 2)){
             return true;
         }
         
