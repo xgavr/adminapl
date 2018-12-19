@@ -219,6 +219,8 @@ class AssemblyManager
      * 
      * @param Application\Entity\Article $article
      * @param Application\Entity\Rawprice $rawprice
+     * 
+     * @return integer 
      */
     public function matchingArticle($article, $rawprice)
     {
@@ -226,15 +228,29 @@ class AssemblyManager
         $tokenIntersect = $this->articleManager->tokenIntersect($article, $rawprice);
         $oemIntersect = $this->articleManager->oemIntersect($article, $rawprice);
         $priceMatching = $this->articleManager->priceMatching($article, $rawprice);
-        var_dump((int) $tokenIntersect);
-        var_dump((int) $priceMatching);
-        var_dump(count($oemIntersect));
 
         return $this->mlManager->matchingRawprice([(int) $tokenIntersect, (int) $priceMatching, (int) count($oemIntersect)>0]);
     }
     
     /**
-     * Сравнение артикулов
+     * Сравнение токенов артикула и строки прайса
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Rawprice $rawprice
+     * 
+     * @return bool
+     */
+    public function matchingArticleTokens($article, $rawprice)
+    {
+        //сопоставление токенов
+        $tokenIntersect = $this->articleManager->tokenIntersect($article, $rawprice);
+
+        return (int) $tokenIntersect > 0;
+    }
+    
+    
+    /**
+     * Полное сравнение артикулов
      * 
      * @param Application\Entity\Article $article
      * @param Application\Entity\Article $articleForMatching
@@ -245,20 +261,40 @@ class AssemblyManager
         $result = 0;
         foreach ($articleForMatching->getRawprice() as $rawprice){
             if ($rawprice->getCode()){
-                var_dump($article->getCode());
-                var_dump($rawprice->getArticle());
                 if ($this->matchingArticle($article, $rawprice)){
                     $result += 1;
-                   var_dump('+1');
                 } else {
                     $result -= 1;
-                   var_dump('-1');
                 }
             }    
             exit;
         }
         
         return $result >= 0;
+    }
+    
+    /**
+     * Сравнение токенов артикулов
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Article $articleForMatching
+     * @return bool
+     */
+    public function matchingArticlesTokens($article, $articleForMatching)
+    {
+        $result = 0;
+        foreach ($articleForMatching->getRawprice() as $rawprice){
+            if ($rawprice->getCode()){
+                if ($this->matchingArticleTokens($article, $rawprice)){
+                    $result += 1;
+                } else {
+                    $result -= 1;
+                }
+            }    
+            exit;
+        }
+        
+        return $result >= 0;        
     }
     
     /**
