@@ -363,6 +363,7 @@ class AssemblyManager
         $maxRow = max(10, $unknownProducer->getSupplierCount() * 2);
         
         foreach ($unknownProducer->getRawprice() as $rawprice){
+            var_dump($this->checkRawprice($rawprice));
             if ($this->checkRawprice($rawprice)){
                 $result += 1;
             } else {
