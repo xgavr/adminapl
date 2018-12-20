@@ -532,8 +532,15 @@ class AplService {
     public function getGoodAplId($good)
     {
         foreach ($good->getRawprice() as $rawprice){
+
+            $makerName = mb_strtoupper($rawprice->getUnknownProducer()->getName(), 'utf-8');
             
-            $key = md5($rawprice->getRaw()->getSupplier()->getAplId().":".trim($rawprice->getArticle()).":".mb_strtoupper($rawprice->getUnknownProducer()->getName(), 'utf-8'));
+            if (!preg_match("/^[a-zA-Z0-9\-\(\)\/ \&\+]+$/", $makerName)) {
+                    $filter = new \Application\Filter\ArticleCode();
+                    $makerName = $filter->filter($makerName);
+            }            
+            
+            $key = md5($rawprice->getRaw()->getSupplier()->getAplId().":".trim($rawprice->getArticle()).":".$makerName);
             
             $url = $this->aplApi().'get-good-id?key='.$key.'&api='.$this->aplApiKey();
 
