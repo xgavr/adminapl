@@ -540,6 +540,7 @@ class AplService {
             $response = file_get_contents($url);
             try {
                 $data = Json::decode($response);
+                var_dump($data); exit;
                 if (is_numeric($data->parent)){
                     $good->setAplId($data->parent);
                     $this->entityManager->persist($good);
