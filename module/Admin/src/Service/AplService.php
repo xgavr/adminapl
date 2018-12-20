@@ -538,25 +538,22 @@ class AplService {
             $url = $this->aplApi().'get-good-id?key='.$key.'&api='.$this->aplApiKey();
 
             $response = file_get_contents($url);
-            if ($response){
-                try {
-                    $data = Json::decode($response);
-                    var_dump($response); exit;
+            try {
+                $data = Json::decode($response);
+                if (is_object($data)){
                     if (is_numeric($data->parent)){
                         $good->setAplId($data->parent);
                         $this->entityManager->persist($good);
                         $this->entityManager->flush($good);
                         return;
                     }
-                } catch (Exception $ex) {
-                    var_dump($url); exit;
-                    var_dump($data); exit;
-                    var_dump($ex->getMessage());
-                    return;
-                }
-            }    
-            
-
+                }    
+            } catch (Exception $ex) {
+                var_dump($url); exit;
+                var_dump($data); exit;
+                var_dump($ex->getMessage());
+                return;
+            }
         }
         
         return;
