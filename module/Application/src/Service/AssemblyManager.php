@@ -291,7 +291,7 @@ class AssemblyManager
                 }
             }    
         }
-        return $result >= 0;        
+        return $result > 0;        
     }
     
     /**
@@ -335,7 +335,7 @@ class AssemblyManager
      */
     public function matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)
     {
-        $maxCheck = max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount());
+        $maxCheck = max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * 2);
         
         $codeRaws = $this->entityManager->getRepository(Producer::class)
                 ->intersectesCode($unknownProducer, $intersectUnknownProducer);
@@ -405,7 +405,7 @@ class AssemblyManager
      */
     public function checkUnknownProducer($unknownProducer)
     {
-        if ($unknownProducer->getRawpriceCount() > max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount())){
+        if ($unknownProducer->getRawpriceCount() > max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * 2)){
             return true;
         }
         

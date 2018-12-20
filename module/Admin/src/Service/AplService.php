@@ -540,18 +540,19 @@ class AplService {
             $response = file_get_contents($url);
             try {
                 $data = Json::decode($response);
+                if (is_numeric($data->parent)){
+                    $good->setAplId($data->parent);
+                    $this->entityManager->persist($good);
+                    $this->entityManager->flush($good);
+                    return;
+                }
             } catch (Exception $ex) {
+                var_dump($url); exit;
+                var_dump($data); exit;
                 var_dump($ex->getMessage());
                 return;
             }
-//            var_dump($url); exit;
-//            var_dump($data); exit;
-            if (is_numeric($data->parent)){
-                $good->setAplId($data->parent);
-                $this->entityManager->persist($good);
-                $this->entityManager->flush($good);
-                return;
-            }
+            
 
         }
         
@@ -565,7 +566,7 @@ class AplService {
      */
     public function updateGoodAplId()
     {
-        set_time_limit(600);
+        set_time_limit(60);
         $startTime = time();
         
         $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
@@ -573,7 +574,7 @@ class AplService {
         
         foreach ($goods as $good){
             $this->getGoodAplId($good);
-            if (time() > $startTime + 500){
+            if (time() > $startTime + 50){
                 return;
             }
             usleep(100);
