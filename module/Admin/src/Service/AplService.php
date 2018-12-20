@@ -537,6 +537,7 @@ class AplService {
             
             $url = $this->aplApi().'get-good-id?key='.$key.'&api='.$this->aplApiKey();
 
+                var_dump($url); exit;
             $response = file_get_contents($url);
             try {
                 $data = Json::decode($response);
