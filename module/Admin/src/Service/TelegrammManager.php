@@ -173,6 +173,8 @@ class TelegrammManager {
                 $result = Request::sendMessage(['chat_id' => $chatId, 'text' => $params['text']]);         
             } catch (Longman\TelegramBot\Exception\TelegramException $e){
                 $logger->error($e->getMessage());
+            } catch (Zend\Http\Client\Adapter\Exception $e){
+                $logger->error($e->getMessage());
             }    
 
             $logger = null;
