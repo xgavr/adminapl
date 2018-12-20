@@ -648,4 +648,23 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    /**
+     * Обновление AplId товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateGoodAplIdAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['get_good_id'] == 1){
+            $this->aplService->updateGoodAplId();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
 }

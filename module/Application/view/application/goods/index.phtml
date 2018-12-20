@@ -44,7 +44,7 @@ $this->headScript()
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                     <th data-field="aplId" data-type="numeric" data-sortable="true">AplId</th>
+                     <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true">AplId</th>
                      <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
                      <th data-field="producer" data-formatter="producerFormatter">Производитель</th>             
                      <th data-field="" data-formatter="activeFormatter"></th>
@@ -71,6 +71,22 @@ $this->headScript()
                             <button value="/goods/delete-empty/" class="btn btn-danger btn-xs refresh-table-button"
                                     title="Удаление пустых">
                                 <span class="glyphicon glyphicon-remove" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                </div>    
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Обработка и обновления
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Обновление AplId
+                        </div>
+                        <div class="pull-right">
+                            <button value="/apl/update-good-apl-id/" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновление AplId">
+                                <span class="glyphicon glyphicon-refresh" ></span>
                             </button> 
                         </div>
                     </div>
@@ -116,6 +132,18 @@ $this->headScript()
             '<a href="/goods/view/' + row.id + '" target="_blank">' + value + '</a>',
             '</div>'
         ].join(''); 
+    }    
+    
+    function aplFormatter(value, row){
+        if (value != '0'){
+            return [
+                '<div class="pull-left">',
+                '<a href="https://autopartslist.ru/goods/view/id/' + value + '" target="_blank">' + value + '</a>',
+                '</div>'
+            ].join(''); 
+        } else {
+            return '-';
+        }    
     }    
     
     function producerFormatter(value, row){

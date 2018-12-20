@@ -98,7 +98,7 @@ class AplController extends AbstractActionController
         ]);
     }
 
-    public function goodIdAction()
+    public function goodAplIdAction()
     {
         $goodId = $this->params()->fromRoute('id', -1);
     
@@ -112,6 +112,17 @@ class AplController extends AbstractActionController
         } 
         
         $this->aplService->getGoodAplId($good);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
+    
+    public function updateGoodAplIdAction()
+    {
+        
+        $this->aplService->updateGoodAplId();
         
         return new JsonModel([
             'result' => 'ok-reload',
