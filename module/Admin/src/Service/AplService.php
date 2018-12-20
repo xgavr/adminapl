@@ -549,9 +549,9 @@ class AplService {
                     }
                 }    
             } catch (Exception $ex) {
-                var_dump($url); exit;
-                var_dump($data); exit;
-                var_dump($ex->getMessage());
+//                var_dump($url); 
+//                var_dump($data); 
+//                var_dump($ex->getMessage());
                 return;
             }
         }
