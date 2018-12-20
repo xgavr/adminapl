@@ -537,7 +537,6 @@ class AplService {
             
             $url = $this->aplApi().'get-good-id?key='.$key.'&api='.$this->aplApiKey();
 
-                var_dump($rawprice->getRaw()->getSupplier()->getAplId().":".trim($rawprice->getArticle()).":".mb_strtoupper($rawprice->getUnknownProducer()->getName())); exit;
             $response = file_get_contents($url);
             try {
                 $data = Json::decode($response);
