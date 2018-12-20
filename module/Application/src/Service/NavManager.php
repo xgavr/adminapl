@@ -280,6 +280,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'bank-settings'])                    
                 ];
 
+                $settingsDropDownItems[] = [
+                    'id' => 'aplExchange',
+                    'label' => 'Настройи обмена с АПЛ',
+                    'link'  => $url('admin', ['action' => 'apl-exchange-settings'])                    
+                ];
+
                 if (count($settingsDropDownItems)!=0) {
                     $items[] = [
                         'id' => 'settings',

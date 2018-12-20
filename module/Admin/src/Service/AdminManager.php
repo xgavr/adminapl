@@ -21,6 +21,7 @@ class AdminManager {
     const SETTINGS_FILE       = './data/settings/config.php'; // файл с настройками общими
     const PRICE_SETTINGS_FILE       = './data/settings/price_config.php'; // файл с настройками загрузки прайсов
     const BANK_SETTINGS_FILE       = './data/settings/bank_config.php'; // файл с настройками обмена с банком
+    const APL_EXCHANGE_SETTINGS_FILE       = './data/settings/apl_exchange_config.php'; // файл с настройками обмена с банком
     
     /**
      * Doctrine entity manager.
@@ -187,6 +188,49 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::BANK_SETTINGS_FILE, $config);
+    }
+    
+    /**
+     * Получить настройки обмена с APL
+     * @return array 
+     */
+    public function getAplExchangeSettings()
+    {
+        if (file_exists(self::APL_EXCHANGE_SETTINGS_FILE)){
+            $config = new Config(include self::APL_EXCHANGE_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->apl_exchange = [];
+        }   
+        
+        return $config->apl_exchange;
+    }
+
+    /**
+     * Настройки обмена с APL
+     * @param array $data
+     */
+    public function setAplExchangeSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::APL_EXCHANGE_SETTINGS_FILE)){
+            $config = new Config(include self::APL_EXCHANGE_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->apl_exchange = [];
+        }
+        
+        if (!isset($config->apl_exchange)){
+            $config->apl_exchange = [];
+        }
+        
+        $config->apl_exchange->get_good_id = $data['get_good_id']; //получать id товара
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::APL_EXCHANGE_SETTINGS_FILE, $config);
     }
     
 }
