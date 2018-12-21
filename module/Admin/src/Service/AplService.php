@@ -584,33 +584,21 @@ class AplService {
      */ 
     public function getGoodAplId($good)
     {
-        foreach ($good->getRawprice() as $rawprice){
-
-            $makerName = mb_strtoupper($rawprice->getUnknownProducer()->getName(), 'utf-8');
+        
+        if ($good->getProducer()->getAplId()){
+        
+            $url = $this->aplApi().'get-good-id?art='.$good->getCode().'&makerid='.$good->getProducer()->getAplId().'&api='.$this->aplApiKey();
             
-            if (!preg_match("/^[a-zA-Z0-9\-\(\)\/ \&\+]+$/", $makerName)) {
-                    $filter = new \Application\Filter\ArticleCode();
-                    $makerName = $filter->filter($makerName);
-            }            
-//            var_dump($makerName);
-            $key = md5($rawprice->getRaw()->getSupplier()->getAplId().":".trim($rawprice->getArticle()).":".$makerName);
-            
-            $url = $this->aplApi().'get-good-id?key='.$key.'&api='.$this->aplApiKey();
-
+//                var_dump($url); 
             $response = file_get_contents($url);
             try {
-                $data = Json::decode($response);
-                if (is_object($data)){
-                    if (is_numeric($data->parent)){
-                        $good->setAplId($data->parent);
-                        $this->entityManager->persist($good);
-                        $this->entityManager->flush($good);
-                        return;
-                    }
-                }    
+                if (is_numeric($response)){
+                    $good->setAplId($response);
+                    $this->entityManager->persist($good);
+                    $this->entityManager->flush($good);
+                    return;
+                }
             } catch (Exception $ex) {
-//                var_dump($url); 
-//                var_dump($data); 
 //                var_dump($ex->getMessage());
                 return;
             }
