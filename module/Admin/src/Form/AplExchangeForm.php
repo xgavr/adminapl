@@ -53,6 +53,18 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'get_producer_id',
+            'options' => [
+                'label' => 'Обновлять Apl Id производителей',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -72,6 +84,17 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                 
         $inputFilter->add([
                 'name'     => 'get_good_id',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'get_producer_id',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

@@ -649,6 +649,25 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * Обновление AplId производителей
+     * 
+     * @return JsonModel
+     */
+    public function updateProducerAplIdAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['get_producer_id'] == 1){
+            $this->aplService->updateProducersAplId();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Обновление AplId товаров
      * 
      * @return JsonModel

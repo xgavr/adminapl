@@ -16,6 +16,10 @@ $this->pageBreadcrumbs()->setItems([
 <?php
 $form = $this->form;
 
+$form->get('get_producer_id')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('get_good_id')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -35,6 +39,12 @@ $form->prepare();
 <div class="row">
     <div class="col-md-5">
         
+        <div class="form-group">
+            <?= $this->formLabel($form->get('get_producer_id')); ?>
+            <?= $this->formElement($form->get('get_producer_id')); ?>
+            <?= $this->formElementErrors($form->get('get_producer_id')); ?>                  
+        </div>
+                        
         <div class="form-group">
             <?= $this->formLabel($form->get('get_good_id')); ?>
             <?= $this->formElement($form->get('get_good_id')); ?>
