@@ -539,7 +539,7 @@ class AplService {
                     $filter = new \Application\Filter\ArticleCode();
                     $makerName = $filter->filter($makerName);
             }            
-            var_dump($makerName);
+//            var_dump($makerName);
             $key = md5($rawprice->getRaw()->getSupplier()->getAplId().":".trim($rawprice->getArticle()).":".$makerName);
             
             $url = $this->aplApi().'get-good-id?key='.$key.'&api='.$this->aplApiKey();
