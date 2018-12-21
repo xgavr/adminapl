@@ -98,6 +98,26 @@ class AplController extends AbstractActionController
         ]);
     }
 
+    public function producerAplIdAction()
+    {
+        $producerId = $this->params()->fromRoute('id', -1);
+    
+        $producer = $this->entityManager->getRepository(\Application\Entity\Producer::class)
+                ->findOneById($producerId);  
+        	
+        if ($producer == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->updateProducerAplId($producer);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
+    
     public function goodAplIdAction()
     {
         $goodId = $this->params()->fromRoute('id', -1);

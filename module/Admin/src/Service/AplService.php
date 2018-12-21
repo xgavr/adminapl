@@ -525,6 +525,30 @@ class AplService {
         return;
     }
     
+    public function updateProducerAplId($producer)
+    {
+        $producerName = mb_strtoupper($producer->getName(), 'utf-8');
+
+        $url = $this->aplApi().'get-maker-id?name='.rawurlencode($producerName).'&api='.$this->aplApiKey();
+
+        $response = file_get_contents($url);
+//                var_dump($url); 
+//                var_dump($response); 
+        try {
+            if (is_numeric($response)){
+                $producer->setAplId($response);
+                $this->entityManager->persist($producer);
+                $this->entityManager->flush($producer);
+                return;
+            }
+        } catch (Exception $ex) {
+//                var_dump($ex->getMessage());
+            return;
+        }
+        
+        return;
+    }
+    
     /**
      * Получить код товара
      * @param Application\Entity\Goods $good
