@@ -530,4 +530,24 @@ class ProducerRepository  extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();            
     }
 
+    /**
+     * Найти производителей для обновления AplId
+     * 
+     * @return object
+     */
+    public function findProducerForUpdateAplId()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Producer::class, 'g')
+            ->where('g.aplId = 0')
+            ->setMaxResults(10000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
+    
 }

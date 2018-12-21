@@ -117,6 +117,16 @@ class AplController extends AbstractActionController
         ]);
     }
 
+    public function updateProducerAplIdAction()
+    {
+        
+        $this->aplService->updateProducersAplId();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
     
     public function goodAplIdAction()
     {

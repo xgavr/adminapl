@@ -525,6 +525,12 @@ class AplService {
         return;
     }
     
+    /**
+     * Обновление Апл Ид производителя
+     * 
+     * @param Application\Entity\Producer $producer
+     * @return type
+     */
     public function updateProducerAplId($producer)
     {
         $producerName = mb_strtoupper($producer->getName(), 'utf-8');
@@ -546,6 +552,29 @@ class AplService {
             return;
         }
         
+        return;
+    }
+    
+    /**
+     * Обновление AplId у производителей
+     * 
+     * @return type
+     */
+    public function updateProducersAplId()
+    {
+        set_time_limit(600);
+        $startTime = time();
+        
+        $producers = $this->entityManager->getRepository(\Application\Entity\Producer::class)
+                ->findProducerForUpdateAplId();
+        
+        foreach ($producers as $producer){
+            $this->updateProducerAplId($producer);
+            if (time() > $startTime + 500){
+                return;
+            }
+            usleep(100);
+        }
         return;
     }
     
