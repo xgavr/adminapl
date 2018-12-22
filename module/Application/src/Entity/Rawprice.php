@@ -12,6 +12,8 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Filter\OemDetectDelimiterFilter;
+use Doctrine\Common\Collections\Criteria;
+use Application\Entity\Token;
 
 /**
  * Description of Customer
@@ -349,7 +351,7 @@ class Rawprice {
     {
         return $this->statusToken;
     }
-
+    
     /**
      * Returns possible statuses as array.
      * @return array
@@ -871,6 +873,26 @@ class Rawprice {
     {
         return $this->tokens;
     }    
+    
+    /**
+     * Получить слова из словаря RU
+     * @return array
+     */
+    public function getDictRuTokens()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->neq("status", Token::IS_DICT));
+        return $this->getTokens()->matching($criteria);        
+    }
+    
+    /**
+     * Получить слова из словаря En
+     * @return array
+     */
+    public function getDictEnTokens()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->neq("status", Token::IS_EN_DICT));
+        return $this->getTokens()->matching($criteria);        
+    }
     
     /**
      * 

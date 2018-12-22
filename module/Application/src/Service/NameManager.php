@@ -8,7 +8,7 @@
 namespace Application\Service;
 
 use Application\Entity\Token;
-use Application\Entity\Article;
+use Application\Entity\Goods;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 
@@ -215,5 +215,27 @@ class NameManager
         $this->entityManager->flush();
         
         return count($tokenForDelete);
-    }    
+    }
+
+    /**
+     * Поиск лучшего наименования для товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @return string
+     */
+    public function findBestName($good)
+    {
+        $result = '';
+        $dict = 0;
+        foreach ($good->getRawprice() as $rawprice){
+            $dictRu = $rawprice->getDictRuTokens()->count();
+            $dictEn = $rawprice->getDictEnTokens()->count();
+            if ($dict < (2*$dictRu + $dictEn)){
+                $dict = 2*$dictRu + $dictEn;
+                $result = $rawprice->getTitle();
+            }
+        }
+        
+        return $result;
+    }
 }

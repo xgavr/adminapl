@@ -47,13 +47,20 @@ class GoodsController extends AbstractActionController
      */
     private $articleManager;
     
+    /**
+     * Менеджер создания наименований.
+     * @var Application\Service\NameManager 
+     */
+    private $nameManager;
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $goodsManager, $assemblyManager, $articleManager) 
+    public function __construct($entityManager, $goodsManager, $assemblyManager, $articleManager, $nameManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
         $this->assemblyManager = $assemblyManager;
         $this->articleManager = $articleManager;
+        $this->nameManager = $nameManager;
     }  
     
     public function assemblyAction()
@@ -358,6 +365,7 @@ class GoodsController extends AbstractActionController
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
             'goodsManager' => $this->goodsManager,
+            'bestName' => $this->nameManager->findBestName($goods),
         ]);
     }      
     
