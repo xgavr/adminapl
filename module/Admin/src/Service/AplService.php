@@ -630,4 +630,40 @@ class AplService {
         return;
     }
     
+    /**
+     * Обновить наименование товара в АПЛ
+     * 
+     * @param Application\Entity\Goods $good
+     */ 
+    public function updateGoodName($good)
+    {
+        
+        if ($good->getName() && $good->getAplId()){
+
+            $url = $this->aplApi().'update-bestname?api='.$this->aplApiKey();
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost([
+                'goodId' => $good->getAplId(),
+                'newname' => $good->getName(),
+                'nameok' => 1,
+            ]);
+
+            $response = $client->send();
+            if ($response->isOk()) {
+//                $body = $response->getBody();
+//                return (array) Json::decode($body);
+                  return 'ok';
+//            } else {
+//                return $response->getContent();
+            }
+
+            return;
+        }    
+        
+        return;
+    }
+    
 }

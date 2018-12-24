@@ -99,7 +99,20 @@ class GoodsManager
         $this->entityManager->flush();
         
         return $goods;
-    }    
+    }  
+    
+    /**
+     * Обновить наименование товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @param string $name
+     */
+    public function updateGoodName($good, $name)
+    {
+        $good->setName($name);
+        $this->entityManager->persist($good);
+        $this->entityManager->flush($good);        
+    }
     
     /**
      * Проверка возможности удаления товара

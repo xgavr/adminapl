@@ -11,7 +11,17 @@ $this->pageBreadcrumbs()->setItems([
 
 ?>
 <h1>
-    <?= $this->escapeHtml($goods->getName()); ?>    
+    <?php if ($goods->getName()): ?>
+        <?= $this->escapeHtml($goods->getName()); ?>
+        <? if ($goods->getAplId()):?>
+            <sup>
+                <button value="/apl/update-good-name/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                        title="Обновить наименование в АПЛ">
+                    <span class="glyphicon glyphicon-refresh" ></span>
+                </button>         
+            </sup>
+        <? endif;?>
+    <? endif;?>
 </h1>
 
 <div>
@@ -24,9 +34,6 @@ $this->pageBreadcrumbs()->setItems([
         <a href="/producer/view/<?=$goods->getProducer()->getId()?>">
             <?= $goods->getProducer()->getName();?>
         </a>
-    </span>    
-    <span>
-        <?= $bestName;?>
     </span>    
 </div>
 <div>
@@ -42,6 +49,13 @@ $this->pageBreadcrumbs()->setItems([
     </span> 
     <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
             title="Обновить АПЛ Ид">
+        <span class="glyphicon glyphicon-refresh" ></span>
+    </button> 
+    <span>
+        <?= $bestName;?>
+    </span>    
+    <button value="/goods/update-bestname/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+            title="Обновить наименование">
         <span class="glyphicon glyphicon-refresh" ></span>
     </button> 
 </div>

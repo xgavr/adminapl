@@ -369,6 +369,30 @@ class GoodsController extends AbstractActionController
         ]);
     }      
     
+    public function updateBestnameAction()
+    {
+        $goodsId = $this->params()->fromRoute('id', -1);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        $bestname = $this->nameManager->findBestName($goods);
+        
+        if ($bestname){
+            $this->goodsManager->updateGoodName($goods, $bestname);
+        }    
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);           
+    }    
+
+
+
     public function deleteEmptyAction()
     {
         $deleted = $this->goodsManager->removeEmpty();
