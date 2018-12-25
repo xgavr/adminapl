@@ -53,14 +53,23 @@ class GoodsController extends AbstractActionController
      */
     private $nameManager;
     
+    /**
+     * Менеджер внешних баз.
+     * @var Application\Service\ExternalManager 
+     */
+    private $externalManager;
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $goodsManager, $assemblyManager, $articleManager, $nameManager) 
+    public function __construct($entityManager, $goodsManager, $assemblyManager, 
+            $articleManager, $nameManager, $externalManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
         $this->assemblyManager = $assemblyManager;
         $this->articleManager = $articleManager;
         $this->nameManager = $nameManager;
+        $this->entityManager = $externalManager;
+        $this->externalManager = $externalManager;
     }  
     
     public function assemblyAction()
@@ -389,7 +398,27 @@ class GoodsController extends AbstractActionController
         return new JsonModel([
             'result' => 'ok-reload',
         ]);           
-    }    
+    }  
+    
+    public function externalApiAction()
+    {
+        $goodsId = $this->params()->fromRoute('id', -1);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->externalManager->autoDb('version');
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);           
+        
+    }
 
 
 

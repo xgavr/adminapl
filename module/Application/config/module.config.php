@@ -302,6 +302,8 @@ return [
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
+            Service\ExternalManager::class => Service\Factory\ExternalManagerFactory::class,
+            Service\ExternalDB\AutodbManager::class => Service\Factory\ExternalDB\AutodbManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
             Service\MlManager::class => Service\Factory\MlManagerFactory::class,
             Service\NameManager::class => Service\Factory\NameManagerFactory::class,

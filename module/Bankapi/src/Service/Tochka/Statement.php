@@ -228,6 +228,7 @@ class Statement {
                         $date_end
                     );                    
                 }    
+                usleep(100);
             }
             
             return $result;
