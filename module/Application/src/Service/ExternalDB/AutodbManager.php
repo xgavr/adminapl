@@ -92,7 +92,7 @@ class AutodbManager
         if (is_array($params)){
             $uri .= '&'.explode('&', $params);
         }        
-//        var_dump($uri);
+        var_dump($uri);
         $client = new Client();
         $client->setUri($uri);
         $client->setAdapter($this::HTTPS_ADAPTER);
