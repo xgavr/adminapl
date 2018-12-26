@@ -94,7 +94,7 @@ class AutodbManager
                 $uri .= "&$key=$value";
             }    
         }        
-        var_dump($uri);
+//        var_dump($uri);
         $client = new Client();
         $client->setUri($uri);
         $client->setAdapter($this::HTTPS_ADAPTER);
@@ -133,6 +133,15 @@ class AutodbManager
     public function getPegasusVersionInfo2()
     {
         return $this->getAction('getPegasusVersionInfo2');
+    }
+
+    /**
+     * Получить критерии
+     * @return array|Esception
+     */
+    public function getCriteria2()
+    {
+        return $this->getAction('getCriteria2');
     }
 
     /**

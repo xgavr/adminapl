@@ -318,6 +318,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'mem'])
                 ];
                 
+                $adminDropdownItems[] = [
+                    'id' => 'external',
+                    'label' => 'Внешние базы',
+                    'link'  => $url('ext')
+                ];
+                
                 if (count($adminDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'admin',

@@ -245,6 +245,20 @@ return [
                     ],
                 ],
             ],        
+            'ext' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/ext[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ExternalController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],    
             'rb' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -279,8 +293,9 @@ return [
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
             Controller\ContactController::class => Controller\Factory\ContactControllerFactory::class,
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
-            Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\ExternalController::class => Controller\Factory\ExternalControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
+            Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\MlController::class => Controller\Factory\MlControllerFactory::class,
             Controller\NameController::class => Controller\Factory\NameControllerFactory::class,
             Controller\OemController::class => Controller\Factory\OemControllerFactory::class,
@@ -339,6 +354,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\GoodsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\ExternalController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

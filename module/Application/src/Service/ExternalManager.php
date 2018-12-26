@@ -56,11 +56,12 @@ class ExternalManager
         switch($action){
             case 'version': $result = $this->autoDbManager->getPegasusVersionInfo2(); break;
             case 'countries': $result = $this->autoDbManager->getCountries(); break;
+            case 'сriteria': $result = $this->autoDbManager->getCriteria2(); break;
             case 'getArticle': $result = $this->autoDbManager->getArticleDirectSearchAllNumbersWithState($params['good']); break;
             default: break;
         }
         
-        var_dump($result);
+//        var_dump($result);
         return $result;
     }
     
