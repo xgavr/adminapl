@@ -136,11 +136,21 @@ class AutodbManager
     }
 
     /**
-     * Получить роизводителей
+     * Получить производителей
      * @return array|Esception
      */
     public function getManufacturers()
     {
         return $this->getAction('getManufacturers', ['linkingTargetType' => 'P']);
     }
+
+        /**
+     * Получить модели серии
+     * @return array|Esception
+     */
+    public function getModelSeries()
+    {
+        return $this->getAction('getModelSeries', ['linkingTargetType' => 'P']);
+    }
+
 }
