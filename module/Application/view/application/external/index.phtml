@@ -59,8 +59,9 @@ $this->pageBreadcrumbs()->setItems([
                 .done(function (data) {
                     dialog.modal('hide');
                     dialog = bootbox.dialog({
-                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+objectToHtml(data.message)+'</p>',
-                        closeButton: true
+                        message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i>'+objectToHtml(data.message)+'</div>',
+                        closeButton: true,
+                        size: large
                     });
                 })
                 .fail(function () {
