@@ -9,6 +9,12 @@ $this->pageBreadcrumbs()->setItems([
             ]);
 ?>
 
+<style>
+    .modal-body {
+        height: 300px;
+        overflow-y: scroll;
+    }    
+</style>
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-info">
@@ -59,7 +65,7 @@ $this->pageBreadcrumbs()->setItems([
                 .done(function (data) {
                     dialog.modal('hide');
                     dialog = bootbox.dialog({
-                        message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i>'+objectToHtml(data.message)+'</div>',
+                        message: '<div><i class="fa fa-spin fa-spinner"></i>'+objectToHtml(data.message)+'</div>',
                         closeButton: true,
                         size: 'large'
                     });
