@@ -92,7 +92,7 @@ class AutodbManager
         if (is_array($params)){
             $uri .= explode('&', $params);
         }        
-        var_dump($uri);
+//        var_dump($uri);
         $client = new Client();
         $client->setUri($uri);
         $client->setAdapter($this::HTTPS_ADAPTER);
@@ -108,7 +108,7 @@ class AutodbManager
         $response = $client->send();
         
         if ($response->isOk()){
-            return $response->getBody();            
+            return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
         }
 
         return $this->exception($response);
