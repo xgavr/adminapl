@@ -90,7 +90,7 @@ class AutodbManager
     {
         $uri = $this->getUri().'?action='.$action;
         if (is_array($params)){
-            $uri .= '&'.explode('&', $params);
+            $uri .= '&'. implode('&', $params);
         }        
         var_dump($uri);
         $client = new Client();
