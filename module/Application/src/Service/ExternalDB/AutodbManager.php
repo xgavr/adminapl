@@ -171,7 +171,7 @@ class AutodbManager
      */
     public function getArticleDirectSearchAllNumbersWithState($good)
     {
-        return $this->getAction('getArticleDirectSearchAllNumbersWithState', ['articleNumber' => $good->getCode(), 'articleCountry' => 'DE']);
+        return $this->getAction('getArticleDirectSearchAllNumbersWithState', ['articleNumber' => $good->getCode(), 'articleCountry' => 'RU']);
     }
 
 }
