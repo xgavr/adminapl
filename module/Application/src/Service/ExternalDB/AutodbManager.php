@@ -108,7 +108,7 @@ class AutodbManager
         $response = $client->send();
         
         if ($response->isOk()){
-            return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
+            return $response->getBody();            
         }
 
         return $this->exception($response);
