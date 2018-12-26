@@ -88,7 +88,7 @@ class AutodbManager
      */    
     public function getAction($action, $params = null)
     {
-        $uri = $this->getUri().'?'.$action;
+        $uri = $this->getUri().'?action='.$action;
         if (is_array($params)){
             $uri .= explode('&', $params);
         }        
