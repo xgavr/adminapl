@@ -139,6 +139,6 @@ class AutodbManager
      */
     public function getManufacturers()
     {
-        return $this->getAction('getManufacturers');
+        return $this->getAction('getManufacturers', ['linkingTargetType' => 'P']);
     }
 }
