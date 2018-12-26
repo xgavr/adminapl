@@ -410,7 +410,7 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $this->externalManager->autoDb('countries', ['good' => $goods]);
+        $this->externalManager->autoDb('getArticle', ['good' => $goods]);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([
