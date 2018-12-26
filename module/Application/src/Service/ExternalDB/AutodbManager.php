@@ -144,13 +144,25 @@ class AutodbManager
         return $this->getAction('getManufacturers', ['linkingTargetType' => 'P']);
     }
 
-        /**
+    /**
      * Получить модели серии
      * @return array|Esception
      */
     public function getModelSeries()
     {
         return $this->getAction('getModelSeries', ['linkingTargetType' => 'P']);
+    }
+
+    /**
+     * Получить articleId
+     * 
+     * @param Application\Entity\Goods $good
+     * 
+     * @return array|Esception
+     */
+    public function getArticleDirectSearchAllNumbersWithState($good)
+    {
+        return $this->getAction('getArticleDirectSearchAllNumbersWithState', ['articleNumber' => $good->getCode()]);
     }
 
 }
