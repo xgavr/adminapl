@@ -123,4 +123,13 @@ class AutodbManager
     {
         return $this->getAction('getPegasusVersionInfo');
     }
+    
+    /**
+     * Получить версию апи
+     * @return array|Esception
+     */
+    public function getPegasusVersionInfo2()
+    {
+        return $this->getAction('getPegasusVersionInfo2');
+    }
 }
