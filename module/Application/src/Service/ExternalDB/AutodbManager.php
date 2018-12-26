@@ -154,6 +154,15 @@ class AutodbManager
     }
 
     /**
+     * Получить страны
+     * @return array|Esception
+     */
+    public function getCountries()
+    {
+        return $this->getAction('getCountries');
+    }
+
+    /**
      * Получить articleId
      * 
      * @param Application\Entity\Goods $good

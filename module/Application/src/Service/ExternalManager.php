@@ -54,7 +54,8 @@ class ExternalManager
     public function autoDb($action, $params = null)
     {
         switch($action){
-            case 'version': $result = $this->autoDbManager->getArticleDirectSearchAllNumbersWithState($params['good']); break;
+            case 'version': $result = $this->autoDbManager->getPegasusVersionInfo2(); break;
+            case 'countries': $result = $this->autoDbManager->getCountries(); break;
             case 'getArticle': $result = $this->autoDbManager->getArticleDirectSearchAllNumbersWithState($params['good']); break;
             default: break;
         }
