@@ -132,4 +132,13 @@ class AutodbManager
     {
         return $this->getAction('getPegasusVersionInfo2');
     }
+
+    /**
+     * Получить роизводителей
+     * @return array|Esception
+     */
+    public function getManufacturers()
+    {
+        return $this->getAction('getManufacturers');
+    }
 }
