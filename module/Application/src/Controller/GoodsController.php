@@ -68,7 +68,6 @@ class GoodsController extends AbstractActionController
         $this->assemblyManager = $assemblyManager;
         $this->articleManager = $articleManager;
         $this->nameManager = $nameManager;
-        $this->entityManager = $externalManager;
         $this->externalManager = $externalManager;
     }  
     

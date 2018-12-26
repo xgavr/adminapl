@@ -35,6 +35,6 @@ class GoodsControllerFactory implements FactoryInterface {
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new GoodsController($entityManager, $goodsManager, $assemblyManager, 
-                $articleManager, $nameManager, $entityManager);
+                $articleManager, $nameManager, $externalManager);
     }
 }

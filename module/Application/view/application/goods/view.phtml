@@ -24,44 +24,18 @@ $this->pageBreadcrumbs()->setItems([
     <? endif;?>
 </h1>
 
+<div>
+    <span>
+        <?= $bestName;?>
+    </span>    
+    <button value="/goods/update-bestname/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+            title="Обновить наименование">
+        <span class="glyphicon glyphicon-refresh" ></span>
+    </button> 
+</div>
+
 <div class="row">
     <div class="col-md-9">
-
-        <div>
-            <span>
-                <a href="/producer/article-view/?code=<?=$goods->getCode()?>">
-                    <?= $goods->getCode();?>
-                </a>
-            </span>
-            <span>
-                <a href="/producer/view/<?=$goods->getProducer()->getId()?>">
-                    <?= $goods->getProducer()->getName();?>
-                </a>
-            </span>    
-        </div>
-        <div>
-            <span>
-                AplId: 
-                <?php if ($goods->getAplId()): ?>
-                <a href="https://autopartslist.ru/goods/view/id/<?= $goods->getAplId() ?>" target="_blank">
-                        <?= $goods->getAplId()?>
-                    </a>
-                <?php else: ?>
-                    <?= $goods->getAplId()?>
-                <? endif; ?>    
-            </span> 
-            <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                    title="Обновить АПЛ Ид">
-                <span class="glyphicon glyphicon-refresh" ></span>
-            </button> 
-            <span>
-                <?= $bestName;?>
-            </span>    
-            <button value="/goods/update-bestname/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                    title="Обновить наименование">
-                <span class="glyphicon glyphicon-refresh" ></span>
-            </button> 
-        </div>
 
         <table class="table table-striped">
             <tr>
@@ -175,8 +149,45 @@ $this->pageBreadcrumbs()->setItems([
             <div class="panel-group">
                 <div class="panel panel-info">
                     <div class="panel-heading">
+                        <span>
+                            <a href="/producer/article-view/?code=<?=$goods->getCode()?>">
+                                <?= $goods->getCode();?>
+                            </a>
+                        </span>
+                        <span>
+                            <a href="/producer/view/<?=$goods->getProducer()->getId()?>">
+                                <?= $goods->getProducer()->getName();?>
+                            </a>
+                        </span>    
                     </div>
                     <div class="panel-body">
+                        <div class="pull-left">
+                            AplId: 
+                            <?php if ($goods->getAplId()): ?>
+                            <a href="https://autopartslist.ru/goods/view/id/<?= $goods->getAplId() ?>" target="_blank">
+                                    <?= $goods->getAplId()?>
+                                </a>
+                            <?php else: ?>
+                                <?= $goods->getAplId()?>
+                            <? endif; ?>    
+                        </div>
+                        <div class="pull-right">
+                            <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить АПЛ Ид">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            TecDocId: 
+                        </div>
+                        <div class="pull-right">
+                            <button value="/goods/external-api/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить TecDocId">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
                     </div>
                 </div>    
             </div>

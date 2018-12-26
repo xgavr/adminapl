@@ -54,10 +54,11 @@ class ExternalManager
     public function autoDb($action, $params = null)
     {
         switch($action){
-            case 'version': $result = $this->autoDbManager->getgetPegasusVersionInfo(); break;
+            case 'version': $result = $this->autoDbManager->getPegasusVersionInfo(); break;
             default: break;
         }
         
+        var_dump($result);
         return $result;
     }
     

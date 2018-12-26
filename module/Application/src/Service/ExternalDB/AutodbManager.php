@@ -22,6 +22,8 @@ class AutodbManager
     
     const URI_PRODUCTION = 'https://auto-db.pro/ws/tecdoc-api/';
     
+    const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
+    
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -53,9 +55,11 @@ class AutodbManager
     {
         switch ($response->getStatusCode()) {
             case 400: //Invalid code
+                throw new \Exception('Ошибка');
             case 401: //The access token is invalid or has expired
+                throw new \Exception('Ошибка');
             case 403: //The access token is missing
-                $this->reAuth();
+                throw new \Exception('Доступ запрещен');
             default:
                 $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);
                 $error_msg = $response->getStatusCode();
@@ -91,7 +95,7 @@ class AutodbManager
         var_dump($uri);
         $client = new Client();
         $client->setUri($uri);
-        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('GET');
         
         $headers = $client->getRequest()->getHeaders();
@@ -107,7 +111,7 @@ class AutodbManager
             return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
         }
 
-        return $this->auth->exception($response);
+        return $this->exception($response);
         
     }
     
