@@ -183,7 +183,7 @@ class AutodbManager
         return $this->getAction('getArticleDirectSearchAllNumbersWithState', [
             'articleNumber' => $good->getCode(), 
             'articleCountry' => 'RU',
-            'numberType' => 1,
+            'numberType' => 0,
            ]);
     }
 
