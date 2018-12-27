@@ -212,7 +212,7 @@ class AutodbManager
         if ($articles['data']){
             $params = [
                 'articleCountry' => 'RU',            
-                //'articleIdPairs' => Encoder::encode([$articles['data']['array'][0]['articleId']]), 
+                'articleIdPairs' => Encoder::encode([$articles['data']['array'][0]['articleId']]), 
             ];
 
             $result = $this->getAction('getAssignedArticlesByIds4', $params);
