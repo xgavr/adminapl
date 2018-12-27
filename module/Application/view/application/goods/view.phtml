@@ -10,6 +10,14 @@ $this->pageBreadcrumbs()->setItems([
             ]);
 
 ?>
+
+<style>
+    .modal-body {
+        height: 400px;
+        overflow-y: scroll;
+    }    
+</style>
+
 <h1>
     <?php if ($goods->getName()): ?>
         <?= $this->escapeHtml($goods->getName()); ?>
