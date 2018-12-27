@@ -189,7 +189,10 @@ class AutodbManager
         
         $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
         
-        \Zend\Debug\Debug::dump($result);
+        if (!$result['data']){
+            $params['numberType'] = 1;
+            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
+        }
         return $data;
     }
 
