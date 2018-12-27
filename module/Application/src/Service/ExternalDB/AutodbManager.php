@@ -184,6 +184,7 @@ class AutodbManager
             'articleNumber' => $good->getCode(), 
             'articleCountry' => 'RU',
             'numberType' => 0,
+            'searchExact' => false,
            ]);
     }
 
