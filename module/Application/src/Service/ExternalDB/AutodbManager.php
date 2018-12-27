@@ -183,21 +183,21 @@ class AutodbManager
         $params = [
             'articleNumber' => $good->getCode(), 
             'articleCountry' => 'RU',            
-            'numberType' => 0,
+            'numberType' => 10,
             'searchExact' => true,
         ];
         
         $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
         
-        if (!$result['data']){
-            $params['numberType'] = 1;
-            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
-        }
-
-        if (!$result['data']){
-            $params['numberType'] = 3;
-            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
-        }
+//        if (!$result['data']){
+//            $params['numberType'] = 1;
+//            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
+//        }
+//
+//        if (!$result['data']){
+//            $params['numberType'] = 3;
+//            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
+//        }
         return $result;
     }
 
