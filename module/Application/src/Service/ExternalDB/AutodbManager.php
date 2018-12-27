@@ -196,4 +196,29 @@ class AutodbManager
         return $result;
     }
 
+    /**
+     * Получить детальную информацию об артикуле
+     * 
+     * @param Application\Entity\Goods $good
+     * 
+     * @return array|Esception
+     */
+    public function getAssignedArticlesByIds4($good)
+    {
+        $result = null;
+        
+        $articles = $this->getArticleDirectSearchAllNumbersWithState($good);
+        
+        if ($articles['data']){
+        
+            $params = [
+                'articleIdPairs' => $articles['data'][0]['articleId'], 
+            ];
+
+            $result = $this->getAction('getAssignedArticlesByIds4', $params);
+
+        }    
+        return $result;
+    }
+
 }
