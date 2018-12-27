@@ -190,12 +190,7 @@ class AutodbManager
         $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
         
         if (!$result['data']){
-            $params['numberType'] = 1;
-            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
-        }
-
-        if (!$result['data']){
-            $params['numberType'] = 3;
+            $params['numberType'] = 10;
             $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
         }
         return $result;
