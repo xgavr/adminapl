@@ -198,7 +198,7 @@ class AutodbManager
             $params['numberType'] = 3;
             $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
         }
-        return $data;
+        return $result;
     }
 
 }
