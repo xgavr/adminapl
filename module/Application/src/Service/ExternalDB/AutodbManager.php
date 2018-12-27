@@ -212,7 +212,8 @@ class AutodbManager
         if ($articles['data']){
         
             $params = [
-                'articleIdPairs' => $articles['data'][0]['articleId'], 
+                'articleCountry' => 'RU',            
+                'articleIdPairs' => [$articles['data'][0]['articleId']], 
             ];
 
             $result = $this->getAction('getAssignedArticlesByIds4', $params);
