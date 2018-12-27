@@ -180,12 +180,17 @@ class AutodbManager
      */
     public function getArticleDirectSearchAllNumbersWithState($good)
     {
-        return $this->getAction('getArticleDirectSearchAllNumbersWithState', [
+        $params = [
             'articleNumber' => $good->getCode(), 
-            'articleCountry' => 'RU',
+            'articleCountry' => 'RU',            
             'numberType' => 0,
             'searchExact' => true,
-           ]);
+        ];
+        
+        $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
+        
+        \Zend\Debug\Debug::dump($result);
+        return $data;
     }
 
 }
