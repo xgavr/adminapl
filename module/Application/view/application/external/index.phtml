@@ -34,21 +34,6 @@ $this->pageBreadcrumbs()->setItems([
 </div>
 
 <script type="text/javascript">
-    var objectToHtml = function(obj){
-        var result = '<div>';
-        $.each( obj, function( key, value ) {
-            if (jQuery.isPlainObject(value) || jQuery.isArray(value)){
-                result = result + '<div>' + key + '</div>';
-                result = result + objectToHtml(value);
-            } else {
-                result = result + '<div><span>' + key + '</span>: <span>' + value + '</span></div>';
-            }    
-        });
-        
-        result = result + '</div>';
-        return result;
-    }
-
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;
 
