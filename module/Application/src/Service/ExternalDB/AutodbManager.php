@@ -210,7 +210,6 @@ class AutodbManager
         $articles = $this->getArticleDirectSearchAllNumbersWithState($good);
         
         if ($articles['data']){
-        var_dump($articles['data']['array'][0]['articleId']);
             $params = [
                 'articleCountry' => 'RU',            
                 'articleIdPairs' => $articles['data']['array'][0]['articleId'], 
