@@ -94,7 +94,7 @@ class AutodbManager
                 $uri .= "&$key=$value";
             }    
         }        
-        var_dump($uri);
+//        var_dump($uri);
         $client = new Client();
         $client->setUri($uri);
         $client->setAdapter($this::HTTPS_ADAPTER);
@@ -203,7 +203,7 @@ class AutodbManager
      * 
      * @return array|Esception
      */
-    public function getAssignedArticlesByIds4($good)
+    public function getDirectArticlesByIds6($good)
     {
         $result = null;
         
@@ -212,10 +212,26 @@ class AutodbManager
         if ($articles['data']){
             $params = [
                 'articleCountry' => 'RU',            
-                'articleIdPairs' => Encoder::encode(['array' => ['articleId' => $articles['data']['array'][0]['articleId']]]), 
-            ];
+                'articleId' => Encoder::encode(['array' => [$articles['data']['array'][0]['articleId']]]), 
+                'attributs' => true,
+                'basicData' => true,
+                'documents' => true,
+                'eanNumbers' => true,
+                'immediateAttributs' => true,
+                'immediateInfo' => true,
+                'info' => true,
+                'lang' => 'RU',
+                'mainArticles' => true,
+                'normalAustauschPrice' => false,
+                'oeNumbers' => true,
+                'prices' => false,
+                'replacedByNumbers' => true,
+                'replacedNumbers' => true,
+                'thumbnails' => true,
+                'usageNumbers' => true,            
+             ];
 
-            $result = $this->getAction('getAssignedArticlesByIds4', $params);
+            $result = $this->getAction('getDirectArticlesByIds6', $params);
 
         }    
         return $result;
