@@ -7,7 +7,6 @@
  */
 namespace Application\Service\ExternalDB;
 
-use Zend\ServiceManager\ServiceManager;
 use Zend\Http\Client;
 use Zend\Json\Decoder;
 use Zend\Json\Encoder;
@@ -21,6 +20,7 @@ class AutodbManager
 {
     
     const URI_PRODUCTION = 'https://auto-db.pro/ws/tecdoc-api/';
+    const GOOD_IMAGE_DIR = './data/images/goods'; //папка для хранения картинок
     
     const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
     
@@ -314,9 +314,82 @@ class AutodbManager
      * 
      * @param integer $docId
      */
-    public function getDocImage($docId)
+    public function getDocImageUri($docId)
     {
         $result = $this::URI_PRODUCTION.'?file='.$docId;
     }
 
+    
+    /**
+     * Создать папку с картинками
+     * 
+     * @param Application\Entity\Goods $good
+     */
+    public function addImageFolder($good)
+    {
+        $image_folder = self::IMAGE_DIR;
+        if (!is_dir($image_folder)){
+            mkdir($image_folder);
+        }
+        
+        $good_image_folder = self::IMAGE_DIR.'/'.$good->getId();
+        if (!is_dir($good_image_folder)){
+            mkdir($good_image_folder);
+        }
+                
+        return;
+    }        
+    
+    
+    /*
+     * Очистить содержимое папки
+     * 
+     * @var string $folderName
+     * 
+     */
+    public function clearPriceFolder($folderName)
+    {
+        if (is_dir($folderName)){
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    unlink($fileInfo->getFilename());                            
+                }
+                if ($fileInfo->isDir()){
+                    $this->clearPriceFolder($fileInfo->getFilename());                    
+                }
+            }
+        }
+    }
+    
+    /**
+     * Сохранить картинку товара по ссылке
+     * 
+     * @param string $uri
+     */
+    public function saveImageGood($good, $uri)
+    {
+        $headers = get_headers($uri);
+        if(preg_match("|200|", $headers[0])) {
+            
+            $basenameFilter = new \Application\Filter\Basename();
+            
+            $image = file_get_contents($uri);
+            file_put_contents(self::IMAGE_DIR.'/'.$good->getId()."/".$basenameFilter->filter($uri), $image);
+        } 
+        
+        return;
+            
+    }
+    
+    /**
+     * Скачать картинку товара
+     * 
+     * @param Application\Entity\Goods $good
+     * 
+     */
+    public function getImages($good)
+    {
+        
+    }
 }
