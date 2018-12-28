@@ -262,7 +262,7 @@ class AutodbManager
      */
     public function getDirectInfo($good)
     {
-        $article = getBestArticle($good);
+        $article = $this->getBestArticle($good);
         
         if (is_array($article)){
             return $this->getDirectArticlesByIds6([$article['articleId']]);
