@@ -226,28 +226,31 @@ class AutodbManager
      * 
      * @return array|Esception
      */
-    public function getDirectArticlesByIds6($articleIds)
+    public function getDirectArticlesByIds6($articleIds, $params = null)
     {
-        $params = [
-            'articleCountry' => 'RU',            
-            'articleId' => Encoder::encode(['array' => $articleIds]), 
-            'attributs' => true,
-            'basicData' => true,
-            'documents' => true,
-            'eanNumbers' => true,
-            'immediateAttributs' => true,
-            'immediateInfo' => true,
-            'info' => true,
-            'lang' => 'RU',
-            'mainArticles' => true,
-            'normalAustauschPrice' => false,
-            'oeNumbers' => true,
-            'prices' => false,
-            'replacedByNumbers' => true,
-            'replacedNumbers' => true,
-            'thumbnails' => true,
-            'usageNumbers' => true,            
-         ];
+        if (!$params){
+            $params = [
+                'attributs' => true,
+                'basicData' => true,
+                'documents' => true,
+                'eanNumbers' => true,
+                'immediateAttributs' => true,
+                'immediateInfo' => true,
+                'info' => true,
+                'mainArticles' => true,
+                'normalAustauschPrice' => false,
+                'oeNumbers' => true,
+                'prices' => false,
+                'replacedByNumbers' => true,
+                'replacedNumbers' => true,
+                'thumbnails' => true,
+                'usageNumbers' => true,            
+             ];
+        }
+        
+        $params['articleCountry'] = 'RU';
+        $params['lang'] = 'RU';
+        $params['articleId'] = Encoder::encode(['array' => $articleIds]);
 
         $result = $this->getAction('getDirectArticlesByIds6', $params);
 
