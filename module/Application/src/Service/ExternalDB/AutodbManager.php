@@ -286,7 +286,7 @@ class AutodbManager
             'linkingTargetType' => 'P',
          ];
 
-        $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
+        $result = $this->getAction('getArticleLinkedAllLinkingTarget4', $params);
 
         return $result;
     }
