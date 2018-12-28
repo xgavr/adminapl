@@ -405,10 +405,10 @@ class AutodbManager
         $this->clearImageGoodFolder($good);
         
         $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
-        var_dump($articleInfo);
         
         if (is_array($articleInfo)){
             foreach($articleInfo['data']['array'] as $articleDocuments){
+        var_dump($articleDocuments);
                 foreach($articleDocuments['array'] as $document){
                     if ($document['docId']){
                         $uri = $this->getDocImageUri($document['docId']);
