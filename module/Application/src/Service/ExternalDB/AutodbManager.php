@@ -253,6 +253,23 @@ class AutodbManager
 
         return $result;
     }
+    
+    /**
+     * Получить информацию по товару
+     * 
+     * @param Application\Entity\Goods $good
+     * @return array
+     */
+    public function getDirectInfo($good)
+    {
+        $article = getBestArticle($good);
+        
+        if (is_array($article)){
+            return $this->getDirectArticlesByIds6([$article['articleId']]);
+        }
+        
+        return;
+    }
 
     /**
      * Получить машины, связанные с артикулом
