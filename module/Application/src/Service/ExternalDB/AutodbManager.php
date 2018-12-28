@@ -195,45 +195,81 @@ class AutodbManager
         }
         return $result;
     }
+    
+    /**
+     * Плучить наиболее подходящий к товару артикул
+     * 
+     * @param Application\Entity\Goods $good
+     * 
+     * @return array
+     */
+    public function getBestArticle($good)
+    {
+        $articles = $this->getArticleDirectSearchAllNumbersWithState($good);
+        if ($articles['data']){
+            foreach ($articles['data']['array'] as $row){
+                foreach($good->getProducer()->getUnknownProducer() as $unknownProducer){
+                    if (mb_strtoupper($row['brandName']) == mb_strtoupper($unknownProducer->getName())){
+                        return $row;
+                    }
+                }        
+            }
+        }
+        
+        return;
+    }
 
     /**
      * Получить детальную информацию об артикуле
      * 
-     * @param Application\Entity\Goods $good
+     * @param array $articleIds
      * 
      * @return array|Esception
      */
-    public function getDirectArticlesByIds6($good)
+    public function getDirectArticlesByIds6($articleIds)
     {
-        $result = null;
-        
-        $articles = $this->getArticleDirectSearchAllNumbersWithState($good);
-        
-        if ($articles['data']){
-            $params = [
-                'articleCountry' => 'RU',            
-                'articleId' => Encoder::encode(['array' => [$articles['data']['array'][0]['articleId']]]), 
-                'attributs' => true,
-                'basicData' => true,
-                'documents' => true,
-                'eanNumbers' => true,
-                'immediateAttributs' => true,
-                'immediateInfo' => true,
-                'info' => true,
-                'lang' => 'RU',
-                'mainArticles' => true,
-                'normalAustauschPrice' => false,
-                'oeNumbers' => true,
-                'prices' => false,
-                'replacedByNumbers' => true,
-                'replacedNumbers' => true,
-                'thumbnails' => true,
-                'usageNumbers' => true,            
-             ];
+        $params = [
+            'articleCountry' => 'RU',            
+            'articleId' => Encoder::encode(['array' => $articleIds]), 
+            'attributs' => true,
+            'basicData' => true,
+            'documents' => true,
+            'eanNumbers' => true,
+            'immediateAttributs' => true,
+            'immediateInfo' => true,
+            'info' => true,
+            'lang' => 'RU',
+            'mainArticles' => true,
+            'normalAustauschPrice' => false,
+            'oeNumbers' => true,
+            'prices' => false,
+            'replacedByNumbers' => true,
+            'replacedNumbers' => true,
+            'thumbnails' => true,
+            'usageNumbers' => true,            
+         ];
 
-            $result = $this->getAction('getDirectArticlesByIds6', $params);
+        $result = $this->getAction('getDirectArticlesByIds6', $params);
 
-        }    
+        return $result;
+    }
+
+    /**
+     * Получить машины, связанные с артикулом
+     * 
+     * @param integer $articleId
+     * 
+     * @return array|Esception
+     */
+    public function getArticleLinkedAllLinkingTarget3($articleId)
+    {
+        $params = [
+            'articleCountry' => 'RU',            
+            'articleId' => $articleId, 
+         ];
+
+        $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
+
         return $result;
     }
 

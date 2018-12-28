@@ -59,6 +59,7 @@ class ExternalManager
             case 'сriteria': $result = $this->autoDbManager->getCriteria2(); break;
             case 'getArticle': $result = $this->autoDbManager->getArticleDirectSearchAllNumbersWithState($params['good']); break;
             case 'getInfo': $result = $this->autoDbManager->getDirectArticlesByIds6($params['good']); break;
+            case 'getBestArticle': $result = $this->autoDbManager->getBestArticle($params['good']); break;
             default: break;
         }
         
