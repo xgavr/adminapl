@@ -58,8 +58,9 @@ class ExternalManager
             case 'countries': $result = $this->autoDbManager->getCountries(); break;
             case 'сriteria': $result = $this->autoDbManager->getCriteria2(); break;
             case 'getArticle': $result = $this->autoDbManager->getArticleDirectSearchAllNumbersWithState($params['good']); break;
-            case 'getInfo': $result = $this->autoDbManager->getDirectInfo($params['good']); break;
             case 'getBestArticle': $result = $this->autoDbManager->getBestArticle($params['good']); break;
+            case 'getInfo': $result = $this->autoDbManager->getDirectInfo($params['good']); break;
+            case 'getLinked': $result = $this->autoDbManager->getLinked($params['good']); break;
             default: break;
         }
         

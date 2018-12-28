@@ -289,5 +289,23 @@ class AutodbManager
 
         return $result;
     }
+    
+    /**
+     * Получить машины, связанные с товаром
+     * 
+     * @param Application\Entity\Goods $good
+     * @return array|null
+     */
+    public function getLinked($good)
+    {
+        $article = $this->getBestArticle($good);
+        
+        if (is_array($article)){
+            return $this->getArticleLinkedAllLinkingTarget3($article['articleId']);
+        }
+        
+        return;
+        
+    }
 
 }
