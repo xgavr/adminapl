@@ -94,7 +94,7 @@ class AutodbManager
                 $uri .= "&$key=$value";
             }    
         }        
-        var_dump($uri);
+//        var_dump($uri);
         $client = new Client();
         $client->setUri($uri);
         $client->setAdapter($this::HTTPS_ADAPTER);
@@ -212,7 +212,7 @@ class AutodbManager
         if ($articles['data']){
             $params = [
                 'articleCountry' => 'RU',            
-                'articleIdPairs' => Encoder::encode(['ids' => $articles['data']['array'][0]['articleId']]), 
+                'articleIdPairs' => Encoder::encode(['articleIds' => [$articles['data']['array'][0]['articleId']]]), 
             ];
 
             $result = $this->getAction('getAssignedArticlesByIds4', $params);
