@@ -286,7 +286,7 @@ class AutodbManager
             'linkingTargetType' => 'P',
          ];
 
-        $result = $this->getAction('getArticleLinkedAllLinkingTarget4', $params);
+        $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
 
         return $result;
     }
@@ -307,6 +307,16 @@ class AutodbManager
         
         return;
         
+    }
+    
+    /**
+     * Получить картинку по номеру документа
+     * 
+     * @param integer $docId
+     */
+    public function getDocImage($docId)
+    {
+        $result = $this::URI_PRODUCTION.'?file='.$docId;
     }
 
 }
