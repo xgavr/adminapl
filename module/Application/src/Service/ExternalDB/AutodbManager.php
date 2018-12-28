@@ -20,7 +20,9 @@ class AutodbManager
 {
     
     const URI_PRODUCTION = 'https://auto-db.pro/ws/tecdoc-api/';
-    const GOOD_IMAGE_DIR = './data/images/goods'; //папка для хранения картинок
+    
+    const IMAGE_DIR = './data/images'; //папка для хранения картинок
+    const GOOD_IMAGE_DIR = './data/images/goods'; //папка для хранения картинок товаров
     
     const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
     
@@ -330,37 +332,43 @@ class AutodbManager
      */
     public function addImageFolder($good)
     {
-        $image_folder = self::IMAGE_DIR;
+        $images_folder = self::IMAGE_DIR;
+        if (!is_dir($images_folder)){
+            mkdir($images_folder);
+        }
+        
+        $image_folder = self::GOOD_IMAGE_DIR;
         if (!is_dir($image_folder)){
             mkdir($image_folder);
         }
         
-        $good_image_folder = self::IMAGE_DIR.'/'.$good->getId();
+        $good_image_folder = self::GOOD_IMAGE_DIR.'/'.$good->getId();
         if (!is_dir($good_image_folder)){
             mkdir($good_image_folder);
         }
-                
         return;
     }        
     
     
     /*
-     * Очистить содержимое папки
+     * Очистить содержимое папки c картинками товара
      * 
-     * @var string $folderName
+     * @var Application\Entity\Goods $folderName
      * 
      */
-    public function clearPriceFolder($folderName)
+    public function clearImageGoodFolder($good)
     {
+        $folderName = self::GOOD_IMAGE_DIR.'/'.$good->getId();
+                
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
                     unlink($fileInfo->getFilename());                            
                 }
-                if ($fileInfo->isDir()){
-                    $this->clearPriceFolder($fileInfo->getFilename());                    
-                }
+//                if ($fileInfo->isDir()){
+//                    $this->clearPriceFolder($fileInfo->getFilename());                    
+//                }
             }
         }
     }
@@ -378,7 +386,7 @@ class AutodbManager
             $basenameFilter = new \Application\Filter\Basename();
             
             $image = file_get_contents($uri);
-            file_put_contents(self::IMAGE_DIR.'/'.$good->getId()."/".$basenameFilter->filter($uri), $image);
+            file_put_contents(self::GOOD_IMAGE_DIR.'/'.$good->getId()."/".$basenameFilter->filter($uri), $image);
         } 
         
         return;
@@ -393,6 +401,22 @@ class AutodbManager
      */
     public function getImages($good)
     {
+        $this->addImageFolder($good);
+        $this->clearImageGoodFolder($good);
         
+        $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
+        
+        if (is_array($articleInfo)){
+            foreach($articleInfo['data']['array'] as $articleDocuments){
+                foreach($articleDocuments['array'] as $document){
+                    if ($document['docId']){
+                        $uri = $this->getDocImageUri($document['docId']);
+                        $this->saveImageGood($good, $uri);
+                    }
+                }
+            }
+        }
+        
+        return;
     }
 }
