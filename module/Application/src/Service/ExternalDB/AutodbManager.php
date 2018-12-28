@@ -263,12 +263,12 @@ class AutodbManager
      * @param Application\Entity\Goods $good
      * @return array
      */
-    public function getDirectInfo($good)
+    public function getDirectInfo($good, $params = null)
     {
         $article = $this->getBestArticle($good);
         
         if (is_array($article)){
-            return $this->getDirectArticlesByIds6([$article['articleId']]);
+            return $this->getDirectArticlesByIds6([$article['articleId']], $params);
         }
         
         return;
