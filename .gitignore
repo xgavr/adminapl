@@ -17,3 +17,4 @@ phpunit.xml
 /data/statements/
 /data/session/
 /data/images/
+/public/img/
