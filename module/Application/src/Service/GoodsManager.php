@@ -194,8 +194,8 @@ class GoodsManager
             $images = [];
         }    
 
-        if (is_dir($folderName)){
-            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+        if (is_dir($folderImage)){
+            foreach (new \DirectoryIterator($folderImage) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
                     $images[basename($folderImage)] = $fileInfo->getFilename();                            
