@@ -192,7 +192,6 @@ class GoodsManager
             $images = [];
         }    
 
-        var_dump($images);
         if (is_dir($folderImage)){
             foreach (new \DirectoryIterator($folderImage) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
@@ -204,6 +203,7 @@ class GoodsManager
                 }
             }
         }
+        var_dump($images);
         return $images;
     }
     
