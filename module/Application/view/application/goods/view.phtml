@@ -152,8 +152,10 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
         </table>
         <div>
-            <?php foreach($images as $key => $path):?>
-            <img src="<?= $path ?>" alt="<?= $key ?>" height="100">
+            <?php foreach($images as $key => $imageFolder):?>
+                <?php foreach ($imageFolder as $path): ?>
+                    <img src="<?= $path ?>" alt="<?= $key ?>" height="100">
+                <?php endforeach;?>            
             <?php endforeach;?>
         </div>
     </div>
