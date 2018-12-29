@@ -199,7 +199,7 @@ class GoodsManager
                     $images[basename($folderImage)] = $folderImage.'/'.$fileInfo->getFilename();                            
                 }
                 if ($fileInfo->isDir()){
-                    array_merge($images, $this->imagesFromFolder($folderImage.'/'.$fileInfo->getFilename(), $images));                    
+                    $images = array_merge($images, $this->imagesFromFolder($folderImage.'/'.$fileInfo->getFilename(), $images));                    
                 }
             }
         }
