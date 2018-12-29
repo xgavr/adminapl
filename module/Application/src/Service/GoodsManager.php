@@ -201,7 +201,7 @@ class GoodsManager
                     $images[basename($folderImage)] = $fileInfo->getFilename();                            
                 }
                 if ($fileInfo->isDir()){
-                    $this->images($fileInfo->getFilename(), $images);                    
+                    $this->imagesFromFolder($fileInfo->getFilename(), $images);                    
                 }
             }
         }
