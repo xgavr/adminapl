@@ -217,6 +217,7 @@ class GoodsManager
      */
     public function images($good)
     {
+        var_dump($good->getId()); exit;
         return $this->imagesFromFolder(self::GOOD_IMAGE_DIR.'/'.$good->getId());
     }
 }
