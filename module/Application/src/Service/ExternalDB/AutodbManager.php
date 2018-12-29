@@ -327,6 +327,17 @@ class AutodbManager
 
     
     /**
+     * Получить путь к папке с картинками
+     * 
+     * @param Application\Entity\Goods $good
+     * @return string
+     */
+    public function getImageFolder($good)
+    {
+        return self::GOOD_IMAGE_DIR.'/'.$good->getId().'/td';
+    }
+
+    /**
      * Создать папку с картинками
      * 
      * @param Application\Entity\Goods $good
@@ -347,6 +358,11 @@ class AutodbManager
         if (!is_dir($good_image_folder)){
             mkdir($good_image_folder);
         }
+
+        $td_image_folder = $this->getImageFolder($good);
+        if (!is_dir($td_image_folder)){
+            mkdir($td_image_folder);
+        }
         return;
     }        
     
@@ -359,7 +375,7 @@ class AutodbManager
      */
     public function clearImageGoodFolder($good)
     {
-        $folderName = self::GOOD_IMAGE_DIR.'/'.$good->getId();
+        $folderName = $this->getImageFolder($good);
                 
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
@@ -367,9 +383,6 @@ class AutodbManager
                 if ($fileInfo->isFile()){
                     unlink($fileInfo->getFilename());                            
                 }
-//                if ($fileInfo->isDir()){
-//                    $this->clearPriceFolder($fileInfo->getFilename());                    
-//                }
             }
         }
     }
@@ -385,7 +398,7 @@ class AutodbManager
         if(preg_match("|200|", $headers[0])) {
             
             $image = file_get_contents($uri);
-            file_put_contents(self::GOOD_IMAGE_DIR.'/'.$good->getId()."/".$docFileName, $image);
+            file_put_contents($this->getImageFolder($good)."/".$docFileName, $image);
         } 
         
         return;

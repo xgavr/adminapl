@@ -21,6 +21,9 @@ use Zend\Config\Writer\PhpArray;
  */
 class GoodsManager
 {
+    const IMAGE_DIR = './data/images'; //папка для хранения картинок
+    const GOOD_IMAGE_DIR = './data/images/goods'; //папка для хранения картинок товаров    
+    const TD_IMAGE_DIR = './data/images/goods/TD'; //папка для хранения картинок товаров
     
     /**
      * Doctrine entity manager.
@@ -179,5 +182,41 @@ class GoodsManager
     }
     
     
+    /**
+     * Получить картинки из папки
+     * 
+     * @param string $folderImage
+     * @return array
+     */
+    public function imagesFromFolder($folderImage, $images = null)
+    {
+        if (!$images){
+            $images = [];
+        }    
 
+        if (is_dir($folderName)){
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    $images[basename($folderImage)] = $fileInfo->getFilename();                            
+                }
+                if ($fileInfo->isDir()){
+                    $this->images($fileInfo->getFilename(), $images);                    
+                }
+            }
+        }
+        return $images;
+    }
+    
+    
+    /**
+     * Получить картинки товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @return array
+     */
+    public function images($good)
+    {
+        return $this->imagesFromFolder(self::GOOD_IMAGE_DIR.'/'.$good->getId());
+    }
 }

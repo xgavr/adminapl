@@ -151,6 +151,11 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
             </tr>
         </table>
+        <div>
+            <?php foreach($images as $key => $path):?>
+                <img src="<?= $path ?>" alt="<?= $key ?>">
+            <?php endforeach;?>
+        </div>
     </div>
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">

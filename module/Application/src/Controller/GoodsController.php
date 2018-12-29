@@ -374,6 +374,7 @@ class GoodsController extends AbstractActionController
             'articleManager' => $this->articleManager,
             'goodsManager' => $this->goodsManager,
             'bestName' => $this->nameManager->findBestName($goods),
+            'images' => $this->goodsManager->images($goods),
         ]);
     }      
     
