@@ -322,6 +322,7 @@ class AutodbManager
     public function getDocImageUri($docId)
     {
         $result = $this::URI_PRODUCTION.'?file='.$docId;
+        return $result;
     }
 
     
@@ -411,7 +412,6 @@ class AutodbManager
                 foreach($articleDocuments['articleDocuments']['array'] as $document){
                     if ($document['docId']){
                         $uri = $this->getDocImageUri($document['docId']);
-        var_dump($uri);
                         $this->saveImageGood($good, $uri);
                     }
                 }
