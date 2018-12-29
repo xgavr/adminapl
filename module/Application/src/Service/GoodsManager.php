@@ -203,7 +203,7 @@ class GoodsManager
                 }
             }
         }
-var_dump($images);
+//var_dump($images);
         return $images;
     }
     
