@@ -407,7 +407,7 @@ class AutodbManager
         $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
         
         if (is_array($articleInfo)){
-            foreach($articleInfo['data']['array'] as $articleDocuments){
+            foreach($articleInfo['data']['array']['articleDocuments'] as $articleDocuments){
         var_dump($articleDocuments);
                 foreach($articleDocuments as $documents){
         var_dump($documents);
