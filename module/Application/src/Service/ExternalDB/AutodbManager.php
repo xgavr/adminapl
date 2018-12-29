@@ -409,8 +409,8 @@ class AutodbManager
         if (is_array($articleInfo)){
             foreach($articleInfo['data']['array'] as $articleDocuments){
                 foreach($articleDocuments['articleDocuments']['array'] as $documents){
-        var_dump($documents);
                     if ($document['docId']){
+        var_dump($document['docId']);
                         $uri = $this->getDocImageUri($document['docId']);
                         $this->saveImageGood($good, $uri);
                     }
