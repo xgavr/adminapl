@@ -192,7 +192,7 @@ class GoodsManager
             $images = [];
         }    
 
-        var_dump($folderImage);
+        var_dump($images);
         if (is_dir($folderImage)){
             foreach (new \DirectoryIterator($folderImage) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
