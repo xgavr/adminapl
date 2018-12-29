@@ -196,14 +196,14 @@ class GoodsManager
             foreach (new \DirectoryIterator($folderImage) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
-                    $images[basename($folderImage)] = $folderImage.'/'.$fileInfo->getFilename();                            
+                    $images[basename($folderImage)] = str_replace('./public', '', $folderImage.'/'.$fileInfo->getFilename());                            
                 }
                 if ($fileInfo->isDir()){
                     $images = array_merge($images, $this->imagesFromFolder($folderImage.'/'.$fileInfo->getFilename(), $images));                    
                 }
             }
         }
-        var_dump($images);
+
         return $images;
     }
     
