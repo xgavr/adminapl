@@ -408,7 +408,6 @@ class AutodbManager
         
         if (is_array($articleInfo)){
             foreach($articleInfo['data']['array'] as $articleDocuments){
-        var_dump($articleDocuments);
                 foreach($articleDocuments['articleDocuments']['array'] as $documents){
         var_dump($documents);
                     if ($document['docId']){
