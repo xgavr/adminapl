@@ -411,12 +411,33 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $data = $this->externalManager->autoDb('getImages', ['good' => $goods]);
+        $data = $this->externalManager->autoDb('getInfo', ['good' => $goods]);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([
             'result' => 'ok-reload',
             'message' => $data,
+        ]);           
+        
+    }
+
+
+    public function externalApiImageAction()
+    {
+        $goodsId = $this->params()->fromRoute('id', -1);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $data = $this->externalManager->autoDb('getImages', ['good' => $goods]);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok-reload',
         ]);           
         
     }
