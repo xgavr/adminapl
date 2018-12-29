@@ -198,7 +198,7 @@ class GoodsManager
             foreach (new \DirectoryIterator($folderImage) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
-                    $images[basename($folderImage)] = $fileInfo->getFilename();                            
+                    $images[basename($folderImage)] = $fileInfo->getRealPath();                            
                 }
                 if ($fileInfo->isDir()){
                     $this->imagesFromFolder($fileInfo->getFilename(), $images);                    
