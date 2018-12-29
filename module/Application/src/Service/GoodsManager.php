@@ -11,8 +11,6 @@ use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Goods;
 use Application\Entity\Producer;
 use Application\Entity\Tax;
-use Zend\Config\Config;
-use Zend\Config\Writer\PhpArray;
 
 /**
  * Description of GoodsService
@@ -21,9 +19,9 @@ use Zend\Config\Writer\PhpArray;
  */
 class GoodsManager
 {
-    const IMAGE_DIR = './data/images'; //папка для хранения картинок
-    const GOOD_IMAGE_DIR = './data/images/goods'; //папка для хранения картинок товаров    
-    const TD_IMAGE_DIR = './data/images/goods/TD'; //папка для хранения картинок товаров
+    const IMAGE_DIR = './public/img'; //папка для хранения картинок
+    const GOOD_IMAGE_DIR = './public/img/goods'; //папка для хранения картинок товаров    
+    const TD_IMAGE_DIR = './pulic/img/goods/TD'; //папка для хранения картинок товаров
     
     /**
      * Doctrine entity manager.

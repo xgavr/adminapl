@@ -21,8 +21,8 @@ class AutodbManager
     
     const URI_PRODUCTION = 'https://auto-db.pro/ws/tecdoc-api/';
     
-    const IMAGE_DIR = './data/images'; //папка для хранения картинок
-    const GOOD_IMAGE_DIR = './data/images/goods'; //папка для хранения картинок товаров
+    const IMAGE_DIR = './public/img'; //папка для хранения картинок
+    const GOOD_IMAGE_DIR = './public/img/goods'; //папка для хранения картинок товаров
     
     const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
     
