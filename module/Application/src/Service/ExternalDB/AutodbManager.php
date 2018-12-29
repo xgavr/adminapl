@@ -379,15 +379,13 @@ class AutodbManager
      * 
      * @param string $uri
      */
-    public function saveImageGood($good, $uri)
+    public function saveImageGood($good, $uri, $docFileName)
     {
         $headers = get_headers($uri);
         if(preg_match("|200|", $headers[0])) {
             
-            $basenameFilter = new \Application\Filter\Basename();
-            
             $image = file_get_contents($uri);
-            file_put_contents(self::GOOD_IMAGE_DIR.'/'.$good->getId()."/".$basenameFilter->filter($uri), $image);
+            file_put_contents(self::GOOD_IMAGE_DIR.'/'.$good->getId()."/".$docFileName, $image);
         } 
         
         return;
@@ -410,9 +408,9 @@ class AutodbManager
         if (is_array($articleInfo)){
             foreach($articleInfo['data']['array'] as $articleDocuments){
                 foreach($articleDocuments['articleDocuments']['array'] as $document){
-                    if ($document['docId']){
+                    if ($document['docId'] && $document['docFileName']){
                         $uri = $this->getDocImageUri($document['docId']);
-                        $this->saveImageGood($good, $uri);
+                        $this->saveImageGood($good, $uri, $document['docFileName']);
                     }
                 }
             }
