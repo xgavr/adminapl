@@ -407,9 +407,9 @@ class AutodbManager
         $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
         
         if (is_array($articleInfo)){
-            foreach($articleInfo['data']['array']['articleDocuments'] as $articleDocuments){
+            foreach($articleInfo['data']['array'] as $articleDocuments){
         var_dump($articleDocuments);
-                foreach($articleDocuments as $documents){
+                foreach($articleDocuments['articleDocuments']['array'] as $documents){
         var_dump($documents);
                     if ($document['docId']){
                         $uri = $this->getDocImageUri($document['docId']);
