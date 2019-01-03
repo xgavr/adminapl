@@ -112,19 +112,25 @@ class TokenRepository  extends EntityRepository
      * @param Application\Entity\Token $token
      * @param integer $dict
      */
-    public function findNearToken($token, $dict = Token::IS_RU)
+    public function findNearToken($token, $dict = Token::IS_DICT)
     {
+        if (mb_strlen($token) < 3){
+            return [];
+        }
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('t')
-                ->form(Token::class, 't')
+                ->from(Token::class, 't')
                 ->where('t.status = ?1')
                 ->andWhere('t.lemma like ?2')
+                ->orderBy('t.lemma')
                 ->setParameter('1', $dict)
-                ->setParameter('2', '"'.$token.'%"')
+                ->setParameter('2', $token.'%')
+                ->setMaxResults(1)
                 ;
-        
-        return $queryBuilder->getQuery()->getResult();            
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);            
     }
 }

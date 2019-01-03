@@ -8,7 +8,6 @@
 namespace Application\Service;
 
 use Application\Entity\Token;
-use Application\Entity\Goods;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 
@@ -145,7 +144,22 @@ class NameManager
             $lemms = $lemmaFilter->filter($tokenFilter->filter($title));
             
             foreach ($lemms as $key => $words){
-                $this->addLemms($rawprice, $words, $key, $flush);
+                if ($key == Token::IS_RU){
+                    foreach ($words as $word){
+                        $predictWords = $this->entityManager->getRepository(Token::class)
+                               ->findNearToken($word);
+                        if (count($predictWords)){
+                            foreach($predictWords as $predictWord){
+//                                var_dump($predictWord['lemma']); exit;
+                                $this->addLemms($rawprice, [$predictWord['lemma']], Token::IS_DICT, $flush);
+                            }    
+                        } else {
+                            $this->addLemms($rawprice, [$word], $key, $flush);
+                        }
+                    }    
+                } else {
+                    $this->addLemms($rawprice, $words, $key, $flush);
+                }    
             }    
         }  
         

@@ -62,7 +62,7 @@ class Lemma extends AbstractFilter
         }
         
         $wordPredict = $word;
-        while (mb_strlen($wordPredict) > 4){
+        while (mb_strlen($wordPredict) > 3){
             $wordLen = mb_strlen($wordPredict);
             $wordPredict = mb_substr($wordPredict, 0, $wordLen-1);
             $collection = $morphy->findWord($wordPredict, phpMorphy::IGNORE_PREDICT);
@@ -70,6 +70,20 @@ class Lemma extends AbstractFilter
                 $predicts[] = $wordPredict;
                 return array_merge($predicts, $this->predictWord(str_replace($wordPredict, '', $word), $morphy));
             }
+        }
+        
+        if (mb_strlen($word) > 3){
+            $wordPredict = $word;
+            while (mb_strlen($wordPredict) > 3){
+                $wordPredict = mb_substr($wordPredict, 1);
+//                var_dump($wordPredict);
+                return $this->predictWord($wordPredict, $morphy);
+//                $collection = $morphy->findWord($wordPredict, phpMorphy::IGNORE_PREDICT);
+//                if (false !== $collection){
+//                    $predicts[] = $wordPredict;
+//                    return array_merge($predicts, $this->predictWord(str_replace($wordPredict, '', $word), $morphy));
+//                }
+            }    
         }
         
         return [$word];
