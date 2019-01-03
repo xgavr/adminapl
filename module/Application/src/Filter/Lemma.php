@@ -47,6 +47,34 @@ class Lemma extends AbstractFilter
         }    
     }
     
+    /**
+     * Все слова должны быть из словаря, 
+     * 
+     * @param string $word
+     * @param phpMorphy $morphy
+     */
+    protected function predictWord($word, $morphy)
+    {
+        $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
+        if (false !== $collection){
+            $predicts = [$word];        
+            return $predicts;
+        }
+        
+        $wordPredict = $word;
+        while (mb_strlen($wordPredict) > 4){
+            $wordLen = mb_strlen($wordPredict);
+            $wordPredict = mb_substr($wordPredict, 0, $wordLen-1);
+            $collection = $morphy->findWord($wordPredict, phpMorphy::IGNORE_PREDICT);
+            if (false !== $collection){
+                $predicts[] = $wordPredict;
+                return array_merge($predicts, $this->predictWord(str_replace($wordPredict, '', $word), $morphy));
+            }
+        }
+        
+        return [$word];
+    }
+    
     public function filter($value)
     {
         
@@ -99,7 +127,17 @@ class Lemma extends AbstractFilter
                     $collectionRU = $morphyRU->findWord($ruWord, phpMorphy::IGNORE_PREDICT);
 
                     if (false === $collectionRU) {
-                        $result[Token::IS_RU][] = $ruWord;                    
+                        $prdcts = $this->predictWord($ruWord, $morphyRU);
+                        foreach ($prdcts as $prdctWord){
+                            $collectionRU = $morphyRU->findWord($prdctWord, phpMorphy::IGNORE_PREDICT);
+                            if (false === $collectionRU) {
+                                $result[Token::IS_RU][] = $prdctWord;                    
+                            } else {
+                                foreach($collectionRU as $paradigm) {                
+                                    $result[Token::IS_DICT][] = $paradigm->getBaseForm();
+                                }                                
+                            }
+                        }
                     } else {
                         foreach($collectionRU as $paradigm) {                
                             $result[Token::IS_DICT][] = $paradigm->getBaseForm();

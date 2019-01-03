@@ -8,7 +8,6 @@
 
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\Article;
 use Application\Entity\Token;
 use Application\Entity\Rawprice;
 
@@ -107,5 +106,25 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();            
     }
 
-    
+    /**
+     * Найти близкий токен из словаря
+     * 
+     * @param Application\Entity\Token $token
+     * @param integer $dict
+     */
+    public function findNearToken($token, $dict = Token::IS_RU)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('t')
+                ->form(Token::class, 't')
+                ->where('t.status = ?1')
+                ->andWhere('t.lemma like ?2')
+                ->setParameter('1', $dict)
+                ->setParameter('2', '"'.$token.'%"')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();            
+    }
 }

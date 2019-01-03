@@ -41,8 +41,8 @@ class Sigma3 extends AbstractValidator
             }
         }        
         
-        $minPrice = $meanPrice - 3*$dispersion;
-        $maxPrice = $meanPrice + 3*$dispersion;
+        $minPrice = $meanPrice - 2*$dispersion;
+        $maxPrice = $meanPrice + 2*$dispersion;
         
         return $price >= $minPrice && $price <= $maxPrice;
     }
