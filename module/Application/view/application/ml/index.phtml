@@ -1,0 +1,28 @@
+<?php
+$this->headTitle('Машинное обучение');
+
+$this->mainMenu()->setActiveItemId('ml');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Машинное обучение'=>$this->url('ml')
+            ]);
+?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Группировка товаров
+            </div>
+        </div>
+        <div class="panel-body">
+            <button value="/ml/name-matrix" class="btn btn-info btn-xs refresh-button">
+                Товары-Токены
+            </button>                             
+            <button value="/ml/cluster-name" class="btn btn-info btn-xs refresh-button">
+                Кластеризация Товары-Токены
+            </button>                             
+        </div>
+    </div>
+</div>

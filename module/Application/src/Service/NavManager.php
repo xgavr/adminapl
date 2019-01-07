@@ -160,6 +160,12 @@ class NavManager
                         ];
                 
                 $rbDropdownItems[] = [
+                            'id' => 'tokenGroup',
+                            'label' => 'Группы наименований',
+                            'link' => $url('name', ['action'=>'token-group'])
+                        ];
+                
+                $rbDropdownItems[] = [
                             'id' => 'currency',
                             'label' => 'Валюты',
                             'link' => $url('currency')
@@ -322,6 +328,12 @@ class NavManager
                     'id' => 'external',
                     'label' => 'Внешние базы',
                     'link'  => $url('ext')
+                ];
+                
+                $adminDropdownItems[] = [
+                    'id' => 'ml',
+                    'label' => 'Машинное обучение',
+                    'link'  => $url('ml')
                 ];
                 
                 if (count($adminDropdownItems)!=0) {

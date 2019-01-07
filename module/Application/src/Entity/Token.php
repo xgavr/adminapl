@@ -73,6 +73,16 @@ class Token {
     private $rawprice;  
     
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\TokenGroup")
+     * @ORM\JoinTable(name="token_group_token",
+     *      joinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="token_group_id", referencedColumnName="id")}
+     *      )
+     */
+    private $tokenGroups;
+    
+
     public function getId() 
     {
         return $this->id;
@@ -233,4 +243,14 @@ class Token {
     {
         return $this->rawprice;
     }        
+
+    /**
+     * Returns the array of tokenGroups assigned to this oemRaw.
+     * @return array
+     */
+    public function getTokenGroups()
+    {
+        return $this->tokenGroups;
+    }        
+    
 }

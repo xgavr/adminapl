@@ -10,6 +10,7 @@ namespace Application\Service;
 use Application\Entity\Token;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Entity\TokenGroup;
 
 use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Application\Filter\NameTokenizer;
@@ -90,6 +91,12 @@ class NameManager
 
             // Применяем изменения к базе данных.
             $this->entityManager->flush($token);
+        } else {
+            if ($token->getStatus() != $data['status']){
+                $token->setStatus($data['status']);                            
+                $this->entityManager->persist($token);
+                $this->entityManager->flush($token);
+            }
         }
         
         return $token;        
@@ -185,7 +192,7 @@ class NameManager
                 ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_NEW]);
         
         foreach ($rawprices as $rawprice){
-            if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
+            if ($rawprice->getStatusToken() == $rawprice::TOKEN_NEW){
                 $this->addNewTokenFromRawprice($rawprice, false);
                 if (time() > $startTime + 400){
                     $this->entityManager->flush();
@@ -252,4 +259,170 @@ class NameManager
         
         return $result;
     }
+    
+    /**
+     * Добавить группу наименований по токенам товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @param bool $flush Description
+     * @return Application\Entity\TokenGroup Description
+     */
+    public function addGroupTokenFromGood($good, $flush = true)
+    {
+        
+        if ($good->getTokenGroup()){
+            return;
+        }
+        
+        if (count($good->getDictRuTokens()) == 0){
+            return;
+        }
+        
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneByIds($good->getDictRuTokenIds());
+        
+        if ($tokenGroup === NULL){
+            
+            $tokenGroup = new TokenGroup();
+        
+            $tokenIds = [];
+            $tokenLemms = [];
+            foreach($good->getDictRuTokens() as $token){
+                $tokenGroup->addToken($token);
+                $tokenIds[] = $token->getId();
+                $tokenLemms[] = $token->getLemma();
+            }
+        
+            $tokenGroup->setName('');
+            $tokenGroup->setLemms($tokenLemms);
+            $tokenGroup->setIds($tokenIds);
+        }
+        
+        $good->setTokenGroup($tokenGroup);
+        
+        $this->entityManager->persist($tokenGroup);
+        if ($flush){
+            $this->entityManager->flush();
+        }    
+        
+        return $tokenGroup;
+    }
+    
+    
+    /**
+     * Выборка токенов из прайса и добавление их в таблицу токенов
+     * @param Appllication\Entity\Raw $raw
+     */
+    public function grabTokenGroupFromRaw($raw)
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1200);
+        $startTime = time();
+        
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_PARSED]);
+        
+        foreach ($rawprices as $rawprice){
+            if ($rawprice->getStatusToken() == Rawprice::TOKEN_PARSED && $rawprice->getStatusGood() == Rawprice::GOOD_OK){
+                $this->addGroupTokenFromGood($rawprice->getGood());
+                if (time() > $startTime + 400){
+                    return;
+                }
+            }    
+        }
+        
+        $raw->setParseStage(Raw::STAGE_TOKEN_GROUP_PARSED);
+        $this->entityManager->persist($raw);
+        
+        $this->entityManager->flush();
+    }
+    
+    
+    /**
+     * Обновить наименование группы наименований
+     * 
+     * @param Application\Entity\TokenGroup $tokenGroup
+     * @param string $name
+     */
+    public function updateTokenGroupName($tokenGroup, $name)
+    {
+        $tokenGroup->setName($name);
+        $this->entityManager->persist($tokenGroup);
+        
+        $this->entityManager->flush($tokenGroup);
+        
+    }
+    
+    /**
+     * Обновление количества товара у группы наименований
+     * 
+     * @param Application\Entity\TokenGroup $tokenGroup
+     * @param bool $flush
+     */
+    public function updateTokenGroupGoodCount($tokenGroup, $flush = true)
+    {
+        $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->count(['tokenGroup' => $tokenGroup->getId()]);
+        
+        $tokenGroup->setGoodCount($goodCount);
+        $this->entityManager->persist($tokenGroup);
+        
+        if ($flush){
+            $this->entityManager->flush($tokenGroup);
+        }
+    }
+    
+    /**
+     * Обновление количества товара у всех групп наименований
+     */
+    public function updateAllTokenGroupGoodCount()
+    {
+        $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                ->findBy([]);
+
+        foreach ($tokenGroups as $tokenGroup){
+            $this->updateTokenGroupGoodCount($tokenGroup, false);
+        }   
+        $this->entityManager->flush();        
+    }
+    
+    
+    
+    /**
+     * Удаление TokenGroup
+     * 
+     * @param Application\Entity\TokenGroup $tokenGroup
+     */
+    public function removeTokenGroup($tokenGroup, $flush = true)
+    {
+        foreach ($tokenGroup->getGoods() as $good){
+            $good->setTokenGroup(null);
+        }
+        
+        $tokenGroup->getTokens()->clear();
+        
+        $this->entityManager->remove($tokenGroup);
+        if ($flush){
+            $this->entityManager->flush();
+        }    
+    }
+    
+    /**
+     * Поиск и удаление пустых групп наименований
+     */
+    public function removeEmptyTokenGroup()
+    {
+        ini_set('memory_limit', '2048M');
+        
+        $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                ->findBy(['goodCount' => 0]);
+
+        foreach ($tokenGroups as $tokenGroup){
+            $this->removeTokenGroup($tokenGroup, false);
+        }
+        
+        $this->entityManager->flush();
+        
+        return count($tokenGroups);
+    }    
 }

@@ -33,6 +33,25 @@ $this->pageBreadcrumbs()->setItems([
 </h1>
 
 <div>
+    <?php if ($goods->getTokenGroup()):?>
+        <span>
+            <?= $goods->getTokenGroup()->getName();?>
+        </span>    
+        <span>
+            <?= $goods->getTokenGroup()->getTokenView();?>
+        </span>    
+    <?php else: ?>
+        <span>
+            Группа наименований не назначена
+        </span>    
+    <?php endif?>
+    <button value="/name/goods-token-group/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+            title="Присвоить группу наименований">
+        <span class="glyphicon glyphicon-refresh" ></span>
+    </button> 
+</div>
+
+<div>
     <span>
         <?= $bestName;?>
     </span>    

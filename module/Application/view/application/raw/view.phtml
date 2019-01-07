@@ -259,6 +259,12 @@ $this->pageBreadcrumbs()->setItems([
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                 <?php endif;?>
+                                <?php if ($raw->getParseStage() == $raw::STAGE_GOOD_ASSEMBLY):?>
+                                    <button value="/name/update-token-group-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Разобрать группы наименований">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                <?php endif;?>
                             </div>    
                         </div>    
                     </div>

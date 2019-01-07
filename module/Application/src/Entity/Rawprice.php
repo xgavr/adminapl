@@ -32,6 +32,7 @@ class Rawprice {
 
     const TOKEN_NEW       = 1; // только что загрузили
     const TOKEN_PARSED    = 2; // прошел разборку.
+    const TOKEN_GROUP_PARSED    = 3; // прошел разборку группу наименований.
     
     const GOOD_NEW        = 1; //только что загрузили
     const GOOD_OK         = 2; //товар создан
@@ -235,7 +236,7 @@ class Rawprice {
     public function __construct() 
     {
         $this->oemRaw = new ArrayCollection();
-        $this->nameRaw = new ArrayCollection();
+        $this->tokens = new ArrayCollection();
     }
    
     /**
@@ -880,7 +881,7 @@ class Rawprice {
      */
     public function getDictRuTokens()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->neq("status", Token::IS_DICT));
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Token::IS_DICT));
         return $this->getTokens()->matching($criteria);        
     }
     
@@ -890,19 +891,29 @@ class Rawprice {
      */
     public function getDictEnTokens()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->neq("status", Token::IS_EN_DICT));
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Token::IS_EN_DICT));
         return $this->getTokens()->matching($criteria);        
     }
     
     /**
      * 
-     * @param Application\Entity\Token $tokens
+     * @param Application\Entity\Token $token
      */
     public function addToken($token)
     {
         $this->tokens->add($token);
     }
 
+    /**
+     * Содержет ли строка токен?
+     * 
+     * @param Application\Entity\Token $token
+     * @return bool
+     */
+    public function hasToken($token)
+    {
+        return $this->tokens->contains($token);
+    }
     
     /*
      * Получить поля со значениями и заголовками

@@ -89,6 +89,14 @@ class Goods {
     protected $images;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\TokenGroup", inversedBy="goods") 
+     * @ORM\JoinColumn(name="token_group_id", referencedColumnName="id")
+     * 
+     */
+
+    protected $tokenGroup;
+    
+    /**
      * Конструктор.
      */
     public function __construct() 
@@ -240,5 +248,83 @@ class Goods {
     {
         $this->rawprice[] = $rawprice;
     }
+    
+    /**
+     * Содержит ли наименование товара токен
+     * 
+     * @param Application\Entity\Token $token
+     * @return boolean
+     */
+    public function hasToken($token)
+    {
+        foreach ($this->rawprice as $rawprice){
+            if ($rawprice->hasToken($token)){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Возвращает токены из словаря Ru
+     * @return array;
+     */
+    public function getDictRuTokens()
+    {
+        $result = [];
+        foreach($this->rawprice as $rawprice){
+            foreach($rawprice->getDictRuTokens() as $token){
+                $result[$token->getId()] = $token;
+            }
+        }
+        
+        return $result;
+    }
             
+    /**
+     * Возвращает id токенов из словаря Ru
+     * @return string;
+     */
+    public function getDictRuTokenIds()
+    {
+        $tokens = $this->getDictRuTokens();
+        $result = [];
+        foreach($tokens as $token){
+            $result[] = $token->getId();
+        }
+        
+        $filter = new \Application\Filter\IdsFormat();
+
+        return $filter->filter($result);
+    }
+            
+    /*
+     * Возвращает связанный tokenGroup.
+     * @return \Application\Entity\TokenGroup
+     */    
+    public function getTokenGroup() 
+    {
+        if ($this->tokenGroup){
+            if ($this->tokenGroup->getId()){
+                return $this->tokenGroup;                
+            }
+        }
+        
+        return;
+    }
+    
+    /**
+     * Задает связанный tokenGroup.
+     * @param \Application\Entity\TokenGroup $tokenGroup
+     */    
+    public function setTokenGroup($tokenGroup) 
+    {
+        $this->tokenGroup = $tokenGroup;
+        if ($tokenGroup){
+            $tokenGroup->addGood($this);
+        }    
+    }     
+
+    
 }

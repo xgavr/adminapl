@@ -8,6 +8,7 @@
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 
 class MlController extends AbstractActionController
@@ -35,9 +36,7 @@ class MlController extends AbstractActionController
     public function indexAction()
     {
         
-        // Визуализируем шаблон представления.
-        return new JsonModel([
-        ]);  
+        return new ViewModel();
     }
     
     public function matchingRawpriceTrainAction()
@@ -46,6 +45,24 @@ class MlController extends AbstractActionController
         
         return new JsonModel([
             'ok'
+        ]);  
+    }
+    
+    public function nameMatrixAction()
+    {
+        $this->mlManager->featureNameMatrix();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);  
+    }
+    
+    public function clusterNameAction()
+    {
+        $this->mlManager->clusterName();
+        
+        return new JsonModel([
+            'result' => 'ok',
         ]);  
     }
     

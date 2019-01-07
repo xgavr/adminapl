@@ -34,6 +34,7 @@ class Raw {
     const STAGE_OEM_PARSED          = 4; //номера замен разобраны
     const STAGE_TOKEN_PARSED        = 5; //наименования разобраны
     const STAGE_GOOD_ASSEMBLY       = 6; //карточки товара собрана
+    const STAGE_TOKEN_GROUP_PARSED  = 7; //группы наименований разобраны
     
            
     /**
@@ -230,6 +231,7 @@ class Raw {
             self::STAGE_OEM_PARSED => 'Номера замен разобраны',
             self::STAGE_TOKEN_PARSED => 'Наименования разобраны',
             self::STAGE_GOOD_ASSEMBLY => 'Товары собраны',
+            self::STAGE_TOKEN_GROUP_PARSED => 'Группы наименований разобраны',
         ];
     }    
     

@@ -1,0 +1,106 @@
+<?php
+$this->headTitle($tokenGroup->getName());
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Группы наименований'=>$this->url('name', ['action' => 'token-group']),
+            $tokenGroup->getName()=>$this->url('name', ['action'=>'view-token-group', 'id'=>$tokenGroup->getId()])
+            ]);
+
+?>
+<h1>
+    <?= $this->escapeHtml(($tokenGroup->getName()) ? $tokenGroup->getName():'---'); ?>    
+    <button onclick="promptDialog('/name/token-group-name-form/<?= $tokenGroup->getId()?>', '<?= $this->escapeHtml($tokenGroup->getName()); ?>')" 
+            class="btn btn-default btn-xs" 
+            title="Изменить наименование группы">
+        <span class="glyphicon glyphicon-refresh" ></span>
+    </button> 
+
+</h1>
+<?= $tokenGroup->getLemms()?>
+<table class="table table-striped">
+    <tr>
+        <td colspan="2"  style="font-size: x-small">            
+            <?php if ($prev):?>
+                <a href="/name/view-token-group/<?= $prev[0]->getId()?>">&larr;<?= ($prev[0]->getName()) ? $prev[0]->getName():$prev[0]->getLemms() ?></a>
+            <?php endif;?>            
+        </td>
+        <td  colspan="3" align="right"  style="font-size: x-small">
+            <?php if ($next):?>
+                <a href="/name/view-token-group/<?= $next[0]->getId()?>"><?= ($next[0]->getName()) ? $next[0]->getName():$next[0]->getLemms()?>&rarr;</a>
+            <?php endif;?>                            
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <?= $this->paginationControl($goods,
+                        'Sliding',
+                        'application/partial/paginator', 
+                        ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
+            
+        </td>
+        <td align="right" valign="center">
+            <b><?= $totalGoodsCount?></b>
+        </td>
+    </tr>
+    <?php    foreach ($goods as $good):?>
+        <tr>
+            <td colspan="6">
+                <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()]);?>">
+                    <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
+                </a>   
+                <div>
+                    <?php foreach($good->getRawprice() as $rawprice):?>
+                        <span>
+                            <?= $rawprice->getGoodname();?>
+                        </span>
+                    <?php endforeach;?>                            
+                </div>
+            </td>
+        </tr>
+    <?php endforeach;?>        
+    <tr>
+        <td colspan="5">
+            <?= $this->paginationControl($goods,
+                        'Sliding',
+                        'application/partial/paginator', 
+                        ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
+            
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    /**
+    * Промпт диалог
+    *
+    */
+    function promptDialog(url, initValue) {
+        if (url){            
+            var dialog = bootbox.prompt({ 
+                size: "medium",
+                value: initValue,
+                title: 'Наименование группы', 
+                callback: function(result){
+                    /* result = String containing user input if OK clicked or null if Cancel clicked */
+                    if (result){
+                        $.ajax({
+                            type: 'GET',
+                            url: url+'?prompt='+result,
+                        })
+                            .done(function (data) {
+                                if (data == 'ok'){
+                                    window.location.reload();
+                                }    
+                            })
+                            .fail(function (e) {
+                                bootbox.alert("Произошла ошибка при выполнении операции.");
+                            });
+                    }        
+                }
+            });
+        }        
+    }    
+</script>

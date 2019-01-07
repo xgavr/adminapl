@@ -10,9 +10,8 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Rawprice;
-use Application\Entity\UnknownProducer;
-use Application\Entity\Article;
 use Application\Entity\Token;
+use Application\Entity\TokenGroup;
 use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -55,46 +54,6 @@ class NameController extends AbstractActionController
         $this->nameManager = $nameManager;
     }    
         
-    public function indexAction()
-    {
-        $bind = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['status' => Rawprice::STATUS_PARSED, 'statusOem' => Rawprice::OEM_PARSED]);
-        $noBind = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['status' => Rawprice::STATUS_PARSED, 'statusOem' => Rawprice::OEM_NEW]);
-        $total = $this->entityManager->getRepository(Token::class)
-                ->count([]);
-                
-        return new ViewModel([
-            'bind' => $bind,
-            'noBind' => $noBind,
-            'total' => $total,
-        ]);  
-    }
-    
-    public function contentAction()
-    {
-        ini_set('memory_limit', '512M');
-        	        
-        $q = $this->params()->fromQuery('search');
-        $offset = $this->params()->fromQuery('offset');
-        $limit = $this->params()->fromQuery('limit');
-        
-        $query = $this->entityManager->getRepository(OemRaw::class)
-                        ->findAllOemRaw(['q' => $q]);
-
-        $total = count($query->getResult(2));
-        
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
-
-        $result = $query->getResult(2);
-        
-        return new JsonModel([
-            'total' => $total,
-            'rows' => $result,
-        ]);          
-    }    
-    
     public function indexTokenAction()
     {
         $bind = $this->entityManager->getRepository(Rawprice::class)
@@ -290,6 +249,71 @@ class NameController extends AbstractActionController
         ]);          
     }
     
+    public function updateTokenGroupFromRawAction()
+    {
+        set_time_limit(0);
+        $rawId = $this->params()->fromRoute('id', -1);
+
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findOneById($rawId);
+
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->grabTokenGroupFromRaw($raw);
+                
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
+    
+    public function tokenGroupNameFormAction()
+    {
+        $tokenGroupId = $this->params()->fromRoute('id', -1);
+        $name = $this->params()->fromQuery('prompt');
+        
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneById($tokenGroupId);      
+        
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->nameManager->updateTokenGroupName($tokenGroup, $name);
+        
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
+    
+    public function deleteTokenGroupFormAction()
+    {
+        $tokenGroupId = $this->params()->fromRoute('id', -1);
+        
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneById($tokenGroupId);      
+        
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->nameManager->removeTokenGroup($tokenGroup);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+
+    
     public function deleteEmptyAction()
     {
         $deleted = $this->nameManager->removeEmptyToken();
@@ -299,4 +323,132 @@ class NameController extends AbstractActionController
             'message' => $deleted.' удалено!',
         ]);          
     }    
+
+    public function tokenGroupAction()
+    {
+        $total = $this->entityManager->getRepository(TokenGroup::class)
+                ->count([]);
+                
+        return new ViewModel([
+            'total' => $total,
+        ]);  
+    }
+    
+    public function tokenGroupContentAction()
+    {
+//        ini_set('memory_limit', '512M');
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findAllTokenGroup(['q' => $q, 'sort' => $sort, 'order' => $order]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
+    public function viewTokenGroupAction() 
+    {       
+        $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
+        $page = $this->params()->fromQuery('page', 1);
+
+        if ($tokenGroupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneById($tokenGroupId);
+        
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $prevQuery = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findAllTokenGroup(['prev1' => $tokenGroup->getIds()]);
+        $nextQuery = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findAllTokenGroup(['next1' => $tokenGroup->getIds()]); 
+        
+        
+        $goodsQuery = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findTokenGroupGoods($tokenGroup);
+
+        $adapter = new DoctrineAdapter(new ORMPaginator($goodsQuery, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setCurrentPageNumber($page);
+
+        $totalGoodsCount = $paginator->getTotalItemCount();
+        
+
+        // Render the view template.
+        return new ViewModel([
+            'tokenGroup' => $tokenGroup,
+            'goods' => $paginator,
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
+            'nameManager' => $this->nameManager,
+            'totalGoodsCount' => $totalGoodsCount,
+        ]);
+    }    
+    
+    public function goodsTokenGroupAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findOneById($goodId);
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->addGroupTokenFromGood($good);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
+    
+    public function goodCountTokenGroupAction()
+    {
+        $this->nameManager->updateAllTokenGroupGoodCount();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
+    
+    
+    public function deleteEmptyTokenGroupAction()
+    {
+        $deleted = $this->nameManager->removeEmptyTokenGroup();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }    
+    
 }

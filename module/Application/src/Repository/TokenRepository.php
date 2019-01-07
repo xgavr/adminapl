@@ -10,6 +10,8 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Token;
 use Application\Entity\Rawprice;
+use Application\Entity\TokenGroup;
+use Application\Entity\Goods;
 
 
 /**
@@ -21,7 +23,7 @@ class TokenRepository  extends EntityRepository
 {
     
     /**
-     * Запрос по кроссам по разным параметрам
+     * Запрос по токенам по разным параметрам
      * 
      * @param array $params
      * @return object
@@ -62,6 +64,50 @@ class TokenRepository  extends EntityRepository
     }            
     
     /**
+     * Запрос по группам наименований по разным параметрам
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function findAllTokenGroup($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('t')
+            ->from(TokenGroup::class, 't')
+            ->addOrderBy('t.name')                
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['q'])){
+                $queryBuilder->where('t.lemms like :search')
+                    ->setParameter('search', '%' . $params['q'] . '%')
+                        ;
+            }
+            if (isset($params['next1'])){
+                $queryBuilder->where('t.ids > ?1')
+                    ->setParameter('1', $params['next1'])
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['prev1'])){
+                $queryBuilder->where('t.ids < ?2')
+                    ->setParameter('2', $params['prev1'])
+                    ->orderBy('t.ids', 'DESC')
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('t.'.$params['sort'], $params['order']);                
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }            
+    
+    /**
      * Найти строки прайсов токена
      * 
      * @param Application\Entity\Token $token
@@ -79,6 +125,26 @@ class TokenRepository  extends EntityRepository
             ->andWhere('r.status = ?2')    
             ->setParameter('1', $token->getId())
             ->setParameter('2', Rawprice::STATUS_PARSED)
+            ;
+        
+        return $queryBuilder->getQuery();            
+    }
+
+    /**
+     * Найти товары группы наименований
+     * 
+     * @param Application\Entity\TokenGroup $tokenGroup
+     * @return object
+     */
+    public function findTokenGroupGoods($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.tokenGroup = ?1')    
+            ->setParameter('1', $tokenGroup->getId())
             ;
         
         return $queryBuilder->getQuery();            
@@ -133,4 +199,6 @@ class TokenRepository  extends EntityRepository
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult(2);            
     }
+    
+    
 }
