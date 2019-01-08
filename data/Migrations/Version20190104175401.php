@@ -66,11 +66,11 @@ final class Version20190104175401 extends AbstractMigration
         $table = $schema->createTable('token_group');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);
         $table->addColumn('name', 'string', ['notnull'=>true, 'length' => 128]);        
-        $table->addColumn('lemms', 'string', ['notnull'=>true, 'length' => 256]);        
+        $table->addColumn('lemms', 'string', ['notnull'=>true, 'length' => 512]);        
         $table->addColumn('ids', 'string', ['notnull'=>true, 'length' => 512]);        
         $table->addColumn('good_count', 'integer', ['notnull'=>true, 'default' => 0]);        
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['ids'], 'ids_indx');
+        $table->addIndex(['ids'], 'ids_indx');
         $table->addOption('engine' , 'InnoDB');
         
         $table = $schema->getTable('goods');

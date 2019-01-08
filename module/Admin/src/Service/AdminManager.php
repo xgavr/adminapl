@@ -143,29 +143,6 @@ class AdminManager {
     }
     
     /**
-     * Включить/отключить все настройки 
-     * 
-     * @param integer $flag
-     */
-    public function offPriceSettings($flag = 1)
-    {
-        if (file_exists(self::PRICE_SETTINGS_FILE)){
-            $config = new Config(include self::PRICE_SETTINGS_FILE, true);
-        }  else {
-            return;
-        }        
-        
-        var_dump($flag); exit;
-        foreach ($config->price as $item){
-            $config->price->$item = $flag;
-        }
-                
-        $writer = new PhpArray();
-        
-        $writer->toFile(self::PRICE_SETTINGS_FILE, $config);       
-    }
-    
-    /**
      * Получить настройки обмена с банком
      * @return array 
      */
