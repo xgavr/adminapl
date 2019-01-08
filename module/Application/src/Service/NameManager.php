@@ -325,6 +325,10 @@ class NameManager
         foreach ($rawprices as $rawprice){
             if ($rawprice->getStatusToken() == Rawprice::TOKEN_PARSED && $rawprice->getStatusGood() == Rawprice::GOOD_OK){
                 $this->addGroupTokenFromGood($rawprice->getGood());
+                
+                $rawprice->setStatueToken(Rawprice::TOKEN_GROUP_PARSED);
+                $this->entityManager->persist($rawprice);
+                
                 if (time() > $startTime + 400){
                     return;
                 }
