@@ -544,6 +544,53 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * Обновление групп наименований из прайса
+     */
+    public function tokenGroupFromRawpriceAction()
+    {
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
+            
+            if ($raw){
+                $this->nameManager->grabTokenGroupFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
+     * Удаление пустых групп наименований производителей
+     */
+    public function deleteTokenGroupAction()
+    {
+        set_time_limit(1200);
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+
+            $this->nameManager->updateAllTokenGroupGoodCount();
+            
+            $this->nameManager->removeEmptyTokenGroup();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    /**
      * Обовление пересечения производителей
      * 
      * @return JsonModel
