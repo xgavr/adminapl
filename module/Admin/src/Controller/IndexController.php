@@ -242,6 +242,17 @@ class IndexController extends AbstractActionController
         
     }
     
+    public function offPriceSettingFormAction()
+    {
+        $flag = $this->params()->fromQuery('flag');
+        
+        $this->adminManager->offPriceSettings($flag);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+}
+    
     public function bankSettingsAction()
     {
         $form = new BankSettingsForm();
