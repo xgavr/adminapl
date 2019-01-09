@@ -32,7 +32,7 @@ class Rawprice {
 
     const TOKEN_NEW       = 1; // только что загрузили
     const TOKEN_PARSED    = 2; // прошел разборку.
-    const TOKEN_GROUP_PARSED    = 3; // прошел разборку группу наименований.
+    const TOKEN_GROUP_PARSED = 3; // прошел разборку группу наименований.
     
     const GOOD_NEW        = 1; //только что загрузили
     const GOOD_OK         = 2; //товар создан

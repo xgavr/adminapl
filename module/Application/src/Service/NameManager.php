@@ -343,7 +343,7 @@ class NameManager
                 $rawprice->setStatusToken(Rawprice::TOKEN_GROUP_PARSED);
                 $this->entityManager->persist($rawprice);
                 
-                if (time() > $startTime + 400){
+                if (time() > $startTime + 600){
                     $this->entityManager->flush();
                     return;
                 }
