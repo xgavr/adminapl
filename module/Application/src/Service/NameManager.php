@@ -344,6 +344,7 @@ class NameManager
                 $this->entityManager->persist($rawprice);
                 
                 if (time() > $startTime + 400){
+                    $this->entityManager->flush();
                     return;
                 }
             }    
