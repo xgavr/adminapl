@@ -334,12 +334,10 @@ class NameManager
         $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_PARSED]);
+                ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_PARSED, 'statusGood' => Rawprice::GOOD_OK]);
         
         foreach ($rawprices as $rawprice){
-            if ($rawprice->getStatusGood() == Rawprice::GOOD_OK){
-                $this->addGroupTokenFromGood($rawprice->getGood());                
-            }    
+            $this->addGroupTokenFromGood($rawprice->getGood());                
             
             $rawprice->setStatusToken(Rawprice::TOKEN_GROUP_PARSED);
             $this->entityManager->persist($rawprice);
