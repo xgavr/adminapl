@@ -131,6 +131,32 @@ class TokenRepository  extends EntityRepository
     }
 
     /**
+     * Найти токены товара по типу
+     * 
+     * @param Application\Entity\Goods $good
+     * @param integer $tokenType Description
+     * @return object
+     */
+    public function findTokenGoodsByStatus($good, $tokenType = Token::IS_DICT)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('rt.id, rt.lemma, rt.status')
+            ->distinct()    
+            ->from(Rawprice::class, 'r')
+            ->join('r.tokens', 'rt', 'WITH')
+            //->join(Token::class, 't', 'WITH')    
+            ->where('r.good = ?1')   
+            ->andWhere('rt.status = ?2')    
+            ->setParameter('1', $good->getId())
+            ->setParameter('2', $tokenType)
+            ;
+//            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
+    /**
      * Найти товары группы наименований
      * 
      * @param Application\Entity\TokenGroup $tokenGroup

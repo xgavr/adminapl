@@ -16,6 +16,7 @@ use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Application\Filter\NameTokenizer;
 use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
+use Application\Filter\IdsFormat;
 
 /**
  * Description of RbService
@@ -274,23 +275,36 @@ class NameManager
             return;
         }
         
-        if (count($good->getDictRuTokens()) == 0){
+//        if (count($good->getDictRuTokens()) == 0){
+//            return;
+//        }
+        $dictTokens = $this->entityManager->getRepository(Token::class)
+                ->findTokenGoodsByStatus($good, Token::IS_DICT);
+        
+//        var_dump(count($dictTokens)); exit;
+        if (count($dictTokens) == 0){
             return;
         }
         
+        $tokenIds = [];
+        $tokenLemms = [];
+        foreach ($dictTokens as $token){
+            $tokenIds[] = $token['id'];
+            $tokenLemms[] = $token['lemma'];
+        }
+        
+        $idsFilter = new IdsFormat();
+        
         $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                ->findOneByIds($good->getDictRuTokenIds());
+                ->findOneByIds($idsFilter->filter($tokenIds));
         
         if ($tokenGroup === NULL){
             
             $tokenGroup = new TokenGroup();
         
-            $tokenIds = [];
-            $tokenLemms = [];
-            foreach($good->getDictRuTokens() as $token){
-                $tokenGroup->addToken($token);
-                $tokenIds[] = $token->getId();
-                $tokenLemms[] = $token->getLemma();
+            foreach($dictTokens as $token){
+                $tokenRef = $this->entityManager->getReference(Token::class, $token['id']);
+                $tokenGroup->addToken($tokenRef);
             }
         
             $tokenGroup->setName('');
