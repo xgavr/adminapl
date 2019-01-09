@@ -337,17 +337,17 @@ class NameManager
                 ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_PARSED]);
         
         foreach ($rawprices as $rawprice){
-            if ($rawprice->getStatusToken() == Rawprice::TOKEN_PARSED && $rawprice->getStatusGood() == Rawprice::GOOD_OK){
-                $this->addGroupTokenFromGood($rawprice->getGood());
-                
-                $rawprice->setStatusToken(Rawprice::TOKEN_GROUP_PARSED);
-                $this->entityManager->persist($rawprice);
-                
-                if (time() > $startTime + 600){
-                    $this->entityManager->flush();
-                    return;
-                }
+            if ($rawprice->getStatusGood() == Rawprice::GOOD_OK){
+                $this->addGroupTokenFromGood($rawprice->getGood());                
             }    
+            
+            $rawprice->setStatusToken(Rawprice::TOKEN_GROUP_PARSED);
+            $this->entityManager->persist($rawprice);
+
+            if (time() > $startTime + 600){
+                $this->entityManager->flush();
+                return;
+            }
         }
         
         $raw->setParseStage(Raw::STAGE_TOKEN_GROUP_PARSED);
