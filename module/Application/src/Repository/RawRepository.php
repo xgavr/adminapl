@@ -290,7 +290,7 @@ class RawRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('r.status as status, count(r.id) as status_count')
+        $queryBuilder->select('r.status as status, count(r.id) as status_count, sum(r.rows) as row_count')
                 ->from(Raw::class, 'r')
                 ->groupBy('r.status')
                 ;
