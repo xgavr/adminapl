@@ -10,6 +10,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Article;
 use Application\Entity\Rawprice;
+use Application\Entity\Raw;
 
 
 /**
@@ -217,6 +218,27 @@ class ArticleRepository  extends EntityRepository
             ->setParameter('1', Rawprice::STATUS_PARSED)
                 ;
         return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
+     * Количество строк в стадии разборки артикулов
+     * @param integer $maxStage Description
+     * @return object
+     */
+    public function findParseStageRawpriceCount($maxStage)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('case when r.parseStage < ?2 then 0 else 1 end as stage, sum(r.rows) as rowCount')
+            ->from(Raw::class, 'r')
+            ->where('r.status = ?1')
+            ->groupBy('stage')    
+            ->setParameter('1', Raw::STATUS_PARSED)
+            ->setParameter('2', $maxStage)
+                ;
+        return $queryBuilder->getQuery()->getResult();            
+        
     }
 
     /**

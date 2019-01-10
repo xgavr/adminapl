@@ -60,14 +60,14 @@ $this->headScript()
                         Строки прайсов
                     </div>
                     <div class="panel-body">
-                        <?php foreach($binds as $bind):?>
-                            <?php if ($bind['bind']):?>
+                        <?php foreach($stages as $stage):?>
+                            <?php if ($stage['stage']):?>
                                 <div>
-                                     <?= $bind['bindCount']?> - привязаны
+                                     <?= $stage['rowCount']?> - привязаны
                                 </div>     
                             <?php else:?>
                                 <div>
-                                    <?= $bind['bindCount']?> - не привязаны
+                                    <?= $stage['rowCount']?> - не привязаны
                                 </div>
                             <?php endif;?>
                         <?php endforeach;?>

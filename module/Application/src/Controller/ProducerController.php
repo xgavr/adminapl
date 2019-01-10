@@ -296,13 +296,13 @@ class ProducerController extends AbstractActionController
     
     public function unknownAction()
     {
-        $bind = $this->entityManager->getRepository(UnknownProducer::class)
-                ->findBindNoBindRawprice();
+        $stages = $this->entityManager->getRepository(Article::class)
+                ->findParseStageRawpriceCount(\Application\Entity\Raw::STAGE_PRODUCER_PARSED);
         $total = $this->entityManager->getRepository(UnknownProducer::class)
                 ->count([]);
         
         return new ViewModel([
-            'binds' => $bind,
+            'stages' => $stages,
             'total' => $total,
         ]);  
     }
@@ -384,13 +384,16 @@ class ProducerController extends AbstractActionController
     
     public function articleAction()
     {
-        $bind = $this->entityManager->getRepository(Article::class)
-                ->findBindNoBindRawprice();
+//        $bind = $this->entityManager->getRepository(Article::class)
+//                ->findBindNoBindRawprice();
+        $stages = $this->entityManager->getRepository(Article::class)
+                ->findParseStageRawpriceCount(\Application\Entity\Raw::STAGE_ARTICLE_PARSED);
+        
         $total = $this->entityManager->getRepository(Article::class)
                 ->count([]);
                 
         return new ViewModel([
-            'binds' => $bind,
+            'stages' => $stages,
             'total' => $total,
         ]);  
     }
