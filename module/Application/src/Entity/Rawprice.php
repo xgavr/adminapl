@@ -652,7 +652,7 @@ class Rawprice {
 
     public function setCurrency($currency) 
     {
-        $this->currency = $currency;
+        $this->currency = mb_substr($currency, 0, 8);
     }     
 
     public function getComment() 
