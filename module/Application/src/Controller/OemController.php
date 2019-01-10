@@ -51,16 +51,13 @@ class OemController extends AbstractActionController
     
     public function indexAction()
     {
-        $bind = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['status' => Rawprice::STATUS_PARSED, 'statusOem' => Rawprice::OEM_PARSED]);
-        $noBind = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['status' => Rawprice::STATUS_PARSED, 'statusOem' => Rawprice::OEM_NEW]);
+        $stages = $this->entityManager->getRepository(Article::class)
+                ->findParseStageRawpriceCount(\Application\Entity\Raw::STAGE_OEM_PARSED);
         $total = $this->entityManager->getRepository(OemRaw::class)
                 ->count([]);
                 
         return new ViewModel([
-            'bind' => $bind,
-            'noBind' => $noBind,
+            'stages' => $stages,
             'total' => $total,
         ]);  
     }

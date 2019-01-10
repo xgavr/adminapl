@@ -65,6 +65,17 @@ class RawRepository extends EntityRepository
     }
     
     /**
+     * Быстрое обновлеие некоторых полей всех строк прайса
+     * @param Application\Entity\Raw $raw
+     * @param array $data 
+     * @return integer
+     */
+    public function updateAllRawpriceField($raw, $data)
+    {
+        return $this->getEntityManager()->getConnection()->update('rawprice', $data, ['raw_id' => $raw->getId()]);
+    }
+    
+    /**
      * Быстрая привязка неизвестного производителя
      * @param Application\Entity\Raw $raw
      * @param integer $status 

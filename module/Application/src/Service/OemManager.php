@@ -49,10 +49,6 @@ class OemManager
 
         if ($oem == null){
 
-            if (mb_strlen($code, 'utf-8') > 36){
-               $result = 'moreThan36';
-            }
-            // Создаем новую сущность UnknownProducer.
             $oem = new OemRaw();
             $oem->setCode($filteredCode);            
             $oem->setFullCode($code);
@@ -110,22 +106,48 @@ class OemManager
      */
     public function grabOemFromRaw($raw)
     {
-        ini_set('memory_limit', '4096M');
-        set_time_limit(1200);
-        $startTime = time();
+        ini_set('memory_limit', '2048M');
+        set_time_limit(600);
+        
+        $filter = new \Application\Filter\ArticleCode();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'statusOem' => Rawprice::OEM_NEW]);
         
         foreach ($rawprices as $rawprice){
-            if ($rawprice->getStatusOem() != $rawprice::OEM_PARSED){
-                $this->addNewOemRawFromRawprice($rawprice, false);
-                if (time() > $startTime + 400){
-                    $this->entityManager->flush();
-                    return;
-                }
-            }    
+            
+            $rawprice->getOemRaw()->clear();
+        
+            $oems = $rawprice->getOemAsArray();
+            if (is_array($oems)){
+                foreach ($oems as $oemCode){
+                    
+                    $filteredCode = mb_strcut(trim($filter->filter($oemCode)), 0, 24, 'UTF-8');
+                    
+                    try{
+                        $inserted = $this->entityManager->getRepository(OemRaw::class)
+                                ->insertOemRaw([
+                                    'code' => $filteredCode,
+                                    'fullcode' => mb_substr($oemCode, 0, 36),
+                                    'article_id' => $rawprice->getCode()->getId(),                                
+                                ]);
+                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
+                        //дубликат;
+                    }    
+                    
+                    $oem = $this->entityManager->getRepository(OemRaw::class)
+                            ->findOneBy(['code' => $filteredCode, 'article' => $rawprice->getCode()->getId()]);
+                            
+                    if ($oem){
+                        $rawprice->getCode()->addOemRaw($oem);
+                        $rawprice->addOemRaw($oem);
+                    }   
+                }    
+            }                
         }
+        
+        $this->entityManager->getRepository(Rawprice::class)
+                ->updateAllRawpriceField($raw, ['status_oem' => Rawprice::OEM_PARSED]);
         
         $raw->setParseStage(Raw::STAGE_OEM_PARSED);
         $this->entityManager->persist($raw);

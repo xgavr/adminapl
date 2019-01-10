@@ -22,14 +22,16 @@ class OemRepository  extends EntityRepository{
 
     
     /**
-     * Быстрая вставка артикула
+     * Быстрая вставка номера
      * @param array $row 
      * @return integer
      */
-    public function insertUnknownProducer($row)
+    public function insertOemRaw($row)
     {
-        return $this->getEntityManager()->getConnection()->insert('article', $row);
+        $inserted = $this->getEntityManager()->getConnection()->insert('oem_raw', $row);
+        return $inserted;
     }    
+
 
     
     /**
