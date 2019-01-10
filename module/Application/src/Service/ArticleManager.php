@@ -63,10 +63,7 @@ class ArticleManager
                     ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $unknownProducer->getId()]);
 
         if ($article == null){
-
-            if (mb_strlen($code, 'utf-8') > 36){
-               $result = 'moreThan36';
-            }
+                    
             // Создаем новую сущность UnknownProducer.
             $article = new Article();
             $article->setCode($filteredCode);            
@@ -121,22 +118,41 @@ class ArticleManager
      */
     public function grabArticleFromRaw($raw)
     {
-        ini_set('memory_limit', '4096M');
-        set_time_limit(1200);
+        ini_set('memory_limit', '2048M');
+        set_time_limit(600);
         $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'code' => null]);
         
-        foreach ($rawprices as $rawprice){
-            $this->addNewArticleFromRawprice($rawprice, false);
-            if (time() > $startTime + 400){
-                $this->entityManager->flush();
-                return;
-            }
-        }
-        $this->entityManager->flush();
+        $filter = new \Application\Filter\ArticleCode();
         
+        foreach ($rawprices as $rawprice){
+
+            $filteredCode = $filter->filter($rawprice->getArticle());
+        
+            try{
+                $this->entityManager->getRepository(Article::class)
+                        ->insertArticle([
+                            'code' => $filteredCode,
+                            'fullcode' => $rawprice->getArticle(),
+                            'unknown_producer_id' => $rawprice->getUnknownProducer()->getId(),
+                        ]);
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
+                //дубликат;
+            }    
+
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $rawprice->getUnknownProducer()->getId()]);
+
+            $this->entityManager->getRepository(Article::class)
+                    ->updateRawpriceCode($rawprice, $article);
+            
+            $article->addRawprice($rawprice);
+            
+            $rawprice->getUnknownProducer()->addCode($article);
+        }    
+                
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'code' => null]);
         

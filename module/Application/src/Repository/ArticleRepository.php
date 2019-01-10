@@ -17,17 +17,46 @@ use Application\Entity\Rawprice;
  *
  * @author Daddy
  */
-class ArticleRepository  extends EntityRepository{
+class ArticleRepository  extends EntityRepository
+{
 
+    public function findArticleForInsert($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
+                ->where('r.raw = ?1')
+                ->andWhere('r.code is null')
+                ->setParameter('1', $raw->getId())
+//                ->setParameter('2', Rawprice::STATUS_PARSED)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
     
     /**
      * Быстрая вставка артикула
      * @param array $row 
      * @return integer
      */
-    public function insertUnknownProducer($row)
+    public function insertArticle($row)
     {
-        return $this->getEntityManager()->getConnection()->insert('article', $row);
+        $inserted = $this->getEntityManager()->getConnection()->insert('article', $row);
+        return $inserted;
+    }    
+
+    /**
+     * Быстрая обновление строки прайса кодом артикула
+     * @param Application\Entity\Rawprice $rawprice
+     * @param Application\Entity\Article $code 
+     * @return integer
+     */
+    public function updateRawpriceCode($rawprice, $code)
+    {
+        $updated = $this->getEntityManager()->getConnection()->update('rawprice', ['article_id' => $code->getId()], ['id' => $rawprice->getId()]);
+        return $updated;
     }    
 
     
