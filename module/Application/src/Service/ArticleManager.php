@@ -135,7 +135,7 @@ class ArticleManager
                 $this->entityManager->getRepository(Article::class)
                         ->insertArticle([
                             'code' => $filteredCode,
-                            'fullcode' => $rawprice->getArticle(),
+                            'fullcode' => mb_substr($rawprice->getArticle(), 0, 36),
                             'unknown_producer_id' => $rawprice->getUnknownProducer()->getId(),
                         ]);
             } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
