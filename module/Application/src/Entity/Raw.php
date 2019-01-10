@@ -248,7 +248,7 @@ class Raw {
         return 'Unknown';
     }    
     
-    public function getParseStageName($parseSatge)
+    public function getParseStageName($parseStage)
     {
         $list = self::getParseStageList();
         if (isset($list[$parseStage]))

@@ -299,6 +299,26 @@ class RawRepository extends EntityRepository
     }
     
     /*
+     * Получить стадии состояния прайсов
+     * @var Apllication\Entity\Raw
+     * 
+     */
+    public function rawStages()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r.parseStage as stage, count(r.id) as status_count, sum(r.rows) as row_count')
+                ->from(Raw::class, 'r')
+                ->where('r.status = ?1')
+                ->groupBy('r.parseStage')
+                ->setParameter('1', Raw::STATUS_PARSED)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /*
      * Получить записи для разбора
      */
     public function findRawpriceForParse($raw)

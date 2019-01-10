@@ -98,6 +98,26 @@ $this->headScript()
                         Всего: <?= $totalRowStatusCount ?><br/>                        
                     </div>
                 </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Стадии разборки                       
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <?php $totalRowStageCount = 0?>
+                            <?php foreach($rawStages as $rawStage):?>
+                                <?php if ($rawStage['row_count']): ?>
+                                    <?= $rawStage['row_count']?>: <?= $rawStage['name']?><br/>                                
+                                    <?php $totalRowStageCount += $rawStage['row_count']?>
+                                <?php endif; ?>    
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        Всего: <?= $totalRowStageCount ?><br/>                        
+                    </div>
+                </div>
             </div>
         </div>
     </div>    
