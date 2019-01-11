@@ -106,8 +106,8 @@ class OemManager
      */
     public function grabOemFromRaw($raw)
     {
-        ini_set('memory_limit', '2048M');
-        set_time_limit(600);
+        ini_set('memory_limit', '4096M');
+        set_time_limit(1800);
         
         $filter = new \Application\Filter\ArticleCode();
         
@@ -135,13 +135,13 @@ class OemManager
                         //дубликат;
                     }    
                     
-                    $oem = $this->entityManager->getRepository(OemRaw::class)
-                            ->findOneBy(['code' => $filteredCode, 'article' => $rawprice->getCode()->getId()]);
-                            
-                    if ($oem){
-                        $rawprice->getCode()->addOemRaw($oem);
-                        $rawprice->addOemRaw($oem);
-                    }   
+//                    $oem = $this->entityManager->getRepository(OemRaw::class)
+//                            ->findOneBy(['code' => $filteredCode, 'article' => $rawprice->getCode()->getId()]);
+//                            
+//                    if ($oem){
+//                        $rawprice->getCode()->addOemRaw($oem);
+//                        $rawprice->addOemRaw($oem);
+//                    }   
                 }    
             }                
         }
