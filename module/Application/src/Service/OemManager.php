@@ -147,12 +147,12 @@ class OemManager
 //                        $rawprice->addOemRaw($oem);
 //                    }   
                 }    
+                
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($row['id'], ['status_oem' => Rawprice::OEM_PARSED]);
             }                
         }
-        
-        $this->entityManager->getRepository(Rawprice::class)
-                ->updateAllRawpriceField($raw, ['status_oem' => Rawprice::OEM_PARSED]);
-        
+                
         $raw->setParseStage(Raw::STAGE_OEM_PARSED);
         $this->entityManager->persist($raw);
         
