@@ -60,6 +60,17 @@ class ArticleRepository  extends EntityRepository
         return $updated;
     }    
 
+    /**
+     * Быстрая удаление номеров, свзанных с артикулом
+     * @param Application\Entity\Article $article 
+     * @return integer
+     */
+    public function deleteOemRaw($article)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('oem_raw', ['article_id' => $article->getId()]);
+        return $deleted;
+    }    
+
     
     /**
      * Выборка не привязанных артикулов из прайса
