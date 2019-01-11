@@ -111,14 +111,18 @@ class OemManager
         
         $filter = new \Application\Filter\ArticleCode();
         
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'statusOem' => Rawprice::OEM_NEW]);
+//        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+//                ->findBy(['raw' => $raw->getId(), 'statusOem' => Rawprice::OEM_NEW]);
         
-        foreach ($rawprices as $rawprice){
+        $rows = $this->entityManager->getRepository(OemRaw::class)
+                ->findOemForInsert($raw);
+        
+        foreach ($rows as $row){
             
-            $rawprice->getOemRaw()->clear();
+//            $rawprice->getOemRaw()->clear();
         
-            $oems = $rawprice->getOemAsArray();
+            $oems = Rawprice::getOemVendorAsArray($row['oem'], $row['vendor']);
+            
             if (is_array($oems)){
                 foreach ($oems as $oemCode){
                     
@@ -129,7 +133,7 @@ class OemManager
                                 ->insertOemRaw([
                                     'code' => $filteredCode,
                                     'fullcode' => mb_substr($oemCode, 0, 36),
-                                    'article_id' => $rawprice->getCode()->getId(),                                
+                                    'article_id' => $row['articleId'],                                
                                 ]);
                     } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
                         //дубликат;

@@ -565,14 +565,27 @@ class Rawprice {
         return $this->oem;
     }
 
-    public function getOemAsArray() 
+    /**
+     * Получить массив номеров из строк
+     * 
+     * @param string $oemStr
+     * @param string $vendorStr
+     * @return array
+     */
+    public function getOemVendorAsArray($oemStr = '', $vendorStr = '')
     {
         $filter = new OemDetectDelimiterFilter();
-        $oemDelimeter = $filter->filter($this->oem);
-        $oem = explode($oemDelimeter, $this->oem);
-        $vendorDelimeter = $filter->filter($this->vendor);
-        $vendor = explode($vendorDelimeter, $this->vendor);
+        $oemDelimeter = $filter->filter($oemStr);
+        $oem = explode($oemDelimeter, $oemStr);
+        $vendorDelimeter = $filter->filter($vendorStr);
+        $vendor = explode($vendorDelimeter, $vendorStr);
         return array_filter(array_unique(array_merge($oem, $vendor)));
+        
+    }
+    
+    public function getOemAsArray() 
+    {
+        return $this->getOemVendorAsArray($this->oem, $this->vendor);
     }
 
     public function getBrand() 

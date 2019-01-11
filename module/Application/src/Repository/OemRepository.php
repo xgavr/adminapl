@@ -21,6 +21,22 @@ use Application\Entity\Rawprice;
 class OemRepository  extends EntityRepository{
 
     
+    public function findOemForInsert($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r.oem, r.vendor, identity(r.code) as articleId')
+                ->from(Rawprice::class, 'r')
+                ->where('r.raw = ?1')
+                ->andWhere('r.statusOem = ?2')
+                ->setParameter('1', $raw->getId())
+                ->setParameter('2', Rawprice::OEM_NEW)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
     /**
      * Быстрая вставка номера
      * @param array $row 
