@@ -59,12 +59,17 @@ $this->headScript()
                         Строки прайсов
                     </div>
                     <div class="panel-body">
-                        <div>
-                             <?= $bind ?> - обработано
-                        </div>     
-                        <div>
-                            <?= $noBind?> - не обработано
-                        </div>
+                        <?php foreach($stages as $stage):?>
+                            <?php if ($stage['stage']):?>
+                                <div>
+                                     <?= $stage['rowCount']?> - привязаны
+                                </div>     
+                            <?php else:?>
+                                <div>
+                                    <?= $stage['rowCount']?> - не привязаны
+                                </div>
+                            <?php endif;?>
+                        <?php endforeach;?>
                     </div>
                 </div>    
                 <div class="panel panel-info">

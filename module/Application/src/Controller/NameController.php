@@ -56,16 +56,13 @@ class NameController extends AbstractActionController
         
     public function indexTokenAction()
     {
-        $bind = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['status' => Rawprice::STATUS_PARSED, 'statusToken' => Rawprice::TOKEN_PARSED]);
-        $noBind = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['status' => Rawprice::STATUS_PARSED, 'statusToken' => Rawprice::TOKEN_NEW]);
+        $stages = $this->entityManager->getRepository(\Application\Entity\Article::class)
+                ->findParseStageRawpriceCount(\Application\Entity\Raw::STAGE_TOKEN_PARSED);
         $total = $this->entityManager->getRepository(Token::class)
                 ->count([]);
                 
         return new ViewModel([
-            'bind' => $bind,
-            'noBind' => $noBind,
+            'stages' => $stages,
             'total' => $total,
         ]);  
     }
