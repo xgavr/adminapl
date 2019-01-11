@@ -47,8 +47,6 @@ class OemRepository  extends EntityRepository{
         $inserted = $this->getEntityManager()->getConnection()->insert('oem_raw', $row);
         return $inserted;
     }    
-
-
     
     /**
      * Выборка не привязанных артикулов из прайса

@@ -23,6 +23,17 @@ class TokenRepository  extends EntityRepository
 {
     
     /**
+     * Быстрая вставка токена
+     * @param array $row 
+     * @return integer
+     */
+    public function insertToken($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('token', $row);
+        return $inserted;
+    }    
+
+    /**
      * Запрос по токенам по разным параметрам
      * 
      * @param array $params

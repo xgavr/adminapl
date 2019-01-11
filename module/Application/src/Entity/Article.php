@@ -59,6 +59,15 @@ class Article {
      */
     private $oemRaw;
         
+     /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Token")
+     * @ORM\JoinTable(name="article_token",
+     *      joinColumns={@ORM\JoinColumn(name="article_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")}
+     *      )
+     */
+    private $tokens;
+
     /**
      * Constructor.
      */
@@ -66,6 +75,7 @@ class Article {
     {
         $this->rawprice = new ArrayCollection();
         $this->oemRaw = new ArrayCollection();
+        $this->tokens = new ArrayCollection();
     }
     
 
@@ -172,4 +182,54 @@ class Article {
         $this->unknownProducer = $unknownProducer;
         $unknownProducer->addCode($this);
     }         
+    
+    /**
+     * Returns the array of tokens assigned to this rawprice.
+     * @return array
+     */
+    public function getTokens()
+    {
+        return $this->tokens;
+    }    
+    
+    /**
+     * Получить слова из словаря RU
+     * @return array
+     */
+    public function getDictRuTokens()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Token::IS_DICT));
+        return $this->getTokens()->matching($criteria);        
+    }
+    
+    /**
+     * Получить слова из словаря En
+     * @return array
+     */
+    public function getDictEnTokens()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Token::IS_EN_DICT));
+        return $this->getTokens()->matching($criteria);        
+    }
+    
+    /**
+     * 
+     * @param Application\Entity\Token $token
+     */
+    public function addToken($token)
+    {
+        $this->tokens->add($token);
+    }
+
+    /**
+     * Содержет ли строка токен?
+     * 
+     * @param Application\Entity\Token $token
+     * @return bool
+     */
+    public function hasToken($token)
+    {
+        return $this->tokens->contains($token);
+    }
+        
 }

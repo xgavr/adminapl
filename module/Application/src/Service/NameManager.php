@@ -121,16 +121,55 @@ class NameManager
      * 
      */
     public function addLemms($rawprice, $lemms, $status, $flush)
-    {
-        
-        if (is_array($lemms)){
+    {        
+       if (is_array($lemms)){
             foreach ($lemms as $lemma){
                 $token = $this->addToken(['word' => $lemma, 'status' => $status], $flush);
                 if ($token){
-                    $rawprice->addToken($token);
+                   if (!$rawprice->getCode()->hasToken($token)){
+                         $rawprice->getCode()->addToken($token);
+                   }     
                 }   
             }
         }    
+    }
+    
+    /**
+     * Дополнительная проверка лемм
+     * 
+     * @param string $str
+     * @return array Description
+     */
+    public function lemmsFromStr($str)
+    {
+        $lemmaFilter = new Lemma();
+        $tokenFilter = new Tokenizer();
+
+        $lemms = $lemmaFilter->filter($tokenFilter->filter($str));
+        $result = [];
+        
+        foreach ($lemms as $key => $words){
+            foreach ($words as $word){
+                if ($key == Token::IS_RU){
+                    
+                    $predictWords = $this->entityManager->getRepository(Token::class)
+                           ->findNearToken($word);
+                    
+                    if (count($predictWords)){
+                        foreach($predictWords as $predictWord){
+//                                var_dump($predictWord['lemma']); exit;
+                            $result[Token::IS_DICT][] = $predictWord['lemma'];
+                        }    
+                    } else {
+                        $result[$key][] = $word;
+                    }
+                } else {
+                    $result[$key][] = $word;                    
+                }
+            }            
+        } 
+            
+        return $result;    
     }
     
     /**
@@ -141,33 +180,16 @@ class NameManager
      */
     public function addNewTokenFromRawprice($rawprice, $flush = true) 
     {
-        $rawprice->getTokens()->clear();
+//        $rawprice->getCode()->getTokens()->clear();
 
         $title = $rawprice->getTitle();
         
         if ($title){
-            $lemmaFilter = new Lemma();
-            $tokenFilter = new Tokenizer();
             
-            $lemms = $lemmaFilter->filter($tokenFilter->filter($title));
+            $lemms = $this->lemmsFromStr($title);
             
             foreach ($lemms as $key => $words){
-                if ($key == Token::IS_RU){
-                    foreach ($words as $word){
-                        $predictWords = $this->entityManager->getRepository(Token::class)
-                               ->findNearToken($word);
-                        if (count($predictWords)){
-                            foreach($predictWords as $predictWord){
-//                                var_dump($predictWord['lemma']); exit;
-                                $this->addLemms($rawprice, [$predictWord['lemma']], Token::IS_DICT, $flush);
-                            }    
-                        } else {
-                            $this->addLemms($rawprice, [$word], $key, $flush);
-                        }
-                    }    
-                } else {
-                    $this->addLemms($rawprice, $words, $key, $flush);
-                }    
+                $this->addLemms($rawprice, $words, $key, $flush);
             }    
         }  
         
@@ -187,19 +209,44 @@ class NameManager
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(1200);
-        $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_NEW]);
         
         foreach ($rawprices as $rawprice){
-            if ($rawprice->getStatusToken() == $rawprice::TOKEN_NEW){
-                $this->addNewTokenFromRawprice($rawprice, false);
-                if (time() > $startTime + 400){
-                    $this->entityManager->flush();
-                    return;
-                }
-            }    
+
+            $title = $rawprice->getTitle();
+        
+            if ($title){
+
+                $lemms = $this->lemmsFromStr($title);
+
+                foreach ($lemms as $key => $words){
+                    foreach ($lemms as $lemma){
+                        try{
+                            $this->entityManager->getRepository(Token::class)
+                                    ->insertToken([
+                                        'lemma' => $lemma,
+                                        'status' => $key,
+                                    ]);
+                        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                            //дубликат
+                        }   
+                        
+                        $token = $this->entityManager->getRepository(Token::class)
+                                ->findOneBy(['lemma' => $lemma]);
+                        
+                        if ($token){
+                            if (!$rawprice->getCode()->hasToken($token)){
+                                $rawprice->getCode()->addToken($token);
+                            }    
+                        }   
+                    }
+                }    
+            }  
+            
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);
         }
         
         $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);

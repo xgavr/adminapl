@@ -176,6 +176,8 @@ class ArticleManager
 //        foreach ($oemRaws as $oemRaw){
 //            $this->entityManager->remove($oemRaw);
 //        }
+        $article->getTokens()->clear();
+        
         $this->entityManager->getRepository(Article::class)
                 ->deleteOemRaw($article);
         
