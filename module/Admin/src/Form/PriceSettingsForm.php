@@ -105,7 +105,7 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'select',
             'name' => 'parse_article',
             'options' => [
-                'label' => 'Разборка номеров производителей из прайсов',
+                'label' => 'Разборка артикулов производителей из прайсов',
                 'value_options' => [
                     1 => 'Делать',
                     2 => 'Остановить',                    
