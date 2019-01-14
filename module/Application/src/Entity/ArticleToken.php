@@ -25,11 +25,6 @@ class ArticleToken {
     protected $id;
     
     /**
-     * @ORM\Column(name="lemma")   
-     */
-    protected $lemma;
-    
-    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        
@@ -44,7 +39,7 @@ class ArticleToken {
      * @ORM\ManyToOne(targetEntity="Application\Entity\Token", inversedBy="articleTokens") 
      * @ORM\JoinColumn(name="lemma", referencedColumnName="lemma")
      */
-    protected $token;
+    protected $lemma;
     
 
     public function getId() 
@@ -57,11 +52,11 @@ class ArticleToken {
         $this->id = $id;
     }     
 
-    public function getLemma() 
+    public function getLemma()
     {
         return $this->lemma;
     }
-
+    
     public function setLemma($lemma) 
     {
         $this->lemma = mb_strcut(trim($lemma), 0, 64, 'UTF-8');
@@ -123,7 +118,7 @@ class ArticleToken {
      */    
     public function setToken($token) 
     {
-        $this->token = $token;
+        $this->token = mb_strcut(trim($token), 0, 64, 'UTF-8');;
     }           
     
 }
