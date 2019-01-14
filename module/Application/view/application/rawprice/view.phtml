@@ -9,8 +9,6 @@ $this->pageBreadcrumbs()->setItems([
             $rawprice->getRaw()->getBasename() => $this->url('raw', ['action'=>'view', 'id' => $rawprice->getRaw()->getId()]),
             'Строка прайса' => $this->url('rawprice', ['action'=>'view', 'id' => $rawprice->getId()]),
             ]);  
-        ;
-        
 ?>
 
 <h1>
@@ -168,10 +166,9 @@ $this->pageBreadcrumbs()->setItems([
                                     <?php endif;?>    
                                 <?php elseif ($key == 'Наименование товара' && $rawprice->getStatusToken() == $rawprice::TOKEN_PARSED):?>
                                     <?= $this->escapeHtml($value)?>
-                                    <?php $tokens = $rawprice->getCode()->getTokens(); ?>
-                                    <?php if(count($tokens)):?>  
+                                    <?php if(count($articleTokens)):?>  
                                         <div>    
-                                            <?php foreach($tokens as $token):?>
+                                            <?php foreach($articleTokens as $token):?>
                                                 <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
                                                     <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
                                                 </span>

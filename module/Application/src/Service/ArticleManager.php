@@ -172,14 +172,12 @@ class ArticleManager
      */
     public function removeArticle($article, $flush = true) 
     {   
-//        $oemRaws = $article->getOemRaw();
-//        foreach ($oemRaws as $oemRaw){
-//            $this->entityManager->remove($oemRaw);
-//        }
-        $article->getTokens()->clear();
         
         $this->entityManager->getRepository(Article::class)
                 ->deleteOemRaw($article);
+        
+        $this->entityManager->getRepository(Article::class)
+                ->deleteArticleToken($article);
         
         $this->entityManager->remove($article);
         

@@ -8,6 +8,8 @@
 namespace Application\Service;
 
 use Application\Entity\Token;
+use Application\Entity\Article;
+use Application\Entity\ArticleToken;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
@@ -70,7 +72,7 @@ class NameManager
     /**
      * Добавить новый токен
      * 
-     * @param string $word
+     * @param array $data
      * @param bool $flushnow
      */
     public function addToken($data, $flushnow = true)
@@ -90,19 +92,61 @@ class NameManager
             // Добавляем сущность в менеджер сущностей.
             $this->entityManager->persist($token);
 
-            // Применяем изменения к базе данных.
-            $this->entityManager->flush($token);
+            
         } else {
             if ($token->getStatus() != $data['status']){
                 $token->setStatus($data['status']);                            
                 $this->entityManager->persist($token);
-                $this->entityManager->flush($token);
             }
         }
+        
+        if ($flushnow){
+            $this->entityManager->flush($token);
+        }    
         
         return $token;        
     }  
     
+    /**
+     * Добавить новый article токен
+     * 
+     * @param Application\Entity\Article $article
+     * @param array $data
+     * @param bool $flushnow
+     */
+    public function addArticleToken($article, $data, $flushnow = true)
+    {
+        
+        $word = mb_strcut(trim($data['word']), 0, 64, 'UTF-8');
+        
+        $articleToken = $this->entityManager->getRepository(ArticleToken::class)
+                    ->findOneBy(['lemma' => $word, 'article' => $article->getId()]);
+
+        if ($articleToken == null){
+            $articleToken = new ArticleToken();
+            $articleToken->setArticle($article);            
+            $articleToken->setLemma($word);            
+            $articleToken->setStatus($data['status']);            
+
+            // Добавляем сущность в менеджер сущностей.
+            $this->entityManager->persist($articleToken);
+
+
+        } else {
+            if ($articleToken->getStatus() != $data['status']){
+                $articleToken->setStatus($data['status']);                            
+                $this->entityManager->persist($articleToken);
+            }
+        }
+
+        if ($flushnow){
+            $this->entityManager->flush($articleToken);
+        }    
+
+        return $articleToken;        
+    }  
+    
+
     /**
      * Обновить флаг токена
      * 
@@ -120,16 +164,12 @@ class NameManager
      * Добавление нового слова со статусом
      * 
      */
-    public function addLemms($rawprice, $lemms, $status, $flush)
+    public function addLemms($article, $lemms, $status, $flush)
     {        
-       if (is_array($lemms)){
+        if (is_array($lemms)){
             foreach ($lemms as $lemma){
-                $token = $this->addToken(['word' => $lemma, 'status' => $status], $flush);
-                if ($token){
-                   if (!$rawprice->getCode()->hasToken($token)){
-                         $rawprice->getCode()->addToken($token);
-                   }     
-                }   
+                $this->addToken(['word' => $lemma, 'status' => $status], $flush);
+                $this->addArticleToken($article, ['word' => $lemma, 'status' => $status], $flush);
             }
         }    
     }
@@ -148,7 +188,7 @@ class NameManager
         $lemms = $lemmaFilter->filter($tokenFilter->filter($str));
         $result = [];
         
-        foreach ($lemms as $key => $words){
+        foreach ($lemms as $key => $words){            
             foreach ($words as $word){
                 if ($key == Token::IS_RU){
                     
@@ -180,24 +220,38 @@ class NameManager
      */
     public function addNewTokenFromRawprice($rawprice, $flush = true) 
     {
-//        $rawprice->getCode()->getTokens()->clear();
+        $article = $rawprice->getCode();
 
-        $title = $rawprice->getTitle();
+        $this->entityManager->getRepository(Article::class)
+                ->deleteArticleToken($article);
         
-        if ($title){
+        $titles = [];
+        foreach ($article->getRawprice() as $rawpriceArticle){
+            if ($rawpriceArticle->getStatus() == Rawprice::STATUS_PARSED){
+                $titles[] = $rawpriceArticle->getTitle();
+                if ($rawpriceArticle->getStatusToken() == Rawprice::TOKEN_NEW){
+                    $rawprice->setStatusToken(Rawprice::TOKEN_PARSED);
+                    $this->entityManager->persist($rawprice);                
+                }
+            }
+        }    
+
+        if (count($titles)){
+            $titleStr = implode(' ', array_filter($titles));        
+
+            $lemms = $this->lemmsFromStr($titleStr);
             
-            $lemms = $this->lemmsFromStr($title);
             
             foreach ($lemms as $key => $words){
-                $this->addLemms($rawprice, $words, $key, $flush);
+                $this->addLemms($article, array_filter($words), $key, false);
             }    
-        }  
-        
-        $rawprice->setStatusToken(Rawprice::TOKEN_PARSED);
-        $this->entityManager->persist($rawprice);
-        if ($flush){
-            $this->entityManager->flush();
+
+//            exit;
+            if ($flush){
+                $this->entityManager->flush();
+            }
         }    
+        
         return;
     }  
     
@@ -207,46 +261,43 @@ class NameManager
      */
     public function grabTokenFromRaw($raw)
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(1200);
         
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_NEW]);
+        $rawprices = $this->entityManager->getRepository(Token::class)
+                ->findRawpriceTitle($raw);
         
-        foreach ($rawprices as $rawprice){
-
-            $title = $rawprice->getTitle();
-        
-            if ($title){
-
-                $lemms = $this->lemmsFromStr($title);
-
-                foreach ($lemms as $key => $words){
-                    foreach ($lemms as $lemma){
-                        try{
-                            $this->entityManager->getRepository(Token::class)
-                                    ->insertToken([
-                                        'lemma' => $lemma,
-                                        'status' => $key,
-                                    ]);
-                        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                            //дубликат
-                        }   
-                        
-                        $token = $this->entityManager->getRepository(Token::class)
-                                ->findOneBy(['lemma' => $lemma]);
-                        
-                        if ($token){
-                            if (!$rawprice->getCode()->hasToken($token)){
-                                $rawprice->getCode()->addToken($token);
-                            }    
-                        }   
-                    }
-                }    
-            }  
+        foreach ($rawprices as $row){
             
+            $lemms = $this->lemmsFromStr($row['goodname']);
+            foreach ($lemms as $key => $words){
+                $words = array_filter($words);
+                foreach ($words as $word){
+                    try{
+                        $this->entityManager->getRepository(Token::class)
+                                ->insertToken([
+                                    'lemma' => $word,
+                                    'status' => $key,
+                                ]);
+                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                        //дубликат
+                    }   
+                    
+                    try{
+                        $this->entityManager->getRepository(Token::class)
+                                ->insertArticleToken([
+                                    'article_id' => $row['articleId'],
+                                    'lemma' => $word,
+                                    'status' => $key,
+                                ]);
+                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                        //дубликат
+                    }   
+                }
+            }    
+                
             $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);
+                    ->updateRawpriceField($row['id'], ['status_token' => Rawprice::TOKEN_PARSED]);                        
         }
         
         $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
@@ -262,6 +313,10 @@ class NameManager
      */
     public function removeToken($token) 
     {   
+        
+        $this->entityManager->getRepository(Token::class)
+                ->deleteArticleToken($token);
+        
         $this->entityManager->remove($token);
         
         $this->entityManager->flush($token);

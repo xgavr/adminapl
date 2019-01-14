@@ -9,6 +9,8 @@
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Article;
+use Application\Entity\ArticleToken;
+use Application\Entity\Token;
 use Application\Entity\Rawprice;
 use Application\Entity\Raw;
 
@@ -61,13 +63,24 @@ class ArticleRepository  extends EntityRepository
     }    
 
     /**
-     * Быстрая удаление номеров, свзанных с артикулом
+     * Быстрое удаление номеров, свзанных с артикулом
      * @param Application\Entity\Article $article 
      * @return integer
      */
     public function deleteOemRaw($article)
     {
         $deleted = $this->getEntityManager()->getConnection()->delete('oem_raw', ['article_id' => $article->getId()]);
+        return $deleted;
+    }    
+
+    /**
+     * Быстрое удаление токенов, свзанных с артикулом
+     * @param Application\Entity\Article $article 
+     * @return integer
+     */
+    public function deleteArticleToken($article)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('article_token', ['article_id' => $article->getId()]);
         return $deleted;
     }    
 
@@ -154,6 +167,23 @@ class ArticleRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
     
+    
+    public function findArticleTokens($article)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('t')
+                ->from(ArticleToken::class, 'at')
+                ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')
+                ->distinct()
+                ->where('at.article = ?1')
+                ->orderBy('t.status')
+                ->setParameter('1', $article->getId())
+                ;
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();        
+    }
     
     /**
      * Количество записей в прайсах с этим артикулом
@@ -328,6 +358,7 @@ class ArticleRepository  extends EntityRepository
         return $queryBuilder->getQuery();
     }
     
+        
     public function findArticleForAssemblyByRaw($raw)
     {
         $entityManager = $this->getEntityManager();

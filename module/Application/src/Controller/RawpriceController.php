@@ -233,8 +233,15 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
+        $articleTokens = null;
+        if ($rawprice->getCode()){
+            $articleTokens = $this->entityManager->getRepository(\Application\Entity\Article::class)
+                    ->findArticleTokens($rawprice->getCode());
+        }
+        
         // Render the view template.
         return new ViewModel([
+            'articleTokens' => $articleTokens,
             'rawprice' => $rawprice,
             'rawManager' => $this->rawManager,
         ]);

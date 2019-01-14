@@ -73,13 +73,10 @@ class Token {
     private $rawprice;  
     
      /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Article")
-     * @ORM\JoinTable(name="article_token",
-     *      joinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="article_id", referencedColumnName="id")}
-     *      )
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleToken", mappedBy="token")
+    * @ORM\JoinColumn(name="lemma", referencedColumnName="lemma")
      */
-    private $articles;  
+    private $articleTokens;
 
     /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\TokenGroup")
@@ -253,12 +250,12 @@ class Token {
     }        
 
     /**
-     * Returns the array of articles assigned to this token.
+     * Returns the array of article tokens assigned to this token.
      * @return array
      */
-    public function getArticles()
+    public function getArticleTokens()
     {
-        return $this->articles;
+        return $this->articleTokens;
     }        
 
     /**

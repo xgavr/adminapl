@@ -21,7 +21,55 @@ use Application\Entity\Goods;
  */
 class TokenRepository  extends EntityRepository
 {
+    /**
+     * Найти артикулы из прайса
+     * 
+     * @param Application\Entity\Raw $raw
+     */
+    public function findRawpriceTitle($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r.id, identity(r.code) as articleId, r.goodname, r.statusToken')
+            ->distinct()    
+            ->from(Rawprice::class, 'r')
+            ->where('r.raw = ?1')
+            ->andWhere('r.statusToken = ?2')
+            ->andWhere('r.code is not null')    
+            ->setParameter('1', $raw->getId())    
+            ->setParameter('2', Rawprice::TOKEN_NEW)    
+            ;    
+
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
     
+
+    /**
+     * 
+     * @param integer $articleId
+     * @return type
+     */
+    public function findArticleTitle($articleId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r.id, r.goodname, r.statusToken')
+            ->from(Rawprice::class, 'r')
+            ->where('r.code = ?1')
+            ->andWhere('r.status = ?2')    
+            ->setParameter('1', $articleId)    
+            ->setParameter('2', Rawprice::STATUS_PARSED)    
+            ;    
+
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+
     /**
      * Быстрая вставка токена
      * @param array $row 
@@ -33,6 +81,28 @@ class TokenRepository  extends EntityRepository
         return $inserted;
     }    
 
+    /**
+     * Быстрая вставка артикула токена
+     * @param array $row 
+     * @return integer
+     */
+    public function insertArticleToken($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('article_token', $row);
+        return $inserted;
+    }    
+
+    /**
+     * Быстрое удаление article токенов, свзанных с token
+     * @param Application\Entity\Token $token 
+     * @return integer
+     */
+    public function deleteArticleToken($token)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('article_token', ['lemma' => $token->getLemma()]);
+        return $deleted;
+    }    
+    
     /**
      * Запрос по токенам по разным параметрам
      * 
@@ -197,15 +267,14 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('o')
-            ->addSelect('count(r.id) as rawpriceCount')    
-            ->from(Token::class, 'o')
-            ->leftJoin('o.rawprice', 'r')
-            ->groupBy('o.id')
-            ->having('rawpriceCount = 0')    
-            //->setParameter('1', Rawprice::STATUS_PARSED)
+        $queryBuilder->select('t')
+            ->addSelect('count(at.id) as articleCount')    
+            ->from(Token::class, 't')
+            ->leftJoin('t.articleTokens', 'at')
+            ->groupBy('t.id')
+            ->having('articleCount = 0')    
                 ;
-        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 

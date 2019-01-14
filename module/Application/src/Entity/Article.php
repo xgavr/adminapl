@@ -60,13 +60,10 @@ class Article {
     private $oemRaw;
         
      /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Token")
-     * @ORM\JoinTable(name="article_token",
-     *      joinColumns={@ORM\JoinColumn(name="article_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")}
-     *      )
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleToken", mappedBy="article")
+    * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
      */
-    private $tokens;
+    private $articleTokens;
 
     /**
      * Constructor.
@@ -74,8 +71,6 @@ class Article {
     public function __construct() 
     {
         $this->rawprice = new ArrayCollection();
-        $this->oemRaw = new ArrayCollection();
-        $this->tokens = new ArrayCollection();
     }
     
 
@@ -181,55 +176,15 @@ class Article {
     {
         $this->unknownProducer = $unknownProducer;
         $unknownProducer->addCode($this);
-    }         
-    
-    /**
-     * Returns the array of tokens assigned to this rawprice.
-     * @return array
-     */
-    public function getTokens()
-    {
-        return $this->tokens;
     }    
     
     /**
-     * Получить слова из словаря RU
+     * Returns the array of article tokens assigned to this token.
      * @return array
      */
-    public function getDictRuTokens()
+    public function getArticleTokens()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Token::IS_DICT));
-        return $this->getTokens()->matching($criteria);        
-    }
+        return $this->articleTokens;
+    }        
     
-    /**
-     * Получить слова из словаря En
-     * @return array
-     */
-    public function getDictEnTokens()
-    {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Token::IS_EN_DICT));
-        return $this->getTokens()->matching($criteria);        
-    }
-    
-    /**
-     * 
-     * @param Application\Entity\Token $token
-     */
-    public function addToken($token)
-    {
-        $this->tokens->add($token);
-    }
-
-    /**
-     * Содержет ли строка токен?
-     * 
-     * @param Application\Entity\Token $token
-     * @return bool
-     */
-    public function hasToken($token)
-    {
-        return $this->tokens->contains($token);
-    }
-        
 }
