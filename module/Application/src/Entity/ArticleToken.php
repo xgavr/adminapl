@@ -25,6 +25,11 @@ class ArticleToken {
     protected $id;
     
     /**
+     * @ORM\Column(name="lemma")  
+     */
+    protected $lemma;        
+
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        
@@ -34,12 +39,6 @@ class ArticleToken {
      * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
      */
     protected $article;    
-        
-    /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Token", inversedBy="articleTokens") 
-     * @ORM\JoinColumn(name="lemma", referencedColumnName="lemma")
-     */
-    protected $lemma;
     
 
     public function getId() 
@@ -107,18 +106,18 @@ class ArticleToken {
      * Возвращает связанный token.
      * @return \Application\Entity\Token
      */    
-    public function getToken() 
-    {
-        return $this->token;
-    }
+//    public function getToken() 
+//    {
+//        return $this->token;
+//    }
 
     /**
      * Задает связанный token.
      * @param \Application\Entity\Token $token
      */    
-    public function setToken($token) 
-    {
-        $this->token = mb_strcut(trim($token), 0, 64, 'UTF-8');;
-    }           
+//    public function setToken($token) 
+//    {
+//        $this->token = mb_strcut(trim($token), 0, 64, 'UTF-8');
+//    }           
     
 }

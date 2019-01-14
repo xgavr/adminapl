@@ -168,7 +168,7 @@ class NameManager
     {        
         if (is_array($lemms)){
             foreach ($lemms as $lemma){
-                $this->addToken(['word' => $lemma, 'status' => $status], $flush);
+                $this->addToken(['word' => $lemma, 'status' => $status], true);
                 $this->addArticleToken($article, ['word' => $lemma, 'status' => $status], $flush);
             }
         }    
