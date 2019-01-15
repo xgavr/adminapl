@@ -570,9 +570,6 @@ class ProcessingController extends AbstractActionController
      */
     public function producerFromUnknownProducerAction()
     {
-        ini_set('memory_limit', '512M');
-        set_time_limit(300);
-        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['assembly_producer'] == 1){

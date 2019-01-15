@@ -34,6 +34,9 @@ class Rawprice {
     const TOKEN_PARSED    = 2; // прошел разборку.
     const TOKEN_GROUP_PARSED = 3; // прошел разборку группу наименований.
     
+    const PRODUCER_NEW = 1; //недавно загрузили
+    const PRODUCER_ASSEMBLY = 2; //производитель собран
+    
     const GOOD_NEW        = 1; //только что загрузили
     const GOOD_OK         = 2; //товар создан
     const GOOD_MISSING_DATA = 3; //не все данные
@@ -180,6 +183,11 @@ class Rawprice {
      * @ORM\Column(name="status_good")   
      */
     protected $statusGood = self::GOOD_NEW;    
+
+    /**
+     * @ORM\Column(name="status_producer")   
+     */
+    protected $statusProducer = self::PRODUCER_NEW;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
@@ -448,6 +456,58 @@ class Rawprice {
     public function setStatusGood($statusGood) 
     {
         $this->statusGood = $statusGood;
+    }   
+
+    /**
+     * Returns statusProducer.
+     * @return int     
+     */
+    public function getStatusProducer() 
+    {
+        return $this->statusProducer;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusProducerList() 
+    {
+        return [
+            self::PRODUCER_NEW => 'Новые данные',
+            self::PRODUCER_ASSEMBLY => 'Карточка создана',
+        ];
+    }    
+    
+    /**
+     * Returns user statusProducer as string.
+     * @return string
+     */
+    public function getStatusProducerAsString()
+    {
+        $list = self::getStatusProducerList();
+        if (isset($list[$this->statusProducer]))
+            return $list[$this->statusProducer];
+        
+        return 'Unknown';
+    }  
+    
+    public function getStatusProducerName()
+    {
+        $list = self::getStatusProducerList();
+        if (isset($list[$this->statusProducer]))
+            return $list[$this->statusProducer];
+        
+        return 'Unknown';        
+    }
+    
+    /**
+     * Sets statusProducer.
+     * @param int $statusProducer     
+     */
+    public function setStatusProducer($statusProducer) 
+    {
+        $this->statusProducer = $statusProducer;
     }   
 
     public function getId() 
@@ -840,7 +900,7 @@ class Rawprice {
     }
     
     /*
-     * Возвращает связанный raw.
+     * Возвращает связанный good.
      * @return \Application\Entity\Goods
      */
     

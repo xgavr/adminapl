@@ -654,6 +654,56 @@ class ProducerController extends AbstractActionController
             'result' => 'ok-reload',
         ]);          
     }
+    
+    public function assemblyProducerFromRawpriceAction()
+    {
+        $rawpriceId = $this->params()->fromRoute('id', -1);
+
+        if ($rawpriceId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $rawprice = $this->entityManager->getRepository(\Application\Entity\Rawprice::class)
+                ->findOneById($rawpriceId);
+
+        if ($rawprice == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->assemblyManager->assemblyProducerFromRawprice($rawprice);
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+
+    public function assemblyProducerFromRawAction()
+    {
+        $rawId = $this->params()->fromRoute('id', -1);
+
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findOneById($rawId);
+
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->assemblyManager->assemblyProducerFromRaw($raw);
+                
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
+    
+    
 
     public function deleteEmptyArticleAction()
     {

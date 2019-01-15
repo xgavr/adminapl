@@ -254,6 +254,12 @@ $this->pageBreadcrumbs()->setItems([
                                     </button>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == $raw::STAGE_TOKEN_PARSED):?>
+                                    <button value="/producer/assembly-producer-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Собрать производителей">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                <?php endif;?>
+                                <?php if ($raw->getParseStage() == $raw::STAGE_PRODUCER_ASSEMBLY):?>
                                     <button value="/goods/assembly-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Собрать товары">
                                         <span class="glyphicon glyphicon-wrench" ></span>

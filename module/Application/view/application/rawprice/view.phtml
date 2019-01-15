@@ -93,7 +93,7 @@ $this->pageBreadcrumbs()->setItems([
                 <?php if ($rawprice->getStatus() == $rawprice::STATUS_PARSED):?>
                     <button value="/producer/parse-unknown-producer/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
                             title="Разобрать">
-                            Производитель
+                            Неизвестный производитель
                     </button>
                     <?php if ($rawprice->getUnknownProducer()):?>
                         <button value="/producer/parse-article/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
@@ -114,6 +114,12 @@ $this->pageBreadcrumbs()->setItems([
                         </button>
                     <?php endif;?>    
                     <?php if ($rawprice->getStatusToken() == $rawprice::TOKEN_PARSED):?>
+                        <button value="/producer/assembly-producer-from-rawprice/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Собрать">
+                                Производитель
+                        </button>
+                    <?php endif;?>    
+                    <?php if ($rawprice->getStatusProducer() == $rawprice::PRODUCER_ASSEMBLY):?>
                         <button value="/goods/assembly/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
                                 title="Создать">
                                 Товар
@@ -143,8 +149,10 @@ $this->pageBreadcrumbs()->setItems([
                                                 <a href="/goods/view/<?= $rawprice->getGood()->getId()?>">
                                                     <?= $rawprice->getGood()->getCode()?>
                                                 </a>
-                                                <a href="/producer/view/<?= $rawprice->getGood()->getProducer()->getId()?>">
-                                                    <?= $rawprice->getGood()->getProducer()->getName()?>
+                                            <?php endif; ?>
+                                            <?php if ($rawprice->getUnknownProducer()->getProducer()):?>
+                                                <a href="/producer/view/<?= $rawprice->getUnknownProducer()->getProducer()->getId()?>">
+                                                    <?= $rawprice->getUnknownProducer()->getProducer()->getName()?>
                                                 </a>
                                             <?php else:?>
                                             <span color=''>

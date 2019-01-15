@@ -9,6 +9,7 @@
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Token;
+use Application\Entity\ArticleToken;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
 use Application\Entity\Goods;
@@ -209,6 +210,53 @@ class TokenRepository  extends EntityRepository
             ;
         
         return $queryBuilder->getQuery();            
+    }
+    
+    /**
+     * Поиск токенов артикула
+     * 
+     * @param Application\Entity\Article|integer $article
+     * @param integer $status
+     */
+    public function findArticleTokenByStatus($article, $status = Token::IS_DICT)
+    {
+        if (is_numeric($article)){
+            $articleId = $article;
+        } else {
+            $articleId = $article->getId();
+        }
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('at.lemma')
+                ->from(ArticleToken::class)
+                ->where('at.article = ?1')
+                ->andWhere('at.status = ?2')
+                ->setParameter('1', $articleId)
+                ->setParameter('2', $status)
+                ;
+        
+//            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);                    
+    }
+    
+    /**
+     * Совпадение токенов артикулов по статусу
+     * 
+     * @param Application\Entity\Article|integer $article
+     * @param Application\Entity\Article|integer $articleForMatching
+     * @param integer $status
+     * @return bool
+     */
+    public function intersectArticleTokenByStatus($article, $articleForMatching, $status = Token::IS_DICT)
+    {
+        $articleTokens = $this->findArticleTokenByStatus($article, $status);
+        $articleTokensForMatching = $this->findArticleTokenByStatus($articleForMatching, $status);
+        
+        $inersects = array_intersect($articleTokens, $articleTokensForMatching);
+        
+        return count($inersects) > 0;
     }
 
     /**

@@ -346,9 +346,14 @@ class AssemblyManager
 
         $result = $i = 0;
         foreach ($codeRaws as $code){
-            if ($this->matchingArticlesTokens($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
-//            if ($this->matchingArticles($this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer), $this->findArticleByCodeUnknownProducer($code, $unknownProducer))){
-//                var_dump($code);
+            
+            $article = $this->findArticleByCodeUnknownProducer($code, $unknownProducer);
+            $articleForMatching = $this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer);
+            
+            $intersectResult = $this->entityManager->getRepository(Token::class)
+                    ->intersectArticleTokenByStatus($article, $articleForMatching);
+            
+            if ($intersectResult){
                 $result += 1;
             } else {
                 $result -= 1;
@@ -446,6 +451,50 @@ class AssemblyManager
         $this->producerManager->bindUnknownProducer($unknownProducer, $producer);
         
         return $producer;
+    }
+    
+    /**
+     * Собрать производителей из строки прайса
+     * 
+     * @param Application\Entity\Rawprice $rawprice
+     */
+    public function assemblyProducerFromRawprice($rawprice)
+    {
+                            
+        $this->addProducerFromUnknownProducer($rawprice->getUnknownProducer());
+            
+        $this->entityManager->getRepository(Rawprice::class)
+                ->updateRawpriceAssemblyProducerStatus($rawprice->getRaw(), $unknownProducer, Rawprice::PRODUCER_ASSEMBLY);
+                
+        return;
+    }
+
+    
+    /**
+     * Собрать производителей из прайса
+     * 
+     * @param Application\Entity\Raw $raw
+     */
+    public function assemblyProducerFromRaw($raw)
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(600);
+                
+        $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findUnknownProducerForAssemblyFromRaw($raw);
+        
+        foreach ($unknownProducers as $unknownProducer){
+            
+            $this->addProducerFromUnknownProducer($unknownProducer);
+            
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceAssemblyProducerStatus($raw, $unknownProducer, Rawprice::PRODUCER_ASSEMBLY);
+        }
+        
+        $raw->setParseStage(Raw::STAGE_PRODUCER_ASSEMBLY);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush($raw);
+        
     }
        
     /**
