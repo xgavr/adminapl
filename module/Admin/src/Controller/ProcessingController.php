@@ -695,7 +695,7 @@ class ProcessingController extends AbstractActionController
         
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_name'] == 1){
+        if ($settings['assembly_group_name'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_GOOD_ASSEMBLY]);
@@ -720,7 +720,7 @@ class ProcessingController extends AbstractActionController
         
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_name'] == 1){
+        if ($settings['assembly_group_name'] == 1){
 
             $this->nameManager->updateAllTokenGroupGoodCount();
             

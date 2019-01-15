@@ -56,6 +56,10 @@ $form->get('assembly_good')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('assembly_group_name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -69,7 +73,7 @@ $form->prepare();
 
 <?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('receiving_mail')); ?>
@@ -100,7 +104,7 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('parse_producer')); ?>                  
         </div>        
     </div>
-    <div class="col-md-4">    
+    <div class="col-md-3">    
         <div class="form-group">
             <?= $this->formLabel($form->get('parse_article')); ?>
             <?= $this->formElement($form->get('parse_article')); ?>
@@ -127,6 +131,13 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('assembly_good')); ?>                  
         </div>        
     </div>   
+    <div class="col-md-3">
+        <div class="form-group">
+            <?= $this->formLabel($form->get('assembly_group_name')); ?>
+            <?= $this->formElement($form->get('assembly_group_name')); ?>
+            <?= $this->formElementErrors($form->get('assembly_group_name')); ?>                  
+        </div>                
+    </div>
     <div class="col-sm-3" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
             <li class="active">

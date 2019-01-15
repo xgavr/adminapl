@@ -136,6 +136,7 @@ class AdminManager {
         $config->price->parse_name = $data['parse_name']; //разбирать наименования из прайсов
         $config->price->assembly_producer = $data['assembly_producer']; //создавать производителей
         $config->price->assembly_good = $data['assembly_good']; //создавать товары
+        $config->price->assembly_group_name = $data['assembly_group_name']; //собирать группы наименований
         
         $writer = new PhpArray();
         
