@@ -496,9 +496,12 @@ class ProducerRepository  extends EntityRepository{
                 ->from(Rawprice::class, 'r')
                 ->join(UnknownProducer::class, 'u', 'WITH', 'u.id = r.unknownProducer')
                 ->where('r.raw = ?1')
-                ->andWhere('r.statusProducer = ?2')
+                ->andWhere('r.status = ?2')
+                ->andWhere('r.code is not null')
+                ->andWhere('r.statusProducer = ?3')
                 ->setParameter('1', $raw->getId())
-                ->setParameter('2', Rawprice::PRODUCER_NEW)
+                ->setParameter('2', Rawprice::STATUS_PARSED)
+                ->setParameter('3', Rawprice::PRODUCER_NEW)
                 ;
         
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;

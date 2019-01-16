@@ -675,7 +675,7 @@ class ProducerController extends AbstractActionController
         $this->assemblyManager->assemblyProducerFromRawprice($rawprice);
                 
         return new JsonModel([
-            'result' => 'ok-reload',
+           'ok'
         ]);          
     }
 

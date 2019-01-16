@@ -101,14 +101,19 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрая установка статуса сборки производителя
+     * 
      * @param Application\Entity\Raw $raw
-     * @param integer $status 
+     * @param Application\Entity\UnknownProducer $unknownProducer 
      * @return integer
      */
-    public function updateRawpriceAssemblyProducerStatus($raw, $unknownProducer, $statusProducer)
+    public function updateRawpriceAssemblyProducerStatus($raw, $unknownProducer)
     {
-        $data = ['status_producer' => $statusProducer];
-        return $this->getEntityManager()->getConnection()->update('rawprice', $data, ['raw_id' => $raw->getId(), 'unknown_producer_id' => $unknownProducer->getId()]);
+        $data = ['status_producer' => Rawprice::PRODUCER_ASSEMBLY];
+        return $this->getEntityManager()->getConnection()->update('rawprice', $data, [
+            'raw_id' => $raw->getId(), 
+            'unknown_producer_id' => $unknownProducer->getId(),
+            'status_producer' => Rawprice::PRODUCER_NEW,
+         ]);
     }
     
 

@@ -230,7 +230,7 @@ class TokenRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('at.lemma')
-                ->from(ArticleToken::class)
+                ->from(ArticleToken::class, 'at')
                 ->where('at.article = ?1')
                 ->andWhere('at.status = ?2')
                 ->setParameter('1', $articleId)
@@ -238,7 +238,9 @@ class TokenRepository  extends EntityRepository
                 ;
         
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult(2);                    
+        $result = $queryBuilder->getQuery()->getResult(2);
+        
+        return array_column($result, 'lemma');                    
     }
     
     /**
@@ -254,9 +256,9 @@ class TokenRepository  extends EntityRepository
         $articleTokens = $this->findArticleTokenByStatus($article, $status);
         $articleTokensForMatching = $this->findArticleTokenByStatus($articleForMatching, $status);
         
-        $inersects = array_intersect($articleTokens, $articleTokensForMatching);
-        
-        return count($inersects) > 0;
+        $intersects = array_intersect($articleTokens, $articleTokensForMatching);
+//        var_dump($articleTokens);
+        return count($intersects) > 0;
     }
 
     /**

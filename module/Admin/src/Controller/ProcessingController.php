@@ -574,11 +574,11 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['assembly_producer'] == 1){
             
-            $unknownProducers = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
-                    ->findUnknownProducerForAssembly();
-
-            foreach ($unknownProducers as $unknownProducer){
-                $this->assemblyManager->addProducerFromUnknownProducer($unknownProducer);
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
+            
+            if ($raw){
+                $this->assemblyManager->assemblyProducerFromRaw($raw);
             }    
         }    
                 

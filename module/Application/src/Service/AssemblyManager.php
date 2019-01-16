@@ -353,7 +353,9 @@ class AssemblyManager
             $intersectResult = $this->entityManager->getRepository(Token::class)
                     ->intersectArticleTokenByStatus($article, $articleForMatching);
             
-            if ($intersectResult){
+            $priceMatching = $this->articleManager->articlePriceMatching($article, $articleForMatching);
+            
+            if ($intersectResult && $priceMatching){
                 $result += 1;
             } else {
                 $result -= 1;
@@ -464,7 +466,7 @@ class AssemblyManager
         $this->addProducerFromUnknownProducer($rawprice->getUnknownProducer());
             
         $this->entityManager->getRepository(Rawprice::class)
-                ->updateRawpriceAssemblyProducerStatus($rawprice->getRaw(), $unknownProducer, Rawprice::PRODUCER_ASSEMBLY);
+                ->updateRawpriceAssemblyProducerStatus($rawprice->getRaw(), $rawprice->getUnknownProducer());
                 
         return;
     }
@@ -478,7 +480,7 @@ class AssemblyManager
     public function assemblyProducerFromRaw($raw)
     {
         ini_set('memory_limit', '1024M');
-        set_time_limit(600);
+        set_time_limit(900);
                 
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findUnknownProducerForAssemblyFromRaw($raw);
@@ -488,7 +490,7 @@ class AssemblyManager
             $this->addProducerFromUnknownProducer($unknownProducer);
             
             $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceAssemblyProducerStatus($raw, $unknownProducer, Rawprice::PRODUCER_ASSEMBLY);
+                    ->updateRawpriceAssemblyProducerStatus($raw, $unknownProducer);
         }
         
         $raw->setParseStage(Raw::STAGE_PRODUCER_ASSEMBLY);

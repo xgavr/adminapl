@@ -414,15 +414,6 @@ class ArticleManager
             $rawprices[$articleRawprice->getId()] = $articleRawprice;
         }
         
-//        $good = $this->getArticleGood($article);
-//        if ($good){
-//            foreach($good->getRawprice() as $goodRawprice){
-//                if (!array_key_exists($goodRawprice->getId(), $rawprices)){
-//                    $rawprices[$goodRawprice->getId()] = $goodRawprice;
-//                }                
-//            }
-//        }
-        
         if (!array_key_exists($rawprice->getId(), $rawprices)){
             $rawprices[$rawprice->getId()] = $rawprice;
         }
@@ -431,6 +422,28 @@ class ArticleManager
         $dispersion = $this->rawpricesDispersion($rawprices);
         
         return $this->inSigma3($rawprice->getRealPrice(), $meanPrice, $dispersion);
+    }
+    
+    /**
+     * Сравнение цен артикулов
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Article $articleForMatching
+     * 
+     * @return bool Description
+     */
+    public function articlePriceMatching($article, $articleForMatching)
+    {
+        $result = 0;
+        foreach ($articleForMatching->getRawprice() as $rawpriceForMatching){
+            if ($this->priceMatching($article, $rawpriceForMatching)){
+                $result += 1;
+            } else {
+                $result -= 1;
+            }
+        }
+        
+        return $result > 0;
     }
     
     /**

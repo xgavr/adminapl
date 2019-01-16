@@ -25,7 +25,7 @@ class Sigma3 extends AbstractValidator
     }    
     
     /**
-     * Возвращает истину, если число попадает в интервал сигма3
+     * Возвращает истину, если число попадает в интервал сигма3(2 точнее)
      *
      * @param float $price
      * @param float $meanPrice

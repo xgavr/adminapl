@@ -262,7 +262,7 @@ class NameManager
     public function grabTokenFromRaw($raw)
     {
         ini_set('memory_limit', '4096M');
-        set_time_limit(1200);
+        set_time_limit(900);
         
         $rawprices = $this->entityManager->getRepository(Token::class)
                 ->findRawpriceTitle($raw);
