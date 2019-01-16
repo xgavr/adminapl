@@ -350,21 +350,23 @@ class AssemblyManager
             $article = $this->findArticleByCodeUnknownProducer($code, $unknownProducer);
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer);
             
-            $intersectResult = $this->entityManager->getRepository(Token::class)
-                    ->intersectArticleTokenByStatus($article, $articleForMatching);
-            
-            $priceMatching = $this->articleManager->articlePriceMatching($article, $articleForMatching);
-            
-            if ($intersectResult && $priceMatching){
-                $result += 1;
-            } else {
-                $result -= 1;
-            }
-            
+            if ($article && $articleForMatching){
+                $intersectResult = $this->entityManager->getRepository(Token::class)
+                        ->intersectArticleTokenByStatus($article, $articleForMatching);
+
+                $priceMatching = $this->articleManager->articlePriceMatching($article, $articleForMatching);
+
+                if ($intersectResult && $priceMatching){
+                    $result += 1;
+                } else {
+                    $result -= 1;
+                }
+            }    
+
             if ($i > $maxCheck){
                 break;
             }
-            $i++;            
+            $i++;
         }
 
         return $result >= 0;
