@@ -443,6 +443,7 @@ class ArticleManager
                 $result -= 1;
             }
         }
+        var_dump($result);
         
         return $result > 0;
     }
