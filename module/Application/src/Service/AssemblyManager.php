@@ -355,7 +355,8 @@ class AssemblyManager
                         ->intersectArticleTokenByStatus($article, $articleForMatching);
 
                 $priceMatching = $this->articleManager->articlePriceMatching($article, $articleForMatching);
-
+                var_dump($intersectResult);
+                var_dump($priceMatching);
                 if ($intersectResult && $priceMatching){
                     $result += 1;
                 } else {
