@@ -409,13 +409,12 @@ class ArticleManager
      */
     public function priceMatching($article, $rawprice)
     {
-        $rawprices = [];
+        $rawprices = [
+            $rawprice->getId() => $rawprice,
+        ];
+        
         foreach ($article->getRawprice() as $articleRawprice){
             $rawprices[$articleRawprice->getId()] = $articleRawprice;
-        }
-        
-        if (!array_key_exists($rawprice->getId(), $rawprices)){
-            $rawprices[$rawprice->getId()] = $rawprice;
         }
         
         $meanPrice = $this->rawpricesMeanPrice($rawprices);
