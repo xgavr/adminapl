@@ -437,11 +437,13 @@ class ArticleManager
         var_dump($article->getId());
         $result = 0;
         foreach ($articleForMatching->getRawprice() as $rawpriceForMatching){
-            if ($this->priceMatching($article, $rawpriceForMatching)){
-                $result += 1;
-            } else {
-                $result -= 1;
-            }
+            if ($rawprice->getStatus() == \Application\Entity\Rawprice::STATUS_PARSED){
+                if ($this->priceMatching($article, $rawpriceForMatching)){
+                    $result += 1;
+                } else {
+                    $result -= 1;
+                }
+            }    
         }
         var_dump($result);
         
