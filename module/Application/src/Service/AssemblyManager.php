@@ -344,6 +344,7 @@ class AssemblyManager
             return false;
         }
 
+        var_dump($codeRaws);
         $result = $i = 0;
         foreach ($codeRaws as $code){
             
