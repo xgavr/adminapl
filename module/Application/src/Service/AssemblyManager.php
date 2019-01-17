@@ -348,7 +348,7 @@ class AssemblyManager
         $result = $i = 0;
         foreach ($codeRaws as $code){
 
-            var_dump($i);
+//            var_dump($code);
             
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code, $unknownProducer);
             $article = $this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer);
@@ -360,6 +360,7 @@ class AssemblyManager
                 $priceMatching = false;
                 if ($intersectResult){
                     $priceMatching = $this->articleManager->articlePriceMatching($article, $articleForMatching);
+                    $i++;
                 }    
 
                 if ($intersectResult && $priceMatching){
@@ -367,7 +368,6 @@ class AssemblyManager
                 } else {
                     $result -= 1;
                 }
-                $i++;
             }    
 
             if ($i > $maxCheck){
