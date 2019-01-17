@@ -408,6 +408,30 @@ class RawRepository extends EntityRepository
      * @var Apllication\Entity\Raw
      * 
      */
+    public function findPreRetiredRaw($raw)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r')
+                ->from(Raw::class, 'r')
+                ->where('r.supplier = ?1')
+                ->andWhere('r.id < ?2')
+                ->andWhere('r.status = ?3')
+                ->setParameter('1', $raw->getSupplier()->getId())
+                ->setParameter('2', $raw->getId())
+                ->setParameter('3', Raw::STATUS_PRE_RETIRED)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
+    /*
+     * Поиск старых прайсов по отношению к данному прайсу
+     * @var Apllication\Entity\Raw
+     * 
+     */
     public function findOldDeletedRaw($raw)
     {
         $entityManager = $this->getEntityManager();

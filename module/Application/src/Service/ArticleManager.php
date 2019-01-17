@@ -157,6 +157,19 @@ class ArticleManager
                 ->findBy(['raw' => $raw->getId(), 'code' => null]);
         
         if (count($rawprices) === 0){
+            
+            $oldRaws = $this->entityManager->getRepository(Raw::class)
+                    ->findPreRetiredRaw($raw);
+
+            foreach ($oldRaws as $oldRaw){
+                                
+                $oldRaw->setStatus(Raw::STATUS_RETIRED);
+                $this->entityManager->persist($oldRaw);
+
+                $this->entityManager->getRepository(Raw::class)
+                        ->updateAllRawpriceStatus($oldRaw, Rawprice::STATUS_RETIRED);
+            }    
+            
             $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
             $this->entityManager->persist($raw);
             $this->entityManager->flush($raw);

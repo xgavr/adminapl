@@ -301,12 +301,12 @@ class ParseManager {
             foreach ($oldRaws as $oldRaw){
                                 
                 if ($this->isDeleteRaw($raw, $oldRaw)){
-                    $oldRaw->setStatus(Raw::STATUS_RETIRED);
+                    $oldRaw->setStatus(Raw::STATUS_PRE_RETIRED);
                     $this->entityManager->persist($oldRaw);
                     $this->entityManager->flush($oldRaw);            
 
-                    $this->entityManager->getRepository(Raw::class)
-                            ->updateAllRawpriceStatus($oldRaw, Rawprice::STATUS_RETIRED);
+//                    $this->entityManager->getRepository(Raw::class)
+//                            ->updateAllRawpriceStatus($oldRaw, Rawprice::STATUS_RETIRED);
                 }                      
             }    
             
