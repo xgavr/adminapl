@@ -344,12 +344,11 @@ class AssemblyManager
             return false;
         }
         
-        var_dump(count($codeRaws));
         
         $result = $i = 0;
         foreach ($codeRaws as $code){
 
-//            var_dump($code);
+            var_dump($i);
             
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code, $unknownProducer);
             $article = $this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer);
