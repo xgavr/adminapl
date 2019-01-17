@@ -432,8 +432,8 @@ class ArticleManager
         
         $meanPrice = $this->rawpricesMeanPrice($rawprices);
         $dispersion = $this->rawpricesDispersion($rawprices);
-        var_dump($meanPrice);
-        var_dump($dispersion);
+//        var_dump($meanPrice);
+//        var_dump($dispersion);
         return $this->inSigma3($rawprice->getRealPrice(), $meanPrice, $dispersion);
     }
     
@@ -447,18 +447,18 @@ class ArticleManager
      */
     public function articlePriceMatching($article, $articleForMatching)
     {
-        var_dump($article->getId());
+//        var_dump($article->getId());
         $result = 0;
         foreach ($articleForMatching->getRawprice() as $rawpriceForMatching){
             if ($rawpriceForMatching->getStatus() == $rawpriceForMatching::STATUS_PARSED){
                 if ($this->priceMatching($article, $rawpriceForMatching)){
-                    $result += 1;
+                    $result += 2;
                 } else {
                     $result -= 1;
                 }
             }    
         }
-        var_dump($result);
+//        var_dump($result);
         
         return $result > 0;
     }

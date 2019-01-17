@@ -364,7 +364,7 @@ class AssemblyManager
                 }    
 
                 if ($intersectResult && $priceMatching){
-                    $result += 1;
+                    $result += 2;
                 } else {
                     $result -= 1;
                 }
