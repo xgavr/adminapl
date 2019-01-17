@@ -119,7 +119,7 @@ class ArticleManager
     public function grabArticleFromRaw($raw)
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(600);
+        set_time_limit(900);
         $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
@@ -172,7 +172,7 @@ class ArticleManager
             
             $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
             $this->entityManager->persist($raw);
-            $this->entityManager->flush($raw);
+            $this->entityManager->flush();
         }        
         
     }
