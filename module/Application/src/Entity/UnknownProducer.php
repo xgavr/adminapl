@@ -96,7 +96,8 @@ class UnknownProducer {
 
     public function setName($name) 
     {
-        $this->name = trim($name);
+        $filter = new \Application\Filter\ProducerName();
+        $this->name = $filter->filter($name);
     }     
 
     public function getDateCreated() 
