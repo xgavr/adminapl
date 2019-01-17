@@ -447,7 +447,7 @@ class ArticleManager
      */
     public function articlePriceMatching($article, $articleForMatching)
     {
-        var_dump($article->getId());
+//        var_dump($article->getId());
         $result = 0;
         foreach ($articleForMatching->getRawprice() as $rawpriceForMatching){
             if ($rawpriceForMatching->getStatus() == $rawpriceForMatching::STATUS_PARSED){
@@ -458,7 +458,7 @@ class ArticleManager
                 }
             }    
         }
-        var_dump($result);
+//        var_dump($result);
         
         return $result > 0;
     }
