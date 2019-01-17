@@ -452,7 +452,7 @@ class ArticleManager
         foreach ($articleForMatching->getRawprice() as $rawpriceForMatching){
             if ($rawpriceForMatching->getStatus() == $rawpriceForMatching::STATUS_PARSED){
                 if ($this->priceMatching($article, $rawpriceForMatching)){
-                    $result += 2;
+                    $result += 1;
                 } else {
                     $result -= 1;
                 }

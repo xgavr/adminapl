@@ -256,9 +256,14 @@ class TokenRepository  extends EntityRepository
         $articleTokens = $this->findArticleTokenByStatus($article, $status);
         $articleTokensForMatching = $this->findArticleTokenByStatus($articleForMatching, $status);
         
-        $intersects = array_intersect($articleTokens, $articleTokensForMatching);
-//        var_dump($articleTokens);
-        return count($intersects) > 0;
+        if (count($articleTokens) && count($articleTokensForMatching)){
+        
+            $intersects = array_intersect($articleTokens, $articleTokensForMatching);
+    //        var_dump($articleTokens);
+            return count($intersects) > 0;
+        }
+        
+        return;
     }
 
     /**

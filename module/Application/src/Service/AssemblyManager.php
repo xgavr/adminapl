@@ -358,6 +358,10 @@ class AssemblyManager
                 $intersectResult = $this->entityManager->getRepository(Token::class)
                         ->intersectArticleTokenByStatus($article, $articleForMatching);
                 
+                if ($intersectResult === null){
+                    continue;
+                }
+                
                 $priceMatching = false;
                 if ($intersectResult){
                     $priceMatching = $this->articleManager->articlePriceMatching($article, $articleForMatching);
@@ -365,7 +369,7 @@ class AssemblyManager
                 }    
 
                 if ($intersectResult && $priceMatching){
-                    $result += 2;
+                    $result += 1;
                 } else {
                     $result -= 1;
                 }
