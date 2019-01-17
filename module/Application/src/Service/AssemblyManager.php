@@ -343,7 +343,6 @@ class AssemblyManager
         if (!count($codeRaws)){
             return false;
         }
-var_dump($maxCheck);
         $result = $i = 0;
         foreach ($codeRaws as $code){
 
@@ -366,12 +365,12 @@ var_dump($maxCheck);
                 } else {
                     $result -= 1;
                 }
+                $i++;
             }    
 
             if ($i > $maxCheck){
                 break;
             }
-            $i++;
         }
 
         return $result >= 0;
