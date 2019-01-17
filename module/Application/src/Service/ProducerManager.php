@@ -12,6 +12,7 @@ use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Filter\ProducerName;
 
 /**
  * Description of RbService
@@ -178,14 +179,17 @@ class ProducerManager
      */
     public function addUnknownProducer($name, $flushnow = true)
     {
+        $nameFilter = new ProducerName();
+        $producerName = $nameFilter->filter($name);
+        
         $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneByName($name);
+                    ->findOneByName($producerName);
 
         if ($unknownProducer == null){
 
             // Создаем новую сущность UnknownProducer.
             $unknownProducer = new UnknownProducer();
-            $unknownProducer->setName($name);
+            $unknownProducer->setName($producerName);
 
             $currentDate = date('Y-m-d H:i:s');
             $unknownProducer->setDateCreated($currentDate);
@@ -214,16 +218,17 @@ class ProducerManager
      */
     public function addNewUnknownProducerFromRawprice($rawprice, $flush = true) 
     {
-        $producerName = $rawprice->getProducer();
+        $nameFilter = new ProducerName();
+        $producerName = $nameFilter->filter($rawprice->getProducer());
         
         $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneByName(trim($producerName));
+                    ->findOneByName($producerName);
 
         if ($unknownProducer == null){
 
             // Создаем новую сущность UnknownProducer.
             $unknownProducer = new UnknownProducer();
-            $unknownProducer->setName(trim($producerName));
+            $unknownProducer->setName($producerName);
 
             $currentDate = date('Y-m-d H:i:s');
             $unknownProducer->setDateCreated($currentDate);
@@ -251,8 +256,12 @@ class ProducerManager
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findUnknownProducerFromRaw($raw);
         
+        $nameFilter = new ProducerName();
+        
         foreach ($unknownProducers as $row){
-            $unknownProducerName = trim($row['producer']);
+            
+            $unknownProducerName = $nameFilter->filter($row['producer']);
+
             $data = [
                 'name' => $unknownProducerName,
                 'date_created' => date('Y-m-d H:i:s'),
