@@ -335,7 +335,7 @@ class AssemblyManager
      */
     public function matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)
     {
-        $maxCheck = max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * 2);
+        $maxCheck = max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * UnknownProducer::CHECK_COUNT);
         
         $codeRaws = $this->entityManager->getRepository(Producer::class)
                 ->intersectesCode($unknownProducer, $intersectUnknownProducer);
@@ -419,7 +419,7 @@ class AssemblyManager
      */
     public function checkUnknownProducer($unknownProducer)
     {
-        if ($unknownProducer->getRawpriceCount() > max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * 2)){
+        if ($unknownProducer->getRawpriceCount() > max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * UnknownProducer::CHECK_COUNT)){
             return true;
         }
         

@@ -21,6 +21,7 @@ class UnknownProducer {
     
     const INTERSECT_COEF = 0.24; // коэффициент отсечение при пересечении.
     const CHECK_MAX_ROW = 10; // максимальное количество строк для проверки
+    const CHECK_COUNT = 3; //множитель для количества проверок
     
     /**
      * @ORM\Id
