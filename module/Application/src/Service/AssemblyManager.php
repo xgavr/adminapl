@@ -348,10 +348,10 @@ class AssemblyManager
         $result = $i = 0;
         foreach ($codeRaws as $code){
 
-            var_dump($code);
-            
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code, $unknownProducer);
             $article = $this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer);
+            
+            var_dump($article->getId());
             
             if ($article && $articleForMatching){
                 $intersectResult = $this->entityManager->getRepository(Token::class)
