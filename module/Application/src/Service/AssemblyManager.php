@@ -348,10 +348,10 @@ class AssemblyManager
         $result = $i = 0;
         foreach ($codeRaws as $code){
 
-            $articleForMatching = $this->findArticleByCodeUnknownProducer($code, $unknownProducer);
-            $article = $this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer);
+            $articleForMatching = $this->findArticleByCodeUnknownProducer($code['code'], $unknownProducer);
+            $article = $this->findArticleByCodeUnknownProducer($code['code'], $intersectUnknownProducer);
             
-            var_dump($code);
+            var_dump($code['code']);
             var_dump($article->getId());
             
             if ($article && $articleForMatching){
