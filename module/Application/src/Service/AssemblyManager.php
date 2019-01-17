@@ -351,6 +351,7 @@ class AssemblyManager
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code, $unknownProducer);
             $article = $this->findArticleByCodeUnknownProducer($code, $intersectUnknownProducer);
             
+            var_dump($code);
             var_dump($article->getId());
             
             if ($article && $articleForMatching){
