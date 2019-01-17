@@ -343,6 +343,9 @@ class AssemblyManager
         if (!count($codeRaws)){
             return false;
         }
+        
+        var_dump($maxCheck);
+        
         $result = $i = 0;
         foreach ($codeRaws as $code){
 
