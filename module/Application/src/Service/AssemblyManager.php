@@ -351,8 +351,8 @@ class AssemblyManager
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code['code'], $unknownProducer);
             $article = $this->findArticleByCodeUnknownProducer($code['code'], $intersectUnknownProducer);
             
-            var_dump($code['code']);
-            var_dump($article->getId());
+//            var_dump($code['code']);
+//            var_dump($article->getId());
             
             if ($article && $articleForMatching){
                 $intersectResult = $this->entityManager->getRepository(Token::class)
@@ -380,7 +380,7 @@ class AssemblyManager
             }
         }
 
-            var_dump($result);
+//            var_dump($result);
         return $result >= 0;
 
     }
