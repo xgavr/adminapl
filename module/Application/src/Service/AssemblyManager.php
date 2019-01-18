@@ -566,6 +566,8 @@ class AssemblyManager
             if (!$good){
                 $good = $this->addNewGoodFromArticle($article, $producer);
             }
+
+            $good->getArticles()->removeElement($article->getGood());
             
             if (!$article->getGood()){
                 $article->setGood($good);
