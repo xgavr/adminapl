@@ -916,9 +916,6 @@ class Rawprice {
     public function setGood($good) 
     {
         $this->good = $good;
-        if ($good){
-            $good->addRawprice($this);
-        }    
     }     
     
     /**

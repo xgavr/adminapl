@@ -351,14 +351,16 @@ class NameManager
     {
         $result = '';
         $dict = 0;
-        foreach ($good->getRawprice() as $rawprice){
-            $dictRu = $rawprice->getDictRuTokens()->count();
-            $dictEn = $rawprice->getDictEnTokens()->count();
-            if ($dict < (2*$dictRu + $dictEn)){
-                $dict = 2*$dictRu + $dictEn;
-                $result = $rawprice->getTitle();
-            }
-        }
+//        foreach ($good->getArtiles() as $article){
+//            foreach ($article->getRawprice() as $rawprice()){
+//                $dictRu = $rawprice->getDictRuTokens()->count();
+//                $dictEn = $rawprice->getDictEnTokens()->count();
+//                if ($dict < (2*$dictRu + $dictEn)){
+//                    $dict = 2*$dictRu + $dictEn;
+//                    $result = $rawprice->getTitle();
+//                }
+//            }    
+//        }
         
         return $result;
     }

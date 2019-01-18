@@ -77,10 +77,10 @@ class Goods {
     protected $description;
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Rawprice", mappedBy="good")
+    * @ORM\OneToMany(targetEntity="Application\Entity\Article", mappedBy="good")
     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
      */
-    private $rawprice;
+    private $articles;
  
     /**
      * @ORM\OneToMany(targetEntity="\Application\Entity\Images", mappedBy="goods")
@@ -102,7 +102,7 @@ class Goods {
     public function __construct() 
     {
       $this->images = new ArrayCollection();   
-      $this->rawprice = new ArrayCollection();      
+      $this->articles = new ArrayCollection();      
       $this->cart = new ArrayCollection();      
     }
     
@@ -236,17 +236,17 @@ class Goods {
      * Returns the array of contacts assigned to this.
      * @return array
      */
-    public function getRawprice()
+    public function getArticles()
     {
-        return $this->rawprice;
+        return $this->articles;
     }
         
     /**
      * Assigns.
      */
-    public function addRawprice($rawprice)
+    public function addArticle($article)
     {
-        $this->rawprice[] = $rawprice;
+        $this->articles[] = $article;
     }
     
     /**

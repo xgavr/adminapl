@@ -36,7 +36,7 @@ class Article {
     protected $fullcode;        
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="good") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="good") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     protected $good;    

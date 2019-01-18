@@ -87,6 +87,27 @@ class AssemblyManager
         return $good;
     }   
     
+    /**
+     * Добавление новой карточки товара из артикула
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Producer $producer
+     * @return Goods
+     */
+    public function addNewGoodFromArticle($article, $producer) 
+    {
+        // Создаем новую сущность Goods.
+        $good = $this->addNewGood($article->getCode(), $producer);
+        $article->setGood($good);
+        
+        $this->entityManager->persist($article);
+        
+        $this->entityManager->flush($article);
+        
+        
+        return $good;
+    }   
+    
         
     /**
      * Проверка строки прайса на возможность создания товара
@@ -537,12 +558,19 @@ class AssemblyManager
         
         if ($producer){
 
-            $code = $rawprice->getCode()->getCode();
+            $article = $rawprice->getCode();
+            $code = $article->getCode();
             $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
 
             if (!$good){
-                $good = $this->addNewGood($code, $producer);
+                $good = $this->addNewGoodFromArticle($article, $producer);
+            }
+            
+            if (!$article->getGood()){
+                $article->setGood($good);
+                $this->entityManager->persist($article);
+                $this->entityManager->flush($article);
             }
 
             if ($good){
@@ -565,7 +593,7 @@ class AssemblyManager
         set_time_limit(900);
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'good' => null, 'statusGood' => Rawprice::GOOD_NEW]);
+                ->findBy(['raw' => $raw->getId(), 'statusGood' => Rawprice::GOOD_NEW]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewGoodFromRawprice($rawprice);
