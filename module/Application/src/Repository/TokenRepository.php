@@ -278,13 +278,13 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('rt.id, rt.lemma, rt.status')
-            ->distinct()    
-            ->from(Rawprice::class, 'r')
-            ->join('r.tokens', 'rt', 'WITH')
-            //->join(Token::class, 't', 'WITH')    
-            ->where('r.good = ?1')   
-            ->andWhere('rt.status = ?2')    
+        $queryBuilder->select('t.id, t.lemma, t.status')
+            ->distinct()
+            ->from(\Application\Entity\Article::class, 'a')    
+            ->join('a.articleTokens', 'at')
+            ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')    
+            ->where('a.good = ?1')   
+            ->andWhere('at.status = ?2')    
             ->setParameter('1', $good->getId())
             ->setParameter('2', $tokenType)
             ;
@@ -292,6 +292,18 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();            
     }
 
+    /**
+     * Быстрая вставка группы наименований
+     * @param array $row 
+     * @return integer
+     */
+    public function insertTokenGroup($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('token_group', $row);
+        return $inserted;
+    }    
+
+    
     /**
      * Найти товары группы наименований
      * 

@@ -375,13 +375,6 @@ class NameManager
     public function addGroupTokenFromGood($good, $flush = true)
     {
         
-        if ($good->getTokenGroup()){
-            return;
-        }
-        
-//        if (count($good->getDictRuTokens()) == 0){
-//            return;
-//        }
         $dictTokens = $this->entityManager->getRepository(Token::class)
                 ->findTokenGoodsByStatus($good, Token::IS_DICT);
         
@@ -398,31 +391,36 @@ class NameManager
         }
         
         $idsFilter = new IdsFormat();
+        $tokenIdsStr = $idsFilter->filter($tokenIds);
         
+        $lemmsFilter = new IdsFormat(['separator' => ' ']);
+        $tokenLemmsStr = $lemmsFilter->filter($tokenLemms);
+        
+        try{
+            $this->entityManager->getRepository(TokenGroup::class)
+                    ->insertTokenGroup([
+                        'name' => '',
+                        'lemms' => $tokenLemmsStr,
+                        'ids' => $tokenIdsStr,
+                        'good_count' => 0,
+                    ]);
+        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+            //дубликат
+        }   
+
         $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                ->findOneByIds($idsFilter->filter($tokenIds));
+            ->findOneByIds($tokenIdsStr);
         
-        if ($tokenGroup === NULL){
-            
-            $tokenGroup = new TokenGroup();
-        
-            foreach($dictTokens as $token){
-                $tokenRef = $this->entityManager->getReference(Token::class, $token['id']);
-                $tokenGroup->addToken($tokenRef);
-            }
-        
-            $tokenGroup->setName('');
-            $tokenGroup->setLemms($tokenLemms);
-            $tokenGroup->setIds($tokenIds);
-        }
+        foreach($dictTokens as $token){
+            $tokenRef = $this->entityManager->getReference(Token::class, $token['id']);
+            $tokenGroup->addToken($tokenRef);
+        }        
         
         $good->setTokenGroup($tokenGroup);
+        $this->entityManager->persist($good);
+        $this->entityManager->flush($good);
         
-        $this->entityManager->persist($tokenGroup);
-        if ($flush){
-            $this->entityManager->flush();
-        }    
-        
+                
         return $tokenGroup;
     }
     
@@ -434,22 +432,17 @@ class NameManager
     public function grabTokenGroupFromRaw($raw)
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(1200);
-        $startTime = time();
+        set_time_limit(900);
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'statusToken' => Rawprice::TOKEN_PARSED, 'statusGood' => Rawprice::GOOD_OK]);
+                ->findBy(['raw' => $raw->getId(), 'statusGood' => Rawprice::GOOD_OK, 'statusToken' => Rawprice::TOKEN_PARSED]);
         
         foreach ($rawprices as $rawprice){
             $this->addGroupTokenFromGood($rawprice->getGood());                
-            
-            $rawprice->setStatusToken(Rawprice::TOKEN_GROUP_PARSED);
-            $this->entityManager->persist($rawprice);
 
-            if (time() > $startTime + 600){
-                $this->entityManager->flush();
-                return;
-            }
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($row['id'], ['status_token' => Rawprice::TOKEN_GROUP_PARSED]);                        
+            
         }
         
         $raw->setParseStage(Raw::STAGE_TOKEN_GROUP_PARSED);

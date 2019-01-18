@@ -246,6 +246,32 @@ class NameController extends AbstractActionController
         ]);          
     }
     
+    public function updateTokenGroupFromRawpriceAction()
+    {
+        $rawpriceId = $this->params()->fromRoute('id', -1);
+
+        if ($rawpriceId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $rawprice = $this->entityManager->getRepository(Rawprice::class)
+                ->findOneById($rawpriceId);
+
+        if ($rawprice == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        if ($rawprice->getStatusGood() == Rawprice::GOOD_OK){
+            $this->nameManager->addGroupTokenFromGood($rawprice->getGood());
+        }    
+                
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
+    
     public function updateTokenGroupFromRawAction()
     {
         set_time_limit(0);

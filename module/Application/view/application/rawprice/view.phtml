@@ -125,6 +125,12 @@ $this->pageBreadcrumbs()->setItems([
                                 Товар
                         </button>
                     <?php endif;?>    
+                    <?php if ($rawprice->getStatusGood() == $rawprice::GOOD_OK):?>
+                        <button value="/name/update-token-group-from-rawprice/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Создать">
+                                Группа наименований
+                        </button>
+                    <?php endif;?>    
                 <?php endif; ?>
             </div>
             <div class="panel-body">

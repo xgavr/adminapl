@@ -163,9 +163,9 @@ class TokenGroup {
      */
     public function addToken($token)
     {
-        if (!$this->hasToken($token)){
+        //if (!$this->hasToken($token)){
             $this->tokens->add($token);
-        }    
+        //}    
     }
 
     
