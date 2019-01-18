@@ -170,20 +170,15 @@ class GoodsController extends AbstractActionController
     
     public function indexAction()
     {
-        $page = $this->params()->fromQuery('page', 1);
         
-        $query = $this->entityManager->getRepository(Goods::class)
-                    ->findAllGoods();
+        $total = $this->entityManager->getRepository(Goods::class)
+                ->count([]);
                 
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
         // Визуализируем шаблон представления.
         return new ViewModel([
             'goods' => $paginator,
             'goodsManager' => $this->goodsManager,
-            'total' => $paginator->getTotalItemCount(),
+            'total' => $total,
         ]);  
     }
     
