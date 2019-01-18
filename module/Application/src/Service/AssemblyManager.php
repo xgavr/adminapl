@@ -562,17 +562,13 @@ class AssemblyManager
     public function assemblyGoodFromRaw($raw)
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(1200);
-        $startTime = time();
+        set_time_limit(900);
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'good' => null, 'statusGood' => Rawprice::GOOD_NEW]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewGoodFromRawprice($rawprice);
-            if (time() > $startTime + 400){
-                return;
-            }
         }
         
         $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
