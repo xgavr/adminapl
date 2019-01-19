@@ -303,6 +303,46 @@ class TokenRepository  extends EntityRepository
         return $inserted;
     }    
 
+    /**
+     * Быстрая вставка связи группы наименований и токена
+     * @param array $row 
+     * @return integer
+     */
+    public function insertTokenGroupToken($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('token_group_token', $row);
+        return $inserted;
+    }    
+
+    /**
+     * Быстрое удаление всех групп наименований
+     * @return integer
+     */
+    public function deleteAllTokenGroup()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('tg.id')
+                ->from(TokenGroup::class, 'tg')
+                ->setMaxResults(1)
+                ;
+        $row = $queryBuilder->getQuery()->getResult();
+//        var_dump($row[0]['id']); exit;
+        
+        $update = $this->getEntityManager()->getConnection()->update('goods', ['token_group_id' => $row[0]['id']], ['1' => 1]);
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->delete(TokenGroup::class, 'tg')
+                ->where('tg.id != ?1')
+                ->setParameter('1', $row[0]['id'])
+                ;
+        $queryBuilder->getQuery()->getResult();
+        
+        return;
+    }    
+    
+    
     
     /**
      * Найти товары группы наименований

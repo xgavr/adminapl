@@ -474,4 +474,15 @@ class NameController extends AbstractActionController
         ]);          
     }    
     
+    public function deleteAllTokenGroupAction()
+    {
+        $deleted = $this->entityManager->getRepository(TokenGroup::class)
+                ->deleteAllTokenGroup();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }    
+    
 }

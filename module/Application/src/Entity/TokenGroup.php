@@ -122,7 +122,7 @@ class TokenGroup {
     public function setIds($ids) 
     {        
         $filter = new IdsFormat();
-        $this->ids = $filter->filter($ids);
+        $this->ids = md5($filter->filter($ids));
     }  
     
     /**

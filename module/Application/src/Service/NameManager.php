@@ -390,8 +390,9 @@ class NameManager
             $tokenLemms[] = $token['lemma'];
         }
         
+//        var_dump($dictTokens); exit;
         $idsFilter = new IdsFormat();
-        $tokenIdsStr = $idsFilter->filter($tokenIds);
+        $tokenIdsStr = md5($idsFilter->filter($tokenIds));
         
         $lemmsFilter = new IdsFormat(['separator' => ' ']);
         $tokenLemmsStr = $lemmsFilter->filter($tokenLemms);
@@ -412,8 +413,18 @@ class NameManager
             ->findOneByIds($tokenIdsStr);
         
         foreach($dictTokens as $token){
-            $tokenRef = $this->entityManager->getReference(Token::class, $token['id']);
-            $tokenGroup->addToken($tokenRef);
+//            var_dump($token['id']);
+//            $tokenRef = $this->entityManager->getReference(Token::class, $token['id']);
+//            $tokenGroup->addToken($tokenRef);
+            try{
+                $this->entityManager->getRepository(TokenGroup::class)
+                        ->insertTokenGroupToken([
+                            'token_group_id' => $tokenGroup->getId(),
+                            'token_id' => $token['id'],
+                        ]);
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+//                var_dump($e->getMessage()); exit;
+            }   
         }        
         
         $good->setTokenGroup($tokenGroup);
@@ -441,7 +452,7 @@ class NameManager
             $this->addGroupTokenFromGood($rawprice->getGood());                
 
             $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($row['id'], ['status_token' => Rawprice::TOKEN_GROUP_PARSED]);                        
+                    ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]);                        
             
         }
         
