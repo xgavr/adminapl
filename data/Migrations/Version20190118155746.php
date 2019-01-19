@@ -15,7 +15,7 @@ final class Version20190118155746 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('token_group');
         $table->dropIndex('ids_indx');
-        $table->changeColumn('ids', ['length' => 64]);
+        $table->changeColumn('ids', ['length' => 128]);
         $table->addUniqueIndex(['ids'], 'ids_uindx');
 
     }
