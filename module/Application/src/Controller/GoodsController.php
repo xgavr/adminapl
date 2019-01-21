@@ -176,7 +176,6 @@ class GoodsController extends AbstractActionController
                 
         // Визуализируем шаблон представления.
         return new ViewModel([
-            'goods' => $paginator,
             'goodsManager' => $this->goodsManager,
             'total' => $total,
         ]);  
