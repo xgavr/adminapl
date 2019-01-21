@@ -120,21 +120,25 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();        
     }
     
-    public function tokenFrequencies($dict = Token::IS_DICT)
+    /**
+     * Выборка количества артикулов в токене
+     * 
+     * @return array
+     */
+    public function tokenFrequencies()
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('t.lemma, count(at.id) as articleCount')
-                ->from(Token::class, 't')
-                ->leftJoin('t.articleTokens', 'at')
-                ->where('t.status = ?1')
-                ->groupBy('t.lemma')
-                ->setParameter('1', $dict)
+        $queryBuilder->select('at.lemma, count(at.article) as articleCount')
+                ->from(ArticleToken::class, 'at')
+                //->where('at.status = ?1')
+                ->groupBy('at.lemma')
+//                ->setParameter('1', $dict)
                 ;
         
         
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();        
         
     }

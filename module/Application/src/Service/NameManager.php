@@ -199,7 +199,7 @@ class NameManager
     public function updateAllTokenArticleCount()
     {
         $tokens = $this->entityManager->getRepository(Token::class)
-                ->articleCountAllToken();
+                ->tokenFrequencies();
 
         foreach ($tokens as $token){
             $articleCount = ($token['articleCount'] === null) ? 0:$token['articleCount']; 
