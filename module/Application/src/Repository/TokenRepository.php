@@ -336,9 +336,11 @@ class TokenRepository  extends EntityRepository
             ->join('a.articleTokens', 'at')
             ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')    
             ->where('a.good = ?1')   
-            ->andWhere('at.status = ?2')    
+            ->andWhere('at.status = ?2')
+            ->andWhere('t.frequency > ?3')    
             ->setParameter('1', $good->getId())
             ->setParameter('2', $tokenType)
+            ->setParameter('3', TokenGroup::FREQUENCY_MIN)
             ;
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
