@@ -47,6 +47,7 @@ $this->headScript()
                      <th data-field="lemma" data-formatter="tokenFormatter">Токен</th>
                      <th data-field="status" data-formatter="statusFormatter">Статус</th>             
                      <th data-field="flag" data-formatter="flagFormatter">Список</th>             
+                     <th data-field="frequency">Частота</th>             
                  </tr>                
             </thead>
         </table>
@@ -85,6 +86,22 @@ $this->headScript()
                                     title="Удаление пустых">
                                 <span class="glyphicon glyphicon-remove" ></span>
                             </button>                             
+                        </div>
+                    </div>
+                </div>    
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Пересчет количества
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <span>артикулов</span>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/name/good-count-token-group/" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Обновить количество товара">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
                         </div>
                     </div>
                 </div>    

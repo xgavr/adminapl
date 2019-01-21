@@ -94,6 +94,51 @@ class TokenRepository  extends EntityRepository
     }    
 
     /**
+     * Быстрое обновление токена по лемме
+     * 
+     * @param string $lemma
+     * @param array $data
+     * @return integer
+     */
+    public function updateToken($lemma, $data)
+    {
+        if (!count($data)){
+            return;
+        }
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->update(Token::class, 't')
+                ->where('t.lemma = ?1')
+                ->setParameter('1', $lemma)
+                ;
+        foreach ($data as $key => $value){
+            $queryBuilder->set('t.'.$key, $value);
+        }
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
+    public function tokenFrequencies($dict = Token::IS_DICT)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('t.lemma, count(at.id) as articleCount')
+                ->from(Token::class, 't')
+                ->leftJoin('t.articleTokens', 'at')
+                ->where('t.status = ?1')
+                ->groupBy('t.lemma')
+                ->setParameter('1', $dict)
+                ;
+        
+        
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();        
+        
+    }
+    /**
      * Быстрое удаление article токенов, свзанных с token
      * @param Application\Entity\Token $token 
      * @return integer

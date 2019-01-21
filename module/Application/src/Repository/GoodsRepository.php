@@ -229,13 +229,13 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g')
-            ->addSelect('count(r.id) as rawpriceCount')    
+            ->addSelect('count(a.id) as articleCount')    
             ->from(Goods::class, 'g')
-            ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.good = g.id')
+            ->leftJoin('g.articles', 'a')
             ->groupBy('g.id')
-            ->having('rawpriceCount = 0')
+            ->having('articleCount = 0')
                 ;
-        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 

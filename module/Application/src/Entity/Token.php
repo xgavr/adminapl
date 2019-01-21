@@ -63,7 +63,12 @@ class Token {
      */
     protected $flag = self::WHITE_LIST;        
 
-     /**
+    /**
+     * @ORM\Column(name="frequency")  
+     */
+    protected $frequency = 9999;        
+
+    /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rawprice")
      * @ORM\JoinTable(name="rawprice_token",
      *      joinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")},
@@ -120,6 +125,16 @@ class Token {
     {
         $this->lemma = mb_strcut(trim($lemma), 0, 64, 'UTF-8');
     }     
+    
+    public function setFrequency($frequency)
+    {
+        $this->frequency = $frequency;
+    }
+    
+    public function getFrequency()
+    {
+        return $this->frequency;
+    }
 
     /**
      * Returns status.

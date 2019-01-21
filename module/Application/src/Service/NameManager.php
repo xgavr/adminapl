@@ -174,6 +174,40 @@ class NameManager
         }    
     }
     
+    
+    /**
+     * Обновление количества артикулов у токена
+     * 
+     * @param string $lemma
+     * @param integer $articleCount
+     */
+    public function updateTokenArticleCount($lemma, $articleCount = null)
+    {
+        if ($articleCount === null){
+            $articleCount = $this->entityManager->getRepository(ArticleToken::class)
+                    ->count(['lemma' => $lemma]);
+        }    
+
+        $this->entityManager->getRepository(Token::class)
+                ->updateToken($lemma, ['frequency' => $articleCount]);
+        
+    }
+    
+    /**
+     * Обновление количества артикулов у всех токенов
+     */
+    public function updateAllTokenArticleCount()
+    {
+        $tokens = $this->entityManager->getRepository(Token::class)
+                ->articleCountAllToken();
+
+        foreach ($tokens as $token){
+            $articleCount = ($token['articleCount'] === null) ? 0:$token['articleCount']; 
+            $this->updateTokenArticleCount($token['lemma'], $articleCount);
+        }   
+    }
+    
+    
     /**
      * Дополнительная проверка лемм
      * 
@@ -481,8 +515,8 @@ class NameManager
     /**
      * Обновление количества товара у группы наименований
      * 
-     * @param Application\Entity\TokenGroup $tokenGroup
-     * @param bool $flush
+     * @param integer $tokenGroupId
+     * @param integer $goodCount
      */
     public function updateTokenGroupGoodCount($tokenGroupId, $goodCount = null)
     {
