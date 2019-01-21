@@ -496,7 +496,7 @@ class NameController extends AbstractActionController
             return;
         }
         
-        $tokenGroup = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                 ->findOneById($tokenGroupId);
         
         if ($tokenGroup == null) {
