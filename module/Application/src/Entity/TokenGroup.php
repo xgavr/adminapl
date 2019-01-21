@@ -20,7 +20,7 @@ use Application\Filter\IdsFormat;
  */
 class TokenGroup {
     
-    const FREQUENCY_MIN   = 9999; // минимальная чатота токена
+    const FREQUENCY_MIN   = 5000; // минимальная чатота токена
 
     /**
      * @ORM\Id
