@@ -484,17 +484,16 @@ class NameManager
      * @param Application\Entity\TokenGroup $tokenGroup
      * @param bool $flush
      */
-    public function updateTokenGroupGoodCount($tokenGroup, $flush = true)
+    public function updateTokenGroupGoodCount($tokenGroupId, $goodCount = null)
     {
-        $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                ->count(['tokenGroup' => $tokenGroup->getId()]);
+        if ($goodCount === null){
+            $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    ->count(['tokenGroup' => $tokenGroupId]);
+        }    
         
-        $tokenGroup->setGoodCount($goodCount);
-        $this->entityManager->persist($tokenGroup);
+        $this->entityManager->getRepository(TokenGroup::class)
+                ->updateTokenGroup($tokenGroupId, ['goodCount' => $goodCount]);
         
-        if ($flush){
-            $this->entityManager->flush($tokenGroup);
-        }
     }
     
     /**
@@ -503,12 +502,12 @@ class NameManager
     public function updateAllTokenGroupGoodCount()
     {
         $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
-                ->findBy([]);
+                ->goodCountAllTokenGroup();
 
         foreach ($tokenGroups as $tokenGroup){
-            $this->updateTokenGroupGoodCount($tokenGroup, false);
+            $goodCount = ($tokenGroup['goodCount'] === null) ? 0:$tokenGroup['goodCount']; 
+            $this->updateTokenGroupGoodCount($tokenGroup['id'], $goodCount);
         }   
-        $this->entityManager->flush();        
     }
     
     

@@ -17,8 +17,36 @@ use Application\Entity\Producer;
  *
  * @author Daddy
  */
-class GoodsRepository extends EntityRepository{
+class GoodsRepository extends EntityRepository
+{
+    
+    /**
+     * Быстрое обновление полей товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @param array $data
+     * @return integer
+     */
+    public function updateGood($good, $data)
+    {
+        if (!count($data)){
+            return;
+        }
+        
+        $entityManager = $this->getEntityManager();
 
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->update(Goods::class, 'g')
+                ->where('g.id = ?1')
+                ->setParameter('1', $good->getId())
+                ;
+        foreach ($data as $key => $value){
+            $queryBuilder->set($key, $value);
+        }
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
     /**
      * Запрос по товарам по разным параметрам
      * 

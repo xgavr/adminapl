@@ -452,6 +452,29 @@ class NameController extends AbstractActionController
         ]);          
     }
     
+    public function updateGoodCountTokenGroupAction()
+    {
+        $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
+        if ($tokenGroupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $tokenGroup = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findOneById($tokenGroupId);
+        
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->updateTokenGroupGoodCount($tokenGroup->getId());
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
     
     public function goodCountTokenGroupAction()
     {

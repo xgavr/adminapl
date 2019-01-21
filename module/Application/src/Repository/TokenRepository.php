@@ -313,6 +313,56 @@ class TokenRepository  extends EntityRepository
         $inserted = $this->getEntityManager()->getConnection()->insert('token_group_token', $row);
         return $inserted;
     }    
+    
+    /**
+     * Быстрое обновление полей группы наименований
+     * 
+     * @param integer $tokenGroupId
+     * @param array $data
+     * @return integer
+     */
+    public function updateTokenGroup($tokenGroupId, $data)
+    {
+        if (!count($data)){
+            return;
+        }
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->update(TokenGroup::class, 'tg')
+                ->where('tg.id = ?1')
+                ->setParameter('1', $tokenGroupId)
+                ;
+        foreach ($data as $key => $value){
+            $queryBuilder->set('tg.'.$key, $value);
+        }
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
+
+    /**
+     * Выборка количества товара в группах наименований
+     * 
+     * @return array
+     */
+    public function goodCountAllTokenGroup()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('tg.id, count(g.id) as goodCount')
+                ->from(TokenGroup::class, 'tg')
+                ->leftJoin('tg.goods', 'g')
+                ->groupBy('tg.id')
+                ;
+        
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
 
     /**
      * Быстрое удаление всех групп наименований
