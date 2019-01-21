@@ -43,11 +43,11 @@ $this->headScript()
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-type="numeric">ID</th>
-                     <th data-field="lemma" data-formatter="tokenFormatter">Токен</th>
-                     <th data-field="status" data-formatter="statusFormatter">Статус</th>             
-                     <th data-field="flag" data-formatter="flagFormatter">Список</th>             
-                     <th data-field="frequency">Частота</th>             
+                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                     <th data-field="lemma" data-formatter="tokenFormatter" data-sortable="true">Токен</th>
+                     <th data-field="status" data-formatter="statusFormatter" data-sortable="true">Статус</th>             
+                     <th data-field="flag" data-formatter="flagFormatter" data-sortable="true">Список</th>             
+                     <th data-field="frequency" data-sortable="true">Частота</th>             
                  </tr>                
             </thead>
         </table>
@@ -124,8 +124,7 @@ $this->headScript()
         });
     });
     
-    function queryParams() {
-        var params = {offset: 0, limit: 10};
+    function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });

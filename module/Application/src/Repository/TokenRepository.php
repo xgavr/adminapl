@@ -189,6 +189,9 @@ class TokenRepository  extends EntityRepository
                     ->setMaxResults(1)    
                  ;
             }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('t.'.$params['sort'], $params['order']);                
+            }            
         }
 
         return $queryBuilder->getQuery();

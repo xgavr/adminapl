@@ -330,8 +330,6 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerFromRawpriceAction()
     {
-        set_time_limit(1200);
-        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_producer'] == 1){
@@ -355,7 +353,7 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerRawpriceCountAction()
     {
-        set_time_limit(1200);
+        set_time_limit(900);
         
         $settings = $this->adminManager->getPriceSettings();
 
@@ -380,7 +378,7 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerSupplierCountAction()
     {
-        set_time_limit(1200);
+        set_time_limit(900);
         
         $settings = $this->adminManager->getPriceSettings();
 
@@ -504,8 +502,6 @@ class ProcessingController extends AbstractActionController
      */
     public function tokenFromRawpriceAction()
     {
-        set_time_limit(1200);
-        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_name'] == 1){
@@ -529,9 +525,12 @@ class ProcessingController extends AbstractActionController
      */
     public function deleteTokenAction()
     {
+        set_time_limit(900)
+        ;
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_name'] == 1){
+            $this->nameManager->updateAllTokenArticleCount();
             $this->nameManager->removeEmptyToken();
         }    
                 

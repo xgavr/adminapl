@@ -73,10 +73,12 @@ class NameController extends AbstractActionController
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
         $limit = $this->params()->fromQuery('limit');
         
         $query = $this->entityManager->getRepository(Token::class)
-                        ->findAllToken(['q' => $q]);
+                        ->findAllToken(['q' => $q, 'sort' => $sort, 'order' => $order]);
 
         $total = count($query->getResult(2));
         
