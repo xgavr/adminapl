@@ -422,7 +422,6 @@ class ProcessingController extends AbstractActionController
      */
     public function articleFromRawpriceAction()
     {
-        set_time_limit(1200);
         
         $settings = $this->adminManager->getPriceSettings();
 
@@ -464,7 +463,6 @@ class ProcessingController extends AbstractActionController
      */
     public function oemFromRawpriceAction()
     {
-        set_time_limit(1200);
         
         $settings = $this->adminManager->getPriceSettings();
 
@@ -550,8 +548,6 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerIntersectAction()
     {
-        set_time_limit(1200);
-        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['assembly_producer'] == 1){
@@ -688,8 +684,6 @@ class ProcessingController extends AbstractActionController
      */
     public function tokenGroupFromRawpriceAction()
     {
-        set_time_limit(1200);
-        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['assembly_group_name'] == 1){
@@ -713,7 +707,7 @@ class ProcessingController extends AbstractActionController
      */
     public function deleteTokenGroupAction()
     {
-        set_time_limit(1200);
+        set_time_limit(900);
         
         $settings = $this->adminManager->getPriceSettings();
 

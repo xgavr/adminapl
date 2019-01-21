@@ -363,6 +363,8 @@ class ProducerManager
     
     public function updateUnknownProducerIntersect()
     {
+        set_time_limit(900);
+        
         $this->entityManager->getRepository(Producer::class)
                 ->articleUnknownProducerIntersect();
         return;

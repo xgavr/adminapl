@@ -107,7 +107,7 @@ class OemManager
     public function grabOemFromRaw($raw)
     {
         ini_set('memory_limit', '4096M');
-        set_time_limit(1800);
+        set_time_limit(900);
         
         $filter = new \Application\Filter\ArticleCode();
         

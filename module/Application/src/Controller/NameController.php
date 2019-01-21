@@ -359,7 +359,7 @@ class NameController extends AbstractActionController
     
     public function tokenGroupContentAction()
     {
-//        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '512M');
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
