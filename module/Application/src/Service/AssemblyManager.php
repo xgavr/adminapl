@@ -132,7 +132,7 @@ class AssemblyManager
             return false;
         }
         
-        if (strlen($code) < 4 || strlen($code) > 24) {
+        if (strlen($code) < 3 || strlen($code) > 24) {
             return false;
         }    
         
