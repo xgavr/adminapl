@@ -95,7 +95,10 @@ $this->pageBreadcrumbs()->setItems([
                     <td>
                         <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
                             <?= $rawprice->getArticle();?>
-                        </a>
+                        </a> 
+                        <div>
+                            <?= $rawprice->getStatusAsString();?>
+                        </div>
                     </td>
                     <td>
                         <div>
