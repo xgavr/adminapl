@@ -85,13 +85,6 @@ $this->pageBreadcrumbs()->setItems([
                     <?//= $randRawprices[0]->getUnknownProducer()->getName()?>
                 </th>
                 <td colspan="3" align="right">
-                    <?php $meanPrice = $articleManager->rawpricesMeanPrice($rawprices);?>
-                    <?php if ($meanPrice):?>
-                        <?php $dispersion = $articleManager->rawpricesDispersion($rawprices);?>
-                        <b><?= number_format($meanPrice, 2, '.', '') ?></b>
-                        (<?= number_format($dispersion, 2, '.', '') ?>)
-                        (<?= number_format($dispersion/$meanPrice, 2, '.', '') ?>)
-                    <?php endif; ?>    
                 </td>
                 <td align="right">
                 </td>
@@ -103,14 +96,6 @@ $this->pageBreadcrumbs()->setItems([
                         <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
                             <?= $rawprice->getArticle();?>
                         </a>
-                        <div>
-                            <?php if ($rawprice->getStatusToken() == $rawprice::TOKEN_PARSED):?>
-                                <button value="/goods/assembly/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
-                                        title="Создать">
-                                        Товар
-                                </button>
-                            <?php endif;?>                        
-                        </div>
                     </td>
                     <td>
                         <div>
@@ -126,9 +111,7 @@ $this->pageBreadcrumbs()->setItems([
                     </td>
                     <td>
                         <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
-                            <span style="color: <?= ($articleManager->tokenRawpricesIntersect($rawprices, $rawprice) ? 'inherit':'red')?>">
-                                    <?= $rawprice->getGoodname();?>
-                            </span>
+                            <?= $rawprice->getGoodname();?>
                         </a>    
                         <?php $tokens = $rawprice->getTokens(); ?>
                         <?php if(count($tokens)):?>  
@@ -150,9 +133,7 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </td>
                     <td align="right">
-                        <span style="color: <?= ($this->articleManager->inSigma3($rawprice->getRealPrice(), $meanPrice, $dispersion)) ? 'inherit':'red'?>">
-                            <?= number_format($rawprice->getRealPrice(), 2, '.', '');?>
-                        </span>
+                        <?= number_format($rawprice->getRealPrice(), 2, '.', '');?>
                     </td>
                     <td align="right">
                         <?= $rawprice->getRealRest();?>

@@ -125,9 +125,9 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
             ->where('r.good = ?1')
-            ->andWhere('r.status = ?2')
+            //->andWhere('r.status = ?2')
             ->setParameter('1', $goods->getId())    
-            ->setParameter('2', Rawprice::STATUS_PARSED)    
+            //->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
         //var_dump($queryBuilder->getQuery()->getDQL());
         return $queryBuilder->getQuery()->getResult();    
