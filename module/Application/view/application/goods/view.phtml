@@ -91,7 +91,7 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <?php $totalRawpriceCount = 0; ?>
             <?php foreach ($rawprices as $rawprice):?>
-                <tr>
+                <tr style="font-size: <?= ($rawprice->getStatus() == $rawprice::STATUS_PARSED) ? "inherit":"xx-small"?>">
                     <td>
                         <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
                             <?= $rawprice->getArticle();?>
