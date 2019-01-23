@@ -151,6 +151,9 @@ class GoodsManager
      */
     public function removeEmpty()
     {
+        set_time_limit(900);        
+        ini_set('memory_limit', '2048M');
+
         $goodsForDelete = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForDelete();
 

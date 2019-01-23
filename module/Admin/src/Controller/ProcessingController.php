@@ -525,8 +525,6 @@ class ProcessingController extends AbstractActionController
      */
     public function deleteTokenAction()
     {
-        set_time_limit(900)
-        ;
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_name'] == 1){

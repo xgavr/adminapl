@@ -198,6 +198,9 @@ class NameManager
      */
     public function updateAllTokenArticleCount()
     {
+        set_time_limit(900);        
+        ini_set('memory_limit', '2048M');
+
         $tokens = $this->entityManager->getRepository(Token::class)
                 ->tokenFrequencies();
 
@@ -361,6 +364,7 @@ class NameManager
      */
     public function removeEmptyToken()
     {
+        set_time_limit(900);        
         ini_set('memory_limit', '2048M');
         
         $tokenForDelete = $this->entityManager->getRepository(Token::class)
