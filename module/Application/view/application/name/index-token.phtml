@@ -24,9 +24,14 @@ $this->headScript()
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                    <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
+                <select id="statusSelect" style="width: 200px" class="form-control">
+                    <?php foreach ($statuses as $key => $value):?>
+                        <option value="<?= $key?>"><?= $value?></option>
+                    <?php endforeach;?>
+                </select>
             </div>
         </div>
         <table id="table" 
@@ -116,10 +121,13 @@ $this->headScript()
     }
 
     var $table = $('#table'),
-        $ok = $('#ok');
+        $ok = $('#ok'), $statusSelect = $('#statusSelect');
 
     $(function () {
         $ok.click(function () {
+            $table.bootstrapTable('refresh');
+        });
+        $statusSelect.change(function () {
             $table.bootstrapTable('refresh');
         });
     });
@@ -135,7 +143,9 @@ $this->headScript()
         offset = $('li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
-        }    
+        }
+        
+        params.status = $statusSelect.val();
         
         return params;
     }

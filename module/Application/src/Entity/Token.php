@@ -160,14 +160,14 @@ class Token {
             self::IS_EN_DICT => 'EN словарь',
             self::IS_EN => 'EN',
             self::IS_EN_1 => 'EN, 1 буква',
-            self::IS_ABBR => 'EN, аббревиатура',
+            self::IS_EN_ABBR => 'EN, аббревиатура',
             
             self::IS_NUMERIC => 'Число',
 
             self::IS_PRODUCER => 'Производитель',
             self::IS_ARTICLE => 'Артикул',
 
-            self::STATUS_UNKNOWN => 'Неизвестно',
+            self::IS_UNKNOWN => 'Неизвестно',
         ];
     }    
     
