@@ -418,9 +418,13 @@ class NameManager
         
 //        var_dump(count($dictTokens)); exit;
         if (count($dictTokens) == 0){
-            $good->setTokenGroup(null);
-            $this->entityManager->persist($good);
-            $this->entityManager->flush($good);
+            try{
+                $good->setTokenGroup(null);
+                $this->entityManager->persist($good);
+                $this->entityManager->flush($good);
+            } catch (Doctrine\ORM\EntityNotFoundException $ex){
+                //not found
+            }    
             return;
         }
         
