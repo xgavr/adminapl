@@ -13,6 +13,23 @@ use Application\Entity\Token;
 use phpMorphy;
 use Zend\Config\Config;
 
+/**
+ * Вспомогательный класс
+ */
+class myDict
+{
+    protected $wordForm;
+
+    function __construct($word)
+    {
+        $this->wordForm = $word;
+    }
+    
+    public function getBaseForm()
+    {
+        return $this->wordForm;
+    }
+}
 
 /**
  * Получить базовую форму слов в предложении
@@ -70,7 +87,7 @@ class Lemma extends AbstractFilter
                 $dict = new Config(include Token::MY_DICT_FILE, true);
                 $word = $dict->get($word);
                 if ($word){                    
-                    $paradigm = new \phpMorphy_WordDescriptor($word, null, $helper);
+                    $paradigm = new myDict($word);
                     $collection = [$paradigm];
                 }
             }        
