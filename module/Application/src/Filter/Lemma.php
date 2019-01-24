@@ -11,6 +11,8 @@ namespace Application\Filter;
 use Zend\Filter\AbstractFilter;
 use Application\Entity\Token;
 use phpMorphy;
+use Zend\Config\Config;
+
 
 /**
  * Получить базовую форму слов в предложении
@@ -37,7 +39,7 @@ class Lemma extends AbstractFilter
     ];
 
     protected $dictsPath = 'vendor/cijic/phpmorphy/libs/phpmorphy/dicts';
-
+    
     // Конструктор.
     public function __construct($options = null) 
     {     
@@ -45,6 +47,25 @@ class Lemma extends AbstractFilter
         if(is_array($options)) {
             $this->options = $options;
         }    
+    }
+    
+    protected function _searchWordInMyDict($word)
+    {
+        
+    }
+    
+    /**
+     * Поиск слова в словарях
+     * 
+     * @param string $word
+     * @param phpMorphy $morphy
+     * @return phpMorphy_WordDescriptor_Collection|array|bool
+     */
+    protected function _searchWord($word, $morphy)
+    {
+        $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
+        
+        return $collection;
     }
     
     /**
@@ -55,7 +76,8 @@ class Lemma extends AbstractFilter
      */
     protected function predictWord($word, $morphy)
     {
-        $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
+//        $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
+        $collection = $this->_searchWord($word, $morphy);
         if (false !== $collection){
             $predicts = [$word];        
             return $predicts;
@@ -65,7 +87,8 @@ class Lemma extends AbstractFilter
         while (mb_strlen($wordPredict) > 3){
             $wordLen = mb_strlen($wordPredict);
             $wordPredict = mb_substr($wordPredict, 0, $wordLen-1);
-            $collection = $morphy->findWord($wordPredict, phpMorphy::IGNORE_PREDICT);
+//            $collection = $morphy->findWord($wordPredict, phpMorphy::IGNORE_PREDICT);
+            $collection = $this->_searchWord($wordPredict, $morphy);
             if (false !== $collection){
                 $predicts[] = $wordPredict;
                 return array_merge($predicts, $this->predictWord(str_replace($wordPredict, '', $word), $morphy));
@@ -138,12 +161,14 @@ class Lemma extends AbstractFilter
                     $result[Token::IS_RU_1][] = $ruWord;
                 } else {
                 
-                    $collectionRU = $morphyRU->findWord($ruWord, phpMorphy::IGNORE_PREDICT);
+//                    $collectionRU = $morphyRU->findWord($ruWord, phpMorphy::IGNORE_PREDICT);
+                    $collectionRU = $this->_searchWord($ruWord, $morphyRU);
 
                     if (false === $collectionRU) {
                         $prdcts = $this->predictWord($ruWord, $morphyRU);
                         foreach ($prdcts as $prdctWord){
-                            $collectionRU = $morphyRU->findWord($prdctWord, phpMorphy::IGNORE_PREDICT);
+//                            $collectionRU = $morphyRU->findWord($prdctWord, phpMorphy::IGNORE_PREDICT);
+                            $collectionRU = $this->_searchWord($prdctWord, $morphyRU);
                             if (false === $collectionRU) {
                                 $result[Token::IS_RU][] = $prdctWord;                    
                             } else {
@@ -165,7 +190,8 @@ class Lemma extends AbstractFilter
                     $result[Token::IS_EN_1][] = $enWord;
                 } else {
                 
-                    $collectionEN = $morphyEN->findWord($enWord, phpMorphy::IGNORE_PREDICT);
+//                    $collectionEN = $morphyEN->findWord($enWord, phpMorphy::IGNORE_PREDICT);
+                    $collectionEN = $this->_searchWord($enWord, $morphyEN);
 
                     if (false === $collectionEN) {
                         $result[Token::IS_EN][] = $enWord;                    

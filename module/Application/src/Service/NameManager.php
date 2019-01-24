@@ -20,6 +20,10 @@ use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
 use Application\Filter\IdsFormat;
 
+use Zend\Config\Config;
+use Zend\Config\Writer\PhpArray;
+
+
 /**
  * Description of RbService
  *
@@ -28,6 +32,9 @@ use Application\Filter\IdsFormat;
 class NameManager
 {
     
+    const MY_DICT_PATH = './data/dict/'; //путь к локальному словарю
+    const MY_DICT_FILE = './data/dict/my_dict.php'; //путь к локальному словарю
+        
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -38,6 +45,51 @@ class NameManager
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+    
+    /**
+     * Добавить слово в локальный словарь
+     * 
+     * @param string $word
+     */
+    public function addToMyDict($word)
+    {
+        if (!is_dir(self::MY_DICT_PATH)){
+            mkdir(self::MY_DICT_PATH);
+        }        
+        
+        if (file_exists(self::MY_DICT_FILE)){
+            $dict = new Config(include self::MY_DICT_FILE, true);
+        }  else {
+            $dict = new Config([], true);
+        }
+        
+        $dict->$word = $word;
+
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::MY_DICT_FILE, $dict);
+        
+    }
+    
+    
+    /**
+     * Удалить слово из локального словаря
+     * 
+     * @param string $word
+     */
+    public function removeFromMyDict($word)
+    {
+        if (file_exists(self::MY_DICT_FILE)){
+            $dict = new Config(include self::MY_DICT_FILE, true);
+            unset($dict->$word);
+            
+            $writer = new PhpArray();
+
+            $writer->toFile(self::MY_DICT_FILE, $dict);
+        }
+        
+        return;
     }
     
     /**
