@@ -66,11 +66,6 @@ class Lemma extends AbstractFilter
         }    
     }
     
-    protected function _searchWordInMyDict($word)
-    {
-        
-    }
-    
     /**
      * Поиск слова в словарях
      * 
