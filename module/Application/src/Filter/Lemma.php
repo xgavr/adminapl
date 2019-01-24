@@ -57,12 +57,18 @@ class Lemma extends AbstractFilter
 
     protected $dictsPath = 'vendor/cijic/phpmorphy/libs/phpmorphy/dicts';
     
+    protected $myDict;
+    
     // Конструктор.
     public function __construct($options = null) 
     {     
         // Задает опции фильтра (если они предоставлены).
         if(is_array($options)) {
             $this->options = $options;
+        }    
+        
+        if (file_exists(Token::MY_DICT_FILE)){
+            $this->myDict = new Config(include Token::MY_DICT_FILE, true);
         }    
     }
     
@@ -78,9 +84,8 @@ class Lemma extends AbstractFilter
         $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
         
         if (false === $collection) {
-            if (file_exists(Token::MY_DICT_FILE)){
-                $dict = new Config(include Token::MY_DICT_FILE, true);
-                $word = $dict->get($word);
+            if ($this->myDict){
+                $word = $this->myDict->get($word);
                 if ($word){                    
                     $paradigm = new myDict($word);
                     $collection = [$paradigm];
