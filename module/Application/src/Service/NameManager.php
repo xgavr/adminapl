@@ -441,10 +441,8 @@ class NameManager
                 ->findTokenForDelete();
 
         foreach ($tokenForDelete as $row){
-            $this->removeToken($row[0], false);
+            $this->removeToken($row[0]);
         }
-        
-        $this->entityManager->flush();
         
         return count($tokenForDelete);
     }
