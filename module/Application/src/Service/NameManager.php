@@ -422,7 +422,7 @@ class NameManager
                 $good->setTokenGroup(null);
                 $this->entityManager->persist($good);
                 $this->entityManager->flush($good);
-            } catch (Doctrine\ORM\EntityNotFoundException $ex){
+            } catch (\Doctrine\ORM\EntityNotFoundException $ex){
                 //not found
             }    
             return;
