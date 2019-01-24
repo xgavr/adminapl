@@ -12,7 +12,34 @@ $this->pageBreadcrumbs()->setItems([
 ?>
 <h1>
     <?= $this->escapeHtml($token->getLemma()); ?>    
+    <sup>
+        <small>
+            <?= $token->getStatusAsString();?>
+        </small>
+    </sup>
 </h1>
+<p>
+    <?php if ($token->getStatus() != $token::IS_DICT && $token->getStatus() != $token::IS_EN_DICT):?>
+        <span>
+            <small>
+                <button value="/name/add-token-to-my-dict/<?= $token->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                        title="Добавить в свой словарь">
+                    <span class="glyphicon glyphicon-plus-sign" ></span>
+                </button> 
+            </small>
+        </span>
+    <?php endif; ?>    
+    <?php if ($token->inMyDict() && ($token->getStatus() == $token::IS_DICT || $token->getStatus() == $token::IS_EN_DICT)):?>
+        <span>
+            <small>
+                <button value="/name/delete-token-from-my-dict/<?= $token->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                        title="Удалить из словаря">
+                    <span class="glyphicon glyphicon glyphicon-minus-sign" ></span>
+                </button> 
+            </small>
+        </span>
+    <?php endif; ?>    
+</p>
 <table class="table table-striped">
     <tr>
         <td colspan="2">            

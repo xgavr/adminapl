@@ -18,3 +18,4 @@ phpunit.xml
 /data/session/
 /data/images/
 /public/img/
+/data/dict/

@@ -11,6 +11,8 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Zend\Config\Config;
+
 /**
  * Description of Producer
  * @ORM\Entity(repositoryClass="\Application\Repository\TokenRepository")
@@ -40,6 +42,8 @@ class Token {
     const GRAY_LIST    = 8; // серый список 
     const BLACK_LIST   = 9; // черный список 
     
+    const MY_DICT_PATH = './data/dict/'; //путь к локальному словарю
+    const MY_DICT_FILE = './data/dict/my_dict.php'; //путь к локальному словарю
     
     /**
      * @ORM\Id
@@ -282,4 +286,18 @@ class Token {
         return $this->tokenGroups;
     }        
     
+    public function wordInMyDict($word)
+    {
+        if (file_exists(self::MY_DICT_FILE)){
+            $dict = new Config(include self::MY_DICT_FILE, true);
+            return $dict->get($word) !== null;            
+        }        
+        
+        return false;
+    }
+    
+    public function inMyDict()
+    {
+        return $this->wordInMyDict($this->getLemma());
+    }
 }

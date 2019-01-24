@@ -93,6 +93,38 @@ class TokenRepository  extends EntityRepository
         return $inserted;
     }    
 
+    
+    
+    
+    /**
+     * Быстрое обновление токенов артикула по лемме
+     * 
+     * @param string $lemma
+     * @param array $data
+     * @return integer
+     */
+    public function updateArticleToken($lemma, $data)
+    {
+        unset($data['flag']);
+        unset($data['frequency']);
+        
+        if (!count($data)){
+            return;
+        }
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->update(ArticleToken::class, 'at')
+                ->where('at.lemma = ?1')
+                ->setParameter('1', $lemma)
+                ;
+        foreach ($data as $key => $value){
+            $queryBuilder->set('at.'.$key, $value);
+        }
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+
     /**
      * Быстрое обновление токена по лемме
      * 
@@ -106,8 +138,9 @@ class TokenRepository  extends EntityRepository
             return;
         }
         
+        $this->updateArticleToken($lemma, $data);
+        
         $entityManager = $this->getEntityManager();
-
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->update(Token::class, 't')
                 ->where('t.lemma = ?1')
@@ -259,10 +292,11 @@ class TokenRepository  extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
-            ->join('r.tokens', 't')
-            ->where('t.id = ?1')    
+            ->join('r.code', 'a')
+            ->join('a.articleTokens', 'at')
+            ->where('at.lemma = ?1')    
             ->andWhere('r.status = ?2')    
-            ->setParameter('1', $token->getId())
+            ->setParameter('1', $token->getLemma())
             ->setParameter('2', Rawprice::STATUS_PARSED)
             ;
         

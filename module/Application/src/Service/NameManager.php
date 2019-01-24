@@ -19,6 +19,7 @@ use Application\Filter\NameTokenizer;
 use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
 use Application\Filter\IdsFormat;
+use Application\Validator\IsRU;
 
 use Zend\Config\Config;
 use Zend\Config\Writer\PhpArray;
@@ -30,10 +31,7 @@ use Zend\Config\Writer\PhpArray;
  * @author Daddy
  */
 class NameManager
-{
-    
-    const MY_DICT_PATH = './data/dict/'; //путь к локальному словарю
-    const MY_DICT_FILE = './data/dict/my_dict.php'; //путь к локальному словарю
+{ 
         
     /**
      * Doctrine entity manager.
@@ -50,25 +48,35 @@ class NameManager
     /**
      * Добавить слово в локальный словарь
      * 
-     * @param string $word
+     * @param Application\Entity\Token $token
      */
-    public function addToMyDict($word)
+    public function addToMyDict($token)
     {
-        if (!is_dir(self::MY_DICT_PATH)){
-            mkdir(self::MY_DICT_PATH);
+        if (!is_dir(Token::MY_DICT_PATH)){
+            mkdir(Token::MY_DICT_PATH);
         }        
         
-        if (file_exists(self::MY_DICT_FILE)){
-            $dict = new Config(include self::MY_DICT_FILE, true);
+        if (file_exists(Token::MY_DICT_FILE)){
+            $dict = new Config(include Token::MY_DICT_FILE, true);
         }  else {
             $dict = new Config([], true);
         }
-        
+        $word = $token->getLemma();
         $dict->$word = $word;
 
         $writer = new PhpArray();
         
-        $writer->toFile(self::MY_DICT_FILE, $dict);
+        $writer->toFile(Token::MY_DICT_FILE, $dict);
+        
+        $ruValidator = new IsRU();
+        if ($ruValidator->isValid($word)){
+            $status = Token::IS_DICT;
+        } else {
+            $status = Token::IS_EN_DICT;
+        }
+        
+        $this->entityManager->getRepository(Token::class)
+                ->updateToken($word, ['status' => $status]);
         
     }
     
@@ -76,17 +84,28 @@ class NameManager
     /**
      * Удалить слово из локального словаря
      * 
-     * @param string $word
+     * @param Application\Entity\Token $token
      */
-    public function removeFromMyDict($word)
+    public function removeFromMyDict($token)
     {
-        if (file_exists(self::MY_DICT_FILE)){
-            $dict = new Config(include self::MY_DICT_FILE, true);
+        if (file_exists(Token::MY_DICT_FILE)){
+            $dict = new Config(include Token::MY_DICT_FILE, true);
+            $word = $token->getLemma();
             unset($dict->$word);
             
             $writer = new PhpArray();
 
-            $writer->toFile(self::MY_DICT_FILE, $dict);
+            $writer->toFile(Token::MY_DICT_FILE, $dict);
+
+            $ruValidator = new IsRU();
+            if ($ruValidator->isValid($word)){
+                $status = Token::IS_RU;
+            } else {
+                $status = Token::IS_EN;
+            }
+
+            $this->entityManager->getRepository(Token::class)
+                    ->updateToken($word, ['status' => $status]);
         }
         
         return;
@@ -198,7 +217,6 @@ class NameManager
         return $articleToken;        
     }  
     
-
     /**
      * Обновить флаг токена
      * 

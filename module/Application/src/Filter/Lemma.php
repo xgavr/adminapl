@@ -65,6 +65,17 @@ class Lemma extends AbstractFilter
     {
         $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
         
+        if (false === $collection) {
+            if (file_exists(Token::MY_DICT_FILE)){
+                $dict = new Config(include Token::MY_DICT_FILE, true);
+                $word = $dict->get($word);
+                if ($word){                    
+                    $paradigm = new \phpMorphy_WordDescriptor($word, null, $helper);
+                    $collection = [$paradigm];
+                }
+            }        
+        }
+        
         return $collection;
     }
     
