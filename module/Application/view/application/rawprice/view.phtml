@@ -178,7 +178,7 @@ $this->pageBreadcrumbs()->setItems([
                                     <?php else:?>
                                         <?= $this->escapeHtml($value)?>
                                     <?php endif;?>    
-                                <?php elseif ($key == 'Наименование товара' && $rawprice->getStatusToken() == $rawprice::TOKEN_PARSED):?>
+                                <?php elseif ($key == 'Наименование товара' && $rawprice->getStatusToken() != $rawprice::TOKEN_NEW):?>
                                     <?= $this->escapeHtml($value)?>
                                     <?php if(count($articleTokens)):?>  
                                         <div>    
