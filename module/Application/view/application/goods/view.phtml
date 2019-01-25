@@ -43,7 +43,11 @@ $this->pageBreadcrumbs()->setItems([
 </h3>
 
 <h5>
-    <?= $goods->getTokenGroup()->getName();?>
+    <?php if ($goods->getTokenGroup()):?>
+        <?= $goods->getTokenGroup()->getName();?>
+    <?php else: ?>
+        Группа наименований не назначена
+    <?php endif?>
 </h5>    
 <h6>
     <button value="/name/goods-token-group/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
@@ -55,10 +59,6 @@ $this->pageBreadcrumbs()->setItems([
             <a href="/name/view-token-group/<?= $goods->getTokenGroup()->getId()?>" target="_blank">
                 <?= $goods->getTokenGroup()->getTokenView();?>
             </a>
-        </span>    
-    <?php else: ?>
-        <span>
-            Группа наименований не назначена
         </span>    
     <?php endif?>
 </h6>
