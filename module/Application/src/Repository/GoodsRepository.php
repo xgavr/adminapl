@@ -72,7 +72,7 @@ class GoodsRepository extends EntityRepository
             }
             if (isset($params['unknownProducer'])){
                 $queryBuilder
-                    ->join('c.rawprice', 'r', 'WITH')
+                    ->join('c.articles', 'r', 'WITH')
                     ->andWhere('r.unknownProducer = ?2')
                     ->setParameter('2', $params['unknownProducer']->getId())
                         ;
