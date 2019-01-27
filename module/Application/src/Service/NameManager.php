@@ -375,6 +375,14 @@ class NameManager
                 ->findRawpriceTitle($raw);
         
         foreach ($rawprices as $row){
+            if ($row['tokenUpdateFlag'] != Article::TOKEN_UPDATE_FLAG){
+                
+                $this->entityManager->getRepository(Article::class)
+                        ->deleteArticleToken($row['articleId']);
+               
+                $this->entityManager->getRepository(Article::class)
+                        ->updateArticle($row['articleId'], ['token_update_flag' => Article::TOKEN_UPDATE_FLAG]);
+            }
             
             $lemms = $this->lemmsFromStr($row['goodname']);
             foreach ($lemms as $key => $words){
@@ -399,7 +407,7 @@ class NameManager
                                 ]);
                     } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
                         //дубликат
-                    }   
+                    }                    
                 }
             }    
                 

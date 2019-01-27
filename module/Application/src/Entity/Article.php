@@ -18,6 +18,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Daddy
  */
 class Article {
+    
+    const TOKEN_UPDATE_FLAG = 1; // установить любое число, для запуска обновления токенов артикулов
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -34,6 +37,11 @@ class Article {
      * @ORM\Column(name="fullcode")  
      */
     protected $fullcode;        
+
+    /**
+     * @ORM\Column(name="token_update_flag")  
+     */
+    protected $tokenUpdateFlag = self::TOKEN_UPDATE_FLAG;        
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="good") 
@@ -102,6 +110,16 @@ class Article {
     public function setFullCode($fullcode) 
     {
         $this->fullcode = trim($fullcode);
+    }     
+
+    public function getTokenUpdateFlag() 
+    {
+        return $this->tokenUpdateFlag;
+    }
+
+    public function setTokenUpdateFlag($tokenUpdateFlag) 
+    {
+        $this->tokenUpdateFlag = $tokenUpdateFlag;
     }     
 
     /**

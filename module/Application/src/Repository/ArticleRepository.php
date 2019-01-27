@@ -51,6 +51,23 @@ class ArticleRepository  extends EntityRepository
     }    
 
     /**
+     * Быстрая обновление артикула
+     * 
+     * @param integer $articleId
+     * @param array $data 
+     * @return integer
+     */
+    public function updateArticle($articleId, $data)
+    {
+        if (!count($data)){
+            return;
+        }
+        
+        $updated = $this->getEntityManager()->getConnection()->update('article', ['id' => $articleId], $data);
+        return $updated;
+    }    
+
+    /**
      * Быстрая обновление строки прайса кодом артикула
      * @param Application\Entity\Rawprice $rawprice
      * @param Application\Entity\Article $code 
@@ -75,12 +92,18 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление токенов, свзанных с артикулом
-     * @param Application\Entity\Article $article 
+     * @param Application\Entity\Article|integer $article 
      * @return integer
      */
     public function deleteArticleToken($article)
     {
-        $deleted = $this->getEntityManager()->getConnection()->delete('article_token', ['article_id' => $article->getId()]);
+        if (is_numeric($article)){
+            $articleId = $article;
+        } else {
+            $articleId = $article->getId();
+        }
+
+        $deleted = $this->getEntityManager()->getConnection()->delete('article_token', ['article_id' => $articleId]);
         return $deleted;
     }    
 

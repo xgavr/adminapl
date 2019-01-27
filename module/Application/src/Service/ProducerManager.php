@@ -253,7 +253,7 @@ class ProducerManager
     {
         set_time_limit(900);
         
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
 
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findUnknownProducerFromRaw($raw);
