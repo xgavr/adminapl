@@ -14,7 +14,7 @@ final class Version20190127062817 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('article');
-        $table->addColumn('token_update_flag', 'integer', ['notnull' => false, 'default' => 0]);
+        $table->addColumn('token_update_flag', 'integer', ['notnull' => true, 'default' => 0]);
     }
 
     public function down(Schema $schema) : void

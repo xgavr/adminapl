@@ -44,6 +44,7 @@ class TokenRepository  extends EntityRepository
             ->setParameter('2', Rawprice::TOKEN_NEW)    
             ;    
 
+//            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();
         
     }

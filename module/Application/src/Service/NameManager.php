@@ -376,7 +376,6 @@ class NameManager
         
         foreach ($rawprices as $row){
             if ($row['tokenUpdateFlag'] != Article::TOKEN_UPDATE_FLAG){
-                
                 $this->entityManager->getRepository(Article::class)
                         ->deleteArticleToken($row['articleId']);
                

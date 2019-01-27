@@ -63,7 +63,7 @@ class ArticleRepository  extends EntityRepository
             return;
         }
         
-        $updated = $this->getEntityManager()->getConnection()->update('article', ['id' => $articleId], $data);
+        $updated = $this->getEntityManager()->getConnection()->update('article', $data, ['id' => $articleId]);
         return $updated;
     }    
 
