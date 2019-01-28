@@ -90,10 +90,13 @@ class MlController extends AbstractActionController
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
         $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
+        $paginator->setCurrentPageNumber($page);
+
+        
         // Визуализируем шаблон представления.
         return new ViewModel([
             'rawprices' => $paginator,
+            'mlManager' => $this->mlManager,
         ]);  
         
     }

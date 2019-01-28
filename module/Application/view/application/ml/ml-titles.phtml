@@ -63,7 +63,13 @@ $this->pageBreadcrumbs()->setItems([
                                     </span>
                                 <?php endforeach;?>
                             </div>        
-                        <?php endif;?>                                                
+                        <?php endif;?> 
+                        <div>
+                            <?php $tokens = $mlManager->tokenize($rawprice->getGoodname()) ?>
+                            <?php foreach($tokens as $mlToken):?>
+                                <small>[<?= $mlToken?>]</small><br/>
+                            <?php endforeach;?>
+                        </div>
                     </td>
                     <td>
                         <?php foreach($rawprice->getOemRaw() as $oemRaw): ?>

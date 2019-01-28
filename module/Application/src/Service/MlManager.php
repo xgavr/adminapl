@@ -11,6 +11,8 @@ use Phpml\Classification\KNearestNeighbors;
 use Phpml\ModelManager;
 use Phpml\Clustering\DBSCAN;
 
+use Phpml\Tokenization\WhitespaceTokenizer;
+
 /**
  * Description of CurrencyService
  *
@@ -137,5 +139,17 @@ class MlManager
 
         $dbscan = new DBSCAN($epsilon = 2, $minSamples = 100);
         $result = $dbscan->cluster($samples);        
+    }
+    
+    /**
+     * Разбивает строку на токены
+     * 
+     * @param string $text
+     * @return array
+     */
+    public function tokenize($text)
+    {
+        $tokenizer = new WhitespaceTokenizer();
+        return $tokenizer->tokenize($text);
     }
 }
