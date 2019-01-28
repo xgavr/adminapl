@@ -11,6 +11,10 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use Zend\Paginator\Paginator;
+
 class MlController extends AbstractActionController
 {
     
@@ -66,4 +70,32 @@ class MlController extends AbstractActionController
         ]);  
     }
     
+    public function fillMlTitlesAction()
+    {
+        $this->entityManager->getRepository(\Application\Entity\Rawprice::class)
+                ->fillMlTitles();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);  
+    }
+    
+    public function mlTitlesAction()
+    {
+        $page = $this->params()->fromQuery('page', 1);
+        
+        $query = $this->entityManager->getRepository(\Application\Entity\Token::class)
+                    ->findMlTitles();
+                
+        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setCurrentPageNumber($page);        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'rawprices' => $paginator,
+        ]);  
+        
+    }
+
 }

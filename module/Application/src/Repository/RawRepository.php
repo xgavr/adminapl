@@ -487,4 +487,42 @@ class RawRepository extends EntityRepository
         return;
     }
         
+    
+    /**
+     * Очистить таблицу наименований для обучения
+     */
+    public function clearMlTitles()
+    {
+        $this->getEntityManager()->getConnection()->delete('ml_title', ['1' => '1']);                    
+    }
+    
+    /**
+     * Заполнение таблицы наименований для обучения
+     */
+    public function fillMlTitles()                        
+    {
+        
+        $this->clearMlTitles();
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
+                ->where('r.status = ?1')
+                ->andWhere('r.statusGood = ?2')
+                ->setParameter('1', Rawprice::STATUS_PARSED)
+                ->setParameter('2', Rawprice::GOOD_OK)
+                ->setMaxResults(1000)
+                ->orderBy('RAND()')
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult(); 
+        
+        foreach ($data as $rawprice){
+            $this->getEntityManager()->getConnection()->insert('ml_title', ['rawprice_id' => $rawprice->getId()]);            
+        }
+        
+        return;
+    }
 }

@@ -13,13 +13,16 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div class="panel panel-info">
             <div class="panel-heading">
-                Группировка товаров
+                Наименования товаров
             </div>
         </div>
         <div class="panel-body">
-            <button value="/ml/name-matrix" class="btn btn-info btn-xs refresh-button">
-                Товары-Токены
-            </button>                             
+            <button value="/ml/fill-ml-titles" class="btn btn-info btn-xs refresh-button">
+                Заполнить обучающую таблицу наименований
+            </button>         
+            <a href="/ml/ml-titles">
+                Обучающая выборка
+            </a>
             <button value="/ml/cluster-name" class="btn btn-info btn-xs refresh-button">
                 Кластеризация Товары-Токены
             </button>                             

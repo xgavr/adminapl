@@ -119,8 +119,9 @@ return [
                     'match' => 'DoctrineExtensions\Query\Mysql\MatchAgainst',
                 ],
                 'numeric_functions' => [
-                    'round' => 'DoctrineExtensions\Query\Mysql\Round',
                     'floor' => 'DoctrineExtensions\Query\Mysql\Floor',
+                    'rand' => 'DoctrineExtensions\Query\Mysql\Rand',
+                    'round' => 'DoctrineExtensions\Query\Mysql\Round',
                 ],
             ],
         ],

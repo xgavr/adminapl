@@ -558,5 +558,24 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult(2);            
     }
     
-    
+
+    /**
+     * Запрос на обучающую выборку наименований
+     * 
+     * @return object
+     */
+    public function findMlTitles()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
+                ->join(\Application\Entity\MlTitle::class, 'mt', 'WITH', 'r.id = mt.rawprice')
+                ;
+
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+        
+    }
 }
