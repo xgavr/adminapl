@@ -67,7 +67,10 @@ $this->pageBreadcrumbs()->setItems([
                         <div>
                             <?php $tokens = $mlManager->tokenize($rawprice->getGoodname()) ?>
                             <?php foreach($tokens as $mlToken):?>
-                                <small>[<?= $mlToken?>]</small><br/>
+                                <?php foreach ($mlToken as $value):?>
+                                    <small>[<?= $value?>]</small>
+                                <?php endforeach;?>
+                                <br/>
                             <?php endforeach;?>
                         </div>
                     </td>

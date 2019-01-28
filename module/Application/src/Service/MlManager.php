@@ -11,7 +11,7 @@ use Phpml\Classification\KNearestNeighbors;
 use Phpml\ModelManager;
 use Phpml\Clustering\DBSCAN;
 
-use Phpml\Tokenization\WhitespaceTokenizer;
+use Application\Filter\TokenizerQualifier;
 
 /**
  * Description of CurrencyService
@@ -149,7 +149,19 @@ class MlManager
      */
     public function tokenize($text)
     {
-        $tokenizer = new WhitespaceTokenizer();
-        return $tokenizer->tokenize($text);
+        $tokenizer = new TokenizerQualifier();
+        return $tokenizer->filter($text);
+    }
+    
+    public function mlTitlesToCsv()
+    {
+        $rawprices = $this->entityManager->getRepository(\Application\Entity\Token::class)
+                    ->findMlTitles()->getResult();
+        
+        $tokenizer = new TokenizerQualifier();
+        
+        foreach ($rawprices as $rawprice){
+            $row = $tokenizer->filter($rawprice->getGoodName());
+        }
     }
 }
