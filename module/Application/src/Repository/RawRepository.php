@@ -201,8 +201,10 @@ class RawRepository extends EntityRepository
         $queryBuilder->select('c')
             ->from(Rawprice::class, 'c')
             ->where('c.raw = ?1')
-            ->andWhere('c.unknownProducer is null')    
+            ->andWhere('c.unknownProducer is null')
+            ->andWhere('c.status = ?2')    
             ->setParameter('1', $raw->getId())    
+            ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
 
         if ($limit){

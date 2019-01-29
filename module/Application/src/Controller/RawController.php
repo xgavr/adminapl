@@ -155,6 +155,9 @@ class RawController extends AbstractActionController
             ->getResult()
                 ;
         
+        $totalRawpriceCount = $this->entityManager->getRepository(Rawprice::class)
+                ->count(['raw' => $raw->getId()]);
+        
         // Render the view template.
         return new ViewModel([
             'raw' => $raw,
@@ -165,6 +168,7 @@ class RawController extends AbstractActionController
             'statuses' => $statuses,
             'status' => $status,
             'otherRaws' => $otherRaws,
+            'totalRawpriceCount' => $totalRawpriceCount,
         ]);
     }      
     

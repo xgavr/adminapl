@@ -7,7 +7,6 @@
  */
 namespace Application\Service;
 
-use Application\Entity\Country;
 use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
@@ -281,7 +280,7 @@ class ProducerManager
             if ($unknownProducer){
                 
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                        ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer']]);
+                        ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer'], 'status' => Rawprice::STATUS_PARSED]);
                 
                 foreach ($rawprices as $rawprice){
                     $rawprice->setUnknownProducer($unknownProducer);
