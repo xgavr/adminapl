@@ -39,9 +39,11 @@ class TokenRepository  extends EntityRepository
             ->join('r.code', 'a')    
             ->where('r.raw = ?1')
             ->andWhere('r.statusToken = ?2')
-            ->andWhere('r.code is not null')    
+            ->andWhere('r.code is not null')
+            ->andWhere('r.status = ?3')    
             ->setParameter('1', $raw->getId())    
             ->setParameter('2', Rawprice::TOKEN_NEW)    
+            ->setParameter('3', Rawprice::STATUS_PARSED)    
             ;    
 
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -126,6 +128,7 @@ class TokenRepository  extends EntityRepository
         
         return $queryBuilder->getQuery()->getResult();        
     }
+
 
     /**
      * Быстрое обновление токена по лемме
@@ -378,10 +381,12 @@ class TokenRepository  extends EntityRepository
             ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')    
             ->where('a.good = ?1')   
             ->andWhere('at.status = ?2')
+            ->andWhere('t.flag = ?4')    
 //            ->andWhere('t.frequency > ?3')    
             ->setParameter('1', $good->getId())
             ->setParameter('2', $tokenType)
 //            ->setParameter('3', TokenGroup::FREQUENCY_MIN)
+            ->setParameter('4', Token::WHITE_LIST)
             ;
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            

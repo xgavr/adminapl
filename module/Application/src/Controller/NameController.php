@@ -160,10 +160,21 @@ class NameController extends AbstractActionController
         
         $flag = $this->params()->fromQuery('flag', 1);
         
-        $this->nameManager->updateTokenFlag($token, $flag);
+        switch ($flag){
+            case Token::BLACK_LIST: $this->nameManager->addToBlackList($token); break;
+            case Token::GRAY_LIST: $this->nameManager->addToGrayList($token); break;
+            default:
+                if ($token->inBlackList()){
+                    $this->nameManager->removeFromBlackList($token);
+                }
+                if ($token->inGrayList()){
+                    $this->nameManager->removeFromGrayList($token);
+                }
+                break;
+        }    
         
         return new JsonModel([
-            'ok',
+            'result' => 'ok-reload',
         ]);          
     }
 

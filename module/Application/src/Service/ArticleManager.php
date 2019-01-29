@@ -123,7 +123,7 @@ class ArticleManager
         $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'code' => null]);
+                ->findBy(['raw' => $raw->getId(), 'code' => null, 'status' => Rawprice::STATUS_PARSED]);
         
         $filter = new \Application\Filter\ArticleCode();
         
@@ -154,7 +154,7 @@ class ArticleManager
         }    
                 
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'code' => null]);
+                ->findBy(['raw' => $raw->getId(), 'code' => null, 'status' => Rawprice::STATUS_PARSED]);
         
         if (count($rawprices) === 0){
             

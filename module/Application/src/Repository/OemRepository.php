@@ -30,8 +30,10 @@ class OemRepository  extends EntityRepository{
                 ->from(Rawprice::class, 'r')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusOem = ?2')
+                ->andWhere('r.status = ?3')
                 ->setParameter('1', $raw->getId())
                 ->setParameter('2', Rawprice::OEM_NEW)
+                ->setParameter('3', Rawprice::STATUS_PARSED)
                 ;
         
         return $queryBuilder->getQuery()->getResult();        

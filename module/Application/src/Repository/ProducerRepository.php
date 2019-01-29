@@ -98,7 +98,9 @@ class ProducerRepository  extends EntityRepository{
                 ->from(Rawprice::class, 'r')
                 ->distinct()
                 ->where('r.raw = ?1')
+                ->andWhere('r.status = ?2')
                 ->setParameter('1', $raw->getId())
+                ->setParameter('2', Rawprice::STATUS_PARSED)
                 ;
         
         return $queryBuilder->getQuery()->getResult();

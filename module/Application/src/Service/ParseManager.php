@@ -16,6 +16,7 @@ use Application\Entity\Goods;
 use Application\Entity\PriceDescription;
 use Application\Form\PriceDescriptionForm;
 use Application\Filter\StrSimilar;
+use Application\Validator\IsBlackList;
 
 use Phpml\Classification\KNearestNeighbors;
 use Phpml\ModelManager;
@@ -38,12 +39,15 @@ class ParseManager {
      * @var Doctrine\ORM\EntityManager
      */
     private $entityManager;
+    
+    private $blackListValidator;
       
     
   // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
+        $this->blackListValidator = new IsBlackList();
     }
     
     /*
@@ -140,7 +144,11 @@ class ParseManager {
         
         if (!is_array($data)) return;
                 
-        $rawprice->setStatus($status);            
+        if ($this->blackListValidator->isValid(implode(' ', $data))){
+            $rawprice->setStatus(Rawprice::STATUS_BLACK_LIST);
+        } else {
+            $rawprice->setStatus($status);            
+        }    
         
         $rawprice->setArticle($data['article']);
         $rawprice->setProducer($data['producer']);
@@ -333,7 +341,7 @@ class ParseManager {
             
             $rawprices = $this->findRawpricesForParse($raw);
             $priceDescriptionFunc = $this->getPriceDescriptionFunc($raw);
-
+            
             if (count($priceDescriptionFunc)){
                 
                 $raw->setStatus(Raw::STATUS_PARSE);
@@ -350,6 +358,7 @@ class ParseManager {
                 $parsedAll = true;
                 $statuses = $this->entityManager->getRepository(Raw::class)
                         ->rawpriceStatuses($raw);
+                
                 foreach ($statuses as $status){
                     if ($status['status'] == Rawprice::STATUS_NEW && $status['status_count']){
                         $parsedAll = false;

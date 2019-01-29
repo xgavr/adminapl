@@ -39,6 +39,48 @@ $this->pageBreadcrumbs()->setItems([
             </small>
         </span>
     <?php endif; ?>    
+    <?php if ($token->inBlackList()):?>
+        <span>
+            <small>
+                <button value="/name/token-flag/<?= $token->getId()?>?flag=<?= $token::WHITE_LIST?>" class="btn btn-danger btn-xs refresh-table-button"
+                        title="Удалить из черного списка">
+                    <span class="glyphicon glyphicon glyphicon-ok-circle" ></span>
+                </button> 
+            </small>
+        </span>
+    <?php else: ?>
+        <?php if (!$token->inGrayList()):?>
+            <span>
+                <small>
+                    <button value="/name/token-flag/<?= $token->getId()?>?flag=<?= $token::BLACK_LIST?>" class="btn btn-default btn-xs refresh-table-button"
+                            title="Добавить в черный список">
+                        <span class="glyphicon glyphicon glyphicon-ban-circle" ></span>
+                    </button> 
+                </small>
+            </span>
+        <?php endif; ?>    
+    <?php endif; ?>    
+    <?php if ($token->inGrayList()):?>
+        <span>
+            <small>
+                <button value="/name/token-flag/<?= $token->getId()?>?flag=<?= $token::WHITE_LIST?>" class="btn btn-warning btn-xs refresh-table-button"
+                        title="Удалить из серого списка">
+                    <span class="glyphicon glyphicon glyphicon-ok-circle" ></span>
+                </button> 
+            </small>
+        </span>
+    <?php else: ?>
+        <?php if (!$token->inBlackList()):?>
+            <span>
+                <small>
+                    <button value="/name/token-flag/<?= $token->getId()?>?flag=<?= $token::GRAY_LIST?>" class="btn btn-info btn-xs refresh-table-button"
+                            title="Добавить в серый список">
+                        <span class="glyphicon glyphicon glyphicon-ban-circle" ></span>
+                    </button> 
+                </small>
+            </span>
+        <?php endif; ?>    
+    <?php endif; ?>    
 </p>
 <table class="table table-striped">
     <tr>

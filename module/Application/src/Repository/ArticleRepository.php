@@ -66,6 +66,39 @@ class ArticleRepository  extends EntityRepository
         $updated = $this->getEntityManager()->getConnection()->update('article', $data, ['id' => $articleId]);
         return $updated;
     }    
+    
+    /**
+     * Быстрое обновление флагов токенов артикула по лемме
+     * 
+     * @param string $lemma
+     * @param int $flag
+     * @return integer
+     */
+    public function updateTokenUpdateFlag($lemma, $flag = 10)
+    {
+        if ($flag == Article::TOKEN_UPDATE_FLAG){
+            return;
+        }
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('a')
+                ->distinct()
+                ->from(ArticleToken::class, 'at')
+                ->join(Article::class, 'a', 'WITH', 'a.id = at.article')
+                ->where('at.lemma = ?1')
+                ->andWhere('a.tokenUpdateFlag = ?2')
+                ->setParameter('1', $lemma)
+                ->setParameter('2', Article::TOKEN_UPDATE_FLAG)
+                ;
+        
+        $articles = $queryBuilder->getQuery()->getResult();
+
+        foreach ($articles as $article){
+            $this->getEntityManager()->getConnection()->update('article', ['token_update_flag' => $flag], ['id' => $article->getId()]);            
+        }
+    }
+    
 
     /**
      * Быстрая обновление строки прайса кодом артикула

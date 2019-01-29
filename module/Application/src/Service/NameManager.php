@@ -78,6 +78,8 @@ class NameManager
         $this->entityManager->getRepository(Token::class)
                 ->updateToken($word, ['status' => $status]);
         
+        $this->entityManager->getRepository(Article::class)
+                ->updateTokenUpdateFlag($word);
     }
     
     
@@ -99,18 +101,139 @@ class NameManager
 
             $ruValidator = new IsRU();
             if ($ruValidator->isValid($word)){
-                $status = Token::IS_RU;
+                if (mb_strlen($word) == 1){
+                    $status = Token::IS_RU_1;
+                } else {
+                    $status = Token::IS_RU;
+                }    
             } else {
-                $status = Token::IS_EN;
+                if (mb_strlen($word) == 1){
+                    $status = Token::IS_EN_1;
+                } else {
+                    $status = Token::IS_EN;
+                }    
             }
 
             $this->entityManager->getRepository(Token::class)
                     ->updateToken($word, ['status' => $status]);
+            
+            $this->entityManager->getRepository(Article::class)
+                    ->updateTokenUpdateFlag($word);
         }
         
         return;
     }
     
+    /**
+     * Добавить слово в черный список
+     * 
+     * @param Application\Entity\Token $token
+     */
+    public function addToBlackList($token)
+    {
+        if (!is_dir(Token::MY_DICT_PATH)){
+            mkdir(Token::MY_DICT_PATH);
+        }        
+        
+        if (file_exists(Token::MY_BLACK_LIST)){
+            $dict = new Config(include Token::MY_BLACK_LIST, true);
+        }  else {
+            $dict = new Config([], true);
+        }
+        $word = $token->getLemma();
+        $dict->$word = $word;
+
+        $writer = new PhpArray();
+        
+        $writer->toFile(Token::MY_BLACK_LIST, $dict);
+        
+        $this->updateTokenFlag($token, Token::BLACK_LIST);
+        $this->entityManager->getRepository(Article::class)
+                ->updateTokenUpdateFlag($word);
+        
+        return;
+    }
+    
+    /**
+     * Добавить слово в серый список
+     * 
+     * @param Application\Entity\Token $token
+     */
+    public function addToGrayList($token)
+    {
+        if (!is_dir(Token::MY_DICT_PATH)){
+            mkdir(Token::MY_DICT_PATH);
+        }        
+        
+        if (file_exists(Token::MY_GRAY_LIST)){
+            $dict = new Config(include Token::MY_GRAY_LIST, true);
+        }  else {
+            $dict = new Config([], true);
+        }
+        $word = $token->getLemma();
+        $dict->$word = $word;
+
+        $writer = new PhpArray();
+        
+        $writer->toFile(Token::MY_GRAY_LIST, $dict);
+        
+        $this->updateTokenFlag($token, Token::GRAY_LIST);
+        $this->entityManager->getRepository(Article::class)
+                ->updateTokenUpdateFlag($word);
+        
+        return;
+    }
+    
+    /**
+     * Удалить слово из черного списка
+     * 
+     * @param Application\Entity\Token $token
+     */
+    public function removeFromBlackList($token)
+    {
+        if (file_exists(Token::MY_BLACK_LIST)){
+            $dict = new Config(include Token::MY_BLACK_LIST, true);
+            $word = $token->getLemma();
+            unset($dict->$word);
+            
+            $writer = new PhpArray();
+
+            $writer->toFile(Token::MY_BLACK_LIST, $dict);
+
+            $this->updateTokenFlag($token, Token::WHITE_LIST);
+
+            $this->entityManager->getRepository(Article::class)
+                    ->updateTokenUpdateFlag($word);
+        }
+        
+        return;
+    }
+
+    /**
+     * Удалить слово из серого списка
+     * 
+     * @param Application\Entity\Token $token
+     */
+    public function removeFromGrayList($token)
+    {
+        if (file_exists(Token::MY_GRAY_LIST)){
+            $dict = new Config(include Token::MY_GRAY_LIST, true);
+            $word = $token->getLemma();
+            unset($dict->$word);
+            
+            $writer = new PhpArray();
+
+            $writer->toFile(Token::MY_GRAY_LIST, $dict);
+
+            $this->updateTokenFlag($token, Token::WHITE_LIST);
+
+            $this->entityManager->getRepository(Article::class)
+                    ->updateTokenUpdateFlag($word);
+        }
+        
+        return;
+    }
+
     /**
      * Разбивает наименование товара на токены
      * 

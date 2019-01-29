@@ -44,6 +44,8 @@ class Token {
     
     const MY_DICT_PATH = './data/dict/'; //путь к локальному словарю
     const MY_DICT_FILE = './data/dict/my_dict.php'; //путь к локальному словарю
+    const MY_BLACK_LIST = './data/dict/black_list.php'; //путь к черному списку
+    const MY_GRAY_LIST = './data/dict/gray_list.php'; //путь к серому списку
     
     /**
      * @ORM\Id
@@ -299,5 +301,35 @@ class Token {
     public function inMyDict()
     {
         return $this->wordInMyDict($this->getLemma());
+    }
+
+    public function wordInBlackList($word)
+    {
+        if (file_exists(self::MY_BLACK_LIST)){
+            $dict = new Config(include self::MY_BLACK_LIST, true);
+            return $dict->get($word) !== null;            
+        }        
+        
+        return false;
+    }
+    
+    public function inBlackList()
+    {
+        return $this->wordInBlackList($this->getLemma());
+    }
+
+    public function wordInGrayList($word)
+    {
+        if (file_exists(self::MY_GRAY_LIST)){
+            $dict = new Config(include self::MY_GRAY_LIST, true);
+            return $dict->get($word) !== null;            
+        }        
+        
+        return false;
+    }
+    
+    public function inGrayList()
+    {
+        return $this->wordInGrayList($this->getLemma());
     }
 }

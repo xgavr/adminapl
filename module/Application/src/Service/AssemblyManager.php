@@ -152,23 +152,6 @@ class AssemblyManager
     }
     
     /**
-     * Привязка производителя
-     * 
-     * @param Application\Entity\Rawprice $rawprice
-     * 
-     * @return Application\Entity\Producer
-     */
-    public function producer($rawprice)
-    {
-    }
-    
-    
-    public function tokenIntersect($good)
-    {
-        
-    }
-    
-    /**
      * Получить все возможные артикулы по строке прайса
      * 
      * @param Apprlication\Entity\Rawprice $rawprice
