@@ -118,7 +118,7 @@ class RawRepository extends EntityRepository
         return $this->getEntityManager()->getConnection()->update('rawprice', $data, [
             'raw_id' => $raw->getId(), 
             'unknown_producer_id' => $unknownProducer->getId(),
-            'status_producer' => Rawprice::PRODUCER_NEW,
+//            'status_producer' => Rawprice::PRODUCER_NEW,
          ]);
     }
     

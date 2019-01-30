@@ -75,7 +75,7 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')                
             ->where('r.unknownProducer = ?1')
-            ->setParameter('1', $unknownProducer->getId())    
+            ->setParameter('1', $unknownProducer->getId())
                 ;
         
         return $queryBuilder->getQuery()->getResult();        
