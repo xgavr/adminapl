@@ -531,7 +531,7 @@ class TokenRepository  extends EntityRepository
             ->groupBy('t.id')
             ->having('articleCount = 0')    
                 ;
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 
