@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Application\Filter\OemDetectDelimiterFilter;
 use Doctrine\Common\Collections\Criteria;
 use Application\Entity\Token;
+use Application\Filter\ProducerName;
 
 /**
  * Description of Customer
@@ -42,6 +43,8 @@ class Rawprice {
     const GOOD_OK         = 2; //товар создан
     const GOOD_MISSING_DATA = 3; //не все данные
     const GOOD_NO_MATCH   = 4; //не совпадает по наименованию или цене
+    
+    private $producerNameFilter;
 
     /**
      * @ORM\Id
@@ -246,6 +249,8 @@ class Rawprice {
     {
         $this->oemRaw = new ArrayCollection();
         $this->tokens = new ArrayCollection();
+        
+        $this->producerNameFilter = new ProducerName();
     }
    
     /**
@@ -549,7 +554,7 @@ class Rawprice {
 
     public function setProducer($producer) 
     {
-        $this->producer = (string) $producer;
+        $this->producer = $this->producerNameFilter->filter($producer);
     }     
     
     public function getGoodname() 

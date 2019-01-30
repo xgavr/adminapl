@@ -262,20 +262,24 @@ class ProducerManager
         foreach ($unknownProducers as $row){
             
             $unknownProducerName = $nameFilter->filter($row['producer']);
-
-            $data = [
-                'name' => $unknownProducerName,
-                'date_created' => date('Y-m-d H:i:s'),
-            ];
-            try{
-                $this->entityManager->getRepository(UnknownProducer::class)
-                        ->insertUnknownProducer($data);
-            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                //дубликат
-            }   
             
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                     ->findOneByName($unknownProducerName);
+
+            if (!$unknownProducer){
+                $data = [
+                    'name' => $unknownProducerName,
+                    'date_created' => date('Y-m-d H:i:s'),
+                ];
+                try{
+                    $this->entityManager->getRepository(UnknownProducer::class)
+                            ->insertUnknownProducer($data);
+                } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                    //дубликат
+                }   
+                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                        ->findOneByName($unknownProducerName);
+            }
             
             if ($unknownProducer){
                 
