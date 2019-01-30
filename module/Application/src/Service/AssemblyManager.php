@@ -441,7 +441,10 @@ class AssemblyManager
         
         $result = 0;
         
-        foreach ($unknownProducer->getRawprice() as $rawprice){
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->getRawprices($unknownProducer);
+        
+        foreach ($rawprices as $rawprice){
             if ($this->checkRawprice($rawprice)){
                 $result += 1;
             } else {

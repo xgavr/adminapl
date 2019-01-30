@@ -155,10 +155,10 @@ class UnknownProducer {
      * Returns the array of contacts assigned to this.
      * @return array
      */
-    public function getRawprice()
-    {
-        return $this->rawprice;
-    }
+//    public function getRawprice()
+//    {
+//        return $this->rawprice;
+//    }
         
     /**
      * Assigns.
