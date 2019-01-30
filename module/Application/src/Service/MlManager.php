@@ -160,8 +160,18 @@ class MlManager
         
         $tokenizer = new TokenizerQualifier();
         
+        $maxRowCount = 0;
         foreach ($rawprices as $rawprice){
             $row = $tokenizer->filter($rawprice->getGoodName());
+            if (count($row) > $maxRowCount){
+                $maxRowCount = count($row);
+            }
+        }
+        foreach ($rawprices as $rawprice){
+            $row = $tokenizer->filter($rawprice->getGoodName());
+            if (count($row) > $maxRowCount){
+                $maxRowCount = count($row);
+            }
         }
     }
 }
