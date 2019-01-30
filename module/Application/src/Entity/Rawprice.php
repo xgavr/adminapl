@@ -44,8 +44,6 @@ class Rawprice {
     const GOOD_MISSING_DATA = 3; //не все данные
     const GOOD_NO_MATCH   = 4; //не совпадает по наименованию или цене
     
-    private $producerNameFilter;
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -249,8 +247,6 @@ class Rawprice {
     {
         $this->oemRaw = new ArrayCollection();
         $this->tokens = new ArrayCollection();
-        
-        $this->producerNameFilter = new ProducerName();
     }
    
     /**
@@ -554,7 +550,8 @@ class Rawprice {
 
     public function setProducer($producer) 
     {
-        $this->producer = $this->producerNameFilter->filter($producer);
+        $producerNameFilter = new ProducerName();
+        $this->producer = $producerNameFilter->filter($producer);
     }     
     
     public function getGoodname() 
