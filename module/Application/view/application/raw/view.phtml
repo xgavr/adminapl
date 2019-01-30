@@ -21,7 +21,7 @@ $this->pageBreadcrumbs()->setItems([
                 <?= $this->paginationControl($rawprice,
                             'Sliding',
                             'application/partial/paginator', 
-                            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId(), ['query' => ['status' => $status]])]); ?>
+                            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId(), 'query' => ['status' => $status])]); ?>
                 <table class="table table-striped">
 
                    <tr>
@@ -78,7 +78,7 @@ $this->pageBreadcrumbs()->setItems([
                 <?= $this->paginationControl($rawprice,
                             'Sliding',
                             'application/partial/paginator', 
-                            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId(), ['query' => ['status' => $status]])]); ?>
+                            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId(), 'query' => ['status' => $status])]); ?>
     
             </div>
         </div> 
@@ -148,7 +148,7 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="pull-left">
-                                    <?= $rawprice->getTotalItemCount(); ?> строк<br/>
+                                    <?= $totalRawpriceCount; ?> строк<br/>
                                     <?php foreach($statuses as $status):?>
                                     <a href="<?= $this->url('raw', ['action' => 'view', 'id' => $raw->getId()], ['query' => ['status' => $status['status']]]);?>"><?= $status['name']?></a>: <?= $status['status_count']?><br/>                                
                                     <?php endforeach;?>
