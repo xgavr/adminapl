@@ -20,6 +20,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class UnknownProducer {
     
     const INTERSECT_COEF = 0.24; // коэффициент отсечение при пересечении.
+    const INTERSECT_UPDATE_FLAG = 10; // требуется проверка на пересечение
+    
     const CHECK_MAX_ROW = 15; // максимальное количество строк для проверки
     const CHECK_COUNT = 3; //множитель для количества проверок
     
@@ -50,6 +52,11 @@ class UnknownProducer {
      */
     protected $supplierCount = 0;
     
+    /**
+     * @ORM\Column(name="intersect_update_flag")
+     */
+    protected $intersectUpdateFlag = 0;
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="unknownProducer") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
@@ -128,6 +135,16 @@ class UnknownProducer {
     public function setSupplierCount($supplierCount) 
     {
         $this->supplierCount = $supplierCount;
+    }     
+
+    public function getIntersectUpdateFlag() 
+    {
+        return $this->intersectUpdateFlag;
+    }
+
+    public function setIntersectUpdateFlag($intersectUpdateFlag) 
+    {
+        $this->intersectUpdateFlag = $intersectUpdateFlag;
     }     
 
     /*

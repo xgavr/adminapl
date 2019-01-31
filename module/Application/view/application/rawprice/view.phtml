@@ -113,7 +113,7 @@ $this->pageBreadcrumbs()->setItems([
                                 Токены
                         </button>
                     <?php endif;?>    
-                    <?php if ($rawprice->getStatusToken() == $rawprice::TOKEN_PARSED):?>
+                    <?php if ($rawprice->getStatusToken() != $rawprice::TOKEN_NEW):?>
                         <button value="/producer/assembly-producer-from-rawprice/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
                                 title="Собрать">
                                 Производитель

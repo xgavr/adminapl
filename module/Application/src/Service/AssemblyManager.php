@@ -513,7 +513,9 @@ class AssemblyManager
         
         foreach ($unknownProducers as $unknownProducer){
             
-            $this->addProducerFromUnknownProducer($unknownProducer);
+            if (!$unknownProducer->getProducer() || $unknownProducer->getItersectUpdateFlag() != UnknownProducer::INTERSECT_UPDATE_FLAG){            
+                $this->addProducerFromUnknownProducer($unknownProducer);
+            }    
             
             $rawprices = $this->entityManager->getRepository(Rawprice::class)
                     ->findBy(['raw' => $raw->getId(), 'unknownProducer' => $unknownProducer->getId(), 'status' => Rawprice::STATUS_PARSED]);

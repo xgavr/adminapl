@@ -166,6 +166,7 @@ class ProducerManager
      */
     public function bindUnknownProducer($unknownProducer, $producer)
     {
+        $unknownProducer->setIntersectUpdateFlag(UnknownProducer::INTERSECT_UPDATE_FLAG);
         $unknownProducer->setProducer($producer);
         $this->entityManager->persist($unknownProducer);
 
