@@ -18,6 +18,14 @@ use Application\Entity\Rawprice;
  */
 class RawRepository extends EntityRepository
 {
+    
+    public function lockRawpriceForUpdate($raw)
+    {
+        $query = $this->getEntityManager()->createQuery('select r from Application\Entity\Rawprice r where r.raw = :1');
+        $query->setParameter('1', $raw->getId());
+        return $query->setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE);
+        
+    }
     /**
      * Быстрая вставка строки прайса
      * @param array $row 
@@ -114,6 +122,13 @@ class RawRepository extends EntityRepository
      */
     public function updateRawpriceAssemblyProducerStatus($raw, $unknownProducer)
     {
+        $sql = 'select r.status_producer form rawprice r where raw_id = :1 and  unknown_producer_id = :2 FOR UPDATE';
+        $stmt = $entityManager->getConnection()->prepare($sql);
+        $stmt->execute([
+                '1' => $raw->getId(),
+                '2' => $unknownProducer->getId(),
+            ]);
+        
         $data = ['status_producer' => Rawprice::PRODUCER_ASSEMBLY];
         return $this->getEntityManager()->getConnection()->update('rawprice', $data, [
             'raw_id' => $raw->getId(), 

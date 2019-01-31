@@ -507,7 +507,7 @@ class AssemblyManager
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(900);
-                
+        
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findUnknownProducerForAssemblyFromRaw($raw);
         
