@@ -513,7 +513,7 @@ class AssemblyManager
         
         foreach ($unknownProducers as $unknownProducer){
             
-            if (!$unknownProducer->getProducer() || $unknownProducer->getItersectUpdateFlag() != UnknownProducer::INTERSECT_UPDATE_FLAG){            
+            if (!$unknownProducer->getProducer() || $unknownProducer->getIntersectUpdateFlag() != UnknownProducer::INTERSECT_UPDATE_FLAG){            
                 $this->addProducerFromUnknownProducer($unknownProducer);
             }    
             
