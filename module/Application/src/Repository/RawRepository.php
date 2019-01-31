@@ -97,21 +97,17 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрая привязка неизвестного производителя
-     * @param Application\Entity\Raw $raw
-     * @param string $producerName
+     * @param Application\Entity\Rawprice $raw
      * @param Application\Entity\UnknownProducer $unknownProducer 
      * @return integer
      */
-    public function updateRawpriceUnknownProducer($raw, $producerName, $unknownProducer)
+    public function updateRawpriceUnknownProducer($rawprice, $unknownProducer)
     {
         $entityManager = $this->getEntityManager();
         
         $data = ['unknown_producer_id' => $unknownProducer->getId()];
         return $this->getEntityManager()->getConnection()->update('rawprice', $data, [
-            'raw_id' => $raw->getId(), 
-            //'unknown_producer_id' => null, 
-            'producer' => $producerName,
-            'status' => Rawprice::STATUS_PARSED,
+            'id' => $rawprice->getId(), 
            ]);
     }
     

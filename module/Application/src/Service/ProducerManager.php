@@ -283,8 +283,13 @@ class ProducerManager
             
             if ($unknownProducer){
                 
-                $this->entityManager->getRepository(Raw::class)
-                        ->updateRawpriceUnknownProducer($raw, $row['producer'], $unknownProducer);                
+                $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                        ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer'], 'status' => Rawprice::STATUS_PARSED]);
+                
+                foreach ($rawprices as $rawprice){
+                    $this->entityManager->getRepository(Rawprice::class)
+                                            ->updateRawpriceUnknownProducer($rawprice, $unknownProducer);                    
+                }    
             }            
         }
         
