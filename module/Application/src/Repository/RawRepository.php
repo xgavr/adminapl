@@ -104,6 +104,16 @@ class RawRepository extends EntityRepository
      */
     public function updateRawpriceUnknownProducer($raw, $producerName, $unknownProducer)
     {
+        $entityManager = $this->getEntityManager();
+        
+        $sql = 'select r.unknown_producer_id from rawprice as r where r.raw_id = :raw_id and r.producer = :producer and r.status = :status FOR UPDATE';
+        $stmt = $entityManager->getConnection()->prepare($sql);
+        $stmt->execute([
+                'raw_id' => $raw->getId(),
+                'producer' => $producerName,
+                'status' => Rawprice::STATUS_PARSED,
+            ]);
+
         $data = ['unknown_producer_id' => $unknownProducer->getId()];
         return $this->getEntityManager()->getConnection()->update('rawprice', $data, [
             'raw_id' => $raw->getId(), 
