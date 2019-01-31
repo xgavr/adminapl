@@ -97,7 +97,7 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрая привязка неизвестного производителя
-     * @param Application\Entity\Rawprice $raw
+     * @param Application\Entity\Rawprice $rawprice
      * @param Application\Entity\UnknownProducer $unknownProducer 
      * @return integer
      */
@@ -114,19 +114,16 @@ class RawRepository extends EntityRepository
     /**
      * Быстрая установка статуса сборки производителя
      * 
-     * @param Application\Entity\Raw $raw
-     * @param Application\Entity\UnknownProducer $unknownProducer 
+     * @param Application\Entity\Rawprice $rawprice
      * @return integer
      */
-    public function updateRawpriceAssemblyProducerStatus($raw, $unknownProducer)
+    public function updateRawpriceAssemblyProducerStatus($rawprice)
     {
         $entityManager = $this->getEntityManager();
         
         $data = ['status_producer' => Rawprice::PRODUCER_ASSEMBLY];
         return $entityManager->getConnection()->update('rawprice', $data, [
-            'raw_id' => $raw->getId(), 
-            'unknown_producer_id' => $unknownProducer->getId(),
-//            'status_producer' => Rawprice::PRODUCER_NEW,
+            'id' => $rawprice->getId(), 
          ]);
     }
     

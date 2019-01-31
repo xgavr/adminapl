@@ -515,8 +515,13 @@ class AssemblyManager
             
             $this->addProducerFromUnknownProducer($unknownProducer);
             
-            $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceAssemblyProducerStatus($raw, $unknownProducer);
+            $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                    ->findBy(['raw' => $raw->getId(), 'unknownProducer' => $unknownProducer->getId(), 'status' => Rawprice::STATUS_PARSED]);
+
+            foreach ($rawprices as $rawprice){
+                $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceAssemblyProducerStatus($rawprice);                    
+            }    
         }
         
         $raw->setParseStage(Raw::STAGE_PRODUCER_ASSEMBLY);
