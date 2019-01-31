@@ -124,11 +124,11 @@ class RawRepository extends EntityRepository
     {
         $entityManager = $this->getEntityManager();
         
-        $sql = 'select r.status_producer form rawprice r where raw_id = :1 and  unknown_producer_id = :2 FOR UPDATE';
+        $sql = 'select r.status_producer form rawprice r where raw_id = :raw_id and  unknown_producer_id = :unknown_producer_id FOR UPDATE';
         $stmt = $entityManager->getConnection()->prepare($sql);
         $stmt->execute([
-                '1' => $raw->getId(),
-                '2' => $unknownProducer->getId(),
+                'raw_id' => $raw->getId(),
+                'unknown_producer_id' => $unknownProducer->getId(),
             ]);
         
         $data = ['status_producer' => Rawprice::PRODUCER_ASSEMBLY];
