@@ -122,6 +122,8 @@ class RawRepository extends EntityRepository
      */
     public function updateRawpriceAssemblyProducerStatus($raw, $unknownProducer)
     {
+        $entityManager = $this->getEntityManager();
+        
         $sql = 'select r.status_producer form rawprice r where raw_id = :1 and  unknown_producer_id = :2 FOR UPDATE';
         $stmt = $entityManager->getConnection()->prepare($sql);
         $stmt->execute([
@@ -130,7 +132,7 @@ class RawRepository extends EntityRepository
             ]);
         
         $data = ['status_producer' => Rawprice::PRODUCER_ASSEMBLY];
-        return $this->getEntityManager()->getConnection()->update('rawprice', $data, [
+        return $entityManager->getConnection()->update('rawprice', $data, [
             'raw_id' => $raw->getId(), 
             'unknown_producer_id' => $unknownProducer->getId(),
 //            'status_producer' => Rawprice::PRODUCER_NEW,
