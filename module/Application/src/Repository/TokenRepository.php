@@ -168,11 +168,10 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('at.lemma, count(at.article) as articleCount')
-                ->from(ArticleToken::class, 'at')
-                //->where('at.status = ?1')
-                ->groupBy('at.lemma')
-//                ->setParameter('1', $dict)
+        $queryBuilder->select('t, count(at.article) as articleCount')
+                ->form(Token::class, 't')
+                ->joinLeft(ArticleToken::class, 'at', 'WITH', 'at.lemma = t.lemma')
+                ->groupBy('t.id')
                 ;
         
         
