@@ -410,7 +410,6 @@ class NameManager
                 ->tokenFrequencies();
 
         foreach ($tokens as $token){
-            $articleCount = ($token['articleCount'] === null) ? 0:$token['articleCount']; 
             $this->updateTokenArticleCount($token['lemma'], $articleCount);
         }   
     }
