@@ -52,6 +52,8 @@ class NameManager
      */
     public function addToMyDict($token)
     {
+        ini_set('memory_limit', '2048M');
+        
         if (!is_dir(Token::MY_DICT_PATH)){
             mkdir(Token::MY_DICT_PATH);
         }        
@@ -90,6 +92,8 @@ class NameManager
      */
     public function removeFromMyDict($token)
     {
+        ini_set('memory_limit', '2048M');
+        
         if (file_exists(Token::MY_DICT_FILE)){
             $dict = new Config(include Token::MY_DICT_FILE, true);
             $word = $token->getLemma();
@@ -131,6 +135,8 @@ class NameManager
      */
     public function addToBlackList($token)
     {
+        ini_set('memory_limit', '2048M');
+        
         if (!is_dir(Token::MY_DICT_PATH)){
             mkdir(Token::MY_DICT_PATH);
         }        
@@ -161,6 +167,8 @@ class NameManager
      */
     public function addToGrayList($token)
     {
+        ini_set('memory_limit', '2048M');
+        
         if (!is_dir(Token::MY_DICT_PATH)){
             mkdir(Token::MY_DICT_PATH);
         }        
@@ -191,6 +199,8 @@ class NameManager
      */
     public function removeFromBlackList($token)
     {
+        ini_set('memory_limit', '2048M');
+        
         if (file_exists(Token::MY_BLACK_LIST)){
             $dict = new Config(include Token::MY_BLACK_LIST, true);
             $word = $token->getLemma();
@@ -216,6 +226,8 @@ class NameManager
      */
     public function removeFromGrayList($token)
     {
+        ini_set('memory_limit', '2048M');
+        
         if (file_exists(Token::MY_GRAY_LIST)){
             $dict = new Config(include Token::MY_GRAY_LIST, true);
             $word = $token->getLemma();

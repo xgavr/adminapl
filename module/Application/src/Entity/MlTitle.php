@@ -10,8 +10,6 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Zend\Config\Config;
-
 /**
  * Description of Producer
  * @ORM\Entity(repositoryClass="\Application\Repository\TokenRepository")
@@ -20,6 +18,16 @@ use Zend\Config\Config;
  */
 class MlTitle {
     
+    const IS_D  = 1; //описание
+    const IS_F  = 2; //характеристики
+    const IS_A  = 2; //применимость
+    const IS_S  = 4; //служебное
+    const IS_O  = 5; //прочее
+    
+    const IS_SD  = 14; //описание + служебное
+    const IS_DF  = 12; //описание + характеристик
+    const IS_FA  = 22; //характеристики + применимость
+    const IS_AS  = 24; //применимость + служебное
     
     /**
      * @ORM\Id
@@ -28,6 +36,10 @@ class MlTitle {
      */
     protected $id;
     
+    /**
+     * @ORM\Column(name="status")   
+     */
+    protected $status;    
     
      /**
     * @ORM\OneToOne(targetEntity="Application\Entity\Rawprice", mappedBy="mlTitles")
@@ -45,6 +57,16 @@ class MlTitle {
         $this->id = $id;
     }     
 
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }     
+
     /**
      * Returns the array of rawprice assigned to this rawprice.
      * @return array
@@ -53,4 +75,6 @@ class MlTitle {
     {
         return $this->rawprice;
     }        
+    
+    
 }
