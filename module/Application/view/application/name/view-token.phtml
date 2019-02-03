@@ -39,6 +39,16 @@ $this->pageBreadcrumbs()->setItems([
             </small>
         </span>
     <?php endif; ?>    
+    <?php if (in_array($token->getStatus(), [$token::IS_EN, $token::IS_EN_ABBR])):?>
+        <span>
+            <small>
+                <button value="/name/abbr/<?= $token->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                        title="Установить/Снять пометрку аббревиатуры">
+                    <span class="">ABBR</span>
+                </button> 
+            </small>
+        </span>
+    <?php endif; ?>    
     <?php if ($token->inBlackList()):?>
         <span>
             <small>

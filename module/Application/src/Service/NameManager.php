@@ -245,6 +245,41 @@ class NameManager
         
         return;
     }
+    
+    /**
+     * Поставить слову метку аббревиатуры
+     * 
+     * @param Application\Entity\Token $token
+     */
+    public function abbrStatus($token)
+    {
+        ini_set('memory_limit', '2048M');
+        
+        $word = $token->getLemma();
+        
+        $isRuValidator = new IsRU();
+        if ($isRuValidator->isValid($word)){
+            if ($token->getStatus() == Token::IS_RU){
+                $status = Token::IS_RU_ABBR;
+            } else {
+                $status = Token::IS_RU;                
+            }    
+        } else {
+            if ($token->getStatus() == Token::IS_EN){
+                $status = Token::IS_EN_ABBR;
+            } else {
+                $status = Token::IS_EN;                
+            }    
+        }
+        
+        $this->entityManager->getRepository(Token::class)
+                ->updateToken($word, ['status' => $status]);
+
+        $this->entityManager->getRepository(Article::class)
+                ->updateTokenUpdateFlag($word);
+        
+        return;
+    }
 
     /**
      * Разбивает наименование товара на токены
