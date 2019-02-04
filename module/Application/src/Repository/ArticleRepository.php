@@ -354,9 +354,10 @@ class ArticleRepository  extends EntityRepository
             ->leftJoin(Rawprice::class, 'r', 'WITH', 'r.code = u.id')
             ->groupBy('u.id')
             ->having('rawpriceCount = 0')    
+            ->setMaxResults(10000)    
             //->setParameter('1', Rawprice::STATUS_PARSED)
                 ;
-        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 
