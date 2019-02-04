@@ -21,77 +21,81 @@ $this->pageBreadcrumbs()->setItems([
         <table class="table table-striped">
             <tr>
                 <td colspan="6">
-                    <?= $this->paginationControl($rawprices,
+                    <?= $this->paginationControl($goods,
                                 'Sliding',
                                 'application/partial/paginator', 
                                 ['route' => array('route' => 'ml', 'action' => 'ml-titles')]); ?>
 
                 </td>
             </tr>
-            <?php foreach ($rawprices as $rawprice):?>
-                <tr style="font-size: <?= ($rawprice->getStatus() == $rawprice::STATUS_PARSED) ? "inherit":"xx-small"?>">
-                    <td>
-                        <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
-                            <?= $rawprice->getArticle();?>
-                        </a> 
-                        <div>
-                            <?= $rawprice->getStatusAsString();?>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rawprice->getRaw()->getSupplier()->getId()]);?>">
-                                <?= $rawprice->getRaw()->getSupplier()->getName();?>
-                            </a>                       
-                        </div>
-                        <div>
-                            <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
-                                <?= $rawprice->getUnknownProducer()->getName();?>
-                            </a>                       
-                        </div>
-                    </td>
-                    <td>
-                        <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
-                            <?= $rawprice->getGoodname();?>
-                        </a>    
-                        <?php $tokens = $rawprice->getTokens(); ?>
-                        <?php if(count($tokens)):?>  
-                            <div>    
-                                <?php foreach($tokens as $token):?>
-                                    <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
-                                        <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
-                                    </span>
+            <?php foreach ($goods as $good):?>
+                <?php foreach ($good->getArticles() as $article):?>
+                    <?php foreach ($article->getRawprice() as $rawprice):?>
+                        <tr style="font-size: <?= ($rawprice->getStatus() == $rawprice::STATUS_PARSED) ? "inherit":"xx-small"?>">
+                            <td>
+                                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
+                                    <?= $rawprice->getArticle();?>
+                                </a> 
+                                <div>
+                                    <?= $rawprice->getStatusAsString();?>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rawprice->getRaw()->getSupplier()->getId()]);?>">
+                                        <?= $rawprice->getRaw()->getSupplier()->getName();?>
+                                    </a>                       
+                                </div>
+                                <div>
+                                    <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
+                                        <?= $rawprice->getUnknownProducer()->getName();?>
+                                    </a>                       
+                                </div>
+                            </td>
+                            <td>
+                                <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
+                                    <?= $rawprice->getGoodname();?>
+                                </a>    
+                                <?php $tokens = $rawprice->getTokens(); ?>
+                                <?php if(count($tokens)):?>  
+                                    <div>    
+                                        <?php foreach($tokens as $token):?>
+                                            <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
+                                                <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
+                                            </span>
+                                        <?php endforeach;?>
+                                    </div>        
+                                <?php endif;?> 
+                                <div>
+                                    <?php $tokens = $mlManager->tokenize($rawprice->getGoodname()) ?>
+                                    <?php foreach($tokens as $mlToken):?>
+                                        <?php foreach ($mlToken as $value):?>
+                                            <small>[<?= $value?>]</small>
+                                        <?php endforeach;?>
+                                        <br/>
+                                    <?php endforeach;?>
+                                </div>
+                            </td>
+                            <td>
+                                <?php foreach($rawprice->getOemRaw() as $oemRaw): ?>
+                                    <a href="<?= $this->url('oem', ['action' => 'view-on-code'], ['query' => ['code' => $oemRaw->getCode()]]);?>">
+                                        <small><?= $oemRaw->getCode()?></small>
+                                    </a>    
                                 <?php endforeach;?>
-                            </div>        
-                        <?php endif;?> 
-                        <div>
-                            <?php $tokens = $mlManager->tokenize($rawprice->getGoodname()) ?>
-                            <?php foreach($tokens as $mlToken):?>
-                                <?php foreach ($mlToken as $value):?>
-                                    <small>[<?= $value?>]</small>
-                                <?php endforeach;?>
-                                <br/>
-                            <?php endforeach;?>
-                        </div>
-                    </td>
-                    <td>
-                        <?php foreach($rawprice->getOemRaw() as $oemRaw): ?>
-                            <a href="<?= $this->url('oem', ['action' => 'view-on-code'], ['query' => ['code' => $oemRaw->getCode()]]);?>">
-                                <small><?= $oemRaw->getCode()?></small>
-                            </a>    
-                        <?php endforeach;?>
-                    </td>
-                    <td align="right">
-                        <?= number_format($rawprice->getRealPrice(), 2, '.', '');?>
-                    </td>
-                    <td align="right">
-                        <?= $rawprice->getRealRest();?>
-                    </td>
-                </tr>
+                            </td>
+                            <td align="right">
+                                <?= number_format($rawprice->getRealPrice(), 2, '.', '');?>
+                            </td>
+                            <td align="right">
+                                <?= $rawprice->getRealRest();?>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>        
+                <?php endforeach;?>        
             <?php endforeach;?>        
             <tr>
                 <td colspan="6">
-                    <?= $this->paginationControl($rawprices,
+                    <?= $this->paginationControl($goods,
                                 'Sliding',
                                 'application/partial/paginator', 
                                 ['route' => array('route' => 'ml', 'action' => 'ml-titles')]); ?>

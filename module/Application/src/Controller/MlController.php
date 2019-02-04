@@ -95,7 +95,7 @@ class MlController extends AbstractActionController
         
         // Визуализируем шаблон представления.
         return new ViewModel([
-            'rawprices' => $paginator,
+            'goods' => $paginator,
             'mlManager' => $this->mlManager,
         ]);  
         

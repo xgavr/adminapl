@@ -606,10 +606,18 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r')
-                ->from(Rawprice::class, 'r')
+//        $queryBuilder->select('r')
+//                ->from(Rawprice::class, 'r')
+//                ->join(\Application\Entity\MlTitle::class, 'mt', 'WITH', 'r.id = mt.rawprice')
+//                ->orderBy('r.good')
+                ;
+        $queryBuilder->select('g')
+                ->distinct()
+                ->from(Goods::class, 'g')
+                ->join(Rawprice::class, 'r', 'WITH', 'r.good = g.id')
                 ->join(\Application\Entity\MlTitle::class, 'mt', 'WITH', 'r.id = mt.rawprice')
                 ;
+                
 
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
