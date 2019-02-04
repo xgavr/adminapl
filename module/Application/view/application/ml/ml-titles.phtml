@@ -29,6 +29,11 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
             </tr>
             <?php foreach ($goods as $good):?>
+                <tr>
+                    <td colspan="6">
+                        <h3><?= $good->getCode()?> <?= $good->getProducer()->getName()?> </h3>
+                    </td>
+                </tr>
                 <?php foreach ($good->getArticles() as $article):?>
                     <?php foreach ($article->getRawprice() as $rawprice):?>
                         <?php 
