@@ -584,7 +584,7 @@ class AssemblyManager
      */
     public function assemblyGoodFromRaw($raw)
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(900);
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
