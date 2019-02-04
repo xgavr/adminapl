@@ -563,6 +563,38 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult(2);            
     }
     
+    
+    public function nameCoverage()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('sum(tg.goodCount) as goodCount')
+                ->from(TokenGroup::class, 'tg')
+                ->where("tg.name != ''")
+//                ->setParameter('1', '')
+                ;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        $result = $queryBuilder->getQuery()->getResult();
+//        var_dump($result[0]);
+        return $result[0]['goodCount'];            
+    }
+
+    public function goodCoverage()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('sum(tg.goodCount) as goodCount')
+                ->from(TokenGroup::class, 'tg')
+                //->where("tg.name != ''")
+//                ->setParameter('1', '')
+                ;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        $result = $queryBuilder->getQuery()->getResult();
+//        var_dump($result[0]);
+        return $result[0]['goodCount'];            
+    }
 
     /**
      * Запрос на обучающую выборку наименований
