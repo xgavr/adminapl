@@ -63,4 +63,22 @@ class ExternalController extends AbstractActionController
         
     }
     
+    public function partsApiAction()
+    {
+        $action = $this->params()->fromQuery('action');
+        
+        if ($action == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $result = $this->externalManager->partsApi($action);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'message' => $result,
+        ]);           
+        
+    }
+    
 }

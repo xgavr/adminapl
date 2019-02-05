@@ -37,11 +37,19 @@ class ExternalManager
      */
     private $autoDbManager;
     
+    /**
+     * Менеджер partsApi
+     * 
+     * @var Application\Service\ExternalDB\PartsApiManager 
+     */
+    private $partsApiManager;
+    
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $autoDbManager)
+    public function __construct($entityManager, $autoDbManager, $partsApiManager)
     {
         $this->entityManager = $entityManager;
         $this->autoDbManager = $autoDbManager;
+        $this->partsApiManager = $partsApiManager;
     }
     
     /**
@@ -62,6 +70,24 @@ class ExternalManager
             case 'getInfo': $result = $this->autoDbManager->getDirectInfo($params['good']); break;
             case 'getLinked': $result = $this->autoDbManager->getLinked($params['good']); break;
             case 'getImages': $result = $this->autoDbManager->getImages($params['good']); break;
+            default: break;
+        }
+        
+//        var_dump($result);
+        return $result;
+    }
+    
+    /**
+     * Подключение к parts api
+     * 
+     * @param string $action
+     * @param array $params
+     * @return array|null;
+     */
+    public function partsApi($action, $params = null)
+    {
+        switch($action){
+            case 'makes': $result = $this->partsApiManager->getMakes(); break;
             default: break;
         }
         

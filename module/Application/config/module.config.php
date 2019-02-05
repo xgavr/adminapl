@@ -119,6 +119,20 @@ return [
                     ],
                 ],
             ],        
+            'make' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/make[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\MakeController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'ml' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -296,6 +310,7 @@ return [
             Controller\ExternalController::class => Controller\Factory\ExternalControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\MakeController::class => Controller\Factory\MakeControllerFactory::class,
             Controller\MlController::class => Controller\Factory\MlControllerFactory::class,
             Controller\NameController::class => Controller\Factory\NameControllerFactory::class,
             Controller\OemController::class => Controller\Factory\OemControllerFactory::class,
@@ -319,7 +334,9 @@ return [
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
             Service\ExternalManager::class => Service\Factory\ExternalManagerFactory::class,
             Service\ExternalDB\AutodbManager::class => Service\Factory\ExternalDB\AutodbManagerFactory::class,
+            Service\ExternalDB\PartsApiManager::class => Service\Factory\ExternalDB\PartsApiManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
+            Service\MakeManager::class => Service\Factory\MakeManagerFactory::class,
             Service\MlManager::class => Service\Factory\MlManagerFactory::class,
             Service\NameManager::class => Service\Factory\NameManagerFactory::class,
             Service\NavManager::class => Service\Factory\NavManagerFactory::class,
@@ -362,6 +379,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\MakeController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
