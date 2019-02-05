@@ -60,11 +60,14 @@ class NameController extends AbstractActionController
                 ->findParseStageRawpriceCount(\Application\Entity\Raw::STAGE_TOKEN_PARSED);
         $total = $this->entityManager->getRepository(Token::class)
                 ->count([]);
+        $statusTokenCount = $this->entityManager->getRepository(Token::class)
+                ->statusTokenCount();
                 
         return new ViewModel([
             'stages' => $stages,
             'statuses' => Token::getStatusList(),
             'total' => $total,
+            'statusTokenCount' => $statusTokenCount,
         ]);  
     }
     
@@ -81,7 +84,7 @@ class NameController extends AbstractActionController
         
         $query = $this->entityManager->getRepository(Token::class)
                         ->findAllToken(['q' => $q, 'sort' => $sort, 'order' => $order, 'status' => $status]);
-
+        
         $total = count($query->getResult(2));
         
         if ($offset) $query->setFirstResult( $offset );

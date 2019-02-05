@@ -45,6 +45,8 @@ $this->headScript()
             data-show-toggle="true"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
+            data-sort-name="frequency"
+            data-sort-order="desc"
             >
             <thead>
                 <tr>
@@ -92,6 +94,11 @@ $this->headScript()
                                 <span class="glyphicon glyphicon-remove" ></span>
                             </button>                             
                         </div>
+                    </div>
+                    <div class="panel-body">
+                        <?php foreach($statusTokenCount as $row):?>
+                            <span onclick="$('#statusSelect').val(<?= $row['status']?>); refreshTable()"><?= $statuses[$row['status']].': '.$row['tokenCount'] ?></span><br/>
+                        <?php endforeach;?>
                     </div>
                 </div>    
                 <div class="panel panel-info">
