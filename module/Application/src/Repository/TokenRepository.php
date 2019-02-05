@@ -236,8 +236,27 @@ class TokenRepository  extends EntityRepository
             }            
         }
 
+//            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }            
+    
+    /**
+     * Количество токенов по статусу
+     * 
+     * @return array
+     */
+    public function statusTokenCount()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('t.status, count(t.id) as tokenCount')
+                ->from(Token::class, 't')
+                ->groupBy('t.status')
+            ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
     
     /**
      * Запрос по группам наименований по разным параметрам
