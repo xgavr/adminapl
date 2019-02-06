@@ -24,8 +24,10 @@ class PartsApiManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        
+        $config = $container->get('config');
+        $authParams = $config['externalDb']['partsapi'];
+
         // Инстанцируем сервис и внедряем зависимости.
-        return new PartsApiManager($entityManager);
+        return new PartsApiManager($entityManager, $authParams);
     }
 }

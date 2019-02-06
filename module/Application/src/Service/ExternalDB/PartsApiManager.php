@@ -32,11 +32,13 @@ class PartsApiManager
      */
     private $entityManager;
     
+    private $api_key;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $authParams)
     {
         $this->entityManager = $entityManager;
+        $this->api_key = $authParams['key'];
     }
     
     /**
@@ -92,6 +94,7 @@ class PartsApiManager
     {
         $uri = $this->getUri().'?act='.$action;
         if (is_array($params)){
+            $params['key'] = $this->api_key;
             foreach ($params as $key => $value){
                 $uri .= "&$key=$value";
             }    
@@ -129,7 +132,7 @@ class PartsApiManager
      */
     public function getMakes()
     {
-        return $this->getAction('getMakes', ['group' => 'passenger', 'key' => 'test']);
+        return $this->getAction('getMakes', ['group' => 'passenger']);
     }
 
 }
