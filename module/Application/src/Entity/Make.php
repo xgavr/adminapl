@@ -11,15 +11,16 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Make
- * @ORM\Entity(repositoryClass="\Application\Repository\MakeRepository")
- * @ORM\Table(name="make")
+ * Description of Pricelist
+ * @ORM\Entity(repositoryClass="\Application\Repository\SupplierRepository")
+ * @ORM\Table(name="bill_gettings")
  * @author Daddy
  */
 class Make {
     
-    const STATUS_NEED_UPDATE = 1; //нужно обновить 
-    const STATUS_UPDATET = 2; //обновлен
+     // Supplier status constants.
+    const STATUS_ACTIVE       = 1; // Active.
+    const STATUS_RETIRED      = 2; // Retired.
     
     /**
      * @ORM\Id
@@ -29,31 +30,36 @@ class Make {
     protected $id;
     
     /**
-     * @ORM\Column(name="td_id")   
-     */
-    protected $tdId;    
-    
-    /**
-     * @ORM\Column(name="apl_id")   
-     */
-    protected $aplId;    
-    
-    /**
      * @ORM\Column(name="name")   
      */
-    protected $name;    
+    protected $name;
+        
+    /**
+     * @ORM\Column(name="email")   
+     */
+    protected $email;
     
     /**
-     * @ORM\Column(name="fullname")   
+     * @ORM\Column(name="email_password")   
      */
-    protected $fullName;    
+    protected $emailPassword;
+    
+    /**
+     * @ORM\Column(name="date_created")  
+     */
+    protected $dateCreated;    
 
     /**
-     * @ORM\Column(name="update_status")   
+     * @ORM\Column(name="status")  
      */
-    protected $updateStatus;
+    protected $status;    
+       
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="billGettings") 
+     * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
+     */
+    private $supplier;    
     
-
     public function getId() 
     {
         return $this->id;
@@ -62,26 +68,6 @@ class Make {
     public function setId($id) 
     {
         $this->id = $id;
-    }     
-
-    public function getTdId() 
-    {
-        return $this->tdId;
-    }
-
-    public function setTdId($tdId) 
-    {
-        $this->tdId = $tdId;
-    }     
-
-    public function getAplId() 
-    {
-        return $this->aplId;
-    }
-
-    public function setAplId($aplId) 
-    {
-        $this->aplId = $aplId;
     }     
 
     public function getName() 
@@ -94,24 +80,98 @@ class Make {
         $this->name = $name;
     }     
 
-    public function getFullName() 
+    public function getEmail() 
     {
-        return $this->fullName;
+        return $this->email;
     }
 
-    public function setFullName($fullName) 
+    public function setEmail($email) 
     {
-        $this->fullName = $fullName;
+        $this->email = $email;
+    }     
+
+    public function getEmailPassword() 
+    {
+        return $this->emailPassword;
+    }
+
+    public function setEmailPassword($emailPassword) 
+    {
+        $this->emailPassword = $emailPassword;
+    }     
+
+    public function getDateCreated() 
+    {
+        return $this->dateCreated;
+    }
+
+    public function setDateCreated($dateCreated) 
+    {
+        $this->dateCreated = $dateCreated;
     }     
     
-    public function getUpdateStatus()
-    {
-        return $this->updateStatus;
-    }
     
-    public function setUpdateStatus($updateStatus)
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
     {
-        $this->updateStatus = $updateStatus;
+        return $this->status;
     }
 
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 'Используется',
+            self::STATUS_RETIRED => 'Не используется'
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }   
+    
+    /*
+     * Возвращает связанный supplier.
+     * @return \Application\Entity\Supplier
+     */    
+    public function getSupplier() 
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * Задает связанный supplier.
+     * @param \Application\Entity\Supplier $supplier
+     */    
+    public function setSupplier($supplier) 
+    {
+        $this->supplier = $supplier;
+        $supplier->addBillGettings($this);
+    }    
+        
 }

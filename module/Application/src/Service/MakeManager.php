@@ -51,7 +51,7 @@ class MakeManager
             $make->setUpdateStatus(Make::STATUS_NEED_UPDATE);
 
             $this->entityManager->persist($make);
-            $this->entityManager-flush($make);
+            $this->entityManager-flush();
         }
         
         return $make;        
@@ -67,7 +67,7 @@ class MakeManager
                 'name' => $row['name'],
                 'fullName' => '',
             ]);
-            var_dump($make); exit;
+//            var_dump($make); exit;
         }
         
         return;

@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Make;
+use Application\Form\MakeForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -69,6 +70,51 @@ class MakeController extends AbstractActionController
             'rows' => $result,
         ]);          
     }    
+    
+    public function makeFormAction()
+    {
+        $makeId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($makeId > 0) {
+            $make = $this->entityManager->getRepository(Make::class)
+                    ->findOneById($makeId);
+            if ($make == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+             
+        $form = new MakeForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                
+                $this->makeManager->addMake($data);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+            }
+        } else {
+            if ($make){
+                $data = [
+                    'fullName' => $make->getFullName(),  
+                ];
+                $form->setData($data);
+            }    
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'make' => $make,
+        ]);                
+    }
     
     public function fillMakesAction()
     {

@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\MakeManager;
 use Application\Service\ExternalManager;
+
 /**
  * Description of CurrencyManagerFactory
  *

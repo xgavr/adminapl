@@ -1,0 +1,68 @@
+<?php
+
+$form = $this->form;
+
+$form->get('fullName')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'make-submit']);
+
+$form->prepare();
+
+?>
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Производители машин</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('fullName')); ?>
+                            <?= $this->formElement($form->get('fullName')); ?>
+                            <?= $this->formElementErrors($form->get('fullName')); ?>                  
+                        </div>
+                    </div>    
+                </div>    
+
+                <?= $this->formElement($form->get('csrf')); ?>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="make-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#make-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/make/make-form/<?= ($make) ? $make->getId():'' ?>',
+            data: $('#make-form').serialize()
+        })
+            .done(function (obj) {
+                var data = jQuery.parseJSON(obj);
+                if (data == 'ok'){
+                    $('#make-modal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#make-modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });
+    })    
+</script>

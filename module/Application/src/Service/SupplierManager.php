@@ -457,6 +457,8 @@ class SupplierManager
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+        
+//        var_dump($billGetting); exit;
     }
     
     public function updateBillGetting($billGetting, $data)
