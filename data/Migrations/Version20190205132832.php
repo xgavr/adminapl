@@ -19,7 +19,7 @@ final class Version20190205132832 extends AbstractMigration
         $table->addColumn('apl_id', 'integer', ['notnull' => true]);
         $table->addColumn('name', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('fullname', 'string', ['notnull' => true, 'length' => 128]);
-        $table->addColumn('update_status', 'integer', ['notnull' => true, 'default' => 0]);
+        $table->addColumn('status', 'integer', ['notnull' => true, 'default' => 0]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['td_id'], 'td_id_uindx');
         $table->addUniqueIndex(['name'], 'name_uindx');

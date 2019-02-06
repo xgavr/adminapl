@@ -12,8 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Description of Pricelist
- * @ORM\Entity(repositoryClass="\Application\Repository\SupplierRepository")
- * @ORM\Table(name="bill_gettings")
+ * @ORM\Entity(repositoryClass="\Application\Repository\MakeRepository")
+ * @ORM\Table(name="make")
  * @author Daddy
  */
 class Make {
@@ -35,30 +35,25 @@ class Make {
     protected $name;
         
     /**
-     * @ORM\Column(name="email")   
+     * @ORM\Column(name="td_id")   
      */
-    protected $email;
+    protected $tdId;
     
     /**
-     * @ORM\Column(name="email_password")   
+     * @ORM\Column(name="apl_id")   
      */
-    protected $emailPassword;
+    protected $aplId;
     
     /**
-     * @ORM\Column(name="date_created")  
+     * @ORM\Column(name="fullname")  
      */
-    protected $dateCreated;    
+    protected $fullName;    
 
     /**
      * @ORM\Column(name="status")  
      */
     protected $status;    
        
-    /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="billGettings") 
-     * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
-     */
-    private $supplier;    
     
     public function getId() 
     {
@@ -80,34 +75,34 @@ class Make {
         $this->name = $name;
     }     
 
-    public function getEmail() 
+    public function getFullName() 
     {
-        return $this->email;
+        return $this->fullName;
     }
 
-    public function setEmail($email) 
+    public function setFullName($fullName) 
     {
-        $this->email = $email;
+        $this->fullName = $fullName;
     }     
 
-    public function getEmailPassword() 
+    public function getTdId() 
     {
-        return $this->emailPassword;
+        return $this->tdId;
     }
 
-    public function setEmailPassword($emailPassword) 
+    public function setTdId($tdId) 
     {
-        $this->emailPassword = $emailPassword;
+        $this->tdId = $tdId;
     }     
 
-    public function getDateCreated() 
+    public function getAplId() 
     {
-        return $this->dateCreated;
+        return $this->aplId;
     }
 
-    public function setDateCreated($dateCreated) 
+    public function setAplId($aplId) 
     {
-        $this->dateCreated = $dateCreated;
+        $this->aplId = $aplId;
     }     
     
     
@@ -155,23 +150,4 @@ class Make {
         $this->status = $status;
     }   
     
-    /*
-     * Возвращает связанный supplier.
-     * @return \Application\Entity\Supplier
-     */    
-    public function getSupplier() 
-    {
-        return $this->supplier;
-    }
-
-    /**
-     * Задает связанный supplier.
-     * @param \Application\Entity\Supplier $supplier
-     */    
-    public function setSupplier($supplier) 
-    {
-        $this->supplier = $supplier;
-        $supplier->addBillGettings($this);
-    }    
-        
 }

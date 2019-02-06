@@ -48,7 +48,7 @@ class MakeManager
             $make->setTdId($data['tdId']);
             $make->setFullName($data['fullName']);
             $make->setName($data['name']);
-            $make->setUpdateStatus(Make::STATUS_NEED_UPDATE);
+            $make->setStatus(Make::STATUS_ACTIVE);
 
             $this->entityManager->persist($make);
             $this->entityManager-flush();
