@@ -11,12 +11,15 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Producer
+ * Description of Make
  * @ORM\Entity(repositoryClass="\Application\Repository\MakeRepository")
  * @ORM\Table(name="make")
  * @author Daddy
  */
 class Make {
+    
+    const STATUS_NEED_UPDATE = 1; //нужно обновить 
+    const STATUS_UPDATET = 2; //обновлен
     
     /**
      * @ORM\Id
@@ -44,6 +47,12 @@ class Make {
      * @ORM\Column(name="fullname")   
      */
     protected $fullName;    
+
+    /**
+     * @ORM\Column(name="update_status")   
+     */
+    protected $updateStatus;
+    
 
     public function getId() 
     {
@@ -94,5 +103,15 @@ class Make {
     {
         $this->fullName = $fullName;
     }     
+    
+    public function getUpdateStatus()
+    {
+        return $this->updateStatus;
+    }
+    
+    public function setUpdateStatus($updateStatus)
+    {
+        $this->updateStatus = $updateStatus;
+    }
 
 }

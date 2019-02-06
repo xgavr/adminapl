@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Description of Producer
+ * Description of Article
  * @ORM\Entity(repositoryClass="\Application\Repository\ArticleRepository")
  * @ORM\Table(name="article")
  * @author Daddy

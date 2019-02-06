@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\MakeManager;
+use Application\Service\ExternalManager;
 /**
  * Description of CurrencyManagerFactory
  *
@@ -23,8 +24,9 @@ class MakeManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $externalManager = $container->get(ExternalManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new MakeManager($entityManager);
+        return new MakeManager($entityManager, $externalManager);
     }
 }

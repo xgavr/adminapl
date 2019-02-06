@@ -69,4 +69,13 @@ class MakeController extends AbstractActionController
             'rows' => $result,
         ]);          
     }    
+    
+    public function fillMakesAction()
+    {
+        $this->makeManager->fillMakes();
+
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
+    }
 }
