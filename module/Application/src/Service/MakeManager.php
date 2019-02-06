@@ -51,7 +51,7 @@ class MakeManager
             $make->setUpdateStatus(Make::STATUS_NEED_UPDATE);
 
             $this->entityManager->persist($make);
-            $this->entityManager-flush();
+            $this->entityManager-flush($make);
         }
         
         return $make;        
