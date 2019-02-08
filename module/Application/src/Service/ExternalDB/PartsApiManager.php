@@ -128,11 +128,13 @@ class PartsApiManager
      * passenger - легковые, 
      * commercial - грузовые и коммерческие, 
      * moto - мототехника
+     * 
+     * @param string $group
      * @return array|Esception
      */
-    public function getMakes()
+    public function getMakes($group)
     {
-        return $this->getAction('getMakes', ['group' => 'passenger']);
+        return $this->getAction('getMakes', ['group' => $group]);
     }
 
 }

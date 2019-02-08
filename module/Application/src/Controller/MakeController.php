@@ -124,4 +124,36 @@ class MakeController extends AbstractActionController
             'result' => 'ok',
         ]);                  
     }
+    
+    public function viewAction() 
+    {       
+        $makeId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($makeId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $make = $this->entityManager->getRepository(Make::class)
+                ->findOneById($makeId);
+        
+        if ($make == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $prevQuery = $this->entityManager->getRepository(Make::class)
+                        ->findAllMake(['prev1' => $make->getName()]);
+        $nextQuery = $this->entityManager->getRepository(Make::class)
+                        ->findAllMake(['next1' => $make->getName()]);        
+
+        // Render the view template.
+        return new ViewModel([
+            'make' => $make,
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
+        ]);
+    }      
+    
 }

@@ -87,7 +87,7 @@ class ExternalManager
     public function partsApi($action, $params = null)
     {
         switch($action){
-            case 'makes': $result = $this->partsApiManager->getMakes(); break;
+            case 'makes': $result = $this->partsApiManager->getMakes($params['group']); break;
             default: break;
         }
         

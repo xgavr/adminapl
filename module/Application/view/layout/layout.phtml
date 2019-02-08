@@ -214,7 +214,8 @@
                     })
                         .done(function (obj) {
                             dialog.modal('hide');
-                            var data = jQuery.parseJSON(obj);
+//                            var data = jQuery.parseJSON(obj);
+                            data = obj;
                             if (data.result == 'ok'){
                                 //bootbox.alert("Ок!");
                                 $('#table').bootstrapTable('refresh');

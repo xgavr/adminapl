@@ -666,4 +666,28 @@ class AplService {
         return;
     }
     
+    public function getMakeAplId($make)
+    {
+        if ($make->getName()){
+
+            $url = $this->aplApi().'get-brand-id?name='.$make->getName().'&api='.$this->aplApiKey();
+            
+//                var_dump($url); 
+            $response = file_get_contents($url);
+            try {
+                if (is_numeric($response)){
+//                    var_dump($response);
+                    $make->setAplId($response);
+                    $this->entityManager->persist($make);
+                    $this->entityManager->flush($make);
+                    return;
+                }
+            } catch (Exception $ex) {
+//                var_dump($ex->getMessage());
+                return;
+            }
+        }    
+        
+        return;        
+    }
 }

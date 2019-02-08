@@ -11,16 +11,26 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Pricelist
+ * Description of Make
  * @ORM\Entity(repositoryClass="\Application\Repository\MakeRepository")
  * @ORM\Table(name="make")
  * @author Daddy
  */
+
 class Make {
     
-     // Supplier status constants.
+     // Make status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    
+    const PASSENGER_YES       = 1; //
+    const PASSENGER_NO       = 2; //    
+    
+    const COMMERC_YES       = 1; //
+    const COMMERC_NO       = 2; //
+    
+    const MOTO_YES       = 1; //
+    const MOTO_NO       = 2; //
     
     /**
      * @ORM\Id
@@ -54,6 +64,23 @@ class Make {
      */
     protected $status;    
        
+    /**
+     * @ORM\Column(name="passenger")  
+     */
+    protected $passenger;
+    
+    /**
+     * @ORM\Column(name="commerc")  
+     */
+    protected $commerc;
+
+    /**
+     * @ORM\Column(name="moto")  
+     */
+    protected $moto;
+    
+   public function __construct() {
+   }    
     
     public function getId() 
     {
@@ -105,6 +132,36 @@ class Make {
         $this->aplId = $aplId;
     }     
     
+    public function getPasenger() 
+    {
+        return $this->passenger;
+    }
+
+    public function setPassenger($passenger) 
+    {
+        $this->passenger = $passenger;
+    }     
+    
+    public function getCommerc() 
+    {
+        return $this->commerc;
+    }
+
+    public function setCommerc($commerc) 
+    {
+        $this->commerc = $commerc;
+    }     
+    
+    public function getMoto() 
+    {
+        return $this->moto;
+    }
+
+    public function setMoto($moto) 
+    {
+        $this->moto = $moto;
+    }     
+    
     
     /**
      * Returns status.
@@ -129,7 +186,7 @@ class Make {
     }    
     
     /**
-     * Returns user status as string.
+     * Returns make status as string.
      * @return string
      */
     public function getStatusAsString()

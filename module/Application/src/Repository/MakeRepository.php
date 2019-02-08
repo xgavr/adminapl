@@ -19,6 +19,30 @@ use Application\Entity\Make;
 class MakeRepository extends EntityRepository{
 
     /**
+     * Быстрая вставка Make
+     * @param array $row 
+     * @return integer
+     */
+    public function insertMake($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('make', $row);
+        return $inserted;
+    }    
+
+    /**
+     * Быстрая обновление Make
+     * 
+     * @param Application\Entity\Make
+     * @param array $data 
+     * @return integer
+     */
+    public function updateMake($make, $data)
+    {
+        $updated = $this->getEntityManager()->getConnection()->update('make', $data, ['id' => $make->getId()]);
+        return $updated;
+    }    
+
+    /**
      * Запрос по машинам по разным параметрам
      * 
      * @param array $params

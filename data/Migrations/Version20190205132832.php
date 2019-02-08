@@ -17,6 +17,9 @@ final class Version20190205132832 extends AbstractMigration
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);
         $table->addColumn('td_id', 'integer', ['notnull' => true]);
         $table->addColumn('apl_id', 'integer', ['notnull' => true]);
+        $table->addColumn('passenger', 'integer', ['notnull' => true]);
+        $table->addColumn('commerc', 'integer', ['notnull' => true]);
+        $table->addColumn('moto', 'integer', ['notnull' => true]);
         $table->addColumn('name', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('fullname', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('status', 'integer', ['notnull' => true, 'default' => 0]);
