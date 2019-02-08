@@ -14,7 +14,7 @@ use Application\Service\MakeManager;
 use Application\Service\ExternalManager;
 
 /**
- * Description of CurrencyManagerFactory
+ * Description of MakeManagerFactory
  *
  * @author Daddy
  */
@@ -24,8 +24,8 @@ class MakeManagerFactory  implements FactoryInterface
     public function __invoke(ContainerInterface $container, 
                     $requestedName, array $options = null)
     {
-        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $externalManager = $container->get(ExternalManager::class);
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         
         // Инстанцируем сервис и внедряем зависимости.
         return new MakeManager($entityManager, $externalManager);

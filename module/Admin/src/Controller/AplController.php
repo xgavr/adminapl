@@ -147,27 +147,6 @@ class AplController extends AbstractActionController
             'result' => 'ok-reload',
         ]);
     }
-
-    public function makeAplIdAction()
-    {
-        $makeId = $this->params()->fromRoute('id', -1);
-    
-        // Находим существующий пост в базе данных.    
-        $make = $this->entityManager->getRepository(\Application\Entity\Make::class)
-                ->findOneById($makeId);  
-        	
-        if ($make == null) {
-            $this->getResponse()->setStatusCode(401);
-            return;                        
-        } 
-        
-        $this->aplService->getMakeAplId($make);
-        
-        return new JsonModel([
-            'result' => 'ok-reload',
-        ]);
-    }
-
     
     public function updateGoodAplIdAction()
     {
@@ -193,6 +172,36 @@ class AplController extends AbstractActionController
         } 
         
         $this->aplService->updateGoodName($good);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
+    public function makeAplIdAction()
+    {
+        $makeId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $make = $this->entityManager->getRepository(\Application\Entity\Make::class)
+                ->findOneById($makeId);  
+        	
+        if ($make == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->getMakeAplId($make);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
+    public function updateMakeAplIdAction()
+    {
+        
+        $this->aplService->updateMakeAplId();
         
         return new JsonModel([
             'result' => 'ok-reload',

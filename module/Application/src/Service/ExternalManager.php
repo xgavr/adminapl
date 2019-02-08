@@ -88,6 +88,7 @@ class ExternalManager
     {
         switch($action){
             case 'makes': $result = $this->partsApiManager->getMakes($params['group']); break;
+            case 'models': $result = $this->partsApiManager->getModels($params['make'], $params['group']); break;
             default: break;
         }
         

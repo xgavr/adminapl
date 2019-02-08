@@ -137,4 +137,20 @@ class PartsApiManager
         return $this->getAction('getMakes', ['group' => $group]);
     }
 
+    /**
+     * КАТАЛОГ: 
+     * Список моделей выбранного производителя: 
+     * passenger - легковые, 
+     * commercial - грузовые и коммерческие, 
+     * moto - мототехника
+     * 
+     * @param integer $make
+     * @param string $group
+     * @return array|Esception
+     */
+    public function getModels($makeId, $group)
+    {
+        return $this->getAction('getModels', ['make' => $makeId, 'group' => $group]);
+    }
+
 }

@@ -18,10 +18,10 @@ $this->headScript()
     ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
             ;    
 ?>
-<button value="/make/make-form" class="btn btn-default btn-xs"
+<!--<button value="/make/make-form" class="btn btn-default btn-xs"
         data-toggle="modal" data-target="#modal-dialog" title="Добавить">
     <span class="glyphicon glyphicon-plus" ></span>
-</button>                                                                        
+</button>                                                                        -->
 
 <div class="row">
     <div class="col-md-9">
@@ -68,6 +68,17 @@ $this->headScript()
                         </div>
                         <div class="pull-right">
                             <button value="/make/fill-makes" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Заполнить">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                           АПЛ Ид
+                        </div>
+                        <div class="pull-right">
+                            <button value="/apl/update-make-apl-id" class="btn btn-info btn-xs refresh-table-button"
                                     title="Заполнить">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             

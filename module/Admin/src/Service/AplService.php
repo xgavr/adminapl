@@ -670,7 +670,7 @@ class AplService {
     {
         if ($make->getName()){
 
-            $url = $this->aplApi().'get-brand-id?name='.$make->getName().'&api='.$this->aplApiKey();
+            $url = $this->aplApi().'get-brand-id?name='.urlencode($make->getName()).'&api='.$this->aplApiKey();
             
 //                var_dump($url); 
             $response = file_get_contents($url);
@@ -687,6 +687,17 @@ class AplService {
                 return;
             }
         }    
+        
+        return;        
+    }
+
+    public function updateMakeAplId()
+    {
+        $makes = $this->entityManager->getRepository(\Application\Entity\Make::class)
+                ->findBy([]);
+        foreach ($makes as $make){
+            $this->getMakeAplId($make);
+        }
         
         return;        
     }

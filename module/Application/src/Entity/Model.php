@@ -9,16 +9,15 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Make
  * @ORM\Entity(repositoryClass="\Application\Repository\MakeRepository")
- * @ORM\Table(name="make")
+ * @ORM\Table(name="model")
  * @author Daddy
  */
 
-class Make {
+class Model {
     
      // Make status constants.
     const STATUS_ACTIVE       = 1; // Active.
@@ -61,6 +60,11 @@ class Make {
     protected $fullName;    
 
     /**
+     * @ORM\Column(name="constructioninterval")  
+     */
+    protected $interval;    
+
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;    
@@ -79,15 +83,16 @@ class Make {
      * @ORM\Column(name="moto")  
      */
     protected $moto;
-    
+        
     /**
-     * @ORM\OneToMany(targetEntity="\Application\Entity\Model", mappedBy="make")
-     * @ORM\JoinColumn(name="id", referencedColumnName="make_id")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Make", inversedBy="models") 
+     * @ORM\JoinColumn(name="make_id", referencedColumnName="id")
+     * 
      */
-    protected $models;
+    protected $make;
+    
     
     public function __construct() {
-        $this->models = new ArrayCollection();   
     }    
     
     public function getId() 
@@ -118,6 +123,16 @@ class Make {
     public function setFullName($fullName) 
     {
         $this->fullName = $fullName;
+    }     
+
+    public function getInterval() 
+    {
+        return $this->interval;
+    }
+
+    public function setInterval($interval) 
+    {
+        $this->interval = $interval;
     }     
 
     public function getTdId() 
@@ -215,21 +230,23 @@ class Make {
         $this->status = $status;
     }   
     
-    /**
-     * Возвращает models для этого make.
-     * @return array
-     */
-    public function getModels() 
+    /*
+     * Возвращает связанный make.
+     * @return \Application\Entity\Make
+     */    
+    public function getMake() 
     {
-        return $this->models;
+        return $this->make;
     }
     
     /**
-     * Добавляет новою model к этому make.
-     * @param $model
-     */
-    public function addModel($model) 
+     * Задает связанный make.
+     * @param \Application\Entity\Make $make
+     */    
+    public function setMake($make) 
     {
-        $this->models[] = $model;
-    }
+        $this->make = $make;
+        $make->addModel($this);
+    }         
+    
 }
