@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Make;
+use Application\Entity\Model;
 use Application\Form\MakeForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -190,5 +191,36 @@ class MakeController extends AbstractActionController
             'result' => 'ok',
         ]);                  
     }
+    
+    public function viewModelAction() 
+    {       
+        $modelId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($modelId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $model = $this->entityManager->getRepository(Model::class)
+                ->findOneById($modelId);
+        
+        if ($model == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $prevQuery = $this->entityManager->getRepository(Model::class)
+                        ->findAllModel($model->getMake(), ['prev1' => $model->getName()]);
+        $nextQuery = $this->entityManager->getRepository(Model::class)
+                        ->findAllModel($model->getMake(), ['next1' => $model->getName()]);        
+
+        // Render the view template.
+        return new ViewModel([
+            'model' => $model,
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
+        ]);
+    }      
     
 }

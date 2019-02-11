@@ -116,7 +116,7 @@ class MakeRepository extends EntityRepository{
      * @param array $params
      * @return object
      */
-    public function findAllModel($params = null)
+    public function findAllModel($make, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -124,22 +124,24 @@ class MakeRepository extends EntityRepository{
 
         $queryBuilder->select('m')
             ->from(Model::class, 'm')
+            ->where('m.make = ?0')
+            ->setParameter('0', $make->getId())    
                 ;
         
         if (is_array($params)){
             if (isset($params['q'])){
-                $queryBuilder->where('m.name like :search')
+                $queryBuilder->andWhere('m.name like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('m.name > ?1')
+                $queryBuilder->andWhere('m.name > ?1')
                     ->setParameter('1', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('m.name < ?2')
+                $queryBuilder->andWhere('m.name < ?2')
                     ->setParameter('2', $params['prev1'])
                     ->orderBy('m.name', 'DESC')
                     ->setMaxResults(1)    
