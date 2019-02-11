@@ -156,4 +156,39 @@ class MakeController extends AbstractActionController
         ]);
     }      
     
+    public function fillModelsAction()
+    {
+        $makeId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($makeId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $make = $this->entityManager->getRepository(Make::class)
+                ->findOneById($makeId);
+        
+        if ($make == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->makeManager->fillModels($make);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+    
+    public function fillAllModelsAction()
+    {
+
+        $this->makeManager->fillAllModels();
+
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
+    }
+    
 }

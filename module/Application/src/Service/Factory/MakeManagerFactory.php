@@ -24,8 +24,8 @@ class MakeManagerFactory  implements FactoryInterface
     public function __invoke(ContainerInterface $container, 
                     $requestedName, array $options = null)
     {
-        $externalManager = $container->get(ExternalManager::class);
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $externalManager = $container->get(ExternalManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new MakeManager($entityManager, $externalManager);

@@ -58,15 +58,20 @@ class MakeManager
             'status' => Make::STATUS_ACTIVE,
         ];
         
-        try{
-            $this->entityManager->getRepository(Make::class)
-                        ->insertMake($row);
-        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-            //дубликат
-        }   
-            
         $make = $this->entityManager->getRepository(Make::class)
                 ->findOneBy(['tdId' => $data['tdId']]);
+        
+        if (!$make){
+            try{
+                $this->entityManager->getRepository(Make::class)
+                            ->insertMake($row);
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                //дубликат
+            }   
+
+            $make = $this->entityManager->getRepository(Make::class)
+                    ->findOneBy(['tdId' => $data['tdId']]);
+        }    
 
         if ($make){
             $this->entityManager->getRepository(Make::class)
@@ -139,19 +144,26 @@ class MakeManager
             'status' => Make::STATUS_ACTIVE,
         ];
         
-        try{
-            $this->entityManager->getRepository(Model::class)
-                        ->insertModel($row);
-        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-            //дубликат
-        }   
-            
         $model = $this->entityManager->getRepository(Model::class)
                 ->findOneBy(['tdId' => $data['tdId']]);
+        
+        if (!$model){
+            try{
+                $this->entityManager->getRepository(Model::class)
+                            ->insertModel($row);
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                //дубликат
+            }   
+            $model = $this->entityManager->getRepository(Model::class)
+                    ->findOneBy(['tdId' => $data['tdId']]);
+        }    
+            
 
         if ($model){
             $this->entityManager->getRepository(Model::class)
                 ->updateModel($model, $group);
+                        
+            $make->addModel($model);
         }      
             
 
@@ -171,7 +183,7 @@ class MakeManager
     private function fillModelFromArray($make, $data, $group)
     {
         foreach ($data as $row){
-            $make = $this->addModel($make, [
+            $model = $this->addModel($make, [
                 'tdId' => $row['id'],
                 'aplId' => 0,
                 'name' => $row['name'],
@@ -181,6 +193,7 @@ class MakeManager
 //            var_dump($model); exit;
         }
         
+        return $model;
     }
     
     /**
@@ -191,12 +204,28 @@ class MakeManager
      */
     public function fillModels($make)
     {
-        $data1 = $this->externalManager->partsApi('models', ['makeId' => $make->getId(), 'group' => 'passenger']);
-        $this->fillModelsFromArray($make, $data1,['passenger' => Make::PASSENGER_YES]);
-        $data2 = $this->externalManager->partsApi('models', ['makeId' => $make->getId(), 'group' => 'commercial']);
-        $this->fillModelsFromArray($make, $data2,['commerc' => Make::COMMERC_YES]);
-        $data3 = $this->externalManager->partsApi('models', ['makeId' => $make->getId(), 'group' => 'moto']);
-        $this->fillModelsFromArray($make, $data3,['moto' => Make::MOTO_YES]);
+        $data1 = $this->externalManager->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'passenger']);
+        $this->fillModelFromArray($make, $data1,['passenger' => Make::PASSENGER_YES]);
+        $data2 = $this->externalManager->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'commercial']);
+        $this->fillModelFromArray($make, $data2,['commerc' => Make::COMMERC_YES]);
+        $data3 = $this->externalManager->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'moto']);
+        $this->fillModelFromArray($make, $data3,['moto' => Make::MOTO_YES]);
+        return;
+    }
+    
+    /**
+     * Заполнить модели у всех производителей
+     */
+    public function fillAllModels()
+    {
+        set_time_limit(1800);
+        
+        $makes = $this->entityManager->getRepository(Make::class)
+                ->findBy([]);
+        foreach ($makes as $make){
+            $this->fillModels($make);
+        }
+        
         return;
     }
 }

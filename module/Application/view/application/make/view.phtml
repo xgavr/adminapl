@@ -13,6 +13,9 @@ $this->pageBreadcrumbs()->setItems([
 
 <h1>
     <?= $make->getName();?>
+    <sup>
+        <?= $make->getTdId();?>
+    </sup>
 </h1>
 
 <div class="row">
@@ -31,17 +34,28 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endif;?>                            
                 </td>
             </tr>
+            <?php foreach($make->getModels() as $model):?>
             <tr>
-                <th>
-
-                </th>
-                <th>
-                </th>
-                <td colspan="3" align="right">
+                <td>
+                    <?= $model->getId()?>
                 </td>
-                <td align="right">
+                <td>
+                    <?= $model->getTdId()?>
+                </td>
+                <td>
+                    <?= $model->getAplId()?>
+                </td>
+                <td>
+                    <?= $model->getName()?>
+                </td>
+                <td>
+                    <?= $model->getInterval()?>
+                </td>
+                <td>
+                    
                 </td>
             </tr>
+            <?php endforeach;?>
         </table>
     </div>
     <div class="col-md-3" id="side-nav" >
@@ -49,10 +63,7 @@ $this->pageBreadcrumbs()->setItems([
             <div class="panel-group">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <span>
-                        </span>
-                        <span>
-                        </span>    
+                        Внешние данные
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
@@ -62,6 +73,17 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-right">
                             <button value="/apl/make-apl-id/<?= $make->getId()?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Обновить АПЛ Ид">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            partsapi
+                        </div>
+                        <div class="pull-right">
+                            <button value="/make/fill-models/<?= $make->getId();?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Заполнить модели">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>

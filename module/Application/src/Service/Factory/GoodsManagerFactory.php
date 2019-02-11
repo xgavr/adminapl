@@ -12,7 +12,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\GoodsManager;
 /**
- * Description of PbManagerFactory
+ * Description of GoodsManagerFactory
  *
  * @author Daddy
  */

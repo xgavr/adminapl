@@ -7,17 +7,10 @@
  */
 namespace Application\Service;
 
-use Application\Entity\Token;
-use Application\Entity\Producer;
-use Application\Entity\UnknownProducer;
-use Application\Entity\Article;
-use Application\Entity\Raw;
-use Application\Entity\Rawprice;
-use Application\Entity\Goods;
 
 /**
  * Description of ExternalManager
- * Создание карточек товаров
+ * Внешние апи
  *
  * @author Daddy
  */
@@ -86,13 +79,14 @@ class ExternalManager
      */
     public function partsApi($action, $params = null)
     {
+        $result = [];
         switch($action){
             case 'makes': $result = $this->partsApiManager->getMakes($params['group']); break;
-            case 'models': $result = $this->partsApiManager->getModels($params['make'], $params['group']); break;
+            case 'models': $result = $this->partsApiManager->getModels($params['makeId'], $params['group']); break;
             default: break;
         }
         
-//        var_dump($result);
+//        var_dump($result); exit;
         return $result;
     }
     

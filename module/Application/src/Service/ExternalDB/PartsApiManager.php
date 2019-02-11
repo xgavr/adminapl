@@ -99,7 +99,7 @@ class PartsApiManager
                 $uri .= "&$key=$value";
             }    
         }        
-//        var_dump($uri);
+//        var_dump($uri); exit;
         $client = new Client();
         $client->setUri($uri);
         $client->setAdapter($this::HTTPS_ADAPTER);
