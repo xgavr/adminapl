@@ -36,7 +36,7 @@ class CarAttributeType {
     protected $title;
     
     /**
-    * @ORM\ManyToOne(targetEntity="Application\Entity\CarAttributeGroup", mappedBy="carAttributeTypes")
+    * @ORM\ManyToOne(targetEntity="Application\Entity\CarAttributeGroup", inversedBy="carAttributeTypes")
     * @ORM\JoinColumn(name="car_attribute_group_id", referencedColumnName="id")
      */
     protected $carAttributeGroup;
@@ -45,6 +45,7 @@ class CarAttributeType {
     * @ORM\OneToMany(targetEntity="Application\Entity\CarAttributeValue", mappedBy="carAttributeType")
     * @ORM\JoinColumn(name="id", referencedColumnName="car_attribute_type_id")
      */
+    
     protected $carAttributeValues;    
 
     public function __construct() {

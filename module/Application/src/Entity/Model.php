@@ -9,6 +9,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Make
@@ -91,8 +92,14 @@ class Model {
      */
     protected $make;
     
+    /**
+     * @ORM\OneToMany(targetEntity="\Application\Entity\Car", mappedBy="model")
+     * @ORM\JoinColumn(name="id", referencedColumnName="model_id")
+     */
+    protected $cars;    
     
     public function __construct() {
+        $this->cars = new ArrayCollection();
     }    
     
     public function getId() 
@@ -249,4 +256,21 @@ class Model {
         $make->addModel($this);
     }         
     
+    /**
+     * Возвращает cars для этого model.
+     * @return array
+     */
+    public function getCars() 
+    {
+        return $this->cars;
+    }
+    
+    /**
+     * Добавляет новою car к этому model.
+     * @param $car
+     */
+    public function addCar($car) 
+    {
+        $this->models[] = $car;
+    }
 }

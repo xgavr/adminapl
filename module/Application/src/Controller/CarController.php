@@ -29,15 +29,15 @@ class MakeController extends AbstractActionController
     
     /**
      * Менеджер товаров.
-     * @var Application\Service\MakeManager 
+     * @var Application\Service\CarManager 
      */
-    private $makeManager;    
+    private $carManager;    
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $makeManager) 
+    public function __construct($entityManager, $carManager) 
     {
         $this->entityManager = $entityManager;
-        $this->makeManager = $makeManager;
+        $this->carManager = $carManager;
     }    
     
     public function indexAction()

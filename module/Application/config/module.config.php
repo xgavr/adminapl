@@ -318,6 +318,7 @@ return [
     ],      
     'controllers' => [
         'factories' => [
+            Controller\CarController::class => Controller\Factory\CarControllerFactory::class,
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
             Controller\ContactController::class => Controller\Factory\ContactControllerFactory::class,
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
@@ -343,6 +344,7 @@ return [
         'factories' => [
             Service\ArticleManager::class => Service\Factory\ArticleManagerFactory::class,
             Service\AssemblyManager::class => Service\Factory\AssemblyManagerFactory::class,
+            Service\CarManager::class => Service\Factory\CarManagerFactory::class,
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
@@ -372,6 +374,10 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
+            Controller\CarController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
             Controller\ClientController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']

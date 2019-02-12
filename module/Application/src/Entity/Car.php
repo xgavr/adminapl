@@ -222,22 +222,35 @@ class Car {
     }   
     
     /*
-     * Возвращает связанный make.
-     * @return \Application\Entity\Make
+     * Возвращает связанный model.
+     * @return \Application\Entity\Model
      */    
-    public function getMake() 
+    public function getModel() 
     {
-        return $this->make;
+        return $this->model;
     }
     
     /**
-     * Задает связанный make.
-     * @param \Application\Entity\Make $make
+     * Задает связанный model.
+     * @param \Application\Entity\Model $model
      */    
-    public function setMake($make) 
+    public function setModel($model) 
     {
-        $this->make = $make;
-        $make->addModel($this);
+        $this->model = $model;
+        $model->addCar($this);
     }         
+
+    /*
+     * Возвращает values.
+     * @return array
+     */    
+    public function getCarAtributeValues() 
+    {
+        return $this->carAttributeValues;
+    }
     
+    public function addCarAttributeValue($carAttributeValue)
+    {
+        $this->carAttributeValues[] = $carAttributeValue;
+    }
 }

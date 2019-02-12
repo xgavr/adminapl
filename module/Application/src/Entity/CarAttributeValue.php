@@ -35,11 +35,16 @@ class CarAttributeValue {
     protected $title;
     
     /**
-    * @ORM\ManyToOne(targetEntity="Application\Entity\CarAttributeType", mappedBy="carAttributeValues")
+    * @ORM\ManyToOne(targetEntity="Application\Entity\CarAttributeType", inversedBy="carAttributeValues")
     * @ORM\JoinColumn(name="car_attribute_type_id", referencedColumnName="id")
      */
     protected $carAttributeType;
 
+    /**
+    * @ORM\ManyToOne(targetEntity="Application\Entity\Car", inversedBy="carAttributeValues")
+    * @ORM\JoinColumn(name="car_id", referencedColumnName="id")
+     */
+    protected $car;
     
     public function getId() 
     {
@@ -74,6 +79,21 @@ class CarAttributeValue {
     {
         $this->carAttributeType = $carAttributeType;
         $carAttributeType->addCarAttributeValue($this);
+    }
+
+    /*
+     * Возвращает car.
+     * @return array
+     */    
+    public function getCar() 
+    {
+        return $this->car;
+    }
+    
+    public function setCar($car)
+    {
+        $this->car = $car;
+        $car->addCarAttributeValue($this);
     }
 
 }
