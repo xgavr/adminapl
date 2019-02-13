@@ -9,11 +9,12 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+    use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Make
  * @ORM\Entity(repositoryClass="\Application\Repository\CarRepository")
- * @ORM\Table(name="model")
+ * @ORM\Table(name="car")
  * @author Daddy
  */
 

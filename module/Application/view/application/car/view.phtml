@@ -1,20 +1,22 @@
 <?php
-$this->headTitle($make->getName());
+$this->headTitle($car->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Машины'=>$this->url('make'),
-            $make->getName()=>$this->url('make', ['action'=>'view', 'id'=>$make->getId()])
+            $car->getModel()->getMake()->getName() => $this->url('make', ['action' => 'view', 'id' => $car->getModel()->getMake()->getId()]),
+            $car->getModel()->getName() => $this->url('make', ['action' => 'view-model', 'id' => $car->getModel()->getId()]),
+            $car->getName()=>$this->url('car', ['action'=>'view', 'id'=>$car->getId()])
             ]);
 
 ?>
 
 <h1>
-    <?= $make->getName();?>
+    <?= $car->getName();?>
     <sup>
-        <?= $make->getTdId();?>
+        <?= $car->getTdId();?>
     </sup>
 </h1>
 
@@ -25,36 +27,25 @@ $this->pageBreadcrumbs()->setItems([
             <tr>
                 <td colspan="3">            
                     <?php if ($prev):?>
-                        <a href="/make/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
+                        <a href="/car/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
                     <?php endif;?>            
                 </td>
                 <td colspan="3" align="right">
                     <?php if ($next):?>
-                        <a href="/make/view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
+                        <a href="/car/view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
                     <?php endif;?>                            
                 </td>
             </tr>
-            <?php foreach($make->getModels() as $model):?>
+            <?php foreach($car->getCarAtributeValues() as $carAttributeValue):?>
             <tr>
                 <td>
-                    <?= $model->getId()?>
+                    <?= $carAttributeValue->getCarAtributeType()->getCarAtributeGroup()->getName()?>
                 </td>
                 <td>
-                    <?= $model->getTdId()?>
+                    <?= $carAttributeValue->getCarAtributeType()->getTitle()?>
                 </td>
-                <td>
-                    <?= $model->getAplId()?>
-                </td>
-                <td>
-                    <a href="/make/view-model/<?= $model->getId()?>">
-                        <?= $model->getName()?>
-                    </a>   
-                </td>
-                <td>
-                    <?= $model->getInterval()?>
-                </td>
-                <td>
-                    
+                <td colspan="4">
+                    <?= $carAttributeValue->getValue()?>
                 </td>
             </tr>
             <?php endforeach;?>
@@ -70,22 +61,11 @@ $this->pageBreadcrumbs()->setItems([
                     <div class="panel-body">
                         <div class="pull-left">
                             AplId: 
-                                <?= $make->getAplId()?>
+                                <?= $car->getAplId()?>
                         </div>
                         <div class="pull-right">
-                            <button value="/apl/make-apl-id/<?= $make->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                            <button value="/apl/car-apl-id/<?= $car->getId()?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Обновить АПЛ Ид">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            partsapi
-                        </div>
-                        <div class="pull-right">
-                            <button value="/make/fill-models/<?= $make->getId();?>" class="btn btn-info btn-xs refresh-table-button"
-                                    title="Заполнить модели">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>

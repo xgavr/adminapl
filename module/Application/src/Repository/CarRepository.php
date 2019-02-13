@@ -11,6 +11,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Make;
 use Application\Entity\Model;
+use Application\Entity\Car;
 
 /**
  * Description of CarRepository
@@ -46,9 +47,9 @@ class CarRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('m')
-            ->from(Model::class, 'm')
-            ->where('m.make = ?0')
-            ->setParameter('0', $make->getId())    
+            ->from(Car::class, 'm')
+            ->where('m.model = ?0')
+            ->setParameter('0', $model->getId())    
                 ;
         
         if (is_array($params)){
@@ -58,15 +59,16 @@ class CarRepository extends EntityRepository
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->andWhere('m.name > ?1')
+                $queryBuilder->andWhere('m.tdId > ?1')
                     ->setParameter('1', $params['next1'])
+                    ->orderBy('m.tdId')
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->andWhere('m.name < ?2')
+                $queryBuilder->andWhere('m.tdId < ?2')
                     ->setParameter('2', $params['prev1'])
-                    ->orderBy('m.name', 'DESC')
+                    ->orderBy('m.tdId', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }

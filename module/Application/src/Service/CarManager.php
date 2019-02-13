@@ -26,10 +26,17 @@ class CarManager
      */
     private $entityManager;
     
+    /**
+     * External manager.
+     * @var Application\Entity\ExternalManager
+     */
+    private $externalManager;
+    
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $externalManager)
     {
         $this->entityManager = $entityManager;
+        $this->externalManager = $externalManager;
     }
     
     /**
@@ -63,7 +70,7 @@ class CarManager
      */
     public function addCarAttributeType($carAttributeGroup, $data)
     {
-        $carAttributeType = $this->entityManager->getRepository(CarAttributeGroup::class)
+        $carAttributeType = $this->entityManager->getRepository(CarAttributeType::class)
                 ->findOneBy(['carAttributeGroup' => $carAttributeGroup->getId(), 'name' => $data['name']]);
         
         if ($carAttributeType == null){
@@ -88,11 +95,14 @@ class CarManager
             $car = new Car();
             $car->setAplId(0);
             $car->setName($data['name']);
+            $car->setFullName('');
             $car->setStatus(Car::STATUS_ACTIVE);
             $car->setTdId($data['tdId']);
             $car->setCommerc(Car::COMMERC_NO);
             $car->setMoto(Car::MOTO_NO);
-            $car->setPassenger(Car::PASSENGER_NO);            
+            $car->setPassenger(Car::PASSENGER_NO); 
+            
+            $car->setModel($model);
 
             $this->entityManager->persist($car);
             $this->entityManager->flush();
@@ -117,4 +127,73 @@ class CarManager
         $this->entityManager->persist($carAttributeValue);
         $this->entityManager->flush();
     }
+    
+    
+    /**
+     * Заполнить модели машины из массива
+     * 
+     * @param Application\Entity\Model $model
+     * @param array $data
+     * @param array $group
+     */
+    private function fillCarFromArray($model, $data, $group)
+    {
+        $carTdId = null;
+        foreach ($data as $row){
+            $car = $this->addCar($model, [
+                'tdId' => $row['id'],
+                'aplId' => 0,
+                'name' => $row['name'],
+                'fullName' => '',
+            ], $group);
+
+            if ($carTdId != $row['id']){
+                foreach ($car->getCarAtributeValues() as $carAttributeValue){
+                    $this->entityManager->remove($carAttributeValue);
+                }                
+                $carTdId = $row['id'];
+            }
+            
+            $carAttributeGroup = $this->addCarAttributeGroup([
+                'name' => $row['attributegroup'],
+            ]);
+
+            $carAttributeType = $this->addCarAttributeType($carAttributeGroup, [
+                'name' => $row['attributetype'],
+                'title' => $row['displaytitle'],
+            ]);
+            
+            $this->addAttributeValue($car, $carAttributeType, 
+                    [
+                        'value' => $row['displayvalue'],
+                    ]);
+        }
+        
+        return $car;
+    }
+
+    /**
+     * Заполнить машины
+     * 
+     * @param Application\Entity\Model $model 
+     * @return null
+     */
+    public function fillCars($model)
+    {
+        $data1 = $this->externalManager->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'passenger']);
+        if (is_array($data1)){
+            $this->fillCarFromArray($model, $data1,['passenger' => Car::PASSENGER_YES]);
+        }    
+        $data2 = $this->externalManager->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'commercial']);
+        if (is_array($data2)){
+            $this->fillCarFromArray($model, $data2,['commerc' => Car::COMMERC_YES]);
+        }    
+        $data3 = $this->externalManager->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'moto']);
+        if (is_array($data3)){
+            $this->fillCarFromArray($model, $data3,['moto' => Car::MOTO_YES]);
+        }    
+        return;
+    }
+    
+    
 }

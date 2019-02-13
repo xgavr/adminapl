@@ -144,13 +144,30 @@ class PartsApiManager
      * commercial - грузовые и коммерческие, 
      * moto - мототехника
      * 
-     * @param integer $make
+     * @param integer $makeId
      * @param string $group
      * @return array|Esception
      */
     public function getModels($makeId, $group)
     {
         return $this->getAction('getModels', ['make' => $makeId, 'group' => $group]);
+    }
+
+    /**
+     * КАТАЛОГ: 
+     * Список моделей выбранного производителя: 
+     * passenger - легковые, 
+     * commercial - грузовые и коммерческие, 
+     * moto - мототехника
+     * 
+     * @param integer $makeId
+     * @param integer $modelId
+     * @param string $group
+     * @return array|Esception
+     */
+    public function getCars($makeId, $modelId, $group)
+    {
+        return $this->getAction('getCars', ['make' => $makeId, 'model' => $modelId, 'group' => $group]);
     }
 
 }

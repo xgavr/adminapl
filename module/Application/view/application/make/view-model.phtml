@@ -6,6 +6,7 @@ $this->mainMenu()->setActiveItemId('rb');
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Машины'=>$this->url('make'),
+            $model->getMake()->getName() => $this->url('make', ['action' => 'view', 'id' => $model->getMake()->getId()]),
             $model->getMake()->getName().' '.$model->getName()=>$this->url('make', ['action'=>'view-model', 'id'=>$model->getId()])
             ]);
 
@@ -17,7 +18,9 @@ $this->pageBreadcrumbs()->setItems([
         <?= $model->getTdId();?>
     </sup>
 </h1>
-
+<small>
+    <?= $model->getInterval()?>
+</small>
 <div class="row">
     <div class="col-md-9">
 
@@ -34,6 +37,33 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endif;?>                            
                 </td>
             </tr>
+            <?php foreach($model->getCars() as $car):?>
+                <tr>
+                    <td>
+                        <?= $car->getId()?>
+                    </td>
+                    <td>
+                        <?= $car->getTdId()?>
+                    </td>
+                    <td>
+                        <?= $car->getAplId()?>
+                    </td>
+                    <td colspan="3">
+                        <a href="/car/view/<?= $car->getId()?>">
+                            <?= $car->getName()?>
+                        </a>   
+                    </td>
+                </tr>    
+                <tr>
+                    <td colspan="6">
+                        <small>
+                           <?php foreach ($car->getCarAtributeValues() as $carAttributeValue):?>
+                            <span><?= $carAttributeValue->getValue(); ?></span>
+                            <?php endforeach;?>
+                        </small>
+                    </td>                    
+                </tr>
+            <?php endforeach;?>    
         </table>
     </div>
     <div class="col-md-3" id="side-nav" >
@@ -57,10 +87,10 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            partsapi
+                            Модификации
                         </div>
                         <div class="pull-right">
-                            <button value="/make/fill-models/<?= $model->getId();?>" class="btn btn-info btn-xs refresh-table-button"
+                            <button value="/car/fill-cars/<?= $model->getId();?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Заполнить модификации">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             

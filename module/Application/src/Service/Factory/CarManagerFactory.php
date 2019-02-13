@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\CarManager;
+use Application\Service\ExternalManager;
 
 /**
  * Description of CarManagerFactory
@@ -24,8 +25,9 @@ class CarManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $externalManager = $container->get(ExternalManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new CarManager($entityManager);
+        return new CarManager($entityManager, $externalManager);
     }
 }

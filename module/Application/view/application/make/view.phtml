@@ -81,11 +81,22 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            partsapi
+                            Модели
                         </div>
                         <div class="pull-right">
                             <button value="/make/fill-models/<?= $make->getId();?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Заполнить модели">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Модификации
+                        </div>
+                        <div class="pull-right">
+                            <button value="/car/fill-make-cars/<?= $make->getId();?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Заполнить модификации">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>

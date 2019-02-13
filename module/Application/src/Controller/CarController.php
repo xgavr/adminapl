@@ -12,13 +12,13 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Make;
 use Application\Entity\Model;
-use Application\Form\MakeForm;
+use Application\Entity\Car;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 
-class MakeController extends AbstractActionController
+class CarController extends AbstractActionController
 {
     
     /**
@@ -72,93 +72,66 @@ class MakeController extends AbstractActionController
         ]);          
     }    
     
-    public function makeFormAction()
-    {
-        $makeId = (int)$this->params()->fromRoute('id', -1);
-        
-        if ($makeId > 0) {
-            $make = $this->entityManager->getRepository(Make::class)
-                    ->findOneById($makeId);
-            if ($make == null) {
-                $this->getResponse()->setStatusCode(404);
-                return;                        
-            }        
-        }
-             
-        $form = new MakeForm($this->entityManager);
-
-        if ($this->getRequest()->isPost()) {
-            
-            $data = $this->params()->fromPost();
-            $form->setData($data);
-            if ($form->isValid()) {
-                
-                $this->makeManager->addMake($data);
-                
-                return new JsonModel(
-                   ['ok']
-                );           
-            } else {
-            }
-        } else {
-            if ($make){
-                $data = [
-                    'fullName' => $make->getFullName(),  
-                ];
-                $form->setData($data);
-            }    
-        }        
-        
-        $this->layout()->setTemplate('layout/terminal');
-        // Render the view template.
-        return new ViewModel([
-            'form' => $form,
-            'make' => $make,
-        ]);                
-    }
-    
-    public function fillMakesAction()
-    {
-        $this->makeManager->fillMakes();
-
-        return new JsonModel([
-            'result' => 'ok',
-        ]);                  
-    }
-    
     public function viewAction() 
     {       
-        $makeId = (int)$this->params()->fromRoute('id', -1);
+        $carId = (int)$this->params()->fromRoute('id', -1);
         
         // Validate input parameter
-        if ($makeId<0) {
+        if ($carId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
-        $make = $this->entityManager->getRepository(Make::class)
-                ->findOneById($makeId);
+        $car = $this->entityManager->getRepository(Car::class)
+                ->findOneById($carId);
         
-        if ($make == null) {
+        if ($car == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $prevQuery = $this->entityManager->getRepository(Make::class)
-                        ->findAllMake(['prev1' => $make->getName()]);
-        $nextQuery = $this->entityManager->getRepository(Make::class)
-                        ->findAllMake(['next1' => $make->getName()]);        
+        $prevQuery = $this->entityManager->getRepository(Car::class)
+                        ->findAllCar($car->getModel(), ['prev1' => $car->getTdId()]);
+        $nextQuery = $this->entityManager->getRepository(Car::class)
+                        ->findAllCar($car->getModel(), ['next1' => $car->getTdId()]);        
 
         // Render the view template.
         return new ViewModel([
-            'make' => $make,
+            'car' => $car,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
         ]);
     }      
     
-    public function fillModelsAction()
+    public function fillCarsAction()
     {
+        $modelId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($modelId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $model = $this->entityManager->getRepository(Model::class)
+                ->findOneById($modelId);
+        
+        if ($model == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->carManager->fillCars($model);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+    
+    public function fillMakeCarsAction()
+    {
+        set_time_limit(1800);
+        
         $makeId = (int)$this->params()->fromRoute('id', -1);
         
         // Validate input parameter
@@ -175,7 +148,9 @@ class MakeController extends AbstractActionController
             return;                        
         }        
 
-        $this->makeManager->fillModels($make);
+        foreach ($make->getModels() as $model){
+            $this->carManager->fillCars($model);
+        }    
 
         return new JsonModel([
             'result' => 'ok-reload',

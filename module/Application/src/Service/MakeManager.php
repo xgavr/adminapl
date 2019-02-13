@@ -205,11 +205,11 @@ class MakeManager
     public function fillModels($make)
     {
         $data1 = $this->externalManager->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'passenger']);
-        $this->fillModelFromArray($make, $data1,['passenger' => Make::PASSENGER_YES]);
+        $this->fillModelFromArray($make, $data1,['passenger' => Model::PASSENGER_YES]);
         $data2 = $this->externalManager->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'commercial']);
-        $this->fillModelFromArray($make, $data2,['commerc' => Make::COMMERC_YES]);
+        $this->fillModelFromArray($make, $data2,['commerc' => Model::COMMERC_YES]);
         $data3 = $this->externalManager->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'moto']);
-        $this->fillModelFromArray($make, $data3,['moto' => Make::MOTO_YES]);
+        $this->fillModelFromArray($make, $data3,['moto' => Model::MOTO_YES]);
         return;
     }
     

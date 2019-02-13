@@ -28,12 +28,7 @@ class CarAttributeValue {
      * @ORM\Column(name="value")   
      */
     protected $value;
-    
-    /**
-     * @ORM\Column(name="title")   
-     */
-    protected $title;
-    
+        
     /**
     * @ORM\ManyToOne(targetEntity="Application\Entity\CarAttributeType", inversedBy="carAttributeValues")
     * @ORM\JoinColumn(name="car_attribute_type_id", referencedColumnName="id")
