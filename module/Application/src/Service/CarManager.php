@@ -168,7 +168,7 @@ class CarManager
                     ]);
         }
         
-        return $car;
+        return;
     }
 
     /**
