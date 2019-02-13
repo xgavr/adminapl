@@ -35,6 +35,18 @@ class CarRepository extends EntityRepository
     }    
 
     /**
+     * Удаление атрибутов Car
+     * 
+     * @param Application\Entity\Car
+     * @return integer
+     */
+    public function deleteCarAttributeValue($car)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('car_attribute_value', ['car_id' => $car->getId()]);
+        return $deleted;
+    }    
+
+    /**
      * Запрос по машин по разным моделям
      * 
      * @param array $params
