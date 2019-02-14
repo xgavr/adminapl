@@ -15,8 +15,8 @@ final class Version20190214054212 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->createTable('post_log');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);
-        $table->addColumn('to', 'string', ['notnull' => true, 'length' => 128]);
-        $table->addColumn('from', 'string', ['notnull' => true, 'length' => 128]);
+        $table->addColumn('to_email', 'string', ['notnull' => true, 'length' => 128]);
+        $table->addColumn('from_email', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('subject', 'string', ['notnull' => false, 'length' => 256]);
         $table->addColumn('body', 'text', ['notnull' => false]);
         $table->addColumn('attachment', 'text', ['notnull' => false]);

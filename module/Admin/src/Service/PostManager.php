@@ -273,7 +273,7 @@ class PostManager {
         }
         
         $fileNames = [];
-        if (is_array($data['attachment'])){
+        if (isset($data['attachment'])){
             foreach ($data['attachment'] as $attachment){
                 $fileNames[] = $attachment['filename'];
             }
