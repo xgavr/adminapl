@@ -148,9 +148,8 @@ class CarManager
             ], $group);
 
             if ($carTdId != $row['id']){
-                foreach ($car->getCarAtributeValues() as $carAttributeValue){
-                    $this->entityManager->remove($carAttributeValue);
-                }                
+                $this->entityManager->getRepository(Car::class)
+                        ->deleteCarAttributeValue($car);
                 $carTdId = $row['id'];
             }
             
@@ -169,7 +168,7 @@ class CarManager
                     ]);
         }
         
-        return $car;
+        return;
     }
 
     /**
