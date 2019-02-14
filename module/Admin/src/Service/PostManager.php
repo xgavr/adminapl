@@ -21,6 +21,7 @@ use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use Admin\Filter\HtmlFilter;
 use Admin\Entity\PostLog;
+use Application\Filter\UnicodeDecodeFilter;
 
 /**
  * Description of PostManager
@@ -261,9 +262,10 @@ class PostManager {
         $postLog = new PostLog();
         $postLog->setTo($data['to']);
         $postLog->setFrom($data['from']);
-        $postLog->setSubject($data['subject']);
+        $postLog->setSubject(html_entity_decode($data['subject']));
         $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
-        $postLog->setBody(implode(self::CONTENT_SEPARATOR, $data['content']));
+        $postLog->setBody(html_entity_decode(implode(self::CONTENT_SEPARATOR, ($data['content']))));
+        $postLog->setStatus(PostLog::STATUS_ACTIVE);
         
         $fileNames = [];
         if (is_array($data['attachment'])){
@@ -365,9 +367,9 @@ class PostManager {
 //        return mb_decode_mimeheader($filename);
     }    
     
-    /*
+    /**
      * Чтение почтового ящика
-     * @array $params
+     * @param array $params
      * server str {imap.yandex.ru:993/imap/ssl}
      * -foders array ['INBOX', Спам]
      * -trash str - папка "Удаленные"
@@ -424,8 +426,10 @@ class PostManager {
 
 //                            var_dump($structure); exit;
 
+                            $result[$messageNumber]['to'] = $params['user'];
+                            
                             if (isset($headers[0])){
-                                $result[$messageNumber]['from'] = $headers[0]->from;
+                                $result[$messageNumber]['from'] = iconv_mime_decode($headers[0]->from);
                                 $result[$messageNumber]['date'] = $headers[0]->date;
                                 if (isset($headers[0]->subject)){
                                     $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);                                    
@@ -541,6 +545,8 @@ class PostManager {
 
                                 }
 
+                                $this->addMessageToLog($result[$messageNumber]);
+                            
                                 if (!$params['leave_message']){
                                     $move = imap_mail_move($connection, (string) $messageNumber, mb_convert_encoding($params['trash'], 'UTF7-IMAP', 'UTF-8'));
                                     if (!$move){
@@ -549,8 +555,6 @@ class PostManager {
                                 }                
                             }    
 
-                            $this->addMessageToLog($result[$messageNumber]);
-                            
                             $messageNumber++;
 
                             if ($messageNumber > 5) break;

@@ -10,6 +10,7 @@ namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * Description of PostLog
  * @ORM\Entity(repositoryClass="\Admin\Repository\PostLogRepository")
