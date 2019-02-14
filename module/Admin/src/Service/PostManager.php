@@ -20,6 +20,7 @@ use RecursiveIteratorIterator;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use Admin\Filter\HtmlFilter;
+use Admin\Entity\PostLog;
 
 /**
  * Description of PostManager
@@ -30,6 +31,8 @@ class PostManager {
     
     const LOG_FOLDER = './data/log/'; //папка логов
     const LOG_FILE = './data/log/mail.log'; //лог 
+    
+    const CONTENT_SEPARATOR = '--==--';
     
     /**
      * Doctrine entity manager.
@@ -248,6 +251,33 @@ class PostManager {
         return $result;
     }    
     
+    /**
+     * Добавление сообщения в лог
+     * 
+     * @param array $data
+     */
+    private function addMessageToLog($data)
+    {
+        $postLog = new PostLog();
+        $postLog->setTo($data['to']);
+        $postLog->setFrom($data['from']);
+        $postLog->setSubject($data['subject']);
+        $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
+        $postLog->setBody(implode(self::CONTENT_SEPARATOR, $data['content']));
+        
+        $fileNames = [];
+        if (is_array($data['attachment'])){
+            foreach ($data['attachment'] as $attachment){
+                $fileNames[] = $attachment['filename'];
+            }
+        }
+        $postLog->setAttachment(implode(self::CONTENT_SEPARATOR, $fileNames));
+        
+        $this->entityManager->persist($postLog);
+        $this->entityManager->flush($postLog);
+    }
+
+
     /*
      * read Imap
      */
@@ -519,6 +549,8 @@ class PostManager {
                                 }                
                             }    
 
+                            $this->addMessageToLog($result[$messageNumber]);
+                            
                             $messageNumber++;
 
                             if ($messageNumber > 5) break;
