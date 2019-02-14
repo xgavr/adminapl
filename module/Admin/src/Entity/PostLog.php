@@ -30,12 +30,12 @@ class PostLog {
     protected $id;
     
     /**
-     * @ORM\Column(name="to")   
+     * @ORM\Column(name="to_email")   
      */
     protected $to;
     
     /**
-     * @ORM\Column(name="from")   
+     * @ORM\Column(name="from_email")   
      */
     protected $from;
     
@@ -58,6 +58,11 @@ class PostLog {
      * @ORM\Column(name="attachment")   
      */
     protected $attachment;
+
+    /**
+     * @ORM\Column(name="status")   
+     */
+    protected $status;
 
     public function __construct() {
     }

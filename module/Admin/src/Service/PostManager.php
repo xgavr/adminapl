@@ -21,7 +21,6 @@ use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use Admin\Filter\HtmlFilter;
 use Admin\Entity\PostLog;
-use Application\Filter\UnicodeDecodeFilter;
 
 /**
  * Description of PostManager
@@ -259,13 +258,19 @@ class PostManager {
      */
     private function addMessageToLog($data)
     {
+        $filter = new HtmlFilter();
+        
         $postLog = new PostLog();
         $postLog->setTo($data['to']);
         $postLog->setFrom($data['from']);
-        $postLog->setSubject(html_entity_decode($data['subject']));
+        $postLog->setSubject($data['subject']);
         $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
-        $postLog->setBody(html_entity_decode(implode(self::CONTENT_SEPARATOR, ($data['content']))));
         $postLog->setStatus(PostLog::STATUS_ACTIVE);
+        
+        foreach ($data['content'] as $content){
+            $postLog->setBody($filter->filter($content));
+            break;
+        }
         
         $fileNames = [];
         if (is_array($data['attachment'])){
