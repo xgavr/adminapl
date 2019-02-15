@@ -341,7 +341,11 @@ class AutodbManager
             }
         }
         
-        return $carIds;
+        if (count($carIds)){
+            return $this->getVehicleByIds3($carIds);
+        }
+        
+        return;
         
     }
     
