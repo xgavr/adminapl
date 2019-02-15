@@ -307,7 +307,7 @@ class AutodbManager
     public function getLinked($good)
     {
         $article = $this->getBestArticle($good);
-        
+        var_dump($article);
         if (is_array($article)){
             return $this->getArticleLinkedAllLinkingTarget3($article['articleId']);
         }
