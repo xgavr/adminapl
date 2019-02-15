@@ -262,14 +262,18 @@ class PostManager {
         $filter = new HtmlFilter();
         $emailFilter = new EmailFromStr();
         $fromEmail = $emailFilter->filter($data['from']);
-        var_dump($fromEmail); exit;
+//        var_dump($fromEmail); exit;
 
         $postLog = new PostLog();
         $postLog->setTo($data['to']);
         $postLog->setFrom($fromEmail);
-        $postLog->setSubject($data['subject']);
+       
         $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
         $postLog->setStatus(PostLog::STATUS_ACTIVE);
+        
+        if (isset($data['subject'])){
+             $postLog->setSubject($data['subject']);
+        }
         
         foreach ($data['content'] as $content){
             $postLog->setBody($filter->filter($content));

@@ -16,11 +16,13 @@ use Zend\Filter\AbstractFilter;
  * @author Daddy
  */
 class EmailFromStr extends AbstractFilter
-{
+{    
     
     // Доступные опции фильтра.
     protected $options = [
     ];    
+    
+    protected $emails = [];
 
     // Конструктор.
     public function __construct($options = null) 
@@ -34,17 +36,20 @@ class EmailFromStr extends AbstractFilter
     
     public function filter($value)
     {
-        $emails = [];
+        
+        $this->emails = [];
+        
         $pattern = "/[-a-z0-9!#$%&'*_`{|}~]+[-a-z0-9!#$%&'*_`{|}~\.=?]*@[a-zA-Z0-9_-]+[a-zA-Z0-9\._-]+/i";
         preg_match_all($pattern, $value, $ar);
         $r = array_unique(array_map(function ($i) { return $i; }, $ar));
         array_walk_recursive($r, function ($item, $key) {
             if ($item){
-                $emails[] = $item;
+                $this->emails[] = $item;
             }        
         });
-        if (count($emails)){
-            return $emails[0];
+        
+        if (count($this->emails)){
+            return $this->emails[0];
         }    
         
         return $value;
