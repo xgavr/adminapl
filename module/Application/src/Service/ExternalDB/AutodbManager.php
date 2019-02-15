@@ -299,6 +299,29 @@ class AutodbManager
     }
     
     /**
+     * Описание машин
+     * 
+     * @param array $carIds
+     * @return array
+     */
+    public function getVehicleByIds3($carIds)
+    {
+        $params = [
+            'articleCountry' => 'RU',            
+            'lang' => 'RU',
+            'countriesCarSelection' => 'RU',
+            'country' => 'RU',
+            'carIds' => [
+                'array' => $carIds
+            ]
+         ];
+
+        $result = $this->getAction('getVehicleByIds3', $params);
+
+        return $result;        
+    }
+    
+    /**
      * Получить машины, связанные с товаром
      * 
      * @param Application\Entity\Goods $good
@@ -308,10 +331,17 @@ class AutodbManager
     {
         $article = $this->getBestArticle($good);
         if (is_array($article)){
-            return $this->getArticleLinkedAllLinkingTarget3($article['articleId']);
+            $cars = $this->getArticleLinkedAllLinkingTarget3($article['articleId']);
+            $carIds = [];
+            foreach ($cars['data']['array'] as $links){
+                foreach ($links['articleLinkages']['array'] as $carLinks){
+                    $carIds[] = $carLinks['linkingTargetId'];
+                }
+                
+            }
         }
         
-        return;
+        return $carIds;
         
     }
     
