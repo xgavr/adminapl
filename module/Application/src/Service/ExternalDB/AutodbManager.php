@@ -294,7 +294,6 @@ class AutodbManager
          ];
 
         $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
-        var_dump($result);
 
         return $result;
     }
