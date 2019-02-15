@@ -10,6 +10,7 @@ namespace Application\Service\ExternalDB;
 use Zend\Http\Client;
 use Zend\Json\Decoder;
 use Zend\Json\Encoder;
+use Application\Filter\ProducerName;
 
 /**
  * Description of AutodbManager
@@ -207,11 +208,12 @@ class AutodbManager
      */
     public function getBestArticle($good)
     {
+        $filter = new ProducerName();
         $articles = $this->getArticleDirectSearchAllNumbersWithState($good);
         if ($articles['data']){
             foreach ($articles['data']['array'] as $row){
                 foreach($good->getProducer()->getUnknownProducer() as $unknownProducer){
-                    if (mb_strtoupper($row['brandName']) == mb_strtoupper($unknownProducer->getName())){
+                    if ($filter->filter($row['brandName']) == $filter->filter($unknownProducer->getName())){
                         return $row;
                     }
                 }        
