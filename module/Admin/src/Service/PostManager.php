@@ -20,6 +20,7 @@ use RecursiveIteratorIterator;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use Admin\Filter\HtmlFilter;
+use Admin\Filter\EmailFromStr;
 use Admin\Entity\PostLog;
 
 /**
@@ -259,10 +260,13 @@ class PostManager {
     private function addMessageToLog($data)
     {
         $filter = new HtmlFilter();
-        
+        $emailFilter = new EmailFromStr();
+        $fromEmail = $emailFilter->filter($data['from']);
+        var_dump($fromEmail); exit;
+
         $postLog = new PostLog();
         $postLog->setTo($data['to']);
-        $postLog->setFrom($data['from']);
+        $postLog->setFrom($fromEmail);
         $postLog->setSubject($data['subject']);
         $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
         $postLog->setStatus(PostLog::STATUS_ACTIVE);
