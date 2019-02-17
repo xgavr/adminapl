@@ -311,9 +311,7 @@ class AutodbManager
             'lang' => 'RU',
             'countriesCarSelection' => 'RU',
             'country' => 'RU',
-            'carIds' => [
-                'array' => $carIds
-            ]
+            'carIds' => Encoder::encode(['array' => $carIds]),
          ];
 
         $result = $this->getAction('getVehicleByIds3', $params);
