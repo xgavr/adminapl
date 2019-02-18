@@ -163,6 +163,40 @@ $this->pageBreadcrumbs()->setItems([
                 <?php endforeach;?>            
             <?php endforeach;?>
         </div>
+        
+        <h5>
+            Применимость
+        </h5>
+        <table  class="table table-striped">
+            <?php foreach($goods->getCars() as $car):?>
+                <tr>
+                    <td>
+                        <?= $car->getId()?>
+                    </td>
+                    <td>
+                        <?= $car->getTdId()?>
+                    </td>
+                    <td>
+                        <?= $car->getAplId()?>
+                    </td>
+                    <td colspan="3">
+                        <a href="/car/view/<?= $car->getId()?>">
+                            <?= $car->getName()?>
+                        </a>   
+                    </td>
+                </tr>    
+                <tr>
+                    <td colspan="6">
+                        <small>
+                           <?php foreach ($car->getCarAtributeValues() as $carAttributeValue):?>
+                            <span><?= $carAttributeValue->getValue(); ?></span>
+                            <?php endforeach;?>
+                        </small>
+                    </td>                    
+                </tr>
+            <?php endforeach;?>    
+            
+        </table>
     </div>
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
