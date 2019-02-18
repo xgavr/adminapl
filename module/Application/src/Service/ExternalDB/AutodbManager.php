@@ -223,19 +223,17 @@ class AutodbManager
         return;
     }
     
+    /**
+     * Получить артикул текдока
+     * 
+     * @param Application\Entity\Goods $good
+     * @return integer|null
+     */
     public function getBestArticleId($good)
     {
         $tdData = $this->getBestArticle($good);
-        if (is_array($tdData)){
-            if (isset($tdData['data'])){
-                if (isset($tdData['data']['array'])){
-                    foreach ($tdData['data']['array'] as $row){
-                        if (is_numeric($row['articleId'])){
-                            return $row['articleId'];
-                        }
-                    }
-                }
-            }
+        if (is_numeric($tdData['articleId'])){
+            return $tdData['articleId'];
         }
         
         return;
