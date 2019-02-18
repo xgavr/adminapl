@@ -298,6 +298,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'apl-exchange-settings'])                    
                 ];
 
+                $settingsDropDownItems[] = [
+                    'id' => 'tdExchange',
+                    'label' => 'Настройи обмена по апи текдока',
+                    'link'  => $url('admin', ['action' => 'td-exchange-settings'])                    
+                ];
+
                 if (count($settingsDropDownItems)!=0) {
                     $items[] = [
                         'id' => 'settings',

@@ -11,6 +11,7 @@ use Admin\Form\SettingsForm;
 use Admin\Form\PriceSettingsForm;
 use Admin\Form\BankSettingsForm;
 use Admin\Form\AplExchangeForm;
+use Admin\Form\TdExchangeForm;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -396,6 +397,92 @@ class IndexController extends AbstractActionController
                 
                 // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
                 $this->adminManager->setAplExchangeSettings($data);                
+            }
+        } else {
+            if ($settings){
+                $form->setData($settings);
+            }    
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
+    /**
+     * Управление настройками обмена по апи текдока
+     * 
+     * @return ViewModel
+     */
+    public function tdExchangeSettingsAction()
+    {
+        $form = new TdExchangeForm();
+    
+        $settings = $this->adminManager->getTdExchangeSettings();
+        
+        if ($settings){
+            $form->setData($settings);
+        }    
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setTdExchangeSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+                // Перенаправляем пользователя на страницу "goods".
+                return $this->redirect()->toRoute('admin', ['action' => 'td-exchange-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        }
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
+    /**
+     * Управление настройками обмена по апи текдока
+     */    
+    public function tdExchangeSettingsFormAction()
+    {
+        $form = new TdExchangeForm();
+    
+        $settings = $this->adminManager->getTdExchangeSettings();
+        
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
+                $this->adminManager->setTdExchangeSettings($data);                
             }
         } else {
             if ($settings){

@@ -276,10 +276,11 @@ class AdminManager {
         $config->td_exchange->update_image = $data['update_image']; //обновлять картинки
         $config->td_exchange->update_description = $data['update_description']; //обновлять описание
         $config->td_exchange->update_group = $data['update_group']; //обновлять группы
+        $config->td_exchange->update_oe = $data['update_oe']; //обновлять номера
         
         $writer = new PhpArray();
         
-        $writer->toFile(self::APL_EXCHANGE_SETTINGS_FILE, $config);
+        $writer->toFile(self::TD_EXCHANGE_SETTINGS_FILE, $config);
     }
     
 }

@@ -1,0 +1,97 @@
+<?php
+$this->headTitle('Настройки обмена по апи текдока');
+
+$this->mainMenu()->setActiveItemId('');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Настройки обмена по апи текдока'=>$this->url('settings', ['action' => 'td-exchange-settings']),
+            ]);
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<?php
+$form = $this->form;
+
+$form->get('update_car')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('update_image')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('update_description')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('update_group')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('update_oe')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Настройки обмена по апи текдока</h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<?= $this->form()->openTag($form); ?>
+<div class="row">
+    <div class="col-md-5">
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('update_car')); ?>
+            <?= $this->formElement($form->get('update_car')); ?>
+            <?= $this->formElementErrors($form->get('update_car')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('update_image')); ?>
+            <?= $this->formElement($form->get('update_image')); ?>
+            <?= $this->formElementErrors($form->get('update_image')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('update_description')); ?>
+            <?= $this->formElement($form->get('update_description')); ?>
+            <?= $this->formElementErrors($form->get('update_description')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('update_group')); ?>
+            <?= $this->formElement($form->get('update_group')); ?>
+            <?= $this->formElementErrors($form->get('update_group')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('update_oe')); ?>
+            <?= $this->formElement($form->get('update_oe')); ?>
+            <?= $this->formElementErrors($form->get('update_oe')); ?>                  
+        </div>
+                        
+    </div>   
+    <div class="col-md-5">
+    </div>
+    <div class="col-md-2" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active">
+                <?= $this->formElement($form->get('submit')); ?>
+            </li>
+        </ul>
+    </div>    
+    
+</div>   
+
+<?= $this->form()->closeTag(); ?>
