@@ -26,6 +26,18 @@ class Goods {
     const AVAILABLE_TRUE    = 1; // Доступен.
     const AVAILABLE_FALSE   = 0; // Недоступен.
     
+    const CAR_UPDATED = 2; // машины обновлены
+    const CAR_FOR_UPDATE = 1; // машины не обновлялись
+    
+    const IMAGE_UPDATED = 2; // картинки обновлены
+    const IMAGE_FOR_UPDATE = 1; // картинки не обновлялись
+    
+    const DESCRIPTION_UPDATED = 2; // описания обновлены
+    const DESCRIPTION_FOR_UPDATE = 1; // описания не обновлялись
+
+    const GROUP_UPDATED = 2; // группы обновлены
+    const GROUP_FOR_UPDATE = 1; // группы не обновлялись
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -52,6 +64,24 @@ class Goods {
      * @ORM\Column(name="price")   
      */
     protected $price;
+    
+    /**
+     * @ORM\Column(name="status_car")   
+     */
+    protected $statusCar;
+    
+    /**
+     * @ORM\Column(name="status_image")   
+     */
+    protected $statusImage;
+    /**
+     * @ORM\Column(name="status_group")   
+     */
+    protected $statusGroup;
+    /**
+     * @ORM\Column(name="status_description")   
+     */
+    protected $statusDescription;
     
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
@@ -353,4 +383,45 @@ class Goods {
     {
         $this->cars->removeElement($car);
     }    
+    
+    public function getStatusCar()
+    {
+        $this->statusCar;
+    }
+    
+    public function setStatusCar($statusCar)
+    {
+        $this->statusCar = $statusCar;
+    }
+
+    public function getStatusImage()
+    {
+        $this->statusImage;
+    }
+    
+    public function setStatusImage($statusImage)
+    {
+        $this->statusImage = $statusImage;
+    }
+    
+    public function getStatusGroup()
+    {
+        $this->statusGroup;
+    }
+    
+    public function setStatusGroup($statusGroup)
+    {
+        $this->statusGroup = $statusGroup;
+    }
+    
+    public function getStatusDescription()
+    {
+        $this->statusDescription;
+    }
+    
+    public function setStatusDescription($statusDescription)
+    {
+        $this->statusDescription = $statusDescription;
+    }    
+    
 }
