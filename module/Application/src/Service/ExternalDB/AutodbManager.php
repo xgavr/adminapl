@@ -346,15 +346,25 @@ class AutodbManager
         $cars = $this->getArticleLinkedAllLinkingTarget3($tdId);
         $carIds = [];
         $i = 0;
-        foreach ($cars['data']['array'] as $links){
-            foreach ($links['articleLinkages']['array'] as $carLinks){
-                $carIds[$i][] = $carLinks['linkingTargetId'];
-                if (count($carIds[$i]) > 20){
-                    $i++;
+        if (isset($cars['data'])){
+            if (isset($cars['data']['array'])){
+                foreach ($cars['data']['array'] as $links){
+                    var_dump($links); exit;
+                    if (isset($links['articleLinkages'])){
+                        if (isset($links['articleLinkages']['array'])){
+                            foreach ($links['articleLinkages']['array'] as $carLinks){
+                                if (isset($carLinks['linkingTargetId'])){
+                                    $carIds[$i][] = $carLinks['linkingTargetId'];
+                                    if (count($carIds[$i]) > 20){
+                                        $i++;
+                                    }
+                                }    
+                            }
+                        }    
+                    }    
                 }
-            }
-
-        }
+            }    
+        }    
 
         if (count($carIds)){
             $result = [];
