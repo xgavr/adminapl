@@ -512,6 +512,7 @@ class ExternalManager
                     }
                 }
             }
-        }            
+        }  
+        return;
     }
 }
