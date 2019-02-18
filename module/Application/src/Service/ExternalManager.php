@@ -483,7 +483,6 @@ class ExternalManager
             }   
 
             if ($car){
-                var_dump($car->getId()); exit;
                 $this->entityManager->getRepository(Goods::class)
                         ->addGoodCar($good, $car);
             }    
