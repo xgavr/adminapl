@@ -97,13 +97,23 @@ class Goods {
     protected $tokenGroup;
     
     /**
+     * @ORM\ManyToMany(targetEntity="\Application\Entity\Car", inversedBy="goods")
+     * @ORM\JoinTable(name="good_car",
+     *      joinColumns={@ORM\JoinColumn(name="good_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="car_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $cars;
+    
+    /**
      * Конструктор.
      */
     public function __construct() 
     {
       $this->images = new ArrayCollection();   
       $this->articles = new ArrayCollection();      
-      $this->cart = new ArrayCollection();      
+      $this->cart = new ArrayCollection(); 
+      $this->cars = new ArrayCollection();
     }
     
   
@@ -326,5 +336,21 @@ class Goods {
         }    
     }     
 
+    // Возвращает машины для данного товара.
+    public function getCars() 
+    {
+        return $this->cars;
+    }      
     
+    // Добавляет новую машину к данному товару.
+    public function addCar($car) 
+    {
+        $this->cars[] = $car;        
+    }
+    
+    // Удаляет связь между этим товаром и заданной машиной.
+    public function removeCarAssociation($car) 
+    {
+        $this->cars->removeElement($car);
+    }    
 }

@@ -92,9 +92,15 @@ class Car {
     * @ORM\JoinColumn(name="id", referencedColumnName="car_id")
      */
     protected $carAttributeValues;    
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="\Application\Entity\Goods", mappedBy="cars")
+     */
+    protected $goods;    
 
     public function __construct() {
-       $this->carAttributeValues = new ArrayCollection();      
+       $this->carAttributeValues = new ArrayCollection();  
+       $this->goods = new ArrayCollection();
     }    
     
     public function getId() 
@@ -254,4 +260,16 @@ class Car {
     {
         $this->carAttributeValues[] = $carAttributeValue;
     }
+    
+    // Возвращает товары, связанные с данной машиной.
+    public function getGoods() 
+    {
+        return $this->goods;
+    }
+    
+    // Добавляет товар в коллекцию товаров, связанных с этой машиной.
+    public function addGood($good) 
+    {
+        $this->goods[] = $good;        
+    }     
 }

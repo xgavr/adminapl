@@ -222,6 +222,24 @@ class AutodbManager
         
         return;
     }
+    
+    public function getBestArticleId($good)
+    {
+        $tdData = $this->getBestArticle($good);
+        if (is_array($tdData)){
+            if (isset($tdData['data'])){
+                if (isset($tdData['data']['array'])){
+                    foreach ($tdData['data']['array'] as $row){
+                        if (is_numeric($row['articleId'])){
+                            return $row['articleId'];
+                        }
+                    }
+                }
+            }
+        }
+        
+        return;
+    }
 
     /**
      * Получить детальную информацию об артикуле
@@ -320,12 +338,37 @@ class AutodbManager
     }
     
     /**
+     * Получить машины, связанные с артикулом
+     * 
+     * @param integer $tdId
+     * @return array|null
+     */
+    public function getLinked($tdId)
+    {
+        $cars = $this->getArticleLinkedAllLinkingTarget3($tdId);
+        $carIds = [];
+        foreach ($cars['data']['array'] as $links){
+            foreach ($links['articleLinkages']['array'] as $carLinks){
+                $carIds[] = $carLinks['linkingTargetId'];
+            }
+
+        }
+        
+        if (count($carIds)){
+            return $this->getVehicleByIds3($carIds);
+        }
+        
+        return;
+        
+    }
+
+    /**
      * Получить машины, связанные с товаром
      * 
      * @param Application\Entity\Goods $good
      * @return array|null
      */
-    public function getLinked($good)
+    public function getGoodLinked($good)
     {
         $article = $this->getBestArticle($good);
         if (is_array($article)){

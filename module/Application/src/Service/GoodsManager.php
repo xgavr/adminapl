@@ -138,6 +138,10 @@ class GoodsManager
             return false;
         }
         
+        foreach ($good->getCars() as $car){
+            $good->removeCarAssociation($car);
+        }            
+        
         $this->entityManager->remove($good);
         
         $this->entityManager->flush($good);

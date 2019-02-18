@@ -259,4 +259,28 @@ class GoodsRepository extends EntityRepository
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
+    
+    /**
+     * Добавление машины к товару
+     * 
+     * @param Application\Entity\Goods $good
+     * @return integer
+     */
+    public function addGoodCar($good, $car)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('good_car', ['good_id' => $good->getId(), 'car_id' => $car->getId()]);
+        return $inserted;        
+    }
+
+    /**
+     * Удаления машин товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @return integer
+     */
+    public function removeGoodCars($good)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('good_car', ['good_id' => $good->getId()]);
+        return $deleted;        
+    }
 }
