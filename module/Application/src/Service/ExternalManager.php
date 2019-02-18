@@ -450,7 +450,6 @@ class ExternalManager
      */
     public function addCarToGood($good, $carData)
     {
-        var_dump($carData); exit;
         if (isset($carData['carId'])){
             $car = $this->entityManager->getRepository(Make::class)
                     ->findOneByTdId($carData['carId']);
@@ -484,6 +483,7 @@ class ExternalManager
             }   
 
             if ($car){
+                var_dump($car->getId()); exit;
                 $this->entityManager->getRepository(Goods::class)
                         ->addGoodCar($good, $car);
             }    
