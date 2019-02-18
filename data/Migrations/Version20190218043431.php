@@ -69,8 +69,8 @@ final class Version20190218043431 extends AbstractMigration
         $table->addColumn('car_id', 'integer', ['notnull'=>true]);
         $table->addIndex(['good_id'], 'good_id_indx');
         $table->addIndex(['car_id'], 'car_id_indx');
-        $table->addForeignKeyConstraint('good', ['good_id'], ['id'], ['onDelete' => 'CASCADE'], 'good_car_good_id_fk');
-        $table->addForeignKeyConstraint('car', ['car_id'], ['id'], ['onDelete' => 'CASCADE'], 'good_car_car_id_fk');
+        $table->addForeignKeyConstraint('good', ['good_id'], ['id'], [], 'good_id_good_car_good_id_fk');
+        $table->addForeignKeyConstraint('car', ['car_id'], ['id'], [], 'car_id_good_car_car_id_fk');
         $table->setPrimaryKey(['id']);
         $table->addOption('engine' , 'InnoDB');  
     }
