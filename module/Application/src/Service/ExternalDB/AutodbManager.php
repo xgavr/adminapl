@@ -349,7 +349,6 @@ class AutodbManager
         if (isset($cars['data'])){
             if (isset($cars['data']['array'])){
                 foreach ($cars['data']['array'] as $links){
-                    var_dump($links); exit;
                     if (isset($links['articleLinkages'])){
                         if (isset($links['articleLinkages']['array'])){
                             foreach ($links['articleLinkages']['array'] as $carLinks){
