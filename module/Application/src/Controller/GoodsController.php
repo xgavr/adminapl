@@ -494,7 +494,6 @@ class GoodsController extends AbstractActionController
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([
             'result' => 'ok-reload',
-            'message' => $data,
         ]);           
         
     }
