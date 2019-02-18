@@ -369,14 +369,15 @@ class AutodbManager
     public function getGoodLinked($good)
     {
         $article = $this->getBestArticle($good);
+        $carIds = [];
+        $i = 0;
         if (is_array($article)){
-            $cars = $this->getArticleLinkedAllLinkingTarget3($article['articleId']);
-            $carIds = [];
+            $cars = $this->getArticleLinkedAllLinkingTarget3($article['articleId']);           
             foreach ($cars['data']['array'] as $links){
-                foreach ($links['articleLinkages']['array'] as $carLinks){
-                    $carIds[] = $carLinks['linkingTargetId'];
-                    if (count($carIds) > 20){
-                        break;
+                foreach ($links['articleLinkages']['array'] as $carLinks){                    
+                    $carIds[$i][] = $carLinks['linkingTargetId'];
+                    if (count($carIds[$i]) > 20){
+                        $i++;
                     }
                 }
                 
@@ -385,7 +386,12 @@ class AutodbManager
         
 //        var_dump($carIds); exit;
         if (count($carIds)){
-            return $this->getVehicleByIds3($carIds);
+            $result = [];
+            foreach($carIds as $key => $value){
+                $result[$key] = $this->getVehicleByIds3($value);
+            } 
+            
+            return $result;
         }
         
         return;
