@@ -503,11 +503,11 @@ class ExternalManager
         $tdId = $this->autoDbManager->getBestArticleId($good);
         if (is_numeric($tdId)){
             $carsData = $this->autoDbManager->getLinked($tdId);
-            var_dump($carsData);
             if (is_array($carsData)){
                 if (isset($carsData['data'])){
                     if (isset($carsData['data']['array'])){
                         foreach ($carsData['data']['array'] as $carData){
+                            var_dump($carData);
                             $this->addCarToGood($good, $carData);
                         }
                     }
