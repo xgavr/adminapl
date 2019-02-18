@@ -22,6 +22,7 @@ class AdminManager {
     const PRICE_SETTINGS_FILE       = './data/settings/price_config.php'; // файл с настройками загрузки прайсов
     const BANK_SETTINGS_FILE       = './data/settings/bank_config.php'; // файл с настройками обмена с банком
     const APL_EXCHANGE_SETTINGS_FILE       = './data/settings/apl_exchange_config.php'; // файл с настройками обмена с банком
+    const TD_EXCHANGE_SETTINGS_FILE       = './data/settings/td_exchange_config.php'; // файл с настройками обмена по апи текдока
     
     /**
      * Doctrine entity manager.
@@ -229,6 +230,52 @@ class AdminManager {
         
         $config->apl_exchange->get_producer_id = $data['get_producer_id']; //получать id производителя
         $config->apl_exchange->get_good_id = $data['get_good_id']; //получать id товара
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::APL_EXCHANGE_SETTINGS_FILE, $config);
+    }
+    
+    /**
+     * Получить настройки обмена по апи баз тд
+     * @return array 
+     */
+    public function getTdExchangeSettings()
+    {
+        if (file_exists(self::TD_EXCHANGE_SETTINGS_FILE)){
+            $config = new Config(include self::TD_EXCHANGE_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->td_exchange = [];
+        }   
+        
+        return $config->td_exchange;
+    }
+    
+    /**
+     * Настройки обмена по апи данных из ТД
+     * @param array $data
+     */
+    public function setTdExchangeSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::TD_EXCHANGE_SETTINGS_FILE)){
+            $config = new Config(include self::TD_EXCHANGE_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->td_exchange = [];
+        }
+        
+        if (!isset($config->td_exchange)){
+            $config->td_exchange = [];
+        }
+        
+        $config->td_exchange->update_car = $data['update_car']; //обновлять машины
+        $config->td_exchange->update_image = $data['update_image']; //обновлять картинки
+        $config->td_exchange->update_description = $data['update_description']; //обновлять описание
+        $config->td_exchange->update_group = $data['update_group']; //обновлять группы
         
         $writer = new PhpArray();
         
