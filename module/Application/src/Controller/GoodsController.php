@@ -498,6 +498,18 @@ class GoodsController extends AbstractActionController
         
     }
 
+    public function updateCarsAction()
+    {
+
+        $this->goodsManager->updateCars();
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);           
+        
+    }
+
 
 
     public function deleteEmptyAction()

@@ -28,11 +28,18 @@ class GoodsManager
      * @var Doctrine\ORM\EntityManager
      */
     private $entityManager;
+    
+     /**
+     * External manager.
+     * @var Application\Service\ExternalManager
+     */
+    private $externalManager;
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $externalManager)
     {
         $this->entityManager = $entityManager;
+        $this->externalManager = $externalManager;
     }
         
     public function addNewGoods($data, $flushnow=true) 
@@ -206,5 +213,21 @@ class GoodsManager
     public function images($good)
     {
         return $this->imagesFromFolder(self::GOOD_IMAGE_DIR.'/'.$good->getId());
+    }
+    
+    /**
+     * Обновить машины у товаров
+     */
+    public function updateCars()
+    {
+        set_time_limit(900);
+        
+        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateCar();
+        
+        foreach ($goodsForUpdate as $good){
+            $this->externalManager->addCarsToGood($good);
+            $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+        }
     }
 }

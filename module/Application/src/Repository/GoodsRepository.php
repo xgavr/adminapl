@@ -261,6 +261,26 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления машин по апи текдока
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateCar()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.statusCar != ?1')
+            ->setParameter('1', Goods::CAR_UPDATED)    
+            ->setMaxResults(2000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
      * Добавление машины к товару
      * 
      * @param Application\Entity\Goods $good
@@ -268,8 +288,8 @@ class GoodsRepository extends EntityRepository
      */
     public function addGoodCar($good, $car)
     {
-        $inserted = $this->getEntityManager()->getConnection()->insert('good_car', ['good_id' => $good->getId(), 'car_id' => $car->getId()]);
-        return $inserted;        
+       $inserted = $this->getEntityManager()->getConnection()->insert('good_car', ['good_id' => $good->getId(), 'car_id' => $car->getId()]);
+       return $inserted;        
     }
 
     /**

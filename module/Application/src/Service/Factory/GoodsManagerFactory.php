@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\GoodsManager;
+use Application\Service\ExternalManager;
 /**
  * Description of GoodsManagerFactory
  *
@@ -23,8 +24,9 @@ class GoodsManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $externalManager = $container->get(ExternalManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new GoodsManager($entityManager);
+        return new GoodsManager($entityManager, $externalManager);
     }
 }

@@ -721,4 +721,19 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    public function updateCarsAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_car'] == 1){
+
+            $this->goodsManager->updateCars();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }
