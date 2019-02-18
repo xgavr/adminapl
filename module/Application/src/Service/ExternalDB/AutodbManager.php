@@ -351,7 +351,7 @@ class AutodbManager
             }
 
         }
-        var_dump($carIds); exit;
+
         if (count($carIds)){
             return $this->getVehicleByIds3($carIds);
         }
@@ -380,6 +380,7 @@ class AutodbManager
             }
         }
         
+        var_dump($carIds); exit;
         if (count($carIds)){
             return $this->getVehicleByIds3($carIds);
         }
