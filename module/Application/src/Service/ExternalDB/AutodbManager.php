@@ -375,12 +375,15 @@ class AutodbManager
             foreach ($cars['data']['array'] as $links){
                 foreach ($links['articleLinkages']['array'] as $carLinks){
                     $carIds[] = $carLinks['linkingTargetId'];
+                    if (count($carIds) > 20){
+                        break;
+                    }
                 }
                 
             }
         }
         
-        var_dump($carIds); exit;
+//        var_dump($carIds); exit;
         if (count($carIds)){
             return $this->getVehicleByIds3($carIds);
         }
