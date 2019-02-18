@@ -497,6 +497,8 @@ class ExternalManager
      */
     public function addCarsToGood($good)
     {
+        set_time_limit(900);
+        
         $this->entityManager->getRepository(Goods::class)
                 ->removeGoodCars($good);
         
