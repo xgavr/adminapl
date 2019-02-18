@@ -507,8 +507,9 @@ class ExternalManager
                 if (isset($carsData['data'])){
                     if (isset($carsData['data']['array'])){
                         foreach ($carsData['data']['array'] as $carData){
-                            var_dump($carData);
-                            $this->addCarToGood($good, $carData);
+                            if (isset($carData['vehicleDetails'])){
+                                $this->addCarToGood($good, $carData['vehicleDetails']);
+                            }    
                         }
                     }
                 }
