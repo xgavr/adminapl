@@ -450,10 +450,10 @@ class ExternalManager
      */
     public function addCarToGood($good, $carData)
     {
-        var_dump($carData['carId']); exit;
         if (isset($carData['carId'])){
             $car = $this->entityManager->getRepository(Make::class)
                     ->findOneByTdId($carData['carId']);
+            var_dump($car->getId()); exit;
             if (!$car){
                 if (isset($carData['modId'])){
                     $model = $this->entityManager->getRepository(Model::class)
