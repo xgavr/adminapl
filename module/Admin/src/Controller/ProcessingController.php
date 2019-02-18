@@ -721,7 +721,7 @@ class ProcessingController extends AbstractActionController
         
     }
     
-    public function updateCarsAction()
+    public function tdUpdateCarsAction()
     {
         $settings = $this->adminManager->getTdExchangeSettings();
 
