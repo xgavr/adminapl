@@ -502,17 +502,19 @@ class ExternalManager
         
         $tdId = $this->autoDbManager->getBestArticleId($good);
         if (is_numeric($tdId)){
-            $carsData = $this->autoDbManager->getLinked($tdId);
-            if (is_array($carsData)){
-                if (isset($carsData['data'])){
-                    if (isset($carsData['data']['array'])){
-                        foreach ($carsData['data']['array'] as $carData){
-                            if (isset($carData['vehicleDetails'])){
-                                $this->addCarToGood($good, $carData['vehicleDetails']);
-                            }    
+            $carsDataI = $this->autoDbManager->getLinked($tdId);
+            if (is_array($carsDataI)){
+                foreach ($carsDataI as $carsData){
+                    if (isset($carsData['data'])){
+                        if (isset($carsData['data']['array'])){
+                            foreach ($carsData['data']['array'] as $carData){
+                                if (isset($carData['vehicleDetails'])){
+                                    $this->addCarToGood($good, $carData['vehicleDetails']);
+                                }    
+                            }
                         }
                     }
-                }
+                }    
             }
         }  
         return;

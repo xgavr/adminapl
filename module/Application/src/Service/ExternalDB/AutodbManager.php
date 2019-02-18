@@ -345,15 +345,24 @@ class AutodbManager
     {
         $cars = $this->getArticleLinkedAllLinkingTarget3($tdId);
         $carIds = [];
+        $i = 0;
         foreach ($cars['data']['array'] as $links){
             foreach ($links['articleLinkages']['array'] as $carLinks){
-                $carIds[] = $carLinks['linkingTargetId'];
+                $carIds[$i][] = $carLinks['linkingTargetId'];
+                if (count($carIds[$i]) > 20){
+                    $i++;
+                }
             }
 
         }
 
         if (count($carIds)){
-            return $this->getVehicleByIds3($carIds);
+            $result = [];
+            foreach($carIds as $key => $value){
+                $result[$key] = $this->getVehicleByIds3($value);
+            } 
+            
+            return $result;
         }
         
         return;
@@ -368,34 +377,8 @@ class AutodbManager
      */
     public function getGoodLinked($good)
     {
-        $article = $this->getBestArticle($good);
-        $carIds = [];
-        $i = 0;
-        if (is_array($article)){
-            $cars = $this->getArticleLinkedAllLinkingTarget3($article['articleId']);           
-            foreach ($cars['data']['array'] as $links){
-                foreach ($links['articleLinkages']['array'] as $carLinks){                    
-                    $carIds[$i][] = $carLinks['linkingTargetId'];
-                    if (count($carIds[$i]) > 20){
-                        $i++;
-                    }
-                }
-                
-            }
-        }
-        
-//        var_dump($carIds); exit;
-        if (count($carIds)){
-            $result = [];
-            foreach($carIds as $key => $value){
-                $result[$key] = $this->getVehicleByIds3($value);
-            } 
-            
-            return $result;
-        }
-        
-        return;
-        
+        $article = $this->getBestArticle($good);        
+        return $this->getLinked($article);        
     }
     
     /**
