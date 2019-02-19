@@ -447,13 +447,14 @@ class ExternalManager
      * 
      * @param Application\Entity\Good $good
      * @param array $carData
+     * @param bool $addCar
      */
-    public function addCarToGood($good, $carData)
+    public function addCarToGood($good, $carData, $addCar = true)
     {
         if (isset($carData['carId'])){
             $car = $this->entityManager->getRepository(Car::class)
                     ->findOneByTdId($carData['carId']);
-            if (!$car){
+            if (!$car && $addCar){
                 if (isset($carData['modId'])){
                     $model = $this->entityManager->getRepository(Model::class)
                             ->findOneByTdId($carData['modId']);
@@ -505,14 +506,13 @@ class ExternalManager
         $tdId = $this->autoDbManager->getBestArticleId($good);
         if (is_numeric($tdId)){
             $carsDataI = $this->autoDbManager->getLinked($tdId);
-            var_dump(count($carsDataI)); exit;
             if (is_array($carsDataI)){
                 foreach ($carsDataI as $carsData){
                     if (isset($carsData['data'])){
                         if (isset($carsData['data']['array'])){
                             foreach ($carsData['data']['array'] as $carData){
                                 if (isset($carData['vehicleDetails'])){
-                                    $this->addCarToGood($good, $carData['vehicleDetails']);
+                                    $this->addCarToGood($good, $carData['vehicleDetails'], count($carsDataI)<=5);
                                 }    
                             }
                         }
