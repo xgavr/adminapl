@@ -505,7 +505,7 @@ class ExternalManager
         $tdId = $this->autoDbManager->getBestArticleId($good);
         if (is_numeric($tdId)){
             $carsDataI = $this->autoDbManager->getLinked($tdId);
-            var_dump($carsDataI); exit;
+            var_dump(count($carsDataI)); exit;
             if (is_array($carsDataI)){
                 foreach ($carsDataI as $carsData){
                     if (isset($carsData['data'])){
