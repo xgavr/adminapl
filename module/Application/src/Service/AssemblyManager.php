@@ -587,7 +587,7 @@ class AssemblyManager
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
         
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+        $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForAccembly($raw);
 //                ->findBy(['raw' => $raw->getId(), 'statusGood' => Rawprice::GOOD_NEW, 'status' => Rawprice::STATUS_PARSED]);
         
