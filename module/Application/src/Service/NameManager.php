@@ -713,6 +713,10 @@ class NameManager
             }        
         }    
         
+        if ($tokenGroup){
+            $tokenGroup->addGood($good);
+        }
+        
         $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->updateGoodId($good->getId(), ['token_group_id' => $tokenGroup->getId()]);
                 
