@@ -504,7 +504,7 @@ class ExternalManager
         $tdId = $this->autoDbManager->getBestArticleId($good);
         if (is_numeric($tdId)){
             $carsDataI = $this->autoDbManager->getLinked($tdId);
-            $addFlag = count($carsDataI)<=50;
+            $addFlag = count($carsDataI)<=10;
             if (is_array($carsDataI)){
                 foreach ($carsDataI as $carsData){
                     if (isset($carsData['data'])){
