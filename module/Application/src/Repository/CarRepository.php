@@ -41,7 +41,7 @@ class CarRepository extends EntityRepository
         $sql = 'select gc.id '
                 . ' from good_car as gc '
                 . ' where gc.good_id = :good'
-                . ' and where gc.car_id = :car';
+                . ' and gc.car_id = :car';
 
 //        var_dump($sql); exit;
 
