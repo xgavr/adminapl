@@ -44,7 +44,7 @@ class MakeController extends AbstractActionController
     {
         $totalMake = $this->entityManager->getRepository(Make::class)
                 ->count([]);
-        $totalModel = $this->entityManager->getRpository(Model::class)
+        $totalModel = $this->entityManager->getRepository(Model::class)
                 ->count([]);
         $totalCar = $this->entityManager->getRepository(\Application\Entity\Car::class)
                 ->count([]);
