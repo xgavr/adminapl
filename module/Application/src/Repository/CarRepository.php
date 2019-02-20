@@ -34,6 +34,27 @@ class CarRepository extends EntityRepository
         return $updated;
     }    
 
+    public function findGoodCar($good, $car)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $sql = 'select gc.id '
+                . ' from good_car as gc '
+                . ' where gc.good_id = :good'
+                . ' and where gc.car_id = :car';
+
+//        var_dump($sql); exit;
+
+        $stmt = $entityManager->getConnection()->prepare($sql);
+        $stmt->execute([
+                'good' => $good->getId(),
+                'car' => $car->getId(),
+            ]);
+
+        return $stmt->fetchAll();
+        
+    }
+    
     /**
      * Удаление атрибутов Car
      * 

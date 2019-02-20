@@ -484,8 +484,14 @@ class ExternalManager
             }   
 
             if ($car){
-                $this->entityManager->getRepository(Goods::class)
-                        ->addGoodCar($good, $car);
+                
+                $goodCar = $this->entityManager->getRepository(Goods::class)
+                        ->findGoodCar($good, $car);
+                
+                if (count($goodCar) == 0){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->addGoodCar($good, $car);
+                }    
             }    
         }
         return;
