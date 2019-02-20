@@ -556,37 +556,53 @@ class NameManager
             foreach ($lemms as $key => $words){
                 $words = array_filter($words);
                 foreach ($words as $word){
-                    try{
-                        $this->entityManager->getRepository(Token::class)
-                                ->insertToken([
-                                    'lemma' => $word,
-                                    'status' => $key,
-                                ]);
-                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                        //дубликат
-                    }   
                     
-                    try{
-                        $this->entityManager->getRepository(Token::class)
-                                ->insertArticleToken([
-                                    'article_id' => $row['articleId'],
-                                    'lemma' => $word,
-                                    'status' => $key,
-                                ]);
-                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                        //дубликат
-                    }                    
+                    $token = $this->entityManager->getRepository(Token::class)
+                            ->findOneByLemma($word);
+                    
+                    if (!$token){
+                        try{
+                            $this->entityManager->getRepository(Token::class)
+                                    ->insertToken([
+                                        'lemma' => $word,
+                                        'status' => $key,
+                                    ]);
+                        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                            //дубликат
+                        }   
+                    }    
+                    
+                    $articleToken = $this->entityManager->getRepository(ArticleToken::class)
+                            ->findOneBy(['article' => $row['articleId'], 'lemma' => $word]);
+                    
+                    if (!$articleToken){
+                        try{
+                            $this->entityManager->getRepository(Token::class)
+                                    ->insertArticleToken([
+                                        'article_id' => $row['articleId'],
+                                        'lemma' => $word,
+                                        'status' => $key,
+                                    ]);
+                        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                            //дубликат
+                        }
+                    }    
                 }
             }    
                 
             $this->entityManager->getRepository(Rawprice::class)
                     ->updateRawpriceField($row['id'], ['status_token' => Rawprice::TOKEN_PARSED]);                        
         }
-        
-        $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
-        $this->entityManager->persist($raw);
-        
-        $this->entityManager->flush();
+
+        $rawprices = $this->entityManager->getRepository(Token::class)
+                ->findRawpriceTitle($raw);
+        if (count($rawprices) == 0){
+            $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
+            $this->entityManager->persist($raw);
+
+            $this->entityManager->flush();
+        }
+        return;
     }
     
     /**
