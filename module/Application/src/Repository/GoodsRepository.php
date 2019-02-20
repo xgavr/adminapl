@@ -11,7 +11,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Goods;
 use Application\Entity\Rawprice;
-use Application\Entity\Producer;
+
 /**
  * Description of GoodsRepository
  *
@@ -20,6 +20,23 @@ use Application\Entity\Producer;
 class GoodsRepository extends EntityRepository
 {
     
+    /**
+     * Быстрая обновление товара
+     * 
+     * @param integer $goodId
+     * @param array $data 
+     * @return integer
+     */
+    public function updateGoodId($goodId, $data)
+    {
+        if (!count($data)){
+            return;
+        }
+        
+        $updated = $this->getEntityManager()->getConnection()->update('goods', $data, ['id' => $goodId]);
+        return $updated;
+    }    
+
     /**
      * Быстрое обновление полей товара
      * 
