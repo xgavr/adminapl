@@ -69,6 +69,7 @@ class GoodsRepository extends EntityRepository
                 ->setMaxResults(100000)
                 ;
 
+//var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();        
         
     }

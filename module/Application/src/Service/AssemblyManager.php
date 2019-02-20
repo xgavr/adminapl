@@ -595,9 +595,10 @@ class AssemblyManager
             $this->addNewGoodFromRawprice($rawprice);
         }
         
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+        $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForAccembly($raw);
         
+//        var_dump(count($rawprices)); exit;
         if (count($rawprices) == 0){
             $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
             $this->entityManager->persist($raw);
