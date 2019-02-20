@@ -222,7 +222,7 @@ class GoodsManager
     {
         set_time_limit(900);
         
-        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+        $goodsForUpdate = $this->entityManager->getRepository(Car::class)
                 ->findGoodsForUpdateCar();
         
         foreach ($goodsForUpdate as $good){
