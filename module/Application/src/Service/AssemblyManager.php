@@ -78,6 +78,10 @@ class AssemblyManager
         $good->setAvailable(Goods::AVAILABLE_TRUE);
         $good->setDescription('');
         $good->setPrice(0);
+        $good->setStatusCar(Goods::CAR_FOR_UPDATE);
+        $good->setStatusDescription(Goods::DESCRIPTION_FOR_UPDATE);
+        $good->setStatusGroup(Goods::GROUP_FOR_UPDATE);
+        $good->setStatusImage(Goods::IMAGE_FOR_UPDATE);
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($good);
