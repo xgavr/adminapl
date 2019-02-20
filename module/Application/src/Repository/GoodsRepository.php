@@ -58,7 +58,8 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->from(Rawprice::class, 'r')
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusGood = ?2')
                 ->andWhere('r.status = ?3')
