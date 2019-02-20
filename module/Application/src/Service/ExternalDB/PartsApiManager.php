@@ -57,6 +57,8 @@ class PartsApiManager
      */
     public function exception($response)
     {
+        ini_set('memory_limit', '512M');
+        
         switch ($response->getStatusCode()) {
             case 400: //Invalid code
                 throw new \Exception('Ошибка');
@@ -92,6 +94,8 @@ class PartsApiManager
      */    
     public function getAction($action, $params = null)
     {
+        ini_set('memory_limit', '512M');
+        
         $uri = $this->getUri().'?act='.$action;
         if (is_array($params)){
             $params['key'] = $this->api_key;

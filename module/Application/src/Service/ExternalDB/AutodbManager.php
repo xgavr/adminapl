@@ -56,6 +56,8 @@ class AutodbManager
      */
     public function exception($response)
     {
+        ini_set('memory_limit', '512M');
+        
         switch ($response->getStatusCode()) {
             case 400: //Invalid code
                 throw new \Exception('Ошибка');
@@ -91,6 +93,8 @@ class AutodbManager
      */    
     public function getAction($action, $params = null)
     {
+        ini_set('memory_limit', '512M');
+        
         $uri = $this->getUri().'?action='.$action;
         if (is_array($params)){
             foreach ($params as $key => $value){
