@@ -336,6 +336,7 @@ class GoodsController extends AbstractActionController
     public function viewAction() 
     {       
         $goodsId = (int)$this->params()->fromRoute('id', -1);
+        $page = $this->params()->fromQuery('page', 1);        
         
         // Validate input parameter
         if ($goodsId<0) {
@@ -359,9 +360,21 @@ class GoodsController extends AbstractActionController
         $nextQuery = $this->entityManager->getRepository(Goods::class)
                         ->findAllGoods(['next1' => $goods->getCode()]);        
 
+        $carQuery = $this->entityManager->getRepository(Goods::class)
+                        ->findCars($goods);
+        
+        $carAdapter = new DoctrineAdapter(new ORMPaginator($carQuery, false));
+        $carPaginator = new Paginator($carAdapter);
+        $carPaginator->setDefaultItemCountPerPage(10);        
+        $carPaginator->setCurrentPageNumber($page);
+
+        $totalCars = $carPaginator->getTotalItemCount();
+
         // Render the view template.
         return new ViewModel([
             'goods' => $goods,
+            'cars' => $carPaginator,
+            'totalCars' => $totalCars,
             'rawprices' => $rawprices,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),

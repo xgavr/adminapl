@@ -165,10 +165,17 @@ $this->pageBreadcrumbs()->setItems([
         </div>
         
         <h5>
-            Применимость
+            Применимость<sup><?= $totalCars?></sup>
         </h5>
         <table  class="table table-striped">
-            <?php foreach($goods->getCars() as $car):?>
+            <td colspan="6">
+                <?= $this->paginationControl($cars,
+                            'Sliding',
+                            'application/partial/paginator', 
+                            ['route' => array('route' => 'goods', 'action' => 'view', 'id' => $goods->getId())]); ?>
+
+            </td>
+            <?php foreach($cars as $car):?>
                 <tr>
                     <td>
                         <?= $car->getId()?>

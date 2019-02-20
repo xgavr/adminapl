@@ -325,6 +325,28 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти машины товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @return object
+     */
+    public function findCars($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('c')
+            ->from(\Application\Entity\Car::class, 'c')
+            ->join('c.goods', 'g')
+            ->where('g.id = ?1')    
+            ->setParameter('1', $good->getId())
+            ;
+        
+        return $queryBuilder->getQuery();            
+    }
+    
+    
+    /**
      * Добавление машины к товару
      * 
      * @param Application\Entity\Goods $good
