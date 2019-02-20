@@ -120,7 +120,6 @@ class ArticleManager
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(900);
-        $startTime = time();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findBy(['raw' => $raw->getId(), 'code' => null, 'status' => Rawprice::STATUS_PARSED]);
@@ -131,19 +130,25 @@ class ArticleManager
 
             $filteredCode = $filter->filter($rawprice->getArticle());
         
-            try{
-                $this->entityManager->getRepository(Article::class)
-                        ->insertArticle([
-                            'code' => $filteredCode,
-                            'fullcode' => mb_substr($rawprice->getArticle(), 0, 36),
-                            'unknown_producer_id' => $rawprice->getUnknownProducer()->getId(),
-                        ]);
-            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
-                //дубликат;
-            }    
-
             $article = $this->entityManager->getRepository(Article::class)
                     ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $rawprice->getUnknownProducer()->getId()]);
+            
+            if (!$article){
+                try{
+                    $this->entityManager->getRepository(Article::class)
+                            ->insertArticle([
+                                'code' => $filteredCode,
+                                'fullcode' => mb_substr($rawprice->getArticle(), 0, 36),
+                                'unknown_producer_id' => $rawprice->getUnknownProducer()->getId(),
+                            ]);
+                } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
+                    //дубликат;
+                }    
+                
+                $article = $this->entityManager->getRepository(Article::class)
+                        ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $rawprice->getUnknownProducer()->getId()]);
+            }    
+
 
             $this->entityManager->getRepository(Article::class)
                     ->updateRawpriceCode($rawprice, $article);
