@@ -588,16 +588,22 @@ class AssemblyManager
         set_time_limit(900);
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'statusGood' => Rawprice::GOOD_NEW, 'status' => Rawprice::STATUS_PARSED]);
+                ->findGoodsForAccembly($raw);
+//                ->findBy(['raw' => $raw->getId(), 'statusGood' => Rawprice::GOOD_NEW, 'status' => Rawprice::STATUS_PARSED]);
         
         foreach ($rawprices as $rawprice){
             $this->addNewGoodFromRawprice($rawprice);
         }
         
-        $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
-        $this->entityManager->persist($raw);
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->findGoodsForAccembly($raw);
         
-        $this->entityManager->flush();
+        if (count($rawprices) == 0){
+            $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
+            $this->entityManager->persist($raw);
+
+            $this->entityManager->flush();
+        }    
     }
     
 }

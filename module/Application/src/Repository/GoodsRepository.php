@@ -48,6 +48,31 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Выборка строк прайса для создания товаров
+     * 
+     * @param Application\Entity\Rawprice $raw
+     * @return array
+     */
+    public function findGoodsForAccembly($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->from(Rawprice::class, 'r')
+                ->where('r.raw = ?1')
+                ->andWhere('r.statusGood = ?2')
+                ->andWhere('r.status = ?3')
+                ->setParameter('1', $raw->getId())
+                ->setParameter('2', Rawprice::GOOD_NEW)
+                ->setParameter('3', Rawprice::STATUS_PARSED)
+                ->setMaxResults(100000)
+                ;
+
+        return $queryBuilder->getQuery()->getResult();        
+        
+    }
+
+    /**
      * Запрос по товарам по разным параметрам
      * 
      * @param array $params
