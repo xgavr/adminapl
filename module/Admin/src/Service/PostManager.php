@@ -267,6 +267,7 @@ class PostManager {
         $postLog = new PostLog();
         $postLog->setTo($data['to']);
         $postLog->setFrom($fromEmail);
+        $postLog->setFromStr($data['from']);
        
         $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
         $postLog->setStatus(PostLog::STATUS_ACTIVE);
@@ -275,10 +276,12 @@ class PostManager {
              $postLog->setSubject($data['subject']);
         }
         
-        foreach ($data['content'] as $content){
-            $postLog->setBody($filter->filter($content));
-            break;
-        }
+        if (isset($data['content'])){
+            foreach ($data['content'] as $content){
+                $postLog->setBody($filter->filter($content));
+                break;
+            }
+        }    
         
         $fileNames = [];
         if (isset($data['attachment'])){

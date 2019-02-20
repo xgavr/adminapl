@@ -39,6 +39,11 @@ class PostLog {
      */
     protected $from;
     
+    /**
+     * @ORM\Column(name="from_str")   
+     */
+    protected $fromStr;
+
     /** 
      * @ORM\Column(name="date_created")  
      */
@@ -95,6 +100,16 @@ class PostLog {
     public function setFrom($from)
     {
         $this->from = $from;
+    }
+    
+    public function getFromStr()
+    {
+        return $this->fromStr;
+    }
+    
+    public function setFromStr($fromStr)
+    {
+        $this->fromStr = $fromStr;
     }
     
     public function getSubject()
