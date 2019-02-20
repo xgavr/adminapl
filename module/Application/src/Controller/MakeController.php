@@ -42,7 +42,17 @@ class MakeController extends AbstractActionController
     
     public function indexAction()
     {
+        $totalMake = $this->entityManager->getRepository(Make::class)
+                ->count([]);
+        $totalModel = $this->entityManager->getRpository(Model::class)
+                ->count([]);
+        $totalCar = $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->count([]);
+        
         return new ViewModel([
+            'totalMake' =>$totalMake,
+            'totalModel' =>$totalModel,
+            'totalCar' =>$totalCar,
         ]);  
     }
     
