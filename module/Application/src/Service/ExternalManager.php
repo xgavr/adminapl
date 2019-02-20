@@ -485,7 +485,7 @@ class ExternalManager
 
             if ($car){
                 
-                $goodCar = $this->entityManager->getRepository(Goods::class)
+                $goodCar = $this->entityManager->getRepository(Car::class)
                         ->findGoodCar($good, $car);
                 
                 if (count($goodCar) == 0){
