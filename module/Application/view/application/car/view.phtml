@@ -51,7 +51,7 @@ $this->pageBreadcrumbs()->setItems([
             <?php endforeach;?>
         </table>
 
-        <h3>Товары<sup><?= $totalCars?></sup></h3>
+        <h3>Товары<sup><?= $totalGoods?></sup></h3>
         <table class="table table-striped">
             <tr>
                 <td colspan="6">
@@ -78,7 +78,7 @@ $this->pageBreadcrumbs()->setItems([
             <div class="panel-group">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        Внешние данные
+                        Обновления и внешние данные
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
@@ -88,6 +88,17 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-right">
                             <button value="/apl/car-apl-id/<?= $car->getId()?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Обновить АПЛ Ид">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Товары<sup><?= $totalGoods?></sup>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/car/update-available/<?= $car->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить доступность">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>

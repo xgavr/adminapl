@@ -104,17 +104,43 @@ class CarController extends AbstractActionController
         $goodsPaginator->setDefaultItemCountPerPage(10);        
         $goodsPaginator->setCurrentPageNumber($page);
 
-        $totalCars = $goodsPaginator->getTotalItemCount();
+        $totalGoods = $goodsPaginator->getTotalItemCount();
         // Render the view template.
         return new ViewModel([
             'car' => $car,
             'goods' => $goodsPaginator,
-            'totalCars' => $totalCars,
+            'totalGoods' => $totalGoods,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
         ]);
     }      
     
+    public function updateAvailableAction()
+    {
+        $carId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($carId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $car = $this->entityManager->getRepository(Car::class)
+                ->findOneById($carId);
+        
+        if ($car == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(Car::class)
+                ->updateAvailable(null, null, $car);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+
     public function fillCarsAction()
     {
         $modelId = (int)$this->params()->fromRoute('id', -1);
