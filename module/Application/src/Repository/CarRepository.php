@@ -111,5 +111,27 @@ class CarRepository extends EntityRepository
         }
 
         return $queryBuilder->getQuery();
-    }            
+    }           
+    
+    /**
+     * Найти товары машины
+     * 
+     * @param Application\Entity\Car $car
+     * @return object
+     */
+    public function findGoods($car)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(\Application\Entity\Goods::class, 'g')
+            ->join('g.cars', 'c')
+            ->where('c.id = ?1')    
+            ->setParameter('1', $car->getId())
+            ;
+        
+        return $queryBuilder->getQuery();            
+    }
+    
 }
