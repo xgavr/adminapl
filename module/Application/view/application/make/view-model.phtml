@@ -52,9 +52,14 @@ $this->pageBreadcrumbs()->setItems([
                         <?= $car->getAplId()?>
                     </td>
                     <td colspan="3">
-                        <a href="/car/view/<?= $car->getId()?>">
-                            <?= $car->getName()?>
-                        </a>   
+                        <span>
+                            <a href="/car/view/<?= $car->getId()?>">
+                                <?= $car->getName()?>
+                            </a>                               
+                        </span>
+                        <span>
+                            <?= $car->getStatusAsString()?>
+                        </span>
                     </td>
                 </tr>    
                 <tr>
