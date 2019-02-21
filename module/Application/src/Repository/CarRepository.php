@@ -148,25 +148,31 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('c.id, count(g.id) as goodCount')
+        $queryBuilder->select('count(g.id) as goodCount')
             ->from(Car::class, 'c')
             ->leftJoin('c.goods', 'g')
-            ->groupBy('c.id')    
             ;
         
         if ($car){
-            $queryBuilder->andWhere('c.id = ?1')
+            $queryBuilder
+                    ->addSelect('c.id as carId')
+                    ->andWhere('c.id = ?1')
+                    ->groupBy('c.id')    
                     ->setParameter('1', $car->getId())
                     ;
         } elseif ($model){
             $queryBuilder
+                    ->addSelect('identity(c.model) as modelId')
                     ->join('c.model', 'm')
                     ->andWhere('m.id = ?2')
+                    ->groupBy('modelId')    
                     ->setParameter('2', $model->getId())
                     ;
         } elseif ($make){
             $queryBuilder
+                    ->addSelect('identity(c.make) as makeId')
                     ->join('c.model', 'm')
+                    ->groupBy('makeId')    
                     ->andWhere('m.make = ?3')
                     ->setParameter('3', $make->getId())
                     ;
@@ -180,7 +186,15 @@ class CarRepository extends EntityRepository
                 default: $status = Car::STATUS_ACTIVE;
             }
 //            var_dump($status); exit;
-            $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['id']]);
+            if (isset($row['carId'])){
+                $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['carId']]);
+            }    
+            if (isset($row['modelId'])){
+                $this->getEntityManager()->getConnection()->update('model', ['status' => $status], ['id' => $row['modelId']]);
+            }    
+            if (isset($row['makeId'])){
+                $this->getEntityManager()->getConnection()->update('make', ['status' => $status], ['id' => $row['makeId']]);
+            }    
         }      
         
         return;

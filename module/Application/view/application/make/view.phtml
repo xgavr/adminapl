@@ -17,6 +17,9 @@ $this->pageBreadcrumbs()->setItems([
         <?= $make->getTdId();?>
     </sup>
 </h1>
+<p>
+    <?= $make->getStatusAsString();?>
+</p>
 
 <div class="row">
     <div class="col-md-9">
@@ -46,9 +49,14 @@ $this->pageBreadcrumbs()->setItems([
                     <?= $model->getAplId()?>
                 </td>
                 <td>
-                    <a href="/make/view-model/<?= $model->getId()?>">
-                        <?= $model->getName()?>
-                    </a>   
+                    <span>
+                        <a href="/make/view-model/<?= $model->getId()?>">
+                            <?= $model->getName()?>
+                        </a>   
+                    </span>
+                    <small>
+                        <?= $model->getStatusAsString()?>
+                    </small>
                 </td>
                 <td>
                     <?= $model->getInterval()?>
@@ -97,6 +105,17 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-right">
                             <button value="/car/fill-make-cars/<?= $make->getId();?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Заполнить модификации">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Товары<sup><?= $totalGoods?></sup>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/car/update-available-make/<?= $make->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить доступность">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>

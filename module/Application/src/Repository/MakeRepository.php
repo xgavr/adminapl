@@ -128,6 +128,29 @@ class MakeRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }   
     
+     /**
+     * Найти товары бренда
+     * 
+     * @param Application\Entity\Make $make
+     * @return object
+     */
+    public function findMakeGoods($make)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->distinct()    
+            ->from(\Application\Entity\Goods::class, 'g')
+            ->join('g.cars', 'c')
+            ->join('c.model', 'm')    
+            ->where('m.make = ?1')    
+            ->setParameter('1', $make->getId())
+            ;
+        
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
     /**
      * Запрос по моделям машин по разным параметрам
      * 
