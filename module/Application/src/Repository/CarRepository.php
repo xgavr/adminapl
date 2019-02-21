@@ -151,21 +151,20 @@ class CarRepository extends EntityRepository
         $queryBuilder->select('c.id, count(g.id) as goodCount')
             ->from(Car::class, 'c')
             ->leftJoin('c.goods', 'g')
+            ->groupBy('c.id')    
             ;
         
         if ($car){
-            $queryBuilder->andWhere('id = ?1')
+            $queryBuilder->andWhere('c.id = ?1')
                     ->setParameter('1', $car->getId())
                     ;
-        }
-        if ($model){
+        } elseif ($model){
             $queryBuilder
                     ->join('c.model', 'm')
                     ->andWhere('m.id = ?2')
                     ->setParameter('2', $model->getId())
                     ;
-        }
-        if ($make){
+        } elseif ($make){
             $queryBuilder
                     ->join('c.model', 'm')
                     ->andWhere('m.make = ?3')
