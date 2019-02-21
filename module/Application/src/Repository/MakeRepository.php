@@ -73,7 +73,8 @@ class MakeRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('identity(c)')
+        $queryBuilder->select('c.id')
+            ->distinct()    
             ->from(Model::class, 'm')
             ->join('m.cars', 'c')
             ->where('m.make = ?1')
