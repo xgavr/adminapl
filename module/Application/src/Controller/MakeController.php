@@ -232,9 +232,13 @@ class MakeController extends AbstractActionController
         $nextQuery = $this->entityManager->getRepository(Model::class)
                         ->findAllModel($model->getMake(), ['next1' => $model->getName()]);        
 
+        $totalCar = $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->count(['model' => $model->getId()]);
+        
         // Render the view template.
         return new ViewModel([
             'model' => $model,
+            'totalCar' => $totalCar,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
         ]);
