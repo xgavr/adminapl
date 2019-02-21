@@ -58,29 +58,7 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
             </tr>
             <?php endforeach;?>
-        </table>
-        
-        <h5>Товары<sup><?= $totalCars?></sup></h5>
-        <table class="table table-striped">
-            <tr>
-                <td colspan="6">
-                    <?= $this->paginationControl($goods,
-                                'Sliding',
-                                'application/partial/paginator', 
-                                ['route' => array('route' => 'car', 'action' => 'view', 'id' => $car->getId())]); ?>
-
-                </td>
-            </tr>
-            <?php    foreach ($goods as $good):?>
-                <tr>
-                    <td colspan="6">
-                        <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()]);?>">
-                            <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
-                        </a>   
-                    </td>
-                </tr>
-            <?php endforeach;?>        
-        </table>
+        </table>        
     </div>
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
