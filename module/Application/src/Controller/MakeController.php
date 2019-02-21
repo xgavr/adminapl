@@ -161,8 +161,8 @@ class MakeController extends AbstractActionController
         
         $totalModel = $this->entityManager->getRepository(Model::class)
                 ->count(['make' => $make->getId()]);
-        $totalCar = $this->entityManager->getRepository(Make::class)
-                ->carMake($make);
+        $totalCar = count($this->entityManager->getRepository(Make::class)
+                ->carMake($make));
 
         // Render the view template.
         return new ViewModel([
