@@ -228,7 +228,7 @@ class MakeRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('gc.good_id')
+        $queryBuilder->select('gc')
             ->distinct()    
             ->from(\Application\Entity\Car::class, 'c')
             ->join('c.goods', 'gc')    
