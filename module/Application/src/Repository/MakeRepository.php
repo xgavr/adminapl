@@ -66,6 +66,23 @@ class MakeRepository extends EntityRepository{
         $updated = $this->getEntityManager()->getConnection()->update('model', $data, ['id' => $model->getId()]);
         return $updated;
     }    
+    
+    public function carMake($make)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Model::class, 'm')
+            ->join('m.cars', 'c')
+            ->where('m.make = ?1')
+            ->setParameter('1', $make->getId())    
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
 
     /**
      * Запрос по машинам по разным параметрам

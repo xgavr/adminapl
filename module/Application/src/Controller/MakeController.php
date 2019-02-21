@@ -157,11 +157,18 @@ class MakeController extends AbstractActionController
         $prevQuery = $this->entityManager->getRepository(Make::class)
                         ->findAllMake(['prev1' => $make->getName()]);
         $nextQuery = $this->entityManager->getRepository(Make::class)
-                        ->findAllMake(['next1' => $make->getName()]);        
+                        ->findAllMake(['next1' => $make->getName()]); 
+        
+        $totalModel = $this->entityManager->getRepository(Model::class)
+                ->count(['make' => $make->getId()]);
+        $totalCar = $this->entityManager->getRepository(Make::class)
+                ->carMake($make);
 
         // Render the view template.
         return new ViewModel([
             'make' => $make,
+            'totalModel' => $totalModel,
+            'totalCar' => $totalCar,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
         ]);

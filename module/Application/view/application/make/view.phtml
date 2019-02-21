@@ -65,7 +65,7 @@ $this->pageBreadcrumbs()->setItems([
             <div class="panel-group">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        Внешние данные
+                        Обновления и внешние данные
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
@@ -81,7 +81,7 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            Модели
+                            Модели<sup><?= $totalModel?></sup>
                         </div>
                         <div class="pull-right">
                             <button value="/make/fill-models/<?= $make->getId();?>" class="btn btn-info btn-xs refresh-table-button"
@@ -92,7 +92,7 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            Модификации
+                            Модификации<sup><?= $totalCar?></sup>
                         </div>
                         <div class="pull-right">
                             <button value="/car/fill-make-cars/<?= $make->getId();?>" class="btn btn-info btn-xs refresh-table-button"
