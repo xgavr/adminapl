@@ -19,7 +19,9 @@ $this->pageBreadcrumbs()->setItems([
         <?= $car->getTdId();?>
     </sup>
 </h1>
-
+<p>
+    <?= $car->getStatusAsString();?>
+</p>
 <div class="row">
     <div class="col-md-9">
 
