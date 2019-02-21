@@ -104,11 +104,12 @@ class CarController extends AbstractActionController
         $goodsPaginator->setDefaultItemCountPerPage(10);        
         $goodsPaginator->setCurrentPageNumber($page);
 
-        $totalCars = $carPaginator->getTotalItemCount();
+        $totalCars = $goodsPaginator->getTotalItemCount();
         // Render the view template.
         return new ViewModel([
             'car' => $car,
             'goods' => $goodsPaginator,
+            'totalCars' => $totalCars,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
         ]);
