@@ -48,8 +48,8 @@ class MakeController extends AbstractActionController
                 ->count([]);
         $totalCar = $this->entityManager->getRepository(\Application\Entity\Car::class)
                 ->count([]);
-        $totalGoods = count($this->entityManager->getRepository(Make::class)
-                ->findGoods());
+//        $totalGoods = count($this->entityManager->getRepository(Make::class)
+//                ->findGoods());
         
         return new ViewModel([
             'totalMake' => $totalMake,
