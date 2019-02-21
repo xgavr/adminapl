@@ -179,7 +179,7 @@ class CarRepository extends EntityRepository
                 case 0: $status = Car::STATUS_RETIRED; break;
                 default: $status = Car::STATUS_ACTIVE;
             }
-            var_dump($status); exit;
+//            var_dump($status); exit;
             $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['id']]);
         }      
         
