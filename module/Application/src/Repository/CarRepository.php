@@ -134,4 +134,55 @@ class CarRepository extends EntityRepository
         return $queryBuilder->getQuery();            
     }
     
+    /**
+     * Обновить доступность машин
+     * 
+     * @param Application\Entity\Make $make
+     * @param Application\Entity\Model $model
+     * @param Application\Entity\Car $car
+     * 
+     * @return null
+     */
+    public function updateAvailable($make = null, $model = null, $car = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('c.id, count(g.id) as goodCount')
+            ->from(Car::class, 'c')
+            ->leftJoin('c.goods', 'g')
+            ;
+        
+        if ($car){
+            $queryBuilder->andWhere('id = ?1')
+                    ->setParameter('1', $car->getId())
+                    ;
+        }
+        if ($model){
+            $queryBuilder
+                    ->join('c.model', 'm')
+                    ->andWhere('m.id = ?2')
+                    ->setParameter('2', $model->getId())
+                    ;
+        }
+        if ($make){
+            $queryBuilder
+                    ->join('c.model', 'm')
+                    ->andWhere('m.make = ?3')
+                    ->setParameter('3', $make->getId())
+                    ;
+        }
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($data as $row){
+            switch ($row['goodCount']){
+                case 0: $status = Car::STATUS_RETIRED; break;
+                default: $status = Car::STATUS_ACTIVE;
+            }
+            $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['id']]);
+        }      
+        
+        return;
+    }    
 }
