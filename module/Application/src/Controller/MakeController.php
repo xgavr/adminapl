@@ -209,6 +209,32 @@ class MakeController extends AbstractActionController
         ]);                  
     }
     
+    public function updateAvailableMakeAction()
+    {
+        $makeId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($makeId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $make = $this->entityManager->getRepository(Make::class)
+                ->findOneById($makeId);
+        
+        if ($make == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->updateAvailable($make);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+    
     public function viewModelAction() 
     {       
         $modelId = (int)$this->params()->fromRoute('id', -1);
@@ -235,13 +261,43 @@ class MakeController extends AbstractActionController
         $totalCar = $this->entityManager->getRepository(\Application\Entity\Car::class)
                 ->count(['model' => $model->getId()]);
         
+        $totalGoods = count($this->entityManager->getRepository(Make::class)
+                ->findModelGoods($model));
+        
         // Render the view template.
         return new ViewModel([
             'model' => $model,
             'totalCar' => $totalCar,
+            'totalgoods' => $totalGoods,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
         ]);
     }      
+    
+    public function updateAvailableModelAction()
+    {
+        $modelId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($modelId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $model = $this->entityManager->getRepository(Model::class)
+                ->findOneById($modelId);
+        
+        if ($model == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->updateAvailable(null, $model);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
     
 }

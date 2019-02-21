@@ -171,5 +171,28 @@ class MakeRepository extends EntityRepository{
         }
 
         return $queryBuilder->getQuery();
-    }            
+    }
+    
+     /**
+     * Найти товары модели
+     * 
+     * @param Application\Entity\Model $model
+     * @return object
+     */
+    public function findModelGoods($model)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->distinct()    
+            ->from(\Application\Entity\Goods::class, 'g')
+            ->join('g.cars', 'c')
+            ->where('c.model = ?1')    
+            ->setParameter('1', $model->getId())
+            ;
+        
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
 }
