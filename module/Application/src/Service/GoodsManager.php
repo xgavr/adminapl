@@ -226,6 +226,7 @@ class GoodsManager
                 ->findGoodsForUpdateCar();
         
         foreach ($goodsForUpdate as $good){
+            $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
             $this->externalManager->addCarsToGood($good);
             $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
         }

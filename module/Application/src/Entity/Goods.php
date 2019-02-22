@@ -27,6 +27,7 @@ class Goods {
     const AVAILABLE_FALSE   = 0; // Недоступен.
     
     const CAR_UPDATED = 2; // машины обновлены
+    const CAR_UPDATING = 3; // машины обновляются
     const CAR_FOR_UPDATE = 1; // машины не обновлялись
     
     const IMAGE_UPDATED = 2; // картинки обновлены

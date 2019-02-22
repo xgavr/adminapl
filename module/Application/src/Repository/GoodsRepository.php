@@ -316,8 +316,8 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
-            ->where('g.statusCar != ?1')
-            ->setParameter('1', Goods::CAR_UPDATED)    
+            ->where('g.statusCar = ?1')
+            ->setParameter('1', Goods::GROUP_FOR_UPDATE)    
             ->setMaxResults(2000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
