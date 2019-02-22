@@ -219,8 +219,10 @@ class GoodsManager
      * Обновить машины у товаров
      */
     public function updateCars()
-    {
+    {        
         set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 800;
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateCar();
@@ -229,6 +231,11 @@ class GoodsManager
             $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
             $this->externalManager->addCarsToGood($good);
             $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+            if (time() >= $finishTime){
+                return;
+            }
         }
+        
+        return;
     }
 }
