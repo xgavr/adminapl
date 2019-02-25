@@ -134,7 +134,7 @@ class CarController extends AbstractActionController
         }        
 
         $this->entityManager->getRepository(Car::class)
-                ->updateAvailable(null, null, $car);
+                ->updateAvailable($car);
         
         return new JsonModel([
             'result' => 'ok-reload',

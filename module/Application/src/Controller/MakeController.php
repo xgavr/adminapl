@@ -235,7 +235,7 @@ class MakeController extends AbstractActionController
         }        
 
         $this->entityManager->getRepository(\Application\Entity\Car::class)
-                ->updateAvailable($make);
+                ->updateAvailableMake($make);
         
         return new JsonModel([
             'result' => 'ok-reload',
@@ -300,7 +300,7 @@ class MakeController extends AbstractActionController
         }        
 
         $this->entityManager->getRepository(\Application\Entity\Car::class)
-                ->updateAvailable(null, $model);
+                ->updateAvailableModel($model);
         
         return new JsonModel([
             'result' => 'ok-reload',

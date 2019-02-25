@@ -137,66 +137,89 @@ class CarRepository extends EntityRepository
     /**
      * Обновить доступность машин
      * 
-     * @param Application\Entity\Make $make
-     * @param Application\Entity\Model $model
      * @param Application\Entity\Car $car
      * 
      * @return null
      */
-    public function updateAvailable($make = null, $model = null, $car = null)
+    public function updateAvailable($car)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('count(g.id) as goodCount')
+        $queryBuilder->select('c.id as carId, count(g.id) as goodCount')
             ->from(Car::class, 'c')
             ->leftJoin('c.goods', 'g')
+            ->groupBy('c.id')    
+            ->where('c.id = ?1')
+            ->setParameter('1', $car->getId())
             ;
-        
-        if ($car){
-            $queryBuilder
-                    ->addSelect('c.id as carId')
-                    ->andWhere('c.id = ?1')
-                    ->groupBy('c.id')    
-                    ->setParameter('1', $car->getId())
-                    ;
-        } elseif ($model){
-            $queryBuilder
-                    ->addSelect('identity(c.model) as modelId')
-                    ->join('c.model', 'm')
-                    ->andWhere('m.id = ?2')
-                    ->groupBy('modelId')    
-                    ->setParameter('2', $model->getId())
-                    ;
-        } elseif ($make){
-            $queryBuilder
-                    ->addSelect('identity(c.make) as makeId')
-                    ->join('c.model', 'm')
-                    ->groupBy('makeId')    
-                    ->andWhere('m.make = ?3')
-                    ->setParameter('3', $make->getId())
-                    ;
-        }
-        
+                
         $data = $queryBuilder->getQuery()->getResult();
         
         foreach ($data as $row){
             switch ($row['goodCount']){
                 case 0: $status = Car::STATUS_RETIRED; break;
-                default: $status = Car::STATUS_ACTIVE;
+                default: $status = Car::STATUS_ACTIVE; break;
             }
-//            var_dump($status); exit;
-            if (isset($row['carId'])){
-                $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['carId']]);
-            }    
-            if (isset($row['modelId'])){
-                $this->getEntityManager()->getConnection()->update('model', ['status' => $status], ['id' => $row['modelId']]);
-            }    
-            if (isset($row['makeId'])){
-                $this->getEntityManager()->getConnection()->update('make', ['status' => $status], ['id' => $row['makeId']]);
-            }    
+            
+            $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['carId']]);
         }      
         
         return;
     }    
+    
+    /**
+     * Обновить доступность моделей
+     * 
+     * @param Application\Entity\Model $model
+     * 
+     * @return null
+     */
+    public function updateAvailableModel($model)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('c')
+            ->from(Car::class, 'c')
+            ->where('c.model = ?1')
+            ->setParameter('1', $model->getId())
+            ;
+                
+        $cars = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($cars as $car){
+            $this->updateAvailable($car);
+        }      
+        
+        return;
+    }    
+    
+    /**
+     * Обновить доступность брендов
+     * 
+     * @param Application\Entity\Make $make
+     * 
+     * @return null
+     */
+    public function updateAvailableMake($make)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('m')
+            ->from(Model::class, 'm')
+            ->where('m.make = ?1')
+            ->setParameter('1', $model->getId())
+            ;
+                
+        $models = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($models as $model){
+            $this->updateAvailableModel($model);
+        }      
+        
+        return;
+    }    
+    
 }
