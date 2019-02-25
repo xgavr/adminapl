@@ -146,7 +146,7 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('c.id as carId, count(g.id) as goodCount')
+        $queryBuilder->select('count(g.id) as goodCount')
             ->from(Car::class, 'c')
             ->leftJoin('c.goods', 'g')
             ->groupBy('c.id')    
@@ -156,16 +156,17 @@ class CarRepository extends EntityRepository
                 
         $data = $queryBuilder->getQuery()->getResult();
         
+        $result = false;
         foreach ($data as $row){
             switch ($row['goodCount']){
-                case 0: $status = Car::STATUS_RETIRED; break;
+                case 0: $result = true; $status = Car::STATUS_RETIRED; break;
                 default: $status = Car::STATUS_ACTIVE; break;
             }
             
-            $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['carId']]);
+            $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $car->getId()]);
         }      
         
-        return;
+        return $result;
     }    
     
     /**
@@ -188,11 +189,23 @@ class CarRepository extends EntityRepository
                 
         $cars = $queryBuilder->getQuery()->getResult();
         
+        $modelResult = false;
         foreach ($cars as $car){
-            $this->updateAvailable($car);
+            $carResult = $this->updateAvailable($car);
+            if ($carResult){
+                $modelResult = true;
+            }
         }      
         
-        return;
+        $result = false;
+        switch ($modelResult){
+            case true: $result = true; $status = Model::STATUS_RETIRED; break;
+            default: $status = Model::STATUS_ACTIVE; break;
+        }
+            
+        $this->getEntityManager()->getConnection()->update('model', ['status' => $status], ['id' => $model->getId()]);
+        
+        return $result;
     }    
     
     /**
