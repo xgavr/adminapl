@@ -148,10 +148,14 @@ class GoodsManager
         foreach ($good->getCars() as $car){
             $good->removeCarAssociation($car);
         }            
+
+        foreach ($good->getImages() as $image){
+            $this->entityManager->remove($image);
+        }                    
         
         $this->entityManager->remove($good);
         
-        $this->entityManager->flush($good);
+        $this->entityManager->flush();
         
         return true;
     }    

@@ -530,4 +530,33 @@ class ExternalManager
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
         return;
     }
+    
+    public function addImageToGood($good)
+    {
+    
+        $this->entityManager->getRepository(Goods::class)
+                ->removeGoodImage($good, \Application\Entity\Images::STATUS_TD);
+        
+        $tdId = $this->autoDbManager->getBestArticleId($good);
+        if (is_numeric($tdId)){
+            $carsDataI = $this->autoDbManager->getImages($params['good']);
+            if (is_array($carsDataI)){
+                $addFlag = count($carsDataI)<=10;
+                foreach ($carsDataI as $carsData){
+                    if (isset($carsData['data'])){
+                        if (isset($carsData['data']['array'])){
+                            foreach ($carsData['data']['array'] as $carData){
+                                if (isset($carData['vehicleDetails'])){
+                                    $this->addCarToGood($good, $carData['vehicleDetails'], $addFlag);
+                                }    
+                            }
+                        }
+                    }
+                }    
+            }
+        }  
+        $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+        return;
+        
+    }
 }

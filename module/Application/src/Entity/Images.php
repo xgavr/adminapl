@@ -18,6 +18,15 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Images {
     
+    const STATUS_UNKNOWN    = 1; // источник картики неопределен.
+    const STATUS_TD   = 2; // картинка из текдока.
+    const STATUS_SUP   =3; //картинка от поставщика
+    const STATUS_HAND   =4; //картинка добавлена вручную
+    
+    const SIMILAR_UNKNOWN = 1; //картинка не определена 
+    const SIMILAR_MATCH = 2; //картинка совпадает
+    const SIMILAR_SIMILAR = 3; //картинка похожа
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -34,6 +43,17 @@ class Images {
      * @ORM\Column(name="path")   
      */
     protected $path;
+
+    /**
+     * @ORM\Column(name="status")   
+     */
+    protected $status;
+    
+    /**
+     * @ORM\Column(name="similar")   
+     */
+    protected $similar;
+    
 
     public function getId() 
     {
@@ -65,6 +85,25 @@ class Images {
         $this->path = $path;
     }     
     
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }     
+    
+    public function getSimilar() 
+    {
+        return $this->similar;
+    }
+
+    public function setSimilar($similar) 
+    {
+        $this->similar = $similar;
+    }     
     /*
     * @ORM\ManyToOne(targetEntity="\Application\Entity\Goods", inversedBy="images")
     * @ORM\JoinColumn(name="good_id", referencedColumnName="id")    

@@ -369,4 +369,27 @@ class GoodsRepository extends EntityRepository
         $deleted = $this->getEntityManager()->getConnection()->delete('good_car', ['good_id' => $good->getId()]);
         return $deleted;        
     }
+    
+    /**
+     * Удаление картинок товара
+     * 
+     * @param Applcation\Entity\Goods $good
+     * @param integer $status
+     * @return integer
+     */
+    public function removeGoodImage($good, $status = null)
+    {
+        $where = [
+            'good_id' => $good->getId(),
+        ];
+        
+        if ($status){
+            $where['status'] = $status;
+        }
+        
+        
+        $deleted = $this->getEntityManager()->getConnection()->delete('images', $where);
+        return $deleted;        
+        
+    }
 }
