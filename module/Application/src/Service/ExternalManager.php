@@ -251,7 +251,7 @@ class ExternalManager
 //            var_dump($model); exit;
         }
         
-        return $model;
+        return;
     }
     
     /**

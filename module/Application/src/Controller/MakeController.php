@@ -55,7 +55,7 @@ class MakeController extends AbstractActionController
             'totalMake' => $totalMake,
             'totalModel' => $totalModel,
             'totalCar' => $totalCar,
-            'totalGoods' => $totalGoods,
+//            'totalGoods' => $totalGoods,
         ]);  
     }
     
