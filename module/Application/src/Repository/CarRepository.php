@@ -235,4 +235,34 @@ class CarRepository extends EntityRepository
         return;
     }    
     
+    /**
+     * Обновить статус машин, в зависимости от количества товара
+     * @return null
+     */
+    public function updateAllCarStatus()
+    {
+        set_time_limit(900);
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('c.id, count(g.id) as goodCount')
+            ->from(Car::class, 'c')
+            ->leftJoin('c.goods', 'g')  
+            ->groupBy('c.id')
+            ;
+                
+        $carIds = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($carIds as $row){
+            switch ($row['goodCount']){
+                case 0: $result = true; $status = Car::STATUS_RETIRED; break;
+                default: $status = Car::STATUS_ACTIVE; break;
+            }
+            
+            $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['id']]);
+        }      
+        
+        return;        
+    }
 }

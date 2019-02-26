@@ -141,6 +141,18 @@ class CarController extends AbstractActionController
         ]);                  
     }
 
+    public function updateAllStatusAction()
+    {
+
+        $this->entityManager->getRepository(Car::class)
+                ->updateAllCarStatus();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+
+
     public function fillCarsAction()
     {
         $modelId = (int)$this->params()->fromRoute('id', -1);
