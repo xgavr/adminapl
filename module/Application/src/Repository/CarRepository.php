@@ -277,11 +277,11 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m.id, max(if(c.status = ?1, 1, 0)) as maxStatus')
+        $queryBuilder->select('m.id, max(if(c.status = 1, 1, 0)) as maxStatus')
             ->from(Model::class, 'm')
             ->leftJoin('m.cars', 'c')  
             ->groupBy('m.id')
-            ->setParameter('1', Car::STATUS_ACTIVE)    
+//            ->setParameter('1', Car::STATUS_ACTIVE)    
             ;
                 
         $modelIds = $queryBuilder->getQuery()->getResult();
