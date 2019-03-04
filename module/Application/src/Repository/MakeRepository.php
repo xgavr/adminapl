@@ -121,7 +121,9 @@ class MakeRepository extends EntityRepository{
                  ;
             }
             if (isset($params['status'])){
-                $queryBuilder->andWhere('m.status', $params['status']);                
+                $queryBuilder->andWhere('m.status = ?3')
+                    ->setParameter('3', $params['status'])
+                        ;
             }            
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('m.'.$params['sort'], $params['order']);                
