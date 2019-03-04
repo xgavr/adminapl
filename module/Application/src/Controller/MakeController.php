@@ -318,5 +318,16 @@ class MakeController extends AbstractActionController
         ]);                  
     }
 
+    public function updateAllMakeStatusAction()
+    {
+
+        $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->updateAllMakeStatus();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+
     
 }

@@ -294,4 +294,33 @@ class CarRepository extends EntityRepository
         
         return;        
     }
+
+    /**
+     * Обновить статус марок, в зависимости от количества товара
+     * @return null
+     */
+    public function updateAllMakeStatus()
+    {
+        set_time_limit(900);
+        
+        $entityManager = $this->getEntityManager();
+
+        $this->getEntityManager()->getConnection()->update('make', ['status' => Make::STATUS_RETIRED], [1 => 1]);
+        
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('m.id')
+            ->from(Make::class, 'm')
+            ->join('m.models', 'mm')  
+            ->where('mm.status = ?1')    
+            ->setParameter('1', Model::STATUS_ACTIVE)    
+            ;
+                
+        $makeIds = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($makeIds as $row){            
+            $this->getEntityManager()->getConnection()->update('make', ['status' => Make::STATUS_ACTIVE], ['id' => $row['id']]);
+        }      
+        
+        return;        
+    }
 }
