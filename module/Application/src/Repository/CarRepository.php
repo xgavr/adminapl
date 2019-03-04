@@ -276,7 +276,7 @@ class CarRepository extends EntityRepository
         
         $entityManager = $this->getEntityManager();
 
-        $this->getEntityManager()->getConnection()->update('model', ['status' => Model::STATUS_RETIRED]);
+        $this->getEntityManager()->getConnection()->update('model', ['status' => Model::STATUS_RETIRED], [1 => 1]);
         
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('m.id')
