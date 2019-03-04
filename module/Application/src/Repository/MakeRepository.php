@@ -120,6 +120,9 @@ class MakeRepository extends EntityRepository{
                     ->setMaxResults(1)    
                  ;
             }
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('m.status', $params['status']);                
+            }            
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('m.'.$params['sort'], $params['order']);                
             }            
