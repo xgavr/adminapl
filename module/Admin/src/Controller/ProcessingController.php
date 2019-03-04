@@ -736,4 +736,27 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    public function updateCarStatusAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_car'] == 1){
+
+            $this->entityManager->getRepository(\Application\Entity\Car::class)
+                    ->updateAllCarStatus();
+
+            $this->entityManager->getRepository(\Application\Entity\Car::class)
+                    ->updateAllModelStatus();
+
+            $this->entityManager->getRepository(\Application\Entity\Car::class)
+                    ->updateAllMakeStatus();
+            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }
