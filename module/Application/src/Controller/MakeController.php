@@ -67,7 +67,7 @@ class MakeController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         $limit = $this->params()->fromQuery('limit');
-        $status = $this->params()->fromQuery('status', 1);
+        $status = $this->params()->fromQuery('status', Make::STATUS_ACTIVE);
         
         $query = $this->entityManager->getRepository(Make::class)
                         ->findAllMake(['q' => $q, 'sort' => $sort, 'order' => $order, 'status' => $status]);
