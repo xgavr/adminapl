@@ -43,11 +43,11 @@ class MakeController extends AbstractActionController
     public function indexAction()
     {
         $totalMake = $this->entityManager->getRepository(Make::class)
-                ->count([]);
+                ->count(['status' => Make::STATUS_ACTIVE]);
         $totalModel = $this->entityManager->getRepository(Model::class)
-                ->count([]);
+                ->count(['status' => Model::STATUS_ACTIVE]);
         $totalCar = $this->entityManager->getRepository(\Application\Entity\Car::class)
-                ->count([]);
+                ->count(['status' => \Application\Entity\Car::STATUS_ACTIVE]);
 //        $totalGoods = count($this->entityManager->getRepository(Make::class)
 //                ->findGoods());
         
