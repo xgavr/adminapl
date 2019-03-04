@@ -39,6 +39,9 @@ class Goods {
     const GROUP_UPDATED = 2; // группы обновлены
     const GROUP_FOR_UPDATE = 1; // группы не обновлялись
 
+    const OEM_UPDATED = 2; // номера обновлены
+    const OEM_FOR_UPDATE = 1; // номера не обновлялись
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -79,11 +82,22 @@ class Goods {
      * @ORM\Column(name="status_group")   
      */
     protected $statusGroup;
+    
     /**
      * @ORM\Column(name="status_description")   
      */
     protected $statusDescription;
     
+    /**
+     * @ORM\Column(name="status_oem")   
+     */
+    protected $statusOem;
+
+    /**
+     * @ORM\Column(name="car_count")   
+     */
+    protected $carCount;
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
@@ -423,6 +437,26 @@ class Goods {
     public function setStatusDescription($statusDescription)
     {
         $this->statusDescription = $statusDescription;
+    }    
+    
+    public function getStatusOem()
+    {
+        $this->statusOem;
+    }
+    
+    public function setStatusOem($statusOem)
+    {
+        $this->statusOem = $statusOem;
+    }    
+    
+    public function getCarCount()
+    {
+        $this->carCount;
+    }
+    
+    public function setCarCount($carCount)
+    {
+        $this->carCount = $carCount;
     }    
     
 }
