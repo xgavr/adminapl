@@ -276,24 +276,20 @@ class CarRepository extends EntityRepository
         
         $entityManager = $this->getEntityManager();
 
+        $this->getEntityManager()->getConnection()->update('model', ['status' => Model::STATUS_RETIRED], []);
+        
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m.id, max(if(c.status = 1, 1, 0)) as maxStatus')
+        $queryBuilder->select('m.id')
             ->from(Model::class, 'm')
-            ->leftJoin('m.cars', 'c')  
-            ->groupBy('m.id')
-//            ->setParameter('1', Car::STATUS_ACTIVE)    
+            ->join('m.cars', 'c')  
+            ->where('c.status = ?1')    
+            ->setParameter('1', Car::STATUS_ACTIVE)    
             ;
                 
         $modelIds = $queryBuilder->getQuery()->getResult();
         
-        foreach ($modelIds as $row){
-            if ($row['maxStatus'] == Car::STATUS_ACTIVE){
-                $status = Model::STATUS_ACTIVE;
-            } else {
-                $status = Model::STATUS_RETIRED;
-            }
-            
-            $this->getEntityManager()->getConnection()->update('model', ['status' => $status], ['id' => $row['id']]);
+        foreach ($modelIds as $row){            
+            $this->getEntityManager()->getConnection()->update('model', ['status' => Model::STATUS_ACTIVE], ['id' => $row['id']]);
         }      
         
         return;        
