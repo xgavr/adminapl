@@ -48,14 +48,14 @@ class MakeController extends AbstractActionController
                 ->count(['status' => Model::STATUS_ACTIVE]);
         $totalCar = $this->entityManager->getRepository(\Application\Entity\Car::class)
                 ->count(['status' => \Application\Entity\Car::STATUS_ACTIVE]);
-//        $totalGoods = count($this->entityManager->getRepository(Make::class)
-//                ->findGoods());
+        $totalGoods = $this->entityManager->getRepository(Make::class)
+                ->findGoods();
         
         return new ViewModel([
             'totalMake' => $totalMake,
             'totalModel' => $totalModel,
             'totalCar' => $totalCar,
-//            'totalGoods' => $totalGoods,
+            'totalGoods' => $totalGoods,
         ]);  
     }
     
