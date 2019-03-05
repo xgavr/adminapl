@@ -392,4 +392,32 @@ class GoodsRepository extends EntityRepository
         return $deleted;        
         
     }
+    
+    /**
+     * Обновить количество машин в товаре
+     * @return null
+     */
+    public function updateGoodCarCount()
+    {
+        set_time_limit(900);
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g.id, count(c.id) as carCount')
+            ->from(Goods::class, 'g')
+            ->leftJoin('g.cars', 'c')  
+            ->groupBy('g.id')
+            ;
+                
+        $goodIds = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($goodIds as $row){
+            $this->getEntityManager()->getConnection()->update('goods', ['car_count' => $row['carCount']], ['id' => $row['id']]);
+        }      
+        
+        return;        
+    }
+
+    
 }

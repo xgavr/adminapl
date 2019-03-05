@@ -535,5 +535,16 @@ class GoodsController extends AbstractActionController
         ]);          
     }
     
+    public function updateCarCountAction()
+    {
+
+        $this->entityManager->getRepository(Goods::class)
+                ->updateGoodCarCount();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+
     
 }
