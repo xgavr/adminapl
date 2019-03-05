@@ -82,6 +82,7 @@ class AssemblyManager
         $good->setStatusDescription(Goods::DESCRIPTION_FOR_UPDATE);
         $good->setStatusGroup(Goods::GROUP_FOR_UPDATE);
         $good->setStatusImage(Goods::IMAGE_FOR_UPDATE);
+        $good->setStatusOem(Goods::OEM_FOR_UPDATE);
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($good);
