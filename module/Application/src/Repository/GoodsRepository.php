@@ -399,7 +399,7 @@ class GoodsRepository extends EntityRepository
      */
     public function updateGoodCarCount()
     {
-        set_time_limit(900);
+        set_time_limit(1800);
         ini_set('memory_limit', '2048M');
         
         $entityManager = $this->getEntityManager();
