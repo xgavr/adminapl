@@ -759,4 +759,21 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    public function updateGoodCarCountAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_car'] == 1){
+
+            $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    ->updateGoodCarCount();
+            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }
