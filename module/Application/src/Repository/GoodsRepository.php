@@ -305,6 +305,30 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Количество товара с Апл ид
+     * 
+     * @return integer
+     */
+    public function findAplIds()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('count(g.id) as aplIdsCount')
+            ->from(Goods::class, 'g')
+            ->where('g.aplId > 0')    
+            ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($data as $row){
+            return $row['aplIdsCount'];
+        }
+        
+        return;
+    }
+    
+    /**
      * Найти товары для обновления машин по апи текдока
      * 
      * @return object

@@ -173,11 +173,18 @@ class GoodsController extends AbstractActionController
         
         $total = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
+        $totalCar = $this->entityManager->getRepository(\Application\Entity\Make::class)
+                ->findGoods();
+        $aplIds = $this->entityManager->getRepository(Goods::class)
+                ->findAplIds();
+        
                 
         // Визуализируем шаблон представления.
         return new ViewModel([
             'goodsManager' => $this->goodsManager,
             'total' => $total,
+            'totalCar' => $totalCar,
+            'aplIds' => $aplIds,
         ]);  
     }
     
