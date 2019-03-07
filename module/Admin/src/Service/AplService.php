@@ -593,9 +593,11 @@ class AplService {
             $response = file_get_contents($url);
             try {
                 if (is_numeric($response)){
-                    $good->setAplId($response);
-                    $this->entityManager->persist($good);
-                    $this->entityManager->flush($good);
+//                    $good->setAplId($response);
+//                    $this->entityManager->persist($good);
+//                    $this->entityManager->flush($good);
+                    $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                            ->updateGoodId($good->getId(), ['apl_id' => $response]);
                     return;
                 }
             } catch (Exception $ex) {
