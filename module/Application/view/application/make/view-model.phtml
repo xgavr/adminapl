@@ -41,36 +41,38 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
             </tr>
             <?php foreach($model->getCars() as $car):?>
-                <tr>
-                    <td>
-                        <?= $car->getId()?>
-                    </td>
-                    <td>
-                        <?= $car->getTdId()?>
-                    </td>
-                    <td>
-                        <?= $car->getAplId()?>
-                    </td>
-                    <td colspan="3">
-                        <span>
-                            <a href="/car/view/<?= $car->getId()?>">
-                                <?= $car->getName()?>
-                            </a>                               
-                        </span>
-                        <small>
-                            <?= $car->getStatusAsString()?>
-                        </small>
-                    </td>
-                </tr>    
-                <tr>
-                    <td colspan="6">
-                        <small>
-                           <?php foreach ($car->getCarAtributeValues() as $carAttributeValue):?>
-                            <span><?= $carAttributeValue->getValue(); ?></span>
-                            <?php endforeach;?>
-                        </small>
-                    </td>                    
-                </tr>
+                <?php if ($car->getStatus() == $car::STATUS_ACTIVE):?>
+                    <tr>
+                        <td>
+                            <?= $car->getId()?>
+                        </td>
+                        <td>
+                            <?= $car->getTdId()?>
+                        </td>
+                        <td>
+                            <?= $car->getAplId()?>
+                        </td>
+                        <td colspan="3">
+                            <span>
+                                <a href="/car/view/<?= $car->getId()?>">
+                                    <?= $car->getName()?>
+                                </a>                               
+                            </span>
+                            <small>
+                                <?= $car->getStatusAsString()?>
+                            </small>
+                        </td>
+                    </tr>    
+                    <tr>
+                        <td colspan="6">
+                            <small>
+                               <?php foreach ($car->getCarAtributeValues() as $carAttributeValue):?>
+                                <span><?= $carAttributeValue->getValue(); ?></span>
+                                <?php endforeach;?>
+                            </small>
+                        </td>                    
+                    </tr>
+                <?php endif;?>    
             <?php endforeach;?>    
         </table>
     </div>

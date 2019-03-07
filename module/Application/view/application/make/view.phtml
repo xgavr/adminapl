@@ -38,33 +38,35 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
             </tr>
             <?php foreach($make->getModels() as $model):?>
-            <tr>
-                <td>
-                    <?= $model->getId()?>
-                </td>
-                <td>
-                    <?= $model->getTdId()?>
-                </td>
-                <td>
-                    <?= $model->getAplId()?>
-                </td>
-                <td>
-                    <span>
-                        <a href="/make/view-model/<?= $model->getId()?>">
-                            <?= $model->getName()?>
-                        </a>   
-                    </span>
-                    <small>
-                        <?= $model->getStatusAsString()?>
-                    </small>
-                </td>
-                <td>
-                    <?= $model->getInterval()?>
-                </td>
-                <td>
-                    
-                </td>
-            </tr>
+                <?php if ($model->getStatus() == $model::STATUS_ACTIVE):?>
+                    <tr>
+                        <td>
+                            <?= $model->getId()?>
+                        </td>
+                        <td>
+                            <?= $model->getTdId()?>
+                        </td>
+                        <td>
+                            <?= $model->getAplId()?>
+                        </td>
+                        <td>
+                            <span>
+                                <a href="/make/view-model/<?= $model->getId()?>">
+                                    <?= $model->getName()?>
+                                </a>   
+                            </span>
+                            <small>
+                                <?= $model->getStatusAsString()?>
+                            </small>
+                        </td>
+                        <td>
+                            <?= $model->getInterval()?>
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                <?php endif;?>
             <?php endforeach;?>
         </table>        
     </div>
