@@ -696,9 +696,45 @@ class AplService {
     public function updateMakeAplId()
     {
         $makes = $this->entityManager->getRepository(\Application\Entity\Make::class)
-                ->findBy([]);
+                ->findBy(['status' => \Application\Entity\Make::STATUS_ACTIVE]);
         foreach ($makes as $make){
             $this->getMakeAplId($make);
+        }
+        
+        return;        
+    }
+
+    public function getModelAplId($model)
+    {
+        if ($model->getMake()->getAplId() && $model->getTdId()){
+
+            $url = $this->aplApi().'get-serie-id?brand='.$model->getMake()->getAplId().'&tdId='.$model->getTdId().'&api='.$this->aplApiKey();
+            
+//                var_dump($url); 
+            $response = file_get_contents($url);
+            try {
+                if (is_numeric($response)){
+//                    var_dump($response);
+                    $model->setAplId($response);
+                    $this->entityManager->persist($model);
+                    $this->entityManager->flush($model);
+                    return;
+                }
+            } catch (Exception $ex) {
+//                var_dump($ex->getMessage());
+                return;
+            }
+        }    
+        
+        return;        
+    }
+
+    public function updateModelAplId()
+    {
+        $models = $this->entityManager->getRepository(\Application\Entity\Model::class)
+                ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE]);
+        foreach ($models as $model){
+            $this->getModelAplId($model);
         }
         
         return;        
