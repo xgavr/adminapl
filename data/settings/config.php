@@ -13,7 +13,7 @@ return array(
         'telegram_api_key' => '460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s',
         'telegram_hook_url' => 'https://adminapl.ru/telegramm/hook',
         'telegram_admin_chat_id' => '189788583',
-        'telegram_proxy' => 'socks5://telegram:telegram@idpuw.teletype.live:1080',
+        'telegram_proxy' => 'socks5://132.145.36.9:1080',
         'ftp_apl_suppliers_price' => 'autopartslist.ru',
         'ftp_apl_suppliers_price_login' => 'prices',
         'ftp_apl_suppliers_price_password' => '8C0c1K4x',

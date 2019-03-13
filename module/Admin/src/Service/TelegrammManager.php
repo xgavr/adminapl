@@ -182,4 +182,14 @@ class TelegrammManager {
             return $result;
         }    
     }
+    
+    public function proxyList()
+    {
+        $countryList = [
+            'FI', 'DE', 'PL', 'UA', 'SE', 'NO', 'US'
+        ];
+        //https://www.nationsonline.org/oneworld/country_code_list.htm
+        
+        $uri = 'https://www.proxy-list.download/api/v1/get?type=socks5&country=DE';
+    }
 }
