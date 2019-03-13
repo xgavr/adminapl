@@ -608,6 +608,17 @@ class IndexController extends AbstractActionController
         ]);        
     }
     
+    public function checkProxyAction()
+    {
+        $proxy = $this->telegrammManager->getProxy();
+        
+        return new JsonModel([
+            'result' => 'ok',
+            'message' => $proxy,
+        ]);        
+    }
+
+
     public function testTamTamAction()
     {
         $result = $this->tamtamManager->message(['chat_id' => '55672109400089', 'text' => 'Привет!']);

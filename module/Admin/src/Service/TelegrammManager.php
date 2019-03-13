@@ -183,13 +183,64 @@ class TelegrammManager {
         }    
     }
     
+    /**
+     * Поверить доступность прокси
+     * 
+     * @param string $proxy
+     * @return bool
+     */
+    public function checkProxy($proxy)
+    {
+        $proxy_port =  explode(':', $proxy);
+        $host = $proxy_port[0]; 
+        $port = $proxy_port[1]; 
+        $waitTimeoutInSeconds = 5; 
+        if($fp = @fsockopen($host, $port, $errCode, $errStr, $waitTimeoutInSeconds)){   
+           $result = true;
+        } else {
+           $result = false;
+        } 
+        fclose($fp);      
+        
+        return $result;
+    }
+    
+    /**
+     * Получить список прокси
+     * @return array
+     */
     public function proxyList()
     {
         $countryList = [
-            'FI', 'DE', 'PL', 'UA', 'SE', 'NO', 'US'
+            'FI', 'DE', 'PL', 'UA', 'SE', 'NO', 'US',
         ];
         //https://www.nationsonline.org/oneworld/country_code_list.htm
         
-        $uri = 'https://www.proxy-list.download/api/v1/get?type=socks5&country=DE';
+        $uri = 'https://www.proxy-list.download/api/v1/get?type=socks5&country=';
+        
+        $result = [];
+        foreach ($countryList as $country){
+            $list = file(file_get_contents($uri.$country));
+            $result = array_merge($result, $list);
+        }    
+        
+        return $result;
+    }
+    
+    /**
+     * Получить прокси
+     * 
+     * @return string
+     */
+    public function getProxy()
+    {
+        $proxyList = $this->proxyList();
+        foreach ($proxyList as $proxy){
+            if ($this->checkProxy($proxy)){
+                return $proxy;
+            }
+        }
+        
+        return;
     }
 }
