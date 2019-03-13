@@ -12,6 +12,7 @@ use Admin\Form\PriceSettingsForm;
 use Admin\Form\BankSettingsForm;
 use Admin\Form\AplExchangeForm;
 use Admin\Form\TdExchangeForm;
+use Admin\Form\TelegramSettingsForm;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -483,6 +484,92 @@ class IndexController extends AbstractActionController
                 
                 // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
                 $this->adminManager->setTdExchangeSettings($data);                
+            }
+        } else {
+            if ($settings){
+                $form->setData($settings);
+            }    
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
+    /**
+     * Управление настройками telegram
+     * 
+     * @return ViewModel
+     */
+    public function telegramSettingsAction()
+    {
+        $form = new TelegramSettingsForm();
+    
+        $settings = $this->adminManager->getTelegramSettings();
+        
+        if ($settings){
+            $form->setData($settings);
+        }    
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setTelegramSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+                // Перенаправляем пользователя на страницу "goods".
+                return $this->redirect()->toRoute('admin', ['action' => 'telegram-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        }
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
+    /**
+     * Управление настройками telegram
+     */    
+    public function telegramSettingsFormAction()
+    {
+        $form = new TelegramSettingsForm();
+    
+        $settings = $this->adminManager->getTelegramSettings();
+        
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                // Используем менеджер постов, чтобы добавить новый пост в базу данных.                
+                $this->adminManager->setTelegramSettings($data);                
             }
         } else {
             if ($settings){

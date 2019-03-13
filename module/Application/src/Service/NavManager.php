@@ -293,6 +293,12 @@ class NavManager
                 ];
 
                 $settingsDropDownItems[] = [
+                    'id' => 'telegram',
+                    'label' => 'Настройи telegram',
+                    'link'  => $url('admin', ['action' => 'telegram-settings'])                    
+                ];
+
+                $settingsDropDownItems[] = [
                     'id' => 'aplExchange',
                     'label' => 'Настройи обмена с АПЛ',
                     'link'  => $url('admin', ['action' => 'apl-exchange-settings'])                    

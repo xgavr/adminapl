@@ -23,6 +23,7 @@ class AdminManager {
     const BANK_SETTINGS_FILE       = './data/settings/bank_config.php'; // файл с настройками обмена с банком
     const APL_EXCHANGE_SETTINGS_FILE       = './data/settings/apl_exchange_config.php'; // файл с настройками обмена с банком
     const TD_EXCHANGE_SETTINGS_FILE       = './data/settings/td_exchange_config.php'; // файл с настройками обмена по апи текдока
+    const TELEGRAM_SETTINGS_FILE       = './data/settings/telegram_config.php'; // файл с настройками telegram
     
     /**
      * Doctrine entity manager.
@@ -71,13 +72,7 @@ class AdminManager {
 
         $config->admin->sms_ru_url = $data['sms_ru_url'];
         $config->admin->sms_ru_api_id = $data['sms_ru_api_id'];
-        
-        $config->admin->telegram_bot_name = $data['telegram_bot_name'];
-        $config->admin->telegram_api_key = $data['telegram_api_key'];
-        $config->admin->telegram_hook_url = $data['telegram_hook_url'];
-        $config->admin->telegram_admin_chat_id = $data['telegram_admin_chat_id'];
-        $config->admin->telegram_proxy = $data['telegram_proxy'];
-        
+                
         $config->admin->ftp_apl_suppliers_price = $data['ftp_apl_suppliers_price'];
         $config->admin->ftp_apl_suppliers_price_login = $data['ftp_apl_suppliers_price_login'];
         $config->admin->ftp_apl_suppliers_price_password = $data['ftp_apl_suppliers_price_password'];
@@ -281,6 +276,53 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::TD_EXCHANGE_SETTINGS_FILE, $config);
+    }
+    
+    /**
+     * Получить настройки telegram
+     * @return array 
+     */
+    public function getTelegramSettings()
+    {
+        if (file_exists(self::TELEGRAM_SETTINGS_FILE)){
+            $config = new Config(include self::TELEGRAM_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->telegram_settings = [];
+        }   
+        
+        return $config->telegram_settings;
+    }
+    
+    /**
+     * Настройки telegram
+     * @param array $data
+     */
+    public function setTelegramSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::TELEGRAM_SETTINGS_FILE)){
+            $config = new Config(include self::TELEGRAM_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->telegram_settings = [];
+        }
+        
+        if (!isset($config->telegram_settings)){
+            $config->telegram_settings = [];
+        }
+        
+        $config->telegram_settings->telegram_bot_name = $data['telegram_bot_name'];
+        $config->telegram_settings->telegram_api_key = $data['telegram_api_key'];
+        $config->telegram_settings->telegram_hook_url = $data['telegram_hook_url'];
+        $config->telegram_settings->telegram_admin_chat_id = $data['telegram_admin_chat_id'];
+        $config->telegram_settings->telegram_proxy = $data['telegram_proxy'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::TELEGRAM_SETTINGS_FILE, $config);
     }
     
 }
