@@ -596,7 +596,7 @@ class IndexController extends AbstractActionController
 
     public function testTelegramAction()
     {
-        $settings = $this->adminManager->getSettings();
+        $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_admin_chat_id']){
             $result = $this->telegrammManager->sendMessage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 

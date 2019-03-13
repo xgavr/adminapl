@@ -87,18 +87,16 @@ $form->prepare();
             <?= $this->formElement($form->get('telegram_proxy')); ?>
             <?= $this->formElementErrors($form->get('telegram_proxy')); ?>                  
         </div>
-
-        <div class="form-group">
-            <button class="btn btn-default test-button" value="/admin/test-telegram">
-                <span class="glyphicon glyphicon-phone" ></span>Телеграм тест
-            </button>
-        </div>    
-                        
     </div>   
     <div class="col-sm-3" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
             <li class="active">
                 <?= $this->formElement($form->get('submit')); ?>
+            </li>
+            <li>
+                <button class="btn btn-default test-button" value="/admin/test-telegram">
+                    <span class="glyphicon glyphicon-phone" ></span>Тест
+                </button>                
             </li>
         </ul>
     </div>    

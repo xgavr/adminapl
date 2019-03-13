@@ -47,7 +47,7 @@ class TelegrammManager {
     public function hook()
     {
         
-        $settings = $this->adminManager->getSettings();
+        $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name'] && $settings['telegram_admin_chat_id']){
         
             $writer = new Stream($this::LOG_FILE);
@@ -91,7 +91,7 @@ class TelegrammManager {
     
     public function setHook()
     {
-        $settings = $this->adminManager->getSettings();
+        $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name'] && $settings['telegram_hook_url']){
         
             $writer = new Stream($this::LOG_FILE);
@@ -115,7 +115,7 @@ class TelegrammManager {
     
     public function unsetHook()
     {
-        $settings = $this->adminManager->getSettings();
+        $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name']){
             
             $writer = new Stream($this::LOG_FILE);
@@ -141,7 +141,7 @@ class TelegrammManager {
     
     public function sendMessage($params)
     {
-        $settings = $this->adminManager->getSettings();
+        $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name']){
 
             $writer = new Stream($this::LOG_FILE);
