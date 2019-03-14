@@ -226,6 +226,7 @@ class TelegrammManager {
     public function proxyList()
     {
         $countryList = [
+            'US',
             'FI', 
             'PL', 
             'UA', 
@@ -238,7 +239,6 @@ class TelegrammManager {
             'NO', 
             'LV', 
             'LT', 
-//            'US',
         ];
         //https://www.nationsonline.org/oneworld/country_code_list.htm
         
@@ -287,7 +287,7 @@ class TelegrammManager {
                 $data = $this->adminManager->getTelegramSettings()->toArray();
                 //var_dump($data); exit;
                 $data['telegram_proxy'] = 'socks5://'.$newProxy;
-                //$this->adminManager->setTelegramSettings($data);
+                $this->adminManager->setTelegramSettings($data);
             }
         }
         
