@@ -191,18 +191,20 @@ class TelegrammManager {
      */
     public function checkProxy($proxy)
     {        
-        $proxyUri = 'socks5://'.$proxy;
         $uri = 'https://api.telegram.org';
         try{
             $client = new Client();
-            $response = $client->request('GET', $uri, ['proxy' => $proxyUri, 'timeout' => 5.0]);
+            $response = $client->request('GET', $uri, ['proxy' => $proxy, 'timeout' => 5.0]);
             if ($response->getStatusCode() == 200){
                 return true;
             } else {
-                var_dump($response->getStatusCode());
-                exit;
+//                var_dump($response->getStatusCode());
+//                exit;
+                return false;
             }
         } catch (\GuzzleHttp\Exception\ConnectException $e){
+            return false;
+        } catch (\GuzzleHttp\Exception\RequestException $e){
             return false;
         }    
         
@@ -252,7 +254,7 @@ class TelegrammManager {
             }    
         }    
         
-        return shuffle(array_filter($result));
+        return array_filter($result);
     }
     
     /**
@@ -265,9 +267,10 @@ class TelegrammManager {
         set_time_limit(900);
 
         $proxyList = $this->proxyList();
+        shuffle($proxyList);
 //        var_dump($proxyList); exit;
         foreach ($proxyList as $proxy){
-            if ($this->checkProxy($proxy)){
+            if ($this->checkProxy('socks5://'.$proxy)){
                 return $proxy;
             }
         }
