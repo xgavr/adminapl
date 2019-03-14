@@ -192,10 +192,11 @@ class TelegrammManager {
     public function checkProxy($proxy)
     {
         if ($proxy){
-            $uri = 'socks5://'.$proxy;
+            $proxyUri = 'socks5://'.$proxy;
+            $uri = 'https://api.telegram.org';
 
             $client = new Client();
-            $response = $client->request('GET', $uri);
+            $response = $client->request('GET', $uri, ['proxy' => $proxyUri]);
             if ($response->isOk()){
                 return true;
             } else {
