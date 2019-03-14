@@ -258,7 +258,6 @@ class ProcessingController extends AbstractActionController
      */
     public function deleteOldPricesAction()
     {
-        set_time_limit(0);
         
         $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                 ->findRawForRemove();

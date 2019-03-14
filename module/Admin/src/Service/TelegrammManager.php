@@ -252,7 +252,7 @@ class TelegrammManager {
             }    
         }    
         
-        return array_filter($result);
+        return shuffle(array_filter($result));
     }
     
     /**
@@ -265,7 +265,7 @@ class TelegrammManager {
         set_time_limit(900);
 
         $proxyList = $this->proxyList();
-        var_dump($proxyList); exit;
+//        var_dump($proxyList); exit;
         foreach ($proxyList as $proxy){
             if ($this->checkProxy($proxy)){
                 return $proxy;
