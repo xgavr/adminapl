@@ -190,20 +190,20 @@ class TelegrammManager {
      * @return bool
      */
     public function checkProxy($proxy)
-    {
-        if ($proxy){
-            $proxyUri = 'socks5://'.$proxy;
-            $uri = 'https://api.telegram.org';
-
+    {        
+        $proxyUri = 'socks5://'.$proxy;
+        $uri = 'https://api.telegram.org';
+        try{
             $client = new Client();
-            $response = $client->request('GET', $uri, ['proxy' => $proxyUri]);
-            if ($response->isOk()){
+            $response = $client->request('GET', $uri, ['proxy' => $proxyUri, 'timeout' => 5.0]);
+            if ($response->getStatusCode() == 200){
                 return true;
             } else {
                 var_dump($response->getStatusCode());
                 exit;
             }
-
+        } catch (\GuzzleHttp\Exception\ConnectException $e){
+            return false;
         }    
         
         return false;
@@ -230,9 +230,15 @@ class TelegrammManager {
             'PL', 
             'UA', 
             'DE', 
+            'IT', 
+            'FR', 
+            'GB', 
+            'RO', 
             'SE', 
             'NO', 
-            'US',
+            'LV', 
+            'LT', 
+//            'US',
         ];
         //https://www.nationsonline.org/oneworld/country_code_list.htm
         
@@ -246,7 +252,7 @@ class TelegrammManager {
             }    
         }    
         
-        return $result;
+        return array_filter($result);
     }
     
     /**
@@ -256,7 +262,10 @@ class TelegrammManager {
      */
     public function getProxy()
     {
+        set_time_limit(900);
+
         $proxyList = $this->proxyList();
+        var_dump($proxyList); exit;
         foreach ($proxyList as $proxy){
             if ($this->checkProxy($proxy)){
                 return $proxy;
@@ -272,15 +281,15 @@ class TelegrammManager {
      */
     public function checkEndChangeProxy()
     {
-        //if ($this->checkCurrentProxy()){
+        if (!$this->checkCurrentProxy()){
             $newProxy = $this->getProxy();
             if ($newProxy){
                 $data = $this->adminManager->getTelegramSettings()->toArray();
                 //var_dump($data); exit;
                 $data['telegram_proxy'] = 'socks5://'.$newProxy;
-                $this->adminManager->setTelegramSettings($data);
+                //$this->adminManager->setTelegramSettings($data);
             }
-        //}
+        }
         
         return;
     }
