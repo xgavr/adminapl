@@ -241,10 +241,7 @@ class ProcessingController extends AbstractActionController
      * Разборка прайсов
      */
     public function parseRawAction()
-    {
-        ini_set('memory_limit', '512M');
-        set_time_limit(0);
-        
+    {        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_raw'] == 1){
