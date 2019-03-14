@@ -42,6 +42,11 @@ $form->get('telegram_proxy')->setAttributes([
     'placeholder'=>'Использовать прокси',
     ]);
 
+$form->get('auto_check_proxy')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Автопроверка прокси',
+    ]);
+
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
@@ -86,6 +91,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('telegram_proxy')); ?>
             <?= $this->formElement($form->get('telegram_proxy')); ?>
             <?= $this->formElementErrors($form->get('telegram_proxy')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('auto_check_proxy')); ?>
+            <?= $this->formElement($form->get('auto_check_proxy')); ?>
+            <?= $this->formElementErrors($form->get('auto_check_proxy')); ?>                  
         </div>
     </div>   
     <div class="col-sm-3" id="side-nav" >

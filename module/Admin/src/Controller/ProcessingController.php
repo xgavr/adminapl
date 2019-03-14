@@ -158,7 +158,7 @@ class ProcessingController extends AbstractActionController
         return [];
     }
     
-    /*
+    /**
      * Сообщения в телеграм
      * $post api_key, chat_id, text
      */
@@ -173,6 +173,20 @@ class ProcessingController extends AbstractActionController
         return new JsonModel(
             $data
         );
+    }
+    
+    public function telegramAutoCheckProxyAction()
+    {
+        $settings = $this->adminManager->getTelegramSettings();
+        
+        if ($settings['auto_check_proxy'] == 1){
+            $this->telegramManager->checkEndChangeProxy();
+        }    
+        
+        return new JsonModel(
+            ['ok']
+        );
+        
     }
     
     /*

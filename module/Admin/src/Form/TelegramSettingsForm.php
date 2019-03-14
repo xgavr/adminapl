@@ -96,6 +96,21 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'auto_check_proxy',
+            'attributes' => [
+                'id' => 'auto_check_proxy'
+            ],
+            'options' => [
+                'label' => 'Автопроверка прокси',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+
                 
         // Добавляем кнопку отправки формы
         $this->add([
@@ -208,6 +223,17 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
                     ],
                 ],
             ]);          
+        
+        $inputFilter->add([
+                'name'     => 'auto_check_proxy',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
         
         
     }    
