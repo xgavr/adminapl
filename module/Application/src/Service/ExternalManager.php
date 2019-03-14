@@ -240,16 +240,18 @@ class ExternalManager
      */
     private function fillModelFromArray($make, $data, $group)
     {
-        foreach ($data as $row){
-            $model = $this->addModel($make, [
-                'tdId' => $row['id'],
-                'aplId' => 0,
-                'name' => $row['name'],
-                'fullName' => '',
-                'constructioninterval' => $row['constructioninterval'],
-            ], $group);
-//            var_dump($model); exit;
-        }
+        if (is_array($data)){
+            foreach ($data as $row){
+                $model = $this->addModel($make, [
+                    'tdId' => $row['id'],
+                    'aplId' => 0,
+                    'name' => $row['name'],
+                    'fullName' => '',
+                    'constructioninterval' => $row['constructioninterval'],
+                ], $group);
+    //            var_dump($model); exit;
+            }
+        }    
         
         return;
     }
