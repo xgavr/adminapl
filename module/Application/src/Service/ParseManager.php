@@ -330,7 +330,7 @@ class ParseManager {
      */
     public function parseRaw($raw = null)
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(0);
         
         if (!$raw){
