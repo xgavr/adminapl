@@ -244,17 +244,20 @@ class TelegrammManager {
         ];
         //https://www.nationsonline.org/oneworld/country_code_list.htm
         
-        $uri = 'https://www.proxy-list.download/api/v1/get?type=socks5&country=';
+//        $uri = 'https://www.proxy-list.download/api/v1/get?type=socks5&country=';
         
-        $result = [];
-        foreach ($countryList as $country){
-            $list = file_get_contents($uri.$country);
-            if ($list){
-                $result = array_merge($result, explode(PHP_EOL, $list));
-            }    
-        }    
+//        $result = [];
+//        foreach ($countryList as $country){
+//            $list = file_get_contents($uri.$country);
+//            if ($list){
+//                $result = array_merge($result, explode(PHP_EOL, $list));
+//            }    
+//        }    
+
+        $uri = 'https://www.proxy-list.download/api/v1/get?type=socks5';
+        $list = file_get_contents($uri);
         
-        return array_filter($result);
+        return array_filter(explode(PHP_EOL, $list));
     }
     
     /**
