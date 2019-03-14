@@ -503,3 +503,294 @@ Content-Length: 62
 * Connection #0 to host 132.145.36.9 left intact
 
  [] []
+[2019-03-13 22:15:26] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 149.154.167.220...
+* TCP_NODELAY set
+*   Trying 2001:67c:4e8:f004::9...
+* TCP_NODELAY set
+* Connected to api.telegram.org (2001:67c:4e8:f004::9) port 443 (#0)
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: d:/ospanel/modules/php/PHP-7.2-x64/cacert.pem
+  CApath: none
+* SSL certificate problem: self signed certificate
+* stopped the pause stream!
+* Closing connection 0
+
+ [] []
+[2019-03-13 22:15:50] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 132.145.36.9...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* Failed to receive SOCKS5 connect request ack.
+* Closing connection 0
+
+ [] []
+[2019-03-14 06:06:25] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 132.145.36.9...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* SOCKS5 request granted.
+* Connected to 132.145.36.9 (132.145.36.9) port 1080 (#0)
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: d:/ospanel/modules/php/PHP-7.2-x64/cacert.pem
+  CApath: none
+* NPN, negotiated HTTP1.1
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: OU=Domain Control Validated; CN=api.telegram.org
+*  start date: May  4 14:42:31 2018 GMT
+*  expire date: May 23 16:17:38 2020 GMT
+*  subjectAltName: host "api.telegram.org" matched cert's "api.telegram.org"
+*  issuer: C=US; ST=Arizona; L=Scottsdale; O=GoDaddy.com, Inc.; OU=http://certs.godaddy.com/repository/; CN=Go Daddy Secure Certificate Authority - G2
+*  SSL certificate verify ok.
+> POST /bot460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s/sendMessage HTTP/1.1
+Host: api.telegram.org
+User-Agent: GuzzleHttp/6.3.3 curl/7.56.0 PHP/7.2.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 62
+
+* upload completely sent off: 62 out of 62 bytes
+< HTTP/1.1 200 OK
+< Server: nginx/1.12.2
+< Date: Thu, 14 Mar 2019 03:06:25 GMT
+< Content-Type: application/json
+< Content-Length: 396
+< Connection: keep-alive
+< Access-Control-Allow-Origin: *
+< Access-Control-Allow-Methods: GET, POST, OPTIONS
+< Access-Control-Expose-Headers: Content-Length,Content-Type,Date,Server,Connection
+< Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+< 
+* Connection #0 to host 132.145.36.9 left intact
+
+ [] []
+[2019-03-14 07:52:51] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 132.145.36.9...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* SOCKS5 request granted.
+* Connected to 132.145.36.9 (132.145.36.9) port 1080 (#0)
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: d:/ospanel/modules/php/PHP-7.2-x64/cacert.pem
+  CApath: none
+* NPN, negotiated HTTP1.1
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: OU=Domain Control Validated; CN=api.telegram.org
+*  start date: May  4 14:42:31 2018 GMT
+*  expire date: May 23 16:17:38 2020 GMT
+*  subjectAltName: host "api.telegram.org" matched cert's "api.telegram.org"
+*  issuer: C=US; ST=Arizona; L=Scottsdale; O=GoDaddy.com, Inc.; OU=http://certs.godaddy.com/repository/; CN=Go Daddy Secure Certificate Authority - G2
+*  SSL certificate verify ok.
+> POST /bot460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s/sendMessage HTTP/1.1
+Host: api.telegram.org
+User-Agent: GuzzleHttp/6.3.3 curl/7.56.0 PHP/7.2.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 62
+
+* upload completely sent off: 62 out of 62 bytes
+< HTTP/1.1 200 OK
+< Server: nginx/1.12.2
+< Date: Thu, 14 Mar 2019 04:52:51 GMT
+< Content-Type: application/json
+< Content-Length: 396
+< Connection: keep-alive
+< Access-Control-Allow-Origin: *
+< Access-Control-Allow-Methods: GET, POST, OPTIONS
+< Access-Control-Expose-Headers: Content-Length,Content-Type,Date,Server,Connection
+< Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+< 
+* Connection #0 to host 132.145.36.9 left intact
+
+ [] []
+[2019-03-14 07:54:29] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 132.145.36.9...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* SOCKS5 request granted.
+* Connected to 132.145.36.9 (132.145.36.9) port 1080 (#0)
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: d:/ospanel/modules/php/PHP-7.2-x64/cacert.pem
+  CApath: none
+* NPN, negotiated HTTP1.1
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: OU=Domain Control Validated; CN=api.telegram.org
+*  start date: May  4 14:42:31 2018 GMT
+*  expire date: May 23 16:17:38 2020 GMT
+*  subjectAltName: host "api.telegram.org" matched cert's "api.telegram.org"
+*  issuer: C=US; ST=Arizona; L=Scottsdale; O=GoDaddy.com, Inc.; OU=http://certs.godaddy.com/repository/; CN=Go Daddy Secure Certificate Authority - G2
+*  SSL certificate verify ok.
+> POST /bot460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s/sendMessage HTTP/1.1
+Host: api.telegram.org
+User-Agent: GuzzleHttp/6.3.3 curl/7.56.0 PHP/7.2.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 62
+
+* upload completely sent off: 62 out of 62 bytes
+< HTTP/1.1 200 OK
+< Server: nginx/1.12.2
+< Date: Thu, 14 Mar 2019 04:54:29 GMT
+< Content-Type: application/json
+< Content-Length: 396
+< Connection: keep-alive
+< Access-Control-Allow-Origin: *
+< Access-Control-Allow-Methods: GET, POST, OPTIONS
+< Access-Control-Expose-Headers: Content-Length,Content-Type,Date,Server,Connection
+< Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+< 
+* Connection #0 to host 132.145.36.9 left intact
+
+ [] []
+[2019-03-14 08:16:30] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 132.145.36.9...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* SOCKS5 request granted.
+* Connected to 132.145.36.9 (132.145.36.9) port 1080 (#0)
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: d:/ospanel/modules/php/PHP-7.2-x64/cacert.pem
+  CApath: none
+* NPN, negotiated HTTP1.1
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: OU=Domain Control Validated; CN=api.telegram.org
+*  start date: May  4 14:42:31 2018 GMT
+*  expire date: May 23 16:17:38 2020 GMT
+*  subjectAltName: host "api.telegram.org" matched cert's "api.telegram.org"
+*  issuer: C=US; ST=Arizona; L=Scottsdale; O=GoDaddy.com, Inc.; OU=http://certs.godaddy.com/repository/; CN=Go Daddy Secure Certificate Authority - G2
+*  SSL certificate verify ok.
+> POST /bot460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s/sendMessage HTTP/1.1
+Host: api.telegram.org
+User-Agent: GuzzleHttp/6.3.3 curl/7.56.0 PHP/7.2.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 62
+
+* upload completely sent off: 62 out of 62 bytes
+* Operation timed out after 10000 milliseconds with 0 bytes received
+* stopped the pause stream!
+* Closing connection 0
+
+ [] []
+[2019-03-14 11:29:23] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 95.216.180.71...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* Failed to receive SOCKS5 connect request ack.
+* Closing connection 0
+
+ [] []
+[2019-03-14 11:29:29] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 95.216.180.71...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* Unable to receive initial SOCKS5 response.
+* Closing connection 0
+
+ [] []
+[2019-03-14 11:29:32] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 95.216.180.71...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* Unable to receive initial SOCKS5 response.
+* Closing connection 0
+
+ [] []
+[2019-03-14 11:33:53] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 95.216.180.71...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* Unable to receive initial SOCKS5 response.
+* Closing connection 0
+
+ [] []
+[2019-03-14 11:35:41] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 217.61.6.198...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* Unable to receive initial SOCKS5 response.
+* Closing connection 0
+
+ [] []
+[2019-03-14 11:36:11] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 207.180.247.235...
+* TCP_NODELAY set
+* Connection timed out after 10000 milliseconds
+* stopped the pause stream!
+* Closing connection 0
+
+ [] []
+[2019-03-14 11:36:39] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 46.4.20.168...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* SOCKS5 request granted.
+* Connected to 46.4.20.168 (46.4.20.168) port 9050 (#0)
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: d:/ospanel/modules/php/PHP-7.2-x64/cacert.pem
+  CApath: none
+* NPN, negotiated HTTP1.1
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: OU=Domain Control Validated; CN=api.telegram.org
+*  start date: May  4 14:42:31 2018 GMT
+*  expire date: May 23 16:17:38 2020 GMT
+*  subjectAltName: host "api.telegram.org" matched cert's "api.telegram.org"
+*  issuer: C=US; ST=Arizona; L=Scottsdale; O=GoDaddy.com, Inc.; OU=http://certs.godaddy.com/repository/; CN=Go Daddy Secure Certificate Authority - G2
+*  SSL certificate verify ok.
+> POST /bot460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s/sendMessage HTTP/1.1
+Host: api.telegram.org
+User-Agent: GuzzleHttp/6.3.3 curl/7.56.0 PHP/7.2.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 62
+
+* upload completely sent off: 62 out of 62 bytes
+< HTTP/1.1 200 OK
+< Server: nginx/1.12.2
+< Date: Thu, 14 Mar 2019 08:36:39 GMT
+< Content-Type: application/json
+< Content-Length: 396
+< Connection: keep-alive
+< Access-Control-Allow-Origin: *
+< Access-Control-Allow-Methods: GET, POST, OPTIONS
+< Access-Control-Expose-Headers: Content-Length,Content-Type,Date,Server,Connection
+< Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+< 
+* Connection #0 to host 46.4.20.168 left intact
+
+ [] []
+[2019-03-14 11:46:55] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 95.216.180.71...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* Failed to receive SOCKS5 connect request ack.
+* Closing connection 0
+
+ [] []
+[2019-03-14 11:50:31] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 217.61.6.198...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* Unable to receive initial SOCKS5 response.
+* Closing connection 0
+
+ [] []

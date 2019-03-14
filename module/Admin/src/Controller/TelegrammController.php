@@ -8,7 +8,7 @@
 namespace Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 
 class TelegrammController extends AbstractActionController
 {
@@ -50,4 +50,15 @@ class TelegrammController extends AbstractActionController
         $this->telegrammManager->unsetHook();
         exit;
     }    
+    
+    public function checkProxyAction()
+    {
+        $result = $this->telegrammManager->checkEndChangeProxy();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $result,
+        ]);   
+        
+    }
 }

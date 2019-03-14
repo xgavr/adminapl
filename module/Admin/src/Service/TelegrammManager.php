@@ -191,20 +191,33 @@ class TelegrammManager {
      */
     public function checkProxy($proxy)
     {
-        $proxy_port =  explode(':', $proxy);
-        $host = $proxy_port[0]; 
-        $port = $proxy_port[1]; 
-        $waitTimeoutInSeconds = 5; 
-        if($fp = @fsockopen($host, $port, $errCode, $errStr, $waitTimeoutInSeconds)){   
-           $result = true;
-        } else {
-           $result = false;
-        } 
-        fclose($fp);      
+        if ($proxy){
+            $uri = 'socks5://'.$proxy;
+
+            $client = new Client();
+            $response = $client->request('GET', $uri);
+            if ($response->isOk()){
+                return true;
+            } else {
+                var_dump($response->getStatusCode());
+                exit;
+            }
+
+        }    
         
-        return $result;
+        return false;
     }
     
+    /**
+     * Проверить текущий прокси
+     * @return bool
+     */
+    public function checkCurrentProxy()
+    {
+        $settings = $this->adminManager->getTelegramSettings();
+        return $this->checkProxy($settings['telegram_proxy']);
+    }
+
     /**
      * Получить список прокси
      * @return array
@@ -212,7 +225,13 @@ class TelegrammManager {
     public function proxyList()
     {
         $countryList = [
-            'FI', 'DE', 'PL', 'UA', 'SE', 'NO', 'US',
+            'FI', 
+            'PL', 
+            'UA', 
+            'DE', 
+            'SE', 
+            'NO', 
+            'US',
         ];
         //https://www.nationsonline.org/oneworld/country_code_list.htm
         
@@ -220,8 +239,10 @@ class TelegrammManager {
         
         $result = [];
         foreach ($countryList as $country){
-            $list = file(file_get_contents($uri.$country));
-            $result = array_merge($result, $list);
+            $list = file_get_contents($uri.$country);
+            if ($list){
+                $result = array_merge($result, explode(PHP_EOL, $list));
+            }    
         }    
         
         return $result;
@@ -240,6 +261,25 @@ class TelegrammManager {
                 return $proxy;
             }
         }
+        
+        return;
+    }
+    
+    /**
+     * Проверить и заменить текущий прокси
+     * @return null
+     */
+    public function checkEndChangeProxy()
+    {
+        //if ($this->checkCurrentProxy()){
+            $newProxy = $this->getProxy();
+            if ($newProxy){
+                $data = $this->adminManager->getTelegramSettings()->toArray();
+                //var_dump($data); exit;
+                $data['telegram_proxy'] = 'socks5://'.$newProxy;
+                $this->adminManager->setTelegramSettings($data);
+            }
+        //}
         
         return;
     }
