@@ -263,6 +263,21 @@ class GoodsRepository extends EntityRepository
         
     }
        
+    public function findImages($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('i')
+            ->from(\Application\Entity\Images::class, 'i')
+            ->where('i.good = ?1')    
+            ->setParameter('1', $good->getId())
+            ;
+        
+        return $queryBuilder->getQuery();            
+        
+    }
+    
     /**
      * Найти товары для удаления
      * 
@@ -279,6 +294,7 @@ class GoodsRepository extends EntityRepository
             ->leftJoin('g.articles', 'a')
             ->groupBy('g.id')
             ->having('articleCount = 0')
+            ->setMaxResults(5000)    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            

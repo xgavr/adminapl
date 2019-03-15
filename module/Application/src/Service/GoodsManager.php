@@ -145,11 +145,16 @@ class GoodsManager
             return false;
         }
         
-        foreach ($good->getCars() as $car){
+        $cars = $this->entityManager->getRepository(Goods::class)
+                ->findCars($good);        
+        foreach ($cars as $car){
             $good->removeCarAssociation($car);
-        }            
+        }           
+        
 
-        foreach ($good->getImages() as $image){
+        $images = $this->entityManager->getRepository(Goods::class)
+                ->findImages($good);
+        foreach ($images as $image){
             $this->entityManager->remove($image);
         }                    
         
