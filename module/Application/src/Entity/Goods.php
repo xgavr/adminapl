@@ -128,7 +128,7 @@ class Goods {
     private $articles;
  
     /**
-     * @ORM\OneToMany(targetEntity="\Application\Entity\Images", mappedBy="good")
+     * @ORM\OneToMany(targetEntity="Application\Entity\Images", mappedBy="good")
      * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
      */
     protected $images;
@@ -142,7 +142,7 @@ class Goods {
     protected $tokenGroup;
     
     /**
-     * @ORM\ManyToMany(targetEntity="\Application\Entity\Car", inversedBy="goods")
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Car", inversedBy="goods")
      * @ORM\JoinTable(name="good_car",
      *      joinColumns={@ORM\JoinColumn(name="good_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="car_id", referencedColumnName="id")}
