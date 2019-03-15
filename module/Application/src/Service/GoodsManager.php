@@ -150,7 +150,7 @@ class GoodsManager
         }            
 
         foreach ($good->getImages() as $image){
-            //$this->entityManager->remove($image);
+            $this->entityManager->remove($image);
         }                    
         
         $this->entityManager->remove($good);

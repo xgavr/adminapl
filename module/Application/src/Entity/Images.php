@@ -103,15 +103,16 @@ class Images {
     public function setSimilar($similar) 
     {
         $this->similar = $similar;
-    }     
-    /*
-    * @ORM\ManyToOne(targetEntity="\Application\Entity\Goods", inversedBy="images")
+    }   
+    
+    /**
+    * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="images")
     * @ORM\JoinColumn(name="good_id", referencedColumnName="id")    
     * 
     */
     protected $good;
      
-    /*
+    /**
      * Возвращает связанный товар.
      * @return \Application\Entity\Goods
      */
