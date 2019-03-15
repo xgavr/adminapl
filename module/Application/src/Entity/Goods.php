@@ -128,7 +128,7 @@ class Goods {
     private $articles;
  
     /**
-     * @ORM\OneToMany(targetEntity="\Application\Entity\Images", mappedBy="goods")
+     * @ORM\OneToMany(targetEntity="\Application\Entity\Images", mappedBy="good")
      * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
      */
     protected $images;
