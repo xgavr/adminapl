@@ -149,9 +149,9 @@ class GoodsManager
             $good->removeCarAssociation($car);
         }            
 
-        foreach ($good->getImages() as $image){
-            $this->entityManager->remove($image);
-        }                    
+//        foreach ($good->getImages() as $image){
+//            $this->entityManager->remove($image);
+//        }                    
         
         $this->entityManager->remove($good);
         

@@ -280,7 +280,7 @@ class GoodsRepository extends EntityRepository
             ->groupBy('g.id')
             ->having('articleCount = 0')
                 ;
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
 
