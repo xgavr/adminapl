@@ -445,7 +445,7 @@ class NameManager
                 ->tokenFrequencies();
 
         foreach ($tokens as $token){
-            $this->updateTokenArticleCount($token['lemma'], $articleCount);
+            $this->updateTokenArticleCount($token['lemma']);
         }   
     }
     
