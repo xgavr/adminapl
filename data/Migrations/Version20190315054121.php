@@ -16,6 +16,7 @@ final class Version20190315054121 extends AbstractMigration
         $table = $schema->getTable('images');
         $table->addColumn('name', 'string', ['notnull' => false, 'length' => 256]);
         $table->addColumn('similar', 'integer', ['notnull' => false, 'default' => 0]);
+        $table->addColumn('status', 'integer', ['notnull' => false, 'default' => 0]);
 
     }
 
@@ -25,5 +26,6 @@ final class Version20190315054121 extends AbstractMigration
         $table = $schema->getTable('images');
         $table->dropColumn('name');
         $table->dropColumn('similar');
+        $table->dropColumn('status');
     }
 }
