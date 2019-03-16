@@ -36,6 +36,19 @@ class AdminManager {
         $this->entityManager = $entityManager;
     }
     
+    /**
+     * Определяем нагрузку на сервер
+     * @return boolean
+     */
+    public function canRun()
+    {
+        $load = sys_getloadavg();
+        if ($load[0] > 10.0) {
+            return FALSE;
+        }
+        return TRUE;
+    }
+    
     /*
      * Получить общие настройки загрузки
      * @return array 

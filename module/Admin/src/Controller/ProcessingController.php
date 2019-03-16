@@ -238,7 +238,7 @@ class ProcessingController extends AbstractActionController
 
         $settings = $this->adminManager->getPriceSettings();
         
-        if ($settings['upload_raw'] == 1){
+        if ($settings['upload_raw'] == 1 && $this->adminManager->canRun()){
             
             $files = $this->supplierManager->getPriceFilesToUpload();
             if (count($files)){
@@ -258,7 +258,7 @@ class ProcessingController extends AbstractActionController
     {        
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_raw'] == 1){
+        if ($settings['parse_raw'] == 1 && $this->adminManager->canRun()){
             $this->parseManager->parseRaw();
         }    
         
@@ -342,7 +342,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_producer'] == 1){
+        if ($settings['parse_producer'] == 1 && $this->adminManager->canRun()){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_NOT]);
@@ -433,7 +433,7 @@ class ProcessingController extends AbstractActionController
         
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_article'] == 1){
+        if ($settings['parse_article'] == 1 && $this->adminManager->canRun()){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_PARSED]);
@@ -474,7 +474,7 @@ class ProcessingController extends AbstractActionController
         
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_oem'] == 1){
+        if ($settings['parse_oem'] == 1 && $this->adminManager->canRun()){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_ARTICLE_PARSED]);
@@ -514,7 +514,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_name'] == 1){
+        if ($settings['parse_name'] == 1 && $this->adminManager->canRun()){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_OEM_PARSED]);
@@ -575,7 +575,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['assembly_producer'] == 1){
+        if ($settings['assembly_producer'] == 1 && $this->adminManager->canRun()){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
@@ -615,7 +615,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['assembly_good'] == 1){
+        if ($settings['assembly_good'] == 1 && $this->adminManager->canRun()){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_ASSEMBLY]);
@@ -693,7 +693,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['assembly_group_name'] == 1){
+        if ($settings['assembly_group_name'] == 1 && $this->adminManager->canRun()){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_GOOD_ASSEMBLY]);
