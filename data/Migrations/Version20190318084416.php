@@ -16,8 +16,11 @@ final class Version20190318084416 extends AbstractMigration
         $table = $schema->createTable('oem');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]); 
         $table->addColumn('good_id', 'integer', ['notnull'=>true]);
-        $table->addColumn('producer_id', 'integer', ['notnull'=>true]);
-        $table->addIndex(['good_id'], 'good_id_indx');
+        $table->addColumn('oe', 'string', ['notnull'=>true, 'length' => 24]);
+        $table->addColumn('oe_number', 'string', ['notnull'=>true, 'length' => 36]);
+        $table->addColumn('brand_name', 'string', ['notnull'=>true, 'length' => 64]);
+        $table->addColumn('status', 'integer', ['notnull' => true, 'default' => 1]);
+        $table->addUniqueIndex(['oe', 'good_id'], 'oe_number_good_id_uindx');
         $table->addForeignKeyConstraint('goods', ['good_id'], ['id'], ['onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE'], 'good_id_oem_good_id_fk');
         $table->setPrimaryKey(['id']);
         $table->addOption('engine' , 'InnoDB');  
