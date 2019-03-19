@@ -577,10 +577,10 @@ class ExternalManager
                 ->removeGoodOem($good);
         
         $info = $this->autoDbManager->getDirectInfo($good);
-        var_dump($info); exit;
         if (is_array($info)){
             if (isset($info['data'])){
                 if (isset($info['data']['array'])){
+        var_dump($info['data']['array']['oenNumbers']); exit;
                     if (isset($info['data']['array']['oenNumbers'])){
                         if (isset($info['data']['array']['oenNumbers']['array'])){
                             foreach ($info['data']['array']['oenNumbers']['array'] as $oen){
