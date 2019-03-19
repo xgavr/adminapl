@@ -15,6 +15,7 @@ use Application\Entity\CarAttributeGroup;
 use Application\Entity\CarAttributeType;
 use Application\Entity\CarAttributeValue;
 use Application\Entity\Oem;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of ExternalManager
@@ -543,14 +544,25 @@ class ExternalManager
      */
     public function addOemToGood($good, $oems)
     {
-        $data = [
-            'good_id' => $good->getId(),
-            'oe' => '',
-            'oe_number' => $oems['oeNumber'],
-            'brand_name' => $oems['brandName'],
-            'status' => Oem::STATUS_ACTIVE,
-            'source' => Oem::SOURCE_TD,
-        ];
+        $filter = new ArticleCode();
+        $oe = $filter->filter($oems['oeNumber']);
+        $oem = $this->entityManager->getRepository(Oem::class)
+                ->findOneBy(['good' => $good->getId(), 'oe' => $oe]);
+        
+        if ($oem == null){
+            $data = [
+                'good_id' => $good->getId(),
+                'oe' => $oe,
+                'oe_number' => $oems['oeNumber'],
+                'brand_name' => $oems['brandName'],
+                'status' => Oem::STATUS_ACTIVE,
+                'source' => Oem::SOURCE_TD,
+            ];
+            
+            $this->entityManager->getRepository(Goods::class)
+                    ->addGoodOem($data);
+        }
+        
         return;
     }
     
@@ -561,8 +573,6 @@ class ExternalManager
      */
     public function addOemsToGood($good)
     {
-        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_FOR_UPDATE], ['id' => $good->getId()]);
-    
         $this->entityManager->getRepository(Goods::class)
                 ->removeGoodOem($good);
         
@@ -581,10 +591,16 @@ class ExternalManager
             }
         }
 
-        $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
         return;
     }
-    
+
+    /**
+     * Добавление картинки к товару
+     * 
+     * @param Application\Entity\Good $good
+     * @return type
+     */
     public function addImageToGood($good)
     {
     

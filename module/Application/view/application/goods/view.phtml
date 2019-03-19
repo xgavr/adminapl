@@ -263,6 +263,17 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
+                            TecDoc номера: 
+                        </div>
+                        <div class="pull-right">
+                            <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                    title="Обновить номера">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
                             TecDoc машины: 
                         </div>
                         <div class="pull-right">
