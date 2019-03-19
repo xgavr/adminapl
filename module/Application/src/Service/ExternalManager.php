@@ -582,9 +582,9 @@ class ExternalManager
                 if (isset($info['data']['array'])){
                     foreach ($info['data']['array'] as $infoArray){
                         if (isset($infoArray['array']['oenNumbers'])){
+                        var_dump($infoArray['array']['oenNumbers']); exit;
                             if (isset($infoArray['array']['oenNumbers']['array'])){
                                 foreach ($infoArray['array']['oenNumbers']['array'] as $oen){
-                        var_dump($oen); exit;
                                     $this->addOemToGood($good, $carData['vehicleDetails'], $addFlag);
                                 }
                             }    
