@@ -14,6 +14,7 @@ use Application\Entity\Car;
 use Application\Entity\CarAttributeGroup;
 use Application\Entity\CarAttributeType;
 use Application\Entity\CarAttributeValue;
+use Application\Entity\Oem;
 
 /**
  * Description of ExternalManager
@@ -533,36 +534,53 @@ class ExternalManager
         return;
     }
     
+    
     /**
-     * Добавление oem к товару
+     * Добавление номера к товару
+     * 
+     * @param Application\Entity\Goods $good
+     * @param array $oems
+     */
+    public function addOemToGood($good, $oems)
+    {
+        $data = [
+            'good_id' => $good->getId(),
+            'oe' => '',
+            'oe_number' => $oems['oeNumber'],
+            'brand_name' => $oems['brandName'],
+            'status' => Oem::STATUS_ACTIVE,
+            'source' => Oem::SOURCE_TD,
+        ];
+        return;
+    }
+    
+    /**
+     * Добавление номеров к товару
      * 
      * @param Application\Entity\Goods $good
      */
-    public function addOemToGood($good)
+    public function addOemsToGood($good)
     {
         $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_FOR_UPDATE], ['id' => $good->getId()]);
     
         $this->entityManager->getRepository(Goods::class)
-                ->removeGoodCars($good);
+                ->removeGoodOem($good);
         
-        $tdId = $this->autoDbManager->getBestArticleId($good);
-        if (is_numeric($tdId)){
-            $carsDataI = $this->autoDbManager->getLinked($tdId);
-            if (is_array($carsDataI)){
-                $addFlag = count($carsDataI)<=10;
-                foreach ($carsDataI as $carsData){
-                    if (isset($carsData['data'])){
-                        if (isset($carsData['data']['array'])){
-                            foreach ($carsData['data']['array'] as $carData){
-                                if (isset($carData['vehicleDetails'])){
-                                    $this->addCarToGood($good, $carData['vehicleDetails'], $addFlag);
-                                }    
+        $info = $this->autoDbManager->getDirectInfo($good);
+        if (is_array($info)){
+            if (isset($info['data'])){
+                if (isset($info['data']['array'])){
+                    if (isset($info['data']['array']['oenNumbers'])){
+                        if (isset($info['data']['array']['oenNumbers']['array'])){
+                            foreach ($info['data']['array']['oenNumbers']['array'] as $oen){
+                                $this->addOemToGood($good, $carData['vehicleDetails'], $addFlag);
                             }
-                        }
-                    }
-                }    
+                        }    
+                    }    
+                }
             }
-        }  
+        }
+
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
         return;
     }

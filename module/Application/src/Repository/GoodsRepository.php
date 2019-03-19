@@ -411,6 +411,30 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Добавление номера к товару
+     * 
+     * @param array $data
+     * @return integer
+     */
+    public function addGoodOem($data)
+    {
+       $inserted = $this->getEntityManager()->getConnection()->insert('oem', $data);
+       return $inserted;        
+    }
+
+    /**
+     * Удаления oem товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @return integer
+     */
+    public function removeGoodOem($good)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId()]);
+        return $deleted;        
+    }
+    
+    /**
      * Удаление картинок товара
      * 
      * @param Applcation\Entity\Goods $good
