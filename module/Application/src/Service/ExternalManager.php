@@ -533,6 +533,40 @@ class ExternalManager
         return;
     }
     
+    /**
+     * Добавление oem к товару
+     * 
+     * @param Application\Entity\Goods $good
+     */
+    public function addOemToGood($good)
+    {
+        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_FOR_UPDATE], ['id' => $good->getId()]);
+    
+        $this->entityManager->getRepository(Goods::class)
+                ->removeGoodCars($good);
+        
+        $tdId = $this->autoDbManager->getBestArticleId($good);
+        if (is_numeric($tdId)){
+            $carsDataI = $this->autoDbManager->getLinked($tdId);
+            if (is_array($carsDataI)){
+                $addFlag = count($carsDataI)<=10;
+                foreach ($carsDataI as $carsData){
+                    if (isset($carsData['data'])){
+                        if (isset($carsData['data']['array'])){
+                            foreach ($carsData['data']['array'] as $carData){
+                                if (isset($carData['vehicleDetails'])){
+                                    $this->addCarToGood($good, $carData['vehicleDetails'], $addFlag);
+                                }    
+                            }
+                        }
+                    }
+                }    
+            }
+        }  
+        $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+        return;
+    }
+    
     public function addImageToGood($good)
     {
     

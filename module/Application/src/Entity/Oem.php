@@ -18,6 +18,15 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Daddy
  */
 class Oem {
+    
+    const STATUS_ACTIVE       = 1; // Active.
+    const STATUS_RETIRED      = 2; // Retired.
+    
+    const SOURCE_TD       = 1; // Active.
+    const SOURCE_SUP      = 2; // Retired.
+    const SOURCE_MAN      = 3; // Retired.
+    const SOURCE_CROSS    = 4; // Retired.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -44,6 +53,11 @@ class Oem {
      * @ORM\Column(name="status")  
      */
     protected $status;        
+
+    /**
+     * @ORM\Column(name="source")  
+     */
+    protected $source;        
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="oem") 
@@ -109,5 +123,95 @@ class Oem {
         $this->good = $good;
         $good->addOem($this);
     }           
+    
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 'Используется',
+            self::STATUS_RETIRED => 'Не используется'
+        ];
+    }    
+    
+    /**
+     * Returns make status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }   
+
+    /**
+     * Returns source.
+     * @return int     
+     */
+    public function getSource() 
+    {
+        return $this->source;
+    }
+
+    
+    /**
+     * Returns possible sources as array.
+     * @return array
+     */
+    public static function getSourceList() 
+    {
+        return [
+            self::SOURCE_TD => 'ТекДок',
+            self::SOURCE_SUP => 'Поставщик',
+            self::SOURCE_MAN => 'Введено вручную',
+            self::SOURCE_CROSS => 'Получено по кроссу',
+        ];
+    }    
+    
+    /**
+     * Returns make source as string.
+     * @return string
+     */
+    public function getSourceAsString()
+    {
+        $list = self::getSourceList();
+        if (isset($list[$this->source]))
+            return $list[$this->source];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets source.
+     * @param int $source     
+     */
+    public function setSource($source) 
+    {
+        $this->source = $source;
+    }   
     
 }
