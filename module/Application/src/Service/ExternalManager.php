@@ -577,6 +577,7 @@ class ExternalManager
                 ->removeGoodOem($good);
         
         $info = $this->autoDbManager->getDirectInfo($good);
+        var_dump($info); exit;
         if (is_array($info)){
             if (isset($info['data'])){
                 if (isset($info['data']['array'])){
