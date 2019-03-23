@@ -9,15 +9,11 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Application\Entity\Rawprice;
-use Application\Entity\UnknownProducer;
 use Application\Entity\Article;
 use Application\Entity\OemRaw;
+use Application\Entity\Oem;
 use Zend\View\Model\JsonModel;
 
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
 
 class OemController extends AbstractActionController
 {
@@ -199,4 +195,39 @@ class OemController extends AbstractActionController
             'message' => $deleted.' удалено!',
         ]);          
     }    
+    
+    public function oemAction()
+    {
+        $total = $this->entityManager->getRepository(Oem::class)
+                ->count([]);
+                
+        return new ViewModel([
+            'total' => $total,
+        ]);  
+    }
+    
+    public function oemContentAction()
+    {
+        ini_set('memory_limit', '512M');
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(Oem::class)
+                        ->findAllOem(['q' => $q]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
 }

@@ -10,6 +10,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Article;
 use Application\Entity\OemRaw;
+use Application\Entity\Oem;
 use Application\Entity\Rawprice;
 
 
@@ -285,6 +286,59 @@ class OemRepository  extends EntityRepository{
         return $queryBuilder->getQuery();
     }            
     
+    /**
+     * Запрос по номерам по разным параметрам
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function findAllOem($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('o, g')
+            ->from(Oem::class, 'o')
+            ->join('o.good', 'g')    
+            ->orderBy('o.oe', 'DESC')
+            ->setMaxResults(100)                
+                ;
+        
+        if (!is_array($params)){
+            $params['q'] = 'moreThan';
+        } elseif (isset($params['q'])){ 
+            if (strlen($params['q']) < 3){
+                $params['q'] = 'moreThan';
+            }
+        }    
+        
+        if (is_array($params)){
+            if (isset($params['q'])){
+                $filter = new \Application\Filter\ArticleCode();
+                $queryBuilder->where('o.oe like :search')
+                    ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
+                        ;
+            }
+            if (isset($params['next1'])){
+                $queryBuilder->where('o.oe > ?1')
+                    ->setParameter('1', $params['next1'])
+                    ->orderBy('o.oe')
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['prev1'])){
+                $queryBuilder->where('o.oe < ?2')
+                    ->setParameter('2', $params['prev1'])
+                    ->orderBy('o.oe', 'DESC')
+                    ->setMaxResults(1)    
+                 ;
+            }
+        }
+
+        return $queryBuilder->getQuery();
+    }            
+
     /**
      * Найти артикулы производителей для удаления
      * 
