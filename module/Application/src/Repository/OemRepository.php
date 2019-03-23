@@ -303,18 +303,10 @@ class OemRepository  extends EntityRepository{
             ->join('o.good', 'g')    
             ->orderBy('o.oe', 'DESC')
             ->setMaxResults(100)                
-                ;
-        
-        if (!is_array($params)){
-            $params['q'] = 'moreThan';
-        } elseif (isset($params['q'])){ 
-            if (strlen($params['q']) < 3){
-                $params['q'] = 'moreThan';
-            }
-        }    
+                ;   
         
         if (is_array($params)){
-            if (isset($params['q'])){
+            if ($params['q']){
                 $filter = new \Application\Filter\ArticleCode();
                 $queryBuilder->where('o.oe like :search')
                     ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
@@ -335,7 +327,7 @@ class OemRepository  extends EntityRepository{
                  ;
             }
         }
-
+//var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }            
 
