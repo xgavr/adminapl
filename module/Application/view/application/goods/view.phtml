@@ -350,6 +350,9 @@ $this->headScript()
         return params;
     }
     
+    function responseHandler(res) {
+        return res;
+    }       
     
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;
