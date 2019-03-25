@@ -9,6 +9,16 @@ $this->pageBreadcrumbs()->setItems([
             $goods->getName()=>$this->url('goods', ['action'=>'view', 'id'=>$goods->getId()])
             ]);
 
+$this->headLink()
+//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+        ;
+
+$this->headScript()
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+            ; 
+
 ?>
 
 <style>
@@ -164,46 +174,47 @@ $this->pageBreadcrumbs()->setItems([
             <?php endforeach;?>
         </div>
         
-        <h5>
-            Применимость<sup><?= $totalCars?></sup>
-        </h5>
-        <table  class="table table-striped">
-            <td colspan="6">
-                <?= $this->paginationControl($cars,
-                            'Sliding',
-                            'application/partial/paginator', 
-                            ['route' => array('route' => 'goods', 'action' => 'view', 'id' => $goods->getId())]); ?>
-
-            </td>
-            <?php foreach($cars as $car):?>
-                <tr>
-                    <td>
-                        <?= $car->getId()?>
-                    </td>
-                    <td>
-                        <?= $car->getTdId()?>
-                    </td>
-                    <td>
-                        <?= $car->getAplId()?>
-                    </td>
-                    <td colspan="3">
-                        <a href="/car/view/<?= $car->getId()?>">
-                            <?= $car->getName()?>
-                        </a>   
-                    </td>
-                </tr>    
-                <tr>
-                    <td colspan="6">
-                        <small>
-                           <?php foreach ($car->getCarAtributeValues() as $carAttributeValue):?>
-                            <span><?= $carAttributeValue->getValue(); ?></span>
-                            <?php endforeach;?>
-                        </small>
-                    </td>                    
-                </tr>
-            <?php endforeach;?>    
-            
-        </table>
+        <ul class="nav nav-tabs" id="featureTab" role="tablist">
+            <li role="presentation" class="active"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Home</a></li>
+            <li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="true">Profile</a></li>
+            <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость</a></li>
+        </ul>
+        
+        <div class="tab-content" id="featureTabContent">
+            <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
+                <p>
+                    лщоакшуоащкуоащкуощ
+                </p>
+            </div>
+            <div class="tab-pane fade" role="tabpanel" id="profile" aria-labelledby="profile-tab">
+                <p>
+                    дклакулакуалдкьалдкуьалкуь
+                </p>
+            </div>
+            <div class="tab-pane fade" role="tabpanel" id="linked" aria-labelledby="linked-tab">
+                <table id="table" 
+                    data-toggle="table" 
+                    data-url="/goods/car-content/<?= $goods->getId()?>"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#toolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="queryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="id" data-type="numeric">ID</th>
+                             <th data-field="tdId" data-type="numeric">TD</th>
+                             <th data-field="aplId" data-type="numeric">APL</th>
+                             <th data-field="name">Машина</th>
+                         </tr>                
+                    </thead>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
@@ -305,6 +316,41 @@ $this->pageBreadcrumbs()->setItems([
 </div>
 
 <script type="text/javascript">
+    $('#featureTab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+    
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var $table = $('#table'),
+        $ok = $('#ok');
+
+    $(function () {
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
+        });
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;
 

@@ -392,6 +392,38 @@ class GoodsController extends AbstractActionController
         ]);
     }      
     
+    public function carContentAction()
+    {
+        
+        $goodsId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($goodsId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);
+        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->findCars($goods);
+
+        $total = count($query->getResult(2));
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
+    
     public function updateBestnameAction()
     {
         $goodsId = $this->params()->fromRoute('id', -1);
