@@ -176,7 +176,7 @@ $this->headScript()
         
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
             <li role="presentation" class="active"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Home</a></li>
-            <li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="true">Profile</a></li>
+            <li role="presentation"><a href="#oem" role="tab" id="profile-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера</a></li>
             <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость</a></li>
         </ul>
         
@@ -186,10 +186,27 @@ $this->headScript()
                     лщоакшуоащкуоащкуощ
                 </p>
             </div>
-            <div class="tab-pane fade" role="tabpanel" id="profile" aria-labelledby="profile-tab">
-                <p>
-                    дклакулакуалдкьалдкуьалкуь
-                </p>
+            <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
+                <table id="linkedTable" 
+                    data-toggle="table" 
+                    data-url="/goods/oem-content/<?= $goods->getId()?>"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#toolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="queryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="id" data-type="numeric">ID</th>
+                             <th data-field="oeNumber" data-type="numeric">Номер</th>
+                             <th data-field="brandName">Бренд</th>
+                         </tr>                
+                    </thead>
+                </table>
             </div>
             <div class="tab-pane fade" role="tabpanel" id="linked" aria-labelledby="linked-tab">
                 <table id="linkedTable" 
@@ -325,7 +342,11 @@ $this->headScript()
         $('#linkedTable').bootstrapTable('refresh');
     }
 
-    var $linkedTable = $('#linkedTable'),
+    function refreshOemTable(){
+        $('#oemTable').bootstrapTable('refresh');
+    }
+
+    var $linkedTable = $('#linkedTable'), $oemTable = $('#oemTable'),
         $ok = $('#ok');
 
     $(function () {

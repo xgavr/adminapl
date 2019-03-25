@@ -430,6 +430,44 @@ class GoodsController extends AbstractActionController
         ]);                  
     }
     
+    public function oemContentAction()
+    {
+        
+        $goodsId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        // Validate input parameter
+        if ($goodsId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);
+
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->findOems($goods);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
+    
     public function updateBestnameAction()
     {
         $goodsId = $this->params()->fromRoute('id', -1);

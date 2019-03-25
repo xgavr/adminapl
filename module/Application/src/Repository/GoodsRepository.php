@@ -385,6 +385,26 @@ class GoodsRepository extends EntityRepository
         return $queryBuilder->getQuery();            
     }
     
+    /**
+     * Найти номера товара
+     * 
+     * @param Application\Entity\Goods $good
+     * @return object
+     */
+    public function findOems($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('o')
+            ->from(\Application\Entity\Oem::class, 'o')
+            ->where('o.good = ?1')    
+            ->setParameter('1', $good->getId())
+            ;
+        
+        return $queryBuilder->getQuery();            
+    }
+    
     
     /**
      * Добавление машины к товару
