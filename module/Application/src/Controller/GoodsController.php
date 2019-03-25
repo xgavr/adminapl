@@ -417,10 +417,10 @@ class GoodsController extends AbstractActionController
         $query = $this->entityManager->getRepository(Goods::class)
                         ->findCars($goods);
 
+        $total = count($query->getResult(2));
+        
         if ($offset) $query->setFirstResult( $offset );
         if ($limit) $query->setMaxResults( $limit );
-        
-        $total = count($query->getResult(2));
         
         $result = $query->getResult(2);
         
