@@ -396,6 +396,9 @@ class GoodsController extends AbstractActionController
     {
         
         $goodsId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
         
         // Validate input parameter
         if ($goodsId<0) {
@@ -405,7 +408,7 @@ class GoodsController extends AbstractActionController
 
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->findOneById($goodsId);
-        
+
         if ($goods == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
@@ -414,6 +417,9 @@ class GoodsController extends AbstractActionController
         $query = $this->entityManager->getRepository(Goods::class)
                         ->findCars($goods);
 
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+        
         $total = count($query->getResult(2));
         
         $result = $query->getResult(2);

@@ -192,7 +192,7 @@ $this->headScript()
                 </p>
             </div>
             <div class="tab-pane fade" role="tabpanel" id="linked" aria-labelledby="linked-tab">
-                <table id="table" 
+                <table id="linkedTable" 
                     data-toggle="table" 
                     data-url="/goods/car-content/<?= $goods->getId()?>"
                     data-side-pagination="server"
@@ -321,23 +321,20 @@ $this->headScript()
         $(this).tab('show')
     })
     
-    function refreshTable(){
-        $('#table').bootstrapTable('refresh');
+    function refreshLinkedTable(){
+        $('#linkedTable').bootstrapTable('refresh');
     }
 
-    var $table = $('#table'),
+    var $linkedTable = $('#linkedTable'),
         $ok = $('#ok');
 
     $(function () {
         $ok.click(function () {
-            $table.bootstrapTable('refresh');
+            $linkedTable.bootstrapTable('refresh');
         });
     });
     
     function queryParams(params) {
-        $('#toolbar').find('input[name]').each(function () {
-            params[$(this).attr('name')] = $(this).val();
-        });
         limit = $('.page-size').html();
         if (limit){
             params.limit = limit;
