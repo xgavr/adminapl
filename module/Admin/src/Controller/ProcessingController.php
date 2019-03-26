@@ -786,4 +786,19 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    public function tdUpdateOemAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_oe'] == 1){
+
+            $this->goodsManager->updateOemTd();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }

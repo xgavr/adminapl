@@ -247,4 +247,26 @@ class GoodsManager
         
         return;
     }
+
+    /**
+     * Обновить номера из текдока у товаров
+     */
+    public function updateOemTd()
+    {        
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 800;
+        
+        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateOemTd();
+        
+        foreach ($goodsForUpdate as $good){
+            if (time() >= $finishTime){
+                return;
+            }
+            $this->externalManager->addOemsToGood($good);
+        }
+        
+        return;
+    }
 }

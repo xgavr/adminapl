@@ -357,7 +357,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
             ->where('g.statusCar = ?1')
-            ->setParameter('1', Goods::GROUP_FOR_UPDATE)    
+            ->setParameter('1', Goods::CAR_FOR_UPDATE)    
             ->setMaxResults(2000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -385,6 +385,26 @@ class GoodsRepository extends EntityRepository
         return $queryBuilder->getQuery();            
     }
     
+    /**
+     * Найти товары для обновления номеров по апи текдока
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateOemTd()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.statusOem = ?1')
+            ->setParameter('1', Goods::OEM_FOR_UPDATE)    
+            ->setMaxResults(2000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
     /**
      * Найти номера товара
      * 
