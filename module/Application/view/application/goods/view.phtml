@@ -204,6 +204,8 @@ $this->headScript()
                              <th data-field="id" data-type="numeric">ID</th>
                              <th data-field="oeNumber" data-type="numeric">Номер</th>
                              <th data-field="brandName">Бренд</th>
+                             <th data-field="source" data-formatter="sourceFormatter">Источник</th>
+                             <th data-field="status" data-formatter="statusFormatter">Статус</th>
                          </tr>                
                     </thead>
                 </table>
@@ -371,6 +373,28 @@ $this->headScript()
     function responseHandler(res) {
         return res;
     }       
+    
+    function sourceFormatter(value){
+        switch(value){
+            <?php foreach ($oemSources as $key => $value):?>
+                case <?= $key?>: result="<?= $value?>"; break;      
+            <?php endforeach;?>            
+            default: result = 'Неизвестно'; break;
+        }
+        
+        return result;
+    }    
+    
+    function statusFormatter(value){
+        switch(value){
+            <?php foreach ($oemStatuses as $key => $value):?>
+                case <?= $key?>: result="<?= $value?>"; break;      
+            <?php endforeach;?>            
+            default: result = 'Неизвестно'; break;
+        }
+        
+        return result;
+    }    
     
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;

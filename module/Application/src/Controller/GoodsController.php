@@ -389,6 +389,8 @@ class GoodsController extends AbstractActionController
             'goodsManager' => $this->goodsManager,
             'bestName' => $this->nameManager->findBestName($goods),
             'images' => $this->goodsManager->images($goods),
+            'oemStatuses' => \Application\Entity\Oem::getStatusList(),
+            'oemSources' => \Application\Entity\Oem::getSourceList(),
         ]);
     }      
     
