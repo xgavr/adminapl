@@ -377,7 +377,7 @@ $this->headScript()
     function sourceFormatter(value){
         switch(value){
             <?php foreach ($oemSources as $key => $value):?>
-                case <?= $key?>: result="<?= $value?>"; break;      
+                case "<?= $key?>": result="<?= $value?>"; break;      
             <?php endforeach;?>            
             default: result = 'Неизвестно'; break;
         }
@@ -388,7 +388,7 @@ $this->headScript()
     function statusFormatter(value){
         switch(value){
             <?php foreach ($oemStatuses as $key => $value):?>
-                case <?= $key?>: result="<?= $value?>"; break;      
+                case "<?= $key?>": result="<?= $value?>"; break;      
             <?php endforeach;?>            
             default: result = 'Неизвестно'; break;
         }
