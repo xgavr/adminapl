@@ -534,38 +534,7 @@ class ExternalManager
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
         return;
     }
-    
-    
-    /**
-     * Добавление номера к товару
-     * 
-     * @param Application\Entity\Goods $good
-     * @param array $oems
-     */
-    public function addOemToGood($good, $oems)
-    {
-        $filter = new ArticleCode();
-        $oe = $filter->filter($oems['oeNumber']);
-        $oem = $this->entityManager->getRepository(Oem::class)
-                ->findOneBy(['good' => $good->getId(), 'oe' => $oe]);
         
-        if ($oem == null){
-            $data = [
-                'good_id' => $good->getId(),
-                'oe' => $oe,
-                'oe_number' => $oems['oeNumber'],
-                'brand_name' => $oems['brandName'],
-                'status' => Oem::STATUS_ACTIVE,
-                'source' => Oem::SOURCE_TD,
-            ];
-            
-            $this->entityManager->getRepository(Goods::class)
-                    ->addGoodOem($data);
-        }
-        
-        return;
-    }
-    
     /**
      * Добавление номеров к товару
      * 
@@ -584,7 +553,8 @@ class ExternalManager
                         if (isset($infoArray['oenNumbers'])){
                             if (isset($infoArray['oenNumbers']['array'])){
                                 foreach ($infoArray['oenNumbers']['array'] as $oen){
-                                    $this->addOemToGood($good, $oen);
+                                    $this->entityManager->getRepository(Oem::class)
+                                            ->addOemToGood($good, $oen, Oem::SOURCE_TD);
                                 }
                             }    
                         }    
@@ -592,6 +562,14 @@ class ExternalManager
                 }
             }
         }
+        
+        $oemsRaw = $this->entityManager->getRepository(Goods::class)
+                ->findOemRaw($good);        
+        foreach ($oemsRaw as $oemRaw){
+            $this->entityManager->getRepository(Oem::class)
+                    ->addOemToGood($good, ['oe' => $oemRaw->getCode(), Oem::SOURCE_SUP]);            
+        }
+        
 
         $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
         return;

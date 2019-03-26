@@ -404,6 +404,28 @@ class GoodsRepository extends EntityRepository
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
+    
+    /**
+     * Найти номера для добавления
+     * 
+     * @param Application\Entity\Goods $good
+     * @return array
+     */
+    public function findOemRaw($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('o')
+            ->from(Goods::class, 'g')
+            ->join('g.articles', 'a')    
+            ->join('a.oemRaw', 'o')    
+            ->where('g.id = ?1')
+            ->setParameter('1', $good->getId())    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();                    
+    }
 
     /**
      * Найти номера товара
