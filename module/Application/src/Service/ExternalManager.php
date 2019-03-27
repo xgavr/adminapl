@@ -567,7 +567,7 @@ class ExternalManager
                 ->findOemRaw($good);        
         foreach ($oemsRaw as $oemRaw){
             $this->entityManager->getRepository(Oem::class)
-                    ->addOemToGood($good, ['oe' => $oemRaw->getCode(), Oem::SOURCE_SUP]);            
+                    ->addOemToGood($good, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
         }
         
 
