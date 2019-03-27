@@ -18,6 +18,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Daddy
  */
 class OemRaw {
+    
+    const LONG_CODE = 'moreThan24';
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

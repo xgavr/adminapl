@@ -11,6 +11,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Goods;
 use Application\Entity\Rawprice;
+use Application\Entity\OemRaw;
 
 /**
  * Description of GoodsRepository
@@ -419,9 +420,11 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('o')
             ->from(Goods::class, 'g')
             ->join('g.articles', 'a')    
-            ->join(\Application\Entity\OemRaw::class, 'o', 'WITH', 'o.article = a.id')    
+            ->join(OemRaw::class, 'o', 'WITH', 'o.article = a.id')    
             ->where('g.id = ?1')
-            ->setParameter('1', $good->getId())    
+            ->andWhere('o.code != ?2')    
+            ->setParameter('1', $good->getId())
+            ->setParameter('2', OemRaw::LONG_CODE)    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();                    

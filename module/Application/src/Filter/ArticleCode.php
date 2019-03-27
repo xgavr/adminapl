@@ -9,6 +9,7 @@
 namespace Application\Filter;
 
 use Zend\Filter\AbstractFilter;
+use Application\Entity\OemRaw;
 
 /**
  * Приводит артикул товара к нужному виду
@@ -37,7 +38,7 @@ class ArticleCode extends AbstractFilter
         $result = mb_strtoupper(preg_replace("/[^a-zA-ZА-Яа-я0-9]/u","", $value), 'utf-8');
         
         if (mb_strlen($result, 'utf-8') > 24){
-            $result = 'moreThan24';
+            $result = OemRaw::LONG_CODE;
         }
         
         return $result;
