@@ -120,7 +120,7 @@ class AutodbManager
             return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
         }
 
-        return $this->exception($response);
+        return; // $this->exception($response);
         
     }
     

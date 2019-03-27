@@ -423,7 +423,7 @@ class GoodsRepository extends EntityRepository
             ->where('g.id = ?1')
             ->setParameter('1', $good->getId())    
                 ;
-        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();                    
     }
 
