@@ -220,7 +220,7 @@ $this->headScript()
                     data-toolbar="#toolbar"
                     data-show-refresh="true"
                     data-show-toggle="true"
-                    data-query-params="queryParams"
+                    data-query-params="linkedQueryParams"
                     data-response-handler="responseHandler"
                     >
                     <thead>
@@ -371,11 +371,11 @@ $this->headScript()
     }
     
     function oemQueryParams(params) {
-        tabQueryParams('#oem', params);
+        return tabQueryParams('#oem', params);
     }
     
     function linkedQueryParams(params) {
-        tabQueryParams('#linked', params);
+        return tabQueryParams('#linked', params);
     }
     
     function responseHandler(res) {
