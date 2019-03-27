@@ -196,7 +196,7 @@ $this->headScript()
                     data-toolbar="#toolbar"
                     data-show-refresh="true"
                     data-show-toggle="true"
-                    data-query-params="queryParams"
+                    data-query-params="oemQueryParams"
                     data-response-handler="responseHandler"
                     >
                     <thead>
@@ -357,17 +357,25 @@ $this->headScript()
         });
     });
     
-    function queryParams(params) {
-        limit = $('.page-size').html();
+    function tabQueryParams(tab, params) {
+        limit = $(tab + ' .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('li.page-number.active a').html();
+        offset = $(tab + ' li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
         
         return params;
+    }
+    
+    function oemQueryParams(params) {
+        tabQueryParams('#oem', params);
+    }
+    
+    function linkedQueryParams(params) {
+        tabQueryParams('#linked', params);
     }
     
     function responseHandler(res) {

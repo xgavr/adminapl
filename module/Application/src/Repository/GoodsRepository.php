@@ -419,7 +419,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('o')
             ->from(Goods::class, 'g')
             ->join('g.articles', 'a')    
-            ->join('a.oemRaw', 'o')    
+            ->join(\Application\Entity\OemRaw::class, 'o', 'WITH', 'o.article = a.id')    
             ->where('g.id = ?1')
             ->setParameter('1', $good->getId())    
                 ;
