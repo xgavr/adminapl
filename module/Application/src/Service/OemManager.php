@@ -8,9 +8,10 @@
 namespace Application\Service;
 
 use Application\Entity\OemRaw;
-use Application\Entity\Article;
+use Application\Entity\Oem;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of RbService
@@ -33,6 +34,28 @@ class OemManager
     }
     
     /**
+     * Добавить оригинальный номер
+     * 
+     * @param Application\Entity\Goods $good
+     * @param array $data
+     * 
+     * @return Application\Entity\Oem;
+     */
+    public function addOem($good, $data)
+    {
+        $oem = $this->entityManager->getRepository(Oem::class)
+                ->addOemToGood($good, $data, Oem::SOURCE_MAN);
+        
+        if (!$oem){
+            $filter = new ArticleCode();        
+            $oem = $this->entityManager->getRepository(Oem::class)
+                        ->findOneBy(['oe' => $filter->filter($data['oeNumber']), 'good' => $good->getId()]);
+        }    
+        
+        return $oem;
+    }
+    
+    /**
      * Добавить новый код
      * 
      * @param string $code
@@ -41,7 +64,7 @@ class OemManager
      */
     public function addOemRaw($code, $article, $flushnow = true)
     {
-        $filter = new \Application\Filter\ArticleCode();
+        $filter = new ArticleCode();
         $filteredCode = mb_strcut(trim($filter->filter($code)), 0, 24, 'UTF-8');
         
         $oem = $this->entityManager->getRepository(OemRaw::class)
@@ -109,7 +132,7 @@ class OemManager
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
         
-        $filter = new \Application\Filter\ArticleCode();
+        $filter = new ArticleCode();
         
 //        $rawprices = $this->entityManager->getRepository(Rawprice::class)
 //                ->findBy(['raw' => $raw->getId(), 'statusOem' => Rawprice::OEM_NEW]);

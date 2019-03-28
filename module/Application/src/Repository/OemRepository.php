@@ -80,7 +80,7 @@ class OemRepository  extends EntityRepository{
                     ->addGoodOem($data);
         }
         
-        return;
+        return $oem;
     }
         
     /**

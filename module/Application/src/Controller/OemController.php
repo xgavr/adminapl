@@ -12,6 +12,8 @@ use Zend\View\Model\ViewModel;
 use Application\Entity\Article;
 use Application\Entity\OemRaw;
 use Application\Entity\Oem;
+use Application\Entity\Goods;
+use Application\Form\OemForm;
 use Zend\View\Model\JsonModel;
 
 
@@ -229,5 +231,55 @@ class OemController extends AbstractActionController
             'rows' => $result,
         ]);          
     }    
+    
+    public function oemFormAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        $oemId = $this->params()->fromQuery('oem');
+        
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodId);
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $oem = null;
+        if ($oemId){
+            $oem = $this->entityManager->getRepository(Oem::class)
+                    ->findOneById($oemId);
+        }
+
+        $form = new OemForm();
+        $this->layout()->setTemplate('layout/terminal');
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                $this->oemManager->addOem($good, $data);
+                        
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }    
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'good' => $good,
+            'oem' => $oem,
+        ]);                
+        
+    }
     
 }

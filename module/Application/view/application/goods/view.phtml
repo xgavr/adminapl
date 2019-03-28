@@ -187,13 +187,24 @@ $this->headScript()
                 </p>
             </div>
             <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
+                <div id="oemToolbar">
+                    <div class="form-inline" role="form">
+                        <button id="newOem" type="button" class="btn btn-default" title="Добавить">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                        <div class="form-group">
+                            <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
+                        </div>
+                        <button id="oemOk" type="submit" class="btn btn-default">OK</button>
+                    </div>
+                </div>
                 <table id="oemTable" 
                     data-toggle="table" 
                     data-url="/goods/oem-content/<?= $goods->getId()?>"
                     data-side-pagination="server"
                     data-pagination="true" 
                     data-page-list="[5, 10, 20, 50]"
-                    data-toolbar="#toolbar"
+                    data-toolbar="#oemToolbar"
                     data-show-refresh="true"
                     data-show-toggle="true"
                     data-query-params="oemQueryParams"
