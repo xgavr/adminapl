@@ -282,4 +282,23 @@ class OemController extends AbstractActionController
         
     }
     
+    public function oemDeleteFormAction()
+    {
+        $oemId = $this->params()->fromRoute('id', -1);
+        
+        $oem = $this->entityManager->getRepository(Oem::class)
+                ->findOneById($oemId);        
+        if ($oem == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->oemManager->removeGood($goods);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+    
 }

@@ -189,7 +189,7 @@ $this->headScript()
             <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
                 <div id="oemToolbar">
                     <div class="form-inline" role="form">
-                        <button id="newOem" type="button" class="btn btn-default" title="Добавить">
+                        <button value="/oem/oem-form/<?= $goods->getId() ?>" type="button" class="btn btn-default" title="Добавить" data-toggle="modal" data-target="#modal-dialog">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                         <div class="form-group">
@@ -217,7 +217,8 @@ $this->headScript()
                              <th data-field="brandName">Бренд</th>
                              <th data-field="source" data-formatter="sourceFormatter">Источник</th>
                              <th data-field="status" data-formatter="statusFormatter">Статус</th>
-                         </tr>                
+                             <th data-field="" data-formatter="oemActiveFormatter"></th>
+                        </tr>                
                     </thead>
                 </table>
             </div>
@@ -414,6 +415,20 @@ $this->headScript()
         
         return result;
     }    
+    
+    function oemActiveFormatter(value, row){
+        var url = '/oem/oem-delete-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
     
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;

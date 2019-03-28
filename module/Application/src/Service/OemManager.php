@@ -56,6 +56,30 @@ class OemManager
     }
     
     /**
+     * Изменение оригинального номера
+     * 
+     * @param \Application\Entity\Oem $oem
+     */
+    public function updateOem($oem, $data)
+    {
+        $filter = new ArticleCode();
+        
+        $oe = $filter->filter($data['oeNumber']);
+        $newOem = $this->getEntityManager()->getRepository(Oem::class)
+                ->findOneBy(['good' => $oem->getGood()->getId(), 'oe' => $oe]);
+        
+        if ($newOem->getId() == $oem->getId()){
+            $oem->setStatus($data['status']);
+            $oem->setBrandName($data['brandName']);
+
+            $this->entityManager->persist($oem);
+            $this->entityManager->flush();                    
+        }
+        
+        return;
+    }
+    
+    /**
      * Добавить новый код
      * 
      * @param string $code
