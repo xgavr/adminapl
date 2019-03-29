@@ -90,7 +90,18 @@ $this->headScript()
                             </button> 
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body">                        
+                        <div class="pull-left">
+                            Номера<sup><?= $totalOem?></sup>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/goods/td-oem/" class="btn btn-info btn-xs refresh-button"
+                                    title="Обновление OEM">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">                        
                         <div class="pull-left">
                             Mашины<sup><?= $totalCar?></sup>
                         </div>
