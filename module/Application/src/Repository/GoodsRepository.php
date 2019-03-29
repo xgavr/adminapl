@@ -433,10 +433,11 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти номера товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
+     * @param array $params
      * @return object
      */
-    public function findOems($good)
+    public function findOems($good, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -446,6 +447,15 @@ class GoodsRepository extends EntityRepository
             ->where('o.good = ?1')    
             ->setParameter('1', $good->getId())
             ;
+        
+        if (is_array($params)){
+            if ($params['q']){
+                $filter = new \Application\Filter\ArticleCode();
+                $queryBuilder->andWhere('o.oe like :search')
+                    ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
+                        ;
+            }
+        }
         
         return $queryBuilder->getQuery();            
     }
@@ -495,7 +505,9 @@ class GoodsRepository extends EntityRepository
      */
     public function removeGoodOem($good)
     {
-        $deleted = $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId()]);
+        $deleted = $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_TD]);
+        $deleted = $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_SUP]);
+        $deleted = $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_CROSS]);
         return $deleted;        
     }
     

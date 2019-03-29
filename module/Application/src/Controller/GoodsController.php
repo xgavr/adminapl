@@ -439,6 +439,7 @@ class GoodsController extends AbstractActionController
 
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
+        $search = $this->params()->fromQuery('search');
         
         // Validate input parameter
         if ($goodsId<0) {
@@ -455,7 +456,7 @@ class GoodsController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->findOems($goods);
+                        ->findOems($goods, ['q' => $search]);
 
         $total = count($query->getResult(2));
         

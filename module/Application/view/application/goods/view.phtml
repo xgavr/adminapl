@@ -217,7 +217,7 @@ $this->headScript()
                              <th data-field="brandName">Бренд</th>
                              <th data-field="source" data-formatter="sourceFormatter">Источник</th>
                              <th data-field="status" data-formatter="statusFormatter">Статус</th>
-                             <th data-field="" data-formatter="oemActiveFormatter"></th>
+                             <th data-field="status" data-formatter="oemActiveFormatter"></th>
                         </tr>                
                     </thead>
                 </table>
@@ -240,7 +240,7 @@ $this->headScript()
                              <th data-field="id" data-type="numeric">ID</th>
                              <th data-field="tdId" data-type="numeric">TD</th>
                              <th data-field="aplId" data-type="numeric">APL</th>
-                             <th data-field="name">Машина</th>
+                             <th data-field="name" data-formatter="carFormatter">Машина</th>
                          </tr>                
                     </thead>
                 </table>
@@ -360,16 +360,19 @@ $this->headScript()
         $('#oemTable').bootstrapTable('refresh');
     }
 
-    var $linkedTable = $('#linkedTable'), $oemTable = $('#oemTable'),
-        $ok = $('#ok');
+    var linkedTable = $('#linkedTable'), oemTable = $('#oemTable'),
+        oemOk = $('#oemOk');
 
     $(function () {
-        $ok.click(function () {
-            $linkedTable.bootstrapTable('refresh');
+        oemOk.click(function () {
+            oemTable.bootstrapTable('refresh');
         });
     });
     
     function tabQueryParams(tab, params) {
+        $(tab +'Toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
         limit = $(tab + ' .page-size').html();
         if (limit){
             params.limit = limit;
@@ -417,16 +420,38 @@ $this->headScript()
     }    
     
     function oemActiveFormatter(value, row){
-        var url = '/oem/oem-delete-form/'+row.id;
-        btn = '<button';
+        if (value == 1){
+            status = 2;
+        } else {
+            status = 1;
+        }            
+        var url = '/oem/oem-status-form/'+row.id+'?status='+status;
+        var btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 
-        btn += ' title="Удалить"'; 
-        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += ' title="Изменить доступность"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\', \'oemTable\')">';
         btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
         btn += '</button>';
-        return btn;
+        
+        var editUrl = '/oem/oem-form/<?= $goods->getId() ?>?oem='+row.id;
+        var editBtn = '<button';
+        if (row.source != 3){
+            editBtn += ' disabled="disabled"';
+        }
+        editBtn += ' type="button" data-toggle="modal" data-target="#modal-dialog"';
+        editBtn += ' class="btn btn-default btn-xs"';
+        editBtn += ' aria-label="Left Align"'; 
+        editBtn += ' title="Изменить"'; 
+        editBtn += ' value="'+editUrl+'">';
+        editBtn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        editBtn += '</button>';
+        return editBtn+' '+btn;
+    }    
+    
+    function carFormatter(value, row) {
+        return '<a href="/car/view/'+row.id+'" target="_blanc">'+value+'</a>';
     }    
     
     

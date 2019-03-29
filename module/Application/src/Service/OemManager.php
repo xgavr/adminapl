@@ -65,7 +65,7 @@ class OemManager
         $filter = new ArticleCode();
         
         $oe = $filter->filter($data['oeNumber']);
-        $newOem = $this->getEntityManager()->getRepository(Oem::class)
+        $newOem = $this->entityManager->getRepository(Oem::class)
                 ->findOneBy(['good' => $oem->getGood()->getId(), 'oe' => $oe]);
         
         if ($newOem->getId() == $oem->getId()){

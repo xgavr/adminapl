@@ -215,9 +215,10 @@ class OemController extends AbstractActionController
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
+        $search = $this->params()->fromQuery('search');
         
         $query = $this->entityManager->getRepository(Oem::class)
-                        ->findAllOem(['q' => $q]);
+                        ->findAllOem(['q' => $search]);
 
         $total = count($query->getResult(2));
         
@@ -266,12 +267,24 @@ class OemController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                $this->oemManager->addOem($good, $data);
+                if ($oem){
+                    $data['status'] = $oem->getStatus();
+                    $this->oemManager->updateOem($oem, $data);                    
+                } else {
+                    $this->oemManager->addOem($good, $data);
+                }    
                         
                 return new JsonModel(
                    ['ok']
                 );           
             }
+        } else {
+            if ($oem){
+                $form->setData([
+                    'oeNumber' => $oem->getOeNumber(),
+                    'brandName' => $oem->getBrandName(),
+                ]);
+            }    
         }    
         // Render the view template.
         return new ViewModel([
@@ -282,18 +295,20 @@ class OemController extends AbstractActionController
         
     }
     
-    public function oemDeleteFormAction()
+    public function oemStatusFormAction()
     {
         $oemId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Oem::STATUS_ACTIVE);
         
         $oem = $this->entityManager->getRepository(Oem::class)
-                ->findOneById($oemId);        
+                ->findOneById($oemId); 
+        
         if ($oem == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $this->oemManager->removeGood($goods);
+        $this->oemManager->updateOem($oem, ['oeNumber' => $oem->getOeNumber(), 'brandName' => $oem->getBrandName(),'status' => $status]);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel(

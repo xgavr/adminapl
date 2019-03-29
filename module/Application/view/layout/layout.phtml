@@ -144,10 +144,10 @@
             *Удаление в bootstrap таблице
             *str url - ссылка на удаление строки таблицы
             */
-            function tableRowDelete(url) {
+            function tableRowDelete(url, table = 'table') {
                 if (url){
                     if (confirm('Удалить запись?')){
-                        var $table = $('#table');
+                        var table = $('#'+table);
                         var dialog = bootbox.dialog({
                             message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
                             closeButton: false
@@ -160,7 +160,7 @@
                             .done(function (data) {
                                 if (data == 'ok'){
                                     dialog.modal('hide');
-                                    $table.bootstrapTable('refresh');
+                                    table.bootstrapTable('refresh');
                                 } else {
                                     alert("Не удалось удалить!");
                                 }    

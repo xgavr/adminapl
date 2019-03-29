@@ -63,7 +63,8 @@ $form->prepare();
             .done(function (data) {
                 if (data == 'ok'){
                     $('#modal-dialog').modal('hide');
-                    window.location.reload();
+//                    window.location.reload();
+                    $('#oemTable').bootstrapTable('refresh');
                 } else {
                     $('#modal-content').html(data);
                 }    
