@@ -176,8 +176,8 @@ $this->headScript()
         
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
             <li role="presentation" class="active"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Home</a></li>
-            <li role="presentation"><a href="#oem" role="tab" id="profile-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера</a></li>
-            <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость</a></li>
+            <li role="presentation"><a href="#oem" role="tab" id="profile-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
+            <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость <span id="linkedBadge" class="badge">0</span></a></li>
         </ul>
         
         <div class="tab-content" id="featureTabContent">
@@ -229,7 +229,7 @@ $this->headScript()
                     data-side-pagination="server"
                     data-pagination="true" 
                     data-page-list="[5, 10, 20, 50]"
-                    data-toolbar="#toolbar"
+                    data-toolbar="#linkedToolbar"
                     data-show-refresh="true"
                     data-show-toggle="true"
                     data-query-params="linkedQueryParams"
@@ -360,14 +360,26 @@ $this->headScript()
         $('#oemTable').bootstrapTable('refresh');
     }
 
-    var linkedTable = $('#linkedTable'), oemTable = $('#oemTable'),
-        oemOk = $('#oemOk');
+    var linkedTable = $('#linkedTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#linkedBadge').html($('#linkedTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+    
+    var oemTable = $('#oemTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#oemBadge').html($('#oemTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+    var oemOk = $('#oemOk');
 
     $(function () {
         oemOk.click(function () {
             oemTable.bootstrapTable('refresh');
         });
     });
+    
+    
     
     function tabQueryParams(tab, params) {
         $(tab +'Toolbar').find('input[name]').each(function () {
