@@ -652,5 +652,14 @@ class GoodsController extends AbstractActionController
         
     }
 
+    public function tdOemAction()
+    {
+        $this->goodsManager->updateOemTd();            
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
     
 }
