@@ -64,7 +64,11 @@ $form->prepare();
                 if (data == 'ok'){
                     $('#modal-dialog').modal('hide');
 //                    window.location.reload();
-                    $('#oemTable').bootstrapTable('refresh');
+                    if ( $( "#oemTable" ).length ) {
+                        $('#oemTable').bootstrapTable('refresh');
+                    } else {
+                        $('#table').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#modal-content').html(data);
                 }    

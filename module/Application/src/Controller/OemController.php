@@ -205,6 +205,8 @@ class OemController extends AbstractActionController
                 
         return new ViewModel([
             'total' => $total,
+            'oemStatuses' => Oem::getStatusList(),
+            'oemSources' => Oem::getSourceList(),
         ]);  
     }
     
