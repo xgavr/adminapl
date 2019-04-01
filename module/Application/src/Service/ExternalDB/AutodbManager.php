@@ -117,7 +117,11 @@ class AutodbManager
         $response = $client->send();
         
         if ($response->isOk()){
-            return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
+            try {
+                return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
+            } catch (\Zend\Json\Exception\RuntimeException $e){
+                var_dump($response->getBody()); exit;
+            }    
         }
 
         return; // $this->exception($response);
