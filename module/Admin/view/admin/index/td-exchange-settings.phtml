@@ -52,6 +52,12 @@ $form->prepare();
     <div class="col-md-5">
         
         <div class="form-group">
+            <?= $this->formLabel($form->get('update_oe')); ?>
+            <?= $this->formElement($form->get('update_oe')); ?>
+            <?= $this->formElementErrors($form->get('update_oe')); ?>                  
+        </div>
+                        
+        <div class="form-group">
             <?= $this->formLabel($form->get('update_car')); ?>
             <?= $this->formElement($form->get('update_car')); ?>
             <?= $this->formElementErrors($form->get('update_car')); ?>                  
@@ -73,12 +79,6 @@ $form->prepare();
             <?= $this->formLabel($form->get('update_group')); ?>
             <?= $this->formElement($form->get('update_group')); ?>
             <?= $this->formElementErrors($form->get('update_group')); ?>                  
-        </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('update_oe')); ?>
-            <?= $this->formElement($form->get('update_oe')); ?>
-            <?= $this->formElementErrors($form->get('update_oe')); ?>                  
         </div>
                         
     </div>   
