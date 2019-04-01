@@ -72,6 +72,7 @@ class ExternalManager
             case 'getInfo': $result = $this->autoDbManager->getDirectInfo($params['good']); break;
             case 'getLinked': $result = $this->autoDbManager->getGoodLinked($params['good']); break;
             case 'getImages': $result = $this->autoDbManager->getImages($params['good']); break;
+            case 'getGenericArticles': $result = $this->autoDbManager->getGenericArticles(); break;
             default: break;
         }
         

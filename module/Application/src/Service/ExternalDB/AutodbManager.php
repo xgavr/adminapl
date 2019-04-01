@@ -182,6 +182,18 @@ class AutodbManager
         return $this->getAction('getCountries');
     }
 
+    
+    public function getGenericArticles()
+    {
+        $params = [
+            'articleCountry' => 'RU',
+            'lang' => 'RU',
+            'searchTreeNodes' => true,
+        ];
+        
+        return $this->getAction('getGenericArticles', $params);
+    }
+    
     /**
      * Получить articleId
      * 
