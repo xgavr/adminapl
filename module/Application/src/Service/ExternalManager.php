@@ -110,6 +110,7 @@ class ExternalManager
     public function updateGenericGroup()
     {
         $data = $this->autoDb('getGenericArticles');
+        var_dump($data); exit;
         if (isset($data['array'])){
             foreach ($data['array'] as $row){
                 $this->entityManager->getRepository(GenericGroup::class)
