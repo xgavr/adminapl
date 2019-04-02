@@ -110,18 +110,20 @@ class ExternalManager
     public function updateGenericGroup()
     {
         $data = $this->autoDb('getGenericArticles');
-        if (isset($data['array'])){
-            foreach ($data['array'] as $row){
-        var_dump($row); exit;
-                $this->entityManager->getRepository(GenericGroup::class)
-                        ->addGenericGroup([
-                            'td_id' => $row['genericArticleId'],
-                            'name' => $row['designation'],
-                            'assembly_group' => $row['assemblyGroup'],
-                            'master_name' => $row['masterDesignation'],
-                            'usage_name' => $row['usageDesignation'],
-                        ]);
-            }
+        if (isset($data['data'])){
+            if (isset($data['data']['array'])){
+                foreach ($data['data']['array'] as $row){
+                var_dump($row); exit;
+                    $this->entityManager->getRepository(GenericGroup::class)
+                            ->addGenericGroup([
+                                'td_id' => $row['genericArticleId'],
+                                'name' => $row['designation'],
+                                'assembly_group' => $row['assemblyGroup'],
+                                'master_name' => $row['masterDesignation'],
+                                'usage_name' => $row['usageDesignation'],
+                            ]);
+                }
+            }    
         }    
         return;
     }
