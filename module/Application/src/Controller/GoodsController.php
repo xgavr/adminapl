@@ -179,6 +179,8 @@ class GoodsController extends AbstractActionController
                 ->findAplIds();
         $totalOem = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusOem' => Goods::OEM_UPDATED]);
+        $totalGroup = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusGroup' => Goods::GROUP_UPDATED]);
         
                 
         // Визуализируем шаблон представления.
