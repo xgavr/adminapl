@@ -265,6 +265,22 @@ class AutodbManager
     }
 
     /**
+     * Получить группу текдока
+     * 
+     * @param Application\Entity\Goods $good
+     * @return integer|null
+     */
+    public function getGenericArticleId($good)
+    {
+        $tdData = $this->getBestArticle($good);
+        if (is_numeric($tdData['genericArticleId'])){
+            return $tdData['genericArticleId'];
+        }
+        
+        return;
+    }
+
+    /**
      * Получить детальную информацию об артикуле
      * 
      * @param array $articleIds

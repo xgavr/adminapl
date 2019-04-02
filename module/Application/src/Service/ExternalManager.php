@@ -124,13 +124,22 @@ class ExternalManager
         if (isset($data['data'])){
             if (isset($data['data']['array'])){
                 foreach ($data['data']['array'] as $row){
+                    $usageDesignation = null;
+                    if (isset($row['usageDesignation'])){
+                        $usageDesignation = $row['usageDesignation'];
+                    }
+                    $assemblyGroup = null;
+                    if (isset($row['assemblyGroup'])){
+                        $assemblyGroup = $row['assemblyGroup'];
+                    }
+                    
                     $this->entityManager->getRepository(GenericGroup::class)
                             ->addGenericGroup([
                                 'td_id' => $row['genericArticleId'],
                                 'name' => $row['designation'],
-                                'assembly_group' => $row['assemblyGroup'],
+                                'assembly_group' => $assemblyGroup,
                                 'master_name' => $row['masterDesignation'],
-                                'usage_name' => $row['usageDesignation'],
+                                'usage_name' => $usageDesignation,
                             ]);
                 }
             }    
@@ -608,6 +617,34 @@ class ExternalManager
         
 
         $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
+        return;
+    }
+
+    /**
+     * Добавление номеров к товару
+     * 
+     * @param Application\Entity\Goods $good
+     */
+    public function updateGoodGenericGroup($good)
+    {
+        
+        $genericArticleId = $this->autoDbManager->getGenericArticleId($good);
+        
+        $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
+                ->findOneByTdId($genericArticleId);
+        
+        if ($genericGroup == null){
+            $this->updateGenericGroup();
+            $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
+                    ->findOneByTdId($genericArticleId);
+        }
+        
+        if ($genericGroup){
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGood($good, ['genericGroup' => $genericGroup->getId()]);            
+        }
+        
+        $this->entityManager->getConnection()->update('goods', ['status_group' => Goods::GROUP_UPDATED], ['id' => $good->getId()]);
         return;
     }
 

@@ -66,12 +66,17 @@ class OemRepository  extends EntityRepository{
         $oem = $this->getEntityManager()->getRepository(Oem::class)
                 ->findOneBy(['good' => $good->getId(), 'oe' => $oe]);
         
+        $brandName = null;
+        if (isset($oems['brandName'])){
+            $brandName = $oems['brandName'];
+        }
+        
         if ($oem == null){
             $data = [
                 'good_id' => $good->getId(),
                 'oe' => $oe,
                 'oe_number' => $oems['oeNumber'],
-                'brand_name' => $oems['brandName'],
+                'brand_name' => $brandName,
                 'status' => Oem::STATUS_ACTIVE,
                 'source' => $source,
             ];
