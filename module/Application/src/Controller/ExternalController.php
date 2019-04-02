@@ -63,6 +63,18 @@ class ExternalController extends AbstractActionController
         
     }
     
+    public function updateGenericGroupAction()
+    {
+
+        $result = $this->externalManager->updateGenericGroup($action);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok',
+        ]);           
+        
+    }
+    
     public function partsApiAction()
     {
         $action = $this->params()->fromQuery('action');

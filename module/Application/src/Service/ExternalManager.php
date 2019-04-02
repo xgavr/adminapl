@@ -15,7 +15,7 @@ use Application\Entity\CarAttributeGroup;
 use Application\Entity\CarAttributeType;
 use Application\Entity\CarAttributeValue;
 use Application\Entity\Oem;
-use Application\Filter\ArticleCode;
+use Application\Entity\GenericGroup;
 
 /**
  * Description of ExternalManager
@@ -102,6 +102,28 @@ class ExternalManager
     }
     
     
+    /**
+     * Обновить группы товаров из Текдок
+     * 
+     * @return null
+     */
+    public function updateGenericGroup()
+    {
+        $data = $this->autoDb('getGenericArticles');
+        if (isset($data['array'])){
+            foreach ($data['array'] as $row){
+                $this->entityManager->getRepository(GenericGroup::class)
+                        ->addGenericGroup([
+                            'td_id' => $row['genericArticleId'],
+                            'name' => $row['designation'],
+                            'assembly_group' => $row['assemblyGroup'],
+                            'master_name' => $row['masterDesignation'],
+                            'usage_name' => $row['usageDesignation'],
+                        ]);
+            }
+        }    
+        return;
+    }
     /**
      * Добавление/обновление машины
      * 

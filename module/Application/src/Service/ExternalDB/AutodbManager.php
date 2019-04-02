@@ -183,6 +183,11 @@ class AutodbManager
     }
 
     
+    /**
+     * Получить группы запчастей
+     * 
+     * @return array
+     */
     public function getGenericArticles()
     {
         $params = [
