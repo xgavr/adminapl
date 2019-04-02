@@ -20,7 +20,7 @@ final class Version20190402044204 extends AbstractMigration
         $table->addColumn('apl_id', 'integer', ['notnull' => true, 'default' => 0]);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => GenericGroup::STATUS_RETIRED]);
         $table->addColumn('name', 'string', ['notnull'=>true, 'length' => 128]);
-        $table->addColumn('assembly_group', 'string', ['notnull'=>true, 'length' => 128]);
+        $table->addColumn('assembly_group', 'string', ['notnull'=>false, 'length' => 128]);
         $table->addColumn('master_name', 'string', ['notnull'=>true, 'length' => 128]);
         $table->addColumn('usage_name', 'string', ['notnull'=>false, 'length' => 128]);
         $table->setPrimaryKey(['id']);
