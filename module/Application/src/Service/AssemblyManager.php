@@ -14,6 +14,7 @@ use Application\Entity\Article;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
+use Application\Entity\GenericGroup;
 
 /**
  * Description of AssemblyManager
@@ -64,7 +65,7 @@ class AssemblyManager
      * Добавление новой карточки товара
      * 
      * @param string $code
-     * @param Application\Entity\Producer $producer
+     * @param \Application\Entity\Producer $producer
      * @return Goods
      */
     public function addNewGood($code, $producer) 
@@ -84,6 +85,12 @@ class AssemblyManager
         $good->setStatusImage(Goods::IMAGE_FOR_UPDATE);
         $good->setStatusOem(Goods::OEM_FOR_UPDATE);
         $good->setCarCount(0);
+        
+        $zeroGroup = $this->entityManager->getRepository(GenericGroup::class)
+                ->findOneByTdId(0);
+        if ($zeroGroup){
+            $good->setGenericGroup($zeroGroup);
+        }
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($good);

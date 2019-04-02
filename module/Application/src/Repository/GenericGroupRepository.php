@@ -29,7 +29,17 @@ class GenericGroupRepository extends EntityRepository{
                 ;
 
         return $queryBuilder->getQuery();
-    }    
+    }
+
+    public function updateZeroGroup()
+    {
+        $zeroGroup = $this->getEntityManager()->getRepository(GenericGroup::class)
+                ->findOneByTdId(0);
+        
+        $this->getEntityManager()->getConnection()->update('goods', ['generic_group_id' => $zeroGroup->getId()], ['generic_group_id' => 0]);
+        
+        return;
+    }
 
     /**
      * Добавить группу товаров

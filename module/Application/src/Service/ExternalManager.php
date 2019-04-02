@@ -117,6 +117,8 @@ class ExternalManager
                     'master_name' => 'Прочее',
                 ]);
         
+        $this->entityManager->getRepository(GenericGroup::class)
+                ->updateZeroGroup();
         
         $data = $this->autoDb('getGenericArticles');
         if (isset($data['data'])){
