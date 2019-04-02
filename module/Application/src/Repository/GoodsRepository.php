@@ -387,6 +387,26 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления групп по апи текдока
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateGroupTd()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.statusGroup = ?1')
+            ->setParameter('1', Goods::GROUP_FOR_UPDATE)    
+            ->setMaxResults(2000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
      * Найти товары для обновления номеров по апи текдока
      * 
      * @return object

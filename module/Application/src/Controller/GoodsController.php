@@ -685,4 +685,14 @@ class GoodsController extends AbstractActionController
         
     }
     
+    public function tdGroupAction()
+    {
+        $this->goodsManager->updateGroupTd();            
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }

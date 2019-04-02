@@ -249,6 +249,27 @@ class GoodsManager
     }
 
     /**
+     * Обновить групп из текдока у товаров
+     */
+    public function updateGroupTd()
+    {        
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 800;
+        
+        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateGroupTd();
+        
+        foreach ($goodsForUpdate as $good){
+            if (time() >= $finishTime){
+                return;
+            }
+            $this->externalManager->updateGoodGenericGroup($good);
+        }
+        
+        return;
+    }
+    /**
      * Обновить номера из текдока у товаров
      */
     public function updateOemTd()
