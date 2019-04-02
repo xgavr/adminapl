@@ -109,6 +109,15 @@ class ExternalManager
      */
     public function updateGenericGroup()
     {
+        // Пустая группа
+        $this->entityManager->getRepository(GenericGroup::class)
+                ->addGenericGroup([
+                    'td_id' => 0,
+                    'name' => 'Прочее',
+                    'master_name' => 'Прочее',
+                ]);
+        
+        
         $data = $this->autoDb('getGenericArticles');
         if (isset($data['data'])){
             if (isset($data['data']['array'])){
