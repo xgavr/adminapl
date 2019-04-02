@@ -641,7 +641,7 @@ class ExternalManager
         
         if ($genericGroup){
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGood($good, ['generic_group_id' => $genericGroup->getId()]);            
+                    ->updateGoodId($good->getId(), ['generic_group_id' => $genericGroup->getId()]);            
         }
         
         $this->entityManager->getConnection()->update('goods', ['status_group' => Goods::GROUP_UPDATED], ['id' => $good->getId()]);
