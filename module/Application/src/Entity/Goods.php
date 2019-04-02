@@ -112,7 +112,7 @@ class Goods {
     protected $tax;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\GenericGroup", inversedBy="goods") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\GenericGroup", inversedBy="goods") 
      * @ORM\JoinColumn(name="generic_group_id", referencedColumnName="id")
      */
     protected $genericGroup;
