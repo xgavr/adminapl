@@ -113,7 +113,6 @@ class ExternalManager
         if (isset($data['data'])){
             if (isset($data['data']['array'])){
                 foreach ($data['data']['array'] as $row){
-                var_dump($row); exit;
                     $this->entityManager->getRepository(GenericGroup::class)
                             ->addGenericGroup([
                                 'td_id' => $row['genericArticleId'],
