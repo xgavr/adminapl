@@ -112,6 +112,12 @@ class Goods {
     protected $tax;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\GenericGroup", inversedBy="goods") 
+     * @ORM\JoinColumn(name="generic_group_id", referencedColumnName="id")
+     */
+    protected $genericGroup;
+    
+    /**
      * @ORM\Column(name="available")   
      */
     protected $available;
@@ -247,6 +253,24 @@ class Goods {
     public function setTax($tax) 
     {
         $this->tax = $tax;
+    }     
+
+    /*
+     * Возвращает связанный genericGroup.
+     * @return \Application\Entity\GenericGroup
+     */    
+    public function getGenericGroup() 
+    {
+        return $this->genericGroup;
+    }
+
+    /**
+     * Задает связанный genericGroup.
+     * @param \Application\Entity\GenericGroup $genericGroup
+     */    
+    public function setGenericGroup($genericGroup) 
+    {
+        $this->genericGroup = $genericGroup;
     }     
 
     public function getAvailable() 

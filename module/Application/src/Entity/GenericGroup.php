@@ -66,9 +66,11 @@ class GenericGroup {
     protected $status;    
            
     /**
-     * @ORM\ManyToMany(targetEntity="\Application\Entity\Goods", mappedBy="genericGroups")
+    * @ORM\OneToMany(targetEntity="Application\Entity\Goods", mappedBy="GenericGroup")
+    * @ORM\JoinColumn(name="id", referencedColumnName="generic_group_id")
      */
     protected $goods;    
+    
 
     public function __construct() {
        $this->goods = new ArrayCollection();
