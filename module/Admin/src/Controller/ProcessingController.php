@@ -816,4 +816,20 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    public function updateGroupGoodCountAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_group'] == 1){
+
+            $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
+                    ->updateGoodCount();
+            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
 }
