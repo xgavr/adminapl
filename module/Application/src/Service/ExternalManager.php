@@ -630,14 +630,17 @@ class ExternalManager
         
         $genericArticleId = $this->autoDbManager->getGenericArticleId($good);
         
-        $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
-                ->findOneByTdId($genericArticleId);
-        
-        if ($genericGroup == null){
-            $this->updateGenericGroup();
+        $genericGroup = null;
+        if (is_numeric($genericArticleId)){
             $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
                     ->findOneByTdId($genericArticleId);
-        }
+
+            if ($genericGroup == null){
+                $this->updateGenericGroup();
+                $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
+                        ->findOneByTdId($genericArticleId);
+            }
+        }    
         
         if ($genericGroup){
             $this->entityManager->getRepository(Goods::class)
