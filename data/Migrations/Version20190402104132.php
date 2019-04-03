@@ -74,7 +74,7 @@ final class Version20190402104132 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('goods');
-        $table->dropIndex('generic_group_id_indx');
+        $table->removeForeignKey('generic_group_id_goods_generic_group_id_fk');
         $table->dropColumn('generic_group_id');
 
     }

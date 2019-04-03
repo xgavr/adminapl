@@ -66,7 +66,12 @@ class GenericGroup {
     protected $status;    
            
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Goods", mappedBy="GenericGroup")
+     * @ORM\Column(name="good_count")  
+     */
+    protected $goodCount;    
+
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Goods", mappedBy="genericGroup")
     * @ORM\JoinColumn(name="id", referencedColumnName="generic_group_id")
      */
     protected $goods;    
@@ -190,6 +195,16 @@ class GenericGroup {
         $this->status = $status;
     }   
     
+    
+    public function getGoodCount() 
+    {
+        return $this->goodCount;
+    }
+
+    public function setGoodCount($goodCount) 
+    {
+        $this->goodCount = $goodCount;
+    }     
     
     // Возвращает товары, связанные с данной машиной.
     public function getGoods() 

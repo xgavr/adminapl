@@ -63,6 +63,20 @@ return [
                     ],
                 ],
             ],        
+            'group' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/group[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\GroupController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'shop' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -338,6 +352,7 @@ return [
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
             Controller\ExternalController::class => Controller\Factory\ExternalControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
+            Controller\GroupController::class => Controller\Factory\GroupControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\MakeController::class => Controller\Factory\MakeControllerFactory::class,
             Controller\MlController::class => Controller\Factory\MlControllerFactory::class,
@@ -405,6 +420,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\GoodsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\GroupController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

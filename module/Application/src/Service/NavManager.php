@@ -149,8 +149,14 @@ class NavManager
                 
                 $rbDropdownItems[] = [
                             'id' => 'oe',
-                            'label' => 'Оригинальный номера',
+                            'label' => 'Оригинальные номера',
                             'link' => $url('oem', ['action'=>'oem'])
+                        ];
+                
+                $rbDropdownItems[] = [
+                            'id' => 'group',
+                            'label' => 'Группы',
+                            'link' => $url('group')
                         ];
                 
                 $rbDropdownItems[] = [

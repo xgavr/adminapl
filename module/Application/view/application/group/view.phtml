@@ -1,0 +1,142 @@
+<?php
+$this->headTitle($car->getName());
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Машины'=>$this->url('make'),
+            $car->getModel()->getMake()->getName() => $this->url('make', ['action' => 'view', 'id' => $car->getModel()->getMake()->getId()]),
+            $car->getModel()->getName() => $this->url('make', ['action' => 'view-model', 'id' => $car->getModel()->getId()]),
+            $car->getName()=>$this->url('car', ['action'=>'view', 'id'=>$car->getId()])
+            ]);
+
+?>
+
+<h1>
+    <?= $car->getName();?>
+    <sup>
+        <?= $car->getTdId();?>
+    </sup>
+</h1>
+<p>
+    <?= $car->getStatusAsString();?>
+</p>
+<div class="row">
+    <div class="col-md-9">
+
+        <table class="table table-striped">
+            <tr>
+                <td colspan="3">            
+                    <?php if ($prev):?>
+                        <a href="/car/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
+                    <?php endif;?>            
+                </td>
+                <td colspan="3" align="right">
+                    <?php if ($next):?>
+                        <a href="/car/view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
+                    <?php endif;?>                            
+                </td>
+            </tr>
+            <?php foreach($car->getCarAtributeValues() as $carAttributeValue):?>
+            <tr>
+                <td>
+                    <?= $carAttributeValue->getCarAtributeType()->getCarAtributeGroup()->getName()?>
+                </td>
+                <td>
+                    <?= $carAttributeValue->getCarAtributeType()->getTitle()?>
+                </td>
+                <td colspan="4">
+                    <?= $carAttributeValue->getValue()?>
+                </td>
+            </tr>
+            <?php endforeach;?>
+        </table>
+
+        <h3>Товары<sup><?= $totalGoods?></sup></h3>
+        <table class="table table-striped">
+            <tr>
+                <td colspan="6">
+                    <?= $this->paginationControl($goods,
+                                'Sliding',
+                                'application/partial/paginator', 
+                                ['route' => array('route' => 'car', 'action' => 'view', 'id' => $car->getId())]); ?>
+
+                </td>
+            </tr>
+            <?php    foreach ($goods as $good):?>
+                <tr>
+                    <td colspan="6">
+                        <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()]);?>">
+                            <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
+                        </a>   
+                    </td>
+                </tr>
+            <?php endforeach;?>        
+        </table>
+    </div>
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Обновления и внешние данные
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            AplId: 
+                                <?= $car->getAplId()?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/apl/car-apl-id/<?= $car->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить АПЛ Ид">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Товары<sup><?= $totalGoods?></sup>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/car/update-available/<?= $car->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить доступность">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.show-button').on('click', function(e) {
+        var url = e.currentTarget.value;
+
+        if (url){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    dialog.modal('hide');
+                    dialog = bootbox.dialog({
+                        message: '<div><i class="fa fa-spin fa-spinner"></i>'+objectToHtml(data.message)+'</div>',
+                        closeButton: true,
+                        size: 'large'
+                    });
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })        
+</script>

@@ -30,6 +30,55 @@ class GenericGroupRepository extends EntityRepository{
 
         return $queryBuilder->getQuery();
     }
+    
+    /**
+     * Запрос по группам по разным параметрам
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function findAllGroup($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g')
+            ->from(GenericGroup::class, 'g')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['q'])){
+                $queryBuilder->where('g.name like :search')
+                    ->setParameter('search', '%' . $params['q'] . '%')
+                        ;
+            }
+            if (isset($params['next1'])){
+                $queryBuilder->where('g.name > ?1')
+                    ->setParameter('1', $params['next1'])
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['prev1'])){
+                $queryBuilder->where('g.name < ?2')
+                    ->setParameter('2', $params['prev1'])
+                    ->orderBy('g.name', 'DESC')
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('g.status = ?3')
+                    ->setParameter('3', $params['status'])
+                        ;
+            }            
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }   
+    
 
     public function updateZeroGroup()
     {
@@ -39,6 +88,33 @@ class GenericGroupRepository extends EntityRepository{
         $this->getEntityManager()->getConnection()->update('goods', ['generic_group_id' => $zeroGroup->getId()], ['generic_group_id' => 0]);
         
         return;
+    }
+    
+    /**
+     * Обновление количества товаров в группах
+     */
+    public function updateGoodCount()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('gg.id, count(g.id) as gCount')
+            ->from(GenericGroup::class, 'gg')
+            ->leftJoin('gg.goods', 'g')    
+            ->groupBy('gg.id')                
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+
+        foreach ($data as $row){
+            if ($row['gCount']){
+                $status = GenericGroup::STATUS_ACTIVE;
+            } else {
+                $status = GenericGroup::STATUS_RETIRED;
+            }
+            $this->getEntityManager()->getConnection()->update('generic_group', ['good_count' => $row['gCount'], 'status' => $status], ['id' => $row['id']]);            
+        }        
     }
 
     /**
