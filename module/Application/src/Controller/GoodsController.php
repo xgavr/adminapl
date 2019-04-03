@@ -190,6 +190,7 @@ class GoodsController extends AbstractActionController
             'totalCar' => $totalCar,
             'aplIds' => $aplIds,
             'totalOem' => $totalOem,
+            'totalGroup' => $totalGroup,
         ]);  
     }
     
