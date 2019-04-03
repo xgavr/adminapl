@@ -801,4 +801,19 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    public function tdUpdateGroupAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_group'] == 1){
+
+            $this->goodsManager->updateGroupTd();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }
