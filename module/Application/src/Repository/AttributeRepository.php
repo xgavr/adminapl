@@ -25,40 +25,40 @@ class AttributeRepository  extends EntityRepository{
      * Добавление атрибута к товару
      * 
      * @param \Application\Entity\Goods $good
-     * @param array $attribute
+     * @param array $attr
      */
-    public function addAttributeToGood($good, $attribute)
+    public function addAttributeToGood($good, $attr)
     {
         $attribute = $this->getEntityManager()->getRepository(Attribute::class)
-                ->findOneByTdId($attribute['attrId']);
+                ->findOneByTdId($attr['attrId']);
         
         if ($attribute == null){
             
             $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                    ->findOneByTdId($attribute['attrValueId']);
+                    ->findOneByTdId($attr['attrValueId']);
             
             if ($attributeValue == null){
                 $value = [
-                    'td_id' => $attribute['attrValueId'],
-                    'value' => $attribute['attrValue'],
+                    'td_id' => $attr['attrValueId'],
+                    'value' => $attr['attrValue'],
                 ];
                 
                $this->getEntityManager()->getConnection()->insert('attribute_value', $value);
 
                $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                    ->findOneByTdId($attribute['attrValueId']);
+                    ->findOneByTdId($attr['attrValueId']);
             }
             
             if ($attributeValue){
                 $data = [
-                    'td_id' => $attribute['attrId'],
-                    'block_no' => $attribute['attrBlockNo'],
-                    'is_conditional' => (int) boolval($attribute['attrIsConditional']),
-                    'is_interval' => (int) boolval($attribute['attrIsInterval']),
-                    'is_linked' => (int) boolval($attribute['attrIsLinked']),
-                    'value_type' => $attribute['attrType'],
-                    'name' => $attribute['attrName'],
-                    'short_name' => $attribute['attrShortName'],
+                    'td_id' => $attr['attrId'],
+                    'block_no' => $attr['attrBlockNo'],
+                    'is_conditional' => (int) boolval($attr['attrIsConditional']),
+                    'is_interval' => (int) boolval($attr['attrIsInterval']),
+                    'is_linked' => (int) boolval($attr['attrIsLinked']),
+                    'value_type' => $attr['attrType'],
+                    'name' => $attr['attrName'],
+                    'short_name' => $attr['attrShortName'],
                     'status' => Attribute::STATUS_ACTIVE,
                     'value_id' => $attributeValue->getId(),
                 ];
@@ -66,7 +66,7 @@ class AttributeRepository  extends EntityRepository{
                 $this->getEntityManager()->getConnection()->insert('attribute', $data);
 
                 $attribute = $this->getEntityManager()->getRepository(Attribute::class)
-                    ->findOneByTdId(['tdId' => $attribute['attrId']]);
+                    ->findOneByTdId(['tdId' => $attr['attrId']]);
             }                
         }
 
