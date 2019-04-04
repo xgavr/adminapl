@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Description of Make
  * @ORM\Entity(repositoryClass="\Application\Repository\AttributeRepository")
- * @ORM\Table(name="good_attribute")
+ * @ORM\Table(name="attribute")
  * @author Daddy
  */
 
