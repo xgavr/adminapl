@@ -427,6 +427,75 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления атрибутов по апи текдока
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateAttributesTd()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.statusDescription = ?1')
+            ->setParameter('1', Goods::DESCRIPTION_FOR_UPDATE)    
+            ->setMaxResults(2000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    
+    /**
+     * Найти атрибуты товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return object
+     */
+    public function findAttributes($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('a')
+            ->from(\Application\Entity\Attribute::class, 'a')
+            ->join('a.goods', 'g')
+            ->where('g.id = ?1')    
+            ->setParameter('1', $good->getId())
+            ;
+        
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
+     * Добавление атрибута к товару
+     * 
+     * @param \Application\Entity\Goods $good
+     * @param \Application\Entity\Attribute $attribute
+     * 
+     * @return integer
+     */
+    public function addGoodAttribute($good, $attribute)
+    {
+       $inserted = $this->getEntityManager()->getConnection()->insert('good_attribute', ['good_id' => $good->getId(), 'attribute_id' => $attribute->getId()]);
+       return $inserted;        
+    }
+
+    /**
+     * Удаления атрибутов товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return integer
+     */
+    public function removeGoodAttributes($good)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('good_attribute', ['good_id' => $good->getId()]);
+        return $deleted;        
+    }
+    
+    
+    /**
      * Найти номера для добавления
      * 
      * @param Application\Entity\Goods $good

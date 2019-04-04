@@ -157,6 +157,15 @@ class Goods {
     protected $cars;
     
     /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Attribute", inversedBy="goods")
+     * @ORM\JoinTable(name="good_attribute",
+     *      joinColumns={@ORM\JoinColumn(name="good_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="attribute_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $attributes;
+
+    /**
      * Конструктор.
      */
     public function __construct() 
@@ -165,6 +174,7 @@ class Goods {
       $this->articles = new ArrayCollection();      
       $this->cart = new ArrayCollection(); 
       $this->cars = new ArrayCollection();
+      $this->attributes = new ArrayCollection();
     }
     
   
@@ -421,6 +431,24 @@ class Goods {
     public function removeCarAssociation($car) 
     {
         $this->cars->removeElement($car);
+    }    
+    
+    // Возвращает аттрибуты для данного товара.
+    public function getAttributes() 
+    {
+        return $this->attributes;
+    }      
+    
+    // Добавляет новую аттрибут к данному товару.
+    public function addAttribut($attribut) 
+    {
+        $this->attributes[] = $attribut;        
+    }
+    
+    // Удаляет связь между этим товаром и заданным аттрибутом.
+    public function removeAttributAssociation($attribut) 
+    {
+        $this->attributes->removeElement($attribut);
     }    
     
     public function getStatusCar()

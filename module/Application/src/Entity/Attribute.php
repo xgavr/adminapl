@@ -32,47 +32,56 @@ class Attribute {
     protected $id;
     
     /**
-     * @ORM\Column(name="name")   
-     */
-    protected $name;
-        
-    /**
      * @ORM\Column(name="td_id")   
      */
     protected $tdId;
     
     /**
-     * @ORM\Column(name="apl_id")   
+     * @ORM\Column(name="block_no")   
      */
-    protected $aplId;
+    protected $blockNo;
     
     /**
-     * @ORM\Column(name="assembly_group")  
+     * @ORM\Column(name="is_conditional")  
      */
-    protected $assemblyGroup;    
+    protected $isConditional;    
 
     /**
-     * @ORM\Column(name="master_name")   
+     * @ORM\Column(name="is_interval")   
      */
-    protected $masterName;
+    protected $isInterval;
+    
     /**
-     * @ORM\Column(name="usage_name")   
+     * @ORM\Column(name="is_linked")   
      */
-    protected $usageName;
+    protected $isLinked;
+
+    /**
+     * @ORM\Column(name="name")   
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(name="short_name")   
+     */
+    protected $shortName;
+
 
     /**
      * @ORM\Column(name="status")  
      */
-    protected $status;    
+    protected $status;   
+    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\AttributeValue", inversedBy="value") 
+     * @ORM\JoinColumn(name="value_id", referencedColumnName="id")
+     * 
+     */
+    protected $value;    
            
     /**
-     * @ORM\Column(name="good_count")  
-     */
-    protected $goodCount;    
-
-    /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Goods", mappedBy="att")
-    * @ORM\JoinColumn(name="id", referencedColumnName="generic_group_id")
+     * @ORM\ManyToMany(targetEntity="\Application\Entity\Goods", mappedBy="attributes")
      */
     protected $goods;    
     
@@ -91,26 +100,6 @@ class Attribute {
         $this->id = $id;
     }     
 
-    public function getName() 
-    {
-        return $this->name;
-    }
-
-    public function setName($name) 
-    {
-        $this->name = $name;
-    }     
-
-    public function getAssemblyGroup() 
-    {
-        return $this->assemblyGroup;
-    }
-
-    public function setAssemblyGroup($assemblyGroup) 
-    {
-        $this->assemblyGroup = $assemblyGroup;
-    }     
-
     public function getTdId() 
     {
         return $this->tdId;
@@ -121,34 +110,64 @@ class Attribute {
         $this->tdId = $tdId;
     }     
 
-    public function getAplId() 
+    public function getBloockNo() 
     {
-        return $this->aplId;
+        return $this->blockNo;
     }
 
-    public function setAplId($aplId) 
+    public function setBlockNo($blockNo) 
     {
-        $this->aplId = $aplId;
+        $this->blockNo = $blockNo;
+    }     
+
+    public function getIsConditional() 
+    {
+        return $this->isConditional;
+    }
+
+    public function setIsConditional($isConditional) 
+    {
+        $this->isConditional = $isConditional;
+    }     
+
+    public function getIsInterval() 
+    {
+        return $this->isInterval;
+    }
+
+    public function setIsInterval($isInterval) 
+    {
+        $this->isInterval = $isInterval;
+    }     
+
+    public function getIsLinked() 
+    {
+        return $this->isLinked;
+    }
+
+    public function setIsLinked($isLinked) 
+    {
+        $this->isLinked = $isLinked;
     }     
     
-    public function getMasterName() 
+    public function getName() 
     {
-        return $this->masterName;
+        return $this->name;
     }
 
-    public function setMasterName($masterName) 
+    public function setName($name) 
     {
-        $this->masterName = $masterName;
+        $this->name = $name;
     }     
-    
-    public function getUsageName() 
+
+    public function getShortName() 
     {
-        return $this->usageName;
+        return $this->shortName;
     }
 
-    public function setUsageName($usageName) 
+    public function setShortName($shortName) 
     {
-        $this->usageName = $usageName;
+        $this->shortName = $shortName;
     }     
     
     /**
@@ -195,24 +214,29 @@ class Attribute {
         $this->status = $status;
     }   
     
-    
-    public function getGoodCount() 
+    public function getValue()
     {
-        return $this->goodCount;
+        $this->value;
+    }
+    
+    /**
+     * Задает связанный value
+     * 
+     * @param \Application\Entity\AttributeValue $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        $value->addAttribute($this);
     }
 
-    public function setGoodCount($goodCount) 
-    {
-        $this->goodCount = $goodCount;
-    }     
-    
-    // Возвращает товары, связанные с данной машиной.
+        // Возвращает товары, связанные с данным атрибутом.
     public function getGoods() 
     {
         return $this->goods;
     }
     
-    // Добавляет товар в коллекцию товаров, связанных с этой машиной.
+    // Добавляет товар в коллекцию товаров, связанных с этим атрибутом.
     public function addGood($good) 
     {
         $this->goods[] = $good;        

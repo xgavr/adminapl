@@ -16,6 +16,7 @@ use Application\Entity\CarAttributeType;
 use Application\Entity\CarAttributeValue;
 use Application\Entity\Oem;
 use Application\Entity\GenericGroup;
+use Application\Entity\Attribute;
 
 /**
  * Description of ExternalManager
@@ -409,11 +410,11 @@ class ExternalManager
     /**
      * Добавить значение атрибута
      * 
-     * @param Application\Entity\Car $car
-     * @param Application\Entity\CarAttributeType $carAttributeType
+     * @param \Application\Entity\Car $car
+     * @param \Application\Entity\CarAttributeType $carAttributeType
      * @param array $data
      */
-    public function addAttributeValue($car, $carAttributeType, $data)
+    public function addCarAttributeValue($car, $carAttributeType, $data)
     {
         $carAttributeValue = new CarAttributeValue();
         $carAttributeValue->setValue($data['value']);
@@ -428,7 +429,7 @@ class ExternalManager
     /**
      * Заполнить модели машины из массива
      * 
-     * @param Application\Entity\Model $model
+     * @param \Application\Entity\Model $model
      * @param array $data
      * @param array $group
      */
@@ -458,7 +459,7 @@ class ExternalManager
                 'title' => $row['displaytitle'],
             ]);
             
-            $this->addAttributeValue($car, $carAttributeType, 
+            $this->addCarAttributeValue($car, $carAttributeType, 
                     [
                         'value' => $row['displayvalue'],
                     ]);
@@ -649,6 +650,39 @@ class ExternalManager
         
         $this->entityManager->getConnection()->update('goods', ['status_group' => Goods::GROUP_UPDATED], ['id' => $good->getId()]);
         return;
+    }
+    
+    /**
+     * Добавление атрибутов к товару
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function addAttributesToGood($good)
+    {
+        $this->entityManager->getRepository(Goods::class)
+                ->removeGoodAttributes($good);
+        
+        $info = $this->autoDbManager->getDirectInfo($good);
+        if (is_array($info)){
+            if (isset($info['data'])){
+                if (isset($info['data']['array'])){
+                    foreach ($info['data']['array'] as $infoArray){
+                        if (isset($infoArray['articleAttributes'])){
+                            if (isset($infoArray['articleAttributes']['array'])){
+                                foreach ($infoArray['oenNumbers']['array'] as $attr){
+                                    $this->entityManager->getRepository(Attribute::class)
+                                            ->addAttributeToGood($good, $attr);
+                                }
+                            }    
+                        }    
+                    }    
+                }
+            }
+        }
+        
+        $this->entityManager->getConnection()->update('goods', ['status_description' => Goods::DESCRIPTION_UPDATED], ['id' => $good->getId()]);
+        return;
+        
     }
 
     /**

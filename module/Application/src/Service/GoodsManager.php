@@ -136,7 +136,7 @@ class GoodsManager
     /**
      * Удалене карточки товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      */
     public function removeGood($good) 
     {   
@@ -149,6 +149,12 @@ class GoodsManager
                 ->findCars($good);        
         foreach ($cars as $car){
             $good->removeCarAssociation($car);
+        }           
+        
+        $attributes = $this->entityManager->getRepository(Goods::class)
+                ->findAttributes($good);        
+        foreach ($attributes as $attribute){
+            $good->removeAttributAssociation($attribute);
         }           
         
 
