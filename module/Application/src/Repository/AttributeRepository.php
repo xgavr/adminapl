@@ -53,9 +53,9 @@ class AttributeRepository  extends EntityRepository{
                 $data = [
                     'td_id' => $attribute['attrId'],
                     'block_no' => $attribute['attrBlockNo'],
-                    'is_conditional' => $attribute['attrIsConditional'],
-                    'is_interval' => $attribute['attrIsInterval'],
-                    'is_linked' => $attribute['attrIsLinked'],
+                    'is_conditional' => (int) boolval($attribute['attrIsConditional']),
+                    'is_interval' => (int) boolval($attribute['attrIsInterval']),
+                    'is_linked' => (int) boolval($attribute['attrIsLinked']),
                     'value_type' => $attribute['attrType'],
                     'name' => $attribute['attrName'],
                     'short_name' => $attribute['attrShortName'],
