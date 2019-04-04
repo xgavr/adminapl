@@ -669,7 +669,7 @@ class ExternalManager
                     foreach ($info['data']['array'] as $infoArray){
                         if (isset($infoArray['articleAttributes'])){
                             if (isset($infoArray['articleAttributes']['array'])){
-                                foreach ($infoArray['oenNumbers']['array'] as $attr){
+                                foreach ($infoArray['articleAttributes']['array'] as $attr){
                                     $this->entityManager->getRepository(Attribute::class)
                                             ->addAttributeToGood($good, $attr);
                                 }
