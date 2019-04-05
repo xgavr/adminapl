@@ -185,19 +185,20 @@ $this->headScript()
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
                 <table class="table table-bordered">
-                    <p>!!!!!!!!!!!!!!!</p>
-                    <?php foreach ($goods->getAttributes() as $attr):?>
-                        <tr>
-                            <td width='30%' align='right'>
-                                <nobr>
-                                   <?= $attr->getName()?>     
-                                </nobr>
-                            </td>
-                            <td>
-                                <?= $attr->getValue()->getValue();?>
-                            </td>
-                        </tr>                                              
-                    <?php endforeach;?>
+                    <p>
+                        <?php foreach ($goods->getAttributes() as $attr):?>
+                            <tr>
+                                <td width='30%' align='right'>
+                                    <nobr>
+                                       <?= $attr->getName()?>     
+                                    </nobr>
+                                </td>
+                                <td>
+                                    <?= $attr->getValue()->getValue();?>
+                                </td>
+                            </tr>                                              
+                        <?php endforeach;?>
+                    </p>
                 </table>                    
             </div>
             <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
@@ -385,7 +386,6 @@ $this->headScript()
 <script type="text/javascript">
     
     $(window).on('load', function() {
-        //console.log($('#home-tab'));
         $('.nav-tabs a:first').tab('show');
     });
     
