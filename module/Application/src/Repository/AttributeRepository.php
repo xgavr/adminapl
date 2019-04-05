@@ -29,7 +29,7 @@ class AttributeRepository  extends EntityRepository{
      */
     public function addAttributeToGood($good, $attr)
     {
-        //var_dump($attr); exit;
+        var_dump($attr); exit;
         $attribute = $this->getEntityManager()->getRepository(Attribute::class)
                 ->findOneByTdId($attr['attrId']);
         
