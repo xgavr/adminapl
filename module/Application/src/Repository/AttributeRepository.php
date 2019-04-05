@@ -80,49 +80,4 @@ class AttributeRepository  extends EntityRepository{
     }
         
     
-    /**
-     * Запрос по номерам по разным параметрам
-     * 
-     * @param array $params
-     * @return object
-     */
-    public function findAllOem($params = null)
-    {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('o, g')
-            ->from(Oem::class, 'o')
-            ->join('o.good', 'g')    
-            ->orderBy('o.id', 'DESC')
-            ->setMaxResults(100)                
-                ;   
-        
-        if (is_array($params)){
-            if ($params['q']){
-                $filter = new \Application\Filter\ArticleCode();
-                $queryBuilder->where('o.oe like :search')
-                    ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
-                        ;
-            }
-            if (isset($params['next1'])){
-                $queryBuilder->where('o.oe > ?1')
-                    ->setParameter('1', $params['next1'])
-                    ->orderBy('o.oe')
-                    ->setMaxResults(1)    
-                 ;
-            }
-            if (isset($params['prev1'])){
-                $queryBuilder->where('o.oe < ?2')
-                    ->setParameter('2', $params['prev1'])
-                    ->orderBy('o.oe', 'DESC')
-                    ->setMaxResults(1)    
-                 ;
-            }
-        }
-//var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery();
-    }            
-
 }
