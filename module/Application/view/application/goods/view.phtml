@@ -187,8 +187,10 @@ $this->headScript()
                 <table class="table table-bordered">
                     <?php foreach ($goods->getAttributes() as $attr):?>
                         <tr>
-                            <td width='50%' align='right'>
-                                <?= $attr->getName()?>
+                            <td width='10%' align='right'>
+                                <nobr>
+                                   <?= $attr->getName()?>     
+                                </nobr>
                             </td>
                             <td>
                                 <?= $attr->getValue()->getValue();?>
