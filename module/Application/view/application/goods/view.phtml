@@ -178,7 +178,7 @@ $this->headScript()
         
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
             <li role="presentation" class="active"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Описание</a></li>
-            <li role="presentation"><a href="#oem" role="tab" id="profile-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
+            <li role="presentation"><a href="#oem" role="tab" id="oem-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
             <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость <span id="linkedBadge" class="badge">0</span></a></li>
         </ul>
         
@@ -383,8 +383,8 @@ $this->headScript()
 
 <script type="text/javascript">
     $(window).on('load', function() {
-        console.log($('#home-tab'));
-        $('#home-tab').tab('show');
+        //console.log($('#home-tab'));
+        $('.nav-tabs a:first').tab('show');
     });
     
     $('#featureTab a').click(function (e) {
