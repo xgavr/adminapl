@@ -187,7 +187,7 @@ $this->headScript()
                 <table class="table table-bordered">
                     <?php foreach ($goods->getAttributes() as $attr):?>
                         <tr>
-                            <td width='10%' align='right'>
+                            <td width='30%' align='right'>
                                 <nobr>
                                    <?= $attr->getName()?>     
                                 </nobr>
@@ -382,6 +382,10 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
+    $(window).load(function () {
+        $('.nav-tabs a:first').tab('show');
+    });
+    
     $('#featureTab a').click(function (e) {
         e.preventDefault()
         $(this).tab('show')
