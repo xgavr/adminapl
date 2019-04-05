@@ -89,14 +89,14 @@ final class Version20190403132248 extends AbstractMigration
         $table->addIndex(['value_id'], 'value_id_indx');
         $table->addOption('engine' , 'InnoDB'); 
         
-        $table = $schema->createTable('good_attribute');
+        $table = $schema->createTable('good_attribute_value');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]); 
         $table->addColumn('good_id', 'integer', ['notnull'=>true]);
-        $table->addColumn('attribute_id', 'integer', ['notnull'=>true]);
+        $table->addColumn('attribute_value_id', 'integer', ['notnull'=>true]);
         $table->addIndex(['good_id'], 'good_id_indx');
-        $table->addIndex(['attribute_id'], 'attribute_id_indx');
+        $table->addIndex(['attribute_value_id'], 'attribute_id_indx');
         $table->addForeignKeyConstraint('goods', ['good_id'], ['id'], ['onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE'], 'good_id_good_attr_good_id_fk');
-        $table->addForeignKeyConstraint('attribute', ['attribute_id'], ['id'], ['onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE'], 'attr_id_good_attr_attr_id_fk');
+        $table->addForeignKeyConstraint('attribute_value', ['attribute_value_id'], ['id'], ['onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE'], 'attr_val_id_good_attr_attr_id_fk');
         $table->setPrimaryKey(['id']);
         $table->addOption('engine' , 'InnoDB');  
         

@@ -157,13 +157,13 @@ class Goods {
     protected $cars;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Attribute", inversedBy="goods")
-     * @ORM\JoinTable(name="good_attribute",
+     * @ORM\ManyToMany(targetEntity="Application\Entity\AttributeValue", inversedBy="goods")
+     * @ORM\JoinTable(name="good_attribute_value",
      *      joinColumns={@ORM\JoinColumn(name="good_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="attribute_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="attribute_value_id", referencedColumnName="id")}
      *      )
      */
-    protected $attributes;
+    protected $attributeValues;
 
     /**
      * Конструктор.
@@ -174,7 +174,7 @@ class Goods {
       $this->articles = new ArrayCollection();      
       $this->cart = new ArrayCollection(); 
       $this->cars = new ArrayCollection();
-      $this->attributes = new ArrayCollection();
+      $this->attributesValues = new ArrayCollection();
     }
     
   
@@ -434,21 +434,21 @@ class Goods {
     }    
     
     // Возвращает аттрибуты для данного товара.
-    public function getAttributes() 
+    public function getAttributeValues() 
     {
-        return $this->attributes;
+        return $this->attributeValues;
     }      
     
     // Добавляет новую аттрибут к данному товару.
-    public function addAttribut($attribut) 
+    public function addAttributeValue($attributeValue) 
     {
-        $this->attributes[] = $attribut;        
+        $this->attributeValues[] = $attributeValue;        
     }
     
     // Удаляет связь между этим товаром и заданным аттрибутом.
-    public function removeAttributAssociation($attribut) 
+    public function removeAttributeValueAssociation($attributeValue) 
     {
-        $this->attributes->removeElement($attribut);
+        $this->attributeValues->removeElement($attributeValue);
     }    
     
     public function getStatusCar()

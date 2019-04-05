@@ -151,11 +151,11 @@ class GoodsManager
             $good->removeCarAssociation($car);
         }           
         
-        $attributes = $this->entityManager->getRepository(Goods::class)
-                ->findAttributes($good);        
-        foreach ($attributes as $attribute){
-            $good->removeAttributAssociation($attribute);
-        }           
+//        $attributes = $this->entityManager->getRepository(Goods::class)
+//                ->findAttributeValues($good);        
+//        foreach ($attributes as $attribute){
+//            $good->removeAttributeValueAssociation($attribute);
+//        }           
         
 
         $images = $this->entityManager->getRepository(Goods::class)

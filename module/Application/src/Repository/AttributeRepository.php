@@ -20,6 +20,31 @@ use Application\Entity\AttributeValue;
  */
 class AttributeRepository  extends EntityRepository{
 
+    /**
+     * Добавить значение атрибута
+     * 
+     * @param array $attr
+     * @return \Application\Entity\AttributeValue;
+     */
+    public function addAtributeValue($attr)
+    {
+        $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
+                ->findOneByTdId($attr['attrValueId']);
+
+        if ($attributeValue == null){
+            $data = [
+                'td_id' => $attr['attrValueId'],
+                'value' => $attr['attrValue'],
+            ];
+        
+            $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           
+
+            $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
+                 ->findOneByTdId($attr['attrValueId']);
+        }
+        
+        return $attributeValue;
+    }
     
     /**
      * Добавление атрибута к товару
@@ -29,27 +54,13 @@ class AttributeRepository  extends EntityRepository{
      */
     public function addAttributeToGood($good, $attr)
     {
-        var_dump($attr); exit;
+//        var_dump($attr); exit;
         $attribute = $this->getEntityManager()->getRepository(Attribute::class)
                 ->findOneByTdId($attr['attrId']);
         
-        if ($attribute == null){
+        if ($attribute == null){            
             
-            $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                    ->findOneByTdId($attr['attrValueId']);
-            
-            var_dump($attr['attrValueId']); exit;
-            if ($attributeValue == null){
-                $value = [
-                    'td_id' => $attr['attrValueId'],
-                    'value' => $attr['attrValue'],
-                ];
-                
-               $this->getEntityManager()->getConnection()->insert('attribute_value', $value);
-
-               $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                    ->findOneByTdId($attr['attrValueId']);
-            }
+            $attributeValue = $this->addAtributeValue($attr);
             
             if ($attributeValue){
                 $data = [
@@ -76,7 +87,7 @@ class AttributeRepository  extends EntityRepository{
 
         if ($attribute){
             $this->getEntityManager()->getRepository(Goods::class)
-                        ->addGoodAttribute($good, $attribute);
+                        ->addGoodAttributeValue($good, $attribute);
             
             //$good->addAttribut($attribut);
         }    

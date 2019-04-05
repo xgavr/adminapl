@@ -43,9 +43,15 @@ class AttributeValue {
      */
     protected $attributes;    
     
+    /**
+     * @ORM\ManyToMany(targetEntity="\Application\Entity\Goods", mappedBy="attributeValues")
+     */
+    protected $goods;    
+    
 
     public function __construct() {
        $this->attributes = new ArrayCollection();
+       $this->goods = new ArrayCollection();
     }    
     
     public function getId() 
@@ -86,5 +92,17 @@ class AttributeValue {
     public function addAttribute($attribute) 
     {
         $this->attributes[] = $attribute;        
+    }     
+
+    // Возвращает товары, связанные с данным атрибутом.
+    public function getGoods() 
+    {
+        return $this->goods;
+    }
+    
+    // Добавляет товар в коллекцию товаров, связанных с этим атрибутом.
+    public function addGood($good) 
+    {
+        $this->goods[] = $good;        
     }     
 }

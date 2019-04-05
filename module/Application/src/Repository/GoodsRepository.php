@@ -453,13 +453,13 @@ class GoodsRepository extends EntityRepository
      * @param \Application\Entity\Goods $good
      * @return object
      */
-    public function findAttributes($good)
+    public function findAttributeValues($good)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('a')
-            ->from(\Application\Entity\Attribute::class, 'a')
+            ->from(\Application\Entity\AttributeValue::class, 'a')
             ->join('a.goods', 'g')
             ->where('g.id = ?1')    
             ->setParameter('1', $good->getId())
@@ -472,13 +472,13 @@ class GoodsRepository extends EntityRepository
      * Добавление атрибута к товару
      * 
      * @param \Application\Entity\Goods $good
-     * @param \Application\Entity\Attribute $attribute
+     * @param \Application\Entity\AttributeValue $attributeValue
      * 
      * @return integer
      */
-    public function addGoodAttribute($good, $attribute)
+    public function addGoodAttributeValue($good, $attributeValue)
     {
-       $inserted = $this->getEntityManager()->getConnection()->insert('good_attribute', ['good_id' => $good->getId(), 'attribute_id' => $attribute->getId()]);
+       $inserted = $this->getEntityManager()->getConnection()->insert('good_attribute_value', ['good_id' => $good->getId(), 'attribute_value_id' => $attributeValue->getId()]);
        return $inserted;        
     }
 
