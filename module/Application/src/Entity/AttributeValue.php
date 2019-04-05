@@ -38,7 +38,7 @@ class AttributeValue {
     protected $value;
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Attribute", mappedBy="attributes")
+    * @ORM\OneToMany(targetEntity="Application\Entity\Attribute", mappedBy="value")
     * @ORM\JoinColumn(name="id", referencedColumnName="value_id")
      */
     protected $attributes;    

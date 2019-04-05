@@ -74,7 +74,7 @@ class Attribute {
     
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\AttributeValue", inversedBy="value") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\AttributeValue", inversedBy="attributes") 
      * @ORM\JoinColumn(name="value_id", referencedColumnName="id")
      * 
      */
