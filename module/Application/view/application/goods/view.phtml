@@ -183,12 +183,19 @@ $this->headScript()
         </ul>
         
         <div class="tab-content" id="featureTabContent">
-            <div class="tab-pane" role="tabpanel" id="home" aria-labelledby="home-tab">
-                <p>
+            <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
+                <table>
                     <?php foreach ($goods->getAttributes() as $attr):?>
-                        <span><?= $attr->getName()?>:</span> <span><?= $attr->getValue()->getValue();?></span> 
+                        <tr>
+                            <td>
+                                <?= $attr->getName()?>
+                            </td>
+                            <td>
+                                <?= $attr->getValue()->getValue();?>
+                            </td>
+                        </tr>                                              
                     <?php endforeach;?>
-                </p>
+                </table>
             </div>
             <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
                 <div id="oemToolbar">
