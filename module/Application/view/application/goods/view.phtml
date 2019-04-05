@@ -383,7 +383,8 @@ $this->headScript()
 
 <script type="text/javascript">
     $(window).on('load', function() {
-        $('.nav-tabs a:first').tab('show');
+        //console.log($('.nav-tabs a[href="#home"'));
+        $('.nav-tabs a[href="#home"').tab('show');
     });
     
     $('#featureTab a').click(function (e) {
