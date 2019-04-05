@@ -74,6 +74,8 @@ class AttributeRepository  extends EntityRepository{
         if ($attribute){
             $this->getEntityManager()->getRepository(Goods::class)
                         ->addGoodAttribute($good, $attribute);
+            
+            $good->addAttribut($attribut);
         }    
         
         return $attribute;
