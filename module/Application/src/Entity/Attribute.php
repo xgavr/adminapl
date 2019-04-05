@@ -214,9 +214,12 @@ class Attribute {
         $this->status = $status;
     }   
     
+    /**
+     * @return \Application\Entity\AttributeValue
+     */
     public function getValue()
     {
-        $this->value;
+        return $this->value;
     }
     
     /**
