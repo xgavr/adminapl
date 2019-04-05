@@ -186,7 +186,7 @@ $this->headScript()
             <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
                 <p>
                     <?php foreach ($goods->getAttributes() as $attr):?>
-                        <span><?= $attr->getName()?>:</span> <span><?//= $attr->getValue()->getValue();?></span> 
+                        <span><?= $attr->getName()?>:</span> <span><?= $attr->getValue()->getValue();?></span> 
                     <?php endforeach;?>
                 </p>
             </div>
