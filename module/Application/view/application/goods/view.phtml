@@ -382,9 +382,10 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
+    $('.nav-tabs a:first').tab('show');
     $(window).on('load', function() {
         //console.log($('#home-tab'));
-        $('.nav-tabs a:first').tab('show');
+        
     });
     
     $('#featureTab a').click(function (e) {
