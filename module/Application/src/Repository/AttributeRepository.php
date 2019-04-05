@@ -68,6 +68,8 @@ class AttributeRepository  extends EntityRepository{
 
                 $attribute = $this->getEntityManager()->getRepository(Attribute::class)
                     ->findOneByTdId(['tdId' => $attr['attrId']]);
+                
+                $attributeValue->addAttribute($attribute);
             }                
         }
 
