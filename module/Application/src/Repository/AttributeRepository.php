@@ -38,6 +38,7 @@ class AttributeRepository  extends EntityRepository{
             $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
                     ->findOneByTdId($attr['attrValueId']);
             
+            var_dump($attr['attrValueId']); exit;
             if ($attributeValue == null){
                 $value = [
                     'td_id' => $attr['attrValueId'],
