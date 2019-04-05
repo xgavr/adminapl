@@ -184,20 +184,18 @@ $this->headScript()
         
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
-                <p>
-                    <table class="table table-bordered">
-                        <?php foreach ($goods->getAttributes() as $attr):?>
-                            <tr>
-                                <td width='50%'>
-                                    <?= $attr->getName()?>
-                                </td>
-                                <td>
-                                    <?= $attr->getValue()->getValue();?>
-                                </td>
-                            </tr>                                              
-                        <?php endforeach;?>
-                    </table>                    
-                </p>
+                <table class="table table-bordered">
+                    <?php foreach ($goods->getAttributes() as $attr):?>
+                        <tr>
+                            <td width='50%' align='right'>
+                                <?= $attr->getName()?>
+                            </td>
+                            <td>
+                                <?= $attr->getValue()->getValue();?>
+                            </td>
+                        </tr>                                              
+                    <?php endforeach;?>
+                </table>                    
             </div>
             <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
                 <div id="oemToolbar">
