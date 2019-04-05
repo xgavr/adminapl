@@ -382,8 +382,8 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
-    $(window).load(function() {
-//        $('.nav-tabs a[href="#home"]').tab('show');
+    $(window).on('load', function() {
+        $('.nav-tabs a[href="#home"]').tab('show');
     });
     
     $('#featureTab a').click(function (e) {
