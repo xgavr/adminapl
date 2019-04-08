@@ -275,6 +275,29 @@ class GoodsManager
         
         return;
     }
+
+    /**
+     * Обновить описания из текдока у товаров
+     */
+    public function updateDescriptionTd()
+    {        
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 800;
+        
+        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateDescriptionTd();
+        
+        foreach ($goodsForUpdate as $good){
+            if (time() >= $finishTime){
+                return;
+            }
+            $this->externalManager->addAttributesToGood($good);
+        }
+        
+        return;
+    }
+
     /**
      * Обновить номера из текдока у товаров
      */

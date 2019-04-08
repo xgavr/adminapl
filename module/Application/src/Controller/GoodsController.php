@@ -181,6 +181,8 @@ class GoodsController extends AbstractActionController
                 ->count(['statusOem' => Goods::OEM_UPDATED]);
         $totalGroup = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusGroup' => Goods::GROUP_UPDATED]);
+        $totalDesc = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusDescription' => Goods::DESCRIPTION_UPDATED]);
         
                 
         // Визуализируем шаблон представления.
@@ -191,6 +193,7 @@ class GoodsController extends AbstractActionController
             'aplIds' => $aplIds,
             'totalOem' => $totalOem,
             'totalGroup' => $totalGroup,
+            'totalDesc' => $totalDesc,
         ]);  
     }
     
@@ -711,6 +714,16 @@ class GoodsController extends AbstractActionController
     public function tdGroupAction()
     {
         $this->goodsManager->updateGroupTd();            
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    public function tdDescriptionAction()
+    {
+        $this->goodsManager->updateDescriptionTd();            
                 
         return new JsonModel(
             ['ok']

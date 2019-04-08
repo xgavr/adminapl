@@ -832,4 +832,21 @@ class ProcessingController extends AbstractActionController
         );
         
     }
+    
+    public function tdUpdateAttributeAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_description'] == 1){
+
+            $this->goodsManager->updateDescriptionTd();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    
 }
