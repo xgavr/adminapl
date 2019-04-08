@@ -85,8 +85,6 @@ final class Version20190403132248 extends AbstractMigration
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => 0]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['td_id'], 'td_id_uindx');
-        $table->addForeignKeyConstraint('attribute_value', ['value_id'], ['id'], ['onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE'], 'value_id_attribute_value_id_fk');
-        $table->addIndex(['value_id'], 'value_id_indx');
         $table->addOption('engine' , 'InnoDB'); 
         
         $table = $schema->createTable('good_attribute_value');
