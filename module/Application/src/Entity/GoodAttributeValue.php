@@ -43,7 +43,7 @@ class GoodAttributeValue {
     
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\AttributeValue", inversedBy="attributeValues") 
-     * @ORM\JoinColumn(name="attribute_value_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="value_id", referencedColumnName="id")
      * 
      */
     protected $attributeValue;    
