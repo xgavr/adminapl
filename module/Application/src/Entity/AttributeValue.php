@@ -38,8 +38,8 @@ class AttributeValue {
     protected $value;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\GoodAttributeValue", inversedBy="attributeValue") 
-     * @ORM\JoinColumn(name="value_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Application\Entity\GoodAttributeValue", mappedBy="attributeValue")
+     * @ORM\JoinColumn(name="id", referencedColumnName="value_id")
      * 
      */
     protected $attributeValues;        

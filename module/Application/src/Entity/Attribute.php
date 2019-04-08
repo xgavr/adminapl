@@ -74,8 +74,8 @@ class Attribute {
     
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\GoodAttributeValue", inversedBy="attribute") 
-     * @ORM\JoinColumn(name="value_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Application\Entity\GoodAttributeValue", mappedBy="attribute")
+     * @ORM\JoinColumn(name="id", referencedColumnName="attribute_id")
      * 
      */
     protected $attributeValues;    
