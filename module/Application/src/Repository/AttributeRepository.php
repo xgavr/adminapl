@@ -67,9 +67,9 @@ class AttributeRepository  extends EntityRepository{
         if ($attributeValue == null){
             $data = [
                 'td_id' => $attr['attrValueId'],
-                'value' => $attr['attrValue'],
+                'value' => $attr['attrValue'] ?? '',
             ];
-        
+
             $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           
 
             $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
