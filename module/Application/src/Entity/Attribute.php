@@ -74,12 +74,20 @@ class Attribute {
     
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\AttributeValue", inversedBy="attributes") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\GoodAttributeValue", inversedBy="attribute") 
      * @ORM\JoinColumn(name="value_id", referencedColumnName="id")
      * 
      */
-    protected $value;    
+    protected $attributeValues;    
            
+    
+    /**
+     * Конструктор.
+     */
+    public function __construct() 
+    {
+      $this->attributesValues = new ArrayCollection();
+    }
     
     public function getId() 
     {
@@ -205,23 +213,21 @@ class Attribute {
         $this->status = $status;
     }   
     
-    /**
-     * @return \Application\Entity\AttributeValue
-     */
-    public function getValue()
+    // Возвращает значения аттрибутов для данного атрибута.
+    public function getAttributeValues() 
     {
-        return $this->value;
+        return $this->attributeValues;
+    }      
+    
+    // Добавляет новое значение аттрибута к данному атрибуту.
+    public function addAttributeValue($attributeValue) 
+    {
+        $this->attributeValues[] = $attributeValue;        
     }
     
-    /**
-     * Задает связанный value
-     * 
-     * @param \Application\Entity\AttributeValue $value
-     */
-    public function setValue($value)
+    // Удаляет связь между этим атрибутом и значением аттрибута.
+    public function removeAttributeValueAssociation($attributeValue) 
     {
-        $this->value = $value;
-        $value->addAttribute($this);
-    }
-
+        $this->attributeValues->removeElement($attributeValue);
+    }    
 }

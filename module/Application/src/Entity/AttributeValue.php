@@ -38,20 +38,15 @@ class AttributeValue {
     protected $value;
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Attribute", mappedBy="value")
-    * @ORM\JoinColumn(name="id", referencedColumnName="value_id")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\GoodAttributeValue", inversedBy="attributeValue") 
+     * @ORM\JoinColumn(name="value_id", referencedColumnName="id")
+     * 
      */
-    protected $attributes;    
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="\Application\Entity\Goods", mappedBy="attributeValues")
-     */
-    protected $goods;    
+    protected $attributeValues;        
     
 
     public function __construct() {
-       $this->attributes = new ArrayCollection();
-       $this->goods = new ArrayCollection();
+       $this->attributeValues = new ArrayCollection();
     }    
     
     public function getId() 
@@ -84,25 +79,22 @@ class AttributeValue {
         $this->value = $value;
     }     
     
-    public function getAttributes() 
+    
+    // Возвращает значения аттрибутов для данного атрибута.
+    public function getAttributeValues() 
     {
-        return $this->attributes;
+        return $this->attributeValues;
+    }      
+    
+    // Добавляет новое значение аттрибута к данному атрибуту.
+    public function addAttributeValue($attributeValue) 
+    {
+        $this->attributeValues[] = $attributeValue;        
     }
     
-    public function addAttribute($attribute) 
+    // Удаляет связь между этим атрибутом и значением аттрибута.
+    public function removeAttributeValueAssociation($attributeValue) 
     {
-        $this->attributes[] = $attribute;        
-    }     
-
-    // Возвращает товары, связанные с данным атрибутом.
-    public function getGoods() 
-    {
-        return $this->goods;
-    }
-    
-    // Добавляет товар в коллекцию товаров, связанных с этим атрибутом.
-    public function addGood($good) 
-    {
-        $this->goods[] = $good;        
-    }     
+        $this->attributeValues->removeElement($attributeValue);
+    }    
 }

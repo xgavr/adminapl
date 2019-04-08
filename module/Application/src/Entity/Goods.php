@@ -157,11 +157,8 @@ class Goods {
     protected $cars;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\AttributeValue", inversedBy="goods")
-     * @ORM\JoinTable(name="good_attribute_value",
-     *      joinColumns={@ORM\JoinColumn(name="good_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="attribute_value_id", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="Application\Entity\GoodAttributeValue", mappedBy="good")
+     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
      */
     protected $attributeValues;
 

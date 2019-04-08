@@ -453,15 +453,14 @@ class GoodsRepository extends EntityRepository
      * @param \Application\Entity\Goods $good
      * @return object
      */
-    public function findAttributeValues($good)
+    public function findGoodAttributeValues($good)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('a')
-            ->from(\Application\Entity\AttributeValue::class, 'a')
-            ->join('a.goods', 'g')
-            ->where('g.id = ?1')    
+            ->from(\Application\Entity\GoodAttributeValue::class, 'a')
+            ->where('a.good = ?1')    
             ->setParameter('1', $good->getId())
             ;
         
@@ -469,16 +468,17 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
-     * Добавление атрибута к товару
+     * Добавление значения атрибута к товару
      * 
      * @param \Application\Entity\Goods $good
+     * @param \Application\Entity\Attribute $attribute
      * @param \Application\Entity\AttributeValue $attributeValue
      * 
      * @return integer
      */
-    public function addGoodAttributeValue($good, $attributeValue)
+    public function addGoodAttributeValue($good, $attribute, $attributeValue)
     {
-       $inserted = $this->getEntityManager()->getConnection()->insert('good_attribute_value', ['good_id' => $good->getId(), 'attribute_value_id' => $attributeValue->getId()]);
+       $inserted = $this->getEntityManager()->getConnection()->insert('good_attribute_value', ['good_id' => $good->getId(), 'attribute_id' => $attribute->getId(), 'value_id' => $attributeValue->getId()]);
        return $inserted;        
     }
 
@@ -488,9 +488,9 @@ class GoodsRepository extends EntityRepository
      * @param \Application\Entity\Goods $good
      * @return integer
      */
-    public function removeGoodAttributes($good)
+    public function removeGoodAttributeValues($good)
     {
-        $deleted = $this->getEntityManager()->getConnection()->delete('good_attribute', ['good_id' => $good->getId()]);
+        $deleted = $this->getEntityManager()->getConnection()->delete('good_attribute_value', ['good_id' => $good->getId()]);
         return $deleted;        
     }
     

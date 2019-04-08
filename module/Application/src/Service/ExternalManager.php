@@ -16,7 +16,7 @@ use Application\Entity\CarAttributeType;
 use Application\Entity\CarAttributeValue;
 use Application\Entity\Oem;
 use Application\Entity\GenericGroup;
-use Application\Entity\Attribute;
+use Application\Entity\GoodAttributeValuee;
 
 /**
  * Description of ExternalManager
@@ -660,7 +660,7 @@ class ExternalManager
     public function addAttributesToGood($good)
     {
         $this->entityManager->getRepository(Goods::class)
-                ->removeGoodAttributes($good);
+                ->removeGoodAttributeValues($good);
         
         $info = $this->autoDbManager->getDirectInfo($good);
         if (is_array($info)){
@@ -670,8 +670,8 @@ class ExternalManager
                         if (isset($infoArray['articleAttributes'])){
                             if (isset($infoArray['articleAttributes']['array'])){
                                 foreach ($infoArray['articleAttributes']['array'] as $attr){
-                                    $this->entityManager->getRepository(Attribute::class)
-                                            ->addAttributeToGood($good, $attr);
+                                    $this->entityManager->getRepository(GoodAttributeValue::class)
+                                            ->addGoodAttributeValue($good, $attr);
                                 }
                             }    
                         }    
