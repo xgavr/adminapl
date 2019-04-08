@@ -46,7 +46,7 @@ class AttributeRepository  extends EntityRepository{
         
             $this->getEntityManager()->getConnection()->insert('attribute', $data);           
 
-            $attributeValue = $this->getEntityManager()->getRepository(Attribute::class)
+            $attribute = $this->getEntityManager()->getRepository(Attribute::class)
                  ->findOneByTdId($attr['attrId']);
         }
         
@@ -99,6 +99,8 @@ class AttributeRepository  extends EntityRepository{
                             ->addGoodAttributeValue($good, $attribute, $attributeValue);
             }                
         }
+        
+        return;
 
     }
         
