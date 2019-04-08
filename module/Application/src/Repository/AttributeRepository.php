@@ -87,9 +87,8 @@ class AttributeRepository  extends EntityRepository{
      */
     public function addGoodAttributeValue($good, $attr)
     {
-        var_dump($attr); exit;
-        $attribute = $this->getEntityManager()->getRepository(Attribute::class)
-                ->findOneByTdId($attr['attrId']);
+
+        $attribute = $this->addAtribute($attr);
         
         if ($attribute){            
             
