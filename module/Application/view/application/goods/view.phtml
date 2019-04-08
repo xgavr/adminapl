@@ -186,15 +186,15 @@ $this->headScript()
             <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
                 <table class="table table-bordered">
                     <p>
-                        <?php foreach ($goods->getAttributeValues() as $attr):?>
+                        <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
                             <tr>
                                 <td width='30%' align='right'>
                                     <nobr>
-                                       <?= $attr->getName()?>     
+                                       <?= $attributeValue->getAttribute()->getName()?>     
                                     </nobr>
                                 </td>
                                 <td>
-                                    <?= $attr->getValue()->getValue();?>
+                                    <?= $attributeValue->getAttributeValue()->getValue();?>
                                 </td>
                             </tr>                                              
                         <?php endforeach;?>

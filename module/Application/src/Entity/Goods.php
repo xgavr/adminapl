@@ -171,7 +171,7 @@ class Goods {
       $this->articles = new ArrayCollection();      
       $this->cart = new ArrayCollection(); 
       $this->cars = new ArrayCollection();
-      $this->attributesValues = new ArrayCollection();
+      $this->attributeValues = new ArrayCollection();
     }
     
   
