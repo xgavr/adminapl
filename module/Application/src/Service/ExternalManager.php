@@ -16,7 +16,7 @@ use Application\Entity\CarAttributeType;
 use Application\Entity\CarAttributeValue;
 use Application\Entity\Oem;
 use Application\Entity\GenericGroup;
-use Application\Entity\GoodAttributeValuee;
+use Application\Entity\GoodAttributeValue;
 
 /**
  * Description of ExternalManager
