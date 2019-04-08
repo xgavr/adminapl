@@ -351,6 +351,11 @@ class AutodbManager
          ];
 
         $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
+        
+        if (!$result){
+            $params['linkingTargetType'] = 'O';
+            $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
+        }
 
         return $result;
     }
