@@ -539,9 +539,11 @@ class IndexController extends AbstractActionController
             }
         }
         
+        $geoIpFilter = new \Admin\Filter\GeoIp();
         // Визуализируем шаблон представления.
         return new ViewModel([
             'form' => $form,
+            'geoIpData' => $geoIpFilter->filter($settings['telegram_proxy']),
         ]);  
         
     }
