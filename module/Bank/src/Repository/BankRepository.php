@@ -73,6 +73,39 @@ class BankRepository extends EntityRepository
     }    
 
     /**
+     * Получить выборку записей остатков
+     * 
+     * @param string $q поисковый запрос
+     * @param string $rs счет
+     * @return object
+     */
+    public function findBalance($q = null, $rs = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('b')
+            ->from(Balance::class, 'b')
+            ->orderBy('b.dateBalance', 'DESC')
+            ->addOrderBy('b.account', 'ASC')    
+                ;
+        
+        if (is_array($rs)){
+            $or = $queryBuilder->expr()->orX();
+            foreach ($rs as $account){
+                $or->add($queryBuilder->expr()->eq('b.account', trim($account)));
+            }
+            $queryBuilder->where($or);
+        }
+        
+        if ($q){
+        }
+        
+        return $queryBuilder->getQuery();
+    }    
+
+    /**
      * Получить текущий остаток по счету 
      * @param string $account
      * @return float

@@ -141,4 +141,30 @@ class IndexController extends AbstractActionController
         $this->bankManager->checkStatementFolder();
         exit;
     }
+    
+    public function balanceContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $rs = $this->params()->fromQuery('rs');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(Statement::class)
+                        ->findBalance($q, $rs);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }
+
+    
 }
