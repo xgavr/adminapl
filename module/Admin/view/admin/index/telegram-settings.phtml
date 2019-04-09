@@ -91,7 +91,7 @@ $form->prepare();
             <?= $this->formLabel($form->get('telegram_proxy')); ?>
             <?= $this->formElement($form->get('telegram_proxy')); ?>
             <?= $this->formElementErrors($form->get('telegram_proxy')); ?>
-            <span><?= $geoIpData['countryCode'];?></span>
+            <span><?= $geoIpData['country'];?></span>
             <span><?= $geoIpData['regionName'];?></span>
             <span><?= $geoIpData['city'];?></span>
         </div>
