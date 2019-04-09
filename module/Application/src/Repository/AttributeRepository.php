@@ -64,7 +64,7 @@ class AttributeRepository  extends EntityRepository{
     {
         $value = isset($attr['attrValue']) ? $attr['attrValue']:'';
         $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                ->findOneBy(['td_id' => $attr['attrValueId'], 'value' => $value]);
+                ->findOneBy(['tdId' => $attr['attrValueId'], 'value' => $value]);
 
         if ($attributeValue == null){
             $data = [
@@ -75,7 +75,7 @@ class AttributeRepository  extends EntityRepository{
             $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           
 
             $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                    ->findOneBy(['td_id' => $attr['attrValueId'], 'value' => $value]);
+                    ->findOneBy(['tdId' => $attr['attrValueId'], 'value' => $value]);
         }
         
         return $attributeValue;
