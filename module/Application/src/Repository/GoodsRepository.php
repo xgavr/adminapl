@@ -473,7 +473,7 @@ class GoodsRepository extends EntityRepository
      */
     public function resetUpdateAttributeTd()
     {
-        $updated = $this->getEntityManager()->getConnection()->update('goods', ['status_description' => Goods::DESCRIPTION_UPDATED], ['status_description' => Goods::DESCRIPTION_FOR_UPDATE]);
+        $updated = $this->getEntityManager()->getConnection()->update('goods', ['status_description' => Goods::DESCRIPTION_FOR_UPDATE], ['status_description' => Goods::DESCRIPTION_UPDATED]);
         return $updated;
         
     }
