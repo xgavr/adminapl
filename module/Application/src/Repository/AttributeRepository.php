@@ -39,6 +39,7 @@ class AttributeRepository  extends EntityRepository{
                 'is_interval' => (int) boolval($attr['attrIsInterval']),
                 'is_linked' => (int) boolval($attr['attrIsLinked']),
                 'value_type' => $attr['attrType'],
+                'value_unit' => (isset($attr['attrUnit'])) ? $attr['attrUnit']:'',
                 'name' => $attr['attrName'],
                 'short_name' => (isset($attr['attrShortName'])) ? $attr['attrShortName']:$attr['attrName'],
                 'status' => Attribute::STATUS_ACTIVE,
@@ -61,19 +62,20 @@ class AttributeRepository  extends EntityRepository{
      */
     public function addAtributeValue($attr)
     {
+        $value = isset($attr['attrValue']) ? $attr['attrValue']:'';
         $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                ->findOneByTdId($attr['attrValueId']);
+                ->findOneBy(['td_id' => $attr['attrValueId'], 'value' => $value]);
 
         if ($attributeValue == null){
             $data = [
                 'td_id' => $attr['attrValueId'],
-                'value' => isset($attr['attrValue']) ? $attr['attrValue']:'',
+                'value' => $value,
             ];
 
             $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           
 
             $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                 ->findOneByTdId($attr['attrValueId']);
+                    ->findOneBy(['td_id' => $attr['attrValueId'], 'value' => $value]);
         }
         
         return $attributeValue;

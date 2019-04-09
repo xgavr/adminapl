@@ -68,6 +68,16 @@ class Attribute {
 
 
     /**
+     * @ORM\Column(name="value_type")   
+     */
+    protected $valueType;
+
+    /**
+     * @ORM\Column(name="value_unit")   
+     */
+    protected $valueUnit;
+
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;   
@@ -169,6 +179,26 @@ class Attribute {
         $this->shortName = $shortName;
     }     
     
+    public function getValueType() 
+    {
+        return $this->valueType;
+    }
+
+    public function setValueType($valueType) 
+    {
+        $this->valueType = $valueType;
+    }     
+
+    public function getValueUnit() 
+    {
+        return $this->valueUnit;
+    }
+
+    public function setValueUnit($valueUnit) 
+    {
+        $this->valueUnit = $valueUnit;
+    }     
+
     /**
      * Returns status.
      * @return int     

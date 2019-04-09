@@ -68,7 +68,7 @@ final class Version20190403132248 extends AbstractMigration
         $table->addColumn('td_id', 'integer', ['notnull' => true]);
         $table->addColumn('value', 'string', ['notnull'=>true, 'length' => 128]);
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['td_id'], 'td_id_uindx');
+        $table->addUniqueIndex(['td_id', 'value'], 'td_id_value_uindx');
         $table->addOption('engine' , 'InnoDB');  
 
         $table = $schema->createTable('attribute');
@@ -80,6 +80,7 @@ final class Version20190403132248 extends AbstractMigration
         $table->addColumn('is_interval', 'integer', ['notnull'=>true, 'default' => 0]);
         $table->addColumn('is_linked', 'integer', ['notnull'=>true, 'default' => 0]);
         $table->addColumn('value_type', 'string', ['notnull'=>true, 'length' => 3]);
+        $table->addColumn('value_unit', 'string', ['notnull'=>true, 'length' => 16]);
         $table->addColumn('name', 'string', ['notnull'=>true, 'lenght' => 128]);
         $table->addColumn('short_name', 'string', ['notnull'=>true, 'lenght' => 128]);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => 0]);

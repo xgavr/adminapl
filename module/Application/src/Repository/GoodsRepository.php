@@ -466,6 +466,19 @@ class GoodsRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();            
     }
     
+    /**
+     * Сброс метки обновления описаний
+     * 
+     * @return integer
+     */
+    public function resetUpdateAttributeTd()
+    {
+        $updated = $this->getEntityManager()->getConnection()->update('goods', ['status_description' => Goods::DESCRIPTION_UPDATED], ['status_description' => Goods::DESCRIPTION_FOR_UPDATE]);
+        return $updated;
+        
+    }
+
+
     
     /**
      * Найти атрибуты товара

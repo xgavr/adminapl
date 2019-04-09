@@ -731,4 +731,15 @@ class GoodsController extends AbstractActionController
         
     }
     
+    public function resetTdDescriptionAction()
+    {
+        $this->entityManager->getRepository(Goods::class)
+                ->resetUpdateAttributeTd();
+        
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }
