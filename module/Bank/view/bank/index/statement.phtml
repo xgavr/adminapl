@@ -43,7 +43,7 @@ $this->headScript()
                     data-toolbar="#toolbar"
                     data-show-refresh="true"
                     data-show-toggle="true"
-                    data-query-params="queryParams"
+                    data-query-params="statementQueryParams"
                     data-response-handler="responseHandler"
                     >
                     <thead>
@@ -73,7 +73,7 @@ $this->headScript()
                     data-toolbar="#toolbar_balance"
                     data-show-refresh="true"
                     data-show-toggle="true"
-                    data-query-params="queryParams"
+                    data-query-params="balanceQueryParams"
                     data-response-handler="responseHandler"
                     >
                     <thead>
@@ -155,15 +155,15 @@ $this->headScript()
         });
     });
     
-    function queryParams(params) {
+    function tabQueryParams(tab, params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('.page-size').html();
+        limit = $(tab + ' .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('li.page-number.active a').html();
+        offset = $(tab + ' li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
@@ -178,8 +178,17 @@ $this->headScript()
         }
         
         return params;
+        
     }
     
+    function balanceQueryParams(params) {
+        return tabQueryParams('#table_balance', params);
+    }
+    
+    function statementQueryParams(params) {
+        return tabQueryParams('#table', params);
+    }
+
     function responseHandler(res) {
         return res;
     }
