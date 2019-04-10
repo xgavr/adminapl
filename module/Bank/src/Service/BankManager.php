@@ -12,7 +12,9 @@ use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
 use Bank\Filter\Statement1cToArray;
 use Bank\Filter\ConvertStatement1c;
-
+use Application\Filter\CsvDetectDelimiterFilter;
+use Application\Filter\RawToStr;
+use Application\Filter\Basename;
 /**
  * Description of BankManager
  *
@@ -146,6 +148,74 @@ class BankManager
         $this->entityManager->flush();
     }
 
+    public function uploadStatementCsv($filename)
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+        $i = 0;
+        
+        if (file_exists($filename)){
+            
+            if (!filesize($filename)){
+                return;
+            }
+
+            $basenameFilter = new Basename();
+
+            $lines = fopen($filename, 'r');
+
+            if($lines) {
+
+                $detector = new CsvDetectDelimiterFilter();
+                $delimiter = $detector->filter($filename);
+                
+                $filter = new RawToStr();
+
+                $rows = 0;
+                $raw = new Raw();
+                $raw->setSupplier($supplier);
+                $raw->setFilename($basenameFilter->filter($filename));
+                $raw->setStatus(Raw::STATUS_LOAD);
+                $raw->setRows($rows);                    
+
+                $currentDate = date('Y-m-d H:i:s');
+                $raw->setDateCreated($currentDate);
+
+                $this->entityManager->persist($raw);
+                $this->entityManager->flush();
+
+                while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
+
+                    $str = $filter->filter($row);
+
+                    if ($str){
+                        $data = [
+                            'rawdata' => $filter->filter($row),
+                            'status'  => Rawprice::STATUS_NEW,
+                            'date_created' => date('Y-m-d H:i:s'),
+                            'raw_id' => $raw->getId(),
+                            'good_id' => null,
+                            'unknown_producer_id' => null,
+                        ];
+
+                        $this->entityManager->getRepository(Rawprice::class)
+                                ->insertRawprice($data);
+                        $rows ++;
+                    }                            
+                }
+                    
+                $raw->setStatus(Raw::STATUS_ACTIVE);
+                $raw->setRows($rows);                    
+                $this->entityManager->persist($raw);
+                $this->entityManager->flush();                    
+
+                fclose($lines);
+            }    
+        }
+        
+        return;
+    }
+    
     /**
      * Получение выписок по почте
      */    
@@ -230,6 +300,24 @@ class BankManager
             if ($fileInfo->isDot()) continue;
             if ($fileInfo->isFile()){
                 if (strtolower($fileInfo->getExtension()) == 'txt'){
+                    $convetFilter = new Statement1cToArray();
+                    $statement = $convetFilter->filter($fileInfo->getPathname());
+
+                    $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                        ->findOneByRs($statement['РасчСчет']);
+            
+                    if ($bankAccount){
+                        $this->saveBalanceFromStatement1c($bankAccount, $statement);
+                        $this->saveStatementFromStatement1c($bankAccount, $statement);
+                        
+                    }
+                    if (is_dir(self::STAEMENTS_ARCH_DIR)){
+                        if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+                            unlink($fileInfo->getPathname());
+                        }
+                    }
+                }
+                if (strtolower($fileInfo->getExtension()) == 'csv'){
                     $convetFilter = new Statement1cToArray();
                     $statement = $convetFilter->filter($fileInfo->getPathname());
 
