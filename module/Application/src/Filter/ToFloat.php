@@ -42,7 +42,7 @@ class ToFloat extends AbstractFilter
             $value = str_replace(",", ".", $value); // replace ',' with '.' 
         } 
   
-        if(preg_match("#([0-9\.]+)#", $value, $match)) { // search for number that may contain '.' 
+        if(preg_match("#([0-9\.\-]+)#", $value, $match)) { // search for number that may contain '.' 
             return floatval($match[0]); 
         } else { 
             return floatval($value); // take some last chances with floatval 

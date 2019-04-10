@@ -16,6 +16,7 @@ use Application\Filter\CsvDetectDelimiterFilter;
 use Application\Filter\RawToStr;
 use Application\Filter\Basename;
 use Bank\Entity\Acquiring;
+use Application\Filter\ToFloat;
 
 /**
  * Description of BankManager
@@ -176,31 +177,37 @@ class BankManager
 
                 $detector = new CsvDetectDelimiterFilter();
                 $delimiter = $detector->filter($filename);
+                $filter = new RawToStr();
+                $floatFilter = new ToFloat();
                 
-                while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
+                while (($line = fgetcsv($lines, 4096, $delimiter)) !== false) {
                     
+                    $row = explode(';', $filter->filter($line));
+
                     $acq = $this->entityManager->getRepository(Acquiring::class)
                             ->findOneByRrn($row[14]);
-
+                    
                     if ($acq == null){
-                        if (is_numeric($row[10])){
+//                        var_dump($floatFilter->filter($row[10]));
+                        if ($floatFilter->filter($row[10])){
                             $acq = new Acquiring();
                             $acq->setInn($row[0]);
                             $acq->setPoint($row[3]);
                             $acq->setCart($row[5]);
                             $acq->setAcode($row[6]);
                             $acq->setCartType($row[7]);
-                            $acq->setAmount($row[8]);
-                            $acq->setComiss($row[9]);
-                            $acq->setOutput($row[10]);
+                            $acq->setAmount($floatFilter->filter($row[8]));
+                            $acq->setComiss($floatFilter->filter($row[9]));
+                            $acq->setOutput($floatFilter->filter($row[10]));
                             $acq->setOperType($row[11]);
                             $acq->setOperDate($row[12]);
                             $acq->setTransDate($row[13]);
                             $acq->setRrn($row[14]);
                             $acq->setIdent($row[15]);
+    
+                            $this->entityManager->persist($acq);
                         }    
 
-                        $this->entityManager->persist($acq);
                     }    
                 }
                     
