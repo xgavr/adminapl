@@ -12,6 +12,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
+use Bank\Entity\Acquiring;
 
 class IndexController extends AbstractActionController
 {
@@ -107,8 +108,12 @@ class IndexController extends AbstractActionController
         
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
 
         $result = $query->getResult(2);
         
@@ -139,7 +144,10 @@ class IndexController extends AbstractActionController
     public function loadStatementFileAction()
     {
         $this->bankManager->checkStatementFolder();
-        exit;
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
     }
     
     public function balanceContentAction()
@@ -155,8 +163,12 @@ class IndexController extends AbstractActionController
         
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
 
         $result = $query->getResult(2);
         
@@ -166,5 +178,31 @@ class IndexController extends AbstractActionController
         ]);          
     }
 
+    public function acquiringContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(Acquiring::class)
+                        ->findAcquiring($q);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }
     
 }

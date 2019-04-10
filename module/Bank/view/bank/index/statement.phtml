@@ -23,6 +23,7 @@ $this->headScript()
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
             <li role="presentation"><a href="#statement" role="tab" id="home-tab" data-toggle="tab" aria-controls="statement" aria-expanded="true">Выписка</a></li>
             <li role="presentation"><a href="#balance" role="tab" id="oem-tab" data-toggle="tab" aria-controls="balance" aria-expanded="true">Остатки</a></li>
+            <li role="presentation"><a href="#acquiring" role="tab" id="oem-tab" data-toggle="tab" aria-controls="acquiring" aria-expanded="true">Эквайринг</a></li>
         </ul>
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="statement" aria-labelledby="statement-tab">
@@ -86,6 +87,38 @@ $this->headScript()
                     </thead>
                 </table>                
             </div>            
+            <div class="tab-pane fade" role="tabpanel" id="acquiring" aria-labelledby="acquiring-tab">
+                <div id="toolbar_acquiring">
+                    <div class="form-inline" role="form">
+                        <button value="/bank/load-statement-file/" class="btn btn-default btn-xs refresh-table-button"
+                                title="Загрузить">
+                            <span class="glyphicon glyphicon-upload" ></span>
+                        </button>                         
+                    </div>
+                </div>
+                <table id="table_acquiring" 
+                    data-toggle="table" 
+                    data-url="/bank/acquiring-content"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#acquiring_balance"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="acquiringQueryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="id"></th>
+                             <th data-field="transDate">Дата</th>
+                             <th data-field="point">Точка</th>
+                             <th data-field="output" data-formatter="amountIn" data-align='right'>Оплата</th>             
+                             <th data-field="output" data-formatter="amountOut" data-align='right'>Возврат</th>             
+                         </tr>                
+                    </thead>
+                </table>                
+            </div>            
         </div>
     </div>
     <div class="col-md-3" id="side-nav" >
@@ -144,6 +177,7 @@ $this->headScript()
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
         $('#table_balance').bootstrapTable('refresh');
+        $('#table_acquiring').bootstrapTable('refresh');
     }
 
     var table = $('#table'),
@@ -187,6 +221,10 @@ $this->headScript()
     
     function statementQueryParams(params) {
         return tabQueryParams('#table', params);
+    }
+
+    function acquiringQueryParams(params) {
+        return tabQueryParams('#table_acquiring', params);
     }
 
     function responseHandler(res) {

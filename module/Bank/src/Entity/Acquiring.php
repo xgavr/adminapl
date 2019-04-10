@@ -110,6 +110,7 @@ class Acquiring {
     }     
 
     /**
+     * ИНН
      * @return string
      */
     public function getInn() 
@@ -118,6 +119,7 @@ class Acquiring {
     }
     
     /**
+     * 
      * @param string $inn
      */
     public function setInn($inn) 
@@ -126,6 +128,7 @@ class Acquiring {
     }     
 
     /**
+     * НОМЕР_ТОЧКИ
      * @return string
      */
     public function getPoint() 
@@ -134,6 +137,7 @@ class Acquiring {
     }
 
     /**
+     * НОМЕР_ТОЧКИ
      * @param string $point
      */
     public function setPoint($point) 
@@ -142,6 +146,7 @@ class Acquiring {
     }     
 
     /**
+     * НОМЕР_КАРТЫ
      * @return string
      */
     public function getCart() 
@@ -150,6 +155,7 @@ class Acquiring {
     }
 
     /**
+     * НОМЕР_КАРТЫ
      * @param string $cart
      */
     public function setCart($cart) 
@@ -158,6 +164,7 @@ class Acquiring {
     }     
 
     /**
+     * КОД_АВТОРИЗАЦИИ
      * @return string
      */
     public function getAcode() 
@@ -166,6 +173,7 @@ class Acquiring {
     }
 
     /**
+     * КОД_АВТОРИЗАЦИИ
      * @param string $acode
      */
     public function setAcode($acode) 
@@ -175,6 +183,7 @@ class Acquiring {
 
 
     /**
+     * ТИП_КАРТЫ
      * @return string
      */
     public function getСartType() 
@@ -183,6 +192,7 @@ class Acquiring {
     }
 
     /**
+     * ТИП_КАРТЫ
      * @param string $cartType
      */             
     public function setCartType($cartType) 
@@ -191,6 +201,7 @@ class Acquiring {
     }     
 
     /**
+     * СУММА_ТРАНЗАКЦИИ
      * @return string
      */
     public function geAmount() 
@@ -199,6 +210,7 @@ class Acquiring {
     }
 
     /**
+     * СУММА_ТРАНЗАКЦИИ
      * @param string $amount
      */
     public function setAmount($amount) 
@@ -207,6 +219,7 @@ class Acquiring {
     }     
 
     /**
+     * КОМИССИЯ
      * @return string
      */
     public function getСomiss() 
@@ -215,6 +228,7 @@ class Acquiring {
     }
 
     /**
+     * КОМИССИЯ
      * @param string $comiss
      */
     public function setComiss($comiss) 
@@ -223,6 +237,7 @@ class Acquiring {
     }     
 
     /**
+     * СУММА_ВОЗМЕЩЕНИЯ
      * @return string
      */
     public function getOutput() 
@@ -231,6 +246,7 @@ class Acquiring {
     }
 
     /**
+     * СУММА_ВОЗМЕЩЕНИЯ
      * @param string $output
      */
     public function setOutput($output) 
@@ -257,6 +273,7 @@ class Acquiring {
     }     
     
     /**
+     * ДАТА_ОБРАБОТКИ
      * @return date
      */
     public function getOperDate() 
@@ -265,6 +282,7 @@ class Acquiring {
     }
 
     /**
+     * ДАТА_ОБРАБОТКИ
      * @param date $operDate
      */
     public function setOperDate($operDate) 
@@ -273,6 +291,7 @@ class Acquiring {
     }     
     
     /**
+     * ДАТА_ТРАНЗАКЦИИ
      * @return date
      */
     public function getTransDate() 
@@ -281,6 +300,7 @@ class Acquiring {
     }
 
     /**
+     * ДАТА_ТРАНЗАКЦИИ
      * @param date $transDate
      */
     public function setTransDate($transDate) 
@@ -289,6 +309,7 @@ class Acquiring {
     }     
     
     /**
+     * RRN
      * @return string
      */
     public function getRrn() 
@@ -297,6 +318,7 @@ class Acquiring {
     }
 
     /**
+     * RRN
      * @param string $rrn
      */
     public function setRrn($rrn) 
@@ -305,6 +327,7 @@ class Acquiring {
     }     
     
     /**
+     * ИДЕНТИФИКАТОР_ОПЕРАЦИИ
      * @return string
      */
     public function getIdent() 
@@ -313,6 +336,7 @@ class Acquiring {
     }
 
     /**
+     * ИДЕНТИФИКАТОР_ОПЕРАЦИИ
      * @param string $ident
      */
     public function setIdent($ident) 

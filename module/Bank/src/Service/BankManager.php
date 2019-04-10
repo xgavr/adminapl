@@ -15,6 +15,8 @@ use Bank\Filter\ConvertStatement1c;
 use Application\Filter\CsvDetectDelimiterFilter;
 use Application\Filter\RawToStr;
 use Application\Filter\Basename;
+use Bank\Entity\Acquiring;
+
 /**
  * Description of BankManager
  *
@@ -148,6 +150,12 @@ class BankManager
         $this->entityManager->flush();
     }
 
+    /**
+     * Загруза выписки эквайринга
+     * 
+     * @param string $filename
+     * @return null
+     */
     public function uploadStatementCsv($filename)
     {
         ini_set('memory_limit', '2048M');
@@ -169,44 +177,33 @@ class BankManager
                 $detector = new CsvDetectDelimiterFilter();
                 $delimiter = $detector->filter($filename);
                 
-                $filter = new RawToStr();
-
-                $rows = 0;
-                $raw = new Raw();
-                $raw->setSupplier($supplier);
-                $raw->setFilename($basenameFilter->filter($filename));
-                $raw->setStatus(Raw::STATUS_LOAD);
-                $raw->setRows($rows);                    
-
-                $currentDate = date('Y-m-d H:i:s');
-                $raw->setDateCreated($currentDate);
-
-                $this->entityManager->persist($raw);
-                $this->entityManager->flush();
-
                 while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
+                    
+                    $acq = $this->entityManager->getRepository(Acquiring::class)
+                            ->findOneByRrn($row[14]);
 
-                    $str = $filter->filter($row);
+                    if ($acq == null){
+                        if (is_numeric($row[10])){
+                            $acq = new Acquiring();
+                            $acq->setInn($row[0]);
+                            $acq->setPoint($row[3]);
+                            $acq->setCart($row[5]);
+                            $acq->setAcode($row[6]);
+                            $acq->setCartType($row[7]);
+                            $acq->setAmount($row[8]);
+                            $acq->setComiss($row[9]);
+                            $acq->setOutput($row[10]);
+                            $acq->setOperType($row[11]);
+                            $acq->setOperDate($row[12]);
+                            $acq->setTransDate($row[13]);
+                            $acq->setRrn($row[14]);
+                            $acq->setIdent($row[15]);
+                        }    
 
-                    if ($str){
-                        $data = [
-                            'rawdata' => $filter->filter($row),
-                            'status'  => Rawprice::STATUS_NEW,
-                            'date_created' => date('Y-m-d H:i:s'),
-                            'raw_id' => $raw->getId(),
-                            'good_id' => null,
-                            'unknown_producer_id' => null,
-                        ];
-
-                        $this->entityManager->getRepository(Rawprice::class)
-                                ->insertRawprice($data);
-                        $rows ++;
-                    }                            
+                        $this->entityManager->persist($acq);
+                    }    
                 }
                     
-                $raw->setStatus(Raw::STATUS_ACTIVE);
-                $raw->setRows($rows);                    
-                $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
 
                 fclose($lines);
@@ -235,6 +232,7 @@ class BankManager
             $mailList = $this->postManager->readImap($box);
 
             if (count($mailList)){
+                /* @var $mailList array */
                 foreach ($mailList as $mail){
                     if (isset($mail['attachment'])){
                         foreach($mail['attachment'] as $attachment){
@@ -297,7 +295,9 @@ class BankManager
         setlocale(LC_ALL,'ru_RU.UTF-8');
         
         foreach (new \DirectoryIterator(self::STAEMENTS_DIR) as $fileInfo) {
-            if ($fileInfo->isDot()) continue;
+            if ($fileInfo->isDot()) {
+                continue;
+            }
             if ($fileInfo->isFile()){
                 if (strtolower($fileInfo->getExtension()) == 'txt'){
                     $convetFilter = new Statement1cToArray();
@@ -318,17 +318,9 @@ class BankManager
                     }
                 }
                 if (strtolower($fileInfo->getExtension()) == 'csv'){
-                    $convetFilter = new Statement1cToArray();
-                    $statement = $convetFilter->filter($fileInfo->getPathname());
 
-                    $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                        ->findOneByRs($statement['РасчСчет']);
-            
-                    if ($bankAccount){
-                        $this->saveBalanceFromStatement1c($bankAccount, $statement);
-                        $this->saveStatementFromStatement1c($bankAccount, $statement);
-                        
-                    }
+                    $this->uploadStatementCsv($fileInfo->getPathname());
+
                     if (is_dir(self::STAEMENTS_ARCH_DIR)){
                         if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
                             unlink($fileInfo->getPathname());

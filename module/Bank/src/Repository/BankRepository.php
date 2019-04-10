@@ -11,6 +11,7 @@ namespace Bank\Repository;
 use Doctrine\ORM\EntityRepository;
 use Bank\Entity\Statement;
 use Bank\Entity\Balance;
+use Bank\Entity\Acquiring;
 
 /**
  * Description of BankRepository
@@ -147,4 +148,29 @@ class BankRepository extends EntityRepository
         
         return 0;                
     }
+    
+    /**
+     * Получить выборку записей эквайринга
+     * 
+     * @param string $q поисковый запрос
+     * @param string $rs счет
+     * @return object
+     */
+    public function findAcquiring($q = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('a')
+            ->from(Acquiring::class, 'a')
+            ->orderBy('a.transDate', 'DESC')
+            ->addOrderBy('a.point', 'ASC')    
+                ;
+                
+        if ($q){
+        }
+        
+        return $queryBuilder->getQuery();
+    }    
 }

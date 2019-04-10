@@ -29,6 +29,7 @@ final class Version20190410072913 extends AbstractMigration
         $table->addColumn('rrn', 'string', ['notnull'=>true, 'length' => 32]);
         $table->addColumn('ident', 'string', ['notnull'=>false, 'length' => 32]);
         $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['rrn'], 'rrn_uindx');
         $table->addOption('engine' , 'InnoDB');  
 
     }
