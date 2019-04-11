@@ -9,6 +9,7 @@
 namespace Bank\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Bank
@@ -90,6 +91,20 @@ class Acquiring {
      * @ORM\Column(name="ident")  
      */
     protected $ident;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\AplPayment", inversedBy="acquirings")
+     * @ORM\JoinTable(name="acquiring_good_car",
+     *      joinColumns={@ORM\JoinColumn(name="acquiring_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="apl_payment_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $aplPayments;
+    
+    public function __construct() 
+    {
+      $this->aplPayments = new ArrayCollection();
+    }
     
     /**
      * Возвращает Id
@@ -343,5 +358,20 @@ class Acquiring {
     {
         $this->ident = $ident;
     }     
+
+    public function getAplPayments() 
+    {
+        return $this->aplPayments;
+    }      
+    
+    public function addAplPayment($aplPayment) 
+    {
+        $this->aplPayments[] = $aplPayment;        
+    }
+    
+    public function removeAplPaymentAssociation($aplPayment) 
+    {
+        $this->aplPayments->removeElement($aplPayment);
+    }    
         
 }

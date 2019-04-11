@@ -739,4 +739,20 @@ class AplService {
         
         return;        
     }
+    
+    public function updateAcquiringPayments()
+    {
+        $url = $this->aplApi().'get-payments?sf=5'.'&api='.$this->aplApiKey();
+
+        $response = file_get_contents($url);
+        try {
+            if (is_numeric($response)){
+                return;
+            }
+        } catch (Exception $ex) {
+//                var_dump($ex->getMessage());
+            return;
+        }
+        
+    }
 }
