@@ -24,7 +24,7 @@ final class Version20190411132924 extends AbstractMigration
         $table->addUniqueIndex(['apl_payment_id'], 'apl_payment_id_uindx');
         $table->addOption('engine' , 'InnoDB');  
         
-        $table = $schema->createTable('acquiring_good_car');
+        $table = $schema->createTable('acquiring_apl_payment');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]); 
         $table->addColumn('acquiring_id', 'integer', ['notnull'=>true]);
         $table->addColumn('apl_payment_id', 'integer', ['notnull'=>true]);
@@ -40,7 +40,7 @@ final class Version20190411132924 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $schema->dropTable('acquiring_good_car');
+        $schema->dropTable('acquiring_apl_payment');
         $schema->dropTable('apl_payment');
     }
 }

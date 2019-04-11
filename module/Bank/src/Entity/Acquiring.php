@@ -94,7 +94,7 @@ class Acquiring {
     
     /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\AplPayment", inversedBy="acquirings")
-     * @ORM\JoinTable(name="acquiring_good_car",
+     * @ORM\JoinTable(name="acquiring_apl_payment",
      *      joinColumns={@ORM\JoinColumn(name="acquiring_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="apl_payment_id", referencedColumnName="id")}
      *      )
