@@ -184,12 +184,12 @@ class BankManager
                     
                     $row = explode(';', $filter->filter($line));
 
-                    $acq = $this->entityManager->getRepository(Acquiring::class)
-                            ->findOneByRrn($row[14]);
-                    
-                    if ($acq == null){
-//                        var_dump($floatFilter->filter($row[10]));
-                        if ($floatFilter->filter($row[10])){
+                    if ($floatFilter->filter($row[10])){
+                        
+                        $acq = $this->entityManager->getRepository(Acquiring::class)
+                                ->findOneBy(['rrn' => $row[14], 'output' => $floatFilter->filter($row[10])]);
+
+                        if ($acq == null){
                             $acq = new Acquiring();
                             $acq->setInn($row[0]);
                             $acq->setPoint($row[3]);
