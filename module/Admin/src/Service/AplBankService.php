@@ -46,7 +46,7 @@ class AplBankService {
     
     protected function aplApiKey()
     {
-        $settings = $this->adminManager->getSettings();
+        $settings = $this->adminManager->getAplExchangeSettings();
         return md5(date('Y-m-d').'#'.$settings['apl_secret_key']);
     }
     
@@ -61,8 +61,10 @@ class AplBankService {
         $bankAccount = $this->entityManager->getRepository(BankAccount::class)
                 ->findOneByRs($statement->getAccount());
         
-        if (!$bankAccount) return;
-        
+        if (!$bankAccount) {
+            return;
+        }
+
         $result['valueDate']         = $statement->getChargeDate();     //ДатаСписано ДатаПоступило
         $result['docNum']            = $statement->getPaymentNumber();  //Номер
         $result['docDate']           = $statement->getPaymentDate();    //Дата
