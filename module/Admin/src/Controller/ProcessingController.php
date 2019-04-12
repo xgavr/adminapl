@@ -687,6 +687,25 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Выгрузка эквайринга из апл
+     * 
+     * @return JsonModel
+     */
+    public function updateAplAcquiringAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['get_acquiring'] == 1){
+            $this->aplService->updateAcquiringPayments();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Обновление групп наименований из прайса
      */
     public function tokenGroupFromRawpriceAction()
