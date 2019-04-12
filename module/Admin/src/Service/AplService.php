@@ -740,19 +740,35 @@ class AplService {
         return;        
     }
     
+    /**
+     * Выгрузка эквайринга с Апл
+     * 
+     * @return null
+     */
     public function updateAcquiringPayments()
     {
-        $url = $this->aplApi().'get-payments?sf=5'.'&api='.$this->aplApiKey();
+        $url = $this->aplApi().'get-acquiring?api='.$this->aplApiKey();
 
-        $response = file_get_contents($url);
-        try {
-            if (is_numeric($response)){
-                return;
+        $data = Json::decode(file_get_contents($url), Json::TYPE_ARRAY);
+        if (is_array($data)){
+            foreach ($data as $row){
+                $payment = $this->entityManager->getRepository(\Bank\Entity\AplPayment::class)
+                        ->findOneByAplPaymentId($row['id']);
+                if ($payment == null){
+
+                    $payment = new \Bank\Entity\AplPayment();
+                    $payment->setAplPaymentId($row['id']);
+                    $payment->setAplPaymentDate($row['created']);
+                    $payment->setAplPaymentSum($row['sort']);
+                    $payment->setAplPaymentType($row['type']);
+                    $payment->setAplPaymentTypeId($row['parent']);
+
+                    $this->entityManager->persist($payment);
+                }    
             }
-        } catch (Exception $ex) {
-//                var_dump($ex->getMessage());
-            return;
+            $this->entityManager->flush();
         }
+        return;
         
     }
 }

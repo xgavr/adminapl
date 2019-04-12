@@ -93,7 +93,7 @@ class Acquiring {
     protected $ident;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\AplPayment", inversedBy="acquirings")
+     * @ORM\ManyToMany(targetEntity="Bank\Entity\AplPayment", inversedBy="acquirings")
      * @ORM\JoinTable(name="acquiring_apl_payment",
      *      joinColumns={@ORM\JoinColumn(name="acquiring_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="apl_payment_id", referencedColumnName="id")}

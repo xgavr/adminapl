@@ -208,5 +208,15 @@ class AplController extends AbstractActionController
         ]);
     }
 
+    public function updateAcquiringAction()
+    {
+        
+        $this->aplService->updateAcquiringPayments();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
     
 }

@@ -17,7 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="apl_payment")
  * @author Daddy
  */
-class AplPayments {
+class AplPayment {
     
 
     /**
@@ -53,7 +53,7 @@ class AplPayments {
     protected $aplPaymentTypeId;
     
     /**
-     * @ORM\ManyToMany(targetEntity="\Application\Entity\Acquiring", mappedBy="aplPayments")
+     * @ORM\ManyToMany(targetEntity="\Bank\Entity\Acquiring", mappedBy="aplPayments")
      */
     protected $acquirings;    
     

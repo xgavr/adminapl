@@ -89,10 +89,14 @@ $this->headScript()
             </div>            
             <div class="tab-pane fade" role="tabpanel" id="acquiring" aria-labelledby="acquiring-tab">
                 <div id="toolbar_acquiring">
-                        <button value="/bank/load-statement-file/" class="btn btn-warning refresh-table-button"
-                                title="Загрузить">
-                            <span class="glyphicon glyphicon-upload" ></span>
-                        </button>                         
+                    <button value="/bank/load-statement-file/" class="btn btn-default refresh-table-button"
+                            title="Загрузить данные банка">
+                        <span class="glyphicon glyphicon-upload" ></span>
+                    </button>                         
+                    <button value="/apl/update-acquiring/" class="btn btn-info refresh-table-button"
+                            title="Загрузить данный АПЛ">
+                        <span class="glyphicon glyphicon-upload" ></span>
+                    </button>                         
                 </div>
                 <table id="table_acquiring" 
                     data-toggle="table" 
