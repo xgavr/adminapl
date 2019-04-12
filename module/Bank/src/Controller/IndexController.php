@@ -150,6 +150,15 @@ class IndexController extends AbstractActionController
         ]);                  
     }
     
+    public function acquiringIntersectAction()
+    {
+        $this->bankManager->findAcquiringIntersect();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
+    }
+    
     public function balanceContentAction()
     {
         	        

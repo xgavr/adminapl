@@ -19,6 +19,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Acquiring {
     
+    const STATUS_NO_MATCH   = 1; // нет совпадений.
+    const STATUS_MATCH      = 2; // совпало.
 
     /**
      * @ORM\Id
@@ -91,6 +93,11 @@ class Acquiring {
      * @ORM\Column(name="ident")  
      */
     protected $ident;
+    
+    /**
+     * @ORM\Column(name="status")   
+     */
+    protected $status = self::STATUS_NO_MATCH;
     
     /**
      * @ORM\ManyToMany(targetEntity="Bank\Entity\AplPayment", inversedBy="acquirings")
@@ -359,6 +366,51 @@ class Acquiring {
         $this->ident = $ident;
     }     
 
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_NO_MATCH => 'Нет совпадений',
+            self::STATUS_MATCH => 'Совпало'
+        ];
+    }    
+    
+    /**
+     * Returns make status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status])) {
+            return $list[$this->status];
+        }
+
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }   
+    
     public function getAplPayments() 
     {
         return $this->aplPayments;

@@ -19,6 +19,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class AplPayment {
     
+    const STATUS_NO_MATCH   = 1; // нет совпадений.
+    const STATUS_MATCH      = 2; // совпало.
 
     /**
      * @ORM\Id
@@ -51,6 +53,12 @@ class AplPayment {
      * @ORM\Column(name="apl_payment_type_id")   
      */
     protected $aplPaymentTypeId;
+    
+    /**
+     * @ORM\Column(name="status")   
+     */
+    protected $status = self::STATUS_NO_MATCH;
+    
     
     /**
      * @ORM\ManyToMany(targetEntity="\Bank\Entity\Acquiring", mappedBy="aplPayments")
@@ -166,8 +174,54 @@ class AplPayment {
      */
     public function setAplPaymentDate($aplPaymentDate) 
     {
-        $this->aplPaymentDate = date('Y-m-d H:i:s', strtotime($aplPaymentDate));
+        $this->aplPaymentDate = date('Y-m-d H:i:s', strtotime($aplPaymentDate));                
     }     
+    
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_NO_MATCH => 'Нет совпадений',
+            self::STATUS_MATCH => 'Совпало'
+        ];
+    }    
+    
+    /**
+     * Returns make status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status])) {
+            return $list[$this->status];
+        }
+
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }   
+    
     
     public function getAcquirings() 
     {

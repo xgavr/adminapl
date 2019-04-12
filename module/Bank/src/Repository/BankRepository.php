@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Bank\Entity\Statement;
 use Bank\Entity\Balance;
 use Bank\Entity\Acquiring;
+use Bank\Entity\AplPayment;
 
 /**
  * Description of BankRepository
@@ -173,4 +174,33 @@ class BankRepository extends EntityRepository
         
         return $queryBuilder->getQuery();
     }    
+    
+    /**
+     * Поиск по сумме эквайринга
+     * 
+     * @param \Bank\Entity\Acquiring $acquiring
+     * @return object
+     */
+    public function findAcquiringIntersect($acquiring)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+            ->from(AplPayment::class, 'p')
+            ->where('p.aplPaymentSum = ?1')
+            ->andWhere('p.status = ?2')    
+            ->andWhere('p.aplPaymentDate >= ?3')
+            ->andWhere('p.aplPaymentDate <= ?4')
+            ->orderBy('p.aplPaymentDate', 'DESC')    
+            ->setMaxResults(1)    
+            ->setParameter('1', $acquiring->getOutput())
+            ->setParameter('2', AplPayment::STATUS_NO_MATCH)    
+            ->setParameter('3', date('Y-m-d', strtotime($acquiring->getTransDate())))
+            ->setParameter('4', date('Y-m-d 23:59:59', strtotime($acquiring->getOperDate())))
+             ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

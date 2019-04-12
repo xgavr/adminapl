@@ -16,6 +16,7 @@ use Application\Filter\CsvDetectDelimiterFilter;
 use Application\Filter\RawToStr;
 use Application\Filter\Basename;
 use Bank\Entity\Acquiring;
+use Bank\Entity\AplPayment;
 use Application\Filter\ToFloat;
 
 /**
@@ -218,6 +219,32 @@ class BankManager
         }
         
         return;
+    }
+    
+    /**
+     * Поиск пересечений эквайринга
+     * 
+     */
+    public function findAcquiringIntersect()
+    {
+        $acquirings = $this->entityManager->getRepository(Acquiring::class)
+                ->findByStatus(Acquiring::STATUS_NO_MATCH);
+        
+        foreach($acquirings as $acquiring){
+            $aplPayment = $this->entityManager->getRepository(Acquiring::class)
+                    ->findAcquiringIntersect($acquiring);
+            
+            if ($aplPayment){
+                $acquiring->setStatus(Acquiring::STATUS_MATCH);
+                $acquiring->addAplPayment($aplPayment);
+                $this->entityManager->persist($acquiring);
+                
+                $aplPayment->setStatus(AplPayment::STATUS_MATCH);
+                $this->entityManager->persist($aplPayment);                
+                
+                $this->entityManager->flush();
+            }
+        }
     }
     
     /**
