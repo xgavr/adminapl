@@ -16,6 +16,16 @@ $this->pageBreadcrumbs()->setItems([
 <?php
 $form = $this->form;
 
+$form->get('apl_secret_key')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'пароль api АПЛ',
+    ]);
+
+
+$form->get('get_acquiring')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('get_producer_id')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -39,6 +49,18 @@ $form->prepare();
 <div class="row">
     <div class="col-md-5">
         
+        <div class="form-group">
+            <?= $this->formLabel($form->get('apl_secret_key')); ?>
+            <?= $this->formElement($form->get('apl_secret_key')); ?>
+            <?= $this->formElementErrors($form->get('apl_secret_key')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('get_acquiring')); ?>
+            <?= $this->formElement($form->get('get_acquiring')); ?>
+            <?= $this->formElementErrors($form->get('get_acquiring')); ?>                  
+        </div>
+
         <div class="form-group">
             <?= $this->formLabel($form->get('get_producer_id')); ?>
             <?= $this->formElement($form->get('get_producer_id')); ?>

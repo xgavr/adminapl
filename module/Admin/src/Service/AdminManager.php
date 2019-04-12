@@ -236,8 +236,10 @@ class AdminManager {
             $config->apl_exchange = [];
         }
         
+        $config->apl_exchange->apl_secret_key = $data['apl_secret_key'];
         $config->apl_exchange->get_producer_id = $data['get_producer_id']; //получать id производителя
         $config->apl_exchange->get_good_id = $data['get_good_id']; //получать id товара
+        $config->apl_exchange->get_acquiring = $data['get_acquiring']; //скачивать эквайринг
         
         $writer = new PhpArray();
         

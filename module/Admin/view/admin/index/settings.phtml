@@ -16,11 +16,6 @@ $this->pageBreadcrumbs()->setItems([
 <?php
 $form = $this->form;
 
-$form->get('apl_secret_key')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'пароль api АПЛ',
-    ]);
-
 $form->get('sms_ru_api_id')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'СМС.РУ api_id',
@@ -76,12 +71,6 @@ $form->prepare();
 <div class="row">
     <div class="col-md-8">
         
-        <div class="form-group">
-            <?= $this->formLabel($form->get('apl_secret_key')); ?>
-            <?= $this->formElement($form->get('apl_secret_key')); ?>
-            <?= $this->formElementErrors($form->get('apl_secret_key')); ?>                  
-        </div>
-                
         <div class="form-group">
             <?= $this->formLabel($form->get('sms_ru_url')); ?>
             <?= $this->formElement($form->get('sms_ru_url')); ?>

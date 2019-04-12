@@ -87,7 +87,7 @@ class AplService {
     
     protected function aplApiKey()
     {
-        $settings = $this->adminManager->getSettings();
+        $settings = $this->adminManager->getAplExchangeSettings();
         return md5(date('Y-m-d').'#'.$settings['apl_secret_key']);
     }
     

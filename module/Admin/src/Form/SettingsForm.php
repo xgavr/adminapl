@@ -143,17 +143,6 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([           
             'type'  => 'text',
-            'name' => 'apl_secret_key',
-            'attributes' => [
-                'id' => 'apl_secret_key'
-            ],
-            'options' => [
-                'label' => 'Пароль api apl',
-            ],
-        ]);
-                
-        $this->add([           
-            'type'  => 'text',
             'name' => 'ftp_apl_suppliers_price',
             'attributes' => [
                 'id' => 'ftp_apl_suppliers_price'
@@ -261,25 +250,6 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'tamtam_access_token',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'apl_secret_key',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

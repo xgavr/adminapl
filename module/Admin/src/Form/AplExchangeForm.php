@@ -40,7 +40,32 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
 
     protected function addElements() 
     {
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'apl_secret_key',
+            'attributes' => [
+                'id' => 'apl_secret_key'
+            ],
+            'options' => [
+                'label' => 'Пароль api apl',
+            ],
+        ]);
+                
+        
                         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'get_acquiring',
+            'options' => [
+                'label' => 'Выгрузка эквайринга',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
         $this->add([            
             'type'  => 'select',
             'name' => 'get_good_id',
@@ -82,6 +107,36 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
         $inputFilter = new InputFilter();        
         $this->setInputFilter($inputFilter);
                 
+        $inputFilter->add([
+                'name'     => 'apl_secret_key',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'get_acquiring',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
         $inputFilter->add([
                 'name'     => 'get_good_id',
                 'required' => true,
