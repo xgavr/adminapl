@@ -201,6 +201,26 @@ class BankRepository extends EntityRepository
     }    
     
     /**
+     * Удалить оплаты с отказами
+     */
+    public function compressAcquiring()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('a.rrn, sum(a.output) as outputSum')
+                ->from(Acquiring::class, 'a')
+                ->groupBy('a.rrn')
+                ->where('a.status = ?1')
+                ->having('outputSum = 0')
+                ->setParameter('1', Acquiring::STATUS_NO_MATCH)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
      * Поиск по сумме эквайринга
      * 
      * @param \Bank\Entity\Acquiring $acquiring

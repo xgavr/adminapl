@@ -242,4 +242,13 @@ class IndexController extends AbstractActionController
         ]);          
     }
     
+    public function compressAcquiringAction()
+    {
+        $this->bankManager->compressAcquiring();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
+    }
+    
 }

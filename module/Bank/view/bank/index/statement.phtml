@@ -94,9 +94,13 @@ $this->headScript()
                             title="Загрузить данные банка">
                         <span class="glyphicon glyphicon-upload" ></span>
                     </button>                         
+                    <button value="/bank/compress-acquiring/" class="btn btn-warning refresh-table-button"
+                            title="Удалить отказы">
+                        <span class="glyphicon glyphicon-remove-circle" ></span>
+                    </button>                         
                     <button value="/bank/acquiring-intersect/" class="btn btn-default refresh-table-button"
                             title="Установить соответствия">
-                        <span class="glyphicon glyphicon-refresh" ></span>
+                        <span class="glyphicon glyphicon-check" ></span>
                     </button>                         
                 </div>
                 <table id="table_acquiring" 
@@ -132,7 +136,7 @@ $this->headScript()
                     </button>                         
                     <button value="/bank/acquiring-intersect/" class="btn btn-default refresh-table-button"
                             title="Установить соответствия">
-                        <span class="glyphicon glyphicon-refresh" ></span>
+                        <span class="glyphicon glyphicon-check" ></span>
                     </button>                         
                 </div>
                 <table id="table_apl" 
@@ -154,7 +158,7 @@ $this->headScript()
                              <th data-field="aplPaymentDate">Дата</th>
                              <th data-field="aplPaymentSum" data-formatter="amountIn" data-align='right'>Оплата</th>             
                              <th data-field="aplPaymentSum" data-formatter="amountOut" data-align='right'>Возврат</th>             
-                             <th data-field="aplPaymentType" data-formatter="orderFormatter" data-align='right'>Заказ</th>             
+                             <th data-field="aplPaymentType" data-formatter="orderFormatter">Заказ</th>             
                          </tr>                
                     </thead>
                 </table>                

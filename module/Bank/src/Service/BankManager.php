@@ -222,6 +222,29 @@ class BankManager
     }
     
     /**
+     * Очистка от записей с отказами
+     * 
+     * @return null
+     */
+    public function compressAcquiring()
+    {
+        $data = $this->entityManager->getRepository(Acquiring::class)
+                ->compressAcquiring();
+
+        foreach ($data as $row){
+            $forDelete = $this->entityManager->getRepository(Acquiring::class)
+                    ->findByRrn($row['rrn']);
+            foreach ($forDelete as $acquiring){
+                $this->entityManager->remove($acquiring);
+            }
+        }
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Поиск пересечений эквайринга
      * 
      */
