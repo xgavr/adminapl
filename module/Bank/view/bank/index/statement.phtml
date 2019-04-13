@@ -21,9 +21,10 @@ $this->headScript()
 <div class="row">
     <div class="col-md-9">
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
-            <li role="presentation"><a href="#statement" role="tab" id="home-tab" data-toggle="tab" aria-controls="statement" aria-expanded="true">Выписка</a></li>
-            <li role="presentation"><a href="#balance" role="tab" id="oem-tab" data-toggle="tab" aria-controls="balance" aria-expanded="true">Остатки</a></li>
-            <li role="presentation"><a href="#acquiring" role="tab" id="oem-tab" data-toggle="tab" aria-controls="acquiring" aria-expanded="true">Эквайринг</a></li>
+            <li role="presentation"><a href="#statement" role="tab" id="statement-tab" data-toggle="tab" aria-controls="statement" aria-expanded="true">Выписка</a></li>
+            <li role="presentation"><a href="#balance" role="tab" id="balance-tab" data-toggle="tab" aria-controls="balance" aria-expanded="true">Остатки</a></li>
+            <li role="presentation"><a href="#acquiring" role="tab" id="acquiring-tab" data-toggle="tab" aria-controls="acquiring" aria-expanded="true">Эквайринг</a></li>
+            <li role="presentation"><a href="#apl" role="tab" id="apl-tab" data-toggle="tab" aria-controls="apl" aria-expanded="true">Оплаты картой</a></li>
         </ul>
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="statement" aria-labelledby="statement-tab">
@@ -93,10 +94,6 @@ $this->headScript()
                             title="Загрузить данные банка">
                         <span class="glyphicon glyphicon-upload" ></span>
                     </button>                         
-                    <button value="/apl/update-acquiring/" class="btn btn-info refresh-table-button"
-                            title="Загрузить данный АПЛ">
-                        <span class="glyphicon glyphicon-upload" ></span>
-                    </button>                         
                     <button value="/bank/acquiring-intersect/" class="btn btn-default refresh-table-button"
                             title="Установить соответствия">
                         <span class="glyphicon glyphicon-refresh" ></span>
@@ -119,8 +116,45 @@ $this->headScript()
                              <th data-field="id"></th>
                              <th data-field="transDate">Дата</th>
                              <th data-field="point">Точка</th>
+                             <th data-field="cart">Карта</th>
+                             <th data-field="acode">Код</th>
                              <th data-field="output" data-formatter="amountIn" data-align='right'>Оплата</th>             
                              <th data-field="output" data-formatter="amountOut" data-align='right'>Возврат</th>             
+                         </tr>                
+                    </thead>
+                </table>                
+            </div>            
+            <div class="tab-pane fade" role="tabpanel" id="apl" aria-labelledby="apl-tab">
+                <div id="toolbar_apl">
+                    <button value="/apl/update-acquiring/" class="btn btn-info refresh-table-button"
+                            title="Загрузить данные АПЛ">
+                        <span class="glyphicon glyphicon-upload" ></span>
+                    </button>                         
+                    <button value="/bank/acquiring-intersect/" class="btn btn-default refresh-table-button"
+                            title="Установить соответствия">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button>                         
+                </div>
+                <table id="table_apl" 
+                    data-toggle="table" 
+                    data-url="/bank/apl-payment-content"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#toolbar_apl"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="aplQueryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="id"></th>
+                             <th data-field="aplPaymentId">Apl_Id</th>
+                             <th data-field="aplPaymentDate">Дата</th>
+                             <th data-field="aplPaymentSum" data-formatter="amountIn" data-align='right'>Оплата</th>             
+                             <th data-field="aplPaymentSum" data-formatter="amountOut" data-align='right'>Возврат</th>             
+                             <th data-field="aplPaymentType" data-formatter="orderFormatter" data-align='right'>Заказ</th>             
                          </tr>                
                     </thead>
                 </table>                
@@ -184,6 +218,7 @@ $this->headScript()
         $('#table').bootstrapTable('refresh');
         $('#table_balance').bootstrapTable('refresh');
         $('#table_acquiring').bootstrapTable('refresh');
+        $('#table_apl').bootstrapTable('refresh');
     }
 
     var table = $('#table'),
@@ -233,12 +268,27 @@ $this->headScript()
         return tabQueryParams('#table_acquiring', params);
     }
 
+    function aplQueryParams(params) {
+        return tabQueryParams('#table_apl', params);
+    }
+
     function responseHandler(res) {
         return res;
     }
     
     function avatar(value, row){
         return '<img src="/bank/avatar-account/'+row.account+'" width="24" height="24" style="border-radius: 100%"/>';
+    }
+
+    function orderFormatter(value, row){
+        if (value == 'Orders'){
+            return '<a href="https://autopartslist.ru/admin/orders/view/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
+        }
+        if (value == 'Users'){
+            return '<a href="https://autopartslist.ru/admin/users/users-orders/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
+        }
+        
+        return '';
     }
 
     function formatDate(value){

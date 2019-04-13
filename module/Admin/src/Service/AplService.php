@@ -760,8 +760,8 @@ class AplService {
                     $payment->setAplPaymentId($row['id']);
                     $payment->setAplPaymentDate($row['created']);
                     $payment->setAplPaymentSum($row['sort']);
-                    $payment->setAplPaymentType($row['type']);
-                    $payment->setAplPaymentTypeId($row['parent']);
+                    $payment->setAplPaymentType($row['comment']);
+                    $payment->setAplPaymentTypeId($row['name']);
 
                     $this->entityManager->persist($payment);
                 }    

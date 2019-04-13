@@ -176,6 +176,31 @@ class BankRepository extends EntityRepository
     }    
     
     /**
+     * Получить выборку записей оплат по картам
+     * 
+     * @param string $q поисковый запрос
+     * @param string $rs счет
+     * @return object
+     */
+    public function findAplPayment($q = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('a')
+            ->from(AplPayment::class, 'a')
+            ->orderBy('a.aplPaymentDate', 'DESC')
+            ->addOrderBy('a.aplPaymentId', 'ASC')    
+                ;
+                
+        if ($q){
+        }
+        
+        return $queryBuilder->getQuery();
+    }    
+    
+    /**
      * Поиск по сумме эквайринга
      * 
      * @param \Bank\Entity\Acquiring $acquiring

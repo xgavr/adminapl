@@ -13,6 +13,7 @@ use Zend\View\Model\JsonModel;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
 use Bank\Entity\Acquiring;
+use Bank\Entity\AplPayment;
 
 class IndexController extends AbstractActionController
 {
@@ -196,6 +197,33 @@ class IndexController extends AbstractActionController
         
         $query = $this->entityManager->getRepository(Acquiring::class)
                         ->findAcquiring($q);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }
+    
+    public function aplPaymentContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(AplPayment::class)
+                        ->findAplPayment($q);
         
         $total = count($query->getResult(2));
         
