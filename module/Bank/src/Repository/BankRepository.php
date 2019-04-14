@@ -290,13 +290,13 @@ class BankRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('a.aplPaymentType, a.aplPaymentTypeId, sum(a.aplPaymentSum) as outputSum')
+        $queryBuilder->select('p.aplPaymentType, p.aplPaymentTypeId, sum(p.aplPaymentSum) as outputSum')
             ->from(AplPayment::class, 'p')
             ->andWhere('p.status = ?2')    
             ->andWhere('p.aplPaymentDate >= ?3')
             ->andWhere('p.aplPaymentDate <= ?4')
-            ->groupBy('a.aplPaymentType')
-            ->addGroupBy('a.aplPaymentTypeId')
+            ->groupBy('p.aplPaymentType')
+            ->addGroupBy('p.aplPaymentTypeId')
             ->having('outputSum = ?1')
             ->setParameter('1', $acquiring->getOutput())
             ->setParameter('2', AplPayment::STATUS_NO_MATCH)    
