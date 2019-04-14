@@ -245,6 +245,30 @@ class BankManager
     }
     
     /**
+     * Очистка от записей с отказами
+     * 
+     * @return null
+     */
+    public function compressAplPayment()
+    {
+        $data = $this->entityManager->getRepository(AplPayment::class)
+                ->compressAplPayment();
+
+        foreach ($data as $row){
+            $forDelete = $this->entityManager->getRepository(AplPayment::class)
+                    ->findBy(['aplPaymentType' => $row['aplPaymentType'], 'aplPaymentTypeId' => $row['aplPaymentTypeId']]);
+            
+            foreach ($forDelete as $aplPayment){
+                $this->entityManager->remove($aplPayment);
+            }
+        }
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Поиск пересечений эквайринга
      * 
      */

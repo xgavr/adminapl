@@ -229,6 +229,27 @@ class BankRepository extends EntityRepository
     }
     
     /**
+     * Удалить оплаты с отказами
+     */
+    public function compressAplPayment()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('a.aplPaymentType, a.aplPaymentTypeId, sum(a.aplPaymentSum) as outputSum')
+                ->from(AplPayment::class, 'a')
+                ->groupBy('a.aplPaymentType')
+                ->addGroupBy('a.aplPaymentTypeId')
+                ->where('a.status = ?1')
+                ->having('outputSum = 0')
+                ->setParameter('1', AplPayment::STATUS_NO_MATCH)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
      * Поиск по сумме эквайринга
      * 
      * @param \Bank\Entity\Acquiring $acquiring
