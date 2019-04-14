@@ -277,4 +277,34 @@ class BankRepository extends EntityRepository
         
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
+
+        /**
+     * Поиск по сумме эквайринга
+     * 
+     * @param \Bank\Entity\Acquiring $acquiring
+     * @return object
+     */
+    public function findAcquiringIntersectSum($acquiring)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('a.aplPaymentType, a.aplPaymentTypeId, sum(a.aplPaymentSum) as outputSum')
+            ->from(AplPayment::class, 'p')
+            ->andWhere('p.status = ?2')    
+            ->andWhere('p.aplPaymentDate >= ?3')
+            ->andWhere('p.aplPaymentDate <= ?4')
+            ->groupBy('a.aplPaymentType')
+            ->addGroupBy('a.aplPaymentTypeId')
+            ->having('outputSum = ?1')
+            ->setParameter('1', $acquiring->getOutput())
+            ->setParameter('2', AplPayment::STATUS_NO_MATCH)    
+            ->setParameter('3', date('Y-m-d', strtotime($acquiring->getTransDate())))
+            ->setParameter('4', date('Y-m-d 23:59:59', strtotime($acquiring->getOperDate()) + 60*60*24*2)) //2 дня
+             ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 }

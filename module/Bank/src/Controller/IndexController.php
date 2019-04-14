@@ -154,6 +154,7 @@ class IndexController extends AbstractActionController
     public function acquiringIntersectAction()
     {
         $this->bankManager->findAcquiringIntersect();
+        $this->bankManager->findAcquiringIntersectSum();
         
         return new JsonModel([
             'result' => 'ok',

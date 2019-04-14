@@ -295,6 +295,39 @@ class BankManager
     }
     
     /**
+     * Поиск пересечений эквайринга
+     * 
+     */
+    public function findAcquiringIntersectSum()
+    {
+        $acquirings = $this->entityManager->getRepository(Acquiring::class)
+                ->findByStatus(Acquiring::STATUS_NO_MATCH);
+        
+        foreach($acquirings as $acquiring){
+            $aplPaymentTypeIds = $this->entityManager->getRepository(Acquiring::class)
+                    ->findAcquiringIntersectSum($acquiring);
+            
+            if (count($aplPaymentTypeIds)){
+                foreach ($aplPaymentTypeIds as $row){
+                    
+                    $aplPayments = $this->entityManager->getRepository(AplPayment::class)
+                            ->findBy(['aplPaymentType' => $row['aplPaymentType'], 'aplPaymentTypeId' => $row['aplPaymentTypeId']]);
+                    
+                    foreach ($aplPayments as $aplPayment){                    
+                        $acquiring->setStatus(Acquiring::STATUS_MATCH);
+                        $acquiring->addAplPayment($aplPayment);
+                        $this->entityManager->persist($acquiring);
+
+                        $aplPayment->setStatus(AplPayment::STATUS_MATCH);
+                        $this->entityManager->persist($aplPayment);                
+                    }    
+                    $this->entityManager->flush();
+                }    
+            }
+        }
+    }
+    
+    /**
      * Получение выписок по почте
      */    
     public function getStatementsByEmail()
