@@ -402,6 +402,7 @@ class BankManager
 
                     $this->uploadStatementCsv($fileInfo->getPathname());
                     $this->compressAcquiring();
+                    $this->compressAplPayment();
 
                     if (is_dir(self::STAEMENTS_ARCH_DIR)){
                         if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
