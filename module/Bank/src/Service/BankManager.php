@@ -328,6 +328,35 @@ class BankManager
     }
     
     /**
+     * Обновление статуса эквайринга
+     * @param \Bank\Entity\Acquiring $acquiring
+     * @param integer $status
+     */
+    public function updateAcquiringStatus($acquiring, $status)
+    {
+        $acquiring->setStatus($status);
+        $this->entityManager->persist($acquiring);
+        $this->entityManager->flush();
+        
+        return;
+    }
+
+    /**
+     * Обновление статуса эквайринга
+     * @param \Bank\Entity\AplPayment $aplPayment
+     * @param integer $status
+     */
+    public function updateAplPaymentStatus($aplPayment, $status)
+    {
+        $aplPayment->setStatus($status);
+        $this->entityManager->persist($aplPayment);
+        $this->entityManager->flush();
+        
+        return;
+    }
+
+
+    /**
      * Получение выписок по почте
      */    
     public function getStatementsByEmail()

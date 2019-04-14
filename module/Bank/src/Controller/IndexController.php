@@ -161,6 +161,55 @@ class IndexController extends AbstractActionController
         ]);                  
     }
     
+    public function updateAcquiringStatusAction()
+    {
+        $acquiringId = $this->params()->fromRoute('id');
+        $status = $this->params()->fromQuery('status');
+        
+        if ($acquiringId){
+            $acquiring = $this->entityManager->getRepository(Acquiring::class)
+                    ->findOneById($acquiringId);
+            
+            if ($acquiring){
+                if ($acquiring->getStatus() == Acquiring::STATUS_NO_MATCH){
+                    $status = Acquiring::STATUS_MATCH;
+                } else {
+                    $status = Acquiring::STATUS_NO_MATCH;
+                }
+                
+                $this->bankManager->updateAcquiringStatus($acquiring, $status);
+            }
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
+    
+    public function updateAplPaymentStatusAction()
+    {
+        $aplPaymentId = $this->params()->fromRoute('id');
+        
+        if ($aplPaymentId){
+            $aplPayment = $this->entityManager->getRepository(AplPayment::class)
+                    ->findOneById($aplPaymentId);
+            
+            if ($aplPayment){
+                if ($aplPayment->getStatus() == AplPayment::STATUS_NO_MATCH){
+                    $status = AplPayment::STATUS_MATCH;
+                } else {
+                    $status = AplPayment::STATUS_NO_MATCH;
+                }
+                
+                $this->bankManager->updateAplPaymentStatus($aplPayment, $status);
+            }
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
+    
     public function balanceContentAction()
     {
         	        

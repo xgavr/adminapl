@@ -163,6 +163,7 @@ $this->headScript()
                              <th data-field="aplPaymentSum" data-formatter="amountIn" data-align='right'>Оплата</th>             
                              <th data-field="aplPaymentSum" data-formatter="amountOut" data-align='right'>Возврат</th>             
                              <th data-field="aplPaymentType" data-formatter="orderFormatter">Заказ</th>             
+                             <th data-field="status" data-formatter="aplStatusFormatter"></th>             
                          </tr>                
                     </thead>
                 </table>                
@@ -298,6 +299,33 @@ $this->headScript()
         
         return '';
     }
+    
+    function aplStatusFormatter(value, row){
+        var url = '/bank/update-apl-payment-status/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Изменить статус"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\', \'table_apl\')">';
+        btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function statusFormatter(value, row){
+        var url = '/bank/update-acquiring-status/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Изменить статус"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\', \'table_acquiring\')">';
+        btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
 
     function formatDate(value){
         if (value){
