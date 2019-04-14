@@ -214,7 +214,7 @@ class BankManager
                     
                 $this->entityManager->flush();                    
 
-                fclose($lines);
+                fclose($lines);                
             }    
         }
         
@@ -377,6 +377,7 @@ class BankManager
                 if (strtolower($fileInfo->getExtension()) == 'csv'){
 
                     $this->uploadStatementCsv($fileInfo->getPathname());
+                    $this->compressAcquiring();
 
                     if (is_dir(self::STAEMENTS_ARCH_DIR)){
                         if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){

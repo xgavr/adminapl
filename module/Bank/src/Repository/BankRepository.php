@@ -153,11 +153,10 @@ class BankRepository extends EntityRepository
     /**
      * Получить выборку записей эквайринга
      * 
-     * @param string $q поисковый запрос
-     * @param string $rs счет
+     * @param array $params поисковый запрос
      * @return object
      */
-    public function findAcquiring($q = null)
+    public function findAcquiring($params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -169,20 +168,24 @@ class BankRepository extends EntityRepository
             ->addOrderBy('a.point', 'ASC')    
                 ;
                 
-        if ($q){
+        if (is_array($params)){
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('a.status = ?1')
+                        ->setParameter('1', $params['status'])
+                        ;
+            }
         }
-        
+                
         return $queryBuilder->getQuery();
     }    
     
     /**
      * Получить выборку записей оплат по картам
      * 
-     * @param string $q поисковый запрос
-     * @param string $rs счет
+     * @param array $params поисковый запрос
      * @return object
      */
-    public function findAplPayment($q = null)
+    public function findAplPayment($params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -194,7 +197,12 @@ class BankRepository extends EntityRepository
             ->addOrderBy('a.aplPaymentId', 'ASC')    
                 ;
                 
-        if ($q){
+        if (is_array($params)){
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('a.status = ?1')
+                        ->setParameter('1', $params['status'])
+                        ;
+            }
         }
         
         return $queryBuilder->getQuery();
@@ -239,13 +247,12 @@ class BankRepository extends EntityRepository
             ->andWhere('p.aplPaymentDate >= ?3')
             ->andWhere('p.aplPaymentDate <= ?4')
             ->orderBy('p.aplPaymentDate', 'DESC')    
-            ->setMaxResults(1)    
             ->setParameter('1', $acquiring->getOutput())
             ->setParameter('2', AplPayment::STATUS_NO_MATCH)    
             ->setParameter('3', date('Y-m-d', strtotime($acquiring->getTransDate())))
             ->setParameter('4', date('Y-m-d 23:59:59', strtotime($acquiring->getOperDate())))
              ;
         
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 }
