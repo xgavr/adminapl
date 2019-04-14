@@ -301,7 +301,7 @@ class BankRepository extends EntityRepository
             ->setParameter('1', $acquiring->getOutput())
             ->setParameter('2', AplPayment::STATUS_NO_MATCH)    
             ->setParameter('3', date('Y-m-d', strtotime($acquiring->getTransDate())))
-            ->setParameter('4', date('Y-m-d 23:59:59', strtotime($acquiring->getOperDate()) + 60*60*24*2)) //2 дня
+            ->setParameter('4', date('Y-m-d 23:59:59', strtotime($acquiring->getOperDate()) + 60*60*24*4)) //2 дня
              ;
         
         return $queryBuilder->getQuery()->getResult();
