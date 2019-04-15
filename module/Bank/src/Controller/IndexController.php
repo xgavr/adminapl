@@ -171,7 +171,7 @@ class IndexController extends AbstractActionController
                     ->findOneById($acquiringId);
             
             if ($acquiring){
-                if ($acquiring->getStatus() === Acquiring::STATUS_NO_MATCH){
+                if ($acquiring->getStatus() == Acquiring::STATUS_NO_MATCH){
                     $status = Acquiring::STATUS_MATCH;
                 } else {
                     $status = Acquiring::STATUS_NO_MATCH;
