@@ -235,11 +235,9 @@ class BankManager
             $forDelete = $this->entityManager->getRepository(Acquiring::class)
                     ->findByRrn($row['rrn']);
             foreach ($forDelete as $acquiring){
-                $this->entityManager->remove($acquiring);
+                $this->updateAcquiringStatus($acquiring, Acquiring::STATUS_MATCH);
             }
         }
-        
-        $this->entityManager->flush();
         
         return;
     }
@@ -259,12 +257,9 @@ class BankManager
                     ->findBy(['aplPaymentType' => $row['aplPaymentType'], 'aplPaymentTypeId' => $row['aplPaymentTypeId']]);
             
             foreach ($forDelete as $aplPayment){
-                $this->entityManager->remove($aplPayment);
+                $this->updateAplPaymentStatus($aplPayment, AplPayment::STATUS_MATCH);
             }
-        }
-        
-        $this->entityManager->flush();
-        
+        }        
         return;
     }
     
