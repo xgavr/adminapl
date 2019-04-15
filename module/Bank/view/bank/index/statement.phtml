@@ -332,7 +332,19 @@ $this->headScript()
         btn += ' onclick="tableRowDelete(\''+url+'\', \'table_apl\')">';
         btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
         btn += '</button>';
-        return btn;
+        
+        var urlDelete = '/bank/delete-apl-payment-status/'+row.id;
+        btnDelete = '<button';
+        btnDelete += ' type="button"';
+        btnDelete += ' class="btn btn-danger btn-xs this-delete"';
+        btnDelete += ' aria-label="Left Align"'; 
+        btnDelete += ' title="Удалить"'; 
+        btnDelete += ' onclick="tableRowDelete(\''+url+'\', \'table_apl\')">';
+        btnDelete += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btnDelete += '</button>';
+        
+        
+        return btn+' '+btnDelete;
     }    
     
     function statusFormatter(value, row){

@@ -349,6 +349,21 @@ class BankManager
         
         return;
     }
+    
+    /**
+     * Удаление оплаты по карте
+     * 
+     * @param \Bank\Entity\AplPayment $aplPayment
+     * @return null
+     */
+    public function removeAplPayment($aplPayment)
+    {
+        $this->entityManager->remove($aplPayment);
+        $this->entityManager->flush();
+        
+        return;
+                
+    }
 
 
     /**

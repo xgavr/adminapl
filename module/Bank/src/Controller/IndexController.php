@@ -210,6 +210,24 @@ class IndexController extends AbstractActionController
         ]);                  
     }
     
+    public function deleteAplPaymentAction()
+    {
+        $aplPaymentId = $this->params()->fromRoute('id');
+        
+        if ($aplPaymentId){
+            $aplPayment = $this->entityManager->getRepository(AplPayment::class)
+                    ->findOneById($aplPaymentId);
+            
+            if ($aplPayment){                
+                $this->bankManager->removeAplPayment($aplPayment);
+            }
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
+
     public function balanceContentAction()
     {
         	        
