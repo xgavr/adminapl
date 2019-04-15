@@ -118,9 +118,9 @@ $this->headScript()
                     <thead>
                         <tr>
                              <th data-field="id"></th>
-                             <th data-field="transDate">Дата</th>
+                             <th data-field="transDate" data-formatter="transDateFormatter">Дата</th>
                              <th data-field="point">Точка</th>
-                             <th data-field="cart">Карта</th>
+                             <th data-field="cartType" data-formatter="cartFormatter">Карта</th>
                              <th data-field="acode">Код</th>
                              <th data-field="rrn">RRN</th>
                              <th data-field="output" data-formatter="amountIn" data-align='right'>Оплата</th>             
@@ -289,6 +289,14 @@ $this->headScript()
     
     function avatar(value, row){
         return '<img src="/bank/avatar-account/'+row.account+'" width="24" height="24" style="border-radius: 100%"/>';
+    }
+    
+    function transDateFormatter(value, row){
+        return value+'<br/>'+row.operDate;
+    }
+
+    function cartFormatter(value, row){
+        return value+'<br/>'+row.cart;
     }
 
     function orderFormatter(value, row){
