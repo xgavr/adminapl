@@ -169,6 +169,17 @@ class BankRepository extends EntityRepository
                 ;
                 
         if (is_array($params)){
+            if (isset($params['search'])){
+                if (trim($params['search'])){
+                    $or = $queryBuilder->expr()->orX();
+                    $or->add($queryBuilder->expr()->like('a.cart', '?1'));
+                    $or->add($queryBuilder->expr()->like('a.rrn', '?1'));
+
+                    $queryBuilder->andWhere($or)
+                            ->setParameter('1', '%' . trim($params['search']) . '%')
+                            ;
+                }    
+            }
             if (isset($params['status'])){
                 $queryBuilder->andWhere('a.status = ?1')
                         ->setParameter('1', $params['status'])

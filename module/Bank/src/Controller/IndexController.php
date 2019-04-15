@@ -171,7 +171,7 @@ class IndexController extends AbstractActionController
                     ->findOneById($acquiringId);
             
             if ($acquiring){
-                if ($acquiring->getStatus() == Acquiring::STATUS_NO_MATCH){
+                if ($acquiring->getStatus() === Acquiring::STATUS_NO_MATCH){
                     $status = Acquiring::STATUS_MATCH;
                 } else {
                     $status = Acquiring::STATUS_NO_MATCH;
@@ -245,9 +245,13 @@ class IndexController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $status = $this->params()->fromQuery('status', Acquiring::STATUS_NO_MATCH);
+        $search = $this->params()->fromQuery('search');
+        if ($search){
+            $status = null;
+        }
         
         $query = $this->entityManager->getRepository(Acquiring::class)
-                        ->findAcquiring(['status' => $status]);
+                        ->findAcquiring(['status' => $status, 'search' => $search]);
         
         $total = count($query->getResult(2));
         
