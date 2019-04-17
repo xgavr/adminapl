@@ -319,6 +319,17 @@ $this->headScript()
         return result;
     }
 
+    function orderFormatter(value, row){
+        if (row.aplPaymentType == 'Orders'){
+            return '<a href="https://autopartslist.ru/admin/orders/view/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
+        }
+        if (row.aplPaymentType == 'Users'){
+            return '<a href="https://autopartslist.ru/admin/users/users-orders/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
+        }
+        
+        return '';
+    }
+
     function cartFormatter(value, row){
         var result = value+'<br/>'+row.cart;
         if(row.aplPaymentTypeId){
@@ -327,16 +338,6 @@ $this->headScript()
         return result;
     }
 
-    function orderFormatter(value, row){
-        if (value == 'Orders'){
-            return '<a href="https://autopartslist.ru/admin/orders/view/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
-        }
-        if (value == 'Users'){
-            return '<a href="https://autopartslist.ru/admin/users/users-orders/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
-        }
-        
-        return '';
-    }
     
     function aplStatusFormatter(value, row){
         var url = '/bank/update-apl-payment-status/'+row.id;
