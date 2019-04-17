@@ -131,7 +131,7 @@ $this->headScript()
                              <th data-field="transDate" data-formatter="transDateFormatter">Дата</th>
                              <th data-field="point">Точка</th>
                              <th data-field="cartType" data-formatter="cartFormatter">Карта</th>
-                             <th data-field="acode" data-formatter="cartFormatter">Код/RRN</th>
+                             <th data-field="acode" data-formatter="acodeFormatter">Код/RRN</th>
                              <th data-field="aplPaymentTypeId" data-formatter="aplFormatter">АПЛ</th>
                              <th data-field="output" data-formatter="amountIn" data-align='right'>Оплата</th>             
                              <th data-field="output" data-formatter="amountOut" data-align='right'>Возврат</th>             
@@ -341,6 +341,10 @@ $this->headScript()
         return result;
     }
 
+    function acodeFormatter(value, row){
+        var result = value+'<br/>'+row.rrn;
+        return result;
+    }
     
     function aplStatusFormatter(value, row){
         var url = '/bank/update-apl-payment-status/'+row.id;
