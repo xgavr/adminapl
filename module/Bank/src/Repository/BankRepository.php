@@ -162,7 +162,7 @@ class BankRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('a, p.aplPaymentType, p.aplPaymentTypeId, p.aplPaymentDate, p.aplPaymentSum')
+        $queryBuilder->select('a.id, a.transDate, a.point, a.cartType, a.acode, a.rrn, a.output, a.status, p.aplPaymentType, p.aplPaymentTypeId, p.aplPaymentDate, p.aplPaymentSum')
             ->from(Acquiring::class, 'a')
             ->leftJoin('a.aplPayments', 'p')
             ->orderBy('a.transDate', 'DESC')
