@@ -296,9 +296,14 @@ class IndexController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $status = $this->params()->fromQuery('status', AplPayment::STATUS_NO_MATCH);
+        $search = $this->params()->fromQuery('search');
+        $date = $this->params()->fromQuery('date');
+        if ($search || $date){
+            $status = null;
+        }
         
         $query = $this->entityManager->getRepository(AplPayment::class)
-                        ->findAplPayment(['status' => $status]);
+                        ->findAplPayment(['status' => $status, 'search' => $search, 'date' => $date]);
         
         $total = count($query->getResult(2));
         

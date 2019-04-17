@@ -219,16 +219,41 @@ class BankRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('a')
-            ->from(AplPayment::class, 'a')
-            ->orderBy('a.aplPaymentDate', 'DESC')
-            ->addOrderBy('a.aplPaymentId', 'ASC')    
+        $queryBuilder->select('p.id, p.paymentId, p.aplPaymentType, p.aplPaymentTypeId, p.aplPaymentDate, p.aplPaymentSum, p.status, a.acode, a.rrn, a.cart, a.cartType')
+            ->from(AplPayment::class, 'p')
+            ->leftJoin('p.acquirings', 'a')    
+            ->orderBy('p.aplPaymentDate', 'DESC')
+            ->addOrderBy('p.aplPaymentId', 'ASC')    
                 ;
                 
         if (is_array($params)){
+            if (isset($params['search'])){
+                if (trim($params['search'])){
+                    $or = $queryBuilder->expr()->orX();
+                    $or->add($queryBuilder->expr()->like('a.cart', '?1'));
+                    $or->add($queryBuilder->expr()->like('a.rrn', '?1'));
+                    $or->add($queryBuilder->expr()->eq('p.aplPaymentTypeId', '?4'));
+
+                    $queryBuilder->andWhere($or)
+                            ->setParameter('1', '%' . trim($params['search']) . '%')
+                            ->setParameter('4', $params['search'])
+                            ;
+                }    
+            }
+            if (isset($params['date'])){
+                if ($params['date']){
+                    $or = $queryBuilder->expr()->orX();
+                    $or->add($queryBuilder->expr()->between('p.aplPaymentDate', '?2', '?3'));
+
+                    $queryBuilder->andWhere($or)
+                            ->setParameter('2', $params['date'])
+                            ->setParameter('3', $params['date']. ' 23:59:59')
+                            ;
+                }    
+            }
             if (isset($params['status'])){
-                $queryBuilder->andWhere('a.status = ?1')
-                        ->setParameter('1', $params['status'])
+                $queryBuilder->andWhere('p.status = ?5')
+                        ->setParameter('5', $params['status'])
                         ;
             }
         }
