@@ -312,7 +312,11 @@ $this->headScript()
     }
     
     function transDateFormatter(value, row){
-        return value+'<br/>'+row.operDate;
+        var result = value+'<br/>'+row.operDate;
+        if (row.aplPaymentDate){
+            result += '<br/><small stile="color:blue">'+row.aplPaymentDate+'</small>';
+        }
+        return result;
     }
 
     function cartFormatter(value, row){
