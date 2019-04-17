@@ -175,9 +175,11 @@ class BankRepository extends EntityRepository
                     $or = $queryBuilder->expr()->orX();
                     $or->add($queryBuilder->expr()->like('a.cart', '?1'));
                     $or->add($queryBuilder->expr()->like('a.rrn', '?1'));
+                    $or->add($queryBuilder->expr()->eq('a.aplPaymentTypeId', '?4'));
 
                     $queryBuilder->andWhere($or)
                             ->setParameter('1', '%' . trim($params['search']) . '%')
+                            ->setParameter('4', $params['search'])
                             ;
                 }    
             }

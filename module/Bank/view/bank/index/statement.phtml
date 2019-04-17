@@ -104,7 +104,7 @@ $this->headScript()
                             <span class="glyphicon glyphicon-check" ></span>
                         </button>                         
                         <div class="form-group">
-                            <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск по номеру карты, rrn">
+                            <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Карта, rrn, заказ">
                         </div>
                         <button id="okAcquiring" type="submit" class="btn btn-default">OK</button>
                         <div class="form-group">
@@ -131,8 +131,8 @@ $this->headScript()
                              <th data-field="transDate" data-formatter="transDateFormatter">Дата</th>
                              <th data-field="point">Точка</th>
                              <th data-field="cartType" data-formatter="cartFormatter">Карта</th>
-                             <th data-field="acode">Код</th>
-                             <th data-field="rrn">RRN</th>
+                             <th data-field="acode" data-formatter="cartFormatter">Код/RRN</th>
+                             <th data-field="aplPaymentTypeId" data-formatter="aplFormatter">АПЛ</th>
                              <th data-field="output" data-formatter="amountIn" data-align='right'>Оплата</th>             
                              <th data-field="output" data-formatter="amountOut" data-align='right'>Возврат</th>             
                              <th data-field="status" data-formatter="statusFormatter"></th>             
@@ -313,9 +313,6 @@ $this->headScript()
     
     function transDateFormatter(value, row){
         var result = value+'<br/>'+row.operDate;
-        if (row.aplPaymentDate){
-            result += '<br/><small style="color:blue">'+row.aplPaymentDate+'</small>';
-        }
         return result;
     }
 
@@ -330,11 +327,17 @@ $this->headScript()
         return '';
     }
 
+    function aplFormatter(value, row){
+        var result = '';
+        if(value){
+            result += '<small style="color:blue">'+row.aplPaymentDate+'</small>';
+            result += '<br/><small>'+orderFormatter(value, row)+'</small>';
+        }
+        return result;
+    }
+
     function cartFormatter(value, row){
         var result = value+'<br/>'+row.cart;
-        if(row.aplPaymentTypeId){
-            result += '<br/><small style="color:blue">'+orderFormatter(value, row)+'</small>';
-        }
         return result;
     }
 
