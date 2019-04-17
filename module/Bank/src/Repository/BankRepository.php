@@ -180,9 +180,19 @@ class BankRepository extends EntityRepository
                             ;
                 }    
             }
+            if (isset($params['date'])){
+                $or = $queryBuilder->expr()->orX();
+                $or->add($queryBuilder->expr()->between('a.transDate', '?2', '?3'));
+                $or->add($queryBuilder->expr()->eq('a.operDate', '?2'));
+
+                $queryBuilder->andWhere($or)
+                        ->setParameter('2', $params['date'])
+                        ->setParameter('3', $params['date']. ' 23:59:59')
+                        ;
+            }
             if (isset($params['status'])){
-                $queryBuilder->andWhere('a.status = ?1')
-                        ->setParameter('1', $params['status'])
+                $queryBuilder->andWhere('a.status = ?5')
+                        ->setParameter('5', $params['status'])
                         ;
             }
         }

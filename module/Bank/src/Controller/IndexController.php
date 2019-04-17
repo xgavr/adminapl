@@ -264,12 +264,13 @@ class IndexController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $status = $this->params()->fromQuery('status', Acquiring::STATUS_NO_MATCH);
         $search = $this->params()->fromQuery('search');
-        if ($search){
+        $date = $this->params()->fromQuery('date');
+        if ($search || $date){
             $status = null;
         }
         
         $query = $this->entityManager->getRepository(Acquiring::class)
-                        ->findAcquiring(['status' => $status, 'search' => $search]);
+                        ->findAcquiring(['status' => $status, 'search' => $search, 'date' => $date]);
         
         $total = count($query->getResult(2));
         
