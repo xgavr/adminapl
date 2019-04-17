@@ -321,6 +321,9 @@ $this->headScript()
     }
 
     function aplQueryParams(params) {
+        $('#toolbar_apl').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
         return tabQueryParams('#table_apl', params);
     }
 
