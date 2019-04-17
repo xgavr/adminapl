@@ -314,13 +314,17 @@ $this->headScript()
     function transDateFormatter(value, row){
         var result = value+'<br/>'+row.operDate;
         if (row.aplPaymentDate){
-            result += '<br/><small stile="color:blue">'+row.aplPaymentDate+'</small>';
+            result += '<br/><small style="color:blue">'+row.aplPaymentDate+'</small>';
         }
         return result;
     }
 
     function cartFormatter(value, row){
-        return value+'<br/>'+row.cart;
+        var result = value+'<br/>'+row.cart;
+        if(row.aplPaymentTypeId){
+            result += '<br/><small style="color:blue">'+orderFormatter(value, row)+'</small>';
+        }
+        return result;
     }
 
     function orderFormatter(value, row){
@@ -351,7 +355,7 @@ $this->headScript()
         btnDelete += ' class="btn btn-danger btn-xs this-delete"';
         btnDelete += ' aria-label="Left Align"'; 
         btnDelete += ' title="Удалить"'; 
-        btnDelete += ' onclick="tableRowDelete(\''+url+'\', \'table_apl\')">';
+        btnDelete += ' onclick="tableRowDelete(\''+urlDelete+'\', \'table_apl\')">';
         btnDelete += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
         btnDelete += '</button>';
         
