@@ -361,13 +361,21 @@ $this->headScript()
     }
 
     function cartFormatter(value, row){
-        var result = value+'<br/>'+row.cart;
-        return result;
+        if (value){
+            var result = value+'<br/>'+row.cart;
+            return result;
+        }
+        
+        return '';
     }
 
     function acodeFormatter(value, row){
-        var result = value+'<br/>'+row.rrn;
-        return result;
+        if (value){
+            var result = value+'<br/>'+row.rrn;
+            return result;
+        }
+        
+        return '';
     }
     
     function aplStatusFormatter(value, row){
