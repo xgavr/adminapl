@@ -8,11 +8,10 @@
 
 namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Images
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\Application\Repository\ImageRepository")
  * @ORM\Table(name="images")
  * @author Daddy
  */
@@ -54,7 +53,13 @@ class Images {
      */
     protected $similar;
     
-
+    /**
+    * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="images")
+    * @ORM\JoinColumn(name="good_id", referencedColumnName="id")    
+    * 
+    */
+    protected $good;
+     
     public function getId() 
     {
         return $this->id;
@@ -105,13 +110,6 @@ class Images {
         $this->similar = $similar;
     }   
     
-    /**
-    * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="images")
-    * @ORM\JoinColumn(name="good_id", referencedColumnName="id")    
-    * 
-    */
-    protected $good;
-     
     /**
      * Возвращает связанный товар.
      * @return \Application\Entity\Goods

@@ -22,9 +22,6 @@ class AutodbManager
     
     const URI_PRODUCTION = 'https://auto-db.pro/ws/tecdoc-api/';
     
-    const IMAGE_DIR = './public/img'; //папка для хранения картинок
-    const GOOD_IMAGE_DIR = './public/img/goods'; //папка для хранения картинок товаров
-    
     const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
     
     /**
@@ -447,85 +444,6 @@ class AutodbManager
         return $result;
     }
 
-    
-    /**
-     * Получить путь к папке с картинками
-     * 
-     * @param Application\Entity\Goods $good
-     * @return string
-     */
-    public function getImageFolder($good)
-    {
-        return self::GOOD_IMAGE_DIR.'/'.$good->getId().'/td';
-    }
-
-    /**
-     * Создать папку с картинками
-     * 
-     * @param Application\Entity\Goods $good
-     */
-    public function addImageFolder($good)
-    {
-        $images_folder = self::IMAGE_DIR;
-        if (!is_dir($images_folder)){
-            mkdir($images_folder);
-        }
-        
-        $image_folder = self::GOOD_IMAGE_DIR;
-        if (!is_dir($image_folder)){
-            mkdir($image_folder);
-        }
-        
-        $good_image_folder = self::GOOD_IMAGE_DIR.'/'.$good->getId();
-        if (!is_dir($good_image_folder)){
-            mkdir($good_image_folder);
-        }
-
-        $td_image_folder = $this->getImageFolder($good);
-        if (!is_dir($td_image_folder)){
-            mkdir($td_image_folder);
-        }
-        return;
-    }        
-    
-    
-    /*
-     * Очистить содержимое папки c картинками товара
-     * 
-     * @var Application\Entity\Goods $folderName
-     * 
-     */
-    public function clearImageGoodFolder($good)
-    {
-        $folderName = $this->getImageFolder($good);
-                
-        if (is_dir($folderName)){
-            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
-                if ($fileInfo->isDot()) continue;
-                if ($fileInfo->isFile()){
-                    unlink($fileInfo->getFilename());                            
-                }
-            }
-        }
-    }
-    
-    /**
-     * Сохранить картинку товара по ссылке
-     * 
-     * @param string $uri
-     */
-    public function saveImageGood($good, $uri, $docFileName)
-    {
-        $headers = get_headers($uri);
-        if(preg_match("|200|", $headers[0])) {
-            
-            $image = file_get_contents($uri);
-            file_put_contents($this->getImageFolder($good)."/".$docFileName, $image);
-        } 
-        
-        return;
-            
-    }
     
     /**
      * Скачать картинку товара
