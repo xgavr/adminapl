@@ -85,6 +85,15 @@ class Images {
         return $this->path;
     }
 
+    public function getPublicPath() 
+    {
+        if (file_exists($this->path)){
+            return public_path().'/../'.$this->path;
+        }
+        
+        return;
+    }
+
     public function setPath($path) 
     {
         $this->path = $path;
