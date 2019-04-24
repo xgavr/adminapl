@@ -455,7 +455,7 @@ class AutodbManager
     public function getImages($good)
     {
         $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
-        $this->entityManager->getRepository(Images::class)->clearImageGoodFolder($good, Images::STATUS_TD);
+        $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
         
         $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
         
