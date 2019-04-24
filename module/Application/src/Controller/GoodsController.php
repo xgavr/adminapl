@@ -184,7 +184,7 @@ class GoodsController extends AbstractActionController
         $totalDesc = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusDescription' => Goods::DESCRIPTION_UPDATED]);
         $totalImage = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusIamge' => Goods::IMAGE_UPDATED]);
+                ->count(['statusImage' => Goods::IMAGE_UPDATED]);
         
                 
         // Визуализируем шаблон представления.
