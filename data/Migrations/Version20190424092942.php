@@ -14,6 +14,7 @@ final class Version20190424092942 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('images');
+        $table->changeColumn('path', ['length' => 256]);
         $table->addUniqueIndex(['path'], 'path_uindx');
 
     }
