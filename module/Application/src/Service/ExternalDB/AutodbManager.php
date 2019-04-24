@@ -11,6 +11,7 @@ use Zend\Http\Client;
 use Zend\Json\Decoder;
 use Zend\Json\Encoder;
 use Application\Filter\ProducerName;
+use Application\Entity\Images;
 
 /**
  * Description of AutodbManager
@@ -453,8 +454,8 @@ class AutodbManager
      */
     public function getImages($good)
     {
-        $this->addImageFolder($good);
-        $this->clearImageGoodFolder($good);
+        $this->entityManager->getRepository(Images::class)->addImageFolder($good);
+        $this->entityManager->getRepository(Images::class)->clearImageGoodFolder($good);
         
         $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
         
@@ -463,7 +464,8 @@ class AutodbManager
                 foreach($articleDocuments['articleDocuments']['array'] as $document){
                     if ($document['docId'] && isset($document['docFileName'])){
                         $uri = $this->getDocImageUri($document['docId']);
-                        $this->saveImageGood($good, $uri, $document['docFileName']);
+                        $this->entityManager->getRepository(Images::class)
+                                ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
                     }
                 }
             }

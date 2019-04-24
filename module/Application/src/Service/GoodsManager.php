@@ -11,6 +11,7 @@ use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Goods;
 use Application\Entity\Producer;
 use Application\Entity\Tax;
+use Application\Entity\Images;
 
 /**
  * Description of GoodsService
@@ -157,13 +158,10 @@ class GoodsManager
             $good->removeAttributeValueAssociation($attributeValue);
         }           
         
-
-        $images = $this->entityManager->getRepository(Goods::class)
-                ->findImages($good);
-        foreach ($images as $image){
-            $this->entityManager->remove($image);
-        }                    
-        
+        $this->entityManager->getRepository(Images::class)
+                ->removeGoodImages($good);
+                
+                
         $this->entityManager->remove($good);
         
         $this->entityManager->flush();

@@ -25,20 +25,22 @@ class ImageRepository extends EntityRepository
     /**
      * Получить путь к папке с картинками
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
+     * @param status integer
      * @return string
      */
-    public function getImageFolder($good)
+    public function getImageFolder($good, $status)
     {
-        return self::GOOD_IMAGE_DIR.'/'.$good->getId().'/td';
+        return self::GOOD_IMAGE_DIR.'/'.$good->getId().'/'.$status;
     }
 
     /**
      * Создать папку с картинками
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
+     * @param integer $status
      */
-    public function addImageFolder($good)
+    public function addImageFolder($good, $status)
     {
         $images_folder = self::IMAGE_DIR;
         if (!is_dir($images_folder)){
@@ -55,9 +57,9 @@ class ImageRepository extends EntityRepository
             mkdir($good_image_folder);
         }
 
-        $td_image_folder = $this->getImageFolder($good);
-        if (!is_dir($td_image_folder)){
-            mkdir($td_image_folder);
+        $status_image_folder = $this->getImageFolder($good, $status);
+        if (!is_dir($status_image_folder)){
+            mkdir($status_image_folder);
         }
         return;
     }        
@@ -66,12 +68,13 @@ class ImageRepository extends EntityRepository
     /*
      * Очистить содержимое папки c картинками товара
      * 
-     * @var Application\Entity\Goods $folderName
+     * @param \Application\Entity\Goods $folderName
+     * @param integer $status
      * 
      */
-    public function clearImageGoodFolder($good)
+    public function clearImageGoodFolder($good, $status)
     {
-        $folderName = $this->getImageFolder($good);
+        $folderName = $this->getImageFolder($good, $status);
                 
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
@@ -86,17 +89,77 @@ class ImageRepository extends EntityRepository
     }
     
     /**
+     * Добавить картинку товаров
+     * 
+     * @param array $data
+     */
+    public function addImage($data)
+    {
+        if (file_exists($data['path'])){
+            $image = $this->getEntityManager()->getRepository(Images::class)
+                    ->findOneByPath($data['path']);
+
+            if ($image == null){
+                $this->getEntityManager()->getConnection()->insert('images', $data);
+            }
+        }    
+       
+       return;
+    }
+    
+    /**
+     * Удаление картинки
+     * 
+     * @param \Application\Entity\Images $image
+     */
+    public function removeImage($image)
+    {
+        unlink($image->getPath());        
+        $this->getEntityManager()->getConnection()->delete('images', ['id' => $image->getId()]);        
+    }
+    
+    /**
+     * Удаление картинок товара
+     * @param \Application\Entity\Goods $good
+     * @param integer $status
+     * 
+     */
+    public function removeGoodImages($good, $status = null)
+    {
+        $images = $this->getEntityManager()->getRepository(Images::class)
+                ->findBy(['good' => $good->getId(), 'status' => $status]);
+        
+        foreach ($images as $image){
+            $this->removeImage($image);
+        }
+    }
+
+    /**
      * Сохранить картинку товара по ссылке
      * 
+     * @param \Application\Entity\Goods $good
      * @param string $uri
+     * @param string $docFileName
+     * @param integer $status
+     * @param integer $similar
      */
-    public function saveImageGood($good, $uri, $docFileName)
+    public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
         $headers = get_headers($uri);
+        
         if(preg_match("|200|", $headers[0])) {
             
             $image = file_get_contents($uri);
-            file_put_contents($this->getImageFolder($good)."/".$docFileName, $image);
+            $path = $this->getImageFolder($good, $status)."/".$docFileName;
+            file_put_contents($path, $image);
+            
+            $this->addImage([
+                'name' => $docFileName,
+                'path' => $path,
+                'status' => $status,
+                'similar' => $similar,
+                'good_id' => $good->getId(),
+            ]);
         } 
         
         return;
@@ -151,20 +214,4 @@ class ImageRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }   
     
-    /**
-     * Добавить картинку товаров
-     * 
-     * @param array $data
-     */
-    public function addImage($data)
-    {
-       $image = $this->getEntityManager()->getRepository(Images::class)
-               ->findOneByTdId($data['td_id']);
-       
-       if ($image == null){
-           $this->getEntityManager()->getConnection()->insert('images', $data);
-       }
-       
-       return;
-    }
 }
