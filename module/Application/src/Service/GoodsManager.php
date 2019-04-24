@@ -224,7 +224,7 @@ class GoodsManager
      * @return array
      */
     public function images($good)
-    {
+    {        
         return $this->imagesFromFolder(self::GOOD_IMAGE_DIR.'/'.$good->getId());
     }
     

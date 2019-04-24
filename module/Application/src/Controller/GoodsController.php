@@ -388,6 +388,9 @@ class GoodsController extends AbstractActionController
         $carPaginator->setCurrentPageNumber($page);
 
         $totalCars = $carPaginator->getTotalItemCount();
+        
+        $images = $this->entityManager->getRepository(\Application\Entity\Images::class)
+                ->findByGood($goods->getId());
 
         // Render the view template.
         return new ViewModel([
@@ -400,7 +403,7 @@ class GoodsController extends AbstractActionController
             'articleManager' => $this->articleManager,
             'goodsManager' => $this->goodsManager,
             'bestName' => $this->nameManager->findBestName($goods),
-            'images' => $this->goodsManager->images($goods),
+            'images' => $images,
             'oemStatuses' => \Application\Entity\Oem::getStatusList(),
             'oemSources' => \Application\Entity\Oem::getSourceList(),
         ]);

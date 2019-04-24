@@ -178,6 +178,13 @@ $this->headScript()
             </div>
         </div>
 
+        <div>
+            <?php foreach($images as $image):?>
+                <img src="<?= $image->getPath() ?>" alt="<?= $image->getName() ?>" height="100">
+            <?php endforeach;?>
+        </div>
+        
+
         <table class="table table-striped">
             <tr>
                 <th>
@@ -256,14 +263,6 @@ $this->headScript()
                 </td>
             </tr>
         </table>
-        <div>
-            <?php foreach($images as $key => $imageFolder):?>
-                <?php foreach ($imageFolder as $path): ?>
-                    <img src="<?= $path ?>" alt="<?= $key ?>" height="100">
-                <?php endforeach;?>            
-            <?php endforeach;?>
-        </div>
-        
     </div>
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
