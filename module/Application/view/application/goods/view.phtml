@@ -180,7 +180,9 @@ $this->headScript()
 
         <div>
             <?php foreach($images as $image):?>
-                <img src="<?= $image->getPublicPath() ?>" alt="<?= $image->getName() ?>" height="100">
+                <? if ($image->getPublicPath()):?>
+                    <img src="<?= $image->getPublicPath() ?>" alt="<?= $image->getName() ?>" height="100">
+                <? endif; ?>    
             <?php endforeach;?>
         </div>
         
