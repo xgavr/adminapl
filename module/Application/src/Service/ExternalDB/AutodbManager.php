@@ -454,12 +454,13 @@ class AutodbManager
      */
     public function getImages($good)
     {
-        $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
-        $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
-        
         $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
         
         if (is_array($articleInfo)){
+
+            $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
+            $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
+        
             foreach($articleInfo['data']['array'] as $articleDocuments){
                 foreach($articleDocuments['articleDocuments']['array'] as $document){
                     if ($document['docId'] && isset($document['docFileName'])){
