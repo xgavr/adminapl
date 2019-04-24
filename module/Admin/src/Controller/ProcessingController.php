@@ -868,4 +868,19 @@ class ProcessingController extends AbstractActionController
     }
     
     
+    public function tdUpdateImagesAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_image'] == 1){
+
+            $this->goodsManager->updateImageTd();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }

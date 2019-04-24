@@ -447,6 +447,26 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления картинок по апи текдока
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateImageTd()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.statusImage = ?1')
+            ->setParameter('1', Goods::IMAGE_FOR_UPDATE)    
+            ->setMaxResults(2000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
      * Найти товары для обновления атрибутов по апи текдока
      * 
      * @return object

@@ -317,4 +317,26 @@ class GoodsManager
         
         return;
     }
+
+    /**
+     * Обновить картинки из текдока у товаров
+     */
+    public function updateImageTd()
+    {        
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 800;
+        
+        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateImageTd();
+        
+        foreach ($goodsForUpdate as $good){
+            if (time() >= $finishTime){
+                return;
+            }
+            $this->externalManager->addImageToGood($good);
+        }
+        
+        return;
+    }
 }
