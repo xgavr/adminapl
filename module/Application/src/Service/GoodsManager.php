@@ -203,7 +203,9 @@ class GoodsManager
 
         if (is_dir($folderImage)){
             foreach (new \DirectoryIterator($folderImage) as $fileInfo) {
-                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isDot()) {
+                    continue;
+                }
                 if ($fileInfo->isFile() && strtoupper($fileInfo->getExtension()) != 'PDF'){
                     $images[basename($folderImage)][] = str_replace('./public', '', $folderImage.'/'.$fileInfo->getFilename());                            
                 }
