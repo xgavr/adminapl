@@ -103,13 +103,13 @@ $this->headScript()
                             <a href="<?= $image->getPublicPath() ?>" target="_blank">
                                 <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
                             </a>    
-                            <div>
+                            <div class="caption panel-body">
                                 <div class="pull-left">
                                     <span><?= $image->getStatusAsString();?></span> 
                                     <span><?= $image->getSimilarAsString();?></span> 
                                 </div>
                                 <div class="pull-right">
-                                    <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-danger btn-xs this-delete"
+                                    <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-warning btn-xs this-delete"
                                             title="Удалить">
                                         <span class="glyphicon glyphicon-remove" ></span>
                                     </button>                             
