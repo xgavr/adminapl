@@ -165,8 +165,8 @@ class Images {
     public function getSimilarAsString()
     {
         $list = self::getSimilarList();
-        if (isset($list[$this->status])) {
-            return $list[$this->status];
+        if (isset($list[$this->similar])) {
+            return $list[$this->similar];
         }
 
         return 'Unknown';

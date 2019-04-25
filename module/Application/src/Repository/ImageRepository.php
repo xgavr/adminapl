@@ -167,6 +167,31 @@ class ImageRepository extends EntityRepository
     }
     
     /**
+     * Сохранить картинку товара загруженная вручную
+     * 
+     * @param \Application\Entity\Goods $good
+     * @param string $path
+     * @param integer $status
+     * @param integer $similar
+     */
+    public function uploadImageGood($good, $path, $status, $similar)
+    {
+        if(file_exists($path)) {
+            
+            $this->addImage([
+                'name' => basename($path),
+                'path' => $path,
+                'status' => $status,
+                'similar' => $similar,
+                'good_id' => $good->getId(),
+            ]);
+        } 
+        
+        return;
+            
+    }
+
+    /**
      * Запрос по картинкам по разным параметрам
      * 
      * @param array $params

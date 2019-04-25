@@ -13,8 +13,10 @@ use Zend\View\Model\JsonModel;
 use Application\Entity\Goods;
 use Application\Entity\Rawprice;
 use Application\Entity\Raw;
+use Application\Entity\Images;
 use Application\Form\GoodsForm;
 use Application\Form\GoodSettingsForm;
+use Application\Form\UploadForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -389,7 +391,7 @@ class GoodsController extends AbstractActionController
 
         $totalCars = $carPaginator->getTotalItemCount();
         
-        $images = $this->entityManager->getRepository(\Application\Entity\Images::class)
+        $images = $this->entityManager->getRepository(Images::class)
                 ->findByGood($goods->getId());
 
         // Render the view template.
@@ -809,7 +811,7 @@ class GoodsController extends AbstractActionController
             return;
         }
         
-        $image = $this->entityManager->getRepository(\Application\Entity\Images::class)
+        $image = $this->entityManager->getRepository(Images::class)
                 ->findOneById($imageId);
         
         if ($image == null) {
@@ -817,7 +819,7 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
         
-        $image = $this->entityManager->getRepository(\Application\Entity\Images::class)
+        $image = $this->entityManager->getRepository(Images::class)
                 ->removeImage($image);
                 
         return new JsonModel([
@@ -826,5 +828,64 @@ class GoodsController extends AbstractActionController
         
     }
     
+    public function uploadImageFormAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find the supplier ID
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodId);
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->entityManager->getRepository(Images::class)
+                ->addImageFolder($good, Images::STATUS_HAND);
+        
+        $imageFolder = $this->entityManager->getRepository(Images::class)
+                ->getImageFolder($good, Images::STATUS_HAND);
+        
+        $form = new UploadForm($imageFolder);
+
+        if($this->getRequest()->isPost()) {
+            
+            $data = array_merge_recursive(
+                $this->params()->fromPost(),
+                $this->params()->fromFiles()
+            );            
+            //var_dump($data); exit;
+
+            // Заполняем форму данными.
+            $form->setData($data);
+            if($form->isValid()) {
+                                
+                // Получаем валадированные данные формы.
+                $data = $form->getData();
+                $this->entityManager->getRepository(Images::class)
+                        ->uploadImageGood($good, $data['name']['tmp_name'], Images::STATUS_HAND, Images::SIMILAR_MATCH);
+              
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+            
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'good' => $good,
+            'form' => $form,
+        ]);
+        
+    }
     
 }
