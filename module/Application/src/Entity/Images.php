@@ -107,6 +107,34 @@ class Images {
         return $this->status;
     }
 
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_UNKNOWN => 'Неизвестно',
+            self::STATUS_TD => 'ТекДок',
+            self::STATUS_SUP => 'Поставщик',
+            self::STATUS_HAND => 'Вручную',
+        ];
+    }    
+    
+    /**
+     * Returns image status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status])) {
+            return $list[$this->status];
+        }
+
+        return 'Unknown';
+    }    
+    
     public function setStatus($status) 
     {
         $this->status = $status;
@@ -116,6 +144,33 @@ class Images {
     {
         return $this->similar;
     }
+
+    /**
+     * Returns possible similar as array.
+     * @return array
+     */
+    public static function getSimilarList() 
+    {
+        return [
+            self::SIMILAR_UNKNOWN => 'Неизвестно',
+            self::SIMILAR_MATCH => 'Точно',
+            self::SIMILAR_SIMILAR => 'Похоже',
+        ];
+    }    
+    
+    /**
+     * Returns image similar as string.
+     * @return string
+     */
+    public function getSimilarAsString()
+    {
+        $list = self::getSimilarList();
+        if (isset($list[$this->status])) {
+            return $list[$this->status];
+        }
+
+        return 'Unknown';
+    }    
 
     public function setSimilar($similar) 
     {

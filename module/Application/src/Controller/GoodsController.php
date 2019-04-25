@@ -799,4 +799,32 @@ class GoodsController extends AbstractActionController
         
     }
     
+    public function deleteImageAction()
+    {
+        $imageId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($imageId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $image = $this->entityManager->getRepository(\Application\Entity\Images::class)
+                ->findOneById($imageId);
+        
+        if ($image == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $image = $this->entityManager->getRepository(\Application\Entity\Images::class)
+                ->removeImage($image);
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    
 }
