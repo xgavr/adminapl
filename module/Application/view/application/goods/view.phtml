@@ -510,7 +510,7 @@ $this->headScript()
     
     function supplierFormatter(value, row) {
         var priceDate = new Date(row.dateCreated);
-        var priceDateStr = priceDate.getDate()+'-'+priceDate.getMonth() + 1 + ' ' + priceDate.getHours() + ':' + priceDate.getMinutes();
+        var priceDateStr = priceDate.getDate()+'-'+ (priceDate.getMonth()+1) + ' ' + priceDate.getHours() + ':' + priceDate.getMinutes();
         return '<a href="/supplier/view/'+row.supplierId+'" target="_blanc">'+value+'</a>' + '<br/>' + priceDateStr ;
     }    
     
