@@ -102,21 +102,19 @@ $this->headScript()
                         <div class="thumbnail">
                             <a href="<?= $image->getPublicPath() ?>" target="_blank">
                                 <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
-                                <div class="caption">
-                                    <p>
-                                        <div class="pull-left">
-                                            <span><?= $image->getStatusAsString();?></span> 
-                                            <span><?= $image->getSimilarAsString();?></span> 
-                                        </div>
-                                        <div class="pull-right">
-                                            <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-danger btn-xs refresh-table-button"
-                                                    title="Удалить">
-                                                <span class="glyphicon glyphicon-remove" ></span>
-                                            </button>                             
-                                        </div>                                                                            
-                                    </p>
-                                </div>
                             </a>    
+                            <div class="caption">
+                                <div class="pull-left">
+                                    <span><?= $image->getStatusAsString();?></span> 
+                                    <span><?= $image->getSimilarAsString();?></span> 
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-danger btn-xs refresh-table-button"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                             
+                                </div>                                                                            
+                            </div>
                         </div>    
                     <? endif; ?>    
                 <?php endforeach;?>
