@@ -820,9 +820,9 @@ class GoodsController extends AbstractActionController
         $image = $this->entityManager->getRepository(\Application\Entity\Images::class)
                 ->removeImage($image);
                 
-        return new JsonModel(
-            ['ok']
-        );
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
         
     }
     
