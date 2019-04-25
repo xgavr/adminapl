@@ -28,243 +28,253 @@ $this->headScript()
     }    
 </style>
 
-<h1>
-    <?php if ($goods->getName()): ?>
-        <?= $this->escapeHtml($goods->getName()); ?>
-        <? if ($goods->getAplId()):?>
-            <sup>
-                <button value="/apl/update-good-name/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                        title="Обновить наименование в АПЛ">
-                    <span class="glyphicon glyphicon-refresh" ></span>
-                </button>         
-            </sup>
-        <? endif;?>
-    <? endif;?>
-</h1>
-
-<h3>
-    <button value="/goods/update-bestname/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-            title="Обновить наименование">
-        <span class="glyphicon glyphicon-refresh" ></span>
-    </button> 
-    <span>
-        <?= ($bestName) ? $bestName:'Нет наименования';?>
-    </span>    
-</h3>
-<h4>
-    <?= $goods->getGenericGroup()->getName().' ('.$goods->getGenericGroup()->getTdId().')';?>
-</h4>    
-<h5>
-    <?php if ($goods->getTokenGroup()):?>
-        <?= $goods->getTokenGroup()->getName();?>
-    <?php else: ?>
-        Группа наименований не назначена
-    <?php endif?>
-</h5>    
-<h6>
-    <button value="/name/goods-token-group/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-            title="Присвоить группу наименований">
-        <span class="glyphicon glyphicon-refresh" ></span>
-    </button> 
-    <?php if ($goods->getTokenGroup()):?>
-        <span>
-            <a href="/name/view-token-group/<?= $goods->getTokenGroup()->getId()?>" target="_blank">
-                <?= $goods->getTokenGroup()->getTokenView();?>
-            </a>
-        </span>    
-    <?php endif?>
-</h6>
 
 <div class="row">
     <div class="col-md-9">
-        <table class="table table-striped">
-            <tr>
-                <td colspan="3">            
-                    <?php if ($prev):?>
-                        <a href="/goods/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getCode()?></a>
-                    <?php endif;?>            
-                </td>
-                <td colspan="3" align="right">
-                    <?php if ($next):?>
-                        <a href="/goods/view/<?= $next[0]->getId()?>"><?= $next[0]->getCode()?>&rarr;</a>
-                    <?php endif;?>                            
-                </td>
-            </tr>
-        </table>
-        
-        <ul class="nav nav-tabs" id="featureTab" role="tablist">
-            <li role="presentation"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Описание</a></li>
-            <li role="presentation"><a href="#oem" role="tab" id="oem-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
-            <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость <span id="linkedBadge" class="badge">0</span></a></li>
-        </ul>
-        
-        <div class="tab-content" id="featureTabContent">
-            <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
-                <table class="table table-bordered">
-                    <p>
-                        <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
-                            <tr>
-                                <td width='30%' align='right'>
-                                    <nobr>
-                                       <?= $attributeValue->getAttribute()->getName()?>     
-                                    </nobr>
-                                </td>
-                                <td>
-                                    <?= $attributeValue->getAttributeValue()->getValue();?>
-                                </td>
-                            </tr>                                              
-                        <?php endforeach;?>
-                    </p>
-                </table>                    
+        <div class="row">
+            <div class="col-md-12">
+                <h1>
+                    <?php if ($goods->getName()): ?>
+                        <?= $this->escapeHtml($goods->getName()); ?>
+                        <? if ($goods->getAplId()):?>
+                            <sup>
+                                <button value="/apl/update-good-name/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновить наименование в АПЛ">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>         
+                            </sup>
+                        <? endif;?>
+                    <? endif;?>
+                </h1>
+
+                <h3>
+                    <button value="/goods/update-bestname/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                            title="Обновить наименование">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                    <span>
+                        <?= ($bestName) ? $bestName:'Нет наименования';?>
+                    </span>    
+                </h3>
+                <h4>
+                    <?= $goods->getGenericGroup()->getName().' ('.$goods->getGenericGroup()->getTdId().')';?>
+                </h4>    
+                <h5>
+                    <?php if ($goods->getTokenGroup()):?>
+                        <?= $goods->getTokenGroup()->getName();?>
+                    <?php else: ?>
+                        Группа наименований не назначена
+                    <?php endif?>
+                </h5>    
+                <h6>
+                    <button value="/name/goods-token-group/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                            title="Присвоить группу наименований">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                    <?php if ($goods->getTokenGroup()):?>
+                        <span>
+                            <a href="/name/view-token-group/<?= $goods->getTokenGroup()->getId()?>" target="_blank">
+                                <?= $goods->getTokenGroup()->getTokenView();?>
+                            </a>
+                        </span>    
+                    <?php endif?>
+                </h6>
+                <table class="table table-striped">
+                    <tr>
+                        <td colspan="3">            
+                            <?php if ($prev):?>
+                                <a href="/goods/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getCode()?></a>
+                            <?php endif;?>            
+                        </td>
+                        <td colspan="3" align="right">
+                            <?php if ($next):?>
+                                <a href="/goods/view/<?= $next[0]->getId()?>"><?= $next[0]->getCode()?>&rarr;</a>
+                            <?php endif;?>                            
+                        </td>
+                    </tr>
+                </table>                
             </div>
-            <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
-                <div id="oemToolbar">
-                    <div class="form-inline" role="form">
-                        <button value="/oem/oem-form/<?= $goods->getId() ?>" type="button" class="btn btn-default" title="Добавить" data-toggle="modal" data-target="#modal-dialog">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                        <div class="form-group">
-                            <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div>
+                    <?php foreach($images as $image):?>
+                        <? if ($image->getPublicPath()):?>
+                            <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
+                        <? endif; ?>    
+                    <?php endforeach;?>
+                </div>                
+            </div>
+            <div class="col-md-9">
+                <ul class="nav nav-tabs" id="featureTab" role="tablist">
+                    <li role="presentation"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Описание</a></li>
+                    <li role="presentation"><a href="#oem" role="tab" id="oem-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
+                    <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость <span id="linkedBadge" class="badge">0</span></a></li>
+                </ul>
+
+                <div class="tab-content" id="featureTabContent">
+                    <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
+                        <table class="table table-bordered">
+                            <p>
+                                <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
+                                    <tr>
+                                        <td width='30%' align='right'>
+                                            <nobr>
+                                               <?= $attributeValue->getAttribute()->getName()?>     
+                                            </nobr>
+                                        </td>
+                                        <td>
+                                            <?= $attributeValue->getAttributeValue()->getValue();?>
+                                        </td>
+                                    </tr>                                              
+                                <?php endforeach;?>
+                            </p>
+                        </table>                    
+                    </div>
+                    <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
+                        <div id="oemToolbar">
+                            <div class="form-inline" role="form">
+                                <button value="/oem/oem-form/<?= $goods->getId() ?>" type="button" class="btn btn-default" title="Добавить" data-toggle="modal" data-target="#modal-dialog">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                                <div class="form-group">
+                                    <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
+                                </div>
+                                <button id="oemOk" type="submit" class="btn btn-default">OK</button>
+                            </div>
                         </div>
-                        <button id="oemOk" type="submit" class="btn btn-default">OK</button>
+                        <table id="oemTable" 
+                            data-toggle="table" 
+                            data-url="/goods/oem-content/<?= $goods->getId()?>"
+                            data-side-pagination="server"
+                            data-pagination="true" 
+                            data-page-list="[5, 10, 20, 50]"
+                            data-toolbar="#oemToolbar"
+                            data-show-refresh="true"
+                            data-show-toggle="true"
+                            data-query-params="oemQueryParams"
+                            data-response-handler="responseHandler"
+                            >
+                            <thead>
+                                <tr>
+                                     <th data-field="id" data-type="numeric">ID</th>
+                                     <th data-field="oeNumber" data-type="numeric">Номер</th>
+                                     <th data-field="brandName">Бренд</th>
+                                     <th data-field="source" data-formatter="sourceFormatter">Источник</th>
+                                     <th data-field="status" data-formatter="statusFormatter">Статус</th>
+                                     <th data-field="status" data-formatter="oemActiveFormatter"></th>
+                                </tr>                
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" role="tabpanel" id="linked" aria-labelledby="linked-tab">
+                        <table id="linkedTable" 
+                            data-toggle="table" 
+                            data-url="/goods/car-content/<?= $goods->getId()?>"
+                            data-side-pagination="server"
+                            data-pagination="true" 
+                            data-page-list="[5, 10, 20, 50]"
+                            data-toolbar="#linkedToolbar"
+                            data-show-refresh="true"
+                            data-show-toggle="true"
+                            data-query-params="linkedQueryParams"
+                            data-response-handler="responseHandler"
+                            >
+                            <thead>
+                                <tr>
+                                     <th data-field="id" data-type="numeric">ID</th>
+                                     <th data-field="tdId" data-type="numeric">TD</th>
+                                     <th data-field="aplId" data-type="numeric">APL</th>
+                                     <th data-field="name" data-formatter="carFormatter">Машина</th>
+                                 </tr>                
+                            </thead>
+                        </table>
                     </div>
                 </div>
-                <table id="oemTable" 
-                    data-toggle="table" 
-                    data-url="/goods/oem-content/<?= $goods->getId()?>"
-                    data-side-pagination="server"
-                    data-pagination="true" 
-                    data-page-list="[5, 10, 20, 50]"
-                    data-toolbar="#oemToolbar"
-                    data-show-refresh="true"
-                    data-show-toggle="true"
-                    data-query-params="oemQueryParams"
-                    data-response-handler="responseHandler"
-                    >
-                    <thead>
-                        <tr>
-                             <th data-field="id" data-type="numeric">ID</th>
-                             <th data-field="oeNumber" data-type="numeric">Номер</th>
-                             <th data-field="brandName">Бренд</th>
-                             <th data-field="source" data-formatter="sourceFormatter">Источник</th>
-                             <th data-field="status" data-formatter="statusFormatter">Статус</th>
-                             <th data-field="status" data-formatter="oemActiveFormatter"></th>
-                        </tr>                
-                    </thead>
-                </table>
-            </div>
-            <div class="tab-pane fade" role="tabpanel" id="linked" aria-labelledby="linked-tab">
-                <table id="linkedTable" 
-                    data-toggle="table" 
-                    data-url="/goods/car-content/<?= $goods->getId()?>"
-                    data-side-pagination="server"
-                    data-pagination="true" 
-                    data-page-list="[5, 10, 20, 50]"
-                    data-toolbar="#linkedToolbar"
-                    data-show-refresh="true"
-                    data-show-toggle="true"
-                    data-query-params="linkedQueryParams"
-                    data-response-handler="responseHandler"
-                    >
-                    <thead>
-                        <tr>
-                             <th data-field="id" data-type="numeric">ID</th>
-                             <th data-field="tdId" data-type="numeric">TD</th>
-                             <th data-field="aplId" data-type="numeric">APL</th>
-                             <th data-field="name" data-formatter="carFormatter">Машина</th>
-                         </tr>                
-                    </thead>
-                </table>
-            </div>
+            </div>    
         </div>
+        <div class="row">
+            <div class="col-md-12">        
+                <table class="table table-striped">
+                    <tr>
+                        <th>
 
-        <div>
-            <?php foreach($images as $image):?>
-                <? if ($image->getPublicPath()):?>
-                    <img src="<?= $image->getPublicPath() ?>" class="img-responsive" alt="<?= $image->getName() ?>">
-                <? endif; ?>    
-            <?php endforeach;?>
-        </div>
-        
-
-        <table class="table table-striped">
-            <tr>
-                <th>
-
-                </th>
-                <th>
-                    <?//= $randRawprices[0]->getUnknownProducer()->getName()?>
-                </th>
-                <td colspan="3" align="right">
-                </td>
-                <td align="right">
-                </td>
-            </tr>
-            <?php $totalRawpriceCount = 0; ?>
-            <?php foreach ($rawprices as $rawprice):?>
-                <tr style="font-size: <?= ($rawprice->getStatus() == $rawprice::STATUS_PARSED) ? "inherit":"xx-small"?>">
-                    <td>
-                        <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
-                            <?= $rawprice->getArticle();?>
-                        </a> 
-                        <div>
-                            <?= $rawprice->getStatusAsString();?>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rawprice->getRaw()->getSupplier()->getId()]);?>">
-                                <?= $rawprice->getRaw()->getSupplier()->getName();?>
-                            </a>                       
-                        </div>
-                        <div>
-                            <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
-                                <?= $rawprice->getUnknownProducer()->getName();?>
-                            </a>                       
-                        </div>
-                    </td>
-                    <td>
-                        <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
-                            <?= $rawprice->getGoodname();?>
-                        </a>    
-                        <?php $tokens = $rawprice->getTokens(); ?>
-                        <?php if(count($tokens)):?>  
-                            <div>    
-                                <?php foreach($tokens as $token):?>
-                                    <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
-                                        <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
-                                    </span>
+                        </th>
+                        <th>
+                            <?//= $randRawprices[0]->getUnknownProducer()->getName()?>
+                        </th>
+                        <td colspan="3" align="right">
+                        </td>
+                        <td align="right">
+                        </td>
+                    </tr>
+                    <?php $totalRawpriceCount = 0; ?>
+                    <?php foreach ($rawprices as $rawprice):?>
+                        <tr style="font-size: <?= ($rawprice->getStatus() == $rawprice::STATUS_PARSED) ? "inherit":"xx-small"?>">
+                            <td>
+                                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
+                                    <?= $rawprice->getArticle();?>
+                                </a> 
+                                <div>
+                                    <?= $rawprice->getStatusAsString();?>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rawprice->getRaw()->getSupplier()->getId()]);?>">
+                                        <?= $rawprice->getRaw()->getSupplier()->getName();?>
+                                    </a>                       
+                                </div>
+                                <div>
+                                    <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
+                                        <?= $rawprice->getUnknownProducer()->getName();?>
+                                    </a>                       
+                                </div>
+                            </td>
+                            <td>
+                                <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
+                                    <?= $rawprice->getGoodname();?>
+                                </a>    
+                                <?php $tokens = $rawprice->getTokens(); ?>
+                                <?php if(count($tokens)):?>  
+                                    <div>    
+                                        <?php foreach($tokens as $token):?>
+                                            <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
+                                                <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
+                                            </span>
+                                        <?php endforeach;?>
+                                    </div>        
+                                <?php endif;?>                                                
+                            </td>
+                            <td>
+                                <?php $oemIntersect = $articleManager->oemRawpricesIntersect($rawprices, $rawprice); ?>
+                                <?php foreach($rawprice->getOemRaw() as $oemRaw): ?>
+                                    <a href="<?= $this->url('oem', ['action' => 'view-on-code'], ['query' => ['code' => $oemRaw->getCode()]]);?>">
+                                        <span style="font-size: xx-small; color: <?= (in_array($oemRaw->getCode(), $oemIntersect)) ? 'green':'inherit' ?>"><?= $oemRaw->getCode()?></span>
+                                    </a>    
                                 <?php endforeach;?>
-                            </div>        
-                        <?php endif;?>                                                
-                    </td>
-                    <td>
-                        <?php $oemIntersect = $articleManager->oemRawpricesIntersect($rawprices, $rawprice); ?>
-                        <?php foreach($rawprice->getOemRaw() as $oemRaw): ?>
-                            <a href="<?= $this->url('oem', ['action' => 'view-on-code'], ['query' => ['code' => $oemRaw->getCode()]]);?>">
-                                <span style="font-size: xx-small; color: <?= (in_array($oemRaw->getCode(), $oemIntersect)) ? 'green':'inherit' ?>"><?= $oemRaw->getCode()?></span>
-                            </a>    
-                        <?php endforeach;?>
-                    </td>
-                    <td align="right">
-                        <?= number_format($rawprice->getRealPrice(), 2, '.', '');?>
-                    </td>
-                    <td align="right">
-                        <?= $rawprice->getRealRest();?>
-                    </td>
-                </tr>
-            <?php endforeach;?>        
-            <tr>
-                <th colspan="4">
-                    Всего
-                </th>
-                <td align="right">
-                </td>
-                <td align="right">
-                    <b><?//= $totalRawpriceCount ?></b>
-                </td>
-            </tr>
-        </table>
+                            </td>
+                            <td align="right">
+                                <?= number_format($rawprice->getRealPrice(), 2, '.', '');?>
+                            </td>
+                            <td align="right">
+                                <?= $rawprice->getRealRest();?>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>        
+                    <tr>
+                        <th colspan="4">
+                            Всего
+                        </th>
+                        <td align="right">
+                        </td>
+                        <td align="right">
+                            <b><?//= $totalRawpriceCount ?></b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>    
     </div>
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
