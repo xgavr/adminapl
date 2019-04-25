@@ -97,15 +97,15 @@ $this->headScript()
         </div>
         <div class="row">
             <div class="col-md-3">
-                <div class="thumbnail">
-                    <?php foreach($images as $image):?>
-                        <? if ($image->getPublicPath()):?>
-                            <a href="<?= $image->getPublicPath() ?>">
+                <?php foreach($images as $image):?>
+                    <? if ($image->getPublicPath()):?>
+                        <div class="thumbnail">
+                            <a href="<?= $image->getPublicPath() ?>" target="_blank">
                                 <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
                             </a>    
-                        <? endif; ?>    
-                    <?php endforeach;?>
-                </div>                
+                        </div>    
+                    <? endif; ?>    
+                <?php endforeach;?>
             </div>
             <div class="col-md-9">
                 <ul class="nav nav-tabs" id="featureTab" role="tablist">
