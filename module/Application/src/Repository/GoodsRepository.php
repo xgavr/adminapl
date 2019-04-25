@@ -604,6 +604,38 @@ class GoodsRepository extends EntityRepository
     
     
     /**
+     * Найти прайсы товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @param array $params
+     * @return object
+     */
+    public function findPrice($good, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r.id, s.name as supplier, s.id as supplierId, r.article, c.code, c.id as codeId, r.producer, identity(r.unknownProducer) as producerId, r.goodname, r.rest, r.price')
+            ->from(Rawprice::class, 'r')
+            ->join('r.code', 'c') 
+            ->join('r.raw', 'rr')
+            ->join('rr.supplier', 's')    
+            ->where('r.good = ?1')    
+            ->setParameter('1', $good->getId())
+            ;
+        
+        if (is_array($params)){
+            if ($params['status']){
+                $queryBuilder->andWhere('r.status = ?2')
+                        ->setParameter('2', $params['status'])
+                        ;
+            }
+        }
+        
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
      * Добавление машины к товару
      * 
      * @param Application\Entity\Goods $good
