@@ -821,7 +821,7 @@ class GoodsController extends AbstractActionController
                 ->removeImage($image);
                 
         return new JsonModel([
-            'result' => 'ok-reload',
+            'ok',
         ]);
         
     }
