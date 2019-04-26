@@ -10,6 +10,7 @@ namespace Application\Controller\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\ImageController;
+use Application\Service\ImageManager;
 
 
 /**
@@ -23,8 +24,9 @@ class ImageControllerFactory implements FactoryInterface {
                      $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $imageManager = $container->get(ImageManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ImageController($entityManager);
+        return new ImageController($entityManager, $imageManager);
     }
 }

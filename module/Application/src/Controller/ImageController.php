@@ -21,10 +21,17 @@ class ImageController extends AbstractActionController
      */
     private $entityManager;
     
+    /**
+     * Менеджер картинок.
+     * @var \Application\Service\ImageManager
+     */
+    private $imageManager;
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager) 
+    public function __construct($entityManager, $imageManager) 
     {
         $this->entityManager = $entityManager;
+        $this->imageManager = $imageManager;
     }    
     
     public function indexAction()
@@ -37,4 +44,12 @@ class ImageController extends AbstractActionController
         ]);
     }
     
+    public function checkMailAction()
+    {
+        $this->imageManager->getImageByMail();
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
 }

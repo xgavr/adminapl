@@ -396,6 +396,7 @@ return [
             Service\ExternalDB\AutodbManager::class => Service\Factory\ExternalDB\AutodbManagerFactory::class,
             Service\ExternalDB\PartsApiManager::class => Service\Factory\ExternalDB\PartsApiManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
+            Service\ImageManager::class => Service\Factory\ImageManagerFactory::class,
             Service\MakeManager::class => Service\Factory\MakeManagerFactory::class,
             Service\MlManager::class => Service\Factory\MlManagerFactory::class,
             Service\NameManager::class => Service\Factory\NameManagerFactory::class,

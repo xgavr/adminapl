@@ -573,7 +573,9 @@ class PostManager {
 
                             $messageNumber++;
 
-                            if ($messageNumber > 5) break;
+                            if ($messageNumber > 5) {
+                                break;
+                            }
                         }    
                     }    
 
