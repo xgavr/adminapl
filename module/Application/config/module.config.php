@@ -63,6 +63,20 @@ return [
                     ],
                 ],
             ],        
+            'image' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/image[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ImageController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'group' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -73,20 +87,6 @@ return [
                     ],
                     'defaults' => [
                         'controller'    => Controller\GroupController::class,
-                        'action'        => 'index',
-                    ],
-                ],
-            ],        
-            'shop' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/shop[/:action[/:id]]',
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]*'
-                    ],
-                    'defaults' => [
-                        'controller'    => Controller\ShopController::class,
                         'action'        => 'index',
                     ],
                 ],
@@ -143,6 +143,20 @@ return [
                     ],
                     'defaults' => [
                         'controller'    => Controller\SupplierController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
+            'shop' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/shop[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ShopController::class,
                         'action'        => 'index',
                     ],
                 ],
@@ -353,6 +367,7 @@ return [
             Controller\ExternalController::class => Controller\Factory\ExternalControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
             Controller\GroupController::class => Controller\Factory\GroupControllerFactory::class,
+            Controller\ImageController::class => Controller\Factory\ImageControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\MakeController::class => Controller\Factory\MakeControllerFactory::class,
             Controller\MlController::class => Controller\Factory\MlControllerFactory::class,
@@ -428,6 +443,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\ExternalController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\ImageController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

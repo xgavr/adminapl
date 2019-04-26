@@ -1,0 +1,30 @@
+<?php
+$this->headTitle('Картинки');
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Картинки'=>$this->url('image')
+            ]);
+?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+            </div>
+        </div>
+        <div class="panel-body">
+            <button value="/ml/fill-ml-titles" class="btn btn-info btn-xs refresh-button">
+                Заполнить обучающую таблицу наименований
+            </button>         
+            <a href="/ml/ml-titles">
+                Обучающая выборка
+            </a>
+            <button value="/ml/cluster-name" class="btn btn-info btn-xs refresh-button">
+                Кластеризация Товары-Токены
+            </button>                             
+        </div>
+    </div>
+</div>

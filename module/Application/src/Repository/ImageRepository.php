@@ -20,7 +20,8 @@ class ImageRepository extends EntityRepository
 {
 
     const IMAGE_DIR = './public/img'; //папка для хранения картинок
-    const GOOD_IMAGE_DIR = './public/img/goods'; //папка для хранения картинок товаров    
+    const GOOD_IMAGE_DIR = './public/img/goods'; //папка для хранения картинок товаров  
+    const GOOD_TMP_IMAGE_DIR = './public/img/goods/tmp'; //временная папка для хранения картинок 
     
     /**
      * Получить путь к папке с картинками
@@ -89,6 +90,30 @@ class ImageRepository extends EntityRepository
     }
     
     /**
+     * Получить временную папку с картинками
+     * 
+     */
+    public function getTmpImageFolder()
+    {
+        $images_folder = self::IMAGE_DIR;
+        if (!is_dir($images_folder)){
+            mkdir($images_folder);
+        }
+        
+        $image_folder = self::GOOD_IMAGE_DIR;
+        if (!is_dir($image_folder)){
+            mkdir($image_folder);
+        }
+        
+        $good_tmp_image_folder = self::GOOD_TMP_IMAGE_DIR;
+        if (!is_dir($good_tmp_image_folder)){
+            mkdir($good_tmp_image_folder);
+        }
+
+        return $good_tmp_image_folder;
+    }        
+    
+    /**
      * Добавить картинку товаров
      * 
      * @param array $data
@@ -106,6 +131,74 @@ class ImageRepository extends EntityRepository
        
        return;
     }
+    
+    
+    /**
+     * Поиск товара по артикулу из наименования файла картинки
+     * 
+     * @param string $filename
+     * @param integer $status
+     * @return \Application\Entity\Goods 
+     * 
+     */
+    public function findGoodByImageFileName($filename, $status)
+    {
+        $fileInfo = pathinfo($filename);
+        $code = $fileInfo['filename'];
+        
+        $filter = new \Application\Filter\ArticleCode();
+        
+        $data = $this->getEntityManager()->getRepository(\Application\Entity\Goods::class)
+                ->findByCode($filter->filter($code));
+        
+        if (count($data) == 1){
+            foreach ($data as $good){
+                $basename = basename($filename);
+                $this->addImageFolder($good, $status);
+                $goodFolder = $this->getImageFolder($good, $status);
+                $path = $goodFolder.'/'.$basename;
+                if (rename($filename, $path)){
+                    $this->addImage([
+                        'name' => $basename,
+                        'path' => $path,
+                        'status' => $status,
+                        'similar' => Images::SIMILAR_MATCH,
+                        'good_id' => $good->getId(),                        
+                    ]);
+                    return $good;
+                }
+            }
+        }
+        
+        return;
+    }
+    
+    /*
+     * Очистить содержимое папки c картинками товара
+     * 
+     * @param \Application\Entity\Goods $folderName
+     * @param integer $status
+     * 
+     */
+    public function uploadImageFromTmpFolder($status)
+    {
+        $folderName = $this->getTmpImageFolder();
+                
+        if (is_dir($folderName)){
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) {
+                    continue;
+                }
+                if ($fileInfo->isFile()){
+                    $good = $this->findGoodByImageFileName($fileInfo->getFilename());
+                }
+            }
+        }
+        
+        return;
+    }
+    
+    
     
     /**
      * Удаление картинки
