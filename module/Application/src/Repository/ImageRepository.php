@@ -113,6 +113,31 @@ class ImageRepository extends EntityRepository
         return $good_tmp_image_folder;
     }        
     
+    
+    /**
+     * Получить картинки во временной папке
+     * 
+     * @return array;
+     */
+    public function getTmpImages()
+    {
+        $tmpFolder = $this->getTmpImageFolder();
+        $result = [];
+        if (is_dir($tmpFolder)){
+            foreach (new \DirectoryIterator($tmpFolder) as $fileInfo) {
+                if ($fileInfo->isDot()) {
+                    continue;
+                }
+                if ($fileInfo->isFile()){
+                    $result[] = $fileInfo->getFileInfo();                            
+                }
+            }
+        }
+        
+        return $result;
+    }
+    
+    
     /**
      * Добавить картинку товаров
      * 
