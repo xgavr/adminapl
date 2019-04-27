@@ -66,6 +66,16 @@ class ImageController extends AbstractActionController
         ]);
     }
 
+    public function uploadTmpFilesAction()
+    {
+        $this->entityManager->getRepository(Images::class)
+                ->uploadImageFromTmpFolder(Images::STATUS_SUP);
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
+    
     public function uploadTmpFileAction()
     {
         $filename = $this->params()->fromQuery('file');
