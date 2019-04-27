@@ -215,6 +215,7 @@ class ImageRepository extends EntityRepository
                     continue;
                 }
                 if ($fileInfo->isFile()){
+                    var_dump($fileInfo->getPathname()); exit;
                     $good = $this->findGoodByImageFileName($fileInfo->getPathname(), $status);
                 }
             }
