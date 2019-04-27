@@ -57,6 +57,15 @@ class ImageController extends AbstractActionController
         ]);
     }
 
+    public function uploadTmpAction()
+    {
+        $this->imageManager->getImageByMail();
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
+
     public function uploadTmpFileAction()
     {
         $filename = $this->params()->fromQuery('file');
@@ -74,12 +83,20 @@ class ImageController extends AbstractActionController
         ]);
     }
     
-    public function uploadTmpAction()
+    public function deleteTmpFileAction()
     {
-        $this->imageManager->getImageByMail();
+        $filename = $this->params()->fromQuery('file');
+
+        $tmpDir = $this->entityManager->getRepository(Images::class)
+                ->getTmpImageFolder();
+        
+        if (file_exists($tmpDir.'/'.$filename)){
+            unlink($tmpDir.'/'.$filename);
+        }
         
         return new JsonModel([
             'ok',
         ]);
     }
+    
 }

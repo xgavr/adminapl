@@ -10,6 +10,8 @@ namespace Application\Service;
 
 use Application\Validator\FileExtensionValidator;
 use Application\Entity\Images;
+use Zend\Validator\File\IsCompressed;
+use Zend\Filter\Decompress;
 
 /**
  * Description of PriceManager
@@ -78,9 +80,27 @@ class ImageManager {
                                 if (file_exists($attachment['temp_file'])){ 
                                     $targetFolder = $this->entityManager->getRepository(Images::class)
                                             ->getTmpImageFolder();
+                                    
+                                    $filename = $targetFolder.'/'.$attachment['filename'];
 
-                                    if (copy($attachment['temp_file'], $targetFolder.'/'.$attachment['filename'])){
+                                    if (copy($attachment['temp_file'], $filename)){
                                         unlink($attachment['temp_file']);
+                                        
+                                        $pathinfo = pathinfo($filename);
+                                        $validator = new IsCompressed();
+                                        if ($validator->isValid($filename)){
+                                            setlocale(LC_ALL,'ru_RU.UTF-8');
+                                            $filter = new Decompress([
+                                                'adapter' => $pathinfo['extension'],
+                                                'options' => [
+                                                    'target' => $pathinfo['dirname'],
+                                                ],
+                                            ]);
+                                            if ($filter->filter($filename)){
+                                                unlink($filename);
+                                            }
+                                        }
+
                                     }
                                 }    
                             }

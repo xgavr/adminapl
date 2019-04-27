@@ -30,7 +30,7 @@ $this->pageBreadcrumbs()->setItems([
                                         title="Привязать картинку к товару">
                                     <span class="glyphicon glyphicon-import" ></span>
                                 </button>                             
-                                <button value="/goods/delete-image/" class="btn btn-warning btn-xs this-delete"
+                                <button value="/image/delete-tmp-file/?file=<?= $fileInfo->getFileName() ?>" class="btn btn-warning btn-xs this-delete"
                                         title="Удалить">
                                     <span class="glyphicon glyphicon-remove" ></span>
                                 </button>                             
