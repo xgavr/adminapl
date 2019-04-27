@@ -1,5 +1,5 @@
 <?php
-$this->headTitle('Файлы с прайсами к загрузке');
+$this->headTitle('Файлы с картинками к загрузке');
 
 $this->mainMenu()->setActiveItemId('rb');
 
@@ -18,14 +18,18 @@ $this->pageBreadcrumbs()->setItems([
             <?php if (count($files)): ?>
                 <?php foreach($files as $fileInfo):?>
                     <div class="thumbnail">                        
-                        <a href="<?= '/img/goods/tmp/'.$fileInfo->getFileName() ?>" target="_blank">
-                            <img src="<?= '/img/goods/tmp/'.$fileInfo->getFileName() ?>" class="img-thumbnail" alt="<?= $fileInfo->getFileName() ?>">
+                        <a href="<?= $tmpDir.'/'.$fileInfo->getFileName() ?>" target="_blank">
+                            <img src="<?= $tmpDir.'/'.$fileInfo->getFileName() ?>" class="img-thumbnail" alt="<?= $fileInfo->getFileName() ?>">
                         </a>    
                         <div class="caption panel-body small">
                             <div class="pull-left">
                                 <?= $fileInfo->getFileName() ?>
                             </div>
                             <div class="pull-right">
+                                <button value="/image/upload-tmp-file/?file=<?= $fileInfo->getFileName() ?>" class="btn btn-default btn-xs refresh-button"
+                                        title="Привязать картинку к товару">
+                                    <span class="glyphicon glyphicon-import" ></span>
+                                </button>                             
                                 <button value="/goods/delete-image/" class="btn btn-warning btn-xs this-delete"
                                         title="Удалить">
                                     <span class="glyphicon glyphicon-remove" ></span>
@@ -47,7 +51,7 @@ $this->pageBreadcrumbs()->setItems([
                     <div class="panel-body">
                         <button value="/image/check-mail" class="btn btn-info btn-xs refresh-button"
                                 title="Проверить ящик для картинок">
-                            <span class="glyphicon glyphicon-bitcoin" ></span>
+                            <span class="glyphicon glyphicon-envelope" ></span>
                         </button>                             
                     </div>
                 </div>

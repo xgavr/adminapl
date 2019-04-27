@@ -85,13 +85,18 @@ class Images {
         return $this->path;
     }
 
+    public function publicPath($path)
+    {
+        return str_replace('./public', '', $path);
+    }
+    
     public function getPublicPath() 
     {
         if (file_exists($this->path)){
             $fileInfo = pathinfo($this->path);
             if ($fileInfo['extension'] && strtoupper($fileInfo['extension']) != 'PDF'){
-                return str_replace('./public', '', $this->path);
-            }    
+                return $this->publicPath($this->path);
+            }
         }
         
         return;

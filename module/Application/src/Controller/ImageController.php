@@ -39,12 +39,42 @@ class ImageController extends AbstractActionController
         $files = $this->entityManager->getRepository(Images::class)
                 ->getTmpImages();
         
+        $tmpDir = $this->entityManager->getRepository(Images::class)
+                ->getTmpImageFolder();
+        
         return new ViewModel([
             'files' => $files,
+            'tmpDir' => Images::publicPath($tmpDir),
         ]);
     }
     
     public function checkMailAction()
+    {
+        $this->imageManager->getImageByMail();
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
+
+    public function uploadTmpFileAction()
+    {
+        $filename = $this->params()->fromQuery('file');
+
+        $tmpDir = $this->entityManager->getRepository(Images::class)
+                ->getTmpImageFolder();
+        
+        if (file_exists($tmpDir.'/'.$filename)){
+            $this->entityManager->getRepository(Images::class)
+                    ->findGoodByImageFileName($tmpDir.'/'.$filename, Images::STATUS_SUP);
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
+    
+    public function uploadTmpAction()
     {
         $this->imageManager->getImageByMail();
         
