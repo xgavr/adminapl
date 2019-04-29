@@ -383,18 +383,20 @@ class Rawprice {
     public function getStatusTokenAsString()
     {
         $list = self::getStatusTokenList();
-        if (isset($list[$this->statusToken]))
+        if (isset($list[$this->statusToken])) {
             return $list[$this->statusToken];
-        
+        }
+
         return 'Unknown';
     }  
     
     public function getStatusTokenName($statusToken)
     {
         $list = self::getStatusTokenList();
-        if (isset($list[$statusToken]))
+        if (isset($list[$statusToken])) {
             return $list[$statusToken];
-        
+        }
+
         return 'Unknown';        
     }
     
@@ -437,18 +439,20 @@ class Rawprice {
     public function getStatusGoodAsString()
     {
         $list = self::getStatusGoodList();
-        if (isset($list[$this->statusGood]))
+        if (isset($list[$this->statusGood])) {
             return $list[$this->statusGood];
-        
+        }
+
         return 'Unknown';
     }  
     
     public function getStatusGoodName()
     {
         $list = self::getStatusGoodList();
-        if (isset($list[$this->statusGood]))
+        if (isset($list[$this->statusGood])) {
             return $list[$this->statusGood];
-        
+        }
+
         return 'Unknown';        
     }
     
@@ -489,18 +493,20 @@ class Rawprice {
     public function getStatusProducerAsString()
     {
         $list = self::getStatusProducerList();
-        if (isset($list[$this->statusProducer]))
+        if (isset($list[$this->statusProducer])) {
             return $list[$this->statusProducer];
-        
+        }
+
         return 'Unknown';
     }  
     
     public function getStatusProducerName()
     {
         $list = self::getStatusProducerList();
-        if (isset($list[$this->statusProducer]))
+        if (isset($list[$this->statusProducer])) {
             return $list[$this->statusProducer];
-        
+        }
+
         return 'Unknown';        
     }
     
@@ -587,7 +593,7 @@ class Rawprice {
 
     public function setPrice($price) 
     {
-        $this->price = (string) $price;
+        $this->price = mb_strimwidth((string) $price, 0, 32);
     }     
     
     public function getRest() 
@@ -616,7 +622,7 @@ class Rawprice {
 
     public function setRest($rest) 
     {
-        $this->rest = (string) $rest;
+        $this->rest = mb_strimwidth((string) $rest, 0, 32);
     }     
     
     public function setOem($oem) 

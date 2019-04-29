@@ -17,6 +17,7 @@ use Application\Entity\PriceDescription;
 use Application\Form\PriceDescriptionForm;
 use Application\Filter\StrSimilar;
 use Application\Validator\IsBlackList;
+use Application\Validator\IsNumericPrice;
 
 use Phpml\Classification\KNearestNeighbors;
 use Phpml\ModelManager;
@@ -36,7 +37,7 @@ class ParseManager {
 
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -50,8 +51,10 @@ class ParseManager {
         $this->blackListValidator = new IsBlackList();
     }
     
-    /*
+    /**
      * Получить поля и функции описания прайса
+     * @param \Application\Entity\Raw $raw
+     * 
      */
     public function getPriceDescriptionFunc($raw)
     {
@@ -65,7 +68,9 @@ class ParseManager {
             if ($priceDescription->getStatus() == PriceDescription::STATUS_ACTIVE){
                 $result = [];
                 foreach ($elements as $element){
-                    if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
+                    if (in_array($element->getName(), ['name', 'status', 'type'])) {
+                        continue;
+                    }
                     $func = 'get'.ucfirst($element->getName());
                     if (method_exists($priceDescription, $func)){
                         $result[$element->getName()] = $priceDescription->$func();
@@ -82,10 +87,10 @@ class ParseManager {
         return;
     }
     
-    /*
-     * Разбока строки данных прайса
-     * @var Application\Entity\Rawprice @rawprice
-     * @var array $priceDescriptionFunc - описание полей прайса
+    /**
+     * Разбока строки данных прайса и выбор лучшего описания полей
+     * @param \Application\Entity\Rawprice @rawprice
+     * @param array $priceDescriptionFunc - описание полей прайса
      */
     public function parseRawdata($rawprice, $priceDescriptionFunc = null)
     {
@@ -93,6 +98,8 @@ class ParseManager {
             $priceDescriptionFunc = $this->getPriceDescriptionFunc($rawprice->getRaw());
         }
 
+        $priceValidator = new IsNumericPrice();
+        
         if (count($priceDescriptionFunc)){
             $spl = new \SplObjectStorage();
     
@@ -107,6 +114,14 @@ class ParseManager {
                     }
                 }    
                 
+                if (!$priceValidator->isValid($result['price'])){
+                    unset($result['price']);
+                }
+                
+                if (!$priceValidator->isValid($result['rest'])){
+                    unset($result['rest']);
+                }
+                                
                 if (!$result['producer'] && $priceDescriptionFunc[$priceDescription]['defaultProducer']){
                     $result['producer'] = $priceDescriptionFunc[$priceDescription]['defaultProducer'];                    
                 }
@@ -115,8 +130,10 @@ class ParseManager {
             }
             
 
-            if (!count($spl)) return;
-        
+            if (!count($spl)) {
+                return;
+            }
+
             $resultParse = [];
             foreach ($spl as $priceDescription){
 //                var_dump($spl[$priceDescription]);
@@ -132,18 +149,21 @@ class ParseManager {
         return;
     }
         
-    /*
-     * @var Application\Entity\Rawprice $rawprice
-     * @var array @parsedata
-     * @var bool $flushnow
+    /**
+     * @param \Application\Entity\Rawprice $rawprice
+     * @param array $priceDescriptionFunc
+     * @param bool $flushnow
+     * @param integer $status
      */
     
     public function updateRawprice($rawprice, $priceDescriptionFunc = null, $flushnow = true, $status = Rawprice::STATUS_PARSED)
     {
         $data = $this->parseRawdata($rawprice, $priceDescriptionFunc);
         
-        if (!is_array($data)) return;
-                
+        if (!is_array($data)) {
+            return;
+        }
+
         if ($this->blackListValidator->isValid(implode(' ', $data))){
             $rawprice->setStatus(Rawprice::STATUS_BLACK_LIST);
         } else {
@@ -179,9 +199,9 @@ class ParseManager {
         return;
     }    
 
-    /*
+    /**
      * Поиск прайса для разбоки
-     * return Application\Entity\Raw
+     * @return \Application\Entity\Raw
      */
     public function findRawForParse()
     {
@@ -209,9 +229,9 @@ class ParseManager {
         return;
     }
     
-    /*
+    /**
      * Получить записи прайса для разбоки
-     * @var Application\Entity\Raw @raw
+     * @parsm \Application\Entity\Raw $raw
      * 
      */    
     public function findRawpricesForParse($raw = null)
@@ -230,12 +250,12 @@ class ParseManager {
     }
     
     
-    /*
+    /**
      * Сравнение прайсов
-     * @param $raw Application\Entity\Raw
-     * @param $prevRaw Aapplication\Entity\Raw
+     * @param \Application\Entity\Raw $raw 
+     * @param \Aapplication\Entity\Raw $prevRaw 
      * 
-     * return array
+     * @return array
      */
     public function compareRaw($raw, $prevRaw)
     {
@@ -270,12 +290,13 @@ class ParseManager {
         $modelManager = new ModelManager();
         $modelManager->saveToFile($classifier, $filepath);
     }
-    /*
+    
+    /**
      * Решение о пометке на удаление прайса
-     * @param $raw Application\Entity\Raw
-     * @param $prevRaw Aapplication\Entity\Raw
+     * @param \Application\Entity\Raw $raw 
+     * @param \Aapplication\Entity\Raw $oldRaw 
      * 
-     * return bool
+     * @return bool
      */
     public function isDeleteRaw($raw, $oldRaw)
     {
@@ -287,9 +308,9 @@ class ParseManager {
     }
 
 
-    /*
+    /**
      * Поиск и пометка старых прайсов на удаление
-     * @var Application\Entity\Raw @raw
+     * @param \Application\Entity\Raw $raw
      * 
      */
     
@@ -323,9 +344,9 @@ class ParseManager {
         return;
     }
     
-    /*
+    /**
      * Парсить записи прайса
-     * @var Application\Entity\Raw @raw
+     * @param \Application\Entity\Raw $raw
      * 
      */
     public function parseRaw($raw = null)
@@ -380,9 +401,9 @@ class ParseManager {
     }
     
     
-    /*
+    /**
      * Выбрать и добавить уникальные товары
-     * @var Application\Entity\Raw @raw
+     * @param \Application\Entity\Raw $raw
      * 
      */    
     public function addNewGoodsRaw($raw)
@@ -424,9 +445,10 @@ class ParseManager {
     }
     
     
-    /*
+    /**
      * Привязать товар к прайсу
-     * @var Application\Entity\Rawprice
+     * @param \Application\Entity\Rawprice $rawprice
+     * @param bool $flushnow
      */
     public function addGoodRawprice($rawprice, $flushnow = true)
     {
@@ -457,6 +479,11 @@ class ParseManager {
         }
     }
     
+    /**
+     * 
+     * @param \Application\Entity\Rawprice $rawprice
+     * @param bool $flushnow
+     */
     public function updateGoodRawprice($rawprice, $flushnow = true)
     {
         if ($rawprice->getUnknownProducer() && $rawprice->getGood()){
@@ -486,9 +513,10 @@ class ParseManager {
         }
     }
     
-    /*
+    /**
      * Установить цену товара
-     * @var Application\Entity\Rawprice $rawprice
+     * @param \Application\Entity\Rawprice $rawprice
+     * @param bool $flushnow
      */
     public function setPriceRawprice($rawprice, $flushnow = true)
     {
@@ -506,9 +534,9 @@ class ParseManager {
     }
 
 
-    /*
+    /**
      * Парсить все записи
-     * @var Application\Entity\Raw @raw
+     * @param \Application\Entity\Raw $raw
      * 
      */
     public function addGoodRaw($raw)
@@ -523,9 +551,9 @@ class ParseManager {
         $this->entityManager->flush();
     }
     
-    /*
+    /**
      * Парсить все записи
-     * @var Application\Entity\Raw @raw
+     * @param \Application\Entity\Raw $raw
      * 
      */
     public function updateGoodRaw($raw)
@@ -537,9 +565,9 @@ class ParseManager {
         $this->entityManager->flush();
     }
     
-    /*
+    /**
      * Установить цену в товарах прайса
-     * @var Application\Entity\Raw @raw
+     * @param \Application\Entity\Raw $raw
      * 
      */
     public function setPriceRaw($raw)

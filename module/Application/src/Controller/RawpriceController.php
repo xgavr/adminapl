@@ -22,25 +22,25 @@ class RawpriceController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Менеджер.
-     * @var Application\Service\SupplierManager 
+     * @var \Application\Service\SupplierManager 
      */
     private $supplierManager;    
     
     /**
      * Менеджер.
-     * @var Application\Service\RawManager 
+     * @var \Application\Service\RawManager 
      */
     private $rawManager;    
     
     /**
      * Менеджер.
-     * @var Application\Service\ParseManager 
+     * @var \Application\Service\ParseManager 
      */
     private $parseManager;    
     
@@ -108,7 +108,7 @@ class RawpriceController extends AbstractActionController
         $rawprice = $this->entityManager->getRepository(Rawprice::class)
                 ->findOneById($rawpriceId);
         
-        $parse = $this->parseManager->updateRawprice($rawprice, null, true, Rawprice::STATUS_PARSED);
+        $this->parseManager->updateRawprice($rawprice, null, true, Rawprice::STATUS_PARSED);
 //        return $this->redirect()->toRoute('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);
 
         return new JsonModel(
