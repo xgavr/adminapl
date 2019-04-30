@@ -462,13 +462,17 @@ class AutodbManager
             $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
         
             foreach($articleInfo['data']['array'] as $articleDocuments){
-                foreach($articleDocuments['articleDocuments']['array'] as $document){
-                    if ($document['docId'] && isset($document['docFileName'])){
-                        $uri = $this->getDocImageUri($document['docId']);
-                        $this->entityManager->getRepository(Images::class)
-                                ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
-                    }
-                }
+                if (isset($articleDocuments['articleDocuments'])){
+                    if (isset($articleDocuments['articleDocuments']['array'])){
+                        foreach($articleDocuments['articleDocuments']['array'] as $document){
+                            if ($document['docId'] && isset($document['docFileName'])){
+                                $uri = $this->getDocImageUri($document['docId']);
+                                $this->entityManager->getRepository(Images::class)
+                                        ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
+                            }
+                        }
+                    }    
+                }    
             }
         }
         

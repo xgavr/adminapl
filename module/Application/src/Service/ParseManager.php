@@ -173,8 +173,8 @@ class ParseManager {
         $rawprice->setArticle($data['article']);
         $rawprice->setProducer($data['producer']);
         $rawprice->setTitle($data['title']);
-        $rawprice->setPrice($data['price']);
-        $rawprice->setRest($data['rest']);            
+        $rawprice->setPrice(isset($data['price']) ? $data['price']:0);
+        $rawprice->setRest(isset($data['rest']) ? $data['rest']:0);            
         $rawprice->setIid($data['iid']);
         $rawprice->setOem($data['oem']);
         $rawprice->setBrand($data['brand']);
