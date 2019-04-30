@@ -9,9 +9,6 @@
 namespace Application\Filter;
 
 use Zend\Filter\AbstractFilter;
-use Application\Filter\ToUtf8;
-use Zend\Filter\StripNewlines;
-use Zend\Filter\StringTrim;
 
 /**
  * Приводит наименование к единому виду
@@ -37,12 +34,10 @@ class ProducerName extends AbstractFilter
     
     public function filter($value)
     {
-        $result = mb_ereg_replace('[^A-ZА-ЯЁ0-9]', '', mb_strtoupper($value, 'utf-8'));
-        
         $s = array('Å', 'Ö');
         $r = array('A', 'O');
-        $result = mb_ereg_replace($s, $r, $result);
-        
+        $result = mb_ereg_replace($s, $r, mb_ereg_replace('[^A-ZА-ЯЁ0-9]', '', mb_strtoupper($value, 'utf-8')));
+        var_dump($result);
         return $result;
     }
     
