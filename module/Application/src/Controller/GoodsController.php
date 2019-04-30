@@ -780,10 +780,20 @@ class GoodsController extends AbstractActionController
         
     }
     
-    public function resetTdDescriptionAction()
+    public function tdImageAction()
+    {
+        $this->goodsManager->updateImageTd();            
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    public function resetTdGroupAction()
     {
         $this->entityManager->getRepository(Goods::class)
-                ->resetUpdateAttributeTd();
+                ->resetUpdateGroupTd();
         
         return new JsonModel(
             ['ok']
@@ -791,10 +801,44 @@ class GoodsController extends AbstractActionController
         
     }
     
-    public function tdImageAction()
+    public function resetTdCarAction()
     {
-        $this->goodsManager->updateImageTd();            
-                
+        $this->entityManager->getRepository(Goods::class)
+                ->resetUpdateCarTd();
+        
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    public function resetTdOemAction()
+    {
+        $this->entityManager->getRepository(Goods::class)
+                ->resetUpdateOemTd();
+        
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    public function resetTdImageAction()
+    {
+        $this->entityManager->getRepository(Goods::class)
+                ->resetUpdateImageTd();
+        
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    public function resetTdDescriptionAction()
+    {
+        $this->entityManager->getRepository(Goods::class)
+                ->resetUpdateAttributeTd();
+        
         return new JsonModel(
             ['ok']
         );

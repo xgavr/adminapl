@@ -241,6 +241,12 @@ class GoodsManager
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateCar();
+
+        if (count($goodsForUpdate) == 0){
+            $this->entityManager->getRepository(Goods::class)
+                    ->resetUpdateCarTd();
+            return;
+        }        
         
         foreach ($goodsForUpdate as $good){
             if (time() >= $finishTime){
@@ -265,6 +271,12 @@ class GoodsManager
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateGroupTd();
+
+        if (count($goodsForUpdate) == 0){
+            $this->entityManager->getRepository(Goods::class)
+                    ->resetUpdateGroupTd();
+            return;
+        }
         
         foreach ($goodsForUpdate as $good){
             if (time() >= $finishTime){
@@ -287,6 +299,12 @@ class GoodsManager
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateDescriptionTd();
+
+        if (count($goodsForUpdate) == 0){
+            $this->entityManager->getRepository(Goods::class)
+                    ->resetUpdateAttributeTd();
+            return;
+        }
         
         foreach ($goodsForUpdate as $good){
             if (time() >= $finishTime){
@@ -310,6 +328,12 @@ class GoodsManager
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateOemTd();
         
+        if (count($goodsForUpdate) == 0){
+            $this->entityManager->getRepository(Goods::class)
+                    ->resetUpdateOemTd();
+            return;
+        }
+        
         foreach ($goodsForUpdate as $good){
             if (time() >= $finishTime){
                 return;
@@ -331,6 +355,12 @@ class GoodsManager
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateImageTd();
+
+        if (count($goodsForUpdate) == 0){
+            $this->entityManager->getRepository(Goods::class)
+                    ->resetUpdateImageTd();
+            return;
+        }        
         
         foreach ($goodsForUpdate as $good){
             if (time() >= $finishTime){

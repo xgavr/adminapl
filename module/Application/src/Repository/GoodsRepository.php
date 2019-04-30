@@ -487,6 +487,30 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Сброс метки обновления номеров
+     * 
+     * @return integer
+     */
+    public function resetUpdateOemTd()
+    {
+        $updated = $this->getEntityManager()->getConnection()->update('goods', ['status_oem' => Goods::OEM_FOR_UPDATE], ['status_oem' => Goods::OEM_UPDATED]);
+        return $updated;
+        
+    }
+
+    /**
+     * Сброс метки обновления групп
+     * 
+     * @return integer
+     */
+    public function resetUpdateGroupTd()
+    {
+        $updated = $this->getEntityManager()->getConnection()->update('goods', ['status_group' => Goods::GROUP_FOR_UPDATE], ['status_group' => Goods::GROUP_UPDATED]);
+        return $updated;
+        
+    }
+
+    /**
      * Сброс метки обновления описаний
      * 
      * @return integer
@@ -496,6 +520,29 @@ class GoodsRepository extends EntityRepository
         $updated = $this->getEntityManager()->getConnection()->update('goods', ['status_description' => Goods::DESCRIPTION_FOR_UPDATE], ['status_description' => Goods::DESCRIPTION_UPDATED]);
         return $updated;
         
+    }
+
+    /**
+     * Сброс метки обновления машин
+     * 
+     * @return integer
+     */
+    public function resetUpdateCarTd()
+    {
+        $this->getEntityManager()->getConnection()->update('goods', ['status_car' => Goods::CAR_FOR_UPDATE], ['status_car' => Goods::CAR_UPDATED]);
+        $this->getEntityManager()->getConnection()->update('goods', ['status_car' => Goods::CAR_FOR_UPDATE], ['status_car' => Goods::CAR_UPDATING]);
+        return;        
+    }
+
+    /**
+     * Сброс метки обновления картинок
+     * 
+     * @return integer
+     */
+    public function resetUpdateImageTd()
+    {
+        $this->getEntityManager()->getConnection()->update('goods', ['status_image' => Goods::IMAGE_FOR_UPDATE], ['status_image' => Goods::IMAGE_UPDATED]);
+        return;  
     }
 
 
@@ -679,10 +726,10 @@ class GoodsRepository extends EntityRepository
      */
     public function removeGoodOem($good)
     {
-        $deleted = $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_TD]);
-        $deleted = $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_SUP]);
-        $deleted = $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_CROSS]);
-        return $deleted;        
+        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_TD]);
+        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_SUP]);
+        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_CROSS]);
+        return;        
     }
     
     /**
