@@ -23,19 +23,19 @@ class ArticleManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      *
-     * @var Application\Service\NameManager
+     * @var \Application\Service\NameManager
      */
     private $nameManager;
   
     /**
      *
-     * @var Application\Service\OemManager
+     * @var \Application\Service\OemManager
      */
     private $oemManager;
   

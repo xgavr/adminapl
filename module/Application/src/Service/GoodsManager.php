@@ -26,13 +26,13 @@ class GoodsManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
      /**
      * External manager.
-     * @var Application\Service\ExternalManager
+     * @var \Application\Service\ExternalManager
      */
     private $externalManager;
   

@@ -17,109 +17,109 @@ class ProcessingController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
 
     /**
      * PostManager manager.
-     * @var Admin\Service\PostManager
+     * @var \Admin\Service\PostManager
      */
     private $postManager;    
     
     /**
      * AutoruManager manager.
-     * @var Admin\Service\AutoruManager
+     * @var \Admin\Service\AutoruManager
      */
     private $autoruManager;    
     
     /**
      * TelegramManager manager.
-     * @var Admin\Service\TelegrammManager
+     * @var \Admin\Service\TelegrammManager
      */
     private $telegramManager;    
     
     /**
      * AplService manager.
-     * @var Admin\Service\AplService
+     * @var \Admin\Service\AplService
      */
     private $aplService;    
 
     /**
      * AplBankService manager.
-     * @var Admin\Service\AplBankService
+     * @var \Admin\Service\AplBankService
      */
     private $aplBankService;    
 
     /**
      * PriceManager manager.
-     * @var Application\Service\PriceManager
+     * @var \Application\Service\PriceManager
      */
     private $priceManager;    
 
     /**
      * RawManager manager.
-     * @var Application\Service\RawManager
+     * @var \Application\Service\RawManager
      */
     private $rawManager;    
 
     /**
      * SupplierManager manager.
-     * @var Application\Service\SupplierManager
+     * @var \Application\Service\SupplierManager
      */
     private $supplierManager;    
 
     /**
      * AdminManager manager.
-     * @var Admin\Service\AdminManager
+     * @var \Admin\Service\AdminManager
      */
     private $adminManager;    
 
     /**
      * AdminManager manager.
-     * @var Application\Service\ParseManager
+     * @var \Application\Service\ParseManager
      */
     private $parseManager;    
 
     /**
      * BankManager manager.
-     * @var Bank\Service\BankManager
+     * @var \Bank\Service\BankManager
      */
     private $bankManager;    
 
     /**
      * ProducerManager manager.
-     * @var Application\Service\ProducerManager
+     * @var \Application\Service\ProducerManager
      */
     private $producerManager;    
 
     /**
      * ArticleManager manager.
-     * @var Application\Service\ArticleManager
+     * @var \Application\Service\ArticleManager
      */
     private $articleManager;    
 
     /**
      * OemManager manager.
-     * @var Application\Service\OemManager
+     * @var \Application\Service\OemManager
      */
     private $oemManager;    
 
     /**
      * NameManager manager.
-     * @var Application\Service\NameManager
+     * @var \Application\Service\NameManager
      */
     private $nameManager;    
 
     /**
      * AssemblyManager manager.
-     * @var Application\Service\AssemblyManager
+     * @var \Application\Service\AssemblyManager
      */
     private $assemblyManager;    
 
     /**
      * GoodsManager manager.
-     * @var Application\Service\GoodsManager
+     * @var \Application\Service\GoodsManager
      */
     private $goodsManager;    
 

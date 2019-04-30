@@ -35,7 +35,7 @@ class NameManager
         
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
@@ -48,7 +48,7 @@ class NameManager
     /**
      * Добавить слово в локальный словарь
      * 
-     * @param Application\Entity\Token $token
+     * @param \Application\Entity\Token $token
      */
     public function addToMyDict($token)
     {
@@ -742,7 +742,7 @@ class NameManager
     
     /**
      * Выборка токенов из прайса и добавление их в таблицу токенов
-     * @param Appllication\Entity\Raw $raw
+     * @param \Appllication\Entity\Raw $raw
      */
     public function grabTokenGroupFromRaw($raw)
     {
