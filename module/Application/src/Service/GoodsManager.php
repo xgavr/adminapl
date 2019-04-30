@@ -231,30 +231,28 @@ class GoodsManager
     }
     
     /**
-     * Обновить машины у товаров
+     * Обновить номера из текдока у товаров
      */
-    public function updateCars()
+    public function updateOemTd()
     {        
         set_time_limit(900);
         $startTime = time();
         $finishTime = $startTime + 800;
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
-                ->findGoodsForUpdateCar();
-
+                ->findGoodsForUpdateOemTd();
+        
         if (count($goodsForUpdate) == 0){
             $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateCarTd();
+                    ->resetUpdateOemTd();
             return;
-        }        
+        }
         
         foreach ($goodsForUpdate as $good){
             if (time() >= $finishTime){
                 return;
             }
-//            $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
-            $this->externalManager->addCarsToGood($good);
-//            $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+            $this->externalManager->addOemsToGood($good);
         }
         
         return;
@@ -317,34 +315,6 @@ class GoodsManager
     }
 
     /**
-     * Обновить номера из текдока у товаров
-     */
-    public function updateOemTd()
-    {        
-        set_time_limit(900);
-        $startTime = time();
-        $finishTime = $startTime + 800;
-        
-        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
-                ->findGoodsForUpdateOemTd();
-        
-        if (count($goodsForUpdate) == 0){
-            $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateOemTd();
-            return;
-        }
-        
-        foreach ($goodsForUpdate as $good){
-            if (time() >= $finishTime){
-                return;
-            }
-            $this->externalManager->addOemsToGood($good);
-        }
-        
-        return;
-    }
-
-    /**
      * Обновить картинки из текдока у товаров
      */
     public function updateImageTd()
@@ -371,4 +341,35 @@ class GoodsManager
         
         return;
     }
+
+    /**
+     * Обновить машины у товаров
+     */
+    public function updateCars()
+    {        
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 800;
+        
+        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateCar();
+
+        if (count($goodsForUpdate) == 0){
+            $this->entityManager->getRepository(Goods::class)
+                    ->resetUpdateCarTd();
+            return;
+        }        
+        
+        foreach ($goodsForUpdate as $good){
+            if (time() >= $finishTime){
+                return;
+            }
+//            $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
+            $this->externalManager->addCarsToGood($good);
+//            $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+        }
+        
+        return;
+    }
+
 }
