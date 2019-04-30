@@ -175,10 +175,12 @@ class GoodsController extends AbstractActionController
         
         $total = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
-        $totalCar = $this->entityManager->getRepository(\Application\Entity\Make::class)
-                ->findGoods();
+//        $totalCar = $this->entityManager->getRepository(\Application\Entity\Make::class)
+//                ->findGoods();
         $aplIds = $this->entityManager->getRepository(Goods::class)
                 ->findAplIds();
+        $totalCar = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusCar' => Goods::CAR_UPDATED]);
         $totalOem = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusOem' => Goods::OEM_UPDATED]);
         $totalGroup = $this->entityManager->getRepository(Goods::class)
