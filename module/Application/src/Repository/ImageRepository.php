@@ -208,13 +208,15 @@ class ImageRepository extends EntityRepository
     /*
      * Загрузить содержимое папки c картинками товара
      * 
-     * @param \Application\Entity\Goods $folderName
      * @param integer $status
+     * @param string $folderName
      * 
      */
-    public function uploadImageFromTmpFolder($status)
+    public function uploadImageFromTmpFolder($status, $folderName = null)
     {
-        $folderName = $this->getTmpImageFolder();
+        if (!$folderName){
+            $folderName = $this->getTmpImageFolder();
+        }    
                 
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
@@ -222,7 +224,10 @@ class ImageRepository extends EntityRepository
                     continue;
                 }
                 if ($fileInfo->isFile()){
-                    $good = $this->findGoodByImageFileName($fileInfo->getPathname(), $status);
+                    $this->findGoodByImageFileName($fileInfo->getPathname(), $status);
+                }
+                if ($fileInfo->isDir()){
+                    $this->uploadImageFromTmpFolder($status, $fileInfo->getPathname());
                 }
             }
         }
