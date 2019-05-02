@@ -20,7 +20,7 @@ use Zend\Filter\Decompress;
  */
 class ImageManager {
     
-    const IMAGE_FILE_EXTENSIONS   = 'jpg, jpeg, bmp, png'; //допустимые расширения файлов c картинками
+    const IMAGE_FILE_EXTENSIONS   = 'jpg, jpeg, bmp, png, tif'; //допустимые расширения файлов c картинками
     
     /**
      * Doctrine entity manager.
