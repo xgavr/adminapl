@@ -39,13 +39,9 @@ class ImageController extends AbstractActionController
     {
         $files = $this->entityManager->getRepository(Images::class)
                 ->getTmpImages();
-        
-        $tmpDir = $this->entityManager->getRepository(Images::class)
-                ->getTmpImageFolder();
-        
+
         return new ViewModel([
-            'files' => $files,
-            'tmpDir' => Images::publicPath($tmpDir),
+            'files' => array_slice($files, 0, 20),
             'imageManager' => $this->imageManager,
         ]);
     }
@@ -82,12 +78,9 @@ class ImageController extends AbstractActionController
     {
         $filename = $this->params()->fromQuery('file');
 
-        $tmpDir = $this->entityManager->getRepository(Images::class)
-                ->getTmpImageFolder();
-        
-        if (file_exists($tmpDir.'/'.$filename)){
+        if (file_exists($filename)){
             $this->entityManager->getRepository(Images::class)
-                    ->findGoodByImageFileName($tmpDir.'/'.$filename, Images::STATUS_SUP);
+                    ->findGoodByImageFileName($filename, Images::STATUS_SUP);
         }
         
         return new JsonModel([
@@ -99,11 +92,8 @@ class ImageController extends AbstractActionController
     {
         $filename = $this->params()->fromQuery('file');
 
-        $tmpDir = $this->entityManager->getRepository(Images::class)
-                ->getTmpImageFolder();
-        
-        if (file_exists($tmpDir.'/'.$filename)){
-            $this->imageManager->decompress($tmpDir.'/'.$filename);
+        if (file_exists($filename)){
+            $this->imageManager->decompress($filename);
         }
         
         return new JsonModel([
@@ -155,11 +145,8 @@ class ImageController extends AbstractActionController
     {
         $filename = $this->params()->fromQuery('file');
 
-        $tmpDir = $this->entityManager->getRepository(Images::class)
-                ->getTmpImageFolder();
-        
-        if (file_exists($tmpDir.'/'.$filename)){
-            unlink($tmpDir.'/'.$filename);
+        if (file_exists($filename)){
+            unlink($filename);
         }
         
         return new JsonModel([

@@ -78,6 +78,16 @@ class ImageManager {
     }
     
     /**
+     * Путь от корня
+     * 
+     * @param string $filename
+     */
+    public function publicPath($filename)
+    {
+        return Images::publicPath($filename);
+    }
+    
+    /**
      * Распаковать файл архива
      * 
      * @param string $filename

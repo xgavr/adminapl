@@ -19,8 +19,8 @@ $this->pageBreadcrumbs()->setItems([
                 <?php foreach($files as $fileInfo):?>
                     <div class="thumbnail">
                         <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
-                            <a href="<?= $tmpDir.'/'.$fileInfo->getFileName() ?>" target="_blank">
-                                <img src="<?= $tmpDir.'/'.$fileInfo->getFileName() ?>" class="img-thumbnail" alt="<?= $fileInfo->getFileName() ?>">
+                            <a href="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" target="_blank">
+                                <img src="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" class="img-thumbnail" alt="<?= $fileInfo->getFileName() ?>">
                             </a>
                         <?php endif;?>
                         <div class="caption panel-body small">
@@ -29,18 +29,18 @@ $this->pageBreadcrumbs()->setItems([
                             </div>
                             <div class="pull-right">
                                 <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
-                                    <button value="/image/upload-tmp-file/?file=<?= $fileInfo->getFileName() ?>" class="btn btn-default btn-xs refresh-button"
+                                    <button value="/image/upload-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
                                             title="Привязать картинку к товару">
                                         <span class="glyphicon glyphicon-import" ></span>
                                     </button>                             
                                 <?php endif;?>
                                 <?php if ($imageManager->isCompressFile($fileInfo->getPathName())): ?>
-                                    <button value="/image/decompress-tmp-file/?file=<?= $fileInfo->getFileName() ?>" class="btn btn-default btn-xs refresh-button"
+                                    <button value="/image/decompress-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
                                             title="Распаковать">
                                         <span class="glyphicon glyphicon-compressed" ></span>
                                     </button>                             
                                 <?php endif;?>
-                                <button value="/image/delete-tmp-file/?file=<?= $fileInfo->getFileName() ?>" class="btn btn-warning btn-xs this-delete"
+                                <button value="/image/delete-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-warning btn-xs this-delete"
                                         title="Удалить">
                                     <span class="glyphicon glyphicon-remove" ></span>
                                 </button>                             

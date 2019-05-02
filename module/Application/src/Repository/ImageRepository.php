@@ -116,12 +116,16 @@ class ImageRepository extends EntityRepository
     
     /**
      * Получить картинки во временной папке
-     * 
+     * @param string $tmpFolder
      * @return array;
      */
-    public function getTmpImages()
+    public function getTmpImages($tmpFolder = null)
     {
-        $tmpFolder = $this->getTmpImageFolder();
+        
+        if (!$tmpFolder){
+            $tmpFolder = $this->getTmpImageFolder();
+        }
+        
         $result = [];
         if (is_dir($tmpFolder)){
             foreach (new \DirectoryIterator($tmpFolder) as $fileInfo) {
@@ -132,7 +136,7 @@ class ImageRepository extends EntityRepository
                     $result[] = $fileInfo->getFileInfo();                            
                 }
                 if ($fileInfo->isDir()){
-                    $result[] = $fileInfo->getFileInfo();                            
+                    $result = array_merge($result, $this->getTmpImages($fileInfo->getPathname()));                            
                 }
             }
         }
@@ -202,7 +206,7 @@ class ImageRepository extends EntityRepository
     }
     
     /*
-     * Очистить содержимое папки c картинками товара
+     * Загрузить содержимое папки c картинками товара
      * 
      * @param \Application\Entity\Goods $folderName
      * @param integer $status
