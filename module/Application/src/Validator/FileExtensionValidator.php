@@ -10,7 +10,7 @@ use Zend\Validator\File\Extension;
  */
 
 /**
- * Description of IsVendorCodeValidator
+ * Description of FileExtensionValidator
  *
  * @author Daddy
  */

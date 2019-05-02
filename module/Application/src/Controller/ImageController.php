@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Images;
+use Application\Form\UploadForm;
 
 class ImageController extends AbstractActionController
 {
@@ -45,6 +46,7 @@ class ImageController extends AbstractActionController
         return new ViewModel([
             'files' => $files,
             'tmpDir' => Images::publicPath($tmpDir),
+            'imageManager' => $this->imageManager,
         ]);
     }
     
@@ -92,6 +94,62 @@ class ImageController extends AbstractActionController
             'ok',
         ]);
     }
+    
+    public function decompressTmpFileAction()
+    {
+        $filename = $this->params()->fromQuery('file');
+
+        $tmpDir = $this->entityManager->getRepository(Images::class)
+                ->getTmpImageFolder();
+        
+        if (file_exists($tmpDir.'/'.$filename)){
+            $this->imageManager->decompress($tmpDir.'/'.$filename);
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
+    
+    public function uploadTmpImageFormAction()
+    {
+
+        $imageFolder = $this->entityManager->getRepository(Images::class)
+                ->getTmpImageFolder();
+        
+        $form = new UploadForm($imageFolder);
+
+        if($this->getRequest()->isPost()) {
+            
+            $data = array_merge_recursive(
+                $this->params()->fromPost(),
+                $this->params()->fromFiles()
+            );            
+            //var_dump($data); exit;
+
+            // Заполняем форму данными.
+            $form->setData($data);
+            if($form->isValid()) {
+                                
+                // Получаем валадированные данные формы.
+                $data = $form->getData();
+                //$this->imageManager->decompress($data['name']['tmp_name']);
+              
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+            
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'form' => $form,
+        ]);
+        
+    }
+    
     
     public function deleteTmpFileAction()
     {

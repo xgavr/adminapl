@@ -20,7 +20,8 @@ use Zend\Filter\Decompress;
  */
 class ImageManager {
     
-
+    const IMAGE_FILE_EXTENSIONS   = 'jpg, jpeg, bmp, png'; //допустимые расширения файлов c картинками
+    
     /**
      * Doctrine entity manager.
      * @var Doctrine\ORM\EntityManager
@@ -51,6 +52,55 @@ class ImageManager {
         $this->adminManager = $adminManager;
     }
     
+    /**
+     * Проверка на файл с картинками
+     * 
+     * @param string $filename
+     * @return bool
+     */
+    public function isImageFile($filename)
+    {
+        $validator = new FileExtensionValidator(self::IMAGE_FILE_EXTENSIONS);
+        
+        return $validator->isValid($filename);
+    }
+    
+    /**
+     * Проверка на файл с архивом
+     * 
+     * @param string $filename
+     * @return bool
+     */
+    public function isCompressFile($filename)
+    {
+        $validator = new IsCompressed();
+        return $validator->isValid($filename);
+    }
+    
+    /**
+     * Распаковать файл архива
+     * 
+     * @param string $filename
+     * @return null
+     */
+    public function decompress($filename)
+    {
+        $pathinfo = pathinfo($filename);
+        $validator = new IsCompressed();
+        if ($validator->isValid($filename)){
+            setlocale(LC_ALL,'ru_RU.UTF-8');
+            $filter = new Decompress([
+                'adapter' => $pathinfo['extension'],
+                'options' => [
+                    'target' => $pathinfo['dirname'],
+                ],
+            ]);
+            if ($filter->filter($filename)){
+                unlink($filename);
+            }
+        }
+        return;
+    }
     
     /**
      * Проверка почты в ящике для картинок
@@ -84,23 +134,9 @@ class ImageManager {
                                     $filename = $targetFolder.'/'.$attachment['filename'];
 
                                     if (copy($attachment['temp_file'], $filename)){
-                                        unlink($attachment['temp_file']);
+                                        unlink($attachment['temp_file']);  
                                         
-                                        $pathinfo = pathinfo($filename);
-                                        $validator = new IsCompressed();
-                                        if ($validator->isValid($filename)){
-                                            setlocale(LC_ALL,'ru_RU.UTF-8');
-                                            $filter = new Decompress([
-                                                'adapter' => $pathinfo['extension'],
-                                                'options' => [
-                                                    'target' => $pathinfo['dirname'],
-                                                ],
-                                            ]);
-                                            if ($filter->filter($filename)){
-                                                unlink($filename);
-                                            }
-                                        }
-
+                                        $this->decompress($filename);
                                     }
                                 }    
                             }

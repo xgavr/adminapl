@@ -131,6 +131,9 @@ class ImageRepository extends EntityRepository
                 if ($fileInfo->isFile()){
                     $result[] = $fileInfo->getFileInfo();                            
                 }
+                if ($fileInfo->isDir()){
+                    $result[] = $fileInfo->getFileInfo();                            
+                }
             }
         }
         
