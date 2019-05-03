@@ -27,6 +27,7 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="caption panel-body small">
                             <div class="pull-left">
                                 <?= $fileInfo->getFileName() ?>
+                                <?= mime_content_type($fileInfo->getPathname()) ?>
                             </div>
                             <div class="pull-right">
                                 <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
