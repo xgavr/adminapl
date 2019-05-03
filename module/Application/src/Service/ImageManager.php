@@ -113,6 +113,21 @@ class ImageManager {
     }
     
     /**
+     * Конвертировать tiff в jpg
+     * 
+     * @param string $filename
+     * @return string
+     */
+    public function tiff2jpg($filename)
+    {
+        $image = new \Imagick($filename);
+        $image->setimageformat('jpg');
+        $image->writeimage($filename);
+        
+        return $filename;
+    }
+    
+    /**
      * Проверка почты в ящике для картинок
      * 
      */

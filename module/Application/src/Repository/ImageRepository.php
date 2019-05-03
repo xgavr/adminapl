@@ -175,6 +175,10 @@ class ImageRepository extends EntityRepository
      */
     public function findGoodByImageFileName($filename, $status)
     {
+        if (mime_content_type($filename) == 'image/tiff'){
+            return;
+        }
+        
         $fileInfo = pathinfo($filename);
         $code = $fileInfo['filename'];
         

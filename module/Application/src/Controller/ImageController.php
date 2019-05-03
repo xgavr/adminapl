@@ -101,6 +101,19 @@ class ImageController extends AbstractActionController
         ]);
     }
     
+    public function convertToJpgAction()
+    {
+        $filename = $this->params()->fromQuery('file');
+
+        if (file_exists($filename)){
+            $this->imageManager->tiff2jpg($filename);
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
+    
     public function uploadTmpImageFormAction()
     {
 
