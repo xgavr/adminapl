@@ -17,6 +17,7 @@ $this->pageBreadcrumbs()->setItems([
         <div class="panel-group">
             <?php if (count($files)): ?>
                 <?php foreach($files as $fileInfo):?>
+                    <?php if (file_exists($fileInfo->getPathname())):?>
                     <div class="thumbnail">
                         <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
                             <a href="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" target="_blank">
@@ -47,6 +48,7 @@ $this->pageBreadcrumbs()->setItems([
                             </div>                                                                            
                         </div>                    
                     </div>
+                    <?php endif;?>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
