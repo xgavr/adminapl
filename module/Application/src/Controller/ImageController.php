@@ -39,7 +39,8 @@ class ImageController extends AbstractActionController
     {
         $files = $this->entityManager->getRepository(Images::class)
                 ->getTmpImages();
-
+        shuffle($files);
+        
         return new ViewModel([
             'files' => array_slice($files, 0, 20),
             'imageManager' => $this->imageManager,
