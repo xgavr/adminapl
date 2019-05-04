@@ -133,4 +133,35 @@ class GenericGroupRepository extends EntityRepository{
        
        return;
     }
+    
+    /**
+     * Поиск группы по группе наименований
+     * 
+     * @param \Application\Entity\TokenGroup $tokenGroup
+     */
+    public function findGenericTokenGroup($tokenGroup)
+    {
+        if ($tokenGroup){
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('gg')
+                    ->from(\Application\Entity\Goods::class, 'g')
+                    ->join(GenericGroup::class, 'gg', 'WITH', 'gg.id = g.genericGroup')
+                    ->where('g.tokenGroup = ?1')
+                    ->andWhere('gg.tdId != 0')
+                    ->setParameter('1', $tokenGroup->getId())
+                    ;
+
+            $data = $queryBuilder->getQuery()->getResult();
+
+            if (count($data) == 1){
+                foreach ($data as $row){
+                    return $row;
+                }
+            }
+        }    
+        return;        
+    }
 }

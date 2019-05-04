@@ -624,7 +624,7 @@ class ExternalManager
     /**
      * Добавление номеров к товару
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      */
     public function updateGoodGenericGroup($good)
     {
@@ -641,7 +641,12 @@ class ExternalManager
                 $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
                         ->findOneByTdId($genericArticleId);
             }
-        }    
+        }   
+        
+        if (!$genericGroup){
+            $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
+                    ->findGenericTokenGroup($good->getTokenGroup());
+        }
         
         if ($genericGroup){
             $this->entityManager->getRepository(Goods::class)
