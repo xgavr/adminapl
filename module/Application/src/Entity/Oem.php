@@ -60,7 +60,7 @@ class Oem {
     protected $source;        
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="oem") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="oems") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     protected $good;    

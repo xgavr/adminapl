@@ -140,6 +140,12 @@ class Goods {
     protected $images;
     
     /**
+     * @ORM\OneToMany(targetEntity="Application\Entity\Oem", mappedBy="good")
+     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+     */
+    protected $oems;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\TokenGroup", inversedBy="goods") 
      * @ORM\JoinColumn(name="token_group_id", referencedColumnName="id")
      * 
@@ -172,6 +178,7 @@ class Goods {
       $this->cart = new ArrayCollection(); 
       $this->cars = new ArrayCollection();
       $this->attributeValues = new ArrayCollection();
+      $this->oems = new ArrayCollection();
     }
     
   
@@ -316,6 +323,24 @@ class Goods {
     public function addImage($image) 
     {
         $this->images[] = $image;
+    }
+    
+    /**
+     * Возвращает номера для этого товара.
+     * @return array
+     */
+    public function getOems() 
+    {
+        return $this->oems;
+    }
+    
+    /**
+     * Добавляет новый номер к этому товару.
+     * @param $oem
+     */
+    public function addOem($oem) 
+    {
+        $this->oems[] = $oem;
     }
     
     /**

@@ -200,7 +200,7 @@ class AutodbManager
     /**
      * Получить articleId
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * 
      * @return array|Esception
      */
@@ -214,18 +214,78 @@ class AutodbManager
         ];
         
         $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
+
+        if (isset($result['data'])){
+            if (isset($result['data']['array'])){
+                return $result;
+            }
+        }
         
-        if (!$result['data']){
+        $params['numberType'] = 10;
+        $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
+
+        if (isset($result['data'])){
+            if (isset($result['data']['array'])){
+                return $result;
+            }
+        }
+        
+        return;
+    }
+    
+    /**
+     * Получить похожий по группе articleId
+     * 
+     * @param \Application\Entity\Goods $good
+     * 
+     * @return array|null|Exception
+     */
+    public function getArticleDirectSearchAllNumbersWithGeneric($good)
+    {
+        if ($good->getGenericGroup()){
+            $params = [
+                'articleNumber' => $good->getCode(), 
+                'articleCountry' => 'RU',            
+                'genericArticleId' => $good->getGenericGroup()->getTdId(),
+                'numberType' => 0,
+                'searchExact' => true,
+            ];
+
+            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
+
+            if (isset($result['data'])){
+                if (isset($result['data']['array'])){
+                    return $result;
+                }
+            }
+            
             $params['numberType'] = 10;
             $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
+
+            if (isset($result['data'])){
+                if (isset($result['data']['array'])){
+                    return $result;
+                }
+            }
+
+            foreach ($good->getOems() as $oem){
+                $params['articleNumber'] = $oem->getOe();
+                $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
+                if (isset($result['data'])){
+                    if (isset($result['data']['array'])){
+                        return $result;
+                    }
+                }
+            }    
         }
-        return $result;
+        
+        return;
     }
     
     /**
      * Плучить наиболее подходящий к товару артикул
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * 
      * @return array
      */
@@ -247,14 +307,49 @@ class AutodbManager
     }
     
     /**
+     * Плучить похожий товару артикул
+     * 
+     * @param \Application\Entity\Goods $good
+     * 
+     * @return array
+     */
+    public function getSimilarArticle($good)
+    {
+        $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good);
+        if ($articles['data']){
+            foreach ($articles['data']['array'] as $row){
+                return $row;
+            }
+        }
+        
+        return;
+    }
+    
+    /**
      * Получить артикул текдока
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * @return integer|null
      */
     public function getBestArticleId($good)
     {
         $tdData = $this->getBestArticle($good);
+        if (is_numeric($tdData['articleId'])){
+            return $tdData['articleId'];
+        }
+        
+        return;
+    }
+
+    /**
+     * Получить похожий артикул текдока
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return integer|null
+     */
+    public function getSimilarArticleId($good)
+    {
+        $tdData = $this->getSimilarArticle($good);
         if (is_numeric($tdData['articleId'])){
             return $tdData['articleId'];
         }
@@ -325,6 +420,23 @@ class AutodbManager
     public function getDirectInfo($good, $params = null)
     {
         $article = $this->getBestArticle($good);
+        
+        if (is_array($article)){
+            return $this->getDirectArticlesByIds6([$article['articleId']], $params);
+        }
+        
+        return;
+    }
+
+    /**
+     * Получить информацию по похожему товару
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return array
+     */
+    public function getSimilarDirectInfo($good, $params = null)
+    {
+        $article = $this->getSimilarArticle($good);
         
         if (is_array($article)){
             return $this->getDirectArticlesByIds6([$article['articleId']], $params);
@@ -425,12 +537,24 @@ class AutodbManager
     /**
      * Получить машины, связанные с товаром
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * @return array|null
      */
     public function getGoodLinked($good)
     {
         $article = $this->getBestArticleId($good);        
+        return $this->getLinked($article);        
+    }
+    
+    /**
+     * Получить машины, связанные с похожим товаром
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return array|null
+     */
+    public function getSimilarGoodLinked($good)
+    {
+        $article = $this->getSimilarArticleId($good);        
         return $this->getLinked($article);        
     }
     
@@ -449,7 +573,7 @@ class AutodbManager
     /**
      * Скачать картинку товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * 
      */
     public function getImages($good)
@@ -478,4 +602,38 @@ class AutodbManager
         
         return;
     }
+    
+    /**
+     * Скачать картинку похожего товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * 
+     */
+    public function getSimilarImages($good)
+    {
+        $articleInfo = $this->getSimilarDirectInfo($good, ['documents' => true]);
+        
+        if (is_array($articleInfo)){
+
+            $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
+            $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
+        
+            foreach($articleInfo['data']['array'] as $articleDocuments){
+                if (isset($articleDocuments['articleDocuments'])){
+                    if (isset($articleDocuments['articleDocuments']['array'])){
+                        foreach($articleDocuments['articleDocuments']['array'] as $document){
+                            if ($document['docId'] && isset($document['docFileName'])){
+                                $uri = $this->getDocImageUri($document['docId']);
+                                $this->entityManager->getRepository(Images::class)
+                                        ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_SIMILAR);
+                            }
+                        }
+                    }    
+                }    
+            }
+        }
+        
+        return;
+    }
+    
 }
