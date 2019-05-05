@@ -565,6 +565,9 @@ class GoodsController extends AbstractActionController
         }        
 
         $data = $this->externalManager->autoDb('getInfo', ['good' => $goods]);
+        if (!$data){
+            $data = $this->externalManager->autoDb('getInfo', ['good' => $goods]);            
+        }
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

@@ -36,14 +36,14 @@ class ExternalManager
     /**
      * Менеджер auto-db
      * 
-     * @var Application\Service\ExternalDB\AutodbManager 
+     * @var \Application\Service\ExternalDB\AutodbManager 
      */
     private $autoDbManager;
     
     /**
      * Менеджер partsApi
      * 
-     * @var Application\Service\ExternalDB\PartsApiManager 
+     * @var \Application\Service\ExternalDB\PartsApiManager 
      */
     private $partsApiManager;
     
@@ -71,6 +71,7 @@ class ExternalManager
             case 'getArticle': $result = $this->autoDbManager->getArticleDirectSearchAllNumbersWithState($params['good']); break;
             case 'getBestArticle': $result = $this->autoDbManager->getBestArticle($params['good']); break;
             case 'getInfo': $result = $this->autoDbManager->getDirectInfo($params['good']); break;
+            case 'getSimilarInfo': $result = $this->autoDbManager->getSimilarDirectInfo($params['good']); break;
             case 'getLinked': $result = $this->autoDbManager->getGoodLinked($params['good']); break;
             case 'getImages': $result = $this->autoDbManager->getImages($params['good']); break;
             case 'getGenericArticles': $result = $this->autoDbManager->getGenericArticles(); break;
