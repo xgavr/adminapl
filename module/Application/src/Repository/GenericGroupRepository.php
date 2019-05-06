@@ -174,7 +174,7 @@ class GenericGroupRepository extends EntityRepository{
         if ($data){
             if (count($data) == 1){
                 foreach ($data as $row){
-                    return $row;
+                    return $row[0];
                 }
             }
         }
