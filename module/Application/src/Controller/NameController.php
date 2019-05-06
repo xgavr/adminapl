@@ -561,6 +561,7 @@ class NameController extends AbstractActionController
             'nameManager' => $this->nameManager,
             'totalGoodsCount' => $totalGoodsCount,
             'tdGroups' => $tdGroups,
+            'tdGroupActive' => $tdGroup,
         ]);
     }    
     
