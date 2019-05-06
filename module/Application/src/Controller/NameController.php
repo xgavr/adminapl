@@ -551,6 +551,7 @@ class NameController extends AbstractActionController
         
         $tdGroups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
                 ->genericTokenGroup($tokenGroup);
+        var_dump($tdGroups); exit;
 
         // Render the view template.
         return new ViewModel([
