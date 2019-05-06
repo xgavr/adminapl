@@ -83,12 +83,13 @@ $this->pageBreadcrumbs()->setItems([
         </table>
     </div>
     <div class="col-md-3">
-        <ul>
+        <ul class="list-group">
             <?php if ($tdGroups):?>
                 <?php foreach ($tdGroups as $tdGroup):?>
-                    <li class="<?= ($tdGroupActive == $tdGroup->getId()) ? 'active':''?>">
-                        <a href='<?= $this->url('name', ['action'=>'view-token-group', 'id'=>$tokenGroup->getId()], ['query' => ['tdGroup' => $tdGroup->getId()]])?>'>
-                            <?= $tdGroup->getName()?>
+                    <li class="list-group-item <?= ($tdGroupActive == $tdGroup['gg']->getId()) ? 'active':''?>">
+                        <span class="badge"><?= $tdGroup['goodCount']?></span>
+                        <a href='<?= $this->url('name', ['action'=>'view-token-group', 'id'=>$tokenGroup->getId()], ['query' => ['tdGroup' => $tdGroup['gg']->getId()]])?>'>
+                            <?= $tdGroup['gg']->getName()?>
                         </a>                    
                     </li>
                 <?php endforeach;?>
