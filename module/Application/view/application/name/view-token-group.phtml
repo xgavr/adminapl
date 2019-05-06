@@ -86,7 +86,11 @@ $this->pageBreadcrumbs()->setItems([
         <ul>
             <?php if ($tdGroups):?>
                 <?php foreach ($tdGroups as $tdGroup):?>
-                    <li><?= $tdGroup->getName()?></li>
+                    <li>
+                        <a href='<?= $this->url('name', ['action'=>'view-token-group', 'id'=>$tokenGroup->getId()], ['query' => ['tdGroup' => $tdGroup->getId()]])?>'>
+                            <?= $tdGroup->getName()?>
+                        </a>                    
+                    </li>
                 <?php endforeach;?>
             <?php endif;?>        
         </ul>

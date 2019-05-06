@@ -547,9 +547,10 @@ class TokenRepository  extends EntityRepository
      * Найти товары группы наименований
      * 
      * @param Application\Entity\TokenGroup $tokenGroup
+     * @param array $params
      * @return object
      */
-    public function findTokenGroupGoods($tokenGroup)
+    public function findTokenGroupGoods($tokenGroup, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -559,6 +560,15 @@ class TokenRepository  extends EntityRepository
             ->where('g.tokenGroup = ?1')    
             ->setParameter('1', $tokenGroup->getId())
             ;
+        if (is_array($params)){
+            if (isset($param['tdGroup'])){
+                if ($param['tdGroup']){
+                    $queryBuilder->andWhere('g.genericGroup = ?2')
+                            ->setParameter('2', $param['tdGroup'])
+                            ;
+                }    
+            }
+        }
         
         return $queryBuilder->getQuery();            
     }

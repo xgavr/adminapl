@@ -518,6 +518,7 @@ class NameController extends AbstractActionController
     {       
         $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
         $page = $this->params()->fromQuery('page', 1);
+        $tdGroup = $this->params()->fromQuery('tdGroup');
 
         if ($tokenGroupId<0) {
             $this->getResponse()->setStatusCode(404);
@@ -539,7 +540,7 @@ class NameController extends AbstractActionController
         
         
         $goodsQuery = $this->entityManager->getRepository(TokenGroup::class)
-                        ->findTokenGroupGoods($tokenGroup);
+                        ->findTokenGroupGoods($tokenGroup, ['tdGroup' => $tdGroup]);
 
         $adapter = new DoctrineAdapter(new ORMPaginator($goodsQuery, false));
         $paginator = new Paginator($adapter);
