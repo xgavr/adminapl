@@ -560,11 +560,12 @@ class TokenRepository  extends EntityRepository
             ->where('g.tokenGroup = ?1')    
             ->setParameter('1', $tokenGroup->getId())
             ;
+        
         if (is_array($params)){
-            if (isset($param['tdGroup'])){
-                if ($param['tdGroup']){
+            if (isset($params['tdGroup'])){
+                if ($params['tdGroup']){
                     $queryBuilder->andWhere('g.genericGroup = ?2')
-                            ->setParameter('2', $param['tdGroup'])
+                            ->setParameter('2', $params['tdGroup'])
                             ;
                 }    
             }
