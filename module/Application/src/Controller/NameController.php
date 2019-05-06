@@ -549,7 +549,7 @@ class NameController extends AbstractActionController
         $totalGoodsCount = $paginator->getTotalItemCount();
         
         $tdGroups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
-                ->findGenericTokenGroup($tokenGroup);
+                ->genericTokenGroup($tokenGroup);
 
         // Render the view template.
         return new ViewModel([
