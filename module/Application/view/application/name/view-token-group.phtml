@@ -20,65 +20,78 @@ $this->pageBreadcrumbs()->setItems([
 
 </h1>
 <?= $tokenGroup->getLemms()?>
-<table class="table table-striped">
-    <tr>
-        <td colspan="2"  style="font-size: x-small">            
-            <?php if ($prev):?>
-                <a href="/name/view-token-group/<?= $prev[0]->getId()?>">&larr;<?= ($prev[0]->getName()) ? $prev[0]->getName():$prev[0]->getLemms() ?></a>
-            <?php endif;?>            
-        </td>
-        <td  colspan="3" align="right"  style="font-size: x-small">
-            <?php if ($next):?>
-                <a href="/name/view-token-group/<?= $next[0]->getId()?>"><?= ($next[0]->getName()) ? $next[0]->getName():$next[0]->getLemms()?>&rarr;</a>
-            <?php endif;?>                            
-        </td>
-    </tr>
-    <tr>
-        <td colspan="4">
-            <?= $this->paginationControl($goods,
-                        'Sliding',
-                        'application/partial/paginator', 
-                        ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
-            
-        </td>
-        <td align="right" valign="center">
-            <b><?= $tokenGroup->getGoodCount()?></b>
-            <button value="/name/update-good-count-token-group/<?= $tokenGroup->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
-                    title="Обновить количество товара">
-                <span class="glyphicon glyphicon-refresh" ></span>
-            </button> 
-        </td>
-    </tr>
-    <?php    foreach ($goods as $good):?>
-        <tr>
-            <td colspan="6">
-                <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()]);?>">
-                    <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
-                </a>   
-                <div>
-                    <?php foreach($good->getArticles() as $article):?>
-                        <?php foreach ($article->getRawprice() as $rawprice):?>
-                            <?php if ($rawprice->getStatus() == $rawprice::STATUS_PARSED):?>
-                                <span>
-                                    <?= $rawprice->getGoodname();?>
-                                </span>
-                            <? endif; ?>        
-                        <?php endforeach;?>                            
-                    <?php endforeach;?>                            
-                </div>
-            </td>
-        </tr>
-    <?php endforeach;?>        
-    <tr>
-        <td colspan="5">
-            <?= $this->paginationControl($goods,
-                        'Sliding',
-                        'application/partial/paginator', 
-                        ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
-            
-        </td>
-    </tr>
-</table>
+<div class="row">
+    <div class="col-md-9">
+        <table class="table table-striped">
+            <tr>
+                <td colspan="2"  style="font-size: x-small">            
+                    <?php if ($prev):?>
+                        <a href="/name/view-token-group/<?= $prev[0]->getId()?>">&larr;<?= ($prev[0]->getName()) ? $prev[0]->getName():$prev[0]->getLemms() ?></a>
+                    <?php endif;?>            
+                </td>
+                <td  colspan="3" align="right"  style="font-size: x-small">
+                    <?php if ($next):?>
+                        <a href="/name/view-token-group/<?= $next[0]->getId()?>"><?= ($next[0]->getName()) ? $next[0]->getName():$next[0]->getLemms()?>&rarr;</a>
+                    <?php endif;?>                            
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <?= $this->paginationControl($goods,
+                                'Sliding',
+                                'application/partial/paginator', 
+                                ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
+
+                </td>
+                <td align="right" valign="center">
+                    <b><?= $tokenGroup->getGoodCount()?></b>
+                    <button value="/name/update-good-count-token-group/<?= $tokenGroup->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                            title="Обновить количество товара">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                </td>
+            </tr>
+            <?php    foreach ($goods as $good):?>
+                <tr>
+                    <td colspan="6">
+                        <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()]);?>">
+                            <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
+                        </a>   
+                        <div>
+                            <?php foreach($good->getArticles() as $article):?>
+                                <?php foreach ($article->getRawprice() as $rawprice):?>
+                                    <?php if ($rawprice->getStatus() == $rawprice::STATUS_PARSED):?>
+                                        <span>
+                                            <?= $rawprice->getGoodname();?>
+                                        </span>
+                                    <? endif; ?>        
+                                <?php endforeach;?>                            
+                            <?php endforeach;?>                            
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach;?>        
+            <tr>
+                <td colspan="5">
+                    <?= $this->paginationControl($goods,
+                                'Sliding',
+                                'application/partial/paginator', 
+                                ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-3">
+        <ul>
+            <?php if ($tdGroups):?>
+                <?php foreach ($tdGroups as $tdGroup):?>
+                    <li><?= $tdGroup->getName()?></li>
+                <?php endforeach;?>
+            <?php endif;?>        
+        </ul>
+    </div>    
+</div>
 
 <script type="text/javascript">
     /**

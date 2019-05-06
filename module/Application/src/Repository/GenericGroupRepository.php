@@ -134,12 +134,13 @@ class GenericGroupRepository extends EntityRepository{
        return;
     }
     
+    
     /**
      * Поиск группы по группе наименований
      * 
      * @param \Application\Entity\TokenGroup $tokenGroup
      */
-    public function findGenericTokenGroup($tokenGroup)
+    public function genericTokenGroup($tokenGroup)
     {
         if ($tokenGroup){
             $entityManager = $this->getEntityManager();
@@ -155,14 +156,28 @@ class GenericGroupRepository extends EntityRepository{
                     ->setParameter('1', $tokenGroup->getId())
                     ;
 
-            $data = $queryBuilder->getQuery()->getResult();
+            return $queryBuilder->getQuery()->getResult();
+        }    
+        return;        
+    }
 
+    /**
+     * Выбор группы по группе наименований
+     * 
+     * @param \Application\Entity\TokenGroup $tokenGroup
+     */
+    public function findGenericTokenGroup($tokenGroup)
+    {
+        $data = $this->genericTokenGroup($tokenGroup);
+
+        if ($data){
             if (count($data) == 1){
                 foreach ($data as $row){
                     return $row;
                 }
             }
-        }    
-        return;        
+        }
+        
+        return;
     }
 }
