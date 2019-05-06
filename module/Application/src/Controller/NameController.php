@@ -553,7 +553,6 @@ class NameController extends AbstractActionController
                 ->genericTokenGroup($tokenGroup);
 
         // Render the view template.
-        var_dump($tdGroup);
         return new ViewModel([
             'tokenGroup' => $tokenGroup,
             'goods' => $paginator,
