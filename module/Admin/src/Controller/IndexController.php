@@ -23,31 +23,31 @@ class IndexController extends AbstractActionController
     
     /**
      * TelegrammManager manager.
-     * @var Admin\Service\TelegrammManager
+     * @var \Admin\Service\TelegrammManager
      */
     private $telegrammManager;    
     
     /**
      * AdminManager manager.
-     * @var Admin\Service\AdminManager
+     * @var \Admin\Service\AdminManager
      */
     private $adminManager;    
     
     /**
      * SmsManager manager.
-     * @var Admin\Service\SmsManager
+     * @var \Admin\Service\SmsManager
      */
     private $smsManager;    
 
     /**
      * SmsManager manager.
-     * @var Admin\Service\TamTamManager
+     * @var \Admin\Service\TamTamManager
      */
     private $tamtamManager;    
 
     /**
      * AnnManager manager.
-     * @var Admin\Service\TamTamManager
+     * @var \Admin\Service\TamTamManager
      */
     private $annManager;    
     
@@ -600,7 +600,11 @@ class IndexController extends AbstractActionController
     {
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_admin_chat_id']){
-            $result = $this->telegrammManager->sendMessage([
+//            $result = $this->telegrammManager->sendMessage([
+//                'chat_id' => $settings['telegram_admin_chat_id'], 
+//                'text' => 'Привет!',
+//            ]);
+            $result = $this->telegrammManager->addPostponeMesage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет!',
             ]);

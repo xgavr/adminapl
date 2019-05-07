@@ -25,13 +25,19 @@ class TelegrammManager {
 
     const LOG_FOLDER = './data/log/'; //папка логов
     const LOG_FILE = './data/log/telegramm.log'; //лог 
+    const POSTPONE_MSG_FILE = './data/log/telegram_postpone_msg.log'; //сообщения для отправки
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
+    /**
+     * Менеджер админ
+     * 
+     * @var \Admin\Service\AdminManager
+     */
     private $adminManager;   
     
     public function __construct($entityManager, $adminManager)
@@ -139,6 +145,55 @@ class TelegrammManager {
         return;
     }
     
+    /**
+     * Добавить отложенное сообщение
+     * 
+     * @param array $params
+     */
+    public function addPostponeMesage($params)
+    {
+        if (!is_dir(self::LOG_FOLDER)){
+            mkdir(self::LOG_FOLDER);
+        }        
+        
+        file_put_contents(self::POSTPONE_MSG_FILE, \Zend\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+    
+    /**
+     * Послать отложенное сообщение
+     * 
+     * @param array $params
+     */
+    public function sendPostponeMessage()
+    {
+        if (file_exists(self::POSTPONE_MSG_FILE)){
+            $file = file(self::POSTPONE_MSG_FILE);
+            if (count($file)){
+                $fp = fopen(self::POSTPONE_MSG_FILE, 'w');
+                $result = $this->sendMessage(\Zend\Json\Json::decode(trim($file[0])));
+                if ($result){
+                    unset($file[0]);
+                    fputs($fp, implode("",$file));
+                    fclose($fp);
+                }
+            }   
+            
+            if (count($file)){
+                sleep(10);
+                $this->sendPostponeMessage();
+            }
+        }
+        
+        return;
+    }
+
+
+    /**
+     * Послать сообщение
+     * 
+     * @param array $params
+     * @return integer
+     */
     public function sendMessage($params)
     {
         $settings = $this->adminManager->getTelegramSettings();

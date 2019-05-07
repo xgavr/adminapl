@@ -28,43 +28,43 @@ class AplService {
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * User manager
-     * @var User\Service\UserManager
+     * @var \User\Service\UserManager
      */
     private $userManager;
 
     /**
      * User manager
-     * @var Application\Service\ContactManager
+     * @var \Application\Service\ContactManager
      */
     private $contactManager;
 
     /**
      * Supplier manager
-     * @var Application\Service\SupplierManager
+     * @var \Application\Service\SupplierManager
      */
     private $supplierManager;
 
     /**
      * Legal manager
-     * @var Company\Service\LegalManager
+     * @var \Company\Service\LegalManager
      */
     private $legalManager;
     
     /**
      * Telegram manager
-     * @var Admin\Service\TelegramManager
+     * @var \Admin\Service\TelegramManager
      */
     private $telegramManager;
     
     /**
      * Admin manager
-     * @var Admin\Service\AdminManager
+     * @var \Admin\Service\AdminManager
      */
     private $adminManager;
     
@@ -507,7 +507,13 @@ class AplService {
             }          
         }        
     }
-        
+    
+    /**
+     * Сообщить в телеграм
+     * 
+     * @param array $params
+     * @return type
+     */
     public function sendTelegramMessage($params)
     {
         if (is_array($params)){
