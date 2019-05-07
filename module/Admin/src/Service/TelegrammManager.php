@@ -13,16 +13,13 @@ use Longman\TelegramBot\Request;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use GuzzleHttp\Client;
-use Aza\Components\Thread\Thread;
-
-error_reporting(E_ALL & ~E_WARNING);
 
 /**
  * Description of AutoruManager
  *
  * @author Daddy
  */
-class TelegrammManager extends Thread
+class TelegrammManager
 {
 
     const COMMANDS_PATH = './vendor/longman/src/Commands/';
@@ -192,16 +189,6 @@ class TelegrammManager extends Thread
         
     }
     
-    /**
-     * Послать отложенное сообщение
-     * 
-     */
-    public function process()
-    {
-        $this->sendPostponeMessage();
-    }
-
-
     /**
      * Послать сообщение
      * 
