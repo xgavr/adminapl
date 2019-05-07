@@ -642,7 +642,7 @@ class Rawprice {
      * @param string $vendorStr
      * @return array
      */
-    public function getOemVendorAsArray($oemStr = '', $vendorStr = '')
+    public static function getOemVendorAsArray($oemStr = '', $vendorStr = '')
     {
         $filter = new OemDetectDelimiterFilter();
         $oemDelimeter = $filter->filter($oemStr);
