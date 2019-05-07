@@ -27,28 +27,28 @@ class AssemblyManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
     /**
      * Менеджер артикулов
      * 
-     * @var Application\Service\ArticleManager 
+     * @var \Application\Service\ArticleManager 
      */
     private $articleManager;
     
     /**
      * Менеджер ml
      * 
-     * @var Application\Service\MlManager 
+     * @var \Application\Service\MlManager 
      */
     private $mlManager;
 
     /**
      * Менеджер producer
      * 
-     * @var Application\Service\ProducerManager 
+     * @var \Application\Service\ProducerManager 
      */
     private $producerManager;
 
@@ -346,8 +346,8 @@ class AssemblyManager
     /**
      * Сравнение пересекающихся производителей
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
-     * @param Application\Entity\UnknownProducer $intersectUnknownProducer
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @param \Application\Entity\UnknownProducer $intersectUnknownProducer
      * @param integer $intersectCountCode
      */
     public function matchingUnknownProducer($unknownProducer, $intersectUnknownProducer, $intersectCountCode)
@@ -380,7 +380,7 @@ class AssemblyManager
                 $intersectResult = $this->entityManager->getRepository(Token::class)
                         ->intersectArticleTokenByStatus($article, $articleForMatching);
                 
-                if ($intersectResult === null){
+                if ($intersectResult == null){
                     continue;
                 }
                 
@@ -470,8 +470,8 @@ class AssemblyManager
     /**
      * Создать производителя из неизвестного производителя с проверками
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
-     * @return Application\Entity\Producer|null
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @return \Application\Entity\Producer|null
      */
     public function addProducerFromUnknownProducer($unknownProducer)
     {        

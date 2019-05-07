@@ -25,31 +25,31 @@ class ProducerController extends AbstractActionController
    
     /**
     * Менеджер сущностей.
-    * @var Doctrine\ORM\EntityManager
+    * @var \Doctrine\ORM\EntityManager
     */
     private $entityManager;
     
     /**
      * Менеджер производителей.
-     * @var Application\Service\ProducerManager 
+     * @var \Application\Service\ProducerManager 
      */
     private $producerManager;    
     
     /**
      * Менеджер артикулов производителей.
-     * @var Application\Service\ArticleManager 
+     * @var \Application\Service\ArticleManager 
      */
     private $articleManager; 
     
     /**
      * Менеджер наименований товаров
-     * @var Application\Service\NameManager
+     * @var \Application\Service\NameManager
      */
     private $nameManager;
     
     /**
      * Менеджер создания товаров
-     * @var Application\Service\AssemblyManager
+     * @var \Application\Service\AssemblyManager
      */
     private $assemblyManager;
     
