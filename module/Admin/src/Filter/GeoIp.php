@@ -56,6 +56,9 @@ class GeoIp extends AbstractFilter
     {
         $parsedUrl = parse_url($ip);
         
+        if (!isset($parsedUrl['host'])){
+            $parsedUrl['host'] = '';
+        }
         $result = \Zend\Json\Json::decode(file_get_contents("http://ip-api.com/json/{$parsedUrl['host']}?lang=ru"), \Zend\Json\Json::TYPE_ARRAY);
 //var_dump($result);
         return $result;

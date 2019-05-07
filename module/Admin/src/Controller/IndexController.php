@@ -600,14 +600,26 @@ class IndexController extends AbstractActionController
     {
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_admin_chat_id']){
-//            $result = $this->telegrammManager->sendMessage([
-//                'chat_id' => $settings['telegram_admin_chat_id'], 
-//                'text' => 'Привет!',
-//            ]);
-            $result = $this->telegrammManager->addPostponeMesage([
+            $this->telegrammManager->sendMessage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет!',
             ]);
+        }    
+        return new JsonModel([
+            'ok'
+        ]);        
+    }
+    
+    public function testPostponeTelegramAction()
+    {
+        $settings = $this->adminManager->getTelegramSettings();
+        if ($settings['telegram_admin_chat_id']){
+            $this->telegrammManager->addPostponeMesage([
+                'chat_id' => $settings['telegram_admin_chat_id'], 
+                'text' => 'Привет! Сейчас '.date('Y-m-d H:i:s'),
+            ]);
+            
+            $this->telegrammManager->sendPostponeMessage();
         }    
         return new JsonModel([
             'ok'

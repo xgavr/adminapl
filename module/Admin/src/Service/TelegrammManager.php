@@ -14,12 +14,15 @@ use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use GuzzleHttp\Client;
 
+error_reporting(E_ALL & ~E_WARNING);
+
 /**
  * Description of AutoruManager
  *
  * @author Daddy
  */
-class TelegrammManager {
+class TelegrammManager extends \Aza\Components\Thread\Thread
+{
 
     const COMMANDS_PATH = './vendor/longman/src/Commands/';
 
@@ -162,7 +165,7 @@ class TelegrammManager {
     /**
      * Послать отложенное сообщение
      * 
-     * @param array $params
+     * @return null
      */
     public function sendPostponeMessage()
     {
@@ -185,6 +188,16 @@ class TelegrammManager {
         }
         
         return;
+        
+    }
+    
+    /**
+     * Послать отложенное сообщение
+     * 
+     */
+    public function process()
+    {
+        $this->sendPostponeMessage();
     }
 
 
