@@ -13,6 +13,7 @@ use Longman\TelegramBot\Request;
 use Zend\Log\Writer\Stream;
 use Zend\Log\Logger;
 use GuzzleHttp\Client;
+use Aza\Components\Thread\Thread;
 
 error_reporting(E_ALL & ~E_WARNING);
 
@@ -21,7 +22,7 @@ error_reporting(E_ALL & ~E_WARNING);
  *
  * @author Daddy
  */
-class TelegrammManager extends \Aza\Components\Thread\Thread
+class TelegrammManager extends Thread
 {
 
     const COMMANDS_PATH = './vendor/longman/src/Commands/';
