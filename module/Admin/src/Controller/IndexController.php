@@ -602,7 +602,7 @@ class IndexController extends AbstractActionController
         if ($settings['telegram_admin_chat_id']){
             $this->telegrammManager->sendMessage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
-                'text' => 'Привет!',
+                'text' => 'Привет! Сейчас '.date('Y-m-d H:i:s'),
             ]);
         }    
         return new JsonModel([
@@ -616,7 +616,7 @@ class IndexController extends AbstractActionController
         if ($settings['telegram_admin_chat_id']){
             $this->telegrammManager->addPostponeMesage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
-                'text' => 'Привет! Сейчас '.date('Y-m-d H:i:s'),
+                'text' => 'Привет! Это отложенное сообщение! Сейчас '.date('Y-m-d H:i:s'),
             ]);
             
             $this->telegrammManager->sendPostponeMessage();
