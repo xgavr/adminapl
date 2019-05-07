@@ -143,6 +143,7 @@ return [
             Service\TamTamManager::class => Service\Factory\TamTamManagerFactory::class,
             Service\TelefonistkaManager::class => Service\Factory\TelefonistkaManagerFactory::class,
             Service\TelegrammManager::class => Service\Factory\TelegrammManagerFactory::class,
+            Service\ThreadManager::class => Service\Factory\ThreadManagerFactory::class,
         ],
     ],    
     'view_manager' => [

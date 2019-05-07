@@ -28,6 +28,12 @@ class IndexController extends AbstractActionController
     private $telegrammManager;    
     
     /**
+     * TelegrammManager manager.
+     * @var \Admin\Service\ThreadManager
+     */
+    private $threadManager;    
+    
+    /**
      * AdminManager manager.
      * @var \Admin\Service\AdminManager
      */
@@ -53,9 +59,10 @@ class IndexController extends AbstractActionController
     
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($telegrammManager, $adminManager, $smsManager, $tamtamManager, $annManager) 
+    public function __construct($telegrammManager, $adminManager, $smsManager, $tamtamManager, $annManager, $threadManager) 
     {
         $this->telegrammManager = $telegrammManager;        
+        $this->threadManager = $threadManager;        
         $this->adminManager = $adminManager;        
         $this->smsManager = $smsManager;        
         $this->tamtamManager = $tamtamManager;        
@@ -619,7 +626,7 @@ class IndexController extends AbstractActionController
                 'text' => 'Привет! Это отложенное сообщение! Сейчас '.date('Y-m-d H:i:s'),
             ]);
             
-            $this->telegrammManager->sendPostponeMessage();
+            $this->threadManager->wait()->run();
         }    
         return new JsonModel([
             'ok'
