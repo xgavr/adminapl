@@ -8,7 +8,8 @@ namespace Admin\Thread;
  */
 
 use Aza\Components\Thread\Thread;
-use Admin\Service\TelegrammManager;
+
+error_reporting(E_ALL & ~E_WARNING);
 
 /**
  * Description of telegramThread
@@ -17,8 +18,22 @@ use Admin\Service\TelegrammManager;
  */
 class TelegramThread extends Thread {
     
+    /**
+     *
+     * @var \Application\Service\TelegrammManager; 
+     */
+    private $telegramManager;
+    
+    public function __construct($telegramManager)
+    {
+        parent::__construct();
+        
+        $this->telegramManager = $telegramManager;
+    }
+    
+    
     function process() {
-        TelegrammManager::sendPostponeMessage();        
+        $this->telegramManager->sendPostponeMessage();
     }
     
 }
