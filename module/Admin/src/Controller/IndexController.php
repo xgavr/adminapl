@@ -609,7 +609,7 @@ class IndexController extends AbstractActionController
         if ($settings['telegram_admin_chat_id']){
             $this->telegrammManager->sendMessage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
-                'text' => 'Привет! Сейчас '.date('Y-m-d H:i:s'),
+                'text' => 'Привет!',
             ]);
         }    
         return new JsonModel([
@@ -627,7 +627,8 @@ class IndexController extends AbstractActionController
             ]);
             
 //            $this->telegrammManager->sendPostponeMessage();
-            $this->threadManager->wait()->run();
+            $telegramThread = new \Admin\Thread\TelegramThread();
+            $telegramThread->wait()->run();
         }    
         return new JsonModel([
             'ok'

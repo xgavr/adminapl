@@ -169,7 +169,7 @@ class TelegrammManager
      * 
      * @return null
      */
-    public function sendPostponeMessage()
+    public static function sendPostponeMessage()
     {
         if (file_exists(self::POSTPONE_MSG_FILE)){
             $file = file(self::POSTPONE_MSG_FILE);
