@@ -520,10 +520,18 @@ class AplService {
             if (isset($params['api_key'])){
                 if ($params['api_key'] == $this->aplApiKey()){
 
-                    return $this->telegramManager->sendMessage([
+//                    return $this->telegramManager->sendMessage([
+//                        'chat_id' => $params['chat_id'], 
+//                        'text' => $params['text'],
+//                    ]);
+                    
+                    $this->telegrammManager->addPostponeMesage([
                         'chat_id' => $params['chat_id'], 
                         'text' => $params['text'],
                     ]);
+
+                    $telegramThread = new \Admin\Thread\TelegramThread($this->telegrammManager);
+                    $telegramThread->wait()->run();
 
                 }
             }    
