@@ -157,6 +157,8 @@ class TelegrammManager
             mkdir(self::LOG_FOLDER);
         }        
         
+        $params['text'] = $params['text'].PHP_EOL.date('Y-m-d H:i:s');
+        
         file_put_contents(self::POSTPONE_MSG_FILE, \Zend\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
         
         return;
@@ -172,19 +174,18 @@ class TelegrammManager
         if (file_exists(self::POSTPONE_MSG_FILE)){
             $file = file(self::POSTPONE_MSG_FILE);
             if (count($file)){
-                $fp = fopen(self::POSTPONE_MSG_FILE, 'w');
                 $result = $this->sendMessage(\Zend\Json\Json::decode(trim($file[0]), \Zend\Json\Json::TYPE_ARRAY));
-                var_dump($result); exit;
                 if ($result){
+                    $fp = fopen(self::POSTPONE_MSG_FILE, 'w');
                     unset($file[0]);
-                    fputs($fp, implode("",$file));
+                    fputs($fp, implode("", $file));
                     fclose($fp);
                 }
             }   
             
             if (count($file)){
-                sleep(10);
-                //$this->sendPostponeMessage();
+                sleep(1);
+                $this->sendPostponeMessage();
             }
         }
         
