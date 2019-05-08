@@ -100,8 +100,14 @@ class AutoruManager {
                         }    
                     }
                     
-                    $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
-                    //printf(nl2br($text));
+//                    $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
+                    $this->telegrammManager->addPostponeMesage([
+                        'chat_id' => '-1001128740501',
+                        'text' => $text,
+                    ]);
+
+                    $telegramThread = new \Admin\Thread\TelegramThread($this->telegrammManager);
+                    $telegramThread->wait()->run();
                 }
             }
         }
