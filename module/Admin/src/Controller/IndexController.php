@@ -626,7 +626,8 @@ class IndexController extends AbstractActionController
                 'text' => 'Привет! Это отложенное сообщение!',
             ]);
             
-            $this->telegrammManager->sendPostponeMessage();
+//            $this->telegrammManager->sendPostponeMessage();
+            $this->threadManager->wait()->run();
         }    
         return new JsonModel([
             'ok'
