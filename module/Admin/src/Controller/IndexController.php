@@ -538,8 +538,8 @@ class IndexController extends AbstractActionController
                 
                 $this->flashMessenger()->addSuccessMessage(
                         'Настройки сохранены.');
-                // Перенаправляем пользователя на страницу "goods".
-                return $this->redirect()->toRoute('admin', ['action' => 'telegram-settings']);
+
+                $this->redirect()->toRoute('admin', ['action' => 'telegram-settings']);
             } else {
                 $this->flashMessenger()->addInfoMessage(
                         'Настройки не сохранены.');                
@@ -626,7 +626,7 @@ class IndexController extends AbstractActionController
                 'text' => 'Привет! Это отложенное сообщение! Сейчас '.date('Y-m-d H:i:s'),
             ]);
             
-            $this->threadManager->wait()->run();
+            $this->telegrammManager->sendPostponeMessage();
         }    
         return new JsonModel([
             'ok'

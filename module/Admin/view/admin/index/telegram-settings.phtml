@@ -53,8 +53,21 @@ $form->prepare();
 
 ?>
 
-<h1>Настройки</h1>
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-default test-button" value="/admin/test-telegram">
+            <span class="glyphicon glyphicon-phone" ></span>Тест
+        </button>                
+        <button class="btn btn-default test-button" value="/admin/test-postpone-telegram">
+            <span class="glyphicon glyphicon-phone" ></span>Тест (отл)
+        </button>                
+        <button class="btn btn-default test-button refresh-table-button" value="/telegramm/check-proxy">
+            <span class="glyphicon glyphicon-bell" ></span>Проверка прокси
+        </button>                
+    </div>
+</div>
 
+<h1>Настройки</h1>
 <p>
     Заполните форму и нажмите <i>Сохранить</i>.
 </p>
@@ -107,21 +120,6 @@ $form->prepare();
             <li class="active">
                 <?= $this->formElement($form->get('submit')); ?>
             </li>
-            <li>
-                <button class="btn btn-default test-button" value="/admin/test-telegram">
-                    <span class="glyphicon glyphicon-phone" ></span>Тест
-                </button>                
-            </li>
-            <li>
-                <button class="btn btn-default test-button" value="/admin/test-postpone-telegram">
-                    <span class="glyphicon glyphicon-phone" ></span>Тест (отл)
-                </button>                
-            </li>
-            <li>
-                <button class="btn btn-default test-button refresh-table-button" value="/telegramm/check-proxy">
-                    <span class="glyphicon glyphicon-bell" ></span>Проверка прокси
-                </button>                
-            </li>
         </ul>
     </div>    
     
@@ -129,7 +127,7 @@ $form->prepare();
 
 <?= $this->form()->closeTag(); ?>
 
-<script async="true">
+<script async="false">
     $('.test-button').on('click', function(e) {
         var url = e.currentTarget.value;
         
