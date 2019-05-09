@@ -304,11 +304,11 @@ class ProcessingController extends AbstractActionController
                 $message .= 'Проверить доступ к api:'.PHP_EOL.'http://adminapl.ru/bankapi/tochka-access';
 
 //                $this->telegramManager->sendMessage(['text' => $message]);
-                $this->telegrammManager->addPostponeMesage([
+                $this->telegramManager->addPostponeMesage([
                     'text' => $message,
                 ]);
 
-                $telegramThread = new \Admin\Thread\TelegramThread($this->telegrammManager);
+                $telegramThread = new \Admin\Thread\TelegramThread($this->telegramManager);
                 $telegramThread->wait()->run();
 
                 $ok = 'error';

@@ -25,7 +25,7 @@ class IndexController extends AbstractActionController
      * TelegrammManager manager.
      * @var \Admin\Service\TelegrammManager
      */
-    private $telegrammManager;    
+    private $telegramManager;    
     
     /**
      * AdminManager manager.
@@ -53,9 +53,9 @@ class IndexController extends AbstractActionController
     
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($telegrammManager, $adminManager, $smsManager, $tamtamManager, $annManager) 
+    public function __construct($telegramManager, $adminManager, $smsManager, $tamtamManager, $annManager) 
     {
-        $this->telegrammManager = $telegrammManager;        
+        $this->telegramManager = $telegramManager;        
         $this->adminManager = $adminManager;        
         $this->smsManager = $smsManager;        
         $this->tamtamManager = $tamtamManager;        
@@ -600,7 +600,7 @@ class IndexController extends AbstractActionController
     {
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_admin_chat_id']){
-            $this->telegrammManager->sendMessage([
+            $this->telegramManager->sendMessage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет!',
             ]);
@@ -614,13 +614,13 @@ class IndexController extends AbstractActionController
     {
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_admin_chat_id']){
-            $this->telegrammManager->addPostponeMesage([
+            $this->telegramManager->addPostponeMesage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет! Это отложенное сообщение!',
             ]);
             
-//            $this->telegrammManager->sendPostponeMessage();
-            $telegramThread = new \Admin\Thread\TelegramThread($this->telegrammManager);
+//            $this->telegramManager->sendPostponeMessage();
+            $telegramThread = new \Admin\Thread\TelegramThread($this->telegramManager);
             $telegramThread->wait()->run();
         }    
         return new JsonModel([
@@ -630,7 +630,7 @@ class IndexController extends AbstractActionController
     
     public function checkProxyAction()
     {
-        $proxy = $this->telegrammManager->getProxy();
+        $proxy = $this->telegramManager->getProxy();
         
         return new JsonModel([
             'result' => 'ok',

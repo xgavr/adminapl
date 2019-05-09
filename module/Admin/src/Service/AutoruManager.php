@@ -39,13 +39,13 @@ class AutoruManager {
      * Telegramm manager.
      * @var Admin\Service\TelegrammManager
      */
-    private $telegrammManager;
+    private $telegramManager;
     
-    public function __construct($entityManager, $postManager, $telegrammManager, $aplService)
+    public function __construct($entityManager, $postManager, $telegramManager, $aplService)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
-        $this->telegrammManager = $telegrammManager;        
+        $this->telegramManager = $telegramManager;        
         $this->aplService = $aplService;        
     }
     
@@ -100,13 +100,13 @@ class AutoruManager {
                         }    
                     }
                     
-//                    $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
-                    $this->telegrammManager->addPostponeMesage([
+//                    $this->telegramManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
+                    $this->telegramManager->addPostponeMesage([
                         'chat_id' => '-1001128740501',
                         'text' => $text,
                     ]);
 
-                    $telegramThread = new \Admin\Thread\TelegramThread($this->telegrammManager);
+                    $telegramThread = new \Admin\Thread\TelegramThread($this->telegramManager);
                     $telegramThread->wait()->run();
                 }
             }

@@ -525,12 +525,12 @@ class AplService {
 //                        'text' => $params['text'],
 //                    ]);
                     
-                    $this->telegrammManager->addPostponeMesage([
+                    $this->telegramManager->addPostponeMesage([
                         'chat_id' => $params['chat_id'], 
                         'text' => $params['text'],
                     ]);
 
-                    $telegramThread = new \Admin\Thread\TelegramThread($this->telegrammManager);
+                    $telegramThread = new \Admin\Thread\TelegramThread($this->telegramManager);
                     $telegramThread->wait()->run();
 
                 }
