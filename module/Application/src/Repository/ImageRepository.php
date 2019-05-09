@@ -285,15 +285,17 @@ class ImageRepository extends EntityRepository
             
             $image = file_get_contents($uri);
             $path = $this->getImageFolder($good, $status)."/".$docFileName;
-            file_put_contents($path, $image);
-            
-            $this->addImage([
-                'name' => $docFileName,
-                'path' => $path,
-                'status' => $status,
-                'similar' => $similar,
-                'good_id' => $good->getId(),
-            ]);
+            if (file_exists($path)){
+                file_put_contents($path, $image);
+
+                $this->addImage([
+                    'name' => $docFileName,
+                    'path' => $path,
+                    'status' => $status,
+                    'similar' => $similar,
+                    'good_id' => $good->getId(),
+                ]);
+            }    
         } 
         
         return;
