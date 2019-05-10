@@ -308,9 +308,6 @@ class ProcessingController extends AbstractActionController
                     'text' => $message,
                 ]);
 
-                $telegramThread = new \Admin\Thread\TelegramThread($this->telegramManager);
-                $telegramThread->wait()->run();
-
                 $ok = 'error';
             } else {
                 //$this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ

@@ -246,6 +246,7 @@ class TelegrammManager
         file_put_contents(self::POSTPONE_MSG_FILE, \Zend\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
         
         $client = new Client();
+        var_dump('http://'.$_SERVER['HTTP_HOST'].'/telegramm/postpone');
         $client->requestAsync('GET', 'http://'.$_SERVER['HTTP_HOST'].'/telegramm/postpone');
                 
         return;

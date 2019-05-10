@@ -530,9 +530,6 @@ class AplService {
                         'text' => $params['text'],
                     ]);
 
-                    $telegramThread = new \Admin\Thread\TelegramThread($this->telegramManager);
-                    $telegramThread->wait()->run();
-
                 }
             }    
         }
