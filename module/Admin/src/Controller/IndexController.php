@@ -617,11 +617,10 @@ class IndexController extends AbstractActionController
     {
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_admin_chat_id']){
-            if ($this->telegramManager->addPostponeMesage([
+            $this->telegramManager->addPostponeMesage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет! Это отложенное сообщение!',
-                ])){
-            }            
+                ]);       
         }    
         
         return new JsonModel([
