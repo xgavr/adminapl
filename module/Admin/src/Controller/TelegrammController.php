@@ -15,14 +15,14 @@ class TelegrammController extends AbstractActionController
     
     /**
      * TelegrammManager manager.
-     * @var Admin\Service\TelegrammManager
+     * @var \Admin\Service\TelegrammManager
      */
-    private $telegrammManager;    
+    private $telegramManager;    
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($telegrammManager) 
+    public function __construct($telegramManager) 
     {
-        $this->telegrammManager = $telegrammManager;        
+        $this->telegramManager = $telegramManager;        
     }   
     
     public function indexAction()
@@ -30,30 +30,36 @@ class TelegrammController extends AbstractActionController
         return [];
     }
     
-    /*
+    /**
      * Telegramm hook
      */
     public function hookAction()
     {
-        $this->telegrammManager->hook();
+        $this->telegramManager->hook();
         exit;        
+    }
+    
+    public function postponeAction()
+    {
+        $this->telegramManager->sendPostponeMessage();
+        exit;                
     }
     
     public function setAction()
     {
-        $this->telegrammManager->setHook();
+        $this->telegramManager->setHook();
         exit;
     }
     
     public function unsetAction()
     {
-        $this->telegrammManager->unsetHook();
+        $this->telegramManager->unsetHook();
         exit;
     }    
     
     public function checkProxyAction()
     {
-        $result = $this->telegrammManager->checkEndChangeProxy();
+        $result = $this->telegramManager->checkEndChangeProxy();
         
         return new JsonModel([
             'result' => 'ok-reload',

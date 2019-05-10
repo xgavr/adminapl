@@ -117,7 +117,7 @@ return [
             Controller\TelegrammController::class => [
                 // Allow access to authenticated users.
                 ['actions' => ['index', 'set', 'unset', 'checkProxy'], 'allow' => '+admin.manage'],
-                ['actions' => ['hook'], 'allow' => '*']
+                ['actions' => ['hook', 'postpone'], 'allow' => '*']
             ],
         ],
     ],    

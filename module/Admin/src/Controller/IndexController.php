@@ -599,14 +599,17 @@ class IndexController extends AbstractActionController
     public function testTelegramAction()
     {
         $settings = $this->adminManager->getTelegramSettings();
+        $result = 'not';
         if ($settings['telegram_admin_chat_id']){
-            $this->telegramManager->sendMessage([
+            if ($this->telegramManager->sendMessage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет!',
-            ]);
+            ])){
+                $result = 'ok';
+            }
         }    
         return new JsonModel([
-            'ok'
+            $result,
         ]);        
     }
     
@@ -614,18 +617,16 @@ class IndexController extends AbstractActionController
     {
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_admin_chat_id']){
-            $this->telegramManager->addPostponeMesage([
+            if ($this->telegramManager->addPostponeMesage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет! Это отложенное сообщение!',
-            ]);
-            
-//            $this->telegramManager->sendPostponeMessage();
-            $telegramThread = new \Admin\Thread\TelegramThread($this->telegramManager);
-            $telegramThread->wait()->run();
+                ])){
+            }            
         }    
+        
         return new JsonModel([
-            'ok'
-        ]);        
+            'ok',
+        ]);
     }
     
     public function checkProxyAction()

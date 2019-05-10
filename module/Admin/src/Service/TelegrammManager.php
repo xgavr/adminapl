@@ -76,18 +76,18 @@ class TelegrammManager
                 $telegram->enableMySql($mysql_credentials, $this::USERNAME . '_');
 
     //            Logging (Error, Debug and Raw Updates)
-                Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$this::USERNAME."_error.log");
-                Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FOLDER . "/".$this::USERNAME."_debug.log");
-                Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$this::USERNAME."_update.log");
+                \Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$this::USERNAME."_error.log");
+                \Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FOLDER . "/".$this::USERNAME."_debug.log");
+                \Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$this::USERNAME."_update.log");
 
                 $telegram->enableLimiter();
 
                 $telegram->handle();
 
-            } catch (Longman\TelegramBot\Exception\TelegramException $e){
-                Longman\TelegramBot\TelegramLog::error($e);
-            } catch (Longman\TelegramBot\Exception\TelegramLogException $e){
-                $logger->error($e->getMessage());            
+            } catch (\Longman\TelegramBot\Exception\TelegramException $e){
+                \Longman\TelegramBot\TelegramLog::error($e);
+            } catch (\Longman\TelegramBot\Exception\TelegramLogException $e){
+                $logger->err($e->getMessage());            
             }    
 
             $logger = null;
@@ -112,8 +112,8 @@ class TelegrammManager
                 if ($result->isOk()) {
                     echo $result->getDescription();
                 }                    
-            } catch (Longman\TelegramBot\Exception\TelegramException $e){
-                $logger->error($e->getMessage());
+            } catch (\Longman\TelegramBot\Exception\TelegramException $e){
+                $logger->err($e->getMessage());
             }    
 
             $logger = null;                
@@ -136,62 +136,15 @@ class TelegrammManager
                 if ($result->isOk()) {
                     echo $result->getDescription();
                 }             
-            } catch (Longman\TelegramBot\Exception\TelegramException $e){
-                $logger->error($e->getMessage());
+            } catch (\Longman\TelegramBot\Exception\TelegramException $e){
+                $logger->err($e->getMessage());
             }    
 
             $logger = null;
         }    
         
         return;
-    }
-    
-    /**
-     * Добавить отложенное сообщение
-     * 
-     * @param array $params
-     */
-    public function addPostponeMesage($params)
-    {
-        if (!is_dir(self::LOG_FOLDER)){
-            mkdir(self::LOG_FOLDER);
-        }        
-        
-        $params['text'] = $params['text'].PHP_EOL.date('Y-m-d H:i:s');
-        
-        file_put_contents(self::POSTPONE_MSG_FILE, \Zend\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
-        
-        return;
-    }
-    
-    /**
-     * Послать отложенное сообщение
-     * 
-     * @return null
-     */
-    public function sendPostponeMessage()
-    {
-        if (file_exists(self::POSTPONE_MSG_FILE)){
-            $file = file(self::POSTPONE_MSG_FILE);
-            if (count($file)){
-                $result = $this->sendMessage(\Zend\Json\Json::decode(trim($file[0]), \Zend\Json\Json::TYPE_ARRAY));
-                if ($result){
-                    $fp = fopen(self::POSTPONE_MSG_FILE, 'w');
-                    unset($file[0]);
-                    fputs($fp, implode("", $file));
-                    fclose($fp);
-                }
-            }   
-            
-            if (count($file)){
-                sleep(1);
-                $this->sendPostponeMessage();
-            }
-        }
-        
-        return;
-        
-    }
+    }    
     
     /**
      * Послать сообщение
@@ -231,16 +184,71 @@ class TelegrammManager
                 }    
                 
                 $result = Request::sendMessage(['chat_id' => $chatId, 'text' => $params['text']]);         
-            } catch (Longman\TelegramBot\Exception\TelegramException $e){
-                $logger->error($e->getMessage());
-            } catch (Zend\Http\Client\Adapter\Exception $e){
-                $logger->error($e->getMessage());
+            } catch (\Longman\TelegramBot\Exception\TelegramException $e){
+                $logger->err($e->getMessage());
+                $result = false;
+            } catch (\Zend\Http\Client\Adapter\Exception $e){
+                $logger->err($e->getMessage());
+                $result = false;
             }    
 
             $logger = null;
-
             return $result;
         }    
+    }
+    
+    /**
+     * Послать отложенное сообщение
+     * 
+     * @return null
+     */
+    public function sendPostponeMessage()
+    {
+        if (file_exists(self::POSTPONE_MSG_FILE)){
+            $file = file(self::POSTPONE_MSG_FILE);
+            if (count($file)){
+                try {
+                    $result = $this->sendMessage(\Zend\Json\Json::decode(trim($file[0]), \Zend\Json\Json::TYPE_ARRAY));
+                    if ($result){
+                        $fp = fopen(self::POSTPONE_MSG_FILE, 'w');
+                        unset($file[0]);
+                        fputs($fp, implode("", $file));
+                        fclose($fp);
+                    }
+                } catch (\Longman\TelegramBot\Exception\TelegramException $e){
+                    sleep(60);
+                }    
+            }   
+            
+            if (count($file)){
+                sleep(1);
+                $this->sendPostponeMessage();
+            }
+        }
+        
+        return;
+        
+    }
+    
+    /**
+     * Добавить отложенное сообщение
+     * 
+     * @param array $params
+     */
+    public function addPostponeMesage($params)
+    {
+        if (!is_dir(self::LOG_FOLDER)){
+            mkdir(self::LOG_FOLDER);
+        }        
+        
+        $params['text'] = $params['text'].PHP_EOL.date('Y-m-d H:i:s');
+        
+        file_put_contents(self::POSTPONE_MSG_FILE, \Zend\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
+        
+        $client = new Client();
+        $client->requestAsync('GET', 'http://'.$_SERVER['HTTP_HOST'].'/telegramm/postpone');
+                
+        return;
     }
     
     /**
