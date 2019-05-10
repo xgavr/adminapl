@@ -216,7 +216,7 @@ class TelegrammManager
                         fclose($fp);
                     }
                 } catch (\Longman\TelegramBot\Exception\TelegramException $e){
-                    sleep(60);
+                    return;
                 }    
             }   
             
@@ -245,8 +245,9 @@ class TelegrammManager
         
         file_put_contents(self::POSTPONE_MSG_FILE, \Zend\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
         
-        $client = new Client();
-        $client->requestAsync('GET', 'http://'.$_SERVER['HTTP_HOST'].'/telegramm/postpone');
+//        $client = new Client();
+//        $promise = $client->requestAsync('GET', 'http://'.$_SERVER['HTTP_HOST'].'/telegramm/postpone');
+//        $promise->wait();
                 
         return;
     }

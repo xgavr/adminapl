@@ -98,6 +98,21 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([           
             'type'  => 'select',
+            'name' => 'send_pospone_msg',
+            'attributes' => [
+                'id' => 'send_pospone_msg'
+            ],
+            'options' => [
+                'label' => 'Посылать отложенные сообщения',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'select',
             'name' => 'auto_check_proxy',
             'attributes' => [
                 'id' => 'auto_check_proxy'
@@ -226,6 +241,17 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'auto_check_proxy',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'send_pospone_msg',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
