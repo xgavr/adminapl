@@ -92,7 +92,7 @@ class RawRepository extends EntityRepository
             ->join('rr.supplier', 's')    
             ->where('r.unknownProducer = ?1')    
             ->setParameter('1', $unknownProducer->getId())
-            ->setMaxResults(1000)    
+            ->setMaxResults(100)    
             ;
         
         if (is_array($params)){
