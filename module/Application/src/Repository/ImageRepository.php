@@ -152,14 +152,12 @@ class ImageRepository extends EntityRepository
      */
     public function addImage($data)
     {
-        if (file_exists($data['path'])){
-            $image = $this->getEntityManager()->getRepository(Images::class)
-                    ->findOneByPath($data['path']);
+        $image = $this->getEntityManager()->getRepository(Images::class)
+                ->findOneByPath($data['path']);
 
-            if ($image == null){
-                $this->getEntityManager()->getConnection()->insert('images', $data);
-            }
-        }    
+        if ($image == null){
+            $this->getEntityManager()->getConnection()->insert('images', $data);
+        }
        
        return;
     }

@@ -594,8 +594,7 @@ class AutodbManager
                                     $uri = $this->getDocImageUri($document['docId']);
                                     $this->entityManager->getRepository(Images::class)
                                             ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
-                                }    
-                                if ($document['docFileTypeName'] == 'URL'){
+                                } else {   
                                     if (isset($document['docUrl'])){
                                         $url = $document['docUrl'];
                                         $this->entityManager->getRepository(Images::class)
