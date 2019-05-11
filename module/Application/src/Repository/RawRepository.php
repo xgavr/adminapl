@@ -87,7 +87,7 @@ class RawRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('r.id, r.article, identity(r.code) as codeId, r.producer, identity(r.unknownProducer) as producerId, r.goodname, r.rest, r.price')
             ->from(Rawprice::class, 'r')
-//            ->join('r.code', 'c') 
+            ->join('r.code', 'c') 
 //            ->join('r.raw', 'rr')
 //            ->join('rr.supplier', 's')    
             ->where('r.unknownProducer = ?1')    
