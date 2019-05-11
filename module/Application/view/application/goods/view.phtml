@@ -109,7 +109,7 @@ $this->headScript()
                     <? if ($image->getPublicPath()):?>
                         <div class="thumbnail">
                             <a href="<?= $image->getPublicPath() ?>" target="_blank">
-                                <?php if (file_exists($image->getPublicPath())):?>
+                                <?php if (file_exists($image->getPath())):?>
                                     <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
                                 <?php else:?>
                                     <span class='glyphicon glyphicon-picture'></span>
