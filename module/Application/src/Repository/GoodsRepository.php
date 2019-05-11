@@ -115,11 +115,18 @@ class GoodsRepository extends EntityRepository
                     ->setParameter('1', $params['producer']->getId())
                         ;
             }
+            if (isset($params['producerId'])){
+                if ($params['producerId']){
+                    $queryBuilder->andWhere('c.producer = ?2')
+                        ->setParameter('2', $params['producerId'])
+                     ;
+                }    
+            }
             if (isset($params['unknownProducer'])){
                 $queryBuilder
                     ->join('c.articles', 'r', 'WITH')
-                    ->andWhere('r.unknownProducer = ?2')
-                    ->setParameter('2', $params['unknownProducer']->getId())
+                    ->andWhere('r.unknownProducer = ?3')
+                    ->setParameter('3', $params['unknownProducer']->getId())
                         ;
             }
             if (isset($params['q'])){
@@ -135,14 +142,14 @@ class GoodsRepository extends EntityRepository
                 }    
             }
             if (isset($params['next1'])){
-                $queryBuilder->andWhere('c.code > ?3')
-                    ->setParameter('3', $params['next1'])
+                $queryBuilder->andWhere('c.code > ?4')
+                    ->setParameter('4', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->andWhere('c.code < ?4')
-                    ->setParameter('4', $params['prev1'])
+                $queryBuilder->andWhere('c.code < ?5')
+                    ->setParameter('5', $params['prev1'])
                     ->orderBy('c.code', 'DESC')
                     ->setMaxResults(1)    
                  ;

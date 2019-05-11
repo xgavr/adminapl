@@ -214,14 +214,19 @@ class GoodsController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
+        $producer = $this->params()->fromQuery('producer');
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->findAllGoods(['q' => $q, 'sort' => $sort, 'order' => $order]);
+                        ->findAllGoods(['q' => $q, 'sort' => $sort, 'order' => $order, 'producerId' => $producer]);
         
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
 
         $result = $query->getResult(2);
         
