@@ -245,4 +245,45 @@ class RawpriceController extends AbstractActionController
             'rawManager' => $this->rawManager,
         ]);
     }      
+    
+    public function contentAction()
+    {
+        $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $search = $this->params()->fromQuery('search');
+        $status = $this->params()->fromQuery('status', Rawprice::STATUS_PARSED);
+        
+        
+        // Validate input parameter
+        if ($goodsId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $unknownProducer = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
+                ->findOneById($unknownProducerId);
+
+        if ($unknownProducer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(Rawprice::class)
+                        ->findPrice($unknownProducer, ['status' => $status]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }    
+    
 }

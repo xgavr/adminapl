@@ -37,6 +37,75 @@ class RawRepository extends EntityRepository
     }
     
     /**
+     * Запрос по строкам прайса по разным параметрам
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function findAllRawprice($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+            ->from(Rawprice::class, 'r')
+                ;
+
+        if (is_array($params)){
+            if (isset($params['unknownProducer'])){
+                $queryBuilder->where('r.unknownProducer = ?1')
+                    ->setParameter('1', $params['unknownProducer']->getId())
+                        ;
+            }
+            if (isset($params['unknownProducerId'])){
+                if ($params['unknownProducerId']){
+                    $queryBuilder->andWhere('r.unknownProducer = ?2')
+                        ->setParameter('2', $params['unknownProducerId'])
+                     ;
+                }    
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('r.'.$params['sort'], $params['order']);                
+            }            
+        }
+//            var_dump($queryBuilder->getQuery()->getDQL()); exit;
+        return $queryBuilder->getQuery();
+    }    
+    
+    /**
+     * Найти прайсы неизветсного производителя
+     * 
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @param array $params
+     * @return object
+     */
+    public function findPrice($unknownProducer, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r.id, s.name as supplier, s.id as supplierId, rr.dateCreated, r.article, c.code, c.id as codeId, r.producer, identity(r.unknownProducer) as producerId, r.goodname, r.rest, r.price')
+            ->from(Rawprice::class, 'r')
+            ->join('r.code', 'c') 
+            ->join('r.raw', 'rr')
+            ->join('rr.supplier', 's')    
+            ->where('r.unknownProducer = ?1')    
+            ->setParameter('1', $unknownProducer->getId())
+            ;
+        
+        if (is_array($params)){
+            if ($params['status']){
+                $queryBuilder->andWhere('r.status = ?2')
+                        ->setParameter('2', $params['status'])
+                        ;
+            }
+        }
+        
+        return $queryBuilder->getQuery();            
+    }    
+    
+    /**
      * Быстрое обновлеие строки прайса
      * @param Application\Entity\Rawprice $rawprice
      * @return integer

@@ -379,6 +379,7 @@ class ProducerController extends AbstractActionController
             'next' => $nextQuery->getResult(),
             'producerManager' => $this->producerManager,
             'intersects' => $intersects,
+            'priceStatuses' => \Application\Entity\Rawprice::getStatusList(),
         ]);
     }
     

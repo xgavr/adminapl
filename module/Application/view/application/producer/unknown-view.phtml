@@ -9,100 +9,192 @@ $this->pageBreadcrumbs()->setItems([
             $unknownProducer->getName()=>$this->url('producer', ['action'=>'unknown-view', 'id'=>$unknownProducer->getId()])
             ]);
 
-?>
-<h1>
-    <?= $this->escapeHtml($unknownProducer->getName()); ?>    
-    <sup>
-        <?php if ($unknownProducer->getProducer()):?>
-            <a style="font-size: calc" href="<?= $this->url('producer', ['action'=>'view', 'id'=>$unknownProducer->getProducer()->getId()]); ?>" target="_balnk"><?= $unknownProducer->getProducer()->getName()?></a>
-        <?php endif;?>        
-        <button value="/producer/assembly-producer/<?= $unknownProducer->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                title="Создать производителя">
-            <span class="glyphicon glyphicon-refresh" ></span>
-        </button> 
-    </sup>
-</h1>
-<div>
-    <?php foreach($intersects as $intrsect):?>
-        <? 
-            $diff = 0;
-            if ($unknownProducer->getRawpriceCount()){
-                $diff = $intrsect['countCode']/($unknownProducer->getRawpriceCount());
-            } else {
-                continue;
-            }            
-        ?>
-        <span>
-            <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $intrsect['unknown_producer_id']])?>">
-                <?= $intrsect['unknown_producer_name']?>
-            </a>
-        </span>    
-        <span>
-            (<?= $intrsect['countCode']?>/<?= round($diff, 2)?>)
-        </span>
-    <?php endforeach;?>    
-</div>
+$this->headLink()
+//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+        ;
 
-<table class="table table-striped">
-    <tr>
-        <th colspan="2">
-            Всего
-        </th>
-        <td  colspan="2" align="right">
-            <b><?= $unknownProducer->getRawpriceCount() ?></b>
-            /
-            <?= $unknownProducer->getSupplierCount() ?>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">            
-            <?php if ($prev):?>
-                <a href="/producer/unknown-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
-            <?php endif;?>            
-        </td>
-        <td colspan="2" align="right">
-            <?php if ($next):?>
-                <a href="/producer/unknown-view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
-            <?php endif;?>                            
-        </td>
-    </tr>
-    <?php    foreach ($rawpriceCountBySupplier as $row):?>
-        <tr>
-            <td colspan="3">
-                <b><?= $row[0]->getSupplier()->getName();?></b>
-            </td>
-            <td align="right">
-                <?= $row['rawpriceCount']?>
-            </td>
-        </tr>
-        <?php $randRawprices = $producerManager->randRawpriceBy(['unknownProducer' => $unknownProducer->getId(), 'raw' => $row[0]->getId()]);?>
-        <?php foreach($randRawprices as $randRawprice):?>
-            <tr style="font-size: x-small">
-                <td>
-                    <?php if ($randRawprice->getCode()):?>
-                        <?php if ($randRawprice->getCode()->getId()):?>
-                            <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $randRawprice->getCode()->getId()]);?>">
-                                <?= $randRawprice->getCode()->getCode();?>
-                            </a>    
-                        <?php else:?>
-                            <?= $randRawprice->getArticle();?>
-                        <?php endif; ?>
-                    <?php else:?>
-                        <?= $randRawprice->getArticle();?>
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $randRawprice->getId()]);?>">
-                        <?= $randRawprice->getGoodname();?>
-                    </a>    
-                </td>
-                <td align="right">
-                    <?= $randRawprice->getPrice();?>
-                </td>
-                <td align="right">
-                    <?= $randRawprice->getRest();?>
-                </td>
-            </tr>
-        <?php endforeach;?>                    
-    <?php endforeach;?>        
-</table>
+$this->headScript()
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+
+
+?>
+<div class="row">
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>
+                    <?= $this->escapeHtml($unknownProducer->getName()); ?>    
+                </h1>
+                <?php foreach($intersects as $intrsect):?>
+                    <? 
+                        $diff = 0;
+                        if ($unknownProducer->getRawpriceCount()){
+                            $diff = $intrsect['countCode']/($unknownProducer->getRawpriceCount());
+                        } else {
+                            continue;
+                        }            
+                    ?>
+                    <span>
+                        <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $intrsect['unknown_producer_id']])?>">
+                            <?= $intrsect['unknown_producer_name']?>
+                        </a>
+                    </span>    
+                    <span>
+                        (<?= $intrsect['countCode']?>/<?= round($diff, 2)?>)
+                    </span>
+                <?php endforeach;?>    
+            </div>
+            <table class="table table-striped">
+                <tr>
+                    <th colspan="2">
+                        Всего
+                    </th>
+                    <td  colspan="2" align="right">
+                        <b><?= $unknownProducer->getRawpriceCount() ?></b>
+                        /
+                        <?= $unknownProducer->getSupplierCount() ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">            
+                        <?php if ($prev):?>
+                            <a href="/producer/unknown-view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
+                        <?php endif;?>            
+                    </td>
+                    <td colspan="2" align="right">
+                        <?php if ($next):?>
+                            <a href="/producer/unknown-view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
+                        <?php endif;?>                            
+                    </td>
+                </tr>
+            </table>    
+            <div id="priceToolbar">
+                <div class="form-inline" role="form">
+                    <select style="width: 200px" class="form-control" id='priceStatusSelect'>
+                        <?php foreach ($priceStatuses as $key => $value):?>
+                            <option value="<?= $key?>" <?= ($key == 2) ? 'selected':'' ?>><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
+            </div>
+            <table id="priceTable" 
+                data-toggle="table" 
+                data-url="/rawprice/content/<?= $unknownProducer->getId()?>"
+                data-side-pagination="server"
+                data-pagination="true" 
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#priceToolbar"
+                data-show-refresh="true"
+                data-show-toggle="true"
+                data-query-params="priceQueryParams"
+                data-response-handler="responseHandler"
+                >
+                <thead>
+                    <tr>
+                         <!--<th data-field="id" data-type="numeric">ID</th>-->
+                         <th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>
+                         <th data-field="code" data-formatter="codeFormatter">Артикул</th>
+                         <th data-field="goodname" data-formatter="goodnameFormatter">Описание</th>
+                         <th data-field="rest" data-align='right'>Наличие</th>
+                         <th data-field="price" data-align='right'>Цена</th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+    <div class="col-md-3" id="side-nav">
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Производитель
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <?php if ($unknownProducer->getProducer()):?>
+                                <a style="font-size: calc" href="<?= $this->url('producer', ['action'=>'view', 'id'=>$unknownProducer->getProducer()->getId()]); ?>" target="_balnk"><?= $unknownProducer->getProducer()->getName()?></a>
+                            <?php else:?>
+                                <i>Не создан</i>
+                            <?php endif;?>        
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/assembly-producer/<?= $unknownProducer->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                    title="Создать производителя">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+<div>
+
+<script type="text/javascript">
+    
+    $(window).on('load', function() {
+        $('.nav-tabs a:first').tab('show');
+    });
+    
+    $(function () {
+        $('#priceStatusSelect').change(function (){
+            $('#priceTable').bootstrapTable('refresh');
+        })
+    });    
+    
+    function refreshPriceTable(){
+        $('#priceTable').bootstrapTable('refresh');
+    }
+
+    var priceTable = $('#priceTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#priceBadge').html($('#priceTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+    
+    function tabQueryParams(tab, params) {
+        $(tab +'Toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $(tab + ' .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $(tab + ' li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function priceQueryParams(params) {
+        params.status = $('#priceStatusSelect').val();
+        return tabQueryParams('#price', params);
+    }
+    
+    function responseHandler(res) {
+        return res;
+    }       
+    
+    function goodnameFormatter(value, row) {
+        return '<a href="/rawprice/view/'+row.id+'" target="_blanc">'+value+'</a>';
+    }    
+    
+    function producerFormatter(value, row) {
+        return '<a href="/producer/unknown-view/'+row.producerId+'" target="_blanc">'+value+'</a>';
+    }    
+    
+    function codeFormatter(value, row) {
+        return '<a href="/producer/article-view/'+row.codeId+'" target="_blanc">'+value+'</a> ' + producerFormatter(row.producer, row);
+    }    
+    
+    function supplierFormatter(value, row) {
+        var priceDate = new Date(row.dateCreated);
+        var priceDateStr = priceDate.getDate()+'-'+ (priceDate.getMonth()+1) + ' ' + priceDate.getHours() + ':' + priceDate.getMinutes();
+        return '<a href="/supplier/view/'+row.supplierId+'" target="_blanc">'+value+'</a>' + '<br/>' + priceDateStr ;
+    }    
+        
+</script>

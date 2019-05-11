@@ -505,6 +505,8 @@ class GoodsController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
         $status = $this->params()->fromQuery('status', Rawprice::STATUS_PARSED);
+        $unknownProducer = $this->params()->fromQuery('unknownProducer');
+        
         
         // Validate input parameter
         if ($goodsId<0) {
