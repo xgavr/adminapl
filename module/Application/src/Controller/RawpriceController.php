@@ -275,9 +275,13 @@ class RawpriceController extends AbstractActionController
 
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
-        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
         $result = $query->getResult(2);
         
         return new JsonModel([
