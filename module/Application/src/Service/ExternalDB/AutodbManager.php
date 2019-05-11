@@ -589,10 +589,19 @@ class AutodbManager
                 if (isset($articleDocuments['articleDocuments'])){
                     if (isset($articleDocuments['articleDocuments']['array'])){
                         foreach($articleDocuments['articleDocuments']['array'] as $document){
-                            if ($document['docId'] && isset($document['docFileName'])){
-                                $uri = $this->getDocImageUri($document['docId']);
-                                $this->entityManager->getRepository(Images::class)
-                                        ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
+                            if ($document['docId'] && isset($document['docFileName']) && isset($document['docFileTypeName'])){
+                                if ($document['docFileTypeName'] != 'URL'){
+                                    $uri = $this->getDocImageUri($document['docId']);
+                                    $this->entityManager->getRepository(Images::class)
+                                            ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
+                                }    
+                                if ($document['docFileTypeName'] == 'URL'){
+                                    if (isset($document['docUrl'])){
+                                        $url = $document['docUrl'];
+                                        $this->entityManager->getRepository(Images::class)
+                                                ->saveImageUrl($good, $url, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
+                                    }    
+                                }    
                             }
                         }
                     }    

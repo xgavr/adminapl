@@ -301,6 +301,31 @@ class ImageRepository extends EntityRepository
     }
     
     /**
+     * Сохранить ссылку на картинку товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @param string $url
+     * @param string $docFileName
+     * @param integer $status
+     * @param integer $similar
+     */
+    public function saveImageUrl($good, $url, $docFileName, $status, $similar)
+    {
+        if ($similar == Images::SIMILAR_MATCH){
+            $this->addImage([
+                'name' => $docFileName,
+                'path' => $url,
+                'status' => $status,
+                'similar' => $similar,
+                'good_id' => $good->getId(),
+            ]);
+        }    
+        
+        return;
+            
+    }
+    
+    /**
      * Сохранить картинку товара загруженная вручную
      * 
      * @param \Application\Entity\Goods $good
