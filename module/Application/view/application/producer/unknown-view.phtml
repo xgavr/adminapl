@@ -95,7 +95,7 @@ $this->headScript()
                     <tr>
                          <!--<th data-field="id" data-type="numeric">ID</th>-->
                          <!--<th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>-->
-                         <th data-field="article" data-formatter="codeFormatter">Артикул</th>
+                         <th data-field="code" data-formatter="codeFormatter">Артикул</th>
                          <th data-field="goodname" data-formatter="goodnameFormatter">Описание</th>
                          <th data-field="rest" data-align='right'>Наличие</th>
                          <th data-field="price" data-align='right'>Цена</th>
@@ -188,7 +188,11 @@ $this->headScript()
     }    
     
     function codeFormatter(value, row) {
-        return '<a href="/producer/article-view/'+row.codeId+'" target="_blanc">'+value+'</a> ' + producerFormatter(row.producer, row);
+        if (row.codeId){
+            return '<a href="/producer/article-view/'+row.codeId+'" target="_blanc">'+value+'</a>';
+        } else {
+            return row.article;
+        }    
     }    
     
     function supplierFormatter(value, row) {
