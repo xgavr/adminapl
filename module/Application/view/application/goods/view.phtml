@@ -109,7 +109,11 @@ $this->headScript()
                     <? if ($image->getPublicPath()):?>
                         <div class="thumbnail">
                             <a href="<?= $image->getPublicPath() ?>" target="_blank">
-                                <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
+                                <?php if (file_exists($image->getPublicPath())):?>
+                                    <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
+                                <?php else:?>
+                                    <span class='glyphicon glyphicon-picture'></span>
+                                <?php endif;?>
                             </a>    
                             <div class="caption panel-body small">
                                 <div class="pull-left">
