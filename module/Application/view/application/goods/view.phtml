@@ -112,7 +112,7 @@ $this->headScript()
                                 <?php if (file_exists($image->getPath())):?>
                                     <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
                                 <?php else:?>
-                                    <span class='glyphicon glyphicon-picture'></span>
+                                    <span class='glyphicon glyphicon-picture'><?= $image->getName() ?></span>
                                 <?php endif;?>
                             </a>    
                             <div class="caption panel-body small">
