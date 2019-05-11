@@ -88,11 +88,11 @@ class RawRepository extends EntityRepository
         $queryBuilder->select('r.id, r.article, identity(r.code) as codeId, r.producer, identity(r.unknownProducer) as producerId, r.goodname, r.rest, r.price')
             ->from(Rawprice::class, 'r')
 //            ->join('r.code', 'c') 
-            ->join('r.raw', 'rr')
+//            ->join('r.raw', 'rr')
             //->join('rr.supplier', 's')    
             ->where('r.unknownProducer = ?1')    
             ->setParameter('1', $unknownProducer->getId())
-            ->setMaxResults(100)    
+            //->setMaxResults(100)    
             ;
         
         if (is_array($params)){
