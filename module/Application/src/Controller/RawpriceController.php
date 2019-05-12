@@ -257,7 +257,7 @@ class RawpriceController extends AbstractActionController
         
         
         // Validate input parameter
-        if ($goodsId<0) {
+        if ($unknownProducerId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
