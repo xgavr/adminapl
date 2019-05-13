@@ -69,7 +69,7 @@ $this->headScript()
             </table>    
             <ul class="nav nav-tabs" id="featureTab" role="tablist">
                 <li role="presentation"><a href="#price" role="tab" id="price-tab" data-toggle="tab" aria-controls="price" aria-expanded="true">Прайсы <span id="priceBadge" class="badge"><?= $unknownProducer->getRawpriceCount() ?></span></a></li>
-                <li role="presentation"><a href="#intersect" role="tab" id="intersect-tab" data-toggle="tab" aria-controls="intersect" aria-expanded="true">Пересечения <span id="intersectBadge" class="badge"></span></a></li>
+                <li role="presentation"><a href="#intersect" role="tab" id="intersect-tab" data-toggle="tab" aria-controls="intersect" aria-expanded="true">Пересечения <span class="badge"><?= count($intersects)?></span><span id="intersectBadge" class="badge"></span></a></li>
             </ul>
 
             <div class="tab-content" id="featureTabContent">
@@ -193,6 +193,12 @@ $this->headScript()
     var priceTable = $('#priceTable').bootstrapTable({
         onLoadSuccess: function(res){
             $('#priceBadge').html($('#priceTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+    
+    var intersectTable = $('#intersectTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#intersectBadge').html($('#intersectTable').bootstrapTable('getOptions').totalRows)
         }
     });
     
