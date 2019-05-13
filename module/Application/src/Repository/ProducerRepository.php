@@ -507,7 +507,38 @@ class ProducerRepository  extends EntityRepository{
             ]);
 
         return $stmt->fetchAll();
+
+    }
+    
+    /**
+     * Выборка пересекающихся артикулов
+     * 
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @param \Application\Entity\UnknownProducer $intersectUnknownProducer
+     * @return query
+     */
+    public function intersectesArticle($unknownProducer, $intersectUnknownProducer)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
         
+        $queryBuilder->select('a')
+                ->from(\Application\Entity\Article::class, 'a')                
+                ;
+        $intersects = $this->intersectesCode($unknownProducer, $intersectUnknownProducer);
+        
+        $codes = [];
+        foreach ($intersects as $row){
+            $codes[] = $row['code'];
+        }
+        
+        $queryBuilder
+                ->andWhere('a.code in (?1)')
+                ->setParameter('1', implode(',', $codes))
+                ;
+
+        return $queryBuilder->getQuery();                
     }
     
     /**

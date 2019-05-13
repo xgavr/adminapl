@@ -327,12 +327,26 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
-        $result = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->intersectesCode($unknownProducer, $unknownProducerIntersect);
+//        $result = $this->entityManager->getRepository(UnknownProducer::class)
+//                        ->intersectesCode($unknownProducer, $unknownProducerIntersect);
+//
+//        $total = count($result);
+//        
+//        $result = array_slice($result, $offset, $limit);
 
-        $total = count($result);
+        $query = $this->entityManager->getRepository(Rawprice::class)
+                        ->intersectesArticle($unknownProducer, $unknownProducerIntersect);
         
-        $result = array_slice($result, $offset, $limit);
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);        
 
         return new JsonModel([
             'total' => $total,
