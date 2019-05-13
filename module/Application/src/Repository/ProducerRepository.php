@@ -535,14 +535,14 @@ class ProducerRepository  extends EntityRepository{
         
         $intersects = $this->intersectesCode($unknownProducer, $intersectUnknownProducer);
         
-        $orX = $queryBuilder->expr()->orX();
-        foreach ($intersects as $row){
-            $orX->add($queryBuilder->expr()->eq('a.code', $row['code']));
-        }
-        
-        $queryBuilder
-                ->andWhere($orX)
-                ;        
+//        $orX = $queryBuilder->expr()->orX();
+//        foreach ($intersects as $row){
+//            $orX->add($queryBuilder->expr()->eq('a.code', $row['code']));
+//        }
+//        
+//        $queryBuilder
+//                ->andWhere($orX)
+//                ;        
 
         var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();                
