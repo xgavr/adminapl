@@ -544,7 +544,7 @@ class ProducerRepository  extends EntityRepository{
                 ->andWhere($orX)
                 ;        
 
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();                
     }
     
