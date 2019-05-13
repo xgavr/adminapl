@@ -334,7 +334,7 @@ class RawpriceController extends AbstractActionController
 //        
 //        $result = array_slice($result, $offset, $limit);
 
-        $query = $this->entityManager->getRepository(Rawprice::class)
+        $query = $this->entityManager->getRepository(UnknownProducer::class)
                         ->intersectesArticle($unknownProducer, $unknownProducerIntersect);
         
         $total = count($query->getResult(2));
