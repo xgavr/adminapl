@@ -19,8 +19,8 @@ error_reporting(E_ALL & ~E_WARNING);
 class TelegramThread extends Thread {
     
     /**
-     *
-     * @var \Application\Service\TelegrammManager; 
+     * TelegrammManager manager.
+     * @var \Admin\Service\TelegrammManager
      */
     private $telegramManager;
     

@@ -13,7 +13,6 @@ use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Rawprice;
 use Application\Entity\Raw;
-use Application\Entity\Supplier;
 
 
 /**
@@ -457,6 +456,7 @@ class ProducerRepository  extends EntityRepository{
                     . ' from unknown_producer_intersect as t '
                     . ' inner join unknown_producer as u on t.unknown_producer_intersect = u.id '                
                     . ' where t.unknown_producer = :unknownProducer'
+                    . ' and where u.name != ""'
                     . ' group by t.unknown_producer, t.unknown_producer_intersect '
                     . ' having countCode/:rawpriceCount > :intersect_coef'
                     . ' order by countCode DESC';
@@ -464,7 +464,7 @@ class ProducerRepository  extends EntityRepository{
     //        $query = $entityManager->createNativeQuery($sql, $rsm);
     //        $query->setParameter(1, $unknownProducer->getId());
 
-    //        var_dump($sql); exit;
+//            var_dump($sql); exit;
 
             $stmt = $entityManager->getConnection()->prepare($sql);
             $stmt->execute([
