@@ -48,13 +48,10 @@ $this->headScript()
             </div>
             <table class="table table-striped">
                 <tr>
-                    <th colspan="2">
-                        Всего
-                    </th>
-                    <td  colspan="2" align="right">
-                        <b><?= $unknownProducer->getRawpriceCount() ?></b>
-                        /
-                        <?= $unknownProducer->getSupplierCount() ?>
+                    <td  colspan="4">
+                        <span>Поставщиков: <?= $unknownProducer->getSupplierCount() ?></span>,
+                        <span>cтрок прайсов: <?= $unknownProducer->getRawpriceCount() ?></span>
+                        
                     </td>
                 </tr>
                 <tr>

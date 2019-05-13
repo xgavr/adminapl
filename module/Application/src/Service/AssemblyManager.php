@@ -443,7 +443,7 @@ class AssemblyManager
     /**
      * Проверка записей в прайсах неизвестного производителя
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param \Application\Entity\UnknownProducer $unknownProducer
      * @return boolean
      */
     public function checkUnknownProducer($unknownProducer)

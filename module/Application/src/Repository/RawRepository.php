@@ -92,7 +92,6 @@ class RawRepository extends EntityRepository
 //            ->join('rr.supplier', 's')    
             ->where('r.unknownProducer = ?1')    
             ->setParameter('1', $unknownProducer->getId())
-            //->setMaxResults(100)    
             ;
         
         if (is_array($params)){
@@ -100,6 +99,9 @@ class RawRepository extends EntityRepository
                 $queryBuilder->andWhere('r.status = ?2')
                         ->setParameter('2', $params['status'])
                         ;
+            }
+            if ($params['limit']){
+                $queryBuilder->setMaxResults($params['limit']);
             }
         }
         

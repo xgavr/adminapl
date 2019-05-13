@@ -12,6 +12,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Entity\UnknownProducer;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -251,7 +252,6 @@ class RawpriceController extends AbstractActionController
         $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
 
         $offset = $this->params()->fromQuery('offset');
-        $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
         $status = $this->params()->fromQuery('status', Rawprice::STATUS_PARSED);
         
@@ -262,7 +262,7 @@ class RawpriceController extends AbstractActionController
             return;
         }
 
-        $unknownProducer = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findOneById($unknownProducerId);
 
         if ($unknownProducer == null) {
@@ -270,8 +270,9 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
+        $limit = $this->params()->fromQuery('limit', max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * UnknownProducer::CHECK_COUNT));
         $query = $this->entityManager->getRepository(Rawprice::class)
-                        ->findPrice($unknownProducer, ['status' => $status]);
+                        ->findPrice($unknownProducer, ['status' => $status, 'limit' => $limit]);
 
         $total = count($query->getResult(2));
         
