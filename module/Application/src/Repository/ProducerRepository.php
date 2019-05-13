@@ -524,16 +524,25 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('a')
-                ->from(\Application\Entity\Article::class, 'a')                
+                ->from(\Application\Entity\Article::class, 'a')
+                ->andWhere($queryBuilder->expr()->orX(
+                        $queryBuilder->expr()->eq('a.unknownProducer', $unknownProducer->getId()),
+                        $queryBuilder->expr()->eq('a.unknownProducer', $intersectUnknownProducer->getId())
+                    )
+                )
+                ->orderBy('a.code')
                 ;
+        
         $intersects = $this->intersectesCode($unknownProducer, $intersectUnknownProducer);
         
+        $orX = $queryBuilder->expr()->orX();
         foreach ($intersects as $row){
-            $queryBuilder
-                    ->orWhere("a.code = '{$row['code']}'")
-                    ;
+            $orX->add($queryBuilder->expr()->eq('a.code', $row['code']));
         }
         
+        $queryBuilder
+                ->andWhere($orX)
+                ;        
 
         var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();                
