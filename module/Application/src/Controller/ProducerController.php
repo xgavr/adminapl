@@ -368,7 +368,7 @@ class ProducerController extends AbstractActionController
                         ->findAllUnknownProducer(['next1' => $unknownProducer->getName()]); 
         
         $intersects = $this->entityManager->getRepository(Producer::class)
-                ->unknownProducerIntersect($unknownProducer, 0);
+                ->unknownProducerIntersect($unknownProducer);
         
 //        var_dump($intersects);
         // Render the view template.
