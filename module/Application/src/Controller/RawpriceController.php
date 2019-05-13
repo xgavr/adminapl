@@ -327,7 +327,7 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
-        $result = $this->entityManager->getRepository(Rawprice::class)
+        $result = $this->entityManager->getRepository(UnknownProducer::class)
                         ->intersectesCode($unknownProducer, $unknownProducerIntersect);
 
         $total = count($result);
