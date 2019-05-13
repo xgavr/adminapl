@@ -405,9 +405,11 @@ class ProducerRepository  extends EntityRepository{
                 ->where('length(a.code) > 0')                
                 ->andWhere('length(a.code) < 24')
                 ->andWhere('a.code not like ?1')
+                ->andWhere('a.code != ?2')
                 ->groupBy('a.code')
                 ->having('unknownProducerCount > 1')
                 ->setParameter('1', '%_pk_%')
+                ->setParameter('2', \Application\Entity\Article::LONG_CODE_NAME)
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $codeRows = $queryBuilder->getQuery()->getResult(2);
