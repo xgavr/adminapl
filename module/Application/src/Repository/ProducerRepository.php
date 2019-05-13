@@ -533,6 +533,7 @@ class ProducerRepository  extends EntityRepository{
             $codes[] = $row['code'];
         }
         
+        var_dump($codes); exit;
         $queryBuilder
                 ->andWhere('a.code in (?1)')
                 ->setParameter('1', implode(',', $codes))
