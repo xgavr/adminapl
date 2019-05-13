@@ -528,16 +528,12 @@ class ProducerRepository  extends EntityRepository{
                 ;
         $intersects = $this->intersectesCode($unknownProducer, $intersectUnknownProducer);
         
-        $codes = [];
         foreach ($intersects as $row){
-            $codes[] = $row['code'];
+            $queryBuilder
+                    ->orWhere("a.code = '{$row['code']}'")
+                    ;
         }
         
-        var_dump(implode(',', $codes)); exit;
-        $queryBuilder
-                ->andWhere('a.code in (?1)')
-                ->setParameter('1', implode(',', $codes))
-                ;
 
         var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();                
