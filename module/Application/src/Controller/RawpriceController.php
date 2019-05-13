@@ -336,7 +336,7 @@ class RawpriceController extends AbstractActionController
 
         $query = $this->entityManager->getRepository(UnknownProducer::class)
                         ->intersectesArticle($unknownProducer, $unknownProducerIntersect);
-        
+
         $total = count($query->getResult(2));
         
         if ($offset) {

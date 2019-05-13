@@ -538,6 +538,7 @@ class ProducerRepository  extends EntityRepository{
                 ->setParameter('1', implode(',', $codes))
                 ;
 
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();                
     }
     
