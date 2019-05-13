@@ -440,10 +440,11 @@ class ProducerRepository  extends EntityRepository{
     /**
      * Количество и частота пересекающихся неизвестных производителей
      * 
-     * @param Application\Entity\UnknownProducer $nknownProducer
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @param float $intersectCoef
      * @return type
      */
-    public function unknownProducerIntersect($unknownProducer)
+    public function unknownProducerIntersect($unknownProducer, $intersectCoef = UnknownProducer::INTERSECT_COEF)
     {
         $entityManager = $this->getEntityManager();
 //        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
@@ -469,8 +470,7 @@ class ProducerRepository  extends EntityRepository{
             $stmt->execute([
                     'unknownProducer' => $unknownProducer->getId(),
                     'rawpriceCount' => $unknownProducer->getRawpriceCount(),
-                    'intersect_coef' => $unknownProducer::INTERSECT_COEF,
-//                    'intersect_coef' => 0,
+                    'intersect_coef' => $intersectCoef,
                 ]);
 
             return $stmt->fetchAll();
@@ -480,10 +480,10 @@ class ProducerRepository  extends EntityRepository{
     }
     
     /**
-     * Получить артикулы пеерсекающихся производителей
+     * Получить артикулы пересекающихся производителей
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
-     * @param Application\Entity\UnknownProducer $intersectUnknownProducer
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @param \Application\Entity\UnknownProducer $intersectUnknownProducer
      * @return array
      */
     public function intersectesCode($unknownProducer, $intersectUnknownProducer)

@@ -252,7 +252,7 @@ class RawpriceController extends AbstractActionController
         $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
 
         $offset = $this->params()->fromQuery('offset');
-        $search = $this->params()->fromQuery('search');
+//        $search = $this->params()->fromQuery('search');
         $status = $this->params()->fromQuery('status', Rawprice::STATUS_PARSED);
         
         
@@ -285,6 +285,44 @@ class RawpriceController extends AbstractActionController
 
         $result = $query->getResult(2);
         
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }    
+    
+    public function intersectContentAction()
+    {
+        $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+//        $search = $this->params()->fromQuery('search');
+        $intersectCoef = $this->params()->fromQuery('coef', UnknownProducer::INTERSECT_COEF);        
+        
+        // Validate input parameter
+        if ($unknownProducerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findOneById($unknownProducerId);
+
+        if ($unknownProducer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $result = $this->entityManager->getRepository(Rawprice::class)
+                        ->unknownProducerIntersect($unknownProducer, $intersectCoef);
+
+        $total = count($result);
+        
+        if ($offset) {
+            $result = array_slice($result, $offset, $limit);
+        }
+
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
