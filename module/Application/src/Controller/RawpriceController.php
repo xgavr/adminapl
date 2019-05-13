@@ -295,7 +295,7 @@ class RawpriceController extends AbstractActionController
     {
         $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
 
-        $offset = $this->params()->fromQuery('offset');
+        $offset = $this->params()->fromQuery('offset', 0);
         $limit = $this->params()->fromQuery('limit');
 //        $search = $this->params()->fromQuery('search');
         $unknownProducerIntersectId = $this->params()->fromQuery('intersect', -1);        
@@ -332,9 +332,11 @@ class RawpriceController extends AbstractActionController
 
         $total = count($result);
         
-        if ($offset) {
-            $result = array_slice($result, $offset, $limit);
+        if ($offset){
+            $offset = $offset-1;
         }
+        
+        $result = array_slice($result, $offset, $limit);
 
         return new JsonModel([
             'total' => $total,
