@@ -298,10 +298,15 @@ class RawpriceController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
 //        $search = $this->params()->fromQuery('search');
-        $intersectCoef = $this->params()->fromQuery('coef', UnknownProducer::INTERSECT_COEF);        
+        $unknownProducerIntersectId = $this->params()->fromQuery('intersect', -1);        
         
         // Validate input parameter
         if ($unknownProducerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        if ($unknownProducerIntersectId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
@@ -314,8 +319,16 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
+        $unknownProducerIntersect = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findOneById($unknownProducerIntersectId);
+
+        if ($unknownProducerIntersect == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
         $result = $this->entityManager->getRepository(Rawprice::class)
-                        ->unknownProducerIntersect($unknownProducer, $intersectCoef);
+                        ->intersectesCode($unknownProducer, $unknownProducerIntersect);
 
         $total = count($result);
         

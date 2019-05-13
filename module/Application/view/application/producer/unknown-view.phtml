@@ -110,7 +110,7 @@ $this->headScript()
                 <div class="tab-pane fade" role="tabpanel" id="intersect" aria-labelledby="intersect-tab">
                     <div id="intersectToolbar">
                         <div class="form-inline" role="form">
-                            <select style="width: 200px" class="form-control" id='priceStatusSelect'>
+                            <select style="width: 200px" class="form-control" id='intersectSelect'>
                                 <?php foreach ($intersects as $key => $value):?>
                                     <option value="<?= $value['unknown_producer_id']?>" <?= ($key === 0) ? 'selected':''?>><?= $value['unknown_producer_name'].' ('.$intrsect['countCode'].'/'.round($diff, 2).')' ?></option>
                                 <?php endforeach;?>
@@ -131,10 +131,7 @@ $this->headScript()
                         >
                         <thead>
                             <tr>
-                                 <th data-field="unknown_producer_name">Производитель</th>
-                                 <th data-field="unknown_producer_rawprice_count">Строк прайсов</th>
-                                 <th data-field="rest" data-align='right'>Наличие</th>
-                                 <th data-field="price" data-align='right'>Цена</th>
+                                 <th data-field="code">Артикул</th>
                              </tr>                
                         </thead>
                     </table>
