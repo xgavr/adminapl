@@ -112,7 +112,7 @@ $this->headScript()
                         <div class="form-inline" role="form">
                             <select style="width: 200px" class="form-control" id='priceStatusSelect'>
                                 <?php foreach ($intersects as $key => $value):?>
-                                    <option value="<?= $key?>"><?= $value?></option>
+                                    <option value="<?= $value['unknown_producer_id']?>" <?= ($key === 0) ? 'selected':''?>><?= $value['unknown_producer_name'].' ('.$intrsect['countCode'].'/'.round($diff, 2).')' ?></option>
                                 <?php endforeach;?>
                             </select>
                         </div>
