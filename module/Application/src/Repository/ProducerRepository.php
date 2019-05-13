@@ -525,11 +525,13 @@ class ProducerRepository  extends EntityRepository{
         
         $queryBuilder->select('a')
                 ->from(\Application\Entity\Article::class, 'a')
-                ->andWhere($queryBuilder->expr()->orX(
-                        $queryBuilder->expr()->eq('a.unknownProducer', $unknownProducer->getId()),
-                        $queryBuilder->expr()->eq('a.unknownProducer', $intersectUnknownProducer->getId())
-                    )
-                )
+//                ->andWhere($queryBuilder->expr()->orX(
+//                        $queryBuilder->expr()->eq('a.unknownProducer', $unknownProducer->getId()),
+//                        $queryBuilder->expr()->eq('a.unknownProducer', $intersectUnknownProducer->getId())
+//                    )
+//                )
+                ->andWhere('a.unknownProducer = ?1')
+                ->setParameter('1', $intersectUnknownProducer->getId())
                 ->orderBy('a.code')
                 ;
         
