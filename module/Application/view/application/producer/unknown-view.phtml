@@ -177,10 +177,17 @@ $this->headScript()
         $('#priceStatusSelect').change(function (){
             $('#priceTable').bootstrapTable('refresh');
         })
+        $('#intersectSelect').change(function (){
+            $('#intersectTable').bootstrapTable('refresh');
+        })
     });    
     
     function refreshPriceTable(){
         $('#priceTable').bootstrapTable('refresh');
+    }
+
+    function refreshIntersectTable(){
+        $('#intersectTable').bootstrapTable('refresh');
     }
 
     var priceTable = $('#priceTable').bootstrapTable({
@@ -208,6 +215,11 @@ $this->headScript()
     function priceQueryParams(params) {
         params.status = $('#priceStatusSelect').val();
         return tabQueryParams('#price', params);
+    }
+    
+    function intersectQueryParams(params) {
+        params.intersect = $('#intersectSelect').val();
+        return tabQueryParams('#intersect', params);
     }
     
     function responseHandler(res) {
