@@ -21,6 +21,8 @@ class Article {
     
     const TOKEN_UPDATE_FLAG = 1; // установить любое число, для запуска обновления токенов артикулов
     
+    const LONG_CODE_NAME = 'moreThan24'; //наименование для длинных артикулов
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

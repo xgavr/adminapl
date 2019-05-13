@@ -494,12 +494,14 @@ class ProducerRepository  extends EntityRepository{
                 . ' from unknown_producer_intersect as t '
                 . ' where t.unknown_producer_intersect = :unknownProducerIntersect'
                 . ' and t.unknown_producer = :unknownProducer'
+                . ' and t.code != :longCodeName'
                 ;
 
         $stmt = $entityManager->getConnection()->prepare($sql);
         $stmt->execute([
                 'unknownProducer' => $unknownProducer->getId(),
                 'unknownProducerIntersect' => $intersectUnknownProducer->getId(),
+                'longCodeName' => \Application\Entity\Article::LONG_CODE_NAME,
             ]);
 
         return $stmt->fetchAll();
