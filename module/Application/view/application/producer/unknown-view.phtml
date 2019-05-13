@@ -131,7 +131,7 @@ $this->headScript()
                         >
                         <thead>
                             <tr>
-                                 <th data-field="code">Артикул</th>
+                                 <th data-field="code" data-formatter="codeFormatter">Артикул</th>
                              </tr>                
                         </thead>
                     </table>
@@ -248,4 +248,8 @@ $this->headScript()
         return '<a href="/supplier/view/'+row.supplierId+'" target="_blanc">'+value+'</a>' + '<br/>' + priceDateStr ;
     }    
         
+    function intersectCodeFormatter(value) {
+        return '<a href="/producer/article-view?code='+value+'" target="_blanc">'+value+'</a>';
+    }    
+    
 </script>
