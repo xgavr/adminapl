@@ -332,10 +332,6 @@ class RawpriceController extends AbstractActionController
 
         $total = count($result);
         
-        if ($offset){
-            $offset = $offset-1;
-        }
-        
         $result = array_slice($result, $offset, $limit);
 
         return new JsonModel([
