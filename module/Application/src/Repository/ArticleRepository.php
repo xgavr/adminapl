@@ -269,19 +269,20 @@ class ArticleRepository  extends EntityRepository
             ->setParameter('2', Rawprice::STATUS_PARSED)    
             ;    
             if (is_array($params)){
+                $orX = $queryBuilder->expr()->orX();
                 if (isset($params['unknownProducer'])){
-                    $queryBuilder->andWhere('a.unknownProducer = ?3')
-                            ->setParameter('3', $params['unknownProducer'])
-                            ;
+                    $orX->add('a.unknownProducer', $params['unknownProducer']);
                 }
                 if (isset($params['unknownProducerIntersect'])){
-                    $queryBuilder->andWhere('a.unknownProducer = ?4')
-                            ->setParameter('4', $params['unknownProducerIntersect'])
-                            ;
+                    $orX->add('a.unknownProducer', $params['unknownProducerIntersect']);
+                }
+                
+                if ($orX->count()){
+                    $queryBuilder->andWhere($orX);
                 }
             }    
 
-            //var_dump($queryBuilder->getQuery()->getDQL());
+            var_dump($queryBuilder->getQuery()->getSql());
         return $queryBuilder->getQuery()->getResult();    
     }
     
@@ -304,7 +305,7 @@ class ArticleRepository  extends EntityRepository
             ->setParameter('1', $params['article'])    
             ->setParameter('2', $params['supplier'])    
             ->setParameter('3', Rawprice::STATUS_PARSED)
-            ->setMaxResults(5)
+            //->setMaxResults(5)
             //->orderBy('rand()')    
                 ;
         return $queryBuilder->getQuery()->getResult();    
