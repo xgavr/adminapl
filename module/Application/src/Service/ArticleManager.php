@@ -500,7 +500,7 @@ class ArticleManager
     /**
      * Получить токены списка строк прайса
      * 
-     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
+     * @param array $rawprices
      * @param integer $rawpriceDiff
      * @return array
      */
@@ -509,10 +509,10 @@ class ArticleManager
         $result = [];
         foreach ($rawprices as $rawprice){
             if ($rawprice->getStatus() == $rawprice::STATUS_PARSED && $rawprice->getId() != $rawpriceDiff){
-                if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
-                    $this->nameManager->addNewTokenFromRawprice($rawprice);
-                    return $this->getRawpricesTokens($rawprices, $rawpriceDiff);
-                }
+//                if ($rawprice->getStatusToken() != $rawprice::TOKEN_PARSED){
+//                    $this->nameManager->addNewTokenFromRawprice($rawprice);
+//                    return $this->getRawpricesTokens($rawprices, $rawpriceDiff);
+//                }
                 foreach ($rawprice->getTokens() as $token){
                     if ($token->isIntersectLemma()){
                         if (array_key_exists($token->getId(), $result)){
@@ -600,8 +600,8 @@ class ArticleManager
     /**
      * Сравнить токены артикула и строки прайса
      * 
-     * @param Application\Entity\Article $article
-     * @param Application\Entity\Rawprice $rawprice
+     * @param \Application\Entity\Article $article
+     * @param \Application\Entity\Rawprice $rawprice
      * 
      * @return bool|null
      */
