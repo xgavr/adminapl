@@ -464,7 +464,7 @@ class ProducerController extends AbstractActionController
         foreach($rawpriceCountBySupplier as $row){
             $articles[] = $row['articleId'];            
         }
-        var_dump($articles);
+        var_dump(array_filter($articles));
         // Render the view template.
         return new ViewModel([
             'article' => $article,
@@ -472,7 +472,7 @@ class ProducerController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
-            'articles' => $articles,
+            'articles' => array_filter($articles),
         ]);
     }
     
