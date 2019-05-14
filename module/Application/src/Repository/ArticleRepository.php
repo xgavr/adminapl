@@ -269,16 +269,16 @@ class ArticleRepository  extends EntityRepository
             ->setParameter('2', Rawprice::STATUS_PARSED)    
             ;    
             if (is_array($params)){
-                $orX = $queryBuilder->expr()->orX();
+                $andX = $queryBuilder->expr()->andX();
                 if (isset($params['unknownProducer'])){
-                    $orX->add('a.unknownProducer', $params['unknownProducer']);
+                    $andX->add('a.unknownProducer', $params['unknownProducer']);
                 }
                 if (isset($params['unknownProducerIntersect'])){
-                    $orX->add('a.unknownProducer', $params['unknownProducerIntersect']);
+                    $andX->add('a.unknownProducer', $params['unknownProducerIntersect']);
                 }
                 
-                if ($orX->count()){
-                    $queryBuilder->andWhere($orX);
+                if ($andX->count()){
+                    $queryBuilder->andWhere($andX);
                 }
             }    
 
