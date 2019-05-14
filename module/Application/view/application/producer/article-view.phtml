@@ -26,6 +26,17 @@ $this->pageBreadcrumbs()->setItems([
             <?php endif;?>                            
         </td>
     </tr>
+    <tr>
+        <td colspan="6" align="right">
+            <?php $articleMeanPrice = $articleManager->articlesMeanPrice($articles);?>
+            <?php $articleDispersion = $articleManager->articlesDeviation($articles);?>
+            <b><?= number_format($articleMeanPrice, 2, '.', '') ?></b>
+            (<?= number_format($articleDispersion, 2, '.', '') ?>)
+            <?php if ($articleMeanPrice):?>
+                (<?= number_format($articleDispersion/$articleMeanPrice, 2, '.', '') ?>)
+            <?php endif; ?>                
+        </td>
+    </tr>
     <?php $totalRawpriceCount = 0; ?>
     <?php $articleId = $meanPrice = $dispersion = 0?>
     <?php    foreach ($rawpriceCountBySupplier as $row):?>
@@ -39,7 +50,7 @@ $this->pageBreadcrumbs()->setItems([
                 <th>
                     <?= $randRawprices[0]->getUnknownProducer()->getName()?>
                 </th>
-                <td colspan="3" align="right">
+                <td colspan="4" align="right">
                     <?php $meanPrice = $articleManager->meanPrice($articleId);?>
                     <?php $dispersion = $articleManager->dispersionPrice($articleId);?>
                     <b><?= number_format($meanPrice, 2, '.', '') ?></b>
@@ -47,8 +58,6 @@ $this->pageBreadcrumbs()->setItems([
                     <?php if ($meanPrice):?>
                         (<?= number_format($dispersion/$meanPrice, 2, '.', '') ?>)
                     <?php endif; ?>    
-                </td>
-                <td align="right">
                 </td>
             </tr>
         <?php endif; ?>    

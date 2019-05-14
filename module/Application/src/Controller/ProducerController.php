@@ -460,6 +460,11 @@ class ProducerController extends AbstractActionController
         $nextQuery = $this->entityManager->getRepository(Article::class)
                         ->findAllArticle(['next1' => $article->getCode()]);        
 
+        $articles = [];
+        foreach($rawpriceCountBySupplier as $row){
+            $articles[] = $row['articleId'];            
+        }
+        
         // Render the view template.
         return new ViewModel([
             'article' => $article,
@@ -467,6 +472,7 @@ class ProducerController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
+            'articles' => $articles,
         ]);
     }
     

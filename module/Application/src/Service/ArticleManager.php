@@ -324,6 +324,27 @@ class ArticleManager
     }
     
     /**
+     * Массив цен из прайсов артикулов
+     * 
+     * @param array $articles
+     * @return array
+     */
+    public function articlesPrices($articles)
+    {
+        $result = [];
+        foreach ($articles as $article){
+            if (is_numeric($article)){
+                $article = $this->entityManager->getRepository(Article::class)
+                        ->findOneById($article);
+                
+                $result += $this->rawpricesPrices($article->getRawprice());
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Средняя цена по строкам прайса
      * 
      * @param array $rawprices
@@ -332,6 +353,17 @@ class ArticleManager
     public function rawpricesMeanPrice($rawprices)
     {
         return Mean::arithmetic($this->rawpricesPrices($rawprices));
+    }
+    
+    /**
+     * Средняя цена по артикулам
+     * 
+     * @param array $articles
+     * @return float
+     */
+    public function articlesMeanPrice($articles)
+    {
+        return Mean::arithmetic($this->articlesPrices($articles));
     }
     
     /**
@@ -369,6 +401,22 @@ class ArticleManager
         return 0; 
     }
     
+    /**
+     * Вычисление стандартного отклонения цены 
+     * 
+     * @param array $articles
+     * @return float 
+     */
+    public function articlesDeviation($articles)
+    {
+        $prices = $this->articlesPrices($articles);
+        if (count($prices)){
+            return StandardDeviation::population($prices, count($prices) > 1);
+        }
+        
+        return 0; 
+    }
+
     /**
      * УСТАРЕЛО
      * Разброс цены по строкам по набору строк прайса 
