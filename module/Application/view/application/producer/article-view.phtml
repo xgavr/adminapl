@@ -120,7 +120,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endforeach;?>
                 </td>
                 <td align="right">
-                    <span style="color: <?= ($this->articleManager->inSigma3($randRawprice->getRealPrice(), $meanPrice, $dispersion)) ? 'inherit':'red'?>">
+                    <span style="color: <?= ($this->articleManager->inSigma3($randRawprice->getRealPrice(), $articleMeanPrice, $articleDispersion)) ? 'inherit':'red'?>">
                         <?= number_format($randRawprice->getRealPrice(), 2, '.', '');?>
                     </span>
                 </td>
