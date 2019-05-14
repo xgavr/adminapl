@@ -12,6 +12,8 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Validator\Sigma3;
+use Phpml\Math\Statistic\Mean;
+use Phpml\Math\Statistic\StandardDeviation;
 
 /**
  * Description of RbService
@@ -301,6 +303,27 @@ class ArticleManager
     }
     
     /**
+     * Массив цен из строк прайсов
+     * 
+     * @param array $rawprices
+     * @return array
+     */
+    public function rawpricesPrices($rawprices)
+    {
+        $result = [];
+        foreach($rawprices as $rawprice){
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() && $rawprice->getRealPrice()){
+                for ($i = 1; $i <= $rawprice->getRealRest(); $i++){
+                    $result[] = $rawprice->getRealPrice();
+                }    
+            }    
+        }
+        
+//        var_dump($result);
+        return $result;
+    }
+    
+    /**
      * Средняя цена по строкам прайса
      * 
      * @param array $rawprices
@@ -308,26 +331,13 @@ class ArticleManager
      */
     public function rawpricesMeanPrice($rawprices)
     {
-        $result = [];
-        $rest = 0;
-        foreach($rawprices as $rawprice){
-            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
-                $result[] = $rawprice->getRealPrice() * $rawprice->getRealRest();
-                $rest += $rawprice->getRealRest();
-            }    
-        }
-
-        if ($rest){
-            return array_sum($result)/$rest;
-        }    
-        
-        return 0;
+        return Mean::arithmetic($this->rawpricesPrices($rawprices));
     }
     
     /**
      * Вычисление средней цены 
      * 
-     * @param Application\Entity\Article
+     * @param integer|\Application\Entity\Article $article
      * @return float 
      */
     public function meanPrice($article)
@@ -343,11 +353,27 @@ class ArticleManager
         return 0;
     }
     
+    /**
+     * Вычисление стандартного отклонения цены 
+     * 
+     * @param array $rawprices
+     * @return float 
+     */
+    public function rawpricesDeviation($rawprices)
+    {
+        $prices = $this->rawpricesPrices($rawprices);
+        if (count($prices)){
+            return StandardDeviation::population($prices, count($prices) > 1);
+        }
+        
+        return 0; 
+    }
     
     /**
+     * УСТАРЕЛО
      * Разброс цены по строкам по набору строк прайса 
      * 
-     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
+     * @param array $rawprices
      * @return float|null
      */
     public function rawpricesDispersion($rawprices)
@@ -357,7 +383,7 @@ class ArticleManager
         $result = [];
         $rest = 0;
         foreach($rawprices as $rawprice){
-            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()){
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() && $rawprice->getRealPrice()){
                 $result[] = pow(($rawprice->getRealPrice() - $mean), 2)*$rawprice->getRealRest();
                 $rest += $rawprice->getRealRest();
             }    
@@ -386,7 +412,8 @@ class ArticleManager
         }
         
         if ($article){
-            return $this->rawpricesDispersion($article->getRawprice());
+//            return $this->rawpricesDispersion($article->getRawprice());
+            return $this->rawpricesDeviation($article->getRawprice());
         }
         
         return;
@@ -395,8 +422,9 @@ class ArticleManager
     /**
      * Проверка цены на попадание в диапазон цен
      * 
-     * @param Application\Entity\Article $article
-     * @param Application\Entity\Rawprice $rawprice
+     * @param float $price
+     * @param float $meanPrice
+     * @param float $dispersion
      * 
      * @return bool
      */
