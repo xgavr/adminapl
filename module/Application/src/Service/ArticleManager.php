@@ -338,7 +338,7 @@ class ArticleManager
                         ->findOneById($article);
             }
                 
-            $result += $this->rawpricesPrices($article->getRawprice());
+            $result = array_merge($result, $this->rawpricesPrices($article->getRawprice()));
         }
         var_dump($result);
         return $result;
