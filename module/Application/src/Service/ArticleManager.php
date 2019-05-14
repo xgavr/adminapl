@@ -336,9 +336,9 @@ class ArticleManager
             if (is_numeric($article)){
                 $article = $this->entityManager->getRepository(Article::class)
                         ->findOneById($article);
-                
-                $result += $this->rawpricesPrices($article->getRawprice());
             }
+                
+            $result += $this->rawpricesPrices($article->getRawprice());
         }
         var_dump($result);
         return $result;
