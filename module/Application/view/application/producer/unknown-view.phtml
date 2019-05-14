@@ -263,7 +263,7 @@ $this->headScript()
     }    
         
     function intersectCodeFormatter(value, row) {
-        return '<a href="/producer/article-view?code='+value+'&unknownProducer=<?= $unknownProducer->getId()?>&unknownProducerIntersect='+row.unknownProducer+'" target="_blank">'+value+'</a>';
+        return '<a href="/producer/article-view?code='+value+'&unknownProducerIntersect=<?= $unknownProducer->getId()?>&unknownProducer='+row.unknownProducer+'" target="_blank">'+value+'</a>';
     }    
     
 </script>
