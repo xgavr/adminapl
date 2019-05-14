@@ -241,16 +241,16 @@ $this->headScript()
     }       
     
     function goodnameFormatter(value, row) {
-        return '<a href="/rawprice/view/'+row.id+'" target="_blanc">'+value+'</a>';
+        return '<a href="/rawprice/view/'+row.id+'" target="_blank">'+value+'</a>';
     }    
     
     function producerFormatter(value, row) {
-        return '<a href="/producer/unknown-view/'+row.producerId+'" target="_blanc">'+value+'</a>';
+        return '<a href="/producer/unknown-view/'+row.producerId+'" target="_blank">'+value+'</a>';
     }    
     
     function codeFormatter(value, row) {
         if (row.codeId){
-            return '<a href="/producer/article-view/'+row.codeId+'" target="_blanc">'+value+'</a>';
+            return '<a href="/producer/article-view/'+row.codeId+'" target="_blank">'+value+'</a>';
         } else {
             return row.article;
         }    
@@ -259,11 +259,11 @@ $this->headScript()
     function supplierFormatter(value, row) {
         var priceDate = new Date(row.dateCreated);
         var priceDateStr = priceDate.getDate()+'-'+ (priceDate.getMonth()+1) + ' ' + priceDate.getHours() + ':' + priceDate.getMinutes();
-        return '<a href="/supplier/view/'+row.supplierId+'" target="_blanc">'+value+'</a>' + '<br/>' + priceDateStr ;
+        return '<a href="/supplier/view/'+row.supplierId+'" target="_blank">'+value+'</a>' + '<br/>' + priceDateStr ;
     }    
         
-    function intersectCodeFormatter(value) {
-        return '<a href="/producer/article-view?code='+value+'" target="_blanc">'+value+'</a>';
+    function intersectCodeFormatter(value, row) {
+        return '<a href="/producer/article-view?code='+value+'&unknownProducer=<?= $unknownProducer->getId()?>&unknownProducerIntersect='+row.unknownProducer+'" target="_blank">'+value+'</a>';
     }    
     
 </script>

@@ -245,11 +245,11 @@ class ArticleRepository  extends EntityRepository
      * Количество записей в прайсах с этим артикулом
      * в разрезе поставщиков
      * 
-     * @param Application\Entity\Article $article
-     * 
+     * @param \Application\Entity\Article $article
+     * @param array $params
      * @return object
      */
-    public function rawpriceCountBySupplier($article)
+    public function rawpriceCountBySupplier($article, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -267,8 +267,21 @@ class ArticleRepository  extends EntityRepository
             ->addGroupBy('s.id')    
             ->setParameter('1', $article->getCode())    
             ->setParameter('2', Rawprice::STATUS_PARSED)    
-                ;
-        //var_dump($queryBuilder->getQuery()->getDQL());
+            ;    
+            if (is_array($params)){
+                if (isset($params['unknownProducer'])){
+                    $queryBuilder->andWhere('a.unknownProducer = ?3')
+                            ->setParameter('3', $params['unknownProducer'])
+                            ;
+                }
+                if (isset($params['unknownProducerIntersect'])){
+                    $queryBuilder->andWhere('a.unknownProducer = ?4')
+                            ->setParameter('4', $params['unknownProducerIntersect'])
+                            ;
+                }
+            }    
+
+            //var_dump($queryBuilder->getQuery()->getDQL());
         return $queryBuilder->getQuery()->getResult();    
     }
     

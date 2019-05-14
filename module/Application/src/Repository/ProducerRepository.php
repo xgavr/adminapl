@@ -523,7 +523,7 @@ class ProducerRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('a')
+        $queryBuilder->select('a.id, a.code, identity(a.unknownProducer) as unknownProducer')
                 ->from(\Application\Entity\Article::class, 'a')
 //                ->andWhere($queryBuilder->expr()->orX(
 //                        $queryBuilder->expr()->eq('a.unknownProducer', $unknownProducer->getId()),
