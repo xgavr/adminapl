@@ -452,20 +452,8 @@ class ProducerController extends AbstractActionController
             return;                        
         }        
         
-        $unknownProducer = null;
-        if ($unknownProducerId){
-            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneById($unknownProducerId);            
-        }
-        
-        $unknownProducerIntersect = null;
-        if ($unknownProducerIntersectId){
-            $unknownProducerIntersect = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneById($unknownProducerIntersectId);            
-        }
-        
         $rawpriceCountBySupplier = $this->entityManager->getRepository(Article::class)
-                ->rawpriceCountBySupplier($article, ['unknownProducer' => $unknownProducer->getId(), 'unknownProducerIntersect' => $unknownProducerIntersect->getId()]);
+                ->rawpriceCountBySupplier($article, ['unknownProducer' => $unknownProducer, 'unknownProducerIntersect' => $unknownProducerIntersect]);
         
         $prevQuery = $this->entityManager->getRepository(Article::class)
                         ->findAllArticle(['prev1' => $article->getCode()]);
