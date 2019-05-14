@@ -340,7 +340,7 @@ class ArticleManager
                 $result += $this->rawpricesPrices($article->getRawprice());
             }
         }
-        
+        var_dump($result);
         return $result;
     }
     
