@@ -282,7 +282,7 @@ class ArticleRepository  extends EntityRepository
                 }
             }    
 
-            var_dump($queryBuilder->getQuery()->getSql());
+//            var_dump($queryBuilder->getQuery()->getSql());
         return $queryBuilder->getQuery()->getResult();    
     }
     
