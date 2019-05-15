@@ -471,7 +471,7 @@ class ProducerController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
-            'articles' => array_filter($articles),
+            'articles' => array_unique($articles),
             'tokenIntersect' => '',
         ]);
     }
