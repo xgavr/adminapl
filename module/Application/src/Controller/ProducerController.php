@@ -453,7 +453,7 @@ class ProducerController extends AbstractActionController
         }        
         
         $rawpriceCountBySupplier = $this->entityManager->getRepository(Article::class)
-                ->rawpriceCountBySupplier($article, ['unknownProducer' => $unknownProducer, 'unknownProducerIntersect' => $unknownProducerIntersect]);
+                ->rawpriceCountBySupplier($article, ['unknownProducer' => $unknownProducerId, 'unknownProducerIntersect' => $unknownProducerIntersectId]);
         
         $prevQuery = $this->entityManager->getRepository(Article::class)
                         ->findAllArticle(['prev1' => $article->getCode()]);
