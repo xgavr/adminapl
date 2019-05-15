@@ -511,6 +511,31 @@ class ArticleManager
     }
     
     /**
+     * Сравнение средних цен артикулов
+     * 
+     * @param type $articleMeanPrice
+     * @param type $articleRest
+     * @param type $articleForMatchingMeanPrice
+     * @param type $articleForMatchingRest
+     * @return type
+     */
+    public function articleMeanPriceMatching($articleMeanPrice, $articleRest, $articleForMatchingMeanPrice, $articleForMatchingRest)
+    {
+        if ($articleMeanPrice && $articleRest && $articleForMatchingMeanPrice && $articleForMatchingRest){
+            $prices = array_merge(array_fill(0, $articleMeanPrice, $articlePrice), array_fill(0, $articleForMatchingRest, $articleForMatchingMeanPrice));
+            if (count($prices)){
+                $meanPrice = Mean::arithmetic($prices);
+                $dispersion = StandardDeviation::population($prices, count($prices) > 1);
+
+                $validator = new Sigma3();
+                return $validator->isValid($articleForMatchingMeanPrice, $meanPrice, $dispersion);
+            }
+        }    
+     
+        return;
+    }
+    
+    /**
      * Проверка цены на попадание в диапазон цен
      * 
      * @param float $price
