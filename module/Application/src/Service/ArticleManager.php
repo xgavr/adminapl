@@ -552,7 +552,7 @@ class ArticleManager
         }
         
         $meanPrice = $this->rawpricesMeanPrice($rawprices);
-        $dispersion = $this->rawpricesDispersion($rawprices);
+        $dispersion = $this->rawpricesDeviation($rawprices);
 //        var_dump($meanPrice);
 //        var_dump($dispersion);
         return $this->inSigma3($rawprice->getRealPrice(), $meanPrice, $dispersion);
