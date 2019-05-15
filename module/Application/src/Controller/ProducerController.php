@@ -461,8 +461,14 @@ class ProducerController extends AbstractActionController
                         ->findAllArticle(['next1' => $article->getCode()]);        
 
         $articles = [];
+        $unknownProducersName = [];
         foreach($rawpriceCountBySupplier as $row){
-            $articles[] = $row['articleId'];            
+            $articles[] = $row['articleId'];
+            $uP = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneById($row['articleId']);
+            if ($up){
+                $unknownProducersName[] = $up->getName();
+            }            
         }
         //var_dump($articles); exit;
         // Render the view template.
@@ -474,6 +480,7 @@ class ProducerController extends AbstractActionController
             'articleManager' => $this->articleManager,
             'articles' => array_unique($articles),
             'tokenIntersect' => '',
+            'unknownProducersName' => array_unique($unknownProducersName),
         ]);
     }
     

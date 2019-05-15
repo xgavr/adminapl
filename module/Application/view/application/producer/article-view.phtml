@@ -27,15 +27,24 @@ $this->pageBreadcrumbs()->setItems([
         </td>
     </tr>
     <tr>
-        <td colspan="6" align="right">
-            <?php if (count($articles) === 2):?>
-                <?php $tokenIntersect = $articleManager->articleTokenIntersect($articles[0], $articles[1]);?>
-                <?php if(count($tokenIntersect)):?>
-                    <span class="label label-success"><?= implode(', ', $tokenIntersect)?></span>
-                <?php else:?>
-                    <span class="label label-default">Нет одинаковых токенов</span>
-                <?php endif;?>
-            <?php endif;?>
+        <td colspan="4">
+            <span>
+                <?php if (count($articles) === 2):?>
+                    <?php $tokenIntersect = $articleManager->articleTokenIntersect($articles[0], $articles[1]);?>
+                    <?php if(count($tokenIntersect)):?>
+                        <span class="label label-success"><?= implode(', ', $tokenIntersect)?></span>
+                    <?php else:?>
+                        <span class="label label-default">Нет одинаковых токенов</span>
+                    <?php endif;?>
+                <?php endif;?>                
+            </span>
+            <span>
+                <?php if (count($unknownProducersName) === 2):?>
+                    <span><?= levenshtein($unknownProducersName[0], $unknownProducersName[1]);?></span>
+                <?php endif;?>                                
+            </span>            
+        </td>
+        <td colspan="2" align="right">
             <?php $articleMeanPrice = $articleManager->articlesMeanPrice($articles);?>
             <?php $articleDispersion = $articleManager->articlesDeviation($articles);?>
             <b><?= number_format($articleMeanPrice, 2, '.', '') ?></b>

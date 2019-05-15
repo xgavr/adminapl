@@ -254,7 +254,7 @@ class ArticleRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('a.id as articleId')
+        $queryBuilder->select('a.id as articleId, identity(a.unknownProducer) as unknownProducerId')
             ->from(Article::class, 'a')
             ->join('a.rawprice', 'r')    
             ->addSelect('count(r.id) as rawpriceCount')
