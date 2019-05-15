@@ -589,6 +589,20 @@ class ArticleManager
     }
     
     /**
+     * Пересечение токенов артикулов
+     * 
+     * @param Application\Entity\Article $article
+     * @param Application\Entity\Article $articleForMatching
+     * 
+     * @return array
+     */
+    public function articleTokenIntersect($article, $articleForMatching)
+    {
+        return $this->entityManager->getRepository(\Application\Entity\Token::class)
+                ->articleTokenIntersect($article, $articleForMatching);
+    }
+    
+    /**
      * Получить токены списка строк прайса
      * 
      * @param array $rawprices
@@ -712,8 +726,8 @@ class ArticleManager
     
     /**
      * Получить номера из списка строка прайса
-     * @param Doctrine\Common\Collections\ArrayCollection $rawprices
-     * @param integer $rawpriceDiff;
+     * @param array $rawprices
+     * @param integer $rawpriceDiff
      * 
      * @return array
      */

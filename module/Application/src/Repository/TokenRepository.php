@@ -359,32 +359,48 @@ class TokenRepository  extends EntityRepository
     }
     
     /**
+     * Пересечение токенов артикулов
+     * 
+     * @param \Application\Entity\Article|integer $article
+     * @param \Application\Entity\Article|integer $articleForMatching
+     * @param integer $status
+     * @return bool
+     */
+    public function articleTokenIntersect($article, $articleForMatching, $status = Token::IS_DICT)
+    {
+        $result = [];
+        
+        $articleTokens = $this->findArticleTokenByStatus($article, $status);
+        $articleTokensForMatching = $this->findArticleTokenByStatus($articleForMatching, $status);
+        
+        if (count($articleTokens) && count($articleTokensForMatching)){        
+            $result = array_intersect($articleTokens, $articleTokensForMatching);
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Совпадение токенов артикулов по статусу
      * 
-     * @param Application\Entity\Article|integer $article
-     * @param Application\Entity\Article|integer $articleForMatching
+     * @param \Application\Entity\Article|integer $article
+     * @param \Application\Entity\Article|integer $articleForMatching
      * @param integer $status
      * @return bool
      */
     public function intersectArticleTokenByStatus($article, $articleForMatching, $status = Token::IS_DICT)
     {
-        $articleTokens = $this->findArticleTokenByStatus($article, $status);
-        $articleTokensForMatching = $this->findArticleTokenByStatus($articleForMatching, $status);
-        
-        if (count($articleTokens) && count($articleTokensForMatching)){
-        
-            $intersects = array_intersect($articleTokens, $articleTokensForMatching);
-    //        var_dump($articleTokens);
-            return count($intersects) > 0;
-        }
-        
+        $result = $this->articleTokenIntersect($article, $articleForMatching, $status);
+        if (count($result)){
+            return count($result) > 0;
+        }    
         return;
     }
 
     /**
      * Найти токены товара по типу
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * @param integer $tokenType Description
      * @return object
      */
