@@ -28,6 +28,14 @@ $this->pageBreadcrumbs()->setItems([
     </tr>
     <tr>
         <td colspan="6" align="right">
+            <?php if (count($articles) == 2):?>
+                <?php $tokenIntersect = $articleManager->articleTokenIntersect($articles[0], $articles[1]);?>
+                <?php if(count($tokenIntersect)):?>
+                    <span class="label label-success"><?= implode(',', $tokenIntersect)?></span>
+                <?php else:?>
+                    <span class="label label-default">Нет одинаковых токенов</span>
+                <?php endif;?>
+            <?php endif;?>
             <?php $articleMeanPrice = $articleManager->articlesMeanPrice($articles);?>
             <?php $articleDispersion = $articleManager->articlesDeviation($articles);?>
             <b><?= number_format($articleMeanPrice, 2, '.', '') ?></b>
@@ -51,14 +59,6 @@ $this->pageBreadcrumbs()->setItems([
                     <?= $randRawprices[0]->getUnknownProducer()->getName()?>
                 </th>
                 <td colspan="4" align="right">
-                    <?php if (count($articles) == 2):?>
-                        <?php $tokenIntersect = $articleManager->articleTokenIntersect($articles[0], $articles[1]);?>
-                        <?php if(count($tokenIntersect)):?>
-                            <span class="label label-success"><?= implode(',', $tokenIntersect)?></span>
-                        <?php else:?>
-                            <span class="label label-default">Нет одинаковых токенов</span>
-                        <?php endif;?>
-                    <?php endif;?>
                     <?php $meanPrice = $articleManager->meanPrice($articleId);?>
                     <?php $dispersion = $articleManager->dispersionPrice($articleId);?>
                     <b><?= number_format($meanPrice, 2, '.', '') ?></b>
