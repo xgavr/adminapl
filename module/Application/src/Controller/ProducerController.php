@@ -465,12 +465,12 @@ class ProducerController extends AbstractActionController
         foreach($rawpriceCountBySupplier as $row){
             $articles[] = $row['articleId'];
             $uP = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneById($row['articleId']);
+                    ->findOneById($row['unknownProducerId']);
             if ($up){
                 $unknownProducersName[] = $up->getName();
             }            
         }
-        var_dump($unknownProducersName); exit;
+//        var_dump($unknownProducersName); exit;
         // Render the view template.
         return new ViewModel([
             'article' => $article,
