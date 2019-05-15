@@ -87,6 +87,8 @@ class ArticleManager
             }
         }  
         
+        $this->updatePriceRest($article);
+        
         return $article;        
     }        
     
@@ -115,6 +117,37 @@ class ArticleManager
         return;
     }  
     
+    /**
+     * Обновление средней ценыи остатка артикула
+     * @param \Application\Entity\Article $article
+     * @return null
+     */
+    public function updatePriceRest($article)
+    {        
+        ini_set('memory_limit', '1024M');
+
+        $prices = [];
+        $rest = 0.0;
+        foreach($article->getRawprice() as $rawprice){
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() > 0 && $rawprice->getRealPrice() > 0){
+                $prices = array_merge($prices, array_fill(0, $rawprice->getRealRest(), $rawprice->getRealPrice()));
+                $rest += $rawprice->getRealRest();
+            }    
+        }
+        
+        $meanPrice = Mean::arithmetic($prices);
+        $standartDeviation = 0;
+        if (count($prices)){
+            $standartDeviation = StandardDeviation::population($prices, count($prices) > 1);
+        }
+        
+        $this->entityManager->getRepository(Article::class)
+                ->updateArticle($article->getId(), ['mean_price' => $meanPrice, 'standart_deviation' => $standartDeviation, 'total_rest' => $rest]);
+        
+        return;
+    }
+
+
     /**
      * Выборка артиклей из прайса и добавление их в артиклулы
      */
@@ -158,6 +191,9 @@ class ArticleManager
             $article->addRawprice($rawprice);
             
             $rawprice->getUnknownProducer()->addCode($article);
+            
+            $this->updatePriceRest($article);
+            
         }    
                 
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
@@ -312,10 +348,8 @@ class ArticleManager
     {
         $result = [];
         foreach($rawprices as $rawprice){
-            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() && $rawprice->getRealPrice()){
-                for ($i = 1; $i <= $rawprice->getRealRest(); $i++){
-                    $result[] = $rawprice->getRealPrice();
-                }    
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() > 0 && $rawprice->getRealPrice() > 0){
+                $result = array_merge($result, array_fill(0, $rawprice->getRealRest(), $rawprice->getRealPrice()));
             }    
         }
         

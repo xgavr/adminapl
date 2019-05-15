@@ -43,7 +43,22 @@ class Article {
     /**
      * @ORM\Column(name="token_update_flag")  
      */
-    protected $tokenUpdateFlag = self::TOKEN_UPDATE_FLAG;        
+    protected $tokenUpdateFlag = self::TOKEN_UPDATE_FLAG;     
+    
+    /**
+     * @ORM\Column(name="mean_price")  
+     */
+    protected $meanPrice = 0.0;        
+
+    /**
+     * @ORM\Column(name="standart_deviation")  
+     */
+    protected $standartDeviation = 0.0;        
+
+    /**
+     * @ORM\Column(name="total_rest")  
+     */
+    protected $totalRest = 0.0;        
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="good") 
@@ -122,6 +137,36 @@ class Article {
     public function setTokenUpdateFlag($tokenUpdateFlag) 
     {
         $this->tokenUpdateFlag = $tokenUpdateFlag;
+    }     
+
+    public function getMeanPrice() 
+    {
+        return $this->meanPrice;
+    }
+
+    public function setMeanPrice($meanPrice) 
+    {
+        $this->meanPrice = $meanPrice;
+    }     
+
+    public function getStandartDeviation() 
+    {
+        return $this->standartDeviation;
+    }
+
+    public function setStandartDeviation($standartDeviation) 
+    {
+        $this->standartDeviation = $standartDeviation;
+    }     
+
+    public function getTotalRest() 
+    {
+        return $this->totalRest;
+    }
+
+    public function setTotalRest($totalRest) 
+    {
+        $this->totalRest = $totalRest;
     }     
 
     /**
