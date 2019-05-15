@@ -271,10 +271,10 @@ class ArticleRepository  extends EntityRepository
             if (is_array($params)){
                 $orX = $queryBuilder->expr()->orX();
                 if (isset($params['unknownProducer'])){
-                    $orX->add('a.unknownProducer', $params['unknownProducer']);
+                    $orX->add($queryBuilder->expr()->eq('a.unknownProducer', $params['unknownProducer']));
                 }
                 if (isset($params['unknownProducerIntersect'])){
-                    $orX->add('a.unknownProducer', $params['unknownProducerIntersect']);
+                    $orX->add($queryBuilder->expr()->eq('a.unknownProducer', $params['unknownProducerIntersect']));
                 }
                 
                 if ($orX->count()){
