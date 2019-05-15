@@ -402,7 +402,11 @@ class ArticleManager
      */
     public function articlesMeanPrice($articles)
     {
-        return Mean::arithmetic($this->articlesPrices($articles));
+        $prices = $this->articlesPrices($rawprices);
+        if (count($prices)){
+            return Mean::arithmetic($prices);
+        }        
+        return 0;
     }
     
     /**
