@@ -124,21 +124,27 @@ class ArticleManager
      */
     public function updatePriceRest($article)
     {        
-        ini_set('memory_limit', '1024M');
+//        ini_set('memory_limit', '1024M');
 
-        $prices = [];
+        $priceSum = 0;
         $rest = 0.0;
-        foreach($article->getRawprice() as $rawprice){
+        
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->findByCode($article->getId());
+        
+        foreach($rawprices as $rawprice){
             if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() > 0 && $rawprice->getRealPrice() > 0){
-                $prices = array_merge($prices, array_fill(0, $rawprice->getRealRest(), $rawprice->getRealPrice()));
+//                $prices = array_merge($prices, array_fill(0, $rawprice->getRealRest(), $rawprice->getRealPrice()));
+                $priceSum += $rawprice->getRealPrice()*$rawprice->getRealRest();
                 $rest += $rawprice->getRealRest();
             }    
         }
+        $meanPrice = 0.0;
+        $standartDeviation = 0.0;
         
-        $meanPrice = Mean::arithmetic($prices);
-        $standartDeviation = 0;
-        if (count($prices)){
-            $standartDeviation = StandardDeviation::population($prices, count($prices) > 1);
+        if ($rest){
+            $meanPrice = $priceSum/$rest;
+//            $standartDeviation = StandardDeviation::population($prices, count($prices) > 1);
         }
         
         $this->entityManager->getRepository(Article::class)
