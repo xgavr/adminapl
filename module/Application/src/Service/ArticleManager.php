@@ -198,7 +198,7 @@ class ArticleManager
             
             $rawprice->getUnknownProducer()->addCode($article);
             
-            $this->updatePriceRest($article);
+//            $this->updatePriceRest($article);
             
         }    
                 
