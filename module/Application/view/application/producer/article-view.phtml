@@ -40,7 +40,8 @@ $this->pageBreadcrumbs()->setItems([
             </span>
             <span>
                 <?php if (count($unknownProducersName) === 2):?>
-                    <span><?= levenshtein($unknownProducersName[0], $unknownProducersName[1]);?></span>
+                    <?php similar_text($unknownProducersName[0], $unknownProducersName[1], $perc) ?>
+                    <span><?= $perc;?></span>
                 <?php endif;?>                                
             </span>            
         </td>
