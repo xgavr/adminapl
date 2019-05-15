@@ -335,6 +335,7 @@ class TokenRepository  extends EntityRepository
      */
     public function findArticleTokenByStatus($article, $status = Token::IS_DICT)
     {
+        var_dump($article); exit;
         if (is_numeric($article)){
             $articleId = $article;
         } else {
