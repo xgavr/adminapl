@@ -28,9 +28,9 @@ $this->pageBreadcrumbs()->setItems([
     </tr>
     <tr>
         <td colspan="6" align="right">
+            <?php var_dump($articles);?>
             <?php if (count($articles) == 2):?>
                 <?php $tokenIntersect = $articleManager->articleTokenIntersect($articles[0], $articles[1]);?>
-            <?php var_dump($tokenIntersect);?>
                 <?php if(count($tokenIntersect)):?>
                     <span class="label label-success"><?= implode(', ', $tokenIntersect)?></span>
                 <?php else:?>
