@@ -462,7 +462,7 @@ class ProducerController extends AbstractActionController
 
         $articles = [];
         foreach($rawpriceCountBySupplier as $row){
-            $articles[$row['articleId']] = $row['articleId'];            
+            $articles[] = $row['articleId'];            
         }
         // Render the view template.
         return new ViewModel([
@@ -471,7 +471,7 @@ class ProducerController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
-            'articles' => $articles,
+            'articles' => array_filter($articles),
             'tokenIntersect' => '',
         ]);
     }
