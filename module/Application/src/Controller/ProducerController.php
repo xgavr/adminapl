@@ -466,7 +466,7 @@ class ProducerController extends AbstractActionController
             $articles[] = $row['articleId'];
             $uP = $this->entityManager->getRepository(UnknownProducer::class)
                     ->findOneById($row['unknownProducerId']);
-            if ($up){
+            if ($uP){
                 $unknownProducersName[] = $up->getName();
             }            
         }
