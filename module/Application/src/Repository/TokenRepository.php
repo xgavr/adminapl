@@ -335,7 +335,6 @@ class TokenRepository  extends EntityRepository
      */
     public function findArticleTokenByStatus($article, $status = Token::IS_DICT)
     {
-        var_dump($article); exit;
         if (is_numeric($article)){
             $articleId = $article;
         } else {
@@ -371,11 +370,13 @@ class TokenRepository  extends EntityRepository
     {
         $result = [];
         
-        $articleTokens = $this->findArticleTokenByStatus($article, $status);
-        $articleTokensForMatching = $this->findArticleTokenByStatus($articleForMatching, $status);
-        
-        if (count($articleTokens) && count($articleTokensForMatching)){        
-            $result = array_intersect($articleTokens, $articleTokensForMatching);
+        if ($article && $articleForMatching){
+            $articleTokens = $this->findArticleTokenByStatus($article, $status);
+            $articleTokensForMatching = $this->findArticleTokenByStatus($articleForMatching, $status);
+
+            if (count($articleTokens) && count($articleTokensForMatching)){        
+                $result = array_intersect($articleTokens, $articleTokensForMatching);
+            }
         }
         
         return $result;
