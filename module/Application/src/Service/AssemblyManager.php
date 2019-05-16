@@ -385,7 +385,7 @@ class AssemblyManager
 
                 $meanPrice = $this->articleManager->meanPrice($article);
                 $meanPriceForMatching = $this->articleManager->meanPrice($articleForMatching);
-                $priceMatching = $this->articleManager->articleMeanPriceMatching($meanPrice, $meanPriceForMatching);
+                $priceMatching = $this->articleManager->articleMeanPriceMatching($meanPrice, 0, $meanPriceForMatching, 0);
 
                 if ($priceMatching){
                     $iPrice += 1;
