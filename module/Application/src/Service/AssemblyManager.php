@@ -369,7 +369,7 @@ class AssemblyManager
         $codeRawsCount = count($codeRaws);
         $iPrice = $iIntersect = $i = 0;
         foreach ($codeRaws as $code){
-            var_dump($code);
+//            var_dump($code);
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code['code'], $unknownProducer);
             $article = $this->findArticleByCodeUnknownProducer($code['code'], $intersectUnknownProducer);
             
@@ -387,9 +387,9 @@ class AssemblyManager
                 $meanPriceForMatching = $this->articleManager->meanPrice($articleForMatching);
                 $priceMatching = $this->articleManager->articleMeanPriceMatching($meanPrice, 0, $meanPriceForMatching, 0);
                 
-                    var_dump($meanPrice);
-                    var_dump($meanPriceForMatching);
-                    var_dump($priceMatching);
+//                    var_dump($meanPrice);
+//                    var_dump($meanPriceForMatching);
+//                    var_dump($priceMatching);
 
                 if ($priceMatching){
                     $iPrice++;
@@ -403,9 +403,9 @@ class AssemblyManager
             }
         }
 
-            var_dump($i);
-            var_dump($iIntersect);
-            var_dump($iPrice);
+//            var_dump($i);
+//            var_dump($iIntersect);
+//            var_dump($iPrice);
         $result = ($iIntersect*100/$i) > 50 && ($iPrice*100/$i) > 50;
         return $result;
 
