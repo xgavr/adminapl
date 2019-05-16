@@ -379,7 +379,7 @@ class AssemblyManager
                 $intersectResult = $this->entityManager->getRepository(Token::class)
                         ->intersectArticleTokenByStatus($article, $articleForMatching);
                 
-                if (count($intersectResult)){
+                if ($intersectResult){
                     $iIntersect++;
                 }    
                 
