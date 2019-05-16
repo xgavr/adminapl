@@ -470,7 +470,7 @@ class ProducerController extends AbstractActionController
                 $unknownProducersName[] = $uP->getName();
             }            
         }
-//        var_dump($unknownProducersName); exit;
+        var_dump($articles); exit;
         // Render the view template.
         return new ViewModel([
             'article' => $article,

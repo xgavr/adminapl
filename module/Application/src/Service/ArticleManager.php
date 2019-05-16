@@ -628,8 +628,6 @@ class ArticleManager
      */
     public function articleTokenIntersect($article, $articleForMatching)
     {
-        var_dump($article);
-        var_dump($articleForMatching);
         return $this->entityManager->getRepository(\Application\Entity\Token::class)
                 ->articleTokenIntersect($article, $articleForMatching);
     }
