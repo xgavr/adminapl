@@ -378,7 +378,7 @@ class AssemblyManager
                         ->intersectArticleTokenByStatus($article, $articleForMatching);
                 
                 if (count($intersectResult)){
-                    $iIntersect += 1;
+                    $iIntersect++;
                 }    
                 
                 $priceMatching = false;
@@ -386,11 +386,13 @@ class AssemblyManager
                 $meanPrice = $this->articleManager->meanPrice($article);
                 $meanPriceForMatching = $this->articleManager->meanPrice($articleForMatching);
                 $priceMatching = $this->articleManager->articleMeanPriceMatching($meanPrice, 0, $meanPriceForMatching, 0);
+                
         var_dump($meanPrice);
         var_dump($meanPriceForMatching);
+        var_dump($priceMatching);
 
                 if ($priceMatching){
-                    $iPrice += 1;
+                    $iPrice++;
                 }
                 
                 $i++;
