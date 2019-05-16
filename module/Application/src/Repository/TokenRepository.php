@@ -330,7 +330,7 @@ class TokenRepository  extends EntityRepository
     /**
      * Поиск токенов артикула
      * 
-     * @param Application\Entity\Article|integer $article
+     * @param \Application\Entity\Article|integer $article
      * @param integer $status
      */
     public function findArticleTokenByStatus($article, $status = Token::IS_DICT)

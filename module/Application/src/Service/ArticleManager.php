@@ -621,13 +621,15 @@ class ArticleManager
     /**
      * Пересечение токенов артикулов
      * 
-     * @param Application\Entity\Article $article
-     * @param Application\Entity\Article $articleForMatching
+     * @param \Application\Entity\Article $article
+     * @param \Application\Entity\Article $articleForMatching
      * 
      * @return array
      */
     public function articleTokenIntersect($article, $articleForMatching)
     {
+        var_dump($article);
+        var_dump($articleForMatching);
         return $this->entityManager->getRepository(\Application\Entity\Token::class)
                 ->articleTokenIntersect($article, $articleForMatching);
     }
