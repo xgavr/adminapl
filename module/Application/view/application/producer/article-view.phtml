@@ -47,11 +47,20 @@ $this->pageBreadcrumbs()->setItems([
             
             <span>
                 <?php if (count($articles) === 2):?>
-                    <?php $tokenIntersect = $articleManager->articleTokenIntersect($articles[0], $articles[1]);?>
-                    <?php if(count($tokenIntersect)):?>
-                        <span class="label label-success"><?= implode(', ', $tokenIntersect)?></span>
+                    <?php 
+                        $meanPrice = $articleManager->meanPrice($articles[0]);
+                        $meanPriceForMatching = $articleManager->meanPrice($articles[1]);
+                        $meanPriceMatchingResult = $articleManager->articleMeanPriceMatching(
+                                $meanPrice, 
+                                $articleManager->articleRest($articles[0]), 
+                                $meanPriceForMatching,
+                                $articleManager->articleRest($articles[1]) 
+                           );
+                    ?>
+                    <?php if($meanPriceMatchingResult):?>
+                        <span class="label label-success"><?= round($meanPriceForMatching, 2) ?></span>
                     <?php else:?>
-                        <span class="label label-default">Нет одинаковых токенов</span>
+                        <span class="label label-default"><?= round($meanPriceForMatching, 2) ?></span>
                     <?php endif;?>
                 <?php endif;?>                
             </span>

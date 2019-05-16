@@ -619,6 +619,31 @@ class ArticleManager
     }
     
     /**
+     * Отстаток по артикулу
+     * 
+     * @param \Application\Entity\Article|float $article
+     * @return float
+     */
+    public function articleRest($article)
+    {
+        $result = 0.0;
+        if (is_numeric($article)){
+            $article = $this->entityManager->getRepository(Article::class)
+                    ->findOneById($article);
+        }
+        
+        if ($article){
+            foreach($article->getRawprice() as $rawprice){
+                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()>0 && $rawprice->getRealPrice()>0){
+                    $result += $rawprice->getRealRest();
+                }    
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Пересечение токенов артикулов
      * 
      * @param \Application\Entity\Article $article
