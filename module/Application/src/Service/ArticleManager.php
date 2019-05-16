@@ -530,7 +530,7 @@ class ArticleManager
      */
     public function articleMeanPriceMatching($articleMeanPrice, $articleRest, $articleForMatchingMeanPrice, $articleForMatchingRest)
     {
-        if ($articleMeanPrice && $articleRest && $articleForMatchingMeanPrice && $articleForMatchingRest){
+        if ($articleMeanPrice && $articleForMatchingMeanPrice){
             //$prices = array_merge(array_fill(0, $articleRest, $articleMeanPrice), array_fill(0, $articleForMatchingRest, $articleForMatchingMeanPrice));
             $prices = [$articleMeanPrice, $articleForMatchingMeanPrice];
             if (count($prices)){
