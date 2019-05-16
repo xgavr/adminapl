@@ -386,6 +386,8 @@ class AssemblyManager
                 $meanPrice = $this->articleManager->meanPrice($article);
                 $meanPriceForMatching = $this->articleManager->meanPrice($articleForMatching);
                 $priceMatching = $this->articleManager->articleMeanPriceMatching($meanPrice, 0, $meanPriceForMatching, 0);
+        var_dump($meanPrice);
+        var_dump($meanPriceForMatching);
 
                 if ($priceMatching){
                     $iPrice += 1;
@@ -399,10 +401,10 @@ class AssemblyManager
             }
         }
 
-        var_dump($codeRawsCount);
+        var_dump($maxCheck);
         var_dump($iIntersect);
         var_dump($iPrice);
-        $result = ($iIntersect*100/$codeRawsCount) > 50 && ($iPrice*100/$codeRawsCount) > 50;
+        $result = ($iIntersect*100/$maxCheck) > 50 && ($iPrice*100/$maxCheck) > 50;
         return $result;
 
     }
