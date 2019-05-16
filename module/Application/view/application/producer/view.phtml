@@ -34,7 +34,7 @@ if ($unknownProducerQuery){
                     <sup style="font-size: xx-small">
                         <?php foreach($producer->getUnknownProducer() as $unknownProducer):?>    
                             <span>
-                                <a href="<?= $this->url('producer', ['action'=>'unknown-view', 'id'=>$unknownProducer->getId()]) ?>">
+                                <a href="<?= $this->url('producer', ['action'=>'unknown-view', 'id'=>$unknownProducer->getId()]) ?>" target="_blank">
                                     <?= $unknownProducer->getName();?>
                                 </a>
                             </span>
