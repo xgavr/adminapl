@@ -544,7 +544,7 @@ class ArticleManager
             }
         }    
      
-        return;
+        return false;
     }
     
     /**
@@ -602,15 +602,14 @@ class ArticleManager
     /**
      * Сравнение цен артикулов
      * 
-     * @param Application\Entity\Article $article
-     * @param Application\Entity\Article $articleForMatching
+     * @param \Application\Entity\Article $article
+     * @param \Application\Entity\Article $articleForMatching
      * 
      * @return bool Description
      */
     public function articlePriceMatching($article, $articleForMatching)
     {
-//        var_dump($article->getId());
-        $result = 0;
+        $result = 0;        
         foreach ($articleForMatching->getRawprice() as $rawpriceForMatching){
             if ($rawpriceForMatching->getStatus() == $rawpriceForMatching::STATUS_PARSED){
                 if ($this->priceMatching($article, $rawpriceForMatching)){
@@ -620,7 +619,6 @@ class ArticleManager
                 }
             }    
         }
-//        var_dump($result);
         
         return $result > 0;
     }

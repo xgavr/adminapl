@@ -366,35 +366,32 @@ class AssemblyManager
             return true;
         }
         
-        
-        $result = $i = 0;
+        $codeRawsCount = count($codeRaws);
+        $iPrice = $iIntersect = $i = 0;
         foreach ($codeRaws as $code){
 
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code['code'], $unknownProducer);
             $article = $this->findArticleByCodeUnknownProducer($code['code'], $intersectUnknownProducer);
             
-//            var_dump($code['code']);
-//            var_dump($article->getId());
-            
             if ($article && $articleForMatching){
                 $intersectResult = $this->entityManager->getRepository(Token::class)
                         ->intersectArticleTokenByStatus($article, $articleForMatching);
                 
-                if ($intersectResult == null){
-                    continue;
-                }
+                if (count($intersectResult)){
+                    $iIntersect += 1;
+                }    
                 
                 $priceMatching = false;
-                if ($intersectResult){
-                    $priceMatching = $this->articleManager->articlePriceMatching($article, $articleForMatching);
-                    $i++;
-                }    
 
-                if ($intersectResult && $priceMatching){
-                    $result += 1;
-                } else {
-                    $result -= 1;
+                $meanPrice = $this->articleManager->meanPrice($article);
+                $meanPriceForMatching = $this->articleManager->meanPrice($articleForMatching);
+                $priceMatching = $this->articleManager->articleMeanPriceMatching($meanPrice, $meanPriceForMatching);
+
+                if ($priceMatching){
+                    $iPrice += 1;
                 }
+                
+                $i++;
             }    
 
             if ($i > $maxCheck){
@@ -402,16 +399,16 @@ class AssemblyManager
             }
         }
 
-//            var_dump($result);
-        return $result >= 0;
+        $result = ($iIntersect*100/$codeRawsCount) > 50 && ($iPrice*100/$codeRawsCount) > 50;
+        return $result;
 
     }
     
     /**
      * Получить производителя из пересечения неизвестных производителей
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
-     * @return Application\Entity\Producer|null
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @return \Application\Entity\Producer|null
      */
     public function intersectUnknownProducer($unknownProducer)
     {

@@ -364,7 +364,7 @@ class TokenRepository  extends EntityRepository
      * @param \Application\Entity\Article|integer $article
      * @param \Application\Entity\Article|integer $articleForMatching
      * @param integer $status
-     * @return bool
+     * @return array
      */
     public function articleTokenIntersect($article, $articleForMatching, $status = Token::IS_DICT)
     {
