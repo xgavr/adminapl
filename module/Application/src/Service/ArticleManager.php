@@ -434,6 +434,20 @@ class ArticleManager
     }
     
     /**
+     * Отклонение прайсов
+     * 
+     * @param array $prices
+     */
+    public function pricesDeviation($prices)
+    {
+        if (count($prices)){
+            return StandardDeviation::population($prices, count($prices) > 1);
+        }
+        
+        return 0;         
+    }
+    
+    /**
      * Вычисление стандартного отклонения цены 
      * 
      * @param array $rawprices
@@ -441,12 +455,7 @@ class ArticleManager
      */
     public function rawpricesDeviation($rawprices)
     {
-        $prices = $this->rawpricesPrices($rawprices);
-        if (count($prices)){
-            return StandardDeviation::population($prices, count($prices) > 1);
-        }
-        
-        return 0; 
+        return $this->pricesDeviation($this->rawpricesPrices($rawprices));
     }
     
     /**
@@ -457,12 +466,7 @@ class ArticleManager
      */
     public function articlesDeviation($articles)
     {
-        $prices = $this->articlesPrices($articles);
-        if (count($prices)){
-            return StandardDeviation::population($prices, count($prices) > 1);
-        }
-        
-        return 0; 
+        return $this->pricesDeviation($this->articlesPrices($articles));
     }
 
     /**
@@ -527,10 +531,13 @@ class ArticleManager
     public function articleMeanPriceMatching($articleMeanPrice, $articleRest, $articleForMatchingMeanPrice, $articleForMatchingRest)
     {
         if ($articleMeanPrice && $articleRest && $articleForMatchingMeanPrice && $articleForMatchingRest){
-            $prices = array_merge(array_fill(0, $articleMeanPrice, $articlePrice), array_fill(0, $articleForMatchingRest, $articleForMatchingMeanPrice));
+            //$prices = array_merge(array_fill(0, $articleRest, $articleMeanPrice), array_fill(0, $articleForMatchingRest, $articleForMatchingMeanPrice));
+            $prices = [$articleMeanPrice, $articleForMatchingMeanPrice];
             if (count($prices)){
                 $meanPrice = Mean::arithmetic($prices);
                 $dispersion = StandardDeviation::population($prices, count($prices) > 1);
+//            var_dump($dispersion);
+//            var_dump($meanPrice);
 
                 $validator = new Sigma3();
                 return $validator->isValid($articleForMatchingMeanPrice, $meanPrice, $dispersion);

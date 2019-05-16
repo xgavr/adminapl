@@ -34,14 +34,15 @@ $this->pageBreadcrumbs()->setItems([
                     <?php if(count($tokenIntersect)):?>
                         <span class="label label-success"><?= implode(', ', $tokenIntersect)?></span>
                     <?php else:?>
-                        <span class="label label-default">Нет одинаковых токенов</span>
+                        <span class="label label-warning">Нет одинаковых токенов</span>
                     <?php endif;?>
                 <?php endif;?>                
             </span>
             
             <span>
                 <?php if (count($unknownProducersName) === 2):?>
-                    <span><?= similar_text($unknownProducersName[0], $unknownProducersName[1]);?></span>
+                    <?php $sim = similar_text($unknownProducersName[0], $unknownProducersName[1])?>
+                <span class="label label-<?= ($sim >= 2)? 'success':'warning' ?>"><?= $sim ?></span>
                 <?php endif;?>                                
             </span>   
             
@@ -49,19 +50,21 @@ $this->pageBreadcrumbs()->setItems([
                 <?php if (count($articles) === 2):?>
                     <?php 
                         $meanPrice = $articleManager->meanPrice($articles[0]);
+                        $rest = $articleManager->articleRest($articles[0]);
                         $meanPriceForMatching = $articleManager->meanPrice($articles[1]);
+                        $restForMatching = $articleManager->articleRest($articles[1]);
                         $meanPriceMatchingResult = $articleManager->articleMeanPriceMatching(
                                 $meanPrice, 
-                                $articleManager->articleRest($articles[0]), 
+                                $rest, 
                                 $meanPriceForMatching,
-                                $articleManager->articleRest($articles[1]) 
+                                $restForMatching 
                            );
                     ?>
-                    <?php if($meanPriceMatchingResult):?>
-                        <span class="label label-success"><?= round($meanPriceForMatching, 2) ?></span>
-                    <?php else:?>
-                        <span class="label label-default"><?= round($meanPriceForMatching, 2) ?></span>
-                    <?php endif;?>
+                    <span class="label label-<?= ($meanPriceMatchingResult) ? 'success':'warning'?>">
+                            <?= round($meanPrice, 2) ?>;
+                            <?= round($meanPriceForMatching, 2) ?>;
+                            (<?= round($articleManager->pricesDeviation([$meanPrice, $meanPriceForMatching]), 2) ?>)
+                    </span>
                 <?php endif;?>                
             </span>
         </td>
