@@ -398,15 +398,15 @@ class AssemblyManager
                 $i++;
             }    
 
-            if ($i >= $maxCheck){
+            if ($i > $maxCheck){
                 break;
             }
         }
 
-            var_dump($maxCheck);
+            var_dump($i);
             var_dump($iIntersect);
             var_dump($iPrice);
-        $result = ($iIntersect*100/$maxCheck) > 50 && ($iPrice*100/$maxCheck) > 50;
+        $result = ($iIntersect*100/$i) > 50 && ($iPrice*100/$i) > 50;
         return $result;
 
     }
