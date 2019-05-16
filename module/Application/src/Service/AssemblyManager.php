@@ -399,6 +399,9 @@ class AssemblyManager
             }
         }
 
+        var_dump($codeRawsCount);
+        var_dump($iIntersect);
+        var_dump($iPrice);
         $result = ($iIntersect*100/$codeRawsCount) > 50 && ($iPrice*100/$codeRawsCount) > 50;
         return $result;
 
