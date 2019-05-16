@@ -403,9 +403,9 @@ class AssemblyManager
             }
         }
 
-            var_dump($i);
-            var_dump($iIntersect);
-            var_dump($iPrice);
+//            var_dump($i);
+//            var_dump($iIntersect);
+//            var_dump($iPrice);
         $result = ($iIntersect*100/$i) > 50 && ($iPrice*100/$i) > 30;
         return $result;
 
