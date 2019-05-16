@@ -369,7 +369,7 @@ class AssemblyManager
         $codeRawsCount = count($codeRaws);
         $iPrice = $iIntersect = $i = 0;
         foreach ($codeRaws as $code){
-
+var_dump($code);
             $articleForMatching = $this->findArticleByCodeUnknownProducer($code['code'], $unknownProducer);
             $article = $this->findArticleByCodeUnknownProducer($code['code'], $intersectUnknownProducer);
             
@@ -398,7 +398,7 @@ class AssemblyManager
                 $i++;
             }    
 
-            if ($i > $maxCheck){
+            if ($i >= $maxCheck){
                 break;
             }
         }
