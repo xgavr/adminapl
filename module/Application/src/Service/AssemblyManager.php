@@ -361,6 +361,8 @@ class AssemblyManager
             return false;
         }
         
+        shuffle($codeRaws);
+        
         $nameValidator = new \Application\Validator\NameValidator();
         if ($nameValidator->isValid($unknownProducer->getName(), $intersectUnknownProducer->getName())){
             return true;
