@@ -29,6 +29,7 @@ $this->pageBreadcrumbs()->setItems([
     <tr>
         <td colspan="4">
             <span>
+                <?php var_dump($articles)?>
                 <?php if (count($articles) === 2):?>
                     <?php $tokenIntersect = $articleManager->articleTokenIntersect($articles[0], $articles[1]);?>
                     <?php if(count($tokenIntersect)):?>
