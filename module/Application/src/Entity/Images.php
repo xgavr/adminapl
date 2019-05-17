@@ -94,7 +94,8 @@ class Images {
     {
         if (file_exists($this->path)){
             $fileInfo = pathinfo($this->path);
-            if ($fileInfo['extension'] && strtoupper($fileInfo['extension']) != 'PDF'){
+           // if ($fileInfo['extension'] && strtoupper($fileInfo['extension']) != 'PDF'){
+            if ($fileInfo['extension']){
                 return $this->publicPath($this->path);
             }                        
         }
