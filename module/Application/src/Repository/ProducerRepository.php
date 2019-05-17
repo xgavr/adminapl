@@ -433,7 +433,7 @@ class ProducerRepository  extends EntityRepository{
         }
         
         // обновление метки проверки
-        //$this->getEntityManager()->getConnection()->query('update unknown_producer set intersect_update_flag = 1 where 1');
+//        $this->getEntityManager()->getConnection()->query('update unknown_producer set intersect_update_flag = 1 where 1');
         
         return;
     }
