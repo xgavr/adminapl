@@ -511,6 +511,33 @@ class ProducerRepository  extends EntityRepository{
     }
     
     /**
+     * Получить количество пересечений производителя
+     * 
+     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @return array
+     */
+    public function intersectCount($unknownProducer)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $sql = 'select count(t.unknown_producer_intersect) as intersectCount '
+                . ' from unknown_producer_intersect as t '
+                . ' where t.unknown_producer = :unknownProducer'
+                . ' and t.code != :longCodeName'
+                . ' group by t.unknown_producer'
+                ;
+
+        $stmt = $entityManager->getConnection()->prepare($sql);
+        $stmt->execute([
+                'unknownProducer' => $unknownProducer->getId(),
+                'longCodeName' => \Application\Entity\Article::LONG_CODE_NAME,
+            ]);
+
+        return $stmt->fetchAll();
+
+    }
+    
+    /**
      * Выборка пересекающихся артикулов
      * 
      * @param \Application\Entity\UnknownProducer $unknownProducer

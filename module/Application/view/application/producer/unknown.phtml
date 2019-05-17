@@ -44,11 +44,12 @@ $this->headScript()
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                     <th data-field="dateCreated">Дата</th>
+                     <th data-field="dateCreated" data-formatter="dateFormatter">Дата</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Неизвестный</th>
                      <th data-field="producer" data-formatter="producerFormatter">Известный</th>             
                      <th data-field="rawpriceCount" data-align='right' data-sortable="true">Строк в прайсах</th>             
                      <th data-field="supplierCount" data-align='right' data-sortable="true">Поставщиков</th>             
+                     <th data-field="id" data-formatter="intersectFormatter" data-align='right' data-sortable="false">Пересечений</th>             
                  </tr>                
             </thead>
         </table>
@@ -182,6 +183,26 @@ $this->headScript()
             ].join(''); 
         }
         return;
+    }    
+    
+    function dateFormatter(value){
+        var date = new Date(value);
+        return date.getDate() + '-' + (date.getMonth() + 1) + '-' +  date.getFullYear();
+    }
+    
+    function intersectCount(data){
+        $('#unknownProducer'+data.id).html(data.intersectCount);
+    }
+    
+    function intersectFormatter(value){
+        $.post(
+            '/producer/intersect-count-content/'+value,
+            null,
+            intersectCount                
+        );
+        return [
+            '<span id="unknownProducer'+value+'">0</span>',
+        ].join(''); 
     }    
     
     function responseHandler(res) {

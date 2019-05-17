@@ -321,8 +321,12 @@ class ProducerController extends AbstractActionController
         
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
 
         $result = $query->getResult(2);
         
@@ -330,7 +334,36 @@ class ProducerController extends AbstractActionController
             'total' => $total,
             'rows' => $result,
         ]);          
-    }    
+    }   
+    
+    public function intersectCountContentAction()
+    {
+        $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($unknownProducerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findOneById($unknownProducerId);
+        
+        if ($unknownProducer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $intersects = $this->entityManager->getRepository(UnknownProducer::class)
+                ->intersectCount($unknownProducer);
+        $intersectCount = 0;
+        if (isset($intersects[0])){
+            $intersectCount = $intersects[0]['intersectCount'];
+        }
+        return new JsonModel([
+            'id' => $unknownProducerId,
+            'intersectCount' => $intersectCount,
+        ]);          
+    }
     
     public function unknownViewAction() 
     {       
