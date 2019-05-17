@@ -439,7 +439,7 @@ class AssemblyManager
                         }
                     }    
                 }
-                return;
+//                return;
             }    
         }   
         
