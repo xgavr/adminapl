@@ -49,6 +49,7 @@ $this->headScript()
             <table class="table table-striped">
                 <tr>
                     <td  colspan="4">
+                        <span><?= $unknownProducer->getDateCreated() ?></span>,
                         <span>Поставщиков: <?= $unknownProducer->getSupplierCount() ?></span>,
                         <span>cтрок прайсов: <?= $unknownProducer->getRawpriceCount() ?></span>
                         
