@@ -145,6 +145,11 @@ class AssemblyManager
             return false;
         }
         
+        if ($code == Article::LONG_CODE_NAME) {
+            return false;
+        }    
+        
+        
         if (strlen($code) < 3 || strlen($code) > 24) {
             return false;
         }    
