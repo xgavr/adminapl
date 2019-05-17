@@ -119,7 +119,7 @@ $this->headScript()
                                 <div class="pull-left">
                                     <span><?= $image->getStatusAsString();?></span> 
                                     <span><?= $image->getSimilarAsString();?></span> 
-                                    <span><?= mime_content_type($image->getPathname()) ?></span>
+                                    <span><?= mime_content_type($image->getPath()) ?></span>
                                 </div>
                                 <div class="pull-right">
                                     <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-warning btn-xs this-delete"
