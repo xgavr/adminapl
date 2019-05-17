@@ -109,7 +109,7 @@ $this->headScript()
                     <? if ($image->getPublicPath()):?>
                         <div class="thumbnail">
                             <?php if (mime_content_type($image->getPath()) == 'application/pdf'):?>
-                                <a href="<?= $image->getPublicPath() ?>" download>
+                                <a href="<?= $image->getPublicPath()  ?>" download>
                                     <span class="glyphicon glyphicon-download"></span>
                                     <?= $image->getName() ?>
                                 </a>
