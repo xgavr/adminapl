@@ -191,7 +191,9 @@ $this->headScript()
     }
     
     function intersectCount(data){
-        $('#unknownProducer'+data.id).html(data.intersectCount);
+        if (data.intersectCount){
+            $('#unknownProducer'+data.id).html(data.intersectCount);
+        }    
     }
     
     function intersectFormatter(value){
@@ -201,7 +203,7 @@ $this->headScript()
             intersectCount                
         );
         return [
-            '<span id="unknownProducer'+value+'">0</span>',
+            '<span id="unknownProducer'+value+'"></span>',
         ].join(''); 
     }    
     

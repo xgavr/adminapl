@@ -355,15 +355,10 @@ class ProducerController extends AbstractActionController
 
         $intersects = $this->entityManager->getRepository(UnknownProducer::class)
                 ->unknownProducerIntersect($unknownProducer);
-        var_dump($intersects);
         
-        $intersectCount = 0;
-        if (isset($intersects[0])){
-            $intersectCount = $intersects[0]['intersectCount'];
-        }
         return new JsonModel([
             'id' => $unknownProducerId,
-            'intersectCount' => $intersectCount,
+            'intersectCount' => count($intersects),
         ]);          
     }
     
