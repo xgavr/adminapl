@@ -247,7 +247,7 @@ class ImageRepository extends EntityRepository
     public function removeImage($image)
     {
         if (file_exists($image->getPath())){
-            unlink($image->getPath());        
+            unlink(realpath($image->getPath()));        
         }    
         $this->getEntityManager()->getConnection()->delete('images', ['id' => $image->getId()]);        
     }
