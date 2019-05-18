@@ -120,7 +120,9 @@ $this->headScript()
                                     </a>
                                 <?php endif; ?>
                             <?php else:?>
-                                <span class='glyphicon glyphicon-picture'><?= $image->getName() ?></span>
+                                <a href="<?= $image->getPublicPath() ?>" target="_blank">
+                                    <span class='glyphicon glyphicon-picture'><?= $image->getName() ?></span>
+                                </a>    
                             <?php endif; ?>
                             <div class="caption panel-body small">
                                 <div class="pull-left">
