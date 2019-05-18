@@ -108,25 +108,27 @@ $this->headScript()
                 <?php foreach($images as $image):?>
                     <? if ($image->getPublicPath()):?>
                         <div class="thumbnail">
-                            <?php if (mime_content_type($image->getPath()) == 'application/pdf'):?>
-                                <a href="<?= $image->getPublicPath()?>" download>
-                                    <span class="glyphicon glyphicon-download"></span>
-                                    <?= $image->getName() ?>
-                                </a>
-                            <?php else:?>
-                                <a href="<?= $image->getPublicPath() ?>" target="_blank">
-                                    <?php if (file_exists($image->getPath())):?>
+                            <?php if (file_exists($image->getPath())):?>
+                                <?php if (mime_content_type($image->getPath()) == 'application/pdf'):?>
+                                    <a href="<?= $image->getPublicPath()?>" download>
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <?= $image->getName() ?>
+                                    </a>
+                                <?php else:?>
+                                    <a href="<?= $image->getPublicPath() ?>" target="_blank">
                                         <img src="<?= $image->getPublicPath() ?>" class="img-thumbnail" alt="<?= $image->getName() ?>">
-                                    <?php else:?>
-                                        <span class='glyphicon glyphicon-picture'><?= $image->getName() ?></span>
-                                    <?php endif;?>
-                                </a>
+                                    </a>
+                                <?php endif; ?>
+                            <?php else:?>
+                                <span class='glyphicon glyphicon-picture'><?= $image->getName() ?></span>
                             <?php endif; ?>
                             <div class="caption panel-body small">
                                 <div class="pull-left">
                                     <span><?= $image->getStatusAsString();?></span> 
                                     <span><?= $image->getSimilarAsString();?></span> 
-                                    <span><?= mime_content_type($image->getPath()) ?></span>
+                                    <?php if (file_exists($image->getPath())):?>
+                                        <span><?= mime_content_type($image->getPath()) ?></span>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="pull-right">                                    
                                     <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-warning btn-xs this-delete"
