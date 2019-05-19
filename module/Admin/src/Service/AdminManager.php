@@ -338,6 +338,7 @@ class AdminManager {
         $config->telegram_settings->telegram_admin_chat_id = $data['telegram_admin_chat_id'];
         $config->telegram_settings->telegram_proxy = $data['telegram_proxy'];
         $config->telegram_settings->send_pospone_msg = $data['send_pospone_msg'];
+        $config->telegram_settings->sending_pospone_msg = $data['sending_pospone_msg'];
         $config->telegram_settings->auto_check_proxy = $data['auto_check_proxy'];
         
         $writer = new PhpArray();

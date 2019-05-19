@@ -44,7 +44,10 @@ $form->get('telegram_proxy')->setAttributes([
 
 $form->get('send_pospone_msg')->setAttributes([
     'class'=>'form-control', 
-    'placeholder'=>'Автопроверка прокси',
+    ]);
+
+$form->get('sending_pospone_msg')->setAttributes([
+    'class'=>'form-control', 
     ]);
 
 $form->get('auto_check_proxy')->setAttributes([
@@ -109,6 +112,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('send_pospone_msg')); ?>
             <?= $this->formElement($form->get('send_pospone_msg')); ?>
             <?= $this->formElementErrors($form->get('send_pospone_msg')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('sending_pospone_msg')); ?>
+            <?= $this->formElement($form->get('sending_pospone_msg')); ?>
+            <?= $this->formElementErrors($form->get('sending_pospone_msg')); ?>                  
         </div>
 
         <div class="form-group">

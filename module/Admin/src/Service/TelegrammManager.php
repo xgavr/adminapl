@@ -199,32 +199,46 @@ class TelegrammManager
     
     /**
      * Послать отложенное сообщение
+     * @param bool $sendingPosponeMsg
      * 
      * @return null
      */
-    public function sendPostponeMessage()
+    public function sendPostponeMessage($sendingPosponeMsg = false)
     {
-        if (file_exists(self::POSTPONE_MSG_FILE)){
-            $file = file(self::POSTPONE_MSG_FILE);
-            if (count($file)){
-                try {
-                    $result = $this->sendMessage(\Zend\Json\Json::decode(trim($file[0]), \Zend\Json\Json::TYPE_ARRAY));
-                    if ($result){
-                        $fp = fopen(self::POSTPONE_MSG_FILE, 'w');
-                        unset($file[0]);
-                        fputs($fp, implode("", $file));
-                        fclose($fp);
-                    }
-                } catch (\Longman\TelegramBot\Exception\TelegramException $e){
-                    return;
-                }    
-            }   
+        $data = $this->adminManager->getTelegramSettings()->toArray();
+        
+        if ($data['sending_pospone_msg'] == 1 || $sendingPosponeMsg){
             
-            if (count($file)){
-                sleep(1);
-                $this->sendPostponeMessage();
+            $data['sending_pospone_msg'] = 2; // идет отправка
+            $this->adminManager->setTelegramSettings($data);
+
+            if (file_exists(self::POSTPONE_MSG_FILE)){
+                $file = file(self::POSTPONE_MSG_FILE);
+                if (count($file)){
+                    try {
+                        $result = $this->sendMessage(\Zend\Json\Json::decode(trim($file[0]), \Zend\Json\Json::TYPE_ARRAY));
+                        if ($result){
+                            $fp = fopen(self::POSTPONE_MSG_FILE, 'w');
+                            unset($file[0]);
+                            fputs($fp, implode("", $file));
+                            fclose($fp);
+                        }
+                    } catch (\Longman\TelegramBot\Exception\TelegramException $e){
+                        $data['sending_pospone_msg'] = 1; // отправка закончилась
+                        $this->adminManager->setTelegramSettings($data);
+                        return;
+                    }    
+                }   
+
+                if (count($file)){
+                    sleep(1);
+                    $this->sendPostponeMessage(true);
+                }
             }
-        }
+
+            $data['sending_pospone_msg'] = 1; // отправка закончилась
+            $this->adminManager->setTelegramSettings($data);
+        }    
         
         return;
         
