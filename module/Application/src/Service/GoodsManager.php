@@ -385,8 +385,8 @@ class GoodsManager
     {
         $result = [];
         
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['good' => $good->getId(), 'status' => Rawprice::STATUS_PARSED]);
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                ->rawpriceArticles($good);
         
         foreach ($rawprices as $rawprice){
             if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
@@ -421,6 +421,8 @@ class GoodsManager
     public function meanPrice($prices)
     {
         if (count($prices)){
+            $minPrice = min($prices);
+            
             $mean = Mean::arithmetic($prices);
             $deviation = StandardDeviation::population($prices, count($prices)>1);
 
@@ -431,7 +433,12 @@ class GoodsManager
                 }
             }
             
-            return Mean::arithmetic(array_filter($prices));
+            $newPrices = array_filter($prices);
+            if (count($newPrices)){
+                return Mean::arithmetic($newPrices);
+            } else {
+                return $minPrice;
+            }    
         }
         
         return 0.0;
@@ -458,5 +465,19 @@ class GoodsManager
         }
         
         return false;
+    }
+    
+    /**
+     * Обновить расчетные цены товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function updatePrices($good)
+    {
+        $prices = $this->rawpricesPrices($good);
+        $this->entityManager->getRepository(Goods::class)
+                ->updateGoodId($good->getId(), ['min_price' => $this->minPrice($prices), 'mean_price' => $this->meanPrice($prices)]);
+        
+        return;
     }
 }

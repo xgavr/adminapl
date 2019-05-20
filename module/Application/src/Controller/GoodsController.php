@@ -944,4 +944,23 @@ class GoodsController extends AbstractActionController
         
     }
     
+    public function updatePricesAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodId);        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->goodsManager->updatePrices($good);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);           
+                
+    }
 }

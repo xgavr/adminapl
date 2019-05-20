@@ -99,6 +99,26 @@ class Goods {
     protected $carCount;
 
     /**
+     * @ORM\Column(name="min_price")   
+     */
+    protected $minPrice;
+
+    /**
+     * @ORM\Column(name="mean_price")   
+     */
+    protected $meanPrice;
+
+    /**
+     * @ORM\Column(name="fix_price")   
+     */
+    protected $fixPrice;
+
+    /**
+     * @ORM\Column(name="markup")   
+     */
+    protected $markup;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
      * 
@@ -231,6 +251,46 @@ class Goods {
     {
         $this->price = $price;
     }     
+    
+    public function getMinPrice()
+    {
+        return $this->minPrice;
+    }
+    
+    public function setMinPrice($minPrice)
+    {
+        $this->minPrice = $minPrice;
+    }
+
+    public function getMeanPrice()
+    {
+        return $this->meanPrice;
+    }
+    
+    public function setMeanPrice($meanPrice)
+    {
+        $this->meanPrice = $meanPrice;
+    }
+
+    public function getFixPrice()
+    {
+        return $this->fixPrice;
+    }
+    
+    public function setFixPrice($fixPrice)
+    {
+        $this->fixPrice = $fixPrice;
+    }
+
+    public function getMarkup()
+    {
+        return $this->markup;
+    }
+    
+    public function setMarkup($markup)
+    {
+        $this->markup = $markup;
+    }
 
     /*
      * Возвращает связанный producer.

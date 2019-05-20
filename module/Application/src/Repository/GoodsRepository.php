@@ -187,6 +187,31 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Строки прайсов этого товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * 
+     * @return object
+     */
+    public function rawpriceArticles($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+            ->from(Goods::class, 'g')
+            ->join('g.articles', 'a')
+            ->join(Rawprice::class, 'r', 'WITH', 'r.code = a.id')    
+            ->where('g.id = ?1')
+            ->andWhere('r.status = ?2')
+            ->setParameter('1', $good->getId()) 
+            ->setParameter('2', Rawprice::STATUS_PARSED)    
+                ;
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery()->getResult();    
+    }
+    
+    /**
      * Выборка из прайсов по id товара и id поставщика 
      * @param array $params
      * @return object

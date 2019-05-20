@@ -149,6 +149,7 @@ $this->headScript()
                     <li role="presentation"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Описание <span id="homeBadge" class="badge"><?= count($goods->getAttributeValues()); ?></span></a></li>
                     <li role="presentation"><a href="#oem" role="tab" id="oem-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
                     <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость <span id="linkedBadge" class="badge">0</span></a></li>
+                    <li role="presentation"><a href="#prices" role="tab" id="price-tab" data-toggle="tab" aria-controls="prices" aria-expanded="true">Цены <span id="pricesBadge" class="badge"><?= $goods->getMeanPrice()?></span></a></li>
                 </ul>
 
                 <div class="tab-content" id="featureTabContent">
@@ -262,6 +263,39 @@ $this->headScript()
                                  </tr>                
                             </thead>
                         </table>
+                    </div>
+                    <div class="tab-pane fade" role="tabpanel" id="prices" aria-labelledby="prices-tab">
+                        <p>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td width='30%'>
+                                                Минимальная
+                                            </td>
+                                            <td align='right'>
+                                                <?= $goods->getMinPrice()?>
+                                            </td>
+                                        </tr>                                              
+                                        <tr>
+                                            <td>
+                                                Средняя
+                                            </td>
+                                            <td align='right'>
+                                                <?= $goods->getMeanPrice()?>
+                                            </td>
+                                        </tr>                                              
+                                    </table>                                                    
+                                </div>
+                                <div class="col-md-2">
+                                    <button value="/goods/update-prices/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                            title="Обновить">
+                                        Обновить
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                                 
+                                </div>
+                            </div>                            
+                        </p>
                     </div>
                 </div>
             </div>    
