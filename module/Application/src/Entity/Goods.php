@@ -101,22 +101,22 @@ class Goods {
     /**
      * @ORM\Column(name="min_price")   
      */
-    protected $minPrice;
+    protected $minPrice = 0.0;
 
     /**
      * @ORM\Column(name="mean_price")   
      */
-    protected $meanPrice;
+    protected $meanPrice = 0.0;
 
     /**
      * @ORM\Column(name="fix_price")   
      */
-    protected $fixPrice;
+    protected $fixPrice = 0.0;
 
     /**
      * @ORM\Column(name="markup")   
      */
-    protected $markup;
+    protected $markup = 0.0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
