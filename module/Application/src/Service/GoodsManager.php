@@ -437,4 +437,26 @@ class GoodsManager
         return 0.0;
     }
 
+    /**
+     * Проверка цены из прайса
+     * 
+     * @param \Application\Entity\Rawprice $rawprice
+     */
+    public function inSigma($rawprice)
+    {
+        $good = $rawprice->getGood();
+        if ($good && $rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
+            $prices = $this->rawpricesPrices($good);
+            
+            if (count($prices)){
+                $validator = new Sigma3();
+                $mean = Mean::arithmetic($prices);
+                $deviation = StandardDeviation::population($prices, count($prices)>1);
+                
+                return $validator->isValid($rawprice->getRealPrice(), $mean, $deviation);
+            }    
+        }
+        
+        return false;
+    }
 }
