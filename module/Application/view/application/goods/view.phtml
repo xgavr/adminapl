@@ -589,6 +589,7 @@ $this->headScript()
     }    
     
     function inSigma(data){
+        console.log(data);
         if (data.inSigma){
             $('#rawpricer'+data.id).removeClass('label-default');
             $('#rawpricer'+data.id).addClass('label-danger');
