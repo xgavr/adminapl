@@ -165,7 +165,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Количество записей в прайсах с этим товара
      * 
-     * @param Application\Entity\Goods $goods
+     * @param \Application\Entity\Goods $goods
      * 
      * @return object
      */

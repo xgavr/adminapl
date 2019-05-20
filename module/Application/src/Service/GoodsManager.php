@@ -12,6 +12,10 @@ use Application\Entity\Goods;
 use Application\Entity\Producer;
 use Application\Entity\Tax;
 use Application\Entity\Images;
+use Application\Entity\Rawprice;
+use Phpml\Math\Statistic\Mean;
+use Phpml\Math\Statistic\StandardDeviation;
+use Application\Validator\Sigma3;
 
 /**
  * Description of GoodsService
@@ -370,6 +374,67 @@ class GoodsManager
         }
         
         return;
+    }
+    
+    /**
+     * Получить массив цен товара
+     * @param \Application\Entity\Goods $good
+     * @return array
+     */
+    public function rawpricesPrices($good)
+    {
+        $result = [];
+        
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->findBy(['good' => $good->getId(), 'status' => Rawprice::STATUS_PARSED]);
+        
+        foreach ($rawprices as $rawprice){
+            if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
+                $result = array_merge($result, array_fill(0, $rawprice->getRealRest(), $rawprice->getRealPrice()));
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Рассчитать минимальную закупочную цену
+     * 
+     * @param array $prices
+     * @return float
+     */
+    public function minPrice($prices)
+    {
+        if (count($prices)){
+            return min($prices);
+        }
+        
+        return 0.0;
+    }
+    
+    /**
+     * Расчитать среднюю закупочную цену
+     * 
+     * @param type $prices
+     * @return float 
+     */
+    public function meanPrice($prices)
+    {
+        if (count($prices)){
+            $mean = Mean::arithmetic($prices);
+            $deviation = StandardDeviation::population($prices, count($prices)>1);
+
+            $validator = new Sigma3();
+            foreach ($prices as $key => $price){
+                if (!$validator->isValid($price, $mean, $deviation)){
+                    $price[$key] = false;
+                }
+            }
+            
+            return Mean::arithmetic(array_filter($prices));
+        }
+        
+        return 0.0;
     }
 
 }
