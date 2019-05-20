@@ -120,7 +120,7 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
             'options' => [
                 'label' => 'Отправка отложенных сообщений',
                 'value_options' => [
-                    1 => 'Остановлена',
+                    1 => 'Сейчас не идет',
                     2 => 'Идет',                    
                 ]
             ],
