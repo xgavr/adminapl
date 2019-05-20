@@ -259,7 +259,7 @@ $this->headScript()
                                      <th data-field="code" data-formatter="codeFormatter">Артикул</th>
                                      <th data-field="goodname" data-formatter="goodnameFormatter">Описание</th>
                                      <th data-field="rest" data-align='right'>Наличие</th>
-                                     <th data-field="price" data-align='right'>Цена</th>
+                                     <th data-field="price" data-formatter="priceFormatter" data-align='right'>Цена</th>
                                  </tr>                
                             </thead>
                         </table>
@@ -588,6 +588,23 @@ $this->headScript()
         return '<a href="/supplier/view/'+row.supplierId+'" target="_blanc">'+value+'</a>' + '<br/>' + priceDateStr ;
     }    
     
+    function inSigma(data){
+        if (data.inSigma){
+            $('#rawpricer'+data.id).removeClass('label-default');
+            $('#rawpricer'+data.id).addClass('label-danger');
+        }    
+    }
+    
+    function priceFormatter(value, row){
+        $.post(
+            '/goods/in-sigma-content/'+row.id,
+            null,
+            inSigma                
+        );
+        return [
+            '<span class="label label-default" id="rawprice"'+row.id+'>'+value+'</span>',
+        ].join(''); 
+    }        
     
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;

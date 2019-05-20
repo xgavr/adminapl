@@ -963,4 +963,30 @@ class GoodsController extends AbstractActionController
         ]);           
                 
     }
+    
+    public function inSigmaContentAction()
+    {
+        $rawpriceId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($rawpriceId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $rawprice = $this->entityManager->getRepository(Rawprice::class)
+                ->findOneById($rawpriceId);
+        
+        if ($rawprice == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $inSigma = $this->goodsManager->inSigma($rawprice);
+        
+        return new JsonModel([
+            'id' => $rawpriceId,
+            'inSigma' => $inSigma,
+        ]);          
+        
+    }
 }
