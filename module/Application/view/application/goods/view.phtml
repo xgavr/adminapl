@@ -590,8 +590,7 @@ $this->headScript()
     
     function inSigma(data){
         if (data.inSigma == false){
-            $('#rawprice'+data.id).addClass('label');
-            $('#rawprice'+data.id).addClass('label-warning');
+            $('#rawprice'+data.id).css('color', 'red');
         }    
     }
     
