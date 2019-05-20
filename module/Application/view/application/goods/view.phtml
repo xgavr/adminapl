@@ -590,9 +590,9 @@ $this->headScript()
     
     function inSigma(data){
         console.log(data);
-        if (data.inSigma){
-            $('#rawpricer'+data.id).removeClass('label-default');
-            $('#rawpricer'+data.id).addClass('label-danger');
+        if (data.inSigma == 'true'){
+            $('#rawpricer'+data.id).addClass('label');
+            $('#rawpricer'+data.id).addClass('label-warning');
         }    
     }
     
@@ -603,7 +603,7 @@ $this->headScript()
             inSigma                
         );
         return [
-            '<span class="label label-default" id="rawprice"'+row.id+'>'+value+'</span>',
+            '<span id="rawprice"'+row.id+'>'+value+'</span>',
         ].join(''); 
     }        
     
