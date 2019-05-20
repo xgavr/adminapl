@@ -257,6 +257,11 @@ class Goods {
         return $this->minPrice;
     }
     
+    public function getFormatMinPrice()
+    {
+        return round($this->minPrice, 2);
+    }
+    
     public function setMinPrice($minPrice)
     {
         $this->minPrice = $minPrice;
@@ -265,6 +270,11 @@ class Goods {
     public function getMeanPrice()
     {
         return $this->meanPrice;
+    }
+    
+    public function getFormatMeanPrice()
+    {
+        return round($this->meanPrice, 2);
     }
     
     public function setMeanPrice($meanPrice)

@@ -149,7 +149,7 @@ $this->headScript()
                     <li role="presentation"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Описание <span id="homeBadge" class="badge"><?= count($goods->getAttributeValues()); ?></span></a></li>
                     <li role="presentation"><a href="#oem" role="tab" id="oem-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
                     <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость <span id="linkedBadge" class="badge">0</span></a></li>
-                    <li role="presentation"><a href="#prices" role="tab" id="price-tab" data-toggle="tab" aria-controls="prices" aria-expanded="true">Цены <span id="pricesBadge" class="badge"><?= $goods->getMeanPrice()?></span></a></li>
+                    <li role="presentation"><a href="#prices" role="tab" id="price-tab" data-toggle="tab" aria-controls="prices" aria-expanded="true">Цены <span id="pricesBadge" class="badge"><?= $goods->getFormatMeanPrice()?></span></a></li>
                 </ul>
 
                 <div class="tab-content" id="featureTabContent">
@@ -274,7 +274,7 @@ $this->headScript()
                                                 Минимальная
                                             </td>
                                             <td align='right'>
-                                                <?= $goods->getMinPrice()?>
+                                                <?= $goods->getFormatMinPrice()?>
                                             </td>
                                         </tr>                                              
                                         <tr>
@@ -282,7 +282,7 @@ $this->headScript()
                                                 Средняя
                                             </td>
                                             <td align='right'>
-                                                <?= $goods->getMeanPrice()?>
+                                                <?= $goods->getFormatMeanPrice()?>
                                             </td>
                                         </tr>                                              
                                     </table>                                                    
