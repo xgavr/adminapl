@@ -966,9 +966,18 @@ class GoodsController extends AbstractActionController
     
     public function inSigmaContentAction()
     {
-        $rawpriceId = (int)$this->params()->fromRoute('id', -1);
+        $goodId = $this->params()->fromRoute('id', -1);
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodId);        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
 
-        if ($rawpriceId<0) {
+        $rawpriceId = (int)$this->params()->fromQuery('rawprice');
+
+        if (!$rawpriceId) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
@@ -981,7 +990,8 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $inSigma = $this->goodsManager->inSigma($rawprice);
+        $prices = $this->goodsManager->rawpricesPrices($good);
+        $inSigma = $this->goodsManager->inSigma($rawprice, $prices);
         
         return new JsonModel([
             'id' => $rawpriceId,

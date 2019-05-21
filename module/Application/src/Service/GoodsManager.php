@@ -448,13 +448,13 @@ class GoodsManager
      * Проверка цены из прайса
      * 
      * @param \Application\Entity\Rawprice $rawprice
+     * @param array $prices
+     * 
+     * @return bool
      */
-    public function inSigma($rawprice)
+    public function inSigma($rawprice, $prices)
     {
-        $good = $rawprice->getGood();
-        if ($good && $rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
-            $prices = $this->rawpricesPrices($good);
-            var_dump(count($prices));
+        if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
             if (count($prices)){
                 $validator = new Sigma3();
                 $mean = Mean::arithmetic($prices);

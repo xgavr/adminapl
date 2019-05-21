@@ -596,7 +596,7 @@ $this->headScript()
     
     function priceFormatter(value, row){
         $.post(
-            '/goods/in-sigma-content/'+row.id,
+            '/goods/in-sigma-content/<?= $goods->getId()?>?rawprice='+row.id,
             null,
             inSigma                
         );
