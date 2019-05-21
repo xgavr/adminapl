@@ -429,7 +429,7 @@ class GoodsManager
             $validator = new Sigma3();
             foreach ($prices as $key => $price){
                 if (!$validator->isValid($price, $mean, $deviation)){
-                    $price[$key] = false;
+                    $prices[$key] = false;
                 }
             }
             
