@@ -134,6 +134,29 @@ class GoodsController extends AbstractActionController
         ]);                  
     }
     
+    public function updatePricesRawAction()
+    {
+        $rawId = $this->params()->fromRoute('id', -1);
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $raw = $this->entityManager->getRepository(Raw::class)
+                ->findOneById($rawId);
+        
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->goodsManager->updatePricesRaw($raw);
+                
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
+    
     public function settingsAction()
     {
         $form = new GoodSettingsForm($this->entityManager);

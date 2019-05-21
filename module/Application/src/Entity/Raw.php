@@ -36,7 +36,8 @@ class Raw {
     const STAGE_TOKEN_PARSED        = 5; //наименования разобраны
     const STAGE_PRODUCER_ASSEMBLY   = 6; //производители собраны
     const STAGE_GOOD_ASSEMBLY       = 7; //карточки товара собрана
-    const STAGE_TOKEN_GROUP_PARSED  = 8; //группы наименований разобраны
+    const STAGE_PRICE_UPDATET       = 8; //цены рассчитаны
+    const STAGE_TOKEN_GROUP_PARSED  = 10; //группы наименований разобраны
     
            
     /**
@@ -235,6 +236,7 @@ class Raw {
             self::STAGE_TOKEN_PARSED => 'Наименования разобраны',
             self::STAGE_PRODUCER_ASSEMBLY => 'Производители собраны',
             self::STAGE_GOOD_ASSEMBLY => 'Товары собраны',
+            self::STAGE_PRICE_UPDATET => 'Цены рассчитаны',
             self::STAGE_TOKEN_GROUP_PARSED => 'Группы наименований разобраны',
         ];
     }    

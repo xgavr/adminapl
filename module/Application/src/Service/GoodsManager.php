@@ -376,6 +376,31 @@ class GoodsManager
         return;
     }
     
+
+    /**
+     * Получить цены из прайсов
+     * 
+     * @param array $rawprices
+     * @return array
+     */
+    public function getPricesFromRawprices($rawprices)
+    {
+        $result = [];
+        
+        foreach ($rawprices as $rawprice){
+            if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
+                $rest = $rawprice->getRealRest();
+                if ($rest > 1000){
+                    $rest = 1000;
+                }
+                $result = array_merge($result, array_fill(0, $rest, $rawprice->getRealPrice()));
+            }
+        }
+        
+        return $result;
+        
+    }
+    
     /**
      * Получить массив цен товара
      * @param \Application\Entity\Goods $good
@@ -383,18 +408,10 @@ class GoodsManager
      */
     public function rawpricesPrices($good)
     {
-        $result = [];
-        
         $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->rawpriceArticles($good);
         
-        foreach ($rawprices as $rawprice){
-            if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
-                $result = array_merge($result, array_fill(0, $rawprice->getRealRest(), $rawprice->getRealPrice()));
-            }
-        }
-        
-        return $result;
+        return $this->getPricesFromRawprices($rawprices);
     }
     
     /**
@@ -474,10 +491,50 @@ class GoodsManager
      */
     public function updatePrices($good)
     {
-        $prices = $this->rawpricesPrices($good);
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                ->rawpriceArticles($good);
+        
+        $prices = $this->getPricesFromRawprices($rawprices);
+        
         $this->entityManager->getRepository(Goods::class)
                 ->updateGoodId($good->getId(), ['min_price' => $this->minPrice($prices), 'mean_price' => $this->meanPrice($prices)]);
         
+        foreach ($rawprices as $rawprice){
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
+        }
+        
+        unset($rawprices);
+        unset($prices);
+        
         return;
+    }
+    
+    /**
+     * Пересчет цен товаров прайса
+     * @param Appllication\Entity\Raw $raw
+     */
+    public function updatePricesRaw($raw)
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(900);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdatePrice($raw);
+        
+        foreach ($goods as $good){
+//            var_dump($good->getId()); exit;
+            $this->updatePrices($good);
+        }
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdatePrice($raw);
+        
+        if (count($goods) == 0){
+            $raw->setParseStage(\Application\Entity\Raw::STAGE_PRICE_UPDATET);
+            $this->entityManager->persist($raw);
+
+            $this->entityManager->flush();
+        }    
     }
 }

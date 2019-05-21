@@ -32,10 +32,6 @@ class Rawprice {
     const OEM_NEW       = 1; // только что загрузили
     const OEM_PARSED    = 2; // прошел разборку.
 
-    const TOKEN_NEW       = 1; // только что загрузили
-    const TOKEN_PARSED    = 2; // прошел разборку.
-    const TOKEN_GROUP_PARSED = 3; // прошел разборку группу наименований.
-    
     const PRODUCER_NEW = 1; //недавно загрузили
     const PRODUCER_ASSEMBLY = 2; //производитель собран
     
@@ -43,6 +39,13 @@ class Rawprice {
     const GOOD_OK         = 2; //товар создан
     const GOOD_MISSING_DATA = 3; //не все данные
     const GOOD_NO_MATCH   = 4; //не совпадает по наименованию или цене
+    
+    const PRICE_NEW       = 1; // только что загрузили
+    const PRICE_PARSED    = 2; // прошел расчет цен.
+
+    const TOKEN_NEW       = 1; // только что загрузили
+    const TOKEN_PARSED    = 2; // прошел разборку.
+    const TOKEN_GROUP_PARSED = 3; // прошел разборку группу наименований.
     
     /**
      * @ORM\Id
@@ -177,9 +180,9 @@ class Rawprice {
     protected $statusOem = self::OEM_NEW;    
 
     /**
-     * @ORM\Column(name="status_token")   
+     * @ORM\Column(name="status_producer")   
      */
-    protected $statusToken = self::TOKEN_NEW;    
+    protected $statusProducer = self::PRODUCER_NEW;    
 
     /**
      * @ORM\Column(name="status_good")   
@@ -187,9 +190,14 @@ class Rawprice {
     protected $statusGood = self::GOOD_NEW;    
 
     /**
-     * @ORM\Column(name="status_producer")   
+     * @ORM\Column(name="status_price")   
      */
-    protected $statusProducer = self::PRODUCER_NEW;    
+    protected $statusPrice = self::PRICE_NEW;    
+
+    /**
+     * @ORM\Column(name="status_token")   
+     */
+    protected $statusToken = self::TOKEN_NEW;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
@@ -517,6 +525,60 @@ class Rawprice {
     public function setStatusProducer($statusProducer) 
     {
         $this->statusProducer = $statusProducer;
+    }   
+
+    /**
+     * Returns statusPrice.
+     * @return int     
+     */
+    public function getStatusPrice() 
+    {
+        return $this->statusPrice;
+    }
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusPriceList() 
+    {
+        return [
+            self::PRICE_NEW => 'Новые Цены',
+            self::PRICE_PARSED => 'Цены рассчитаны',
+        ];
+    }    
+    
+    /**
+     * Returns user statusPrice as string.
+     * @return string
+     */
+    public function getStatusPriceAsString()
+    {
+        $list = self::getStatusPriceList();
+        if (isset($list[$this->statusPrice])) {
+            return $list[$this->statusPrice];
+        }
+
+        return 'Unknown';
+    }  
+    
+    public function getStatusPriceName($statusPrice)
+    {
+        $list = self::getStatusPriceList();
+        if (isset($list[$statusPrice])) {
+            return $list[$statusPrice];
+        }
+
+        return 'Unknown';        
+    }
+    
+    /**
+     * Sets statusPrice.
+     * @param int $statusPrice     
+     */
+    public function setStatusPrice($statusPrice) 
+    {
+        $this->statusPrice = $statusPrice;
     }   
 
     public function getId() 

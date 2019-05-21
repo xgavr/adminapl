@@ -266,6 +266,12 @@ $this->pageBreadcrumbs()->setItems([
                                     </button>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == $raw::STAGE_GOOD_ASSEMBLY):?>
+                                    <button value="/goods/update-prices-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Рассчитать цены">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                <?php endif;?>
+                                <?php if ($raw->getParseStage() == $raw::STAGE_PRICE_UPDATET):?>
                                     <button value="/name/update-token-group-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Разобрать группы наименований">
                                         <span class="glyphicon glyphicon-wrench" ></span>
