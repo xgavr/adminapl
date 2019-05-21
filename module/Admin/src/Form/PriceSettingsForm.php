@@ -83,7 +83,7 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
             'options' => [
                 'label' => 'Загрузка прайса',
                 'value_options' => [
-                    1 => 'Не идет',
+                    1 => 'Сейчас не идет',
                     2 => 'Сейчас идет',                    
                 ]
             ],

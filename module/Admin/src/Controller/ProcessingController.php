@@ -250,14 +250,20 @@ class ProcessingController extends AbstractActionController
     {
         set_time_limit(0);
 
-        $settings = $this->adminManager->getPriceSettings();
+        $data = $this->adminManager->getPriceSettings()->toArray();
         
-        if ($settings['upload_raw'] == 1 && $this->adminManager->canRun()){
+        if ($data['upload_raw'] == 1 && $data['uploading_raw'] == 1 && $this->adminManager->canRun()){
+
+            $data['uploading_raw'] = 2; // идет загрузка
+            $this->adminManager->setPriceSettings($data);
             
             $files = $this->supplierManager->getPriceFilesToUpload();
             if (count($files)){
                 $this->rawManager->checkSupplierPrice($files[0]['priceGetting']->getSupplier());
             }            
+            
+            $data['uploading_raw'] = 1; // загрузка закончилась
+            $this->adminManager->setPriceSettings($data);
         }    
         
         return new JsonModel(
