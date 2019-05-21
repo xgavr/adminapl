@@ -711,7 +711,7 @@ class GoodsRepository extends EntityRepository
             ->join('c.rawprice', 'r') 
             ->join('r.raw', 'rr')
             ->join('rr.supplier', 's')    
-            ->where('g.good = ?1')    
+            ->where('g.id = ?1')    
             ->setParameter('1', $good->getId())
             ;
         
