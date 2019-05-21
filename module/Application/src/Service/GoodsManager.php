@@ -452,9 +452,10 @@ class GoodsManager
     public function inSigma($rawprice)
     {
         $good = $rawprice->getGood();
+            var_dump($rawprice->getRealPrice());
+            var_dump($rawprice->getRealRest());
         if ($good && $rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
             $prices = $this->rawpricesPrices($good);
-            var_dump($prices);
             if (count($prices)){
                 $validator = new Sigma3();
                 $mean = Mean::arithmetic($prices);
