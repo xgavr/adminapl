@@ -79,6 +79,18 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
                 
         $this->add([            
             'type'  => 'select',
+            'name' => 'uploading_raw',
+            'options' => [
+                'label' => 'Загрузка прайса',
+                'value_options' => [
+                    1 => 'Не идет',
+                    2 => 'Сейчас идет',                    
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
             'name' => 'parse_raw',
             'options' => [
                 'label' => 'Разборка загруженных прайсов',
@@ -154,6 +166,18 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
             'name' => 'assembly_good',
             'options' => [
                 'label' => 'Создавать товары',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'update_good_price',
+            'options' => [
+                'label' => 'Рассчитывать цены',
                 'value_options' => [
                     1 => 'Делать',
                     2 => 'Остановить',                    
@@ -258,6 +282,17 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
             ]); 
         
         $inputFilter->add([
+                'name'     => 'uploading_raw',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
                 'name'     => 'parse_raw',
                 'required' => true,
                 'filters'  => [                    
@@ -336,6 +371,17 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'assembly_good',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'update_good_price',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

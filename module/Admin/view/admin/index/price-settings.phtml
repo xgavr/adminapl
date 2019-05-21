@@ -28,6 +28,10 @@ $form->get('upload_raw')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('uploading_raw')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('parse_raw')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -53,6 +57,10 @@ $form->get('assembly_producer')->setAttributes([
     ]);
 
 $form->get('assembly_good')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('update_good_price')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -106,6 +114,12 @@ $form->prepare();
         </div>        
 
         <div class="form-group">
+            <?= $this->formLabel($form->get('uploading_raw')); ?>
+            <?= $this->formElement($form->get('uploading_raw')); ?>
+            <?= $this->formElementErrors($form->get('uploading_raw')); ?>                  
+        </div>        
+
+        <div class="form-group">
             <?= $this->formLabel($form->get('parse_raw')); ?>
             <?= $this->formElement($form->get('parse_raw')); ?>
             <?= $this->formElementErrors($form->get('parse_raw')); ?>                  
@@ -141,6 +155,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('assembly_good')); ?>
             <?= $this->formElement($form->get('assembly_good')); ?>
             <?= $this->formElementErrors($form->get('assembly_good')); ?>                  
+        </div>        
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('update_good_price')); ?>
+            <?= $this->formElement($form->get('update_good_price')); ?>
+            <?= $this->formElementErrors($form->get('update_good_price')); ?>                  
         </div>        
     </div>   
     <div class="col-md-3">

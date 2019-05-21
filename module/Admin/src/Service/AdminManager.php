@@ -138,6 +138,7 @@ class AdminManager {
         $config->price->receiving_mail = $data['receiving_mail']; //получать прайсы по почте
         $config->price->receiving_link = $data['receiving_link']; //получать прайсы по ссылке
         $config->price->upload_raw = $data['upload_raw']; //загружать прайсы в базу
+        $config->price->uploading_raw = $data['uploading_raw']; //идет загрузка прайса
         $config->price->parse_raw = $data['parse_raw']; //разбирать прайсы
         $config->price->parse_producer = $data['parse_producer']; //разбирать производителей из прайсов
         $config->price->parse_article = $data['parse_article']; //разбирать артикулы из прайсов
@@ -145,6 +146,7 @@ class AdminManager {
         $config->price->parse_name = $data['parse_name']; //разбирать наименования из прайсов
         $config->price->assembly_producer = $data['assembly_producer']; //создавать производителей
         $config->price->assembly_good = $data['assembly_good']; //создавать товары
+        $config->price->update_good_price = $data['update_good_price']; //рассчитать цены в товарах
         $config->price->assembly_group_name = $data['assembly_group_name']; //собирать группы наименований
         $config->price->image_mail_box = $data['image_mail_box']; //ящик для сбора картинок
         $config->price->image_mail_box_password = $data['image_mail_box_password']; //ящик для сбора картинок пароль
