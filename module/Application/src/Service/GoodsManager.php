@@ -535,6 +535,8 @@ class GoodsManager
             $this->entityManager->persist($raw);
 
             $this->entityManager->flush();
-        }    
+        } 
+        
+        return;
     }
 }

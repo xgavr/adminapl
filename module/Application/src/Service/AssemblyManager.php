@@ -564,7 +564,7 @@ class AssemblyManager
     /**
      * Добавление нового товара из прайса
      * 
-     * @param Application\Entity\Rawprice $rawprice
+     * @param \Application\Entity\Rawprice $rawprice
      * @param bool $flush
      */
     public function addNewGoodFromRawprice($rawprice) 
@@ -588,6 +588,14 @@ class AssemblyManager
         if ($producer){
 
             $article = $rawprice->getCode();
+            
+            if (!$article){
+                $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
+                $this->entityManager->persist($rawprice);
+                $this->entityManager->flush($rawprice);
+                return;
+            }
+
             $code = $article->getCode();
             $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
@@ -596,19 +604,23 @@ class AssemblyManager
                 $good = $this->addNewGoodFromArticle($article, $producer);
             }
 
-            $good->getArticles()->removeElement($article->getGood());
+//            $good->getArticles()->removeElement($article->getGood());
             
-            if (!$article->getGood()){
-                $article->setGood($good);
-                $this->entityManager->persist($article);
-                $this->entityManager->flush($article);
-            }
+//            if (!$article->getGood()){
+//                $article->setGood($good);
+//                $this->entityManager->persist($article);
+//                $this->entityManager->flush($article);
+//            }
 
             if ($good){
+                $article->setGood($good);
+                $this->entityManager->persist($article);
+
                 $rawprice->setGood($good);
                 $rawprice->setStatusGood(Rawprice::GOOD_OK);
                 $this->entityManager->persist($rawprice);
-                $this->entityManager->flush($rawprice);
+                
+                $this->entityManager->flush();
             }
         }
         return;
