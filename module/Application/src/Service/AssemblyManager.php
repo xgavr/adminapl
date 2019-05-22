@@ -523,7 +523,7 @@ class AssemblyManager
         $this->addProducerFromUnknownProducer($rawprice->getUnknownProducer());
             
         $this->entityManager->getRepository(Rawprice::class)
-                ->updateRawpriceAssemblyProducerStatus($rawprice->getRaw(), $rawprice->getUnknownProducer());
+                ->updateRawpriceAssemblyProducerStatus($rawprice);
                 
         return;
     }
