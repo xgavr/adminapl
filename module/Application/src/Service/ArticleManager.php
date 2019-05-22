@@ -124,27 +124,27 @@ class ArticleManager
      */
     public function updatePriceRest($article)
     {        
-//        ini_set('memory_limit', '1024M');
 
         $priceSum = 0;
-        $rest = 0.0;
+        $totalRest = 0.0;
+        $prices = [];
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
                 ->findByCode($article->getId());
         
         foreach($rawprices as $rawprice){
             if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() > 0 && $rawprice->getRealPrice() > 0){
-//                $prices = array_merge($prices, array_fill(0, $rawprice->getRealRest(), $rawprice->getRealPrice()));
-                $priceSum += $rawprice->getRealPrice()*$rawprice->getRealRest();
-                $rest += $rawprice->getRealRest();
+                $rest = min(1000, $rawprice->getRealRest());
+                $prices = array_merge($prices, array_fill(0, $rest, $rawprice->getRealPrice()));
+                $totalRest += $rest;
             }    
         }
         $meanPrice = 0.0;
         $standartDeviation = 0.0;
         
-        if ($rest){
-            $meanPrice = $priceSum/$rest;
-//            $standartDeviation = StandardDeviation::population($prices, count($prices) > 1);
+        if (count($prices)){
+            $meanPrice = Mean::arithmetic($prices);
+            $standartDeviation = StandardDeviation::population($prices, count($prices) > 1);
         }
         
         $this->entityManager->getRepository(Article::class)
@@ -355,7 +355,8 @@ class ArticleManager
         $result = [];
         foreach($rawprices as $rawprice){
             if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() > 0 && $rawprice->getRealPrice() > 0){
-                $result = array_merge($result, array_fill(0, $rawprice->getRealRest(), $rawprice->getRealPrice()));
+                $rest = min(1000, $rawprice->getRealRest());
+                $result = array_merge($result, array_fill(0, $rest, $rawprice->getRealPrice()));
             }    
         }
         
@@ -481,16 +482,17 @@ class ArticleManager
         $mean = $this->rawpricesMeanPrice($rawprices);
 
         $result = [];
-        $rest = 0;
+        $totalRest = 0;
         foreach($rawprices as $rawprice){
             if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest() && $rawprice->getRealPrice()){
-                $result[] = pow(($rawprice->getRealPrice() - $mean), 2)*$rawprice->getRealRest();
-                $rest += $rawprice->getRealRest();
+                $rest = min(1000, $rawprice->getRealRest());
+                $result[] = pow(($rawprice->getRealPrice() - $mean), 2)*$rest;
+                $totalRest += $rest;
             }    
         }
 
         if ($rest){
-            return sqrt(array_sum($result)/$rest);
+            return sqrt(array_sum($result)/$totalRest);
         } else {
             return 0;
         } 
@@ -640,7 +642,8 @@ class ArticleManager
         if ($article){
             foreach($article->getRawprice() as $rawprice){
                 if ($rawprice->getStatus() == Rawprice::STATUS_PARSED && $rawprice->getRealRest()>0 && $rawprice->getRealPrice()>0){
-                    $result += $rawprice->getRealRest();
+                    $rest = min(1000, $rawprice->getRealRest());
+                    $result += $rest;
                 }    
             }
         }
