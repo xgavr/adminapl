@@ -64,7 +64,9 @@ class GoodsManager
         
         $goods->setProducer($producer);
         if (array_key_exists('tax', $data)){
-            if (!$data['tax']) $data['tax'] = $this->getSettings()->defaultTax;
+            if (!$data['tax']) {
+                $data['tax'] = $this->getSettings()->defaultTax;
+            }
         } else {
             $data['tax'] = $this->getSettings()->defaultTax;
         }    
