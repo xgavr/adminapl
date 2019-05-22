@@ -66,9 +66,10 @@ class AssemblyManager
      * 
      * @param string $code
      * @param \Application\Entity\Producer $producer
+     * @param \Application\Entity\GenericGroup $zeroGroup
      * @return Goods
      */
-    public function addNewGood($code, $producer) 
+    public function addNewGood($code, $producer, $zeroGroup = null) 
     {
         // Создаем новую сущность Goods.
         $good = new Goods();
@@ -86,8 +87,11 @@ class AssemblyManager
         $good->setStatusOem(Goods::OEM_FOR_UPDATE);
         $good->setCarCount(0);
         
-        $zeroGroup = $this->entityManager->getRepository(GenericGroup::class)
-                ->findOneByTdId(0);
+        if (!$zeroGroup){
+            $zeroGroup = $this->entityManager->getRepository(GenericGroup::class)
+                    ->findOneByTdId(0);
+        }
+        
         if ($zeroGroup){
             $good->setGenericGroup($zeroGroup);
         }
@@ -103,20 +107,18 @@ class AssemblyManager
     /**
      * Добавление новой карточки товара из артикула
      * 
-     * @param Application\Entity\Article $article
-     * @param Application\Entity\Producer $producer
+     * @param \Application\Entity\Article $article
+     * @param \Application\Entity\Producer $producer
+     * @param \Application\Entity\GenericGroup $zeroGroup
      * @return Goods
      */
-    public function addNewGoodFromArticle($article, $producer) 
+    public function addNewGoodFromArticle($article, $producer, $zeroGroup = null) 
     {
         // Создаем новую сущность Goods.
-        $good = $this->addNewGood($article->getCode(), $producer);
-        $article->setGood($good);
+        $good = $this->addNewGood($article->getCode(), $producer, $zeroGroup);
         
-        $this->entityManager->persist($article);
-        
-        $this->entityManager->flush($article);
-        
+        $this->entityManager->getRepository(Article::class)
+                ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
         
         return $good;
     }   
@@ -565,9 +567,10 @@ class AssemblyManager
      * Добавление нового товара из прайса
      * 
      * @param \Application\Entity\Rawprice $rawprice
+     * @param \Application\Entity\Rawprice $zeroGroup
      * @param bool $flush
      */
-    public function addNewGoodFromRawprice($rawprice) 
+    public function addNewGoodFromRawprice($rawprice, $zeroGroup = null) 
     {
         if (!$this->checkRawprice($rawprice)){
             $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
@@ -601,27 +604,14 @@ class AssemblyManager
                     ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
 
             if (!$good){
-                $good = $this->addNewGoodFromArticle($article, $producer);
+                $good = $this->addNewGoodFromArticle($article, $producer, $zeroGroup);
+            } else {
+                $this->entityManager->getRepository(Article::class)
+                        ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
             }
-
-//            $good->getArticles()->removeElement($article->getGood());
             
-//            if (!$article->getGood()){
-//                $article->setGood($good);
-//                $this->entityManager->persist($article);
-//                $this->entityManager->flush($article);
-//            }
-
-            if ($good){
-                $article->setGood($good);
-                $this->entityManager->persist($article);
-
-                $rawprice->setGood($good);
-                $rawprice->setStatusGood(Rawprice::GOOD_OK);
-                $this->entityManager->persist($rawprice);
-                
-                $this->entityManager->flush();
-            }
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($rawprice->getId(), ['good_id' => $good->getId(), 'status_good' => Rawprice::GOOD_OK]);
         }
         return;
     }
@@ -637,10 +627,12 @@ class AssemblyManager
         
         $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForAccembly($raw);
-//                ->findBy(['raw' => $raw->getId(), 'statusGood' => Rawprice::GOOD_NEW, 'status' => Rawprice::STATUS_PARSED]);
+
+        $zeroGroup = $this->entityManager->getRepository(GenericGroup::class)
+                ->findOneByTdId(0);
         
         foreach ($rawprices as $rawprice){
-            $this->addNewGoodFromRawprice($rawprice);
+            $this->addNewGoodFromRawprice($rawprice, $zeroGroup);
         }
         
         $rawprices = $this->entityManager->getRepository(Goods::class)
