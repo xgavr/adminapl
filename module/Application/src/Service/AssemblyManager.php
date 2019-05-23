@@ -536,7 +536,7 @@ class AssemblyManager
      */
     public function assemblyProducerFromRaw($raw)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(900);
         
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)

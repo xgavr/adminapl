@@ -17,6 +17,7 @@ use User\Entity\User;
 use Company\Entity\Office;
 use Application\Entity\Contact;
 use Application\Entity\Supplier;
+use Application\Entity\Rawprice;
 use Zend\Http\Client;
 
 /**
@@ -781,5 +782,62 @@ class AplService {
         }
         return;
         
+    }
+    
+    /**
+     * Отправить строку прайса
+     * 
+     * @param \Application\Entity\Rawprice $rawprice
+     */
+    public function sendRawprice($rawprice)
+    {
+        $url = $this->aplApi().'add-rawprice?api='.$this->aplApiKey();
+
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setParameterPost([
+            'key'       => $rawprice->getId(),
+            'created'   => $rawprice->getDateCreated(),
+            'lastmod'   => date('Y-m-d H:i:s'),
+            'article'   => $rawprice->getCode()->getCode(),
+            'producer'  => $rawprice->getProducer(),
+            'goodname'  => $rawprice->getGoodname(),
+            'price'     => $rawprice->getRealPrice(),
+            'rest'      => $rawprice->getRealRest(),
+            'iid'       => $rawprice->getIid(),
+            'lot'       => $rawprice->getLot(),
+            'unit'      => $rawprice->getUnit(),
+            'bar'       => $rawprice->getBar(),
+            'currency'  => $rawprice->getCurrency(),
+            'weight'    => $rawprice->getWeight(),
+            'country'   => $rawprice->getCountry(),
+            'markdown'  => $rawprice->getMarkdown(),
+            'sale'      => $rawprice->getSale(),
+            'pack'      => $rawprice->getPack(),
+        ]);
+
+        $response = $client->send();
+        if ($response->isOk()) {
+            return true;
+        }
+
+        return false;
+    }
+    
+    /**
+     * Обновить строки прайсов товара
+     * 
+     * @param \Application\Entity\Good $good
+     */
+    public function updateGoodRawprice($good)
+    {
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->rawpriceArticles($good);
+        foreach ($rawprices as $rawprice){
+            $this->sendRawprice($rawprice);
+        }
+        
+        return;
     }
 }

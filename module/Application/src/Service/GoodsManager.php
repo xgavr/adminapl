@@ -64,7 +64,9 @@ class GoodsManager
         
         $goods->setProducer($producer);
         if (array_key_exists('tax', $data)){
-            if (!$data['tax']) $data['tax'] = $this->getSettings()->defaultTax;
+            if (!$data['tax']) {
+                $data['tax'] = $this->getSettings()->defaultTax;
+            }
         } else {
             $data['tax'] = $this->getSettings()->defaultTax;
         }    
@@ -389,10 +391,7 @@ class GoodsManager
         
         foreach ($rawprices as $rawprice){
             if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
-                $rest = $rawprice->getRealRest();
-                if ($rest > 1000){
-                    $rest = 1000;
-                }
+                $rest = min(1000, $rawprice->getRealRest());
                 $result = array_merge($result, array_fill(0, $rest, $rawprice->getRealPrice()));
             }
         }
