@@ -14,7 +14,7 @@ final class Version20190521074616 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('rawprice');
-        $table->addColumn('status_price', 'integer', ['notnull' => true, 'default' => 1]);
+//        $table->addColumn('status_price', 'integer', ['notnull' => true, 'default' => 1]);
 
     }
 
