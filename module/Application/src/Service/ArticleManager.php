@@ -216,7 +216,7 @@ class ArticleManager
                 $this->entityManager->persist($oldRaw);
 
                 $this->entityManager->getRepository(Raw::class)
-                        ->updateAllRawpriceStatus($oldRaw, Rawprice::STATUS_RETIRED);
+                        ->updateAllRawpriceField($oldRaw, ['status' => Rawprice::STATUS_RETIRED, 'status_ex' => Rawprice::EX_NEW]);
             }    
             
             $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);

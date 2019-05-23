@@ -4,9 +4,6 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Application\Entity\Images;
-use Application\Entity\Producer;
-use Company\Entity\Tax;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -42,6 +39,9 @@ class Goods {
     const OEM_UPDATED = 2; // номера обновлены
     const OEM_FOR_UPDATE = 1; // номера не обновлялись
 
+    const RAWPRICE_EX_NEW            = 1; // не передано
+    const RAWPRICE_EX_TRANSFERRED    = 2; // передано.
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -92,6 +92,11 @@ class Goods {
      * @ORM\Column(name="status_oem")   
      */
     protected $statusOem;
+
+    /**
+     * @ORM\Column(name="status_rawprice_ex")   
+     */
+    protected $statusRawpriceEx;
 
     /**
      * @ORM\Column(name="car_count")   
@@ -601,6 +606,16 @@ class Goods {
     public function setCarCount($carCount)
     {
         $this->carCount = $carCount;
+    }    
+    
+    public function getStatusRawpriceEx()
+    {
+        $this->statusRawpriceEx;
+    }
+    
+    public function setStatusRawpriceEx($statusRawpriceEx)
+    {
+        $this->statusRawpriceEx = $statusRawpriceEx;
     }    
     
 }

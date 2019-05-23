@@ -219,10 +219,11 @@ class GoodsRepository extends EntityRepository
      * Строки прайсов этого товара
      * 
      * @param \Application\Entity\Goods $good
+     * @param array $params
      * 
      * @return object
      */
-    public function rawpriceArticles($good)
+    public function rawpriceArticles($good, $params=null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -236,6 +237,13 @@ class GoodsRepository extends EntityRepository
             ->setParameter('1', $good->getId()) 
             ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
+        if (is_array($params)){
+            if (isset($params['statusEx'])){
+                $queryBuilder->andWhere('r.statusEx = ?3')
+                        ->setParameter('3', $params['statusEx'])
+                        ;
+            }
+        }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();    
     }

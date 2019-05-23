@@ -18,6 +18,7 @@ use Company\Entity\Office;
 use Application\Entity\Contact;
 use Application\Entity\Supplier;
 use Application\Entity\Rawprice;
+use Application\Entity\Goods;
 use Zend\Http\Client;
 
 /**
@@ -819,23 +820,66 @@ class AplService {
 
         $response = $client->send();
         if ($response->isOk()) {
-            return true;
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRENSFERRED]);
+                    
         }
+        
+        return;
+    }
+    
+    /**
+     * Удалить строку прайса
+     * 
+     * @param \Application\Entity\Rawprice $rawprice
+     */
+    public function removeRawprice($rawprice)
+    {
+        $url = $this->aplApi().'delete-rawprice?api='.$this->aplApiKey();
 
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setParameterPost([
+            'key'       => $rawprice->getId(),
+        ]);
+
+        $response = $client->send();
+        if ($response->isOk()) {
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
+            return true;                    
+        }
+        
         return false;
     }
     
     /**
      * Обновить строки прайсов товара
      * 
-     * @param \Application\Entity\Good $good
+     * @param \Application\Entity\Goods $good
      */
     public function updateGoodRawprice($good)
     {
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->rawpriceArticles($good);
+        $ok = TRUE;
+        
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                ->rawpriceArticles($good, ['statusEx' => Rawprice::EX_NEW]);
         foreach ($rawprices as $rawprice){
-            $this->sendRawprice($rawprice);
+            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
+                if (!$this->sendRawprice($rawprice)){
+                    $ok = FALSE;
+                }
+            } else {
+                if (!$this->removeRawprice($rawprice)){
+                    $ok = FALSE;
+                }
+            }    
+        }
+        
+        if ($ok){
+            $this->entityManager->getReository(Goods::class)
+                    ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED]);
         }
         
         return;
