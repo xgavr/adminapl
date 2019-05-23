@@ -47,6 +47,8 @@ class Rawprice {
     const TOKEN_PARSED    = 2; // прошел разборку.
     const TOKEN_GROUP_PARSED = 3; // прошел разборку группу наименований.
     
+    const EX_NEW            = 1; // не передано
+    const EX_TRENSFERRED    = 2; // передано.
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -198,6 +200,11 @@ class Rawprice {
      * @ORM\Column(name="status_token")   
      */
     protected $statusToken = self::TOKEN_NEW;    
+
+    /**
+     * @ORM\Column(name="status_ex")   
+     */
+    protected $statusEx = self::EX_NEW;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Raw", inversedBy="rawprice") 
@@ -579,6 +586,60 @@ class Rawprice {
     public function setStatusPrice($statusPrice) 
     {
         $this->statusPrice = $statusPrice;
+    }   
+
+    /**
+     * Returns statusEx.
+     * @return int     
+     */
+    public function getStatusEx() 
+    {
+        return $this->statusEx;
+    }
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusExList() 
+    {
+        return [
+            self::EX_NEW => 'Не передано',
+            self::EX_TRENSFERRED => 'Передано',
+        ];
+    }    
+    
+    /**
+     * Returns user statusEx as string.
+     * @return string
+     */
+    public function getStatusExAsString()
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$this->statusEx])) {
+            return $list[$this->statusEx];
+        }
+
+        return 'Unknown';
+    }  
+    
+    public function getStatusExName($statusEx)
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$statusEx])) {
+            return $list[$statusEx];
+        }
+
+        return 'Unknown';        
+    }
+    
+    /**
+     * Sets statusEx.
+     * @param int $statusEx     
+     */
+    public function setStatusEx($statusEx) 
+    {
+        $this->statusEx = $statusEx;
     }   
 
     public function getId() 
