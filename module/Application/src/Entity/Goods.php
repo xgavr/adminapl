@@ -96,7 +96,7 @@ class Goods {
     /**
      * @ORM\Column(name="status_rawprice_ex")   
      */
-    protected $statusRawpriceEx;
+    protected $statusRawpriceEx = self::RAWPRICE_EX_NEW;
 
     /**
      * @ORM\Column(name="car_count")   
