@@ -329,9 +329,13 @@ $this->headScript()
                             <? endif; ?>    
                         </div>
                         <div class="pull-right">
-                            <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                            <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                                     title="Обновить АПЛ Ид">
                                 <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                            <button value="/apl/ex-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                    title="Обмен строк прайса">
+                                <span class="glyphicon glyphicon-export" ></span>
                             </button>                             
                         </div>
                     </div>
