@@ -469,7 +469,7 @@ class AssemblyManager
         if (date('Y-m-d', strtotime($unknownProducer->getDateCreated().' +2 day')) > date('Y-m-d')){
             return false;
         }
-        
+
         $result = 0;
         
         $rawprices = $this->entityManager->getRepository(Producer::class)
@@ -479,9 +479,11 @@ class AssemblyManager
             if ($this->checkRawprice($rawprice)){
                 $result += 1;
             } else {
+//                var_dump($rawprice->getId());
                 $result -= 1;
             }  
         }
+        
         
         return $result > 0;
     }

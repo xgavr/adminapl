@@ -819,9 +819,10 @@ class AplService {
         ]);
 
         $response = $client->send();
+
         if ($response->isOk()) {
-            $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRENSFERRED]);
+//            $this->entityManager->getRepository(Rawprice::class)
+//                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
                     
         }
         
@@ -861,27 +862,30 @@ class AplService {
      */
     public function updateGoodRawprice($good)
     {
-        $ok = TRUE;
-        
         $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticles($good, ['statusEx' => Rawprice::EX_NEW]);
-        foreach ($rawprices as $rawprice){
-            if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
-                if (!$this->sendRawprice($rawprice)){
-                    $ok = FALSE;
-                }
-            } else {
-                if (!$this->removeRawprice($rawprice)){
-                    $ok = FALSE;
-                }
-            }    
-        }
+                ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_NEW]);
         
-        if ($ok){
-            $this->entityManager->getReository(Goods::class)
-                    ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED]);
+        if (count($rawprices)){
+            $ok = TRUE;
+
+            foreach ($rawprices as $rawprice){
+                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
+                    if (!$this->sendRawprice($rawprice)){
+                        $ok = FALSE;
+                    }
+                } else {
+                    if (!$this->removeRawprice($rawprice)){
+                        $ok = FALSE;
+                    }
+                }    
+            }
+
+            if ($ok){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED]);
+            }
         }
-        
+
         return;
     }
 }

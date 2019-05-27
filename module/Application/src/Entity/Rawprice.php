@@ -727,7 +727,6 @@ class Rawprice {
     public function getRealRest() 
     {
         if ($this->rest){
-            
             if (in_array($this->rest, ['+'])){
                 return 1;
             }

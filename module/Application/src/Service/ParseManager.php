@@ -118,9 +118,9 @@ class ParseManager {
                     unset($result['price']);
                 }
                 
-                if (!$priceValidator->isValid($result['rest'])){
-                    unset($result['rest']);
-                }
+//                if (!$priceValidator->isValid($result['rest'])){
+//                    unset($result['rest']);
+//                }
                                 
                 if (!$result['producer'] && $priceDescriptionFunc[$priceDescription]['defaultProducer']){
                     $result['producer'] = $priceDescriptionFunc[$priceDescription]['defaultProducer'];                    

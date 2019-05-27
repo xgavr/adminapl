@@ -148,7 +148,7 @@ class ArticleManager
         }
         
         $this->entityManager->getRepository(Article::class)
-                ->updateArticle($article->getId(), ['mean_price' => $meanPrice, 'standart_deviation' => $standartDeviation, 'total_rest' => $rest]);
+                ->updateArticle($article->getId(), ['mean_price' => $meanPrice, 'standart_deviation' => $standartDeviation, 'total_rest' => $totalRest]);
         
         return;
     }
