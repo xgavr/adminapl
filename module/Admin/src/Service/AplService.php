@@ -541,7 +541,7 @@ class AplService {
     /**
      * Обновление Апл Ид производителя
      * 
-     * @param Application\Entity\Producer $producer
+     * @param \Application\Entity\Producer $producer
      * @return type
      */
     public function updateProducerAplId($producer)
@@ -604,6 +604,8 @@ class AplService {
             
 //                var_dump($url); 
             $response = file_get_contents($url);
+//                var_dump($url); 
+//                var_dump($response); 
             try {
                 if (is_numeric($response)){
 //                    $good->setAplId($response);
@@ -819,7 +821,7 @@ class AplService {
         ]);
 
         $response = $client->send();
-
+        var_dump($response->getBody()); exit;
         if ($response->isOk()) {
 //            $this->entityManager->getRepository(Rawprice::class)
 //                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
@@ -864,7 +866,7 @@ class AplService {
     {
         $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_NEW]);
-        
+
         if (count($rawprices)){
             $ok = TRUE;
 

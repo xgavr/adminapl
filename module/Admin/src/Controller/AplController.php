@@ -22,13 +22,13 @@ class AplController extends AbstractActionController
     
     /**
      * AplService manager.
-     * @var Admin\Service\AplService
+     * @var \Admin\Service\AplService
      */
     private $aplService;    
     
     /**
      * AplBankService manager.
-     * @var Admin\Service\AplBankService
+     * @var \Admin\Service\AplBankService
      */
     private $aplBankService;    
 
