@@ -818,6 +818,7 @@ class AplService {
             'markdown'  => $rawprice->getMarkdown(),
             'sale'      => $rawprice->getSale(),
             'pack'      => $rawprice->getPack(),
+            'name'      => $rawprice->getRaw()->getSupplier()->getAplId(),
         ]);
 
         $response = $client->send();
