@@ -119,6 +119,28 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'email',
+            'name' => 'telefonistka_email',
+            'attributes' => [
+                'id' => 'telefonistka_email'
+            ],
+            'options' => [
+                'label' => 'Email для получения звонков телефонистки',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'telefonistka_email_password',
+            'attributes' => [
+                'id' => 'telefonistka_email_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на email телефонистки',
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -128,6 +150,7 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'settings_submit_button',
             ],
         ]);        
+        
     }
     
     private function addInputFilter() 
@@ -257,6 +280,49 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'autoru_email_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'telefonistka_email',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'telefonistka_email_password',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

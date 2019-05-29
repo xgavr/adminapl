@@ -46,6 +46,14 @@ $form->get('autoru_email_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('telefonistka_email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('telefonistka_email_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -110,6 +118,18 @@ $form->prepare();
             <?= $this->formLabel($form->get('autoru_email_password')); ?>
             <?= $this->formElement($form->get('autoru_email_password')); ?>
             <?= $this->formElementErrors($form->get('autoru_email_password')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('telefonistka_email')); ?>
+            <?= $this->formElement($form->get('telefonistka_email')); ?>
+            <?= $this->formElementErrors($form->get('telefonistka_email')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('telefonistka_email_password')); ?>
+            <?= $this->formElement($form->get('telefonistka_email_password')); ?>
+            <?= $this->formElementErrors($form->get('telefonistka_email_password')); ?>                  
         </div>
     </div>    
     

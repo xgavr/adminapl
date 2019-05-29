@@ -40,21 +40,34 @@ class TelefonistkaManager {
      */
     private $telegrammManager;
     
-    public function __construct($entityManager, $postManager, $telegrammManager, $aplService)
+    /**
+     * Менеджер админ
+     * 
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;   
+    
+    
+    public function __construct($entityManager, $postManager, $telegrammManager, $aplService, $adminManager)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
         $this->telegrammManager = $telegrammManager;        
-        $this->aplService = $aplService;        
+        $this->aplService = $aplService;  
+        $this->adminManager = $adminManager;
     }
     
     public function postMessage()
     {
+        
+        $settings = $this->adminManager->getSettings();
+        $telegramSettings = $this->adminManager->getTelegramSettings();
+        
         $box = [
             'host' => 'imap.yandex.ru',
             'server' => '{imap.yandex.ru:993/imap/ssl}',
-            'user' => 'telefonistka@autopartslist.ru',
-            'password' => 'kjdrf4',
+            'user' => $settings['telefonistka_email'],
+            'password' => $settings['telefonistka_email_password'],
             'leave_message' => false,
         ];
         
@@ -99,7 +112,7 @@ class TelefonistkaManager {
                         }    
                     }
                     
-                    $this->telegrammManager->sendMessage(['chat_id' => '-1001128740501', 'text' => $text]);
+                    $this->telegrammManager->sendMessage(['chat_id' => $telegramSettings['telegram_group_chat_id'], 'text' => $text]);
                     //printf(nl2br($text));
                 }
             }
