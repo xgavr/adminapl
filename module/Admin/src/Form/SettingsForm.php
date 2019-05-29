@@ -66,83 +66,6 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([           
             'type'  => 'text',
-            'name' => 'tamtam_access_token',
-            'attributes' => [
-                'id' => 'tamtam_access_token'
-            ],
-            'options' => [
-                'label' => 'ТамТам access token',
-            ],
-        ]);
-
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'tamtam_chat_id',
-            'attributes' => [
-                'id' => 'tamtam_chat_id'
-            ],
-            'options' => [
-                'label' => 'ТамТам чат Id',
-            ],
-        ]);
-
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'telegram_api_key',
-            'attributes' => [
-                'id' => 'telegram_api_key'
-            ],
-            'options' => [
-                'label' => 'Телеграм api key',
-            ],
-        ]);
-
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'telegram_admin_chat_id',
-            'attributes' => [
-                'id' => 'telegram_admin_chat_id'
-            ],
-            'options' => [
-                'label' => 'Телеграм чат администратора',
-            ],
-        ]);
-
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'telegram_bot_name',
-            'attributes' => [
-                'id' => 'telegram_bot_name'
-            ],
-            'options' => [
-                'label' => 'Телеграм имя бота',
-            ],
-        ]);
-
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'telegram_hook_url',
-            'attributes' => [
-                'id' => 'telegram_hook_url'
-            ],
-            'options' => [
-                'label' => 'Телеграм hook url',
-            ],
-        ]);
-                
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'telegram_proxy',
-            'attributes' => [
-                'id' => 'telegram_proxy'
-            ],
-            'options' => [
-                'label' => 'Телеграм прокси',
-            ],
-        ]);
-
-        $this->add([           
-            'type'  => 'text',
             'name' => 'ftp_apl_suppliers_price',
             'attributes' => [
                 'id' => 'ftp_apl_suppliers_price'
@@ -171,6 +94,28 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'Пароль на FTP АПЛ для прайсов поставщиков',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'email',
+            'name' => 'autoru_email',
+            'attributes' => [
+                'id' => 'autoru_email'
+            ],
+            'options' => [
+                'label' => 'Email для получения заказов AutoRu',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'autoru_email_password',
+            'attributes' => [
+                'id' => 'autoru_email_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на email AutoRu',
             ],
         ]);
                 
@@ -212,139 +157,6 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'sms_ru_url',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'tamtam_chat_id',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'tamtam_access_token',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'telegram_hook_url',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'telegram_bot_name',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'telegram_api_key',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'telegram_admin_chat_id',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'telegram_proxy',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -414,6 +226,49 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                         'options' => [
                             'min' => 1,
                             'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'autoru_email',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'autoru_email_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
                         ],
                     ],
                 ],

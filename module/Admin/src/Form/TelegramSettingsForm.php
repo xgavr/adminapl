@@ -65,6 +65,17 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([           
             'type'  => 'text',
+            'name' => 'telegram_group_chat_id',
+            'attributes' => [
+                'id' => 'telegram_group_chat_id'
+            ],
+            'options' => [
+                'label' => 'Телеграм чат группы АПЛ',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
             'name' => 'telegram_bot_name',
             'attributes' => [
                 'id' => 'telegram_bot_name'
@@ -218,6 +229,25 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'telegram_admin_chat_id',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'telegram_group_chat_id',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

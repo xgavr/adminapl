@@ -14,6 +14,7 @@ use Admin\Service\AutoruManager;
 use Admin\Service\PostManager;
 use Admin\Service\TelegrammManager;
 use Admin\Service\AplService;
+use Admin\Service\AdminManager;
 
 /**
  * Description of AutoruManagerFactory
@@ -30,7 +31,8 @@ class AutoruManagerFactory  implements FactoryInterface
         $postManager = $container->get(PostManager::class);
         $telegrammManager = $container->get(TelegrammManager::class);
         $aplService = $container->get(AplService::class);
+        $adminManager = $container->get(AdminManager::class);
         // Инстанцируем сервис и внедряем зависимости.
-        return new AutoruManager($entityManager, $postManager, $telegrammManager, $aplService);
+        return new AutoruManager($entityManager, $postManager, $telegrammManager, $aplService, $adminManager);
     }
 }

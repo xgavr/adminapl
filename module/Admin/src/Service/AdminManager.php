@@ -90,8 +90,8 @@ class AdminManager {
         $config->admin->ftp_apl_suppliers_price_login = $data['ftp_apl_suppliers_price_login'];
         $config->admin->ftp_apl_suppliers_price_password = $data['ftp_apl_suppliers_price_password'];
 
-//        $config->admin->tamtam_access_token = $data['tamtam_access_token'];
-//        $config->admin->tamtam_chat_id = $data['tamtam_chat_id'];
+        $config->admin->autoru_email = $data['autoru_email'];
+        $config->admin->autoru_email_password = $data['autoru_email_password'];
         
         $writer = new PhpArray();
         
@@ -338,6 +338,7 @@ class AdminManager {
         $config->telegram_settings->telegram_api_key = $data['telegram_api_key'];
         $config->telegram_settings->telegram_hook_url = $data['telegram_hook_url'];
         $config->telegram_settings->telegram_admin_chat_id = $data['telegram_admin_chat_id'];
+        $config->telegram_settings->telegram_group_chat_id = $data['telegram_group_chat_id'];
         $config->telegram_settings->telegram_proxy = $data['telegram_proxy'];
         $config->telegram_settings->send_pospone_msg = $data['send_pospone_msg'];
         $config->telegram_settings->sending_pospone_msg = $data['sending_pospone_msg'];

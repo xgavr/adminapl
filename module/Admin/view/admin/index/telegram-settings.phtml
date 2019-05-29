@@ -37,6 +37,11 @@ $form->get('telegram_admin_chat_id')->setAttributes([
     'placeholder'=>'Чат администратора',
     ]);
 
+$form->get('telegram_group_chat_id')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Чат группы АПЛ',
+    ]);
+
 $form->get('telegram_proxy')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'Использовать прокси',
@@ -82,7 +87,7 @@ $form->prepare();
 
 <?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-4">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('telegram_bot_name')); ?>
@@ -108,6 +113,13 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('telegram_admin_chat_id')); ?>                  
         </div>
 
+        <div class="form-group">
+            <?= $this->formLabel($form->get('telegram_group_chat_id')); ?>
+            <?= $this->formElement($form->get('telegram_group_chat_id')); ?>
+            <?= $this->formElementErrors($form->get('telegram_group_chat_id')); ?>                  
+        </div>
+    </div>
+    <div class="col-md-4">
         <div class="form-group">
             <?= $this->formLabel($form->get('send_pospone_msg')); ?>
             <?= $this->formElement($form->get('send_pospone_msg')); ?>

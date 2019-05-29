@@ -26,11 +26,6 @@ $form->get('sms_ru_url')->setAttributes([
     'placeholder'=>'СМС.РУ url http://sms.ru/sms/send',
     ]);
 
-$form->get('telegram_hook_url')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'Телеграм hook url',
-    ]);
-
 $form->get('ftp_apl_suppliers_price')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -43,18 +38,13 @@ $form->get('ftp_apl_suppliers_price_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('autoru_email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
 
-
-//$form->get('tamtam_chat_id')->setAttributes([
-//    'class'=>'form-control', 
-//    'placeholder'=>'ТамТам chat_id',
-//    ]);
-//
-//$form->get('tamtam_access_token')->setAttributes([
-//    'class'=>'form-control', 
-//    'placeholder'=>'ТамТам access token',
-//    ]);
-
+$form->get('autoru_email_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
@@ -69,7 +59,7 @@ $form->prepare();
 
 <?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-4">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('sms_ru_url')); ?>
@@ -106,10 +96,24 @@ $form->prepare();
             <?= $this->formElement($form->get('ftp_apl_suppliers_price_password')); ?>
             <?= $this->formElementErrors($form->get('ftp_apl_suppliers_price_password')); ?>                  
         </div>
-
         
     </div>   
-    <div class="col-sm-3" id="side-nav" >
+    <div class="col-md-4">
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('autoru_email')); ?>
+            <?= $this->formElement($form->get('autoru_email')); ?>
+            <?= $this->formElementErrors($form->get('autoru_email')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('autoru_email_password')); ?>
+            <?= $this->formElement($form->get('autoru_email_password')); ?>
+            <?= $this->formElementErrors($form->get('autoru_email_password')); ?>                  
+        </div>
+    </div>    
+    
+    <div class="col-md-4" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
             <li class="active">
                 <?= $this->formElement($form->get('submit')); ?>
