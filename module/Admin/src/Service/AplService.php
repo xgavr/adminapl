@@ -849,9 +849,10 @@ class AplService {
         ]);
 
         $response = $client->send();
+        var_dump($response->getBody());
         if ($response->isOk()) {
-            $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
+//            $this->entityManager->getRepository(Rawprice::class)
+//                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
             return true;                    
         }
         
