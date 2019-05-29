@@ -573,14 +573,10 @@ class AssemblyManager
     public function missingData($rawprice)
     {
         $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
+        $rawprice->setCode(null);
+        
         $this->entityManager->persist($rawprice);
         $this->entityManager->flush($rawprice);
-
-        $article = $rawprice->getCode();
-        if ($article){
-            $this->entityManager->getRepository(Article::class)
-                    ->updateArticle($article->getId(), ['good_id' => null]);            
-        }
         
         return;        
     }

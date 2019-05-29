@@ -1028,7 +1028,9 @@ class Rawprice {
     public function setCode($code) 
     {
         $this->code = $code;
-        $code->addRawprice($this);
+        if ($code){
+            $code->addRawprice($this);
+        }    
     }
     
     /*
