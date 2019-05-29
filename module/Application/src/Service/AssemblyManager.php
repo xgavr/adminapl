@@ -567,6 +567,25 @@ class AssemblyManager
     }
        
     /**
+     * Обработка неполных данных
+     * @param \Application\Entity\Rawprice $rawprice
+     */
+    public function missingData($rawprice)
+    {
+        $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
+        $this->entityManager->persist($rawprice);
+        $this->entityManager->flush($rawprice);
+
+        $article = $rawprice->getCode();
+        if ($article){
+            $this->entityManager->getRepository(Article::class)
+                    ->updateArticle($article->getId(), ['good_id' => null]);            
+        }
+        
+        return;        
+    }
+    
+    /**
      * Добавление нового товара из прайса
      * 
      * @param \Application\Entity\Rawprice $rawprice
@@ -576,19 +595,13 @@ class AssemblyManager
     public function addNewGoodFromRawprice($rawprice, $zeroGroup = null) 
     {
         if (!$this->checkRawprice($rawprice)){
-            $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
-            $this->entityManager->persist($rawprice);
-            $this->entityManager->flush($rawprice);
-            return;
+            return $this->missingData($rawprice);
         }
         
         $producer = $rawprice->getUnknownProducer()->getProducer();
         
         if (!$producer){
-            $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
-            $this->entityManager->persist($rawprice);
-            $this->entityManager->flush($rawprice);
-            return;
+            return $this->missingData($rawprice);
         }
         
         if ($producer){
@@ -596,10 +609,7 @@ class AssemblyManager
             $article = $rawprice->getCode();
             
             if (!$article){
-                $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
-                $this->entityManager->persist($rawprice);
-                $this->entityManager->flush($rawprice);
-                return;
+                return $this->missingData($rawprice);
             }
 
             $code = $article->getCode();
