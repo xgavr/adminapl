@@ -81,8 +81,6 @@ class AdminManager {
             $config->admin = [];
         }
         
-        $config->admin->apl_secret_key = $data['apl_secret_key'];
-
         $config->admin->sms_ru_url = $data['sms_ru_url'];
         $config->admin->sms_ru_api_id = $data['sms_ru_api_id'];
                 
