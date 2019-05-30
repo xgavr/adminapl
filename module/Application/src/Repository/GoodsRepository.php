@@ -419,6 +419,27 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления прайсов
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateRawprice()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.meanPrice > 0')
+            ->andWhere('g.statusRawpriceEx = ?1')
+            ->setParameter('1', Goods::RAWPRICE_EX_NEW)    
+            ->setMaxResults(100000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
      * Количество товара с Апл ид
      * 
      * @return integer

@@ -611,7 +611,7 @@ class AplService {
 //                    $good->setAplId($response);
 //                    $this->entityManager->persist($good);
 //                    $this->entityManager->flush($good);
-                    $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    $this->entityManager->getRepository(Goods::class)
                             ->updateGoodId($good->getId(), ['apl_id' => $response]);
                     return;
                 }
@@ -634,7 +634,7 @@ class AplService {
         set_time_limit(900);
         $startTime = time();
         
-        $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $goods = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateAplId();
         
         foreach ($goods as $good){
@@ -955,4 +955,28 @@ class AplService {
         
         return;
     }
+    
+    /**
+     * Обновление прайсов в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodRawprice()
+    {
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateRawprice();
+        
+        foreach ($goods as $good){
+            $this->sendGoodRawprice($good);
+            if (time() > $startTime + 1700){
+                return;
+            }
+            usleep(1);
+        }
+        return;
+    }
+    
 }
