@@ -180,7 +180,7 @@ $this->pageBreadcrumbs()->setItems([
                                     <?php endif;?>    
                                 <?php elseif ($key == 'Наименование товара' && $rawprice->getStatusToken() != $rawprice::TOKEN_NEW):?>
                                     <?= $this->escapeHtml($value)?>
-                                    <?php if(count($articleTokens)):?>  
+                                    <?php if($articleTokens):?>  
                                         <div>    
                                             <?php foreach($articleTokens as $token):?>
                                                 <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">

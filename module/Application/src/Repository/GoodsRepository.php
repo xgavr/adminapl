@@ -41,7 +41,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Быстрое обновление полей товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * @param array $data
      * @return integer
      */

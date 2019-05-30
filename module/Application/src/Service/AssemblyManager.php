@@ -617,6 +617,9 @@ class AssemblyManager
             } else {
                 $this->entityManager->getRepository(Article::class)
                         ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
+                
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);
             }
             
             $this->entityManager->getRepository(Rawprice::class)
