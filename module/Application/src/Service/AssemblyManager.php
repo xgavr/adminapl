@@ -619,7 +619,7 @@ class AssemblyManager
                         ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
                 
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);
+                        ->updateGood($good, ['g.statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);
             }
             
             $this->entityManager->getRepository(Rawprice::class)
