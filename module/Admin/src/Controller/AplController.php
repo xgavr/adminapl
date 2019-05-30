@@ -240,7 +240,7 @@ class AplController extends AbstractActionController
     public function updateGoodRawpriceAction()
     {
         
-        $this->aplService->updateGoodRawprice();
+        $this->aplService->updateGoodsRawprice();
         
         return new JsonModel([
             ['ok']

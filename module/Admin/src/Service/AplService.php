@@ -961,7 +961,7 @@ class AplService {
      * 
      * @return type
      */
-    public function updateGoodRawprice()
+    public function updateGoodsRawprice()
     {
         set_time_limit(1800);
         $startTime = time();
