@@ -53,12 +53,12 @@ if ($unknownProducerQuery){
                     <tr>
                         <td colspan="2">            
                             <?php if ($prev):?>
-                                <a href="/producer/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
+                                <a href="/producer/view/<?= $prev[0]['id']?>">&larr;<?= $prev[0]['name']?></a>
                             <?php endif;?>            
                         </td>
                         <td  colspan="3" align="right">
                             <?php if ($next):?>
-                                <a href="/producer/view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
+                                <a href="/producer/view/<?= $next[0]['id']?>"><?= $next[0]['name']?>&rarr;</a>
                             <?php endif;?>                            
                         </td>
                     </tr>

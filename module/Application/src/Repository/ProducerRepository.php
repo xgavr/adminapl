@@ -327,7 +327,7 @@ class ProducerRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('p.id, p.aplId, p.name, count(up.id) as unknownProducerCount')
+        $queryBuilder->select('p.id, p.aplId, p.name, count(up.id) as unknownProducerCount, sum(up.supplierCount) as supplierCount, sum(up.rawpriceCount) as rawpriceCount')
             ->from(Producer::class, 'p')
             ->leftJoin('p.unknownProducer', 'up') 
             ->groupBy('p.id')    
@@ -356,6 +356,10 @@ class ProducerRepository  extends EntityRepository{
             if (isset($params['sort'])){
                 if ($params['sort'] == 'unknownProducerCount'){
                     $queryBuilder->orderBy('unknownProducerCount', $params['order']);
+                } elseif ($params['sort'] == 'supplierCount'){
+                    $queryBuilder->orderBy('supplierCount', $params['order']);
+                } elseif ($params['sort'] == 'rawpriceCount'){
+                    $queryBuilder->orderBy('rawpriceCount', $params['order']);
                 } else {
                     $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);                
                 }    
