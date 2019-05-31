@@ -43,7 +43,23 @@ class Producer {
      */
     protected $country;
 
+   /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\Goods", mappedBy="producer")
+    * @ORM\JoinColumn(name="id", referencedColumnName="producer_id")
+   */
+   private $goods;
+
+   /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\UnknownProducer", mappedBy="producer")
+    * @ORM\JoinColumn(name="id", referencedColumnName="producer_id")
+   */
+   private $unknownProducer;
     
+   public function __construct() {
+      $this->goods = new ArrayCollection();
+      $this->unknownProducer = new ArrayCollection();
+   }
+
     public function getId() 
     {
         return $this->id;
@@ -92,23 +108,6 @@ class Producer {
         $this->country = $country;
         $country->addProducer($this);
     }     
-
-   /**
-    * @ORM\OneToMany(targetEntity="\Application\Entity\Goods", mappedBy="producer")
-    * @ORM\JoinColumn(name="id", referencedColumnName="producer_id")
-   */
-   private $goods;
-
-   /**
-    * @ORM\OneToMany(targetEntity="\Application\Entity\UnknownProducer", mappedBy="producer")
-    * @ORM\JoinColumn(name="id", referencedColumnName="producer_id")
-   */
-   private $unknownProducer;
-
-   public function __construct() {
-      $this->goods = new ArrayCollection();
-      $this->unknownProducer = new ArrayCollection();
-   }
 
     /**
      * Возвращает goods для этого producer.

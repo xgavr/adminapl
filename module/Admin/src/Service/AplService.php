@@ -804,7 +804,7 @@ class AplService {
             'good'      => $rawprice->getGood()->getId(),
             'created'   => $rawprice->getDateCreated(),
             'lastmod'   => date('Y-m-d H:i:s'),
-            'article'   => $rawprice->getCode()->getCode(),
+            'article'   => $rawprice->getArticle(),
             'producer'  => $rawprice->getProducer(),
             'goodname'  => $rawprice->getGoodname(),
             'price'     => $rawprice->getRealPrice(),
@@ -919,7 +919,7 @@ class AplService {
                 'good'      => $good->getId(),
                 'created'   => $rawprice->getDateCreated(),
                 'lastmod'   => date('Y-m-d H:i:s'),
-                'article'   => $rawprice->getCode()->getCode(),
+                'article'   => $rawprice->getArticle(),
                 'producer'  => $rawprice->getProducer(),
                 'goodname'  => $rawprice->getGoodname(),
                 'price'     => $rawprice->getRealPrice(),
@@ -953,6 +953,8 @@ class AplService {
 //                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);                    
         }
         
+        unset($post);
+        unset($rawprices);
         return;
     }
     
@@ -977,6 +979,7 @@ class AplService {
             }
             usleep(1);
         }
+        unset($goods);
         return;
     }
     

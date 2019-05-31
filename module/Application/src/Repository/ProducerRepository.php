@@ -315,38 +315,50 @@ class ProducerRepository  extends EntityRepository{
         return $queryBuilder->getQuery();
     }    
     
+    /**
+     * Запрос по производителям
+     * 
+     * @param array $params
+     * @return query
+     */
     public function findAllProducer($params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(Producer::class, 'c')
-            ->orderBy('c.name');
+        $queryBuilder->select('p.id, p.aplId, p.name, count(g.id) as goodCount')
+            ->from(Producer::class, 'p')
+            ->leftJoin('p.goods', 'g') 
+            ->groupBy('p.id')    
+            ->orderBy('p.name')
                 ;
         
         if (is_array($params)){
             if (isset($params['q'])){
-                $queryBuilder->where('c.name like :search')
+                $queryBuilder->where('p.name like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('c.name > ?1')
+                $queryBuilder->where('p.name > ?1')
                     ->setParameter('1', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('c.name < ?1')
+                $queryBuilder->where('p.name < ?1')
                     ->setParameter('1', $params['prev1'])
-                    ->orderBy('c.name', 'DESC')
+                    ->orderBy('p.name', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
+                if ($params['sort'] == 'goodCount'){
+                    $queryBuilder->orderBy('goodCount', $params['order']);
+                } else {
+                    $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);                
+                }    
             }            
         }
 

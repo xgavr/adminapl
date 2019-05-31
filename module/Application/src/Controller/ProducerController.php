@@ -65,21 +65,11 @@ class ProducerController extends AbstractActionController
     
     public function indexAction()
     {
-        $page = $this->params()->fromQuery('page', 1);
-        
-        $query = $this->entityManager->getRepository(Producer::class)
-                    ->findAllProducer();
-                
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
-        // Визуализируем шаблон представления.
+        $total = $this->entityManager->getRepository(Producer::class)
+                ->count([]);
         
         return new ViewModel([
-            'producer' => $paginator,
-            'producerManager' => $this->producerManager,
-            'total' => $paginator->getTotalItemCount(),
+            'total' => $total,
         ]);  
     }
     
@@ -97,8 +87,12 @@ class ProducerController extends AbstractActionController
         
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
 
         $result = $query->getResult(2);
         
