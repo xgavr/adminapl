@@ -442,7 +442,8 @@ class ProducerManager
                     ->findOneByUnknownProducer($unknownProducer->getId());
 
             if ($rawprice){
-                $newName = $rawprice->getProducer();
+                $filedValues = $rawprice->getFieldValues();
+                $newName = $filedValues['Производитель'];
                 
                 if ($newName != $producer->getName()){
                     $producerWithName = $this->entityManager->getRepository(Producer::class)
