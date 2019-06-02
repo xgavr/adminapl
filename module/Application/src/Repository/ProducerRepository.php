@@ -689,6 +689,4 @@ class ProducerRepository  extends EntityRepository{
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
-
-    
 }

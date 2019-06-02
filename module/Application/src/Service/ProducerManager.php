@@ -426,5 +426,36 @@ class ProducerManager
         
         return $result;
     }  
+    
+    /**
+     * Лучшее наименование
+     * 
+     * @param \Application\Entity\Producer $producer
+     */
+    public function bestName($producer)
+    {
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findOneByProducer($producer, ['supplierCount' => 'DESC']);
+        
+        if ($unknownProducer){
+            $rawprice = $this->entityManager->getRepository(Rawprice::class)
+                    ->findOneByUnknownProducer($unknownProducer);
+            if ($rawprice){
+                $newName = $rawprice->getProducer();
+                
+                if ($newName != $producer->getName()){
+                    $producerWithName = $this->entityManager->getRepository(Producer::class)
+                            ->findOneByName($newName);
+                    if (!$producerWithName){
+                        $producer->setName($newName);
+                        $this->entityManager->persist($producer);
+                        $this->entityManager->flush();
+                    }    
+                }    
+            }    
+        }
+        
+        return;
+    }
         
 }

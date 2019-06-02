@@ -828,5 +828,28 @@ class ProducerController extends AbstractActionController
         return $this->redirect()->toRoute('producer', ['action' => 'unknown'], ['query' => ['page' => $page]]);
     }    
 
+    public function bestNameAction()
+    {
+        $producerId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($producerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $producer = $this->entityManager->getRepository(Producer::class)
+                ->findOneById($producerId);
+        
+        if ($producer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        $this->producerManager->bestName($producer);
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+        
+    }
     
 }
