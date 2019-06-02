@@ -444,7 +444,7 @@ class ProducerManager
             if ($rawprice){
                 $filedValues = $rawprice->getFieldValues();
                 $newName = $filedValues['Производитель'];
-                
+                var_dump($newName);
                 if ($newName != $producer->getName()){
                     $producerWithName = $this->entityManager->getRepository(Producer::class)
                             ->findOneByName($newName);
