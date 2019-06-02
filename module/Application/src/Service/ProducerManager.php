@@ -435,11 +435,12 @@ class ProducerManager
     public function bestName($producer)
     {
         $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                ->findOneByProducer($producer, ['supplierCount' => 'DESC']);
-        
+                ->findOneByProducer($producer->getId(), ['rawpriceCount' => 'DESC']);
+
         if ($unknownProducer){
             $rawprice = $this->entityManager->getRepository(Rawprice::class)
-                    ->findOneByUnknownProducer($unknownProducer);
+                    ->findOneByUnknownProducer($unknownProducer->getId());
+
             if ($rawprice){
                 $newName = $rawprice->getProducer();
                 
