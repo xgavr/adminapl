@@ -852,4 +852,18 @@ class ProducerController extends AbstractActionController
         
     }
     
+    public function bestNamesAction()
+    {
+        $producers = $this->entityManager->getRepository(Producer::class)
+                ->findBy([]);
+        foreach ($producers as $producer){
+            $this->producerManager->bestName($producer);
+        }    
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+        
+    }
+    
 }
