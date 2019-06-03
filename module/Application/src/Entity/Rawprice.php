@@ -1129,7 +1129,9 @@ class Rawprice {
         $form = new \Application\Form\PriceDescriptionForm();
         $elements = $form->getElements();
         foreach ($elements as $element){
-            if(in_array($element->getName(), ['name', 'status', 'type'])) continue;
+            if (in_array($element->getName(), ['name', 'status', 'type'])) {
+                continue;
+            }
             $func = 'get'.ucfirst($element->getName());
             if (method_exists($this, $func)){
                 if($this->$func()){

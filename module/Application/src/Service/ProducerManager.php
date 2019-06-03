@@ -442,16 +442,20 @@ class ProducerManager
                     ->findOneByUnknownProducer($unknownProducer->getId());
 
             if ($rawprice){
-                $filedValues = $rawprice->getFieldValues();
-                $newName = $filedValues['Производитель'];
-                var_dump($filedValues);
-                if ($newName != $producer->getName()){
-                    $producerWithName = $this->entityManager->getRepository(Producer::class)
-                            ->findOneByName($newName);
-                    if (!$producerWithName){
-                        $producer->setName($newName);
-                        $this->entityManager->persist($producer);
-                        $this->entityManager->flush();
+                $priceDescription = $this->entityManager->getRepository(\Application\Entity\PriceDescription::class)
+                        ->findOneById($rawprice->getPriceDescription());
+                if ($priceDescription){
+                    $rawValues = $rawprice->getRawdataAsArray();
+                    $newName = $rawValues[$priceDescription->getProducer() - 1];
+//                    var_dump($priceDescription->getProducer());
+                    if ($newName != $producer->getName()){
+                        $producerWithName = $this->entityManager->getRepository(Producer::class)
+                                ->findOneByName($newName);
+                        if (!$producerWithName){
+                            $producer->setName($newName);
+                            $this->entityManager->persist($producer);
+                            $this->entityManager->flush();
+                        }    
                     }    
                 }    
             }    
