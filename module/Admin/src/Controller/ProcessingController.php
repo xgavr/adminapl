@@ -616,6 +616,28 @@ class ProcessingController extends AbstractActionController
     }
 
     /**
+     * Обновление наименований производителей
+     */
+    public function producerBestNameAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_producer'] == 1 && $this->adminManager->canRun()){
+            
+            $producers = $this->entityManager->getRepository(\Application\Entity\Producer::class)
+                    ->findBy([]);
+            foreach ($producers as $producer){
+                $this->producerManager->bestName($producer);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
      * Удаление пустых производителей
      */
     public function deleteProducerAction()
