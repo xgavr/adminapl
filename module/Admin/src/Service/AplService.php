@@ -546,25 +546,30 @@ class AplService {
      */
     public function updateProducerAplId($producer)
     {
-        $producerName = mb_strtoupper($producer->getName(), 'utf-8');
+    $producerName = mb_strtoupper($producer->getName(), 'utf-8');
 
-        $url = $this->aplApi().'get-maker-id?name='.rawurlencode($producerName).'&api='.$this->aplApiKey();
-
-        $response = file_get_contents($url);
-//                var_dump($url); 
-//                var_dump($response); 
-        try {
-            if (is_numeric($response)){
-                $producer->setAplId($response);
-                $this->entityManager->persist($producer);
-                $this->entityManager->flush($producer);
-                return;
-            }
-        } catch (Exception $ex) {
-//                var_dump($ex->getMessage());
-            return;
-        }
+        $url = $this->aplApi().'get-maker-id?api='.$this->aplApiKey();
         
+        $post = [
+            'name' => $producer->getName(),
+            'type' => $producer->getId(),
+        ];
+
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setParameterPost($post);
+
+        $response = $client->send();
+        $body = $response->getBody();
+        var_dump($body);
+        if ($response->isOk()) {
+//                return (array) Json::decode($body);
+              return 'ok';
+//            } else {
+//                return $response->getContent();
+        }
+
         return;
     }
     
