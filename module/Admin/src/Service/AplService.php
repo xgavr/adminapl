@@ -597,26 +597,32 @@ class AplService {
     
     /**
      * Получить код товара
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      */ 
     public function getGoodAplId($good)
     {
         
         if ($good->getProducer()->getAplId()){
         
-            $url = $this->aplApi().'get-good-id?art='.$good->getCode().'&makerid='.$good->getProducer()->getAplId().'&api='.$this->aplApiKey();
+            $url = $this->aplApi().'get-good-id?api='.$this->aplApiKey();
             
-//                var_dump($url); 
-            $response = file_get_contents($url);
-//                var_dump($url); 
-//                var_dump($response); 
+            $post = [
+                'art' => $good->getCode(),
+                'makerid' => $good->getProducer()->getAplId(),
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $response = $client->send();
+            $body = $response->getBody();
+
             try {
-                if (is_numeric($response)){
-//                    $good->setAplId($response);
-//                    $this->entityManager->persist($good);
-//                    $this->entityManager->flush($good);
+                if (is_numeric($body)){
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), ['apl_id' => $response]);
+                            ->updateGoodId($good->getId(), ['apl_id' => $body]);
                     return;
                 }
             } catch (Exception $ex) {
