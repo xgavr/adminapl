@@ -642,7 +642,7 @@ class AplService {
      */
     public function updateGoodAplId()
     {
-        set_time_limit(900);
+        set_time_limit(1800);
         $startTime = time();
         
         $goods = $this->entityManager->getRepository(Goods::class)
@@ -650,7 +650,7 @@ class AplService {
         
         foreach ($goods as $good){
             $this->getGoodAplId($good);
-            if (time() > $startTime + 800){
+            if (time() > $startTime + 1500){
                 return;
             }
             usleep(1);
