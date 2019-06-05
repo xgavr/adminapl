@@ -681,9 +681,9 @@ class ProducerRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g')
-            ->from(Producer::class, 'g')
-            ->where('g.aplId = 0')
+        $queryBuilder->select('p')
+            ->from(Producer::class, 'p')
+            ->where('p.aplId = 0')
             ->setMaxResults(10000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
