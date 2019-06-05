@@ -609,6 +609,7 @@ class AplService {
             $post = [
                 'art' => $good->getCode(),
                 'makerid' => $good->getProducer()->getAplId(),
+                'createnew' => 1,
             ];
             
             $client = new Client();
