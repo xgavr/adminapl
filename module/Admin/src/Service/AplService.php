@@ -653,7 +653,7 @@ class AplService {
             if (time() > $startTime + 800){
                 return;
             }
-            usleep(100);
+            usleep(1);
         }
         return;
     }
