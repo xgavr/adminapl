@@ -562,12 +562,9 @@ class AplService {
 
         $response = $client->send();
         $body = $response->getBody();
-        var_dump($body);
-        if ($response->isOk()) {
-//                return (array) Json::decode($body);
-              return 'ok';
-//            } else {
-//                return $response->getContent();
+        
+        if (is_numeric($body)){
+            $producer->setAplId((int) $body);
         }
 
         return;
