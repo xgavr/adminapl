@@ -565,6 +565,8 @@ class AplService {
         
         if (is_numeric($body)){
             $producer->setAplId((int) $body);
+            $this->entityManager->persist($producer);
+            $this->entityManager->flush();
         }
 
         return;
