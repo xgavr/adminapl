@@ -754,6 +754,7 @@ class ProcessingController extends AbstractActionController
             
             $this->aplService->updateGoodAplId();
 
+            $data = $this->adminManager->getAplExchangeSettings()->toArray();
             $data['get_good_id'] = 1; // загрузка закончилась
             $this->adminManager->setAplExchangeSettings($data);
         }    
@@ -780,6 +781,7 @@ class ProcessingController extends AbstractActionController
             
             $this->aplService->updateGoodsRawprice();
             
+            $data = $this->adminManager->getAplExchangeSettings()->toArray();
             $data['rawprice'] = 1; // загрузка закончилась
             $this->adminManager->setAplExchangeSettings($data);
         }    
