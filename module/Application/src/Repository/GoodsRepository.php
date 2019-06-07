@@ -430,7 +430,6 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
-            ->where('g.meanPrice > 0')
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusRawpriceEx = ?1')
             ->setParameter('1', Goods::RAWPRICE_EX_NEW)    
