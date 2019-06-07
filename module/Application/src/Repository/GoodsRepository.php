@@ -440,6 +440,27 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления номеров
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateOem()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->andWhere('g.aplId > 0')    
+            ->andWhere('g.statusOemEx = ?1')
+            ->setParameter('1', Goods::OEM_EX_NEW)    
+            ->setMaxResults(10000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
      * Количество товара с Апл ид
      * 
      * @return integer
@@ -845,6 +866,7 @@ class GoodsRepository extends EntityRepository
     public function addGoodOem($data)
     {
        $inserted = $this->getEntityManager()->getConnection()->insert('oem', $data);
+       $this->updateGoodId($data['good_id'], ['status_oem_ex' => Goods::OEM_EX_NEW]);
        return $inserted;        
     }
 

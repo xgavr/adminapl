@@ -996,4 +996,74 @@ class AplService {
         return;
     }
     
+    /**
+     * Обновить номера товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function sendGoodOem($good)
+    {
+        if ($good->getAplId()){
+            $url = $this->aplApi().'update-good-oem?api='.$this->aplApiKey();
+
+            $post = [
+                'good' => $good->getId(),
+                'oems' => [],
+            ];
+
+            $oems = $this->entityManager->getRepository(Goods::class)
+                    ->findOems($good);
+
+
+            foreach ($oems as $oem){
+                $post['oems'][$oem->getId()] = [                
+                    'parent'    => $good->getAplId(),
+                    'sort'      => $oem->getSourceTagAsString(),
+                    'name'      => $oem->getOeNumber(),
+                    'desc'      => $oem->getBrandName(),
+                    'sf'        => $oem->getSourceAsString(),
+                ]; 
+            }
+    //        var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $response = $client->send();
+    //        var_dump($response->getBody()); exit;
+            if ($response->isOk()) {
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['g.statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
+            }
+
+            unset($post);
+            unset($oems);
+        }    
+        return;
+    }
+    
+    /**
+     * Обновление номеров в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodsOem()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateOem();
+        
+        foreach ($goods as $good){
+            $this->sendGoodOem($good);
+            if (time() > $startTime + 1740){
+                return;
+            }
+        }
+        unset($goods);
+        return;
+    }
 }

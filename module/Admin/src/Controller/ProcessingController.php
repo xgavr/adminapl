@@ -792,6 +792,32 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Обновление номеров товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateGoodOemAction()
+    {
+        sleep(10);
+        
+        $data = $this->adminManager->getAplExchangeSettings()->toArray();
+        
+        if ($data['oem'] == 1 && $this->adminManager->canRun()){
+            $data['oem'] = 3; // идет загрузка
+            $this->adminManager->setAplExchangeSettings($data);
+            
+            $this->aplService->updateGoodsOem();
+            
+            $data = $this->adminManager->getAplExchangeSettings()->toArray();
+            $data['oem'] = 1; // загрузка закончилась
+            $this->adminManager->setAplExchangeSettings($data);
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    /**
      * Выгрузка эквайринга из апл
      * 
      * @return JsonModel

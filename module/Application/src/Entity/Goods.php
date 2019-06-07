@@ -42,6 +42,18 @@ class Goods {
     const RAWPRICE_EX_NEW            = 1; // не передано
     const RAWPRICE_EX_TRANSFERRED    = 2; // передано.
     
+    const OEM_EX_NEW            = 1; // не передано
+    const OEM_EX_TRANSFERRED    = 2; // передано.
+    
+    const CAR_EX_NEW            = 1; // не передано
+    const CAR_EX_TRANSFERRED    = 2; // передано.
+    
+    const IMG_EX_NEW            = 1; // не передано
+    const IMG_EX_TRANSFERRED    = 2; // передано.
+    
+    const PRICE_EX_NEW            = 1; // не передано
+    const PRICE_EX_TRANSFERRED    = 2; // передано.
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -97,6 +109,26 @@ class Goods {
      * @ORM\Column(name="status_rawprice_ex")   
      */
     protected $statusRawpriceEx = self::RAWPRICE_EX_NEW;
+
+    /**
+     * @ORM\Column(name="status_oem_ex")   
+     */
+    protected $statusOemEx = self::OEM_EX_NEW;
+
+    /**
+     * @ORM\Column(name="status_car_ex")   
+     */
+    protected $statusCarEx = self::CAR_EX_NEW;
+
+    /**
+     * @ORM\Column(name="status_img_ex")   
+     */
+    protected $statusImgEx = self::IMG_EX_NEW;
+
+    /**
+     * @ORM\Column(name="status_price_ex")   
+     */
+    protected $statusPriceEx = self::PRICE_EX_NEW;
 
     /**
      * @ORM\Column(name="car_count")   
@@ -616,6 +648,46 @@ class Goods {
     public function setStatusRawpriceEx($statusRawpriceEx)
     {
         $this->statusRawpriceEx = $statusRawpriceEx;
+    }    
+    
+    public function getStatusOemEx()
+    {
+        $this->statusOemEx;
+    }
+    
+    public function setStatusOemEx($statusOemEx)
+    {
+        $this->statusOemEx = $statusOemEx;
+    }    
+    
+    public function getStatusCarEx()
+    {
+        $this->statusCarEx;
+    }
+    
+    public function setStatusCarEx($statusOemEx)
+    {
+        $this->statusCarEx = $statusCarEx;
+    }    
+    
+    public function getStatusImgEx()
+    {
+        $this->statusImgEx;
+    }
+    
+    public function setStatusImgEx($statusImgEx)
+    {
+        $this->statusImgEx = $statusImgEx;
+    }    
+    
+    public function getStatusPriceEx()
+    {
+        $this->statusPriceEx;
+    }
+    
+    public function setStatusPriceEx($statusPriceEx)
+    {
+        $this->statusPriceEx = $statusPriceEx;
     }    
     
 }

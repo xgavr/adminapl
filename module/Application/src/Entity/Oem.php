@@ -206,6 +206,33 @@ class Oem {
     }    
     
     /**
+     * Returns possible sources as array.
+     * @return array
+     */
+    public static function getSourceTagList() 
+    {
+        return [
+            self::SOURCE_TD => 100,
+            self::SOURCE_SUP => 1000,
+            self::SOURCE_MAN => 1000,
+            self::SOURCE_CROSS => 1000,
+        ];
+    }    
+    
+    /**
+     * Returns make source as string.
+     * @return string
+     */
+    public function getSourceTagAsString()
+    {
+        $list = self::getSourceList();
+        if (isset($list[$this->source]))
+            return $list[$this->source];
+        
+        return 1000;
+    }    
+    
+    /**
      * Sets source.
      * @param int $source     
      */

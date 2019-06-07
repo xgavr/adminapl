@@ -248,7 +248,7 @@ class AdminManager {
         $config->apl_exchange->get_acquiring = $data['get_acquiring']; //скачивать эквайринг
         $config->apl_exchange->rawprice = $data['rawprice']; //обновлять строки прайсов
         $config->apl_exchange->oem = $data['oem']; //обновлять номера
-        $config->apl_exchange->group = $data['group']; //обновлять группы
+//        $config->apl_exchange->group = $data['group']; //обновлять группы
         $config->apl_exchange->image = $data['image']; //обновлять картинки
         $config->apl_exchange->car = $data['car']; //обновлять машины
         $config->apl_exchange->good_name = $data['good_name']; //обновлять наименования
