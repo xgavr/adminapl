@@ -980,7 +980,7 @@ class AplService {
     public function updateGoodsRawprice()
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(1800);
+        set_time_limit(900);
         $startTime = time();
         
         $goods = $this->entityManager->getRepository(Goods::class)
@@ -988,7 +988,7 @@ class AplService {
         
         foreach ($goods as $good){
             $this->sendGoodRawprice($good);
-            if (time() > $startTime + 1740){
+            if (time() > $startTime + 840){
                 return;
             }
         }
