@@ -770,6 +770,8 @@ class ProcessingController extends AbstractActionController
      */
     public function updateGoodRawpriceAction()
     {
+        sleep(5);
+        
         $data = $this->adminManager->getAplExchangeSettings()->toArray();
         
         if ($data['rawprice'] == 1 && $this->adminManager->canRun()){
