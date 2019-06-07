@@ -653,7 +653,6 @@ class AplService {
             if (time() > $startTime + 1500){
                 return;
             }
-            usleep(1);
         }
         return;
     }
@@ -989,7 +988,7 @@ class AplService {
         
         foreach ($goods as $good){
             $this->sendGoodRawprice($good);
-            if (time() > $startTime + 1700){
+            if (time() > $startTime + 1500){
                 return;
             }
             usleep(1);

@@ -73,7 +73,8 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                 'label' => 'Обновлять Apl Id товаров',
                 'value_options' => [
                     1 => 'Делать',
-                    2 => 'Не делать',                    
+                    2 => 'Не делать',    
+                    3 => 'Идет обновление'
                 ]
             ],
         ]);
@@ -216,7 +217,7 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3]]]
                 ],
             ]); 
         

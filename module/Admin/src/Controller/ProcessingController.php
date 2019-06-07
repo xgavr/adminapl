@@ -695,6 +695,30 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * Обновление цен товаров из прайса
+     */
+    public function updateGoodPriceRawAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['update_good_price'] == 1 && $this->adminManager->canRun()){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_GOOD_ASSEMBLY]);
+            
+            if ($raw){
+                $this->goodsManager->updatePricesRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }    
+    
+    
+    /**
      * Обновление AplId производителей
      * 
      * @return JsonModel
@@ -721,10 +745,17 @@ class ProcessingController extends AbstractActionController
     public function updateGoodAplIdAction()
     {
         
-        $settings = $this->adminManager->getAplExchangeSettings();
+        $data = $this->adminManager->getAplExchangeSettings()->toArray();
 
-        if ($settings['get_good_id'] == 1){
+        if ($data['get_good_id'] == 1 && $this->adminManager->canRun()){
+            
+            $data['get_good_id'] = 3; // идет загрузка
+            $this->adminManager->setAplExchangeSettings($data);
+            
             $this->aplService->updateGoodAplId();
+
+            $data['get_good_id'] = 1; // загрузка закончилась
+            $this->adminManager->setAplExchangeSettings($data);
         }    
         
         return new JsonModel([
@@ -733,28 +764,23 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
-     * Обновление цен товаров из прайса
+     * Обновление AplId товаров
+     * 
+     * @return JsonModel
      */
-    public function updateGoodPriceRawAction()
+    public function updateGoodRawpriceAction()
     {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['update_good_price'] == 1 && $this->adminManager->canRun()){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_GOOD_ASSEMBLY]);
-            
-            if ($raw){
-                $this->goodsManager->updatePricesRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
         
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['rawprice'] == 1){
+            $this->aplService->updateGoodsRawprice();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
     }    
-    
     
     /**
      * Выгрузка эквайринга из апл
