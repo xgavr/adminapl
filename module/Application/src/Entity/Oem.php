@@ -225,7 +225,7 @@ class Oem {
      */
     public function getSourceTagAsString()
     {
-        $list = self::getSourceList();
+        $list = self::getSourceTagList();
         if (isset($list[$this->source]))
             return $list[$this->source];
         
