@@ -1013,6 +1013,7 @@ class AplService {
 
             $oemsQuery = $this->entityManager->getRepository(Goods::class)
                     ->findOems($good);
+            
             $oems = $oemsQuery->getResult();
 
             foreach ($oems as $oem){
@@ -1031,7 +1032,7 @@ class AplService {
             $client->setParameterPost($post);
 
             $response = $client->send();
-    //        var_dump($response->getBody()); exit;
+            var_dump($response->getBody()); exit;
             if ($response->isOk()) {
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['g.statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
