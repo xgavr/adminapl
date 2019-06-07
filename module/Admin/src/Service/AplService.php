@@ -1011,9 +1011,9 @@ class AplService {
                 'oems' => [],
             ];
 
-            $oems = $this->entityManager->getRepository(Goods::class)
+            $oemsQuery = $this->entityManager->getRepository(Goods::class)
                     ->findOems($good);
-
+            $oems = $oemsQuery->getResult();
 
             foreach ($oems as $oem){
                 $post['oems'][$oem->getId()] = [                
