@@ -770,11 +770,16 @@ class ProcessingController extends AbstractActionController
      */
     public function updateGoodRawpriceAction()
     {
+        $data = $this->adminManager->getAplExchangeSettings()->toArray();
         
-        $settings = $this->adminManager->getAplExchangeSettings();
-
-        if ($settings['rawprice'] == 1){
+        if ($data['rawprice'] == 1 && $this->adminManager->canRun()){
+            $data['rawprice'] = 3; // идет загрузка
+            $this->adminManager->setAplExchangeSettings($data);
+            
             $this->aplService->updateGoodsRawprice();
+            
+            $data['rawprice'] = 1; // загрузка закончилась
+            $this->adminManager->setAplExchangeSettings($data);
         }    
         
         return new JsonModel([
