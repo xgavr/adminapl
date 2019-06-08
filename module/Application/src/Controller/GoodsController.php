@@ -213,6 +213,16 @@ class GoodsController extends AbstractActionController
         $totalImage = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusImage' => Goods::IMAGE_UPDATED]);
         
+        $totalRawpriceEx = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TRANSFERRED]);
+        $totalOemEx = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
+        $totalImgEx = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
+        $totalPriceEx = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
+        $totalCarEx = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusCarEx' => Goods::CAR_EX_TRANSFERRED]);
                 
         // Визуализируем шаблон представления.
         return new ViewModel([
@@ -224,6 +234,11 @@ class GoodsController extends AbstractActionController
             'totalGroup' => $totalGroup,
             'totalDesc' => $totalDesc,
             'totalImage' => $totalImage,
+            'totalRawpriceEx' => $totalRawpriceEx,
+            'totalOemEx' => $totalOemEx,
+            'totalImgEx' => $totalImgEx,
+            'totalPriceEx' => $totalPriceEx,
+            'totalCarEx' => $totalCarEx
         ]);  
     }
     
