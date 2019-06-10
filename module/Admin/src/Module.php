@@ -8,7 +8,10 @@
 namespace Admin;
 
 use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
+use Admin\Service\SettingManager;
+use Admin\Controller\ProcessingController;
 
 class Module
 {
@@ -29,6 +32,12 @@ class Module
         // Регистрируем метод-обработчик. 
         $sharedEventManager->attach(__NAMESPACE__, 'route', 
                                     [$this, 'onRoute'], 100);        
+
+        $sharedEventManager->attach(AbstractActionController::class, 
+                MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 200);
+        
+        $sharedEventManager->attach(AbstractActionController::class, 
+                MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 300);
     }
 
     public function onRoute(MvcEvent $event)
@@ -52,5 +61,38 @@ class Module
             return $response;
         }
     }    
+
+    public function onDispatch(MvcEvent $event)
+    {
+        // Get controller and action to which the HTTP request was dispatched.
+        $controller = $event->getTarget();
+        $controllerName = $event->getRouteMatch()->getParam('controller', null);
+        $actionName = $event->getRouteMatch()->getParam('action', null);
         
+        // Convert dash-style action name to camel-case.
+        $actionName = str_replace('-', '', lcfirst(ucwords($actionName, '-')));
+        
+        if ($controllerName == ProcessingController::class) {
+            $settingManager = $event->getApplication()->getServiceManager()->get(SettingManager::class);
+            $settingManager->addProcess($controllerName, $actionName);
+        }
+    }    
+    
+    public function onFinish(MvcEvent $event)
+    {
+            var_dump(11);
+        // Get controller and action to which the HTTP request was dispatched.
+        $controller = $event->getTarget();
+        $controllerName = $event->getRouteMatch()->getParam('controller', null);
+        $actionName = $event->getRouteMatch()->getParam('action', null);
+        
+        // Convert dash-style action name to camel-case.
+        $actionName = str_replace('-', '', lcfirst(ucwords($actionName, '-')));
+        
+        if ($controllerName == ProcessingController::class) {
+            $settingManager = $event->getApplication()->getServiceManager()->get(SettingManager::class);
+            $settingManager->removeProcess($controllerName, $actionName);
+        }
+    }    
+    
 }

@@ -163,7 +163,16 @@ class ProcessingController extends AbstractActionController
         set_time_limit(180);
         $this->autoruManager->postOrder();
         
-        return [];
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    public function testAction()
+    {
+        return new JsonModel(
+            ['ok']
+        );        
     }
     
     /**
@@ -193,8 +202,7 @@ class ProcessingController extends AbstractActionController
         
         return new JsonModel(
             ['ok']
-        );
-        
+        );        
     }
     
     public function telegramPostponeAction()

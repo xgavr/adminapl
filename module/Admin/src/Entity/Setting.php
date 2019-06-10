@@ -30,17 +30,12 @@ class Setting {
     protected $id;
     
     /**
-     * @ORM\Column(name="module")   
-     */
-    protected $module;
-    
-    /**
      * @ORM\Column(name="controller")   
      */
     protected $controller;
     
     /**
-     * @ORM\Column(name="from_str")   
+     * @ORM\Column(name="action")   
      */
     protected $action;
 
@@ -60,16 +55,6 @@ class Setting {
     public function setId($id) 
     {
         $this->id = $id;
-    }     
-
-    public function getModule() 
-    {
-        return $this->module;
-    }
-
-    public function setModule($module) 
-    {
-        $this->module = $module;
     }     
 
     public function getController()

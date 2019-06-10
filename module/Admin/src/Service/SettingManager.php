@@ -61,29 +61,27 @@ class SettingManager {
     /**
      * Установить метку запуска процесса
      * 
-     * @param string $module
      * @param string $controller
      * @param string $action
      */
-    public function addProcess($module, $controller, $action)
+    public function addProcess($controller, $action)
     {
         $proc = $this->entityManager->getRepository(Setting::class)
-                ->findOneBy(['module' => $module, $controller, $controller]);
+                ->findOneBy(['controller' => $controller, 'action' => $action]);
         
         if ($proc == null){
-            $setting = new Setting();
-            $setting->setModule($module);
-            $setting->setController($controller);
-            $setting->setAction($action);
-            $setting->setStatus(Setting::STATUS_ACTIVE);
+            $proc = new Setting();
+            $proc->setController($controller);
+            $proc->setAction($action);
+            $proc->setStatus(Setting::STATUS_ACTIVE);
             
         } else {
-            if ($setting->getStatus() === Setting::STATUS_RETIRED){
-                $setting->setStatus(Setting::STATUS_ACTIVE);                
+            if ($proc->getStatus() === Setting::STATUS_RETIRED){
+                $proc->setStatus(Setting::STATUS_ACTIVE);                
             }
         }
         
-        $this->entityManager->persist($setting);
+        $this->entityManager->persist($proc);
         $this->entityManager->flush();
     }    
     
@@ -94,14 +92,14 @@ class SettingManager {
      * @param string $controller
      * @param string $action
      */
-    public function removeProcess($module, $controller, $action)
+    public function removeProcess($controller, $action)
     {
         $proc = $this->entityManager->getRepository(Setting::class)
-                ->findOneBy(['module' => $module, $controller, $controller]);
+                ->findOneBy(['controller' => $controller, 'action' => $action]);
         
         if ($proc){
             $setting->setStatus(Setting::STATUS_RETIRED);                
-            $this->entityManager->persist($setting);
+            $this->entityManager->persist($proc);
             $this->entityManager->flush();
         }        
     }
