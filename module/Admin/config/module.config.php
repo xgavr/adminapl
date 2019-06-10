@@ -139,6 +139,7 @@ return [
             Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
             Service\FtpManager::class => Service\Factory\FtpManagerFactory::class,
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
+            Service\SettingManager::class => Service\Factory\SettingManagerFactory::class,
             Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,
             Service\TamTamManager::class => Service\Factory\TamTamManagerFactory::class,
             Service\TelefonistkaManager::class => Service\Factory\TelefonistkaManagerFactory::class,

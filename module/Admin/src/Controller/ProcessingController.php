@@ -118,6 +118,12 @@ class ProcessingController extends AbstractActionController
     private $assemblyManager;    
 
     /**
+     * SettingManager manager.
+     * @var \Application\Service\SettingManager
+     */
+    private $settingManager;    
+
+    /**
      * GoodsManager manager.
      * @var \Application\Service\GoodsManager
      */
@@ -127,7 +133,7 @@ class ProcessingController extends AbstractActionController
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
-            $oemManager, $nameManager, $assemblyManager, $goodsManager) 
+            $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -147,9 +153,11 @@ class ProcessingController extends AbstractActionController
         $this->nameManager = $nameManager;
         $this->assemblyManager = $assemblyManager;
         $this->goodsManager = $goodsManager;
+        $this->settingManager = $settingManager;
     }   
 
     
+
     public function indexAction()
     {
         set_time_limit(180);
