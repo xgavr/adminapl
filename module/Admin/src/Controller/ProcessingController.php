@@ -267,20 +267,14 @@ class ProcessingController extends AbstractActionController
     {
         set_time_limit(0);
 
-        $data = $this->adminManager->getPriceSettings()->toArray();
+        $settings = $this->adminManager->getPriceSettings();
         
-        if ($data['upload_raw'] == 1 && $data['uploading_raw'] == 1 && $this->adminManager->canRun()){
+        if ($settings['upload_raw'] == 1){
 
-            $data['uploading_raw'] = 2; // идет загрузка
-            $this->adminManager->setPriceSettings($data);
-            
             $files = $this->supplierManager->getPriceFilesToUpload();
             if (count($files)){
                 $this->rawManager->checkSupplierPrice($files[0]['priceGetting']->getSupplier());
-            }            
-            
-            $data['uploading_raw'] = 1; // загрузка закончилась
-            $this->adminManager->setPriceSettings($data);
+            }                        
         }    
         
         return new JsonModel(
@@ -295,7 +289,7 @@ class ProcessingController extends AbstractActionController
     {        
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_raw'] == 1 && $this->adminManager->canRun()){
+        if ($settings['parse_raw'] == 1){
             $this->parseManager->parseRaw();
         }    
         
@@ -383,7 +377,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_producer'] == 1 && $this->adminManager->canRun()){
+        if ($settings['parse_producer'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_NOT]);
@@ -474,7 +468,7 @@ class ProcessingController extends AbstractActionController
         
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_article'] == 1 && $this->adminManager->canRun()){
+        if ($settings['parse_article'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_PARSED]);
@@ -515,7 +509,7 @@ class ProcessingController extends AbstractActionController
         
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_oem'] == 1 && $this->adminManager->canRun()){
+        if ($settings['parse_oem'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_ARTICLE_PARSED]);
@@ -555,7 +549,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_name'] == 1 && $this->adminManager->canRun()){
+        if ($settings['parse_name'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_OEM_PARSED]);
@@ -616,7 +610,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['assembly_producer'] == 1 && $this->adminManager->canRun()){
+        if ($settings['assembly_producer'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
@@ -639,7 +633,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['assembly_producer'] == 1 && $this->adminManager->canRun()){
+        if ($settings['assembly_producer'] == 1){
             
             $producers = $this->entityManager->getRepository(\Application\Entity\Producer::class)
                     ->findBy([]);
@@ -678,7 +672,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['assembly_good'] == 1 && $this->adminManager->canRun()){
+        if ($settings['assembly_good'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_ASSEMBLY]);
@@ -718,7 +712,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['update_good_price'] == 1 && $this->adminManager->canRun()){
+        if ($settings['update_good_price'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_GOOD_ASSEMBLY]);
@@ -762,18 +756,12 @@ class ProcessingController extends AbstractActionController
     public function updateGoodAplIdAction()
     {
         
-        $data = $this->adminManager->getAplExchangeSettings()->toArray();
+        $settings = $this->adminManager->getAplExchangeSettings();
 
-        if ($data['get_good_id'] == 1 && $this->adminManager->canRun()){
-            
-            $data['get_good_id'] = 3; // идет загрузка
-            $this->adminManager->setAplExchangeSettings($data);
+        if ($settings['get_good_id'] == 1){
             
             $this->aplService->updateGoodAplId();
 
-            $data = $this->adminManager->getAplExchangeSettings()->toArray();
-            $data['get_good_id'] = 1; // загрузка закончилась
-            $this->adminManager->setAplExchangeSettings($data);
         }    
         
         return new JsonModel([
@@ -788,19 +776,12 @@ class ProcessingController extends AbstractActionController
      */
     public function updateGoodRawpriceAction()
     {
-        sleep(5);
+        $settings = $this->adminManager->getAplExchangeSettings();
         
-        $data = $this->adminManager->getAplExchangeSettings()->toArray();
-        
-        if ($data['rawprice'] == 1 && $this->adminManager->canRun()){
-            $data['rawprice'] = 3; // идет загрузка
-            $this->adminManager->setAplExchangeSettings($data);
+        if ($settings['rawprice'] == 1){
             
             $this->aplService->updateGoodsRawprice();
             
-            $data = $this->adminManager->getAplExchangeSettings()->toArray();
-            $data['rawprice'] = 1; // загрузка закончилась
-            $this->adminManager->setAplExchangeSettings($data);
         }    
         
         return new JsonModel([
@@ -815,19 +796,10 @@ class ProcessingController extends AbstractActionController
      */
     public function updateGoodOemAction()
     {
-        sleep(10);
+        $settings = $this->adminManager->getAplExchangeSettings();
         
-        $data = $this->adminManager->getAplExchangeSettings()->toArray();
-        
-        if ($data['oem'] == 1 && $this->adminManager->canRun()){
-            $data['oem'] = 3; // идет загрузка
-            $this->adminManager->setAplExchangeSettings($data);
-            
-            $this->aplService->updateGoodsOem();
-            
-            $data = $this->adminManager->getAplExchangeSettings()->toArray();
-            $data['oem'] = 1; // загрузка закончилась
-            $this->adminManager->setAplExchangeSettings($data);
+        if ($data['oem'] == 1){            
+            $this->aplService->updateGoodsOem();            
         }    
         
         return new JsonModel([
@@ -860,7 +832,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['assembly_group_name'] == 1 && $this->adminManager->canRun()){
+        if ($settings['assembly_group_name'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRICE_UPDATET]);
