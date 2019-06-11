@@ -33,8 +33,8 @@ class Module
         $sharedEventManager->attach(__NAMESPACE__, 'route', 
                                     [$this, 'onRoute'], 100); 
         
-        $sharedEventManager->attach(AbstractActionController::class, 
-                MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 100);        
+//        $sharedEventManager->attach(AbstractActionController::class, 
+//                MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 100);        
 
         $sharedEventManager->attach(__NAMESPACE__, 
                 MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onFinish'], 100);

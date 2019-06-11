@@ -138,8 +138,12 @@ class SettingManager {
             $proc->setStatus(Setting::STATUS_RETIRED);                
             $proc->setLastMod(date('Y-m-d H:i:s'));
             
-            $this->entityManager->persist($proc);
-            $this->entityManager->flush($proc);
+            try {
+                $this->entityManager->persist($proc);
+                $this->entityManager->flush($proc);
+            } catch(\Doctrine\ORM\ORMException $e){
+                
+            }    
         }        
     }
     

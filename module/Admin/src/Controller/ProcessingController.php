@@ -11,6 +11,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Application\Entity\PriceGetting;
+use Zend\Stdlib\RequestInterface as Request;
+use Zend\Stdlib\ResponseInterface as Response;
+use Zend\Mvc\MvcEvent;
 
 
 class ProcessingController extends AbstractActionController
@@ -120,7 +123,7 @@ class ProcessingController extends AbstractActionController
 
     /**
      * SettingManager manager.
-     * @var \Application\Service\SettingManager
+     * @var \Admin\Service\SettingManager
      */
     private $settingManager;    
 
@@ -157,7 +160,18 @@ class ProcessingController extends AbstractActionController
         $this->settingManager = $settingManager;
     }   
 
-    
+    public function dispatch(Request $request, Response $response = null)
+    {
+        $controllerName = $this->params('controller');
+        $actionName = str_replace('-', '', lcfirst(ucwords($this->params('action'), '-')));
+
+        if ($this->settingManager->canStart($controllerName, $actionName)){
+            $this->settingManager->addProcess($controllerName, $actionName);
+        } else {    
+            exit;
+        }
+        return parent::dispatch($request, $response);
+    }    
 
     public function indexAction()
     {
@@ -171,7 +185,7 @@ class ProcessingController extends AbstractActionController
     
     public function testAction()
     {
-        sleep(10);
+        sleep(60);
         return new ViewModel([
         ]);       
     }
