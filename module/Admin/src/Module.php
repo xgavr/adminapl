@@ -8,6 +8,7 @@
 namespace Admin;
 
 use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Admin\Service\SettingManager;
 use Admin\Controller\ProcessingController;
@@ -32,8 +33,8 @@ class Module
         $sharedEventManager->attach(__NAMESPACE__, 'route', 
                                     [$this, 'onRoute'], 100); 
         
-        $sharedEventManager->attach('Zend\Mvc\Application', 
-                MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 200);        
+        $sharedEventManager->attach(AbstractActionController::class, 
+                MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 100);        
 
         $sharedEventManager->attach(__NAMESPACE__, 
                 MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onFinish'], 100);
@@ -42,7 +43,7 @@ class Module
                 MvcEvent::EVENT_RENDER_ERROR, [$this, 'onFinish'], 100);
 
         $sharedEventManager->attach('Zend\Mvc\Application', 
-                MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 300);
+                MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 100);
     }
     
     public function onRoute(MvcEvent $event)
@@ -82,15 +83,18 @@ class Module
             if ($settingManager->canStart($controllerName, $actionName)){
                 $settingManager->addProcess($controllerName, $actionName);
             } else {
-                die();
+//                return $controller->redirect()->toRoute('home');
+//                throw new \Exception('Процесс запущен!');
+                exit;
             }    
         }
+        
+        return;
     }    
     
     public function onFinish(MvcEvent $event)
     {
         // Get controller and action to which the HTTP request was dispatched.
-        $controller = $event->getTarget();
         $controllerName = $event->getRouteMatch()->getParam('controller', null);
         $actionName = $event->getRouteMatch()->getParam('action', null);
         
@@ -101,6 +105,7 @@ class Module
             $settingManager = $event->getApplication()->getServiceManager()->get(SettingManager::class);
             $settingManager->removeProcess($controllerName, $actionName);
         }
-    }    
-    
+        
+        return;
+    }        
 }

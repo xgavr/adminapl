@@ -171,7 +171,7 @@ class ProcessingController extends AbstractActionController
     
     public function testAction()
     {
-        sleep(30);
+        sleep(60);
         return new ViewModel([
         ]);       
     }

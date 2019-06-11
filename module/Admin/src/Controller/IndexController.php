@@ -64,7 +64,8 @@ class IndexController extends AbstractActionController
     
     public function indexAction()
     {
-        return [];
+        return new ViewModel([
+        ]);
     }
         
     public function phpinfoAction()
