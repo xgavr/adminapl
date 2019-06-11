@@ -105,6 +105,10 @@ class SettingManager {
         $proc = $this->entityManager->getRepository(Setting::class)
                 ->findOneBy(['controller' => $controller, 'action' => $action]);
         
+        if (!$proc){
+            return TRUE;
+        }
+        
         if ($proc->getStatus() == Setting::STATUS_RETIRED){
             return TRUE;
         }        
