@@ -8,7 +8,6 @@
 namespace Admin;
 
 use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Admin\Service\SettingManager;
 use Admin\Controller\ProcessingController;
@@ -31,15 +30,21 @@ class Module
         $sharedEventManager = $eventManager->getSharedManager();
         // Регистрируем метод-обработчик. 
         $sharedEventManager->attach(__NAMESPACE__, 'route', 
-                                    [$this, 'onRoute'], 100);        
-
-        $sharedEventManager->attach(AbstractActionController::class, 
-                MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 200);
+                                    [$this, 'onRoute'], 100); 
         
-        $sharedEventManager->attach(AbstractActionController::class, 
+        $sharedEventManager->attach('Zend\Mvc\Application', 
+                MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 200);        
+
+        $sharedEventManager->attach(__NAMESPACE__, 
+                MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onFinish'], 100);
+
+        $sharedEventManager->attach(__NAMESPACE__, 
+                MvcEvent::EVENT_RENDER_ERROR, [$this, 'onFinish'], 100);
+
+        $sharedEventManager->attach('Zend\Mvc\Application', 
                 MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 300);
     }
-
+    
     public function onRoute(MvcEvent $event)
     {
         if (php_sapi_name() == "cli") {
@@ -74,13 +79,16 @@ class Module
         
         if ($controllerName == ProcessingController::class) {
             $settingManager = $event->getApplication()->getServiceManager()->get(SettingManager::class);
-            $settingManager->addProcess($controllerName, $actionName);
+            if ($settingManager->canStart($controllerName, $actionName)){
+                $settingManager->addProcess($controllerName, $actionName);
+            } else {
+                die();
+            }    
         }
     }    
     
     public function onFinish(MvcEvent $event)
     {
-            var_dump(11);
         // Get controller and action to which the HTTP request was dispatched.
         $controller = $event->getTarget();
         $controllerName = $event->getRouteMatch()->getParam('controller', null);

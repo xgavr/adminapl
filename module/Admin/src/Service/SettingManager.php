@@ -74,17 +74,52 @@ class SettingManager {
             $proc->setController($controller);
             $proc->setAction($action);
             $proc->setStatus(Setting::STATUS_ACTIVE);
+            $proc->setLastMod(date('Y-m-d H:i:s'));
             
         } else {
-            if ($proc->getStatus() === Setting::STATUS_RETIRED){
+            if ($proc->getStatus() == Setting::STATUS_RETIRED){
                 $proc->setStatus(Setting::STATUS_ACTIVE);                
+                $proc->setLastMod(date('Y-m-d H:i:s'));
             }
         }
         
         $this->entityManager->persist($proc);
-        $this->entityManager->flush();
+        $this->entityManager->flush($proc);
     }    
     
+    /**
+     * Определяем возможность старта процесса
+     * 
+     * @param string $controller
+     * @param string $action
+     * @return boolean
+     */
+    public function canStart($controller, $action)
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            
+        } else {
+            if (!$this->adminManager->canRun()){
+                return FALSE;
+            }            
+        }
+
+        $proc = $this->entityManager->getRepository(Setting::class)
+                ->findOneBy(['controller' => $controller, 'action' => $action]);
+        
+        if ($proc->getStatus() == Setting::STATUS_RETIRED){
+            return TRUE;
+        }        
+
+        $lastMod = strtotime($proc->getLastMod()) + 900;
+        if ($proc->getStatus() == Setting::STATUS_ACTIVE && time() > $lastMod){
+            return TRUE;
+        }                
+        
+        return FALSE;
+    }
+
+
     /**
      * Установить метку остановки процесса 
      * 
@@ -98,9 +133,11 @@ class SettingManager {
                 ->findOneBy(['controller' => $controller, 'action' => $action]);
         
         if ($proc){
-            $setting->setStatus(Setting::STATUS_RETIRED);                
+            $proc->setStatus(Setting::STATUS_RETIRED);                
+            $proc->setLastMod(date('Y-m-d H:i:s'));
+            
             $this->entityManager->persist($proc);
-            $this->entityManager->flush();
+            $this->entityManager->flush($proc);
         }        
     }
     

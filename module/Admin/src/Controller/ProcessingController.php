@@ -9,6 +9,7 @@ namespace Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
+use Zend\View\Model\ViewModel;
 use Application\Entity\PriceGetting;
 
 
@@ -170,9 +171,9 @@ class ProcessingController extends AbstractActionController
     
     public function testAction()
     {
-        return new JsonModel(
-            ['ok']
-        );        
+        sleep(60);
+        return new ViewModel([
+        ]);       
     }
     
     /**

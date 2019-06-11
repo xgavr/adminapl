@@ -44,6 +44,11 @@ class Setting {
      */
     protected $status;
 
+    /**
+     * @ORM\Column(name="last_mod")   
+     */
+    protected $lastMod;
+
     public function __construct() {
     }
    
@@ -75,6 +80,16 @@ class Setting {
     public function setAction($action)
     {
         $this->action = $action;
+    }
+        
+    public function getLastMod()
+    {
+        return $this->lastMod;
+    }
+    
+    public function setLastMod($lastMod)
+    {
+        $this->lastMod = $lastMod;
     }
         
         /**

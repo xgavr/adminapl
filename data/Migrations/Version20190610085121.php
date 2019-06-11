@@ -20,6 +20,7 @@ final class Version20190610085121 extends AbstractMigration
         $table->addColumn('controller', 'string', ['notnull' => true, 'lenght' => 256]);
         $table->addColumn('action', 'string', ['notnull' => true, 'lenght' => 128]);
         $table->addColumn('status', 'integer', ['notnull' => true, 'default' => Setting::STATUS_RETIRED]);
+        $table->addColumn('last_mod', 'datetime', ['notnull' => true]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['controller', 'action'], 'mca_uindx');
         $table->addOption('engine' , 'InnoDB');                  
