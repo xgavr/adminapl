@@ -95,16 +95,18 @@ class Module
     public function onFinish(MvcEvent $event)
     {
         // Get controller and action to which the HTTP request was dispatched.
-        $controllerName = $event->getRouteMatch()->getParam('controller', null);
-        $actionName = $event->getRouteMatch()->getParam('action', null);
-        
-        // Convert dash-style action name to camel-case.
-        $actionName = str_replace('-', '', lcfirst(ucwords($actionName, '-')));
-        
-        if ($controllerName == ProcessingController::class) {
-            $settingManager = $event->getApplication()->getServiceManager()->get(SettingManager::class);
-            $settingManager->removeProcess($controllerName, $actionName);
-        }
+        if ($event->getRouteMatch()){
+            $controllerName = $event->getRouteMatch()->getParam('controller', null);
+            $actionName = $event->getRouteMatch()->getParam('action', null);
+
+            // Convert dash-style action name to camel-case.
+            $actionName = str_replace('-', '', lcfirst(ucwords($actionName, '-')));
+
+            if ($controllerName == ProcessingController::class) {
+                $settingManager = $event->getApplication()->getServiceManager()->get(SettingManager::class);
+                $settingManager->removeProcess($controllerName, $actionName);
+            }
+        }    
         
         return;
     }        
