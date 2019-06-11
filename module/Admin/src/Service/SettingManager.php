@@ -73,15 +73,13 @@ class SettingManager {
             $proc = new Setting();
             $proc->setController($controller);
             $proc->setAction($action);
-            $proc->setStatus(Setting::STATUS_ACTIVE);
-            $proc->setLastMod(date('Y-m-d H:i:s'));
-            
+            $proc->setStatus(Setting::STATUS_ACTIVE);            
         } else {
             if ($proc->getStatus() == Setting::STATUS_RETIRED){
                 $proc->setStatus(Setting::STATUS_ACTIVE);                
-                $proc->setLastMod(date('Y-m-d H:i:s'));
             }
         }
+        $proc->setLastMod(date('Y-m-d H:i:s'));
         
         $this->entityManager->persist($proc);
         $this->entityManager->flush($proc);
