@@ -475,7 +475,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusImgEx = ?1')
             ->setParameter('1', Goods::IMG_EX_NEW)    
-            ->setMaxResults(10000)    
+            ->setMaxResults(50000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
