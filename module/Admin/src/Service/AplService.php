@@ -1097,14 +1097,14 @@ class AplService {
                     'source'      => 'http://adminapl.ru'.$image->getPublicPath(),
                 ]; 
             }
-            var_dump($post); exit;
+//            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
             $client->setParameterPost($post);
 
             $response = $client->send();
-//            var_dump($response->getBody()); exit;
+            var_dump($response->getBody()); exit;
             if ($response->isOk()) {
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
