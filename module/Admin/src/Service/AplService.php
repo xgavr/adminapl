@@ -1118,7 +1118,7 @@ class AplService {
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
                 }
-            } catch (Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
                 
             }    
 
