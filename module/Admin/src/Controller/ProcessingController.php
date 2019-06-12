@@ -820,6 +820,25 @@ class ProcessingController extends AbstractActionController
             ['ok']
         ]);
     }    
+
+    /**
+     * Обновление картинок товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateGoodImgAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['image'] == 1){            
+            $this->aplService->updateGoodsImg();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
     /**
      * Выгрузка эквайринга из апл
      * 
