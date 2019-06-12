@@ -297,4 +297,14 @@ class AplController extends AbstractActionController
         ]);
     }
     
+    public function updateGoodImgAction()
+    {
+        
+        $this->aplService->updateGoodsImg();
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }        
+    
 }
