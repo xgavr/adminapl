@@ -1111,12 +1111,16 @@ class AplService {
             $client->setMethod('POST');
             $client->setParameterPost($post);
 
-            $response = $client->send();
-//            var_dump($response->getBody()); exit;
-            if ($response->isOk()) {
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
-            }
+            try{
+                $response = $client->send();
+    //            var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
+                }
+            } catch (Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                
+            }    
 
             unset($post);
             unset($images);
