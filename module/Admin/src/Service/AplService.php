@@ -1067,4 +1067,53 @@ class AplService {
         unset($goods);
         return;
     }
+    
+    /**
+     * Обновить картинки товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function sendGoodImg($good)
+    {
+        if ($good->getAplId()){
+            $url = $this->aplApi().'update-good-img?api='.$this->aplApiKey();
+
+            $post = [
+                'good' => $good->getId(),
+                'images' => [],
+            ];
+
+            $oemsQuery = $this->entityManager->getRepository(Goods::class)
+                    ->findOems($good);
+            
+            $oems = $oemsQuery->getResult();
+
+            foreach ($oems as $oem){
+                $post['oems'][$oem->getId()] = [                
+                    'parent'    => $good->getAplId(),
+                    'sort'      => $oem->getSourceTagAsString(),
+                    'name'      => $oem->getOeNumber(),
+                    'desc'      => $oem->getBrandName(),
+                    'sf'        => $oem->getSourceAsString(),
+                ]; 
+            }
+//            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $response = $client->send();
+//            var_dump($response->getBody()); exit;
+            if ($response->isOk()) {
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['g.statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
+            }
+
+            unset($post);
+            unset($oems);
+        }    
+        return;
+    }
+    
 }

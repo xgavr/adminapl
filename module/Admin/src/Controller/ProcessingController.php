@@ -812,7 +812,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getAplExchangeSettings();
         
-        if ($data['oem'] == 1){            
+        if ($settings['oem'] == 1){            
             $this->aplService->updateGoodsOem();            
         }    
         
