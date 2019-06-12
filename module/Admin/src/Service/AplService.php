@@ -1087,15 +1087,23 @@ class AplService {
             $imgQuery = $this->entityManager->getRepository(Goods::class)
                     ->findImages($good);
             
-            $images = $imgQuery->getResult();
+            $images = $imgQuery->getResult();                       
 
             foreach ($images as $image){
-                $post['images'][$image->getId()] = [                
-                    'parent'    => $good->getAplId(),
-                    'comment'   => $image->getName(),
-                    'sort'      => $image->getSimilarAplAsString(),
-                    'source'      => 'http://adminapl.ru'.$image->getPublicPath(),
-                ]; 
+                if ($image->allowTransfer()){
+                    $post['images'][$image->getId()] = [                
+                        'parent'    => $good->getAplId(),
+                        'comment'   => $image->getName(),
+                        'sort'      => $image->getSimilarAplAsString(),
+                        'source'      => 'http://adminapl.ru'.$image->getPublicPath(),
+                    ]; 
+                }    
+            }
+            
+            if (!count($post['images'])){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
+                return;        
             }
 //            var_dump($post); exit;
             $client = new Client();
@@ -1104,7 +1112,7 @@ class AplService {
             $client->setParameterPost($post);
 
             $response = $client->send();
-            var_dump($response->getBody()); exit;
+//            var_dump($response->getBody()); exit;
             if ($response->isOk()) {
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
