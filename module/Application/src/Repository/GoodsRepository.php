@@ -461,6 +461,27 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления картинок
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateImg()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->andWhere('g.aplId > 0')    
+            ->andWhere('g.statusImgEx = ?1')
+            ->setParameter('1', Goods::IMG_EX_NEW)    
+            ->setMaxResults(10000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
      * Количество товара с Апл ид
      * 
      * @return integer

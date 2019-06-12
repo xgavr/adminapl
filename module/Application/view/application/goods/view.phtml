@@ -332,7 +332,11 @@ $this->headScript()
                             <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                                     title="Обновить АПЛ Ид">
                                 <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
+                            </button>
+                        </div>    
+                    </div>    
+                    <?php if ($goods->getAplId()):?>
+                        <div class="panel-body">
                             <button value="/apl/ex-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                                     title="Обмен строк прайса">
                                 <span class="glyphicon glyphicon-export" ></span>
@@ -341,8 +345,12 @@ $this->headScript()
                                     title="Обмен номеров">
                                 <span class="glyphicon glyphicon-export" ></span>
                             </button>                             
+                            <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                    title="Обмен картинок">
+                                <span class="glyphicon glyphicon-export" ></span>
+                            </button>                             
                         </div>
-                    </div>
+                    <?php endif;?>
                     <div class="panel-body">
                         <div class="pull-left">
                             Поиск в TecDoc: 

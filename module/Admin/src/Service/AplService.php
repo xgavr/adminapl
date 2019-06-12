@@ -1080,24 +1080,24 @@ class AplService {
 
             $post = [
                 'good' => $good->getId(),
+                'good_id' => $good->getAplId(),
                 'images' => [],
             ];
 
-            $oemsQuery = $this->entityManager->getRepository(Goods::class)
-                    ->findOems($good);
+            $imgQuery = $this->entityManager->getRepository(Goods::class)
+                    ->findImages($good);
             
-            $oems = $oemsQuery->getResult();
+            $images = $imgQuery->getResult();
 
-            foreach ($oems as $oem){
-                $post['oems'][$oem->getId()] = [                
+            foreach ($images as $image){
+                $post['images'][$image->getId()] = [                
                     'parent'    => $good->getAplId(),
-                    'sort'      => $oem->getSourceTagAsString(),
-                    'name'      => $oem->getOeNumber(),
-                    'desc'      => $oem->getBrandName(),
-                    'sf'        => $oem->getSourceAsString(),
+                    'comment'   => $image->getName(),
+                    'sort'      => $image->getSimilarAplAsString(),
+                    'source'      => 'http://adminapl.ru'.$image->getPublicPath(),
                 ]; 
             }
-//            var_dump($post); exit;
+            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
@@ -1107,12 +1107,36 @@ class AplService {
 //            var_dump($response->getBody()); exit;
             if ($response->isOk()) {
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
+                        ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
             }
 
             unset($post);
-            unset($oems);
+            unset($images);
         }    
+        return;
+    }
+    
+    /**
+     * Обновление картинок в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodsImg()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateImg();
+        
+        foreach ($goods as $good){
+            $this->sendGoodImg($good);
+            if (time() > $startTime + 1740){
+                return;
+            }
+        }
+        unset($goods);
         return;
     }
     

@@ -182,6 +182,34 @@ class Images {
         return 'Unknown';
     }    
 
+    /**
+     * Returns possible similar as array.
+     * @return array
+     */
+    public static function getSimilarAplList() 
+    {
+        return [
+            self::SIMILAR_UNKNOWN => '333',
+            self::SIMILAR_MATCH => '111',
+            self::SIMILAR_SIMILAR => '222',
+        ];
+    }    
+    
+    /**
+     * Returns image similar as string.
+     * @return string
+     */
+    public function getSimilarAplAsString()
+    {
+        $list = self::getSimilarAplList();
+        if (isset($list[$this->similar])) {
+            return $list[$this->similar];
+        }
+
+        return 'Unknown';
+    }    
+
+
     public function setSimilar($similar) 
     {
         $this->similar = $similar;

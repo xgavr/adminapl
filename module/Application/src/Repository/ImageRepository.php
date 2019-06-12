@@ -157,6 +157,7 @@ class ImageRepository extends EntityRepository
 
         if ($image == null){
             $this->getEntityManager()->getConnection()->insert('images', $data);
+            $this->updateGoodId($data['good_id'], ['status_img_ex' => \Application\Entity\Goods::IMG_EX_NEW]);
         }
        
        return;

@@ -277,4 +277,24 @@ class AplController extends AbstractActionController
         ]);
     }        
     
+    public function exImgAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findOneById($goodId);  
+        	
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->sendGoodImg($good);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+    
 }
