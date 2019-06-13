@@ -466,7 +466,7 @@ class AssemblyManager
             return true;
         }
         
-        if (date('Y-m-d', strtotime($unknownProducer->getDateCreated().' +2 day')) > date('Y-m-d')){
+        if (date('Y-m-d', strtotime($unknownProducer->getDateCreated().' +5 day')) > date('Y-m-d')){
             return false;
         }
 
