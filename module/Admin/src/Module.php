@@ -36,11 +36,11 @@ class Module
 //        $sharedEventManager->attach(AbstractActionController::class, 
 //                MvcEvent::EVENT_DISPATCH, [$this, 'onDispatch'], 100);        
 
-        $sharedEventManager->attach(__NAMESPACE__, 
-                MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onFinish'], 100);
-
-        $sharedEventManager->attach(__NAMESPACE__, 
-                MvcEvent::EVENT_RENDER_ERROR, [$this, 'onFinish'], 100);
+//        $sharedEventManager->attach(__NAMESPACE__, 
+//                MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onFinish'], 100);
+//
+//        $sharedEventManager->attach(__NAMESPACE__, 
+//                MvcEvent::EVENT_RENDER_ERROR, [$this, 'onFinish'], 100);
 
         $sharedEventManager->attach('Zend\Mvc\Application', 
                 MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 100);
