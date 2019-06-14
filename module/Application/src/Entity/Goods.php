@@ -45,6 +45,9 @@ class Goods {
     const OEM_EX_NEW            = 1; // не передано
     const OEM_EX_TRANSFERRED    = 2; // передано.
     
+    const ATTR_EX_NEW            = 1; // не передано
+    const ATTR_EX_TRANSFERRED    = 2; // передано.
+    
     const CAR_EX_NEW            = 1; // не передано
     const CAR_EX_TRANSFERRED    = 2; // передано.
     
@@ -114,6 +117,11 @@ class Goods {
      * @ORM\Column(name="status_oem_ex")   
      */
     protected $statusOemEx = self::OEM_EX_NEW;
+
+    /**
+     * @ORM\Column(name="status_attr_ex")   
+     */
+    protected $statusAttrEx = self::ATTR_EX_NEW;
 
     /**
      * @ORM\Column(name="status_car_ex")   
@@ -658,6 +666,16 @@ class Goods {
     public function setStatusOemEx($statusOemEx)
     {
         $this->statusOemEx = $statusOemEx;
+    }    
+    
+    public function getStatusAttrEx()
+    {
+        $this->statusAttrEx;
+    }
+    
+    public function setStatusAttrEx($statusAttrEx)
+    {
+        $this->statusAttrEx = $statusAttrEx;
     }    
     
     public function getStatusCarEx()

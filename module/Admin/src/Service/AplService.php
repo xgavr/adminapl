@@ -1153,4 +1153,88 @@ class AplService {
         return;
     }
     
+    /**
+     * Обновить атрибуты товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function sendGoodAttribute($good)
+    {
+        if ($good->getAplId()){
+            $url = $this->aplApi().'update-good-attribute?api='.$this->aplApiKey();
+
+            $post = [
+                'good' => $good->getId(),
+                'attributes' => [],
+            ];
+
+            $attrQuery = $this->entityManager->getRepository(Goods::class)
+                    ->findAttributes($good);
+            
+            $attributes = $attrQuery->getResult();                       
+
+            foreach ($attributes as $attribute){
+                if ($image->allowTransfer()){
+                    $post['attributes'][$image->getId()] = [                
+                        'parent'    => $good->getAplId(),
+                        'comment'   => $attribute->getName(),
+                        'sort'      => $attribute->getSimilarAplAsString(),
+                    ]; 
+                }    
+            }
+            
+            if (!count($post['attributes'])){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
+                return;        
+            }
+//            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            try{
+                $response = $client->send();
+    //            var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                
+            }    
+
+            unset($post);
+            unset($attributes);
+        }    
+        return;
+    }
+    
+    /**
+     * Обновление атрибутов в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodsAttribute()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateAttribute();
+        
+        foreach ($goods as $good){
+            $this->sendGoodAttribute($good);
+            if (time() > $startTime + 1740){
+                return;
+            }
+            usleep(100);
+        }
+        unset($goods);
+        return;
+    }
+    
+    
 }
