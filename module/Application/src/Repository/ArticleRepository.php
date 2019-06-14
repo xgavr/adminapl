@@ -51,6 +51,19 @@ class ArticleRepository  extends EntityRepository
     }    
 
     /**
+     * Быстрая вставка артикула наименования
+     * @param array $row 
+     * @return integer
+     */
+    public function insertArticleTitle($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('article_title', $row);
+        return $inserted;
+    }    
+
+    
+    
+    /**
      * Быстрая обновление артикула
      * 
      * @param integer $articleId
@@ -137,6 +150,23 @@ class ArticleRepository  extends EntityRepository
         }
 
         $deleted = $this->getEntityManager()->getConnection()->delete('article_token', ['article_id' => $articleId]);
+        return $deleted;
+    }    
+
+    /**
+     * Быстрое удаление наименований, свзанных с артикулом
+     * @param Application\Entity\Article|integer $article 
+     * @return integer
+     */
+    public function deleteArticleTitle($article)
+    {
+        if (is_numeric($article)){
+            $articleId = $article;
+        } else {
+            $articleId = $article->getId();
+        }
+
+        $deleted = $this->getEntityManager()->getConnection()->delete('article_title', ['article_id' => $articleId]);
         return $deleted;
     }    
 

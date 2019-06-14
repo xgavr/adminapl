@@ -241,6 +241,9 @@ class ArticleManager
         $this->entityManager->getRepository(Article::class)
                 ->deleteArticleToken($article);
         
+        $this->entityManager->getRepository(Article::class)
+                ->deleteArticleTitle($article);
+        
         $this->entityManager->remove($article);
         
         if ($flush){

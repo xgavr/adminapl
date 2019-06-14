@@ -532,6 +532,29 @@ class NameManager
     }  
     
     /**
+     * Проверить флаг обновления токенов
+     * 
+     * @param integer $articleId
+     * @param integer $tokenUpdateFlag
+     * @return type
+     */
+    public function checkUpdateTokenFlag($articleId, $tokenUpdateFlag)
+    {
+        if ($tokenUpdateFlag != Article::TOKEN_UPDATE_FLAG){
+            $this->entityManager->getRepository(Article::class)
+                    ->deleteArticleToken($articleId);
+
+            $this->entityManager->getRepository(Article::class)
+                    ->deleteArticleTitle($articleId);
+
+            $this->entityManager->getRepository(Article::class)
+                    ->updateArticle($articleId, ['token_update_flag' => Article::TOKEN_UPDATE_FLAG]);
+        }
+        
+        return;
+    }
+    
+    /**
      * Выборка токенов из прайса и добавление их в таблицу токенов
      * @param Appllication\Entity\Raw $raw
      */
@@ -544,50 +567,57 @@ class NameManager
                 ->findRawpriceTitle($raw);
         
         foreach ($rawprices as $row){
-            if ($row['tokenUpdateFlag'] != Article::TOKEN_UPDATE_FLAG){
-                $this->entityManager->getRepository(Article::class)
-                        ->deleteArticleToken($row['articleId']);
-               
-                $this->entityManager->getRepository(Article::class)
-                        ->updateArticle($row['articleId'], ['token_update_flag' => Article::TOKEN_UPDATE_FLAG]);
-            }
             
-            $lemms = $this->lemmsFromStr($row['goodname']);
-            foreach ($lemms as $key => $words){
-                $words = array_filter($words);
-                foreach ($words as $word){
-                    
-                    $token = $this->entityManager->getRepository(Token::class)
-                            ->findOneByLemma($word);
-                    
-                    if (!$token){
-                        try{
-                            $this->entityManager->getRepository(Token::class)
-                                    ->insertToken([
-                                        'lemma' => $word,
-                                        'status' => $key,
-                                    ]);
-                        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                            //дубликат
-                        }   
-                    }    
-                    
-                    $articleToken = $this->entityManager->getRepository(ArticleToken::class)
-                            ->findOneBy(['article' => $row['articleId'], 'lemma' => $word]);
-                    
-                    if (!$articleToken){
-                        try{
-                            $this->entityManager->getRepository(Token::class)
-                                    ->insertArticleToken([
-                                        'article_id' => $row['articleId'],
-                                        'lemma' => $word,
-                                        'status' => $key,
-                                    ]);
-                        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                            //дубликат
-                        }
-                    }    
-                }
+            $this->checkUpdateTokenFlag($row['articleId'], $row['tokenUpdateFlag']);
+
+            $title = mb_strtoupper(trim($row['goodname']), 'UTF-8');
+            $titleMd5 = md5($title);
+
+            $articleTitle = $this->entityManager->getRepository(\Application\Entity\ArticleTitle::class)
+                    ->findOneBy(['article' => $row['articleId'], 'titleMd5' => $titleMd5]);
+            
+            if ($articleTitle == null){
+                
+                $lemms = $this->lemmsFromStr($row['goodname']);
+                foreach ($lemms as $key => $words){
+                    $words = array_filter($words);
+                    foreach ($words as $word){
+
+                        $token = $this->entityManager->getRepository(Token::class)
+                                ->findOneByLemma($word);
+
+                        if (!$token){
+                            try{
+                                $this->entityManager->getRepository(Token::class)
+                                        ->insertToken([
+                                            'lemma' => $word,
+                                            'status' => $key,
+                                        ]);
+                            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                                //дубликат
+                            }   
+                        }    
+
+                        $articleToken = $this->entityManager->getRepository(ArticleToken::class)
+                                ->findOneBy(['article' => $row['articleId'], 'lemma' => $word]);
+
+                        if (!$articleToken){
+                            try{
+                                $this->entityManager->getRepository(Token::class)
+                                        ->insertArticleToken([
+                                            'article_id' => $row['articleId'],
+                                            'lemma' => $word,
+                                            'status' => $key,
+                                        ]);
+                            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                                //дубликат
+                            }
+                        }    
+                    }
+                }    
+                
+                $this->entityManager->getRepository(Article::class)
+                        ->insertArticleTitle(['article_id' => $row['articleId'], 'title' => $title, 'title_md5' => $titleMd5]);
             }    
                 
             $this->entityManager->getRepository(Rawprice::class)
