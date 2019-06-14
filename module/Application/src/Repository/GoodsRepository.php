@@ -475,6 +475,27 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusImgEx = ?1')
             ->setParameter('1', Goods::IMG_EX_NEW)    
+            ->setMaxResults(10000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
+     * Найти товары для обновления атрибутов
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateAttribute()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->andWhere('g.aplId > 0')    
+            ->andWhere('g.statusAttrEx = ?1')
+            ->setParameter('1', Goods::ATTR_EX_NEW)    
             ->setMaxResults(50000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
