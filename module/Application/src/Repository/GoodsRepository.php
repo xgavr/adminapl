@@ -722,18 +722,29 @@ class GoodsRepository extends EntityRepository
      * Найти атрибуты товара
      * 
      * @param \Application\Entity\Goods $good
+     * @param array $params
      * @return object
      */
-    public function findGoodAttributeValues($good)
+    public function findGoodAttributeValues($good, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('a')
-            ->from(\Application\Entity\GoodAttributeValue::class, 'a')
-            ->where('a.good = ?1')    
+        $queryBuilder->select('gav')
+            ->from(\Application\Entity\GoodAttributeValue::class, 'gav')
+            ->where('gav.good = ?1')    
             ->setParameter('1', $good->getId())
             ;
+        
+        if (is_array($params)){
+            if (isset($params['status'])){
+                $queryBuilder
+                        ->join('gav.attribute', 'a')
+                        ->andWhere('a.status = ?2')
+                        ->setParameter('2', $params['status'])
+                        ;
+            }
+        }
         
         return $queryBuilder->getQuery();            
     }

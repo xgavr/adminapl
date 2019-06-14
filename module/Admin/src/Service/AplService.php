@@ -1169,16 +1169,18 @@ class AplService {
             ];
 
             $attrQuery = $this->entityManager->getRepository(Goods::class)
-                    ->findAttributes($good);
+                    ->findGoodAttributeValues($good, ['status' => \Application\Entity\Attribute::STATUS_ACTIVE]);
             
             $attributes = $attrQuery->getResult();                       
 
             foreach ($attributes as $attribute){
                 if ($image->allowTransfer()){
-                    $post['attributes'][$image->getId()] = [                
+                    $post['attributes'][$attribute->getId()] = [                
                         'parent'    => $good->getAplId(),
-                        'comment'   => $attribute->getName(),
-                        'sort'      => $attribute->getSimilarAplAsString(),
+                        'attrId'    => $attribute->getAttribute()->getId(),
+                        'name'      => $attribute->getAttribute()->getName(),
+                        'attrValueId' => $attribute->getAttributeValue()->getId(),
+                        'comment'   => $attribute->getAttributeValue()->getValue(),
                     ]; 
                 }    
             }
