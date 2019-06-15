@@ -231,7 +231,7 @@ class RawManager {
                         }                            
                     }
                     
-                    if (count($rows) > 1){
+                    if ($rows > 1){
                         $raw->setStatus(Raw::STATUS_ACTIVE);
                     } else {
                         $raw->setStatus(Raw::STATUS_RETIRED);                    
@@ -337,7 +337,7 @@ class RawManager {
                     
                 }
                 
-                if (count($rows) > 1){
+                if ($rows > 1){
                     $raw->setStatus(Raw::STATUS_ACTIVE);
                 } else {
                     $raw->setStatus(Raw::STATUS_RETIRED);                    
@@ -434,7 +434,7 @@ class RawManager {
                     
                 }
                 
-                if (count($rows) > 1){
+                if ($rows > 1){
                     $raw->setStatus(Raw::STATUS_ACTIVE);
                 } else {
                     $raw->setStatus(Raw::STATUS_RETIRED);                    
