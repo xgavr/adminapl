@@ -167,7 +167,7 @@ class RawManager {
         return;
     }
 
-        /**
+    /**
      * Загрузка сырого прайса csv, txt
      * @var Application\Entity\Supplier
      * @var string $filename
@@ -231,7 +231,11 @@ class RawManager {
                         }                            
                     }
                     
-                    $raw->setStatus(Raw::STATUS_ACTIVE);
+                    if (count($rows) > 1){
+                        $raw->setStatus(Raw::STATUS_ACTIVE);
+                    } else {
+                        $raw->setStatus(Raw::STATUS_RETIRED);                    
+                    }    
                     $raw->setRows($rows);                    
                     $this->entityManager->persist($raw);
                     $this->entityManager->flush();                    
@@ -333,7 +337,11 @@ class RawManager {
                     
                 }
                 
-                $raw->setStatus(Raw::STATUS_ACTIVE);
+                if (count($rows) > 1){
+                    $raw->setStatus(Raw::STATUS_ACTIVE);
+                } else {
+                    $raw->setStatus(Raw::STATUS_RETIRED);                    
+                }    
                 $raw->setRows($rows);
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
@@ -426,7 +434,11 @@ class RawManager {
                     
                 }
                 
-                $raw->setStatus(Raw::STATUS_ACTIVE);
+                if (count($rows) > 1){
+                    $raw->setStatus(Raw::STATUS_ACTIVE);
+                } else {
+                    $raw->setStatus(Raw::STATUS_RETIRED);                    
+                }    
                 $raw->setRows($rows);
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
