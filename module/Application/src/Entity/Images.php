@@ -107,6 +107,18 @@ class Images {
         return;
     }
     
+    public function getTransferPath() 
+    {
+        if (file_exists($this->path)){
+            $fileInfo = pathinfo($this->path);
+           // if ($fileInfo['extension'] && strtoupper($fileInfo['extension']) != 'PDF'){
+            if ($fileInfo['extension']){
+                return htmlspecialchars($this->publicPath($this->path));
+            }                        
+        }
+        return;
+    }
+    
     public function allowTransfer()
     {
         $fileInfo = pathinfo($this->path);
