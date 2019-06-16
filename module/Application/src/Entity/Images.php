@@ -113,7 +113,7 @@ class Images {
             $fileInfo = pathinfo($this->publicPath($this->path));
            // if ($fileInfo['extension'] && strtoupper($fileInfo['extension']) != 'PDF'){
             if ($fileInfo['extension']){
-                return $fileInfo['dirname'].'/'. urlencode($fileInfo['basename']);
+                return $fileInfo['dirname'].'/'. htmlentities($fileInfo['basename']);
             }                        
         }
         return;
