@@ -1105,7 +1105,7 @@ class AplService {
                         ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
                 return;        
             }
-//            var_dump($post); exit;
+            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');

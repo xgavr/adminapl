@@ -110,10 +110,10 @@ class Images {
     public function getTransferPath() 
     {
         if (file_exists($this->path)){
-            $fileInfo = pathinfo($this->path);
+            $fileInfo = pathinfo($this->publicPath($this->path));
            // if ($fileInfo['extension'] && strtoupper($fileInfo['extension']) != 'PDF'){
             if ($fileInfo['extension']){
-                return htmlspecialchars($this->publicPath($this->path));
+                return $fileInfo['dirname'].'/'. urlencode($fileInfo['basename']);
             }                        
         }
         return;
