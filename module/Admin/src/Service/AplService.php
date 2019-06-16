@@ -1095,7 +1095,7 @@ class AplService {
                         'parent'    => $good->getAplId(),
                         'comment'   => $image->getName(),
                         'sort'      => $image->getSimilarAplAsString(),
-                        'source'      => 'http://adminapl.ru'.$image->getPublicPath(),
+                        'source'      => 'http://adminapl.ru'.urlencode($image->getPublicPath()),
                     ]; 
                 }    
             }
