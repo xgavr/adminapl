@@ -27,37 +27,37 @@ class GoodsController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Менеджер товаров.
-     * @var Application\Service\GoodsManager 
+     * @var \Application\Service\GoodsManager 
      */
     private $goodsManager;    
     
     /**
      * Менеджер создания товаров.
-     * @var Application\Service\AssemblyManager 
+     * @var \Application\Service\AssemblyManager 
      */
     private $assemblyManager;
     
     /**
      * Менеджер создания товаров.
-     * @var Application\Service\ArticleManager 
+     * @var \Application\Service\ArticleManager 
      */
     private $articleManager;
     
     /**
      * Менеджер создания наименований.
-     * @var Application\Service\NameManager 
+     * @var \Application\Service\NameManager 
      */
     private $nameManager;
     
     /**
      * Менеджер внешних баз.
-     * @var Application\Service\ExternalManager 
+     * @var \Application\Service\ExternalManager 
      */
     private $externalManager;
     
@@ -1035,6 +1035,38 @@ class GoodsController extends AbstractActionController
             'id' => $rawpriceId,
             'inSigma' => $inSigma,
         ]);          
+        
+    }
+    
+    public function updateAttributeAction()
+    {
+        
+    }
+    
+    public function deleteAttributeAction()
+    {
+        $attributeId = $this->params()->fromRoute('id', -1);
+        
+        $attribute = $this->entityManager->getRepository(\Application\Entity\Attribute::class)
+                ->findOneById($attributeId);
+        
+        if ($attribute == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $status = \Application\Entity\Attribute::STATUS_RETIRED;
+        if ($attribute->getStatus() == \Application\Entity\Attribute::STATUS_RETIRED){
+            $status = \Application\Entity\Attribute::STATUS_ACTIVE;
+        }
+        
+        $this->goodsManager->updateAttribute($attribute, ['status' => $status]);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
         
     }
 }

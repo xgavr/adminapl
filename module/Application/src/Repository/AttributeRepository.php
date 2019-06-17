@@ -55,6 +55,30 @@ class AttributeRepository  extends EntityRepository{
     }
     
     /**
+     * Обновить атрибут
+     * 
+     * @param \Application\Entity\Attribute $attribute
+     * @param array $data
+     */
+    public function updateAttribute($attribute, $data)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->update(Attribute::class, 'a')
+                ->where('a.id = ?1')
+                ->setParameter('1', $attribute->getId())
+                ;
+        
+        foreach ($data as $key => $value){
+            $queryBuilder->set('a'.$key, $value);
+        }
+        
+        return $queryBuilder->getQuery()->getResult();        
+        
+    }
+    
+    /**
      * Добавить значение атрибута
      * 
      * @param array $attr

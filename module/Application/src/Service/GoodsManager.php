@@ -319,6 +319,27 @@ class GoodsManager
         
         return;
     }
+    
+    /**
+     * Обновить атрибут
+     * 
+     * @param \Application\Entity\Attribute $attribute
+     * @param array $data
+     */
+    public function updateAttribute($attribute, $data)
+    {
+        if (isset($data['status'])){
+            $attribute->setStatus($data['status']);
+        }
+        if (isset($data['name'])){
+            $attribute->setName($data['name']);
+        }
+        
+        $this->entityManager->persist($attribute);
+        $this->entityManager->flush();
+        
+        return;
+    }
 
     /**
      * Обновить картинки из текдока у товаров
