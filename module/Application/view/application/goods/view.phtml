@@ -169,7 +169,7 @@ $this->headScript()
                                         <td>
                                             <nobr>
                                                 <button value="/goods/update-attribute/<?= $goods->getId()?>?attr=<?= $attributeValue->getAttribute()->getId()?>" type="button"
-                                                        class="btn btn-default btn-xs" title="Изменить">
+                                                        class="btn btn-default btn-xs" title="Изменить" data-toggle="modal" data-target="#modal-dialog">
                                                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                                 </button>
                                                 <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
