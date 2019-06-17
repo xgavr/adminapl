@@ -7,7 +7,7 @@ $form->get('name')->setAttributes([
     ]);
 
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'email-submit']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'attribut-submit']);
 
 $form->prepare();
 
@@ -17,7 +17,7 @@ $form->prepare();
             <?= $this->form()->openTag($form); ?>
             
             <div class="modal-header">
-                <h5 class="modal-title">Контактный email</h5>
+                <h5 class="modal-title">Атрибут товара</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -29,7 +29,7 @@ $form->prepare();
                         <div class="input-group">
                             <?= $this->formElement($form->get('name')); ?>
                             <div class="input-group-btn">
-                                <button type="button" class="btn btn-primary" id="email-submit">Сохранить</button>
+                                <button type="button" class="btn btn-primary" id="attribute-submit">Сохранить</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                             </div>    
                         </div>    
@@ -43,11 +43,11 @@ $form->prepare();
             <?= $this->form()->closeTag(); ?>
             
 <script>
-    $('#email-submit').on('click', function() {
+    $('#attribute-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>',
-            data: $('#email-form').serialize()
+            url: '/goods/update-attribute-form/<?= $good->getId() ?>?attr=<?= ($attribute ? $attribute->getId():'') ?>',
+            data: $('#attribute-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){
