@@ -143,7 +143,7 @@ class Images {
             return false;
         }
 
-        var_dump($ext);
+//        var_dump($ext);
         return true;
     }
 
