@@ -1175,15 +1175,13 @@ class AplService {
             $attributes = $attrQuery->getResult();                       
 
             foreach ($attributes as $attribute){
-                if ($image->allowTransfer()){
-                    $post['attributes'][$attribute->getId()] = [                
-                        'parent'    => $good->getAplId(),
-                        'attrId'    => $attribute->getAttribute()->getId(),
-                        'name'      => $attribute->getAttribute()->getName(),
-                        'attrValueId' => $attribute->getAttributeValue()->getId(),
-                        'comment'   => $attribute->getAttributeValue()->getValue(),
-                    ]; 
-                }    
+                $post['attributes'][$attribute->getId()] = [                
+                    'parent'    => $good->getAplId(),
+                    'attrId'    => $attribute->getAttribute()->getId(),
+                    'name'      => $attribute->getAttribute()->getName(),
+                    'attrValueId' => $attribute->getAttributeValue()->getId(),
+                    'comment'   => $attribute->getAttributeValue()->getValue(),
+                ]; 
             }
             
             if (!count($post['attributes'])){
