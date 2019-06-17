@@ -167,7 +167,7 @@ $this->headScript()
                                             <?= $attributeValue->getAttributeValue()->getValue();?>
                                         </td>
                                         <td>
-                                            <button value="/goods/delete-attribute/<?php $attributeValue->getAttribute()->getId()?>" type="button"
+                                            <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
                                                     class="btn btn-default btn-xs this-delete" title="Не показывать">
                                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                             </button>
