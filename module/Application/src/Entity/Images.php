@@ -137,7 +137,7 @@ class Images {
         if (strtoupper($ext) == 'SPIN'){
             return false;
         }
-        
+        var_dump($ext);
         return true;
     }
 
