@@ -137,7 +137,12 @@ class Images {
         if (strtoupper($ext) == 'SPIN'){
             return false;
         }
-        var_dump($ext);
+
+        $uriValidator = new \Zend\Validator\Uri();
+        if ($uriValidator->isValid($this->path)){
+            return false;
+        }
+
         return true;
     }
 
