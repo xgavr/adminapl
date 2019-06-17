@@ -157,7 +157,7 @@ $this->headScript()
                         <table class="table table-bordered">
                             <p>
                                 <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
-                                    <tr>
+                                    <tr style="text-decoration: <?= $attributeValue->getAttribute()->getStatusDecorationAsString()?>">
                                         <td width='30%' align='right'>
                                             <nobr>
                                                <?= $attributeValue->getAttribute()->getName()?>     

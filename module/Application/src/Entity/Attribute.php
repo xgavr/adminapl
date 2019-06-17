@@ -235,6 +235,31 @@ class Attribute {
     }    
     
     /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusDecorationList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 'none',
+            self::STATUS_RETIRED => 'line-through'
+        ];
+    }    
+    
+    /**
+     * Returns make status as string.
+     * @return string
+     */
+    public function getStatusDecorationAsString()
+    {
+        $list = self::getStatusDecorationList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    /**
      * Sets status.
      * @param int $status     
      */
