@@ -1191,7 +1191,7 @@ class AplService {
                         ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
                 return;        
             }
-//            var_dump($post); exit;
+            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');

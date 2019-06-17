@@ -798,12 +798,11 @@ class GoodsRepository extends EntityRepository
         $this->updateGoodId($good->getId(), ['status_attr_ex' => Goods::ATTR_EX_NEW]);
         return $deleted;        
     }
-    
-    
+        
     /**
      * Найти номера для добавления
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * @return array
      */
     public function findOemRaw($good)
