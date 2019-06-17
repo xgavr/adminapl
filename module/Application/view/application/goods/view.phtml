@@ -167,14 +167,16 @@ $this->headScript()
                                             <?= $attributeValue->getAttributeValue()->getValue();?>
                                         </td>
                                         <td>
-                                            <button value="/goods/update-attribute/<?= $goods->getId()?>?attr=<?= $attributeValue->getAttribute()->getId()?>" type="button"
-                                                    class="btn btn-default btn-xs" title="Изменить">
-                                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                            </button>
-                                            <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
-                                                    class="btn btn-default btn-xs this-delete" title="Не показывать">
-                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                            </button>
+                                            <nobr>
+                                                <button value="/goods/update-attribute/<?= $goods->getId()?>?attr=<?= $attributeValue->getAttribute()->getId()?>" type="button"
+                                                        class="btn btn-default btn-xs" title="Изменить">
+                                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                                </button>
+                                                <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
+                                                        class="btn btn-default btn-xs this-delete" title="Не показывать">
+                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                </button>
+                                            </nobr>
                                         </td>
                                     </tr>                                              
                                 <?php endforeach;?>
