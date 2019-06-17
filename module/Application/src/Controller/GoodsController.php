@@ -1038,9 +1038,66 @@ class GoodsController extends AbstractActionController
         
     }
     
-    public function updateAttributeAction()
+    public function updateAttributeFormAction()
     {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
         
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodId);
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $attributeId = (int)$this->params()->fromQuery('attr', -1);
+        
+        // Validate input parameter
+        if ($attributeId>0) {
+            $attribute = $this->entityManager->getRepository(\Application\Entity\Attribute::class)
+                    ->findOneById($attributeId);
+        } else {
+            $attribute = null;
+        }        
+        $form = new \Application\Form\AttributeForm($this->entityManager, $attribute);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                if ($attribute){
+                    $this->goodsManager->updateAttribute($attribute, ['name' => $data['name']]);                    
+                } else {
+//                    $this->goodsManager->addAttribute($good, $data['name']);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($attribute){
+                $data = [
+                    'name' => $attribute->getName(),  
+                ];
+                $form->setData($data);
+            }  
+        }    
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'good' => $good,
+            'attribute' => $attribute,
+        ]);                                
     }
     
     public function deleteAttributeAction()
