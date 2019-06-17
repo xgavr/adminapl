@@ -122,7 +122,23 @@ class Images {
     public function allowTransfer()
     {
         $fileInfo = pathinfo($this->path);
-        return isset($fileInfo['extension']) && strtoupper($fileInfo['extension']) != 'PDF' && strtoupper($fileInfo['extension']) != 'SPIN';
+        $ext = null;
+        if (isset($fileInfo['extension'])){
+            $ext = $fileInfo['extension'];
+        }
+        
+        if (!$ext){
+            return FALSE;
+        }
+        
+        if (strtoupper($ext) == 'PDF'){
+            return false;
+        }
+        if (strtoupper($ext) == 'SPIN'){
+            return false;
+        }
+        
+        return true;
     }
 
     public function setPath($path) 
