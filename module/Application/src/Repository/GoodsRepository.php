@@ -361,6 +361,12 @@ class GoodsRepository extends EntityRepository
         
     }
        
+    /**
+     * Выбока картинок товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return query
+     */
     public function findImages($good)
     {
         $entityManager = $this->getEntityManager();
