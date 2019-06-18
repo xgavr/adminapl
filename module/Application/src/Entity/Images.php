@@ -139,8 +139,8 @@ class Images {
         }
 
         $uriValidator = new \Zend\Validator\Uri();
-        if ($uriValidator->isValid($this->path)){
-            return false;
+        if (!$uriValidator->isValid($this->path)){
+            return FALSE;
         }
 
 //        var_dump($ext);
