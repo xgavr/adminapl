@@ -121,7 +121,7 @@ class Images {
     
     public function allowTransfer()
     {
-        $fileInfo = pathinfo($this->path);
+        $fileInfo = pathinfo($this->name);
         $ext = null;
         if (isset($fileInfo['extension'])){
             $ext = $fileInfo['extension'];
