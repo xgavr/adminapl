@@ -703,9 +703,9 @@ class AplService {
     {
         if ($make->getName()){
 
-            $url = $this->aplApi().'get-brand-id?name='.urlencode($make->getName()).'&api='.$this->aplApiKey();
+            $url = $this->aplApi().'get-brand-id?name='.urlencode($make->getTransferName()).'&api='.$this->aplApiKey();
             
-//                var_dump($url); 
+//                var_dump($url); exit;
             $response = file_get_contents($url);
             try {
                 if (is_numeric($response)){

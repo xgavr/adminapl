@@ -105,6 +105,15 @@ class Make {
         return $this->name;
     }
 
+    public function getTransferName() 
+    {
+        $s = array('Å', 'Ë', 'Ö');
+        $r = array('A', 'E', 'O');
+        $result = str_replace($s, $r, mb_strtoupper($this->name, 'utf-8'));
+
+        return $result;
+    }
+
     public function setName($name) 
     {
         $this->name = $name;
