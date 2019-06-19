@@ -133,6 +133,59 @@ class MakeRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }   
     
+    /**
+     * Запрос по машинам по разным параметрам
+     * 
+     * @param \Application\Entity\Make $make
+     * @param array $params
+     * @return object
+     */
+    public function findMakeModel($make, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('m')
+            ->from(Model::class, 'm')
+            ->where('m.make = ?1')
+            ->setParameter('1', $make->getId())    
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['q'])){
+                if ($params['q']){
+                    $queryBuilder->andWhere('m.name like :search')
+                        ->setParameter('search', '%' . $params['q'] . '%')
+                            ;
+                }    
+            }
+            if (isset($params['next1'])){
+                $queryBuilder->andWhere('m.name > ?2')
+                    ->setParameter('2', $params['next1'])
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['prev1'])){
+                $queryBuilder->andWhere('m.name < ?3')
+                    ->setParameter('3', $params['prev1'])
+                    ->orderBy('m.name', 'DESC')
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('m.status = ?4')
+                    ->setParameter('4', $params['status'])
+                        ;
+            }            
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('m.'.$params['sort'], $params['order']);                
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }   
+    
      /**
      * Найти товары бренда
      * 

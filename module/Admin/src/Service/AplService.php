@@ -693,6 +693,12 @@ class AplService {
         return;
     }
     
+    /**
+     * Обновить aplId машин
+     * 
+     * @param \Application\Entity\Make $make
+     * @return null
+     */
     public function getMakeAplId($make)
     {
         if ($make->getName()){

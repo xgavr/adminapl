@@ -74,8 +74,12 @@ class MakeController extends AbstractActionController
 
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
 
         $result = $query->getResult(2);
         
@@ -179,7 +183,53 @@ class MakeController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
         ]);
-    }      
+    }   
+    
+    public function modelContentAction()
+    {
+        $makeId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($makeId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $make = $this->entityManager->getRepository(Make::class)
+                ->findOneById($makeId);
+        
+        if ($make == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        $limit = $this->params()->fromQuery('limit');
+        $status = $this->params()->fromQuery('status', Model::STATUS_ACTIVE);
+        
+        $query = $this->entityManager->getRepository(Make::class)
+                        ->findMakeModel($make, ['q' => $q, 'sort' => $sort, 'order' => $order, 'status' => $status]);
+
+//        var_dump($query->getSQL()); exit;
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }
     
     public function fillModelsAction()
     {
