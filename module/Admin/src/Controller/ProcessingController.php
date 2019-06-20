@@ -840,6 +840,24 @@ class ProcessingController extends AbstractActionController
     }    
 
     /**
+     * Обновление aplId машин
+     * 
+     * @return JsonModel
+     */
+    public function updateMakeAplIdAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['car'] == 1){            
+            $this->aplService->updateMakeAplId();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
+    /**
      * Выгрузка эквайринга из апл
      * 
      * @return JsonModel
