@@ -727,7 +727,7 @@ class AplService {
     public function updateMakeAplId()
     {
         $makes = $this->entityManager->getRepository(\Application\Entity\Make::class)
-                ->findBy(['status' => \Application\Entity\Make::STATUS_ACTIVE]);
+                ->findBy(['status' => \Application\Entity\Make::STATUS_ACTIVE, 'aplId' => 0]);
         foreach ($makes as $make){
             $this->getMakeAplId($make);
         }
