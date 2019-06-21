@@ -786,10 +786,17 @@ class AplService {
 
     public function updateModelAplId()
     {
+        set_time_limit(1800);
+        $startTime = time();
+        
         $models = $this->entityManager->getRepository(\Application\Entity\Model::class)
                 ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE, 'aplId' => 0]);
         foreach ($models as $model){
             $this->getModelAplId($model);
+            if (time() > $startTime + 1740){
+                return;
+            }
+            usleep(100);
         }
         
         return;        
