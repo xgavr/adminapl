@@ -207,6 +207,26 @@ class AplController extends AbstractActionController
         ]);
     }
 
+    public function modelAplIdAction()
+    {
+        $modelId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $model = $this->entityManager->getRepository(\Application\Entity\Model::class)
+                ->findOneById($modelId);  
+        	
+        if ($model == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->getModelAplId($model);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
     public function updateAcquiringAction()
     {
         
