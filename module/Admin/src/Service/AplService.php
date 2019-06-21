@@ -735,35 +735,50 @@ class AplService {
         return;        
     }
 
+    /**
+     * Обновление aplId моделей авто
+     * 
+     * @param \Application\Entity\Model $model
+     * @return null
+     */
     public function getModelAplId($model)
     {
         if ($model->getMake()->getAplId() && $model->getTdId()){
 
-            $url = $this->aplApi().'get-serie-id?brand='.$model->getMake()->getAplId().'&tdId='.$model->getTdId().'&api='.$this->aplApiKey();
+            $url = $this->aplApi().'get-serie-id?api='.$this->aplApiKey();
             
-//                var_dump($url); 
-            $response = file_get_contents($url);
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost([
+                'parent' => $model->getMake()->getAplId(),
+                'type' => $model->getTdId(),
+                'name' => $model->getName(),
+                'desc' => $model->getInterval(),
+            ]);
+
+            $response = $client->send();
+            var_dump($response->getBody()); exit;
             try {
                 if (is_numeric($response)){
-//                    var_dump($response);
+    //                    var_dump($response);
                     $model->setAplId($response);
                     $this->entityManager->persist($model);
                     $this->entityManager->flush($model);
                     return;
                 }
             } catch (Exception $ex) {
-//                var_dump($ex->getMessage());
+    //                var_dump($ex->getMessage());
                 return;
             }
         }    
-        
         return;        
     }
 
     public function updateModelAplId()
     {
         $models = $this->entityManager->getRepository(\Application\Entity\Model::class)
-                ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE]);
+                ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE, 'aplId' => 0]);
         foreach ($models as $model){
             $this->getModelAplId($model);
         }
