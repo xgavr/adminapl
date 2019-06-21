@@ -749,13 +749,11 @@ class AplService {
             
             $sf = '';
             $intervals = explode('-', $model->getInterval());
-            if (!empty($intervals[0])){
-                try{
-                    $sf = date('Ym', strtotime($intervals[0]));
-                } catch (Exception $ex) {
-                }
+            if (!empty(trim($intervals[0]))){
+                $ym = explode('.', trim($intervals[0]));
+                $sf = $ym[1].$ym[0];
             }
-            var_dump($intervals); exit;
+            var_dump($sf); exit;
             
             $client = new Client();
             $client->setUri($url);
