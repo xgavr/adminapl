@@ -803,6 +803,61 @@ class AplService {
     }
     
     /**
+     * Обновление aplId машин
+     * 
+     * @param \Application\Entity\Car $car
+     * @return null
+     */
+    public function getCarAplId($car)
+    {
+        if ($car->getModel()->getAplId() && $car->getTdId()){
+
+            $url = $this->aplApi().'get-model-id?api='.$this->aplApiKey();
+            
+            $post = [];
+            
+            foreach ($car->getCarAtributeValues() as $carAttributeValue){
+                
+            }
+            
+            $sf = '';
+            $intervals = explode('-', $car->get());
+            if (!empty(trim($intervals[0]))){
+                $ym = explode('.', trim($intervals[0]));
+                $sf = $ym[1].$ym[0];
+            }
+//            var_dump($sf); exit;
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost([
+                'parent' => $model->getMake()->getAplId(),
+                'type' => $model->getTdId(),
+                'name' => urlencode($model->getName()),
+                'desc' => $model->getInterval(),
+                'sf' => $sf,
+            ]);
+
+            $response = $client->send();
+//            var_dump($response->getBody()); exit;
+            try {
+                if (is_numeric($response->getBody())){
+//                        var_dump($response);
+                    $car->setAplId($response->getBody());
+                    $this->entityManager->persist($car);
+                    $this->entityManager->flush($car);
+                    return;
+                }
+            } catch (Exception $ex) {
+    //                var_dump($ex->getMessage());
+                return;
+            }
+        }    
+        return;        
+    }
+
+    /**
      * Выгрузка эквайринга с Апл
      * 
      * @return null
