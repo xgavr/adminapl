@@ -1240,7 +1240,7 @@ class AplService {
             if (time() > $startTime + 1740){
                 return;
             }
-            usleep(100);
+            usleep(1000);
         }
         unset($goods);
         return;
