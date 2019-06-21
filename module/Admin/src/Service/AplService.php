@@ -760,9 +760,9 @@ class AplService {
             $response = $client->send();
 //            var_dump($response->getBody()); exit;
             try {
-                if (is_numeric($response)){
-                        var_dump($response);
-                    $model->setAplId($response);
+                if (is_numeric($response->getBody())){
+//                        var_dump($response);
+                    $model->setAplId($response->getBody());
                     $this->entityManager->persist($model);
                     $this->entityManager->flush($model);
                     return;
