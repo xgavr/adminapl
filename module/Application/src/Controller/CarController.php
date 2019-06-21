@@ -247,5 +247,35 @@ class CarController extends AbstractActionController
             'next' => $nextQuery->getResult(),
         ]);
     }      
+ 
     
+    public function AttributeTypesAction()
+    {
+        return new ViewModel([
+        ]);
+        
+    }
+    
+    public function attributeTypesContentAction()
+    {
+        $query = $this->entityManager->getRepository(\Application\Entity\CarAttributeType::class)
+                        ->findAttributeTypes();
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+        
+    }
 }

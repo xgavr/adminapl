@@ -323,4 +323,20 @@ class CarRepository extends EntityRepository
         
         return;        
     }
+    
+    /**
+     * Выборка аттрибутов
+     * 
+     * @return qyery
+     */
+    public function findAttributeTypes()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('cat')
+            ->from(\Application\Entity\CarAttributeType::class, 'cat')
+            ;
+        
+        return $queryBuilder->getQuery();
+    }
 }

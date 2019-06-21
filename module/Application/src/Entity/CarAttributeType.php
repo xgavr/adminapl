@@ -31,6 +31,11 @@ class CarAttributeType {
     protected $name;
     
     /**
+     * @ORM\Column(name="name_apl")   
+     */
+    protected $nameApl;
+    
+    /**
      * @ORM\Column(name="title")   
      */
     protected $title;
@@ -70,6 +75,16 @@ class CarAttributeType {
     public function setName($name) 
     {
         $this->name = $name;
+    }     
+
+    public function getNameApl() 
+    {
+        return $this->nameApl;
+    }
+
+    public function setNameApl($nameApl) 
+    {
+        $this->nameApl = $nameApl;
     }     
 
     public function getTitle() 
