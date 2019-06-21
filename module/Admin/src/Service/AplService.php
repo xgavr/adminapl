@@ -755,7 +755,7 @@ class AplService {
                 } catch (Exception $ex) {
                 }
             }
-            var_dump($sf); exit;
+            var_dump($intervals); exit;
             
             $client = new Client();
             $client->setUri($url);
