@@ -753,7 +753,7 @@ class AplService {
                 $ym = explode('.', trim($intervals[0]));
                 $sf = $ym[1].$ym[0];
             }
-            var_dump($sf); exit;
+//            var_dump($sf); exit;
             
             $client = new Client();
             $client->setUri($url);
@@ -761,7 +761,7 @@ class AplService {
             $client->setParameterPost([
                 'parent' => $model->getMake()->getAplId(),
                 'type' => $model->getTdId(),
-                'name' => $model->getName(),
+                'name' => urlencode($model->getName()),
                 'desc' => $model->getInterval(),
                 'sf' => $sf,
             ]);
