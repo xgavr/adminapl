@@ -747,6 +747,15 @@ class AplService {
 
             $url = $this->aplApi().'get-serie-id?api='.$this->aplApiKey();
             
+            $sf = '';
+            $intervals = explode('-', $model->getInterval());
+            if (!empty($intervals[0])){
+                try{
+                    $sf = date('Ym', strtotime($intervals[0]));
+                } catch (Exception $ex) {
+                }
+            }
+            
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
@@ -755,6 +764,7 @@ class AplService {
                 'type' => $model->getTdId(),
                 'name' => $model->getName(),
                 'desc' => $model->getInterval(),
+                'sf' => $sf,
             ]);
 
             $response = $client->send();
