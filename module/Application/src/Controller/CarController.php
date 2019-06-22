@@ -258,6 +258,9 @@ class CarController extends AbstractActionController
     
     public function attributeTypesContentAction()
     {
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+
         $query = $this->entityManager->getRepository(\Application\Entity\CarAttributeType::class)
                         ->findAttributeTypes();
 
