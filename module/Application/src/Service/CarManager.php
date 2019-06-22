@@ -60,11 +60,9 @@ class CarManager
     public function updateAttributeType($attribute, $data)
     {
         if (is_array($data)){
-            if (!empty($data['value'])){
-                $attribute->setNameApl($data['value']);
-                $this->entityManager->persist($attribute);
-                $this->entityManager->flush();
-            }
+            $attribute->setNameApl($data['value']);
+            $this->entityManager->persist($attribute);
+            $this->entityManager->flush();
         }
         return;
     }
