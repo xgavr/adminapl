@@ -1,11 +1,11 @@
 <?php
 $this->headTitle('Машины');
 
-$this->mainMenu()->setActiveItemId('make');
+$this->mainMenu()->setActiveItemId('rb');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Машины'=>$this->url('make')
+            'Машины'=>$this->url('make'),
             ]);
 
 $this->headLink()
@@ -129,7 +129,12 @@ $this->headScript()
                             </button>                             
                         </div>
                     </div>
-                </div>    
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <a href="<?= $this->url('car', ['action' => 'attribute-types'])?>">Атрибуты</a>                                            
+                    </div>
+                </div>
             </div>
         </div>
     </div>

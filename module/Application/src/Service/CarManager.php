@@ -22,13 +22,13 @@ class CarManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * External manager.
-     * @var Application\Entity\ExternalManager
+     * @var \Application\Entity\ExternalManager
      */
     private $externalManager;
     
@@ -51,5 +51,21 @@ class CarManager
         return;
     }
     
-    
+    /**
+     * Обновить атрибут
+     * 
+     * @param \Application\Entity\CarAttributeType $attribute
+     * @param array $data
+     */
+    public function updateAttributeType($attribute, $data)
+    {
+        if (is_array($data)){
+            if (!empty($data['value'])){
+                $attribute->setNameApl($data['value']);
+                $this->entityManager->persist($attribute);
+                $this->entityManager->flush();
+            }
+        }
+        return;
+    }
 }

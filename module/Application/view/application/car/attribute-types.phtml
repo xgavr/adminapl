@@ -1,21 +1,23 @@
 <?php
 $this->headTitle('Атрибуты машин');
 
-$this->mainMenu()->setActiveItemId('make');
+$this->mainMenu()->setActiveItemId('rb');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Машины'=>$this->url('make')
+            'Машины'=>$this->url('make'),
+            'Атрибуты' => $this->url('car', ['action' => 'attribute-types']),
             ]);
 
 $this->headLink()
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-   // ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.14.2/bootstrap-table.min.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
         ;
 $this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.14.2/extensions/editable/bootstrap-table-editable.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.14.2/bootstrap-table.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.14.2/locale/bootstrap-table-ru-RU.min.js')
+//    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.14.2/extensions/editable/bootstrap-table-editable.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
             ;    
 
 ?>
@@ -47,36 +49,40 @@ $this->headScript()
             data-show-toggle="true"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
-            data-editable-url="/my/editable/update/path"
             >
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
                      <th data-field="name" data-sortable="true">Наименование</th>
                      <th data-field="title" data-sortable="true">Выводимое</th>
-                     <th data-field="nameApl" data-editable="true" data-editable-emptytext="Custom empty text.">для АПЛ</th>             
+                     <th data-field="nameApl" data-formatter="editableFormatter">для АПЛ</th>             
                  </tr>                
             </thead>
         </table>
     </div>
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
+            <!--<a href="#" class="nameAplEdit" data-type="text" data-pk="1" data-url="/car/attribute-edit" data-title="">222</a>-->
         </div>
     </div>
 </div>    
 
 <script type="text/javascript">
-    
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
 
-    var $table = $('#table'),
-        $ok = $('#ok');
+    var table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('.nameAplEdit').editable();
+        }
+    });
+    
+    ok = $('#ok');
 
     $(function () {
-        $ok.click(function () {
-            $table.bootstrapTable('refresh');
+        ok.click(function () {
+            table.bootstrapTable('refresh');
         });
     });
     
@@ -96,14 +102,19 @@ $this->headScript()
         
         return params;
     }
-//    
-//    function editableFormatter(value, row){
-//        return [
-//            '<a href="#" class="aplNameEdit" data-type="text" data-pk="1" data-name="firstname" data-url="post.php">' + value + '</a>'
-//        ].join(''); 
-//    }    
+    
+    function editableFormatter(value, row){
+        return [
+            '<a href="#" class="nameAplEdit" data-type="text" data-pk="'+row.id+'" data-name="nameApl" data-url="/car/attribute-edit">' + value + '</a>'
+        ].join(''); 
+    }    
         
     function responseHandler(res) {
         return res;
     }    
+
+//    $(document).ready(function() {
+//        $('.nameAplEdit').editable();
+//    });
+    
 </script>

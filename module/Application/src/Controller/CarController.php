@@ -23,13 +23,13 @@ class CarController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Менеджер товаров.
-     * @var Application\Service\CarManager 
+     * @var \Application\Service\CarManager 
      */
     private $carManager;    
     
@@ -277,5 +277,22 @@ class CarController extends AbstractActionController
             'rows' => $result,
         ]);          
         
+    }
+    
+    public function attributeEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $attributeId = $data['pk'];
+            $attribute = $this->entityManager->getRepository(\Application\Entity\CarAttributeType::class)
+                    ->findOneById($attributeId);
+                    
+            if ($attribute){
+                $this->carManager->updateAttributeType($attribute, $data);
+            }    
+        }
+        
+        exit;
     }
 }
