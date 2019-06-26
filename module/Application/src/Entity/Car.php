@@ -94,12 +94,19 @@ class Car {
     protected $carAttributeValues;    
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\VehicleDetailCar", mappedBy="car")
+    * @ORM\JoinColumn(name="id", referencedColumnName="car_id")
+     */
+    protected $vehicleDetailsCar;    
+    
+    /**
      * @ORM\ManyToMany(targetEntity="\Application\Entity\Goods", mappedBy="cars")
      */
     protected $goods;    
 
     public function __construct() {
-       $this->carAttributeValues = new ArrayCollection();  
+       $this->carAttributeValues = new ArrayCollection();
+       $this->vehicleDetailsCar = new ArrayCollection();
        $this->goods = new ArrayCollection();
     }    
     
@@ -259,6 +266,24 @@ class Car {
     public function addCarAttributeValue($carAttributeValue)
     {
         $this->carAttributeValues[] = $carAttributeValue;
+    }
+    
+    /*
+     * Возвращает values.
+     * @return array
+     */    
+    public function getVehicleDetailsCar() 
+    {
+        return $this->vehicleDetailsCar;
+    }
+    
+    /**
+     * 
+     * @param \Application\Entity\VehicleDetailCar $vehicleDetailCar
+     */
+    public function addVehicleDetailCar($vehicleDetailCar)
+    {
+        $this->vehicleDetailsCar[] = $vehicleDetailCar;
     }
     
     // Возвращает товары, связанные с данной машиной.
