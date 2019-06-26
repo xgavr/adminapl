@@ -14,6 +14,9 @@ use Application\Entity\Car;
 use Application\Entity\CarAttributeGroup;
 use Application\Entity\CarAttributeType;
 use Application\Entity\CarAttributeValue;
+use Application\Entity\VehicleDetail;
+use Application\Entity\VehicleDetailCar;
+use Application\Entity\VehicleDetailValue;
 use Application\Entity\Oem;
 use Application\Entity\GenericGroup;
 use Application\Entity\GoodAttributeValue;
@@ -29,7 +32,7 @@ class ExternalManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
@@ -585,6 +588,74 @@ class ExternalManager
         return;
     }
     
+    /**
+     * Добавить наименование описания машины
+     * @param string $name
+     * @return VehicleDetail
+     */
+    public function addVehicleDetail($name)
+    {
+        $vehicleDetail = $this->entityManager->getRepository(VehicleDetail::class)
+                ->findOneByName($name);
+        
+        if ($vehicleDetail == null){
+            $vehicleDetail = new VehicleDetail();
+            $vehicleDetail->setName($name);
+            $this->entityManager->persist($vehicleDetail);
+            $this->entityManager->flush($vehicleDetail);
+        }
+        
+        return $vehicleDetail;
+    }
+    
+    /**
+     * Добавить значение наименования описания машины
+     * @param string $name
+     * @return VehicleDetailValue
+     */
+    public function addVehicleDetailValue($name)
+    {
+        $vehicleDetailValue = $this->entityManager->getRepository(VehicleDetailValue::class)
+                ->findOneByName($name);
+        
+        if ($vehicleDetailValue == null){
+            $vehicleDetailValue = new VehicleDetailValue();
+            $vehicleDetailValue->setName($name);
+            $vehicleDetailValue->setTitle($name);
+            $this->entityManager->persist($vehicleDetailValue);
+            $this->entityManager->flush($vehicleDetailValue);
+        }
+        
+        return $vehicleDetailValue;
+    }
+    
+    /**
+     * Добавить описание машины
+     * @param Car $car
+     * @param array $carData
+     */
+    public function addVehicleDetailCar($car, $carData)
+    {
+        foreach ($carData as $key => $value){
+            $vehicleDetail = $this->addVehicleDetail($key);
+            $vehicleDetailValue = $this->addVehicleDetailValue($value);
+            
+            $vehicleDetailCar = $this->entityManager->getRepository(VehicleDetailCar::class)
+                    ->findOneBy(['car' => $car->getId(), 'vehicleDetail' => $vehicleDetail->getId(), 'vehicleDetailValue' => $vehicleDetailValue->getId()]);
+            
+            if ($vehicleDetailCar == null){
+                $vehicleDetailCar = new VehicleDetailCar();
+                $vehicleDetailCar->setCar($car);
+                $vehicleDetailCar->setVehicleDetail($vehicleDetail);
+                $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
+                
+                $this->entityManager->persist($vehicleDetailCar);
+                $this->entityManager->flush($vehicleDetailCar);
+            }
+        }
+        
+        return;
+    }
     
     /**
      * Обновление машин товара
