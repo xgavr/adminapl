@@ -107,8 +107,8 @@ class Make {
 
     public function getTransferName() 
     {
-        $s = array('Å', 'Ë', 'Ö');
-        $r = array('A', 'E', 'O');
+        $s = array('Å', 'Ë', 'Ö', 'Ü');
+        $r = array('A', 'E', 'O', 'U');
         $result = str_replace($s, $r, mb_strtoupper($this->name, 'utf-8'));
 
         return $result;
