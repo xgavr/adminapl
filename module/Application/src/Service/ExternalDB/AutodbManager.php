@@ -457,7 +457,7 @@ class AutodbManager
         $params = [
             'articleCountry' => 'RU',            
             'articleId' => $articleId, 
-            'linkingTargetType' => 'P',
+            'linkingTargetType' => 'M',
          ];
 
         $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
