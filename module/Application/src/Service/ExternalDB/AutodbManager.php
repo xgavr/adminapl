@@ -500,6 +500,7 @@ class AutodbManager
     public function getLinked($tdId)
     {
         $cars = $this->getArticleLinkedAllLinkingTarget3($tdId);
+        var_dump($cars); exit;
         $carIds = [];
         $i = 0;
         if (isset($cars['data'])){
