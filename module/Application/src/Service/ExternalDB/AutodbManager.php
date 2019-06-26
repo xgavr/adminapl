@@ -487,7 +487,6 @@ class AutodbManager
          ];
 
         $result = $this->getAction('getVehicleByIds3', $params);
-        var_dump($result); exit;
 
         return $result;        
     }

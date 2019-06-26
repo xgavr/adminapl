@@ -153,9 +153,9 @@ class ExternalManager
      * 
      * @param array $data
      * @param array $group
-     * @return type
+     * @return \Application\Entity\Make
      */
-    public function addMake($data, $group)
+    public function addMake($data, $group = null)
     {
         $row = [
             'td_id' => $data['tdId'],
@@ -181,9 +181,14 @@ class ExternalManager
 
             $make = $this->entityManager->getRepository(Make::class)
                     ->findOneBy(['tdId' => $data['tdId']]);
+        } else {
+            if ($data['name'] != $make->getName()){
+                $this->entityManager->getRepository(Make::class)
+                    ->updateMake($make, ['name' => $data['name']]);                
+            }
         }    
 
-        if ($make){
+        if ($make && is_array($group)){
             $this->entityManager->getRepository(Make::class)
                 ->updateMake($make, $group);
         }      
@@ -234,9 +239,9 @@ class ExternalManager
      * @param Application\Entity\Make $make
      * @param array $data
      * @param array $group
-     * @return type
+     * @return \Application\Entity\Model
      */
-    public function addModel($make, $data, $group)
+    public function addModel($make, $data, $group = null)
     {
         $row = [
             'make_id' => $make->getId(),
@@ -263,14 +268,20 @@ class ExternalManager
             }   
             $model = $this->entityManager->getRepository(Model::class)
                     ->findOneBy(['tdId' => $data['tdId']]);
-        }    
+        } else {
+            if ($data['name'] != $model->getName()){
+                $this->entityManager->getRepository(Model::class)
+                    ->updateModel($model, ['name' => $data['name']]);                
+            }
+        }   
             
 
         if ($model){
-            $this->entityManager->getRepository(Model::class)
-                ->updateModel($model, $group);
-                        
             $make->addModel($model);
+            if (is_array($group)){
+                $this->entityManager->getRepository(Model::class)
+                    ->updateModel($model, $group);
+            }    
         }      
             
 
@@ -370,23 +381,38 @@ class ExternalManager
     }
     
     /**
+     * Полное наименование машины
+     * 
+     * @param Model $model
+     * @param string name
+     * 
+     * @return string
+     */
+    public function carFullName($model, $name)
+    {
+        return $model->getMake()->getName().' '.$model->getName().' '.$name;
+    }
+    
+    /**
      * Добавить машину
      * 
-     * @param Apllication\Entity\Model $model
+     * @param \Apllication\Entity\Model $model
      * @param array $data
      * @param integer $group
      * @return Car
      */
-    public function addCar($model, $data, $group)
+    public function addCar($model, $data, $group = null)
     {
         $car = $this->entityManager->getRepository(Car::class)
                 ->findOneByTdId($data['tdId']);
+        
+        $fullName = $this->carFullName($model, $data['name']);
         
         if ($car == null){
             $car = new Car();
             $car->setAplId(0);
             $car->setName($data['name']);
-            $car->setFullName('');
+            $car->setFullName($fullName);
             $car->setStatus(Car::STATUS_ACTIVE);
             $car->setTdId($data['tdId']);
             $car->setCommerc(Car::COMMERC_NO);
@@ -397,9 +423,19 @@ class ExternalManager
 
             $this->entityManager->persist($car);
             $this->entityManager->flush();
+        } else {
+            if ($data['name'] != $car->getName()){
+                $this->entityManager->getRepository(Car::class)
+                    ->updateCar($car, ['name' => $data['name'], 'fullName' => $fullName]);                            
+            } else {
+                if ($car->getFullName() != $fullName){
+                    $this->entityManager->getRepository(Car::class)
+                        ->updateCar($car, ['fullName' => $fullName]);                                            
+                }
+            }    
         }
         
-        if ($car){
+        if ($car && $group){
             
             $this->entityManager->getRepository(Car::class)
                 ->updateCar($car, $group);            
@@ -494,7 +530,8 @@ class ExternalManager
     }
         
     /**
-     * Добавление машины к товару
+     * НЕИСПОЛЬЗУЕТСЯ
+     * Добавление машины к товару 
      * 
      * @param Application\Entity\Good $good
      * @param array $carData
@@ -545,6 +582,63 @@ class ExternalManager
                 }    
             }    
         }
+        return;
+    }
+    
+    
+    /**
+     * Обновление машин товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @param array $carData
+       
+          ["manuId"] =>              int(183)
+          ["manuName"] =>            string(7) "HYUNDAI"
+
+     *    ["modId"] =>               int(4847)
+          ["modelName"] =>           string(14) "SONATA VI (YF)"
+
+     *    ["carId"] =>               int(7325)
+          ["typeName"] =>            string(3) "2.4"
+          ["typeNumber"] =>          int(7325)
+
+     *    ["ccmTech"] =>             int(2359)
+          ["constructionType"] =>    string(10) "седан"
+          ["cylinder"] =>            int(4)
+          ["cylinderCapacityCcm"] => int(2359)
+          ["cylinderCapacityLiter"]=> int(240)
+          ["fuelType"] =>            string(12) "бензин"
+          ["fuelTypeProcess"] =>     string(45) "Непосредственный впрыск"
+          ["impulsionType"] =>       string(47) "Привод на передние колеса"
+          ["motorType"] =>           string(39) "Бензиновый двигатель"
+          ["powerHpFrom"] =>         int(178)
+          ["powerHpTo"] =>           int(178)
+          ["powerKwFrom"] =>         int(131)
+          ["powerKwTo"] =>           int(131)
+          ["valves"] =>              int(4)
+          ["yearOfConstrFrom"] =>    int(200901)
+          ["yearOfConstrTo"] =>      int(201512)
+          ["rmiTypeId"] =>          int(67586)
+     * @param bool $addFlag
+     */
+    public function updateGoodCar($good, $carData, $addFlag)
+    {
+        $make = $this->addMake(['tdId' => $carData['manuId'], 'aplId' => 0, 'name' => $carData['manuName']]);
+        if ($make){
+            $model = $this->addModel($make, ['tdId' => $carData['modId'], 'aplId' => 0, 'name' => $carData['modelName'], 'constructioninterval' => '']);
+            if ($model){
+                $car = $this->addCar($model, ['tdId' => $carData['carId'], 'aplId' => 0, 'name' => $carData['typeName']]);
+                if ($car){
+                    $goodCar = $this->entityManager->getRepository(Car::class)
+                            ->findGoodCar($good, $car);
+                    if (count($goodCar) == 0){
+                        $this->entityManager->getRepository(Goods::class)
+                                ->addGoodCar($good, $car);
+                    }    
+                }                    
+            }
+        }      
+        
         return;
     }
     
