@@ -457,7 +457,7 @@ class AutodbManager
         $params = [
             'articleCountry' => 'RU',            
             'articleId' => $articleId, 
-            'linkingTargetType' => 'M',
+            'linkingTargetType' => 'P',
          ];
 
         $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
@@ -487,6 +487,7 @@ class AutodbManager
          ];
 
         $result = $this->getAction('getVehicleByIds3', $params);
+        var_dump($result); exit;
 
         return $result;        
     }
@@ -500,7 +501,6 @@ class AutodbManager
     public function getLinked($tdId)
     {
         $cars = $this->getArticleLinkedAllLinkingTarget3($tdId);
-        var_dump($cars); exit;
         $carIds = [];
         $i = 0;
         if (isset($cars['data'])){
