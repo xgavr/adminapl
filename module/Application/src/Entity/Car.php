@@ -81,6 +81,11 @@ class Car {
     protected $moto;
         
     /**
+     * @ORM\Column(name="update_flag")  
+     */
+    protected $updateFlag;
+        
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Model", inversedBy="model") 
      * @ORM\JoinColumn(name="model_id", referencedColumnName="id")
      * 
@@ -188,6 +193,16 @@ class Car {
     public function setMoto($moto) 
     {
         $this->moto = $moto;
+    }     
+    
+    public function getUpdateFlag() 
+    {
+        return $this->updateFlag;
+    }
+
+    public function setUpdateFlag($updateFlag) 
+    {
+        $this->updateFlag = $updateFlag;
     }     
     
     

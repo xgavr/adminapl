@@ -421,6 +421,7 @@ class ExternalManager
             $car->setCommerc(Car::COMMERC_NO);
             $car->setMoto(Car::MOTO_NO);
             $car->setPassenger(Car::PASSENGER_NO); 
+            $car->setUpdateFlag(0);
             
             $car->setModel($model);
 
@@ -602,7 +603,6 @@ class ExternalManager
             $vehicleDetail = new VehicleDetail();
             $vehicleDetail->setName($name);
             $this->entityManager->persist($vehicleDetail);
-            $this->entityManager->flush($vehicleDetail);
         }
         
         return $vehicleDetail;
@@ -623,7 +623,6 @@ class ExternalManager
             $vehicleDetailValue->setName($name);
             $vehicleDetailValue->setTitle($name);
             $this->entityManager->persist($vehicleDetailValue);
-            $this->entityManager->flush($vehicleDetailValue);
         }
         
         return $vehicleDetailValue;
@@ -632,33 +631,60 @@ class ExternalManager
     /**
      * Добавить описание машины
      * @param Car $car
+     * @param string $key
+     * @param string $value
+     */
+    public function addVehicleDetailCarKeyValue($car, $key, $value)
+    {
+        $vehicleDetail = $this->addVehicleDetail($key);
+        $vehicleDetailValue = $this->addVehicleDetailValue($value);
+
+        $vehicleDetailCar = $this->entityManager->getRepository(VehicleDetailCar::class)
+                ->findOneBy(['car' => $car->getId(), 'vehicleDetail' => $vehicleDetail->getId()]);
+
+        if ($vehicleDetailCar == null){
+            $vehicleDetailCar = new VehicleDetailCar();
+            $vehicleDetailCar->setCar($car);
+            $vehicleDetailCar->setVehicleDetail($vehicleDetail);
+            $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
+
+            $this->entityManager->persist($vehicleDetailCar);
+        } else {
+            if ($vehicleDetailCar->getVehicleDetailValue()->getId() != $vehicleDetailValue->getId()){
+                $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
+                $this->entityManager->persist($vehicleDetailCar);
+            }
+        }
+        
+        return;
+    }
+    
+    /**
+     * Добавить описания машины
+     * @param Car $car
      * @param array $carData
      */
     public function addVehicleDetailCar($car, $carData)
     {
-        foreach ($carData as $key => $value){
-            $vehicleDetail = $this->addVehicleDetail($key);
-            $vehicleDetailValue = $this->addVehicleDetailValue($value);
+        if ($car->getUpdateFlag() != date('n')){
             
-            $vehicleDetailCar = $this->entityManager->getRepository(VehicleDetailCar::class)
-                    ->findOneBy(['car' => $car->getId(), 'vehicleDetail' => $vehicleDetail->getId()]);
-            
-            if ($vehicleDetailCar == null){
-                $vehicleDetailCar = new VehicleDetailCar();
-                $vehicleDetailCar->setCar($car);
-                $vehicleDetailCar->setVehicleDetail($vehicleDetail);
-                $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
-                
-                $this->entityManager->persist($vehicleDetailCar);
-                $this->entityManager->flush($vehicleDetailCar);
-            } else {
-                if ($vehicleDetailCar->getVehicleDetailValue()->getId() != $vehicleDetailValue->getId()){
-                    $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
-                    $this->entityManager->persist($vehicleDetailCar);
-                    $this->entityManager->flush($vehicleDetailCar);
+            foreach ($carData as $key => $value){
+                $this->addVehicleDetailCarKeyValue($car, $key, $value);
+            }
+
+            $pcon = '';
+            if (!empty($carData['yearOfConstrFrom'])){
+                $pcon = substr($carData['yearOfConstrFrom'], -2).'.'.substr($carData['yearOfConstrFrom'], 0, 4).'-';
+                if (!empty($carData['yearOfConstrTo'])){
+                    $pcon .= substr($carData['yearOfConstrTo'], -2).'.'.substr($carData['yearOfConstrTo'], 0, 4);
                 }
             }
-        }
+            $this->addVehicleDetailCarKeyValue($car, 'PCON', $pcon);
+
+            $car->setUpdateFlag(date('n'));
+            $this->entityManager->persist($car);
+            $this->entityManager->flush();
+        }    
         
         return;
     }
@@ -706,6 +732,7 @@ class ExternalManager
             if ($model){
                 $car = $this->addCar($model, ['tdId' => $carData['carId'], 'aplId' => 0, 'name' => $carData['typeName']]);
                 if ($car){
+                    $this->addVehicleDetailCar($car, $carData);
                     $goodCar = $this->entityManager->getRepository(Car::class)
                             ->findGoodCar($good, $car);
                     if (count($goodCar) == 0){
@@ -741,7 +768,8 @@ class ExternalManager
                         if (isset($carsData['data']['array'])){
                             foreach ($carsData['data']['array'] as $carData){
                                 if (isset($carData['vehicleDetails'])){
-                                    $this->addCarToGood($good, $carData['vehicleDetails'], $addFlag);
+//                                    $this->addCarToGood($good, $carData['vehicleDetails'], $addFlag);
+                                    $this->updateGoodCar($good, $carData['vehicleDetails'], $addFlag);
                                 }    
                             }
                         }
