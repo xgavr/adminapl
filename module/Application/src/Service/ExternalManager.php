@@ -603,6 +603,7 @@ class ExternalManager
             $vehicleDetail = new VehicleDetail();
             $vehicleDetail->setName($name);
             $this->entityManager->persist($vehicleDetail);
+            $this->entityManager->flush($vehicleDetail);
         }
         
         return $vehicleDetail;
@@ -623,6 +624,7 @@ class ExternalManager
             $vehicleDetailValue->setName($name);
             $vehicleDetailValue->setTitle($name);
             $this->entityManager->persist($vehicleDetailValue);
+            $this->entityManager->flush($vehicleDetailValue);
         }
         
         return $vehicleDetailValue;
@@ -649,10 +651,12 @@ class ExternalManager
             $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
 
             $this->entityManager->persist($vehicleDetailCar);
+            $this->entityManager->flush($vehicleDetailCar);
         } else {
             if ($vehicleDetailCar->getVehicleDetailValue()->getId() != $vehicleDetailValue->getId()){
                 $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
                 $this->entityManager->persist($vehicleDetailCar);
+                $this->entityManager->flush($vehicleDetailCar);
             }
         }
         
