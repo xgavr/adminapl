@@ -61,10 +61,14 @@ class VehicleDetailCar {
         return $this->car;
     }
     
+    /**
+     * 
+     * @param \Application\Entity\Car $car
+     */
     public function setCar($car)
     {
         $this->car = $car;
-        $car->addCarAttributeValue($this);
+        $car->addVehicleDetailCar($this);
     }
 
     /*
