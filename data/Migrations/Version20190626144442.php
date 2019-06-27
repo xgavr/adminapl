@@ -18,6 +18,7 @@ final class Version20190626144442 extends AbstractMigration
         $table->addColumn('name', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('name_apl', 'string', ['length' => 32, 'notnull' => false]);
         $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['name'], 'name_uindx');
         $table->addOption('engine' , 'InnoDB');
         
         $table = $schema->createTable('vehicle_detail_value');
@@ -26,6 +27,7 @@ final class Version20190626144442 extends AbstractMigration
         $table->addColumn('title', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('name_apl', 'string', ['length' => 128, 'notnull' => false]);
         $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['name'], 'name_uindx');
         $table->addOption('engine' , 'InnoDB');
         
         $table = $schema->createTable('vehicle_detail_car');
@@ -34,6 +36,7 @@ final class Version20190626144442 extends AbstractMigration
         $table->addColumn('vehicle_detail_id', 'integer', ['notnull'=>true]);
         $table->addColumn('vehicle_detail_value_id', 'integer', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['car_id', 'vehicle_detail_id'], 'car_vehicle_detail_uindx');
         $table->addForeignKeyConstraint('car', ['car_id'], ['id'], 
                 ['onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE'], 'car_id_car_vehicle_detail_car_id_fk');
         $table->addForeignKeyConstraint('vehicle_detail', ['vehicle_detail_id'], ['id'], 

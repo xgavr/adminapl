@@ -641,7 +641,7 @@ class ExternalManager
             $vehicleDetailValue = $this->addVehicleDetailValue($value);
             
             $vehicleDetailCar = $this->entityManager->getRepository(VehicleDetailCar::class)
-                    ->findOneBy(['car' => $car->getId(), 'vehicleDetail' => $vehicleDetail->getId(), 'vehicleDetailValue' => $vehicleDetailValue->getId()]);
+                    ->findOneBy(['car' => $car->getId(), 'vehicleDetail' => $vehicleDetail->getId()]);
             
             if ($vehicleDetailCar == null){
                 $vehicleDetailCar = new VehicleDetailCar();
@@ -651,6 +651,12 @@ class ExternalManager
                 
                 $this->entityManager->persist($vehicleDetailCar);
                 $this->entityManager->flush($vehicleDetailCar);
+            } else {
+                if ($vehicleDetailCar->getVehicleDetailValue()->getId() != $vehicleDetailValue->getId()){
+                    $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
+                    $this->entityManager->persist($vehicleDetailCar);
+                    $this->entityManager->flush($vehicleDetailCar);
+                }
             }
         }
         

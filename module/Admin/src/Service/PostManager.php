@@ -397,6 +397,8 @@ class PostManager {
      */
     public function readImap($params)
     {
+        ini_set('memory_limit', '512M');
+        
         $result = [];
         $imap_obj = $connection = null;
         
