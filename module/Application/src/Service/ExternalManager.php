@@ -697,6 +697,7 @@ class ExternalManager
      * Обновление машин товара
      * 
      * @param \Application\Entity\Goods $good
+     * @param Model $model
      * @param array $carData
        
           ["manuId"] =>              int(183)
@@ -728,24 +729,20 @@ class ExternalManager
           ["rmiTypeId"] =>          int(67586)
      * @param bool $addFlag
      */
-    public function updateGoodCar($good, $carData, $addFlag)
+    public function updateGoodCar($good, $model, $carData, $addFlag)
     {
-        $make = $this->addMake(['tdId' => $carData['manuId'], 'aplId' => 0, 'name' => $carData['manuName']]);
-        if ($make){
-            $model = $this->addModel($make, ['tdId' => $carData['modId'], 'aplId' => 0, 'name' => $carData['modelName'], 'constructioninterval' => '']);
-            if ($model){
-                $car = $this->addCar($model, ['tdId' => $carData['carId'], 'aplId' => 0, 'name' => $carData['typeName']]);
-                if ($car){
-                    $this->addVehicleDetailCar($car, $carData);
-                    $goodCar = $this->entityManager->getRepository(Car::class)
-                            ->findGoodCar($good, $car);
-                    if (count($goodCar) == 0){
-                        $this->entityManager->getRepository(Goods::class)
-                                ->addGoodCar($good, $car);
-                    }    
-                }                    
-            }
-        }      
+        if ($model){
+            $car = $this->addCar($model, ['tdId' => $carData['carId'], 'aplId' => 0, 'name' => $carData['typeName']]);
+            if ($car){
+                $this->addVehicleDetailCar($car, $carData);
+                $goodCar = $this->entityManager->getRepository(Car::class)
+                        ->findGoodCar($good, $car);
+                if (count($goodCar) == 0){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->addGoodCar($good, $car);
+                }    
+            }                    
+        }
         
         return;
     }
@@ -757,6 +754,8 @@ class ExternalManager
      */
     public function addCarsToGood($good)
     {
+        ini_set('memory_limit', '512M');
+        
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
     
         $this->entityManager->getRepository(Goods::class)
@@ -767,13 +766,32 @@ class ExternalManager
             $carsDataI = $this->autoDbManager->getLinked($tdId);
             if (is_array($carsDataI)){
                 $addFlag = count($carsDataI)<=10;
+                $makes = [];
+                $models = [];
                 foreach ($carsDataI as $carsData){
                     if (isset($carsData['data'])){
                         if (isset($carsData['data']['array'])){
                             foreach ($carsData['data']['array'] as $carData){
                                 if (isset($carData['vehicleDetails'])){
-//                                    $this->addCarToGood($good, $carData['vehicleDetails'], $addFlag);
-                                    $this->updateGoodCar($good, $carData['vehicleDetails'], $addFlag);
+                                    $vehicleDetails = $carData['vehicleDetails'];
+                                    if (!isset($makes[$vehicleDetails['manuId']])){
+                                        $makes[$vehicleDetails['manuId']] = $this->addMake([
+                                            'tdId' => $vehicleDetails['manuId'], 
+                                            'aplId' => 0, 
+                                            'name' => $vehicleDetails['manuName']
+                                        ]);
+                                    }
+                                    if (!isset($models[$vehicleDetails['modId']])){
+                                        $models[$vehicleDetails['modId']] = $this->addModel(
+                                                $makes[$vehicleDetails['manuId']],[
+                                                    'tdId' => $vehicleDetails['modId'], 
+                                                    'aplId' => 0, 
+                                                    'name' => $vehicleDetails['modelName'],
+                                                    'constructioninterval' => '',
+                                                ]);
+                                    }
+                                    
+                                    $this->updateGoodCar($good, $$vehicleDetails['modId'], $vehicleDetails, $addFlag);
                                 }    
                             }
                         }
@@ -782,6 +800,9 @@ class ExternalManager
             }
         }  
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+        unset($makes);
+        unset($models);
+        unset($carsDataI);
         return;
     }
         
