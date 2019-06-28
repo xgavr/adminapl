@@ -14,7 +14,7 @@ $this->pageBreadcrumbs()->setItems([
 ?>
 
 <h1>
-    <?= $car->getName();?>
+    <?= $car->getFullName();?>
     <sup>
         <?= $car->getTdId();?>
     </sup>
@@ -48,6 +48,19 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
                 <td colspan="4">
                     <?= $carAttributeValue->getValue()?>
+                </td>
+            </tr>
+            <?php endforeach;?>
+            <?php foreach($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
+            <tr>
+                <td>
+                    <?= $vehicleDetailCar->getVehicleDetail()->getName()?>
+                </td>
+                <td colspan="2">
+                    <?= $vehicleDetailCar->getVehicleDetailValue()->getName()?>
+                </td>
+                <td colspan="3">
+                    <?= $vehicleDetailCar->getVehicleDetailValue()->getTitle()?>
                 </td>
             </tr>
             <?php endforeach;?>
