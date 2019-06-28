@@ -148,7 +148,7 @@ class Model {
     {
         if ($this->constructionFrom < self::COSTRUCTION_MAX_PERIOD){
             $result = substr($this->constructionFrom, -2).'.'.substr($this->constructionFrom, 0, 4).'-';
-            if ($this->constructionTo < date('Ym')){
+            if ($this->constructionTo <= date('Ym')){
                 $result .= substr($this->constructionTo, -2).'.'.substr($this->constructionTo, 0, 4);
             }
             return $result;
