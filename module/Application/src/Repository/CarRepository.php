@@ -339,4 +339,21 @@ class CarRepository extends EntityRepository
         
         return $queryBuilder->getQuery();
     }
+    
+    /**
+     * Выборка аттрибутов
+     * 
+     * @return qyery
+     */
+    public function findVehicleDetails()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('vd')
+            ->from(\Application\Entity\VehicleDetail::class, 'vd')
+            ;
+        
+        return $queryBuilder->getQuery();
+    }
+    
 }

@@ -40,7 +40,7 @@ $this->headScript()
         <table id="table" 
             data-toggle="table" 
             data-id-field="id"
-            data-url="/car/attribute-types-content"
+            data-url="/car/vehicle-detail-content"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -105,7 +105,7 @@ $this->headScript()
     
     function editableFormatter(value, row){
         return [
-            '<a href="#" class="nameAplEdit" data-type="text" data-pk="'+row.id+'" data-name="nameApl" data-url="/car/attribute-edit">' + value + '</a>'
+            '<a href="#" class="nameAplEdit" data-type="text" data-pk="'+row.id+'" data-name="nameApl" data-url="/car/vehicle-detail-edit">' + value + '</a>'
         ].join(''); 
     }    
         

@@ -66,4 +66,21 @@ class CarManager
         }
         return;
     }
+
+        /**
+     * Обновить атрибут
+     * 
+     * @param \Application\Entity\VehicleDetail $attribute
+     * @param array $data
+     */
+    public function updateVehicleDetail($attribute, $data)
+    {
+        if (is_array($data)){
+            $attribute->setNameApl($data['value']);
+            $this->entityManager->persist($attribute);
+            $this->entityManager->flush();
+        }
+        return;
+    }
+
 }

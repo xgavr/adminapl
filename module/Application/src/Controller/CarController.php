@@ -298,4 +298,48 @@ class CarController extends AbstractActionController
         
         exit;
     }
+
+    public function vehicleDetailContentAction()
+    {
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+
+        $query = $this->entityManager->getRepository(\Application\Entity\VehicleDetail::class)
+                        ->findVehicleDetails();
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+        
+    }
+    
+    public function vehicleDetailEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $attributeId = $data['pk'];
+            $attribute = $this->entityManager->getRepository(\Application\Entity\VehicleDetail::class)
+                    ->findOneById($attributeId);
+                    
+            if ($attribute){
+                $this->carManager->updateVehicleDetail($attribute, $data);
+            }    
+        }
+        
+        exit;
+    }
+
 }
