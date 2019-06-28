@@ -791,7 +791,7 @@ class ExternalManager
                                                 ]);
                                     }
                                     
-                                    $this->updateGoodCar($good, $$vehicleDetails['modId'], $vehicleDetails, $addFlag);
+                                    $this->updateGoodCar($good, $vehicleDetails['modId'], $vehicleDetails, $addFlag);
                                 }    
                             }
                         }
