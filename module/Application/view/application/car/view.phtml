@@ -1,5 +1,5 @@
 <?php
-$this->headTitle($car->getName());
+$this->headTitle($car->getFullName());
 
 $this->mainMenu()->setActiveItemId('rb');
 
@@ -38,19 +38,6 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endif;?>                            
                 </td>
             </tr>
-            <?php foreach($car->getCarAtributeValues() as $carAttributeValue):?>
-            <tr>
-                <td>
-                    <?= $carAttributeValue->getCarAtributeType()->getCarAtributeGroup()->getName()?>
-                </td>
-                <td>
-                    <?= $carAttributeValue->getCarAtributeType()->getTitle()?>
-                </td>
-                <td colspan="4">
-                    <?= $carAttributeValue->getValue()?>
-                </td>
-            </tr>
-            <?php endforeach;?>
             <?php foreach($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
             <tr>
                 <td>
