@@ -599,25 +599,25 @@ $this->headScript()
     }    
     
     function carFormatter(value, row) {
-        return '<a href="/car/view/'+row.id+'" target="_blanc">'+value+'</a>';
+        return '<a href="/car/view/'+row.id+'" target="_blank">'+value+'</a>';
     }    
     
     function goodnameFormatter(value, row) {
-        return '<a href="/rawprice/view/'+row.id+'" target="_blanc">'+value+'</a>';
+        return '<a href="/rawprice/view/'+row.id+'" target="_blank">'+value+'</a>';
     }    
     
     function producerFormatter(value, row) {
-        return '<a href="/producer/unknown-view/'+row.producerId+'" target="_blanc">'+value+'</a>';
+        return '<a href="/producer/unknown-view/'+row.producerId+'" target="_blank">'+value+'</a>';
     }    
     
     function codeFormatter(value, row) {
-        return '<a href="/producer/article-view/'+row.codeId+'" target="_blanc">'+value+'</a> ' + producerFormatter(row.producer, row);
+        return '<a href="/producer/article-view/'+row.codeId+'" target="_blank">'+value+'</a> ' + producerFormatter(row.producer, row);
     }    
     
     function supplierFormatter(value, row) {
         var priceDate = new Date(row.dateCreated);
         var priceDateStr = priceDate.getDate()+'-'+ (priceDate.getMonth()+1) + ' ' + priceDate.getHours() + ':' + priceDate.getMinutes();
-        return '<a href="/supplier/view/'+row.supplierId+'" target="_blanc">'+value+'</a>' + '<br/>' + priceDateStr ;
+        return '<a href="/supplier/view/'+row.supplierId+'" target="_blank">'+value+'</a>' + '<br/>' + priceDateStr ;
     }    
     
     function inSigma(data){
