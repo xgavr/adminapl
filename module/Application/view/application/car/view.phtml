@@ -11,6 +11,12 @@ $this->pageBreadcrumbs()->setItems([
             $car->getName()=>$this->url('car', ['action'=>'view', 'id'=>$car->getId()])
             ]);
 
+$this->headLink()
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
+        ;
+$this->headScript()
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
+            ;    
 ?>
 
 <h1>
@@ -50,7 +56,13 @@ $this->pageBreadcrumbs()->setItems([
                     <?= $vehicleDetailCar->getVehicleDetailValue()->getName()?>
                 </td>
                 <td colspan="2">
-                    <?= $vehicleDetailCar->getVehicleDetailValue()->getTitle()?>
+                    <a href="#" 
+                       class="nameAplEdit" data-type="text" 
+                       data-pk="<?= $vehicleDetailCar->getVehicleDetailValue()->getId()?>" 
+                       data-name="nameApl" 
+                       data-url="/car/vehicle-detail-value-edit">
+                        <?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl()?>
+                    </a>                                        
                 </td>
             </tr>
             <?php endforeach;?>

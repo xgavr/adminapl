@@ -342,4 +342,21 @@ class CarController extends AbstractActionController
         exit;
     }
 
+    public function vehicleDetailValueEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $valueId = $data['pk'];
+            $value = $this->entityManager->getRepository(\Application\Entity\VehicleDetailValue::class)
+                    ->findOneById($valueId);
+                    
+            if ($value){
+                $this->carManager->updateVehicleDetailValue($value, $data);
+            }    
+        }
+        
+        exit;
+    }
+
 }
