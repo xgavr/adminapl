@@ -836,7 +836,7 @@ class AplService {
                     'publish' => 1,
                     'name' => urlencode($car->getName()),
                     'comment' => urlencode($car->getFullName()),
-                    'desc' => Json::decode($desc),
+                    'desc' => Json::encode($desc),
                     'sf' => $sf,
                 ]);
 
