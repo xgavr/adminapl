@@ -245,7 +245,7 @@ class AplController extends AbstractActionController
         $car = $this->entityManager->getRepository(\Application\Entity\Car::class)
                 ->findOneById($carId);  
         	
-        if ($model == null) {
+        if ($car == null) {
             $this->getResponse()->setStatusCode(401);
             return;                        
         } 
