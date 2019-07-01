@@ -18,6 +18,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Daddy
  */
 class VehicleDetail {
+    
+    const CANNOT_VALUE_EDIT = 2; //нельзя редактировать занчения
+    const CAN_VALUE_EDIT = 1; //vj;yj редактировать занчения
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -36,13 +40,18 @@ class VehicleDetail {
     protected $nameApl;
         
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\VehicleDetailCar", mappedBy="vehicleDetail")
+     * @ORM\Column(name="status_edit")   
+     */
+    protected $statusEdit;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\VehicleDetailValue", mappedBy="vehicleDetail")
     * @ORM\JoinColumn(name="id", referencedColumnName="vehicle_detail_id")
      */    
-    protected $vehicleDetailsCar;    
+    protected $vehicleDetailValues;    
 
     public function __construct() {
-       $this->vehicleDetailsCar = new ArrayCollection();      
+       $this->vehicleDetailValues = new ArrayCollection();      
     }    
     
     public function getId() 
@@ -70,6 +79,16 @@ class VehicleDetail {
         return $this->nameApl;
     }
 
+    public function setStatusEdit($statusEdit) 
+    {
+        $this->statusEdit = $statusEdit;
+    }     
+
+    public function getStatusEdit() 
+    {
+        return $this->statusEdit;
+    }
+
     public function setNameApl($nameApl) 
     {
         $this->nameApl = $nameApl;
@@ -79,14 +98,14 @@ class VehicleDetail {
      * Возвращает values.
      * @return array
      */    
-    public function getVehicleDetailsCar() 
+    public function getVehicleDetailValues() 
     {
-        return $this->vehicleDetailsCar;
+        return $this->vehicleDetailValues;
     }
     
-    public function addVehicleDetailCar($vehicleDetailsCar)
+    public function addVehicleDetailValue($vehicleDetailValue)
     {
-        $this->vehicleDetailsCar[] = $vehicleDetailsCar;
+        $this->vehicleDetailValues[] = $vehicleDetailValue;
     }
 
 

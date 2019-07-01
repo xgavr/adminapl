@@ -31,12 +31,6 @@ class VehicleDetailCar {
     protected $car;
     
     /**
-    * @ORM\ManyToOne(targetEntity="Application\Entity\VehicleDetail", inversedBy="vehicleDetailsCar")
-    * @ORM\JoinColumn(name="vehicle_detail_id", referencedColumnName="id")
-     */
-    protected $vehicleDetail;
-
-    /**
     * @ORM\ManyToOne(targetEntity="Application\Entity\VehicleDetailValue", inversedBy="vehicleDetailsCar")
     * @ORM\JoinColumn(name="vehicle_detail_value_id", referencedColumnName="id")
      */
@@ -69,25 +63,6 @@ class VehicleDetailCar {
     {
         $this->car = $car;
         $car->addVehicleDetailCar($this);
-    }
-
-    /*
-     * Возвращает type.
-     * @return array
-     */    
-    public function getVehicleDetail() 
-    {
-        return $this->vehicleDetail;
-    }
-    
-    /**
-     * 
-     * @param \Application\Entity\VehicleDetail $vehicleDetail
-     */
-    public function setVehicleDetail($vehicleDetail)
-    {
-        $this->vehicleDetail = $vehicleDetail;
-        $vehicleDetail->addVehicleDetailCar($this);
     }
 
     /*

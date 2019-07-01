@@ -602,6 +602,7 @@ class ExternalManager
         if ($vehicleDetail == null){
             $vehicleDetail = new VehicleDetail();
             $vehicleDetail->setName($name);
+            $vehicleDetail->setStatusEdit(VehicleDetail::CANNOT_VALUE_EDIT);
             $this->entityManager->persist($vehicleDetail);
             $this->entityManager->flush($vehicleDetail);
         }
@@ -611,18 +612,21 @@ class ExternalManager
     
     /**
      * Добавить значение наименования описания машины
+     * 
+     * @param VehicleDetail $vehicleDetail
      * @param string $name
      * @return VehicleDetailValue
      */
-    public function addVehicleDetailValue($name)
+    public function addVehicleDetailValue($vehicleDetail, $name)
     {
         $vehicleDetailValue = $this->entityManager->getRepository(VehicleDetailValue::class)
-                ->findOneByName($name);
+                ->findOneBy(['vehicleDetail' => $vehicleDetail->getId(), 'name' => $name]);
         
         if ($vehicleDetailValue == null){
             $vehicleDetailValue = new VehicleDetailValue();
             $vehicleDetailValue->setName($name);
-            $vehicleDetailValue->setTitle($name);
+            $vehicleDetailValue->setVehicleDetail($vehicleDetail);
+            
             $this->entityManager->persist($vehicleDetailValue);
             $this->entityManager->flush($vehicleDetailValue);
         }
@@ -639,27 +643,21 @@ class ExternalManager
     public function addVehicleDetailCarKeyValue($car, $key, $value)
     {
         $vehicleDetail = $this->addVehicleDetail($key);
-        $vehicleDetailValue = $this->addVehicleDetailValue($value);
+        if ($vehicleDetail){
+            $vehicleDetailValue = $this->addVehicleDetailValue($vehicleDetail, $value);
 
-        $vehicleDetailCar = $this->entityManager->getRepository(VehicleDetailCar::class)
-                ->findOneBy(['car' => $car->getId(), 'vehicleDetail' => $vehicleDetail->getId()]);
+            $vehicleDetailCar = $this->entityManager->getRepository(VehicleDetailCar::class)
+                    ->findOneBy(['car' => $car->getId(), 'vehicleDetailValue' => $vehicleDetailValue->getId()]);
 
-        if ($vehicleDetailCar == null){
-            $vehicleDetailCar = new VehicleDetailCar();
-            $vehicleDetailCar->setCar($car);
-            $vehicleDetailCar->setVehicleDetail($vehicleDetail);
-            $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
-
-            $this->entityManager->persist($vehicleDetailCar);
-            $this->entityManager->flush($vehicleDetailCar);
-        } else {
-            if ($vehicleDetailCar->getVehicleDetailValue()->getId() != $vehicleDetailValue->getId()){
+            if ($vehicleDetailCar == null){
+                $vehicleDetailCar = new VehicleDetailCar();
+                $vehicleDetailCar->setCar($car);
                 $vehicleDetailCar->setVehicleDetailValue($vehicleDetailValue);
+
                 $this->entityManager->persist($vehicleDetailCar);
                 $this->entityManager->flush($vehicleDetailCar);
             }
-        }
-        
+        }    
         return;
     }
     

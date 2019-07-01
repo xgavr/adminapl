@@ -31,15 +31,16 @@ class VehicleDetailValue {
     protected $name;
     
     /**
-     * @ORM\Column(name="title")   
-     */
-    protected $title;
-
-    /**
      * @ORM\Column(name="name_apl")   
      */
     protected $nameApl;
         
+    /**
+    * @ORM\ManyToOne(targetEntity="Application\Entity\VehicleDetail", inversedBy="vehicleDetailValues")
+    * @ORM\JoinColumn(name="vehicle_detail_id", referencedColumnName="id")
+     */
+    protected $vehicleDetail;
+    
     /**
     * @ORM\OneToMany(targetEntity="Application\Entity\VehicleDetailCar", mappedBy="vehicleDetailValue")
     * @ORM\JoinColumn(name="id", referencedColumnName="vehicle_detail_value_id")
@@ -70,20 +71,10 @@ class VehicleDetailValue {
         $this->name = $name;
     }     
 
-    public function getTitle() 
-    {
-        return $this->title;
-    }
-
-    public function setTitle($title) 
-    {
-        $this->title = $title;
-    }     
-
     public function getNameApl() 
     {
         if (empty($this->nameApl)){
-            return $this->getTitle();
+            return $this->getName();
         }
         return $this->nameApl;
     }
@@ -93,6 +84,26 @@ class VehicleDetailValue {
         $this->nameApl = $nameApl;
     }     
 
+    /*
+     * Возвращает type.
+     * @return array
+     */    
+    public function getVehicleDetail() 
+    {
+        return $this->vehicleDetail;
+    }
+    
+    /**
+     * 
+     * @param \Application\Entity\VehicleDetail $vehicleDetail
+     */
+    public function setVehicleDetail($vehicleDetail)
+    {
+        $this->vehicleDetail = $vehicleDetail;
+        $vehicleDetail->addVehicleDetailValue($this);
+    }
+
+    
     /*
      * Возвращает values.
      * @return array
