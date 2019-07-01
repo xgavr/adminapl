@@ -68,8 +68,8 @@ $this->pageBreadcrumbs()->setItems([
                             <div>
                                 <small>
                                    <?php foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
-                                        <?php if ($vehicleDetailCar->getVehicleDetail()->getNameApl()):?>
-                                            <span><?= $vehicleDetailCar->getVehicleDetail()->getNameApl(); ?></span>: 
+                                        <?php if ($vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl()):?>
+                                            <span><?= $vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl(); ?></span>: 
                                             <span><?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl(); ?></span>; 
                                         <?php endif;?>
                                     <?php endforeach;?>

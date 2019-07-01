@@ -107,9 +107,9 @@ final class Version20190701130400 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-//        $schema->dropTable('vehicle_detail');
-//        $schema->dropTable('vehicle_detail_value');
-//        $schema->dropTable('vehicle_detail_car');
+        $schema->dropTable('vehicle_detail');
+        $schema->dropTable('vehicle_detail_value');
+        $schema->dropTable('vehicle_detail_car');
 
 //        $table = $schema->createTable('vehicle_detail');
 //        $table->addColumn('id', 'integer', ['autoincrement'=>true]);

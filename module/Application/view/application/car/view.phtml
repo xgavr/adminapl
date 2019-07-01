@@ -47,16 +47,16 @@ $this->headScript()
             <?php foreach($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
             <tr>
                 <td>
-                    <?= $vehicleDetailCar->getVehicleDetail()->getName()?>
+                    <?= $vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getName()?>
                 </td>
                 <td>
-                    <?= $vehicleDetailCar->getVehicleDetail()->getNameApl()?>
+                    <?= $vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl()?>
                 </td>
                 <td colspan="2">
                     <?= $vehicleDetailCar->getVehicleDetailValue()->getName()?>
                 </td>
                 <td colspan="2">
-                    <?php if (empty($vehicleDetailCar->getVehicleDetail()->getNameApl())):?>
+                    <?php if (empty($vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl())):?>
                         <?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl()?>
                     <?php else: ?>
                         <a href="#" 
