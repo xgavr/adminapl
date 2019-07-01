@@ -67,17 +67,10 @@ $this->pageBreadcrumbs()->setItems([
                         <td colspan="6">
                             <div>
                                 <small>
-                                   <?php foreach ($car->getCarAtributeValues() as $carAttributeValue):?>
-                                    <span><?= $carAttributeValue->getValue(); ?></span>
-                                    <?php endforeach;?>
-                                </small>                                
-                            </div>
-                            <div>
-                                <small>
                                    <?php foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
                                         <?php if ($vehicleDetailCar->getVehicleDetail()->getNameApl()):?>
                                             <span><?= $vehicleDetailCar->getVehicleDetail()->getNameApl(); ?></span>: 
-                                            <span><?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl(); ?></span>
+                                            <span><?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl(); ?></span>; 
                                         <?php endif;?>
                                     <?php endforeach;?>
                                 </small>                                
