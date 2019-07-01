@@ -237,6 +237,26 @@ class AplController extends AbstractActionController
         ]);
     }
 
+    public function carAplIdAction()
+    {
+        $carId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $car = $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->findOneById($carId);  
+        	
+        if ($model == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->getCarAplId($car);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
     public function updateAcquiringAction()
     {
         

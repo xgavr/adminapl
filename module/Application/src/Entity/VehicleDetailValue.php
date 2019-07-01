@@ -83,7 +83,7 @@ class VehicleDetailValue {
     public function getNameApl() 
     {
         if (empty($this->nameApl)){
-            return $this->title;
+            return $this->getTitle();
         }
         return $this->nameApl;
     }

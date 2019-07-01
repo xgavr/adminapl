@@ -814,45 +814,47 @@ class AplService {
 
             $url = $this->aplApi().'get-model-id?api='.$this->aplApiKey();
             
-            $post = [];
-            
-            foreach ($car->getCarAtributeValues() as $carAttributeValue){
-                
+            $desc = [];
+            $sf = 0;
+            foreach ($car->getVhicleDetailsCar() as $vehicleDetailCar){
+                if ($vehicleDetailCar->getVehicleDeatail()->getNameApl()){
+                    $desc[$vehicleDetailCar->getVehicleDeatail()->getNameApl()] = $vehicleDetailCar->getVehicleDeatailValue()->getNameApl();
+                }
+                if ($vehicleDetailCar->getVehicleDeatail()->getName() == 'yearOfConstrFrom'){
+                   $sf = $vehicleDetailCar->getVehicleDeatailValue()->getNameApl(); 
+                }
             }
             
-            $sf = '';
-            $intervals = explode('-', $car->get());
-            if (!empty(trim($intervals[0]))){
-                $ym = explode('.', trim($intervals[0]));
-                $sf = $ym[1].$ym[0];
-            }
-//            var_dump($sf); exit;
-            
-            $client = new Client();
-            $client->setUri($url);
-            $client->setMethod('POST');
-            $client->setParameterPost([
-                'parent' => $model->getMake()->getAplId(),
-                'type' => $model->getTdId(),
-                'name' => urlencode($model->getName()),
-                'desc' => $model->getInterval(),
-                'sf' => $sf,
-            ]);
+            if (count($desc)){
+                $client = new Client();
+                $client->setUri($url);
+                $client->setMethod('POST');
+                $client->setParameterPost([
+                    'parent' => $car->getModel()->getAplId(),
+                    'type' => $car->getTdId(),
+                    'sort' => $car->getTdId(),
+                    'publish' => 1,
+                    'name' => urlencode($car->getName()),
+                    'comment' => urlencode($car->getFullName()),
+                    'desc' => Json::decode($desc),
+                    'sf' => $sf,
+                ]);
 
-            $response = $client->send();
-//            var_dump($response->getBody()); exit;
-            try {
-                if (is_numeric($response->getBody())){
-//                        var_dump($response);
-                    $car->setAplId($response->getBody());
-                    $this->entityManager->persist($car);
-                    $this->entityManager->flush($car);
+                $response = $client->send();
+    //            var_dump($response->getBody()); exit;
+                try {
+                    if (is_numeric($response->getBody())){
+    //                        var_dump($response);
+                        $car->setAplId($response->getBody());
+                        $this->entityManager->persist($car);
+                        $this->entityManager->flush($car);
+                        return;
+                    }
+                } catch (Exception $ex) {
+        //                var_dump($ex->getMessage());
                     return;
                 }
-            } catch (Exception $ex) {
-    //                var_dump($ex->getMessage());
-                return;
-            }
+            }    
         }    
         return;        
     }
