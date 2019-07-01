@@ -729,6 +729,7 @@ class GoodsRepository extends EntityRepository
     {
         $this->getEntityManager()->getConnection()->update('goods', ['status_car' => Goods::CAR_FOR_UPDATE], ['status_car' => Goods::CAR_UPDATED]);
         $this->getEntityManager()->getConnection()->update('goods', ['status_car' => Goods::CAR_FOR_UPDATE], ['status_car' => Goods::CAR_UPDATING]);
+        $this->getEntityManager()->getConnection()->update('car', ['update_flag' => 0], ['update_flag' => date('m')]);
         return;        
     }
 
