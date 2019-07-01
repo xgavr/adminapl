@@ -127,6 +127,10 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('.nameAplEdit').editable();
+    });
+    
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;
 
