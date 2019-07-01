@@ -55,6 +55,7 @@ $this->headScript()
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
                      <th data-field="name" data-sortable="true">Наименование</th>
                      <th data-field="nameApl" data-formatter="editableFormatter">для АПЛ</th>             
+                     <th data-field="statusEdit" data-formatter="checkboxFormatter">Доступ</th>             
                  </tr>                
             </thead>
         </table>
@@ -105,6 +106,12 @@ $this->headScript()
     function editableFormatter(value, row){
         return [
             '<a href="#" class="nameAplEdit" data-type="text" data-pk="'+row.id+'" data-name="nameApl" data-url="/car/vehicle-detail-edit">' + value + '</a>'
+        ].join(''); 
+    }    
+        
+    function checkboxFormatter(value, row){
+        return [
+            '<input type="checkbox"/>'
         ].join(''); 
     }    
         
