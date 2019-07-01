@@ -679,8 +679,27 @@ class ExternalManager
             $pcon = '';
             if (!empty($carData['yearOfConstrFrom'])){
                 $pcon = substr($carData['yearOfConstrFrom'], -2).'.'.substr($carData['yearOfConstrFrom'], 0, 4).'-';
+
+                $modelConstructionFrom = $car->getModel()->getConstructionFrom(); 
+
+                $model = $car->getModel();
+
+                if ($modelConstructionFrom > $carData['yearOfConstrFrom']){
+                    $model->setConstructionFrom($carData['yearOfConstrFrom']);
+                    $this->entityManager->persist($model);
+                }
+
                 if (!empty($carData['yearOfConstrTo'])){
                     $pcon .= substr($carData['yearOfConstrTo'], -2).'.'.substr($carData['yearOfConstrTo'], 0, 4);
+
+                    $modelConstructionTo = $car->getModel()->getConstructionTo(); 
+                    if ($modelConstructionTo < $carData['yearOfConstrTo'] || $modelConstructionTo == Model::COSTRUCTION_MAX_PERIOD){
+                        $model->setConstructionTo($carData['yearOfConstrTo']);
+                        $this->entityManager->persist($model);
+                    }
+                } else {
+                    $model->setConstructionTo(date('Ym'));
+                    $this->entityManager->persist($model);                    
                 }
             }
             $this->addVehicleDetailCarKeyValue($car, 'PCON', $pcon);

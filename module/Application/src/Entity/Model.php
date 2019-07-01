@@ -33,6 +33,8 @@ class Model {
     const MOTO_YES       = 1; //
     const MOTO_NO       = 2; //
     
+    const COSTRUCTION_MAX_PERIOD = 999999;
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -86,6 +88,16 @@ class Model {
     protected $moto;
         
     /**
+     * @ORM\Column(name="construction_from")  
+     */
+    protected $constructionFrom = self::COSTRUCTION_MAX_PERIOD;
+        
+    /**
+     * @ORM\Column(name="construction_to")  
+     */
+    protected $constructionTo = self::COSTRUCTION_MAX_PERIOD;
+        
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Make", inversedBy="models") 
      * @ORM\JoinColumn(name="make_id", referencedColumnName="id")
      * 
@@ -134,6 +146,13 @@ class Model {
 
     public function getInterval() 
     {
+        if ($this->constructionFrom < self::COSTRUCTION_MAX_PERIOD){
+            $result = substr($this->constructionFrom, -2).'.'.substr($this->constructionFrom, 0, 4).'-';
+            if ($this->constructionTo < date('Ym')){
+                $result .= substr($this->constructionTo, -2).'.'.substr($this->constructionTo, 0, 4);
+            }
+            return $result;
+        }
         return $this->interval;
     }
 
@@ -190,6 +209,26 @@ class Model {
     public function setMoto($moto) 
     {
         $this->moto = $moto;
+    }     
+    
+    public function getConstructionFrom() 
+    {
+        return $this->constructionFrom;
+    }
+
+    public function setConstructionFrom($constructionFrom) 
+    {
+        $this->constructionFrom = $constructionFrom;
+    }     
+    
+    public function getConstructionTo() 
+    {
+        return $this->constructionTo;
+    }
+
+    public function setConstructionTo($constructionTo) 
+    {
+        $this->constructionTo = $constructionTo;
     }     
     
     
