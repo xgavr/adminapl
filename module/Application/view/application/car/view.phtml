@@ -43,10 +43,13 @@ $this->pageBreadcrumbs()->setItems([
                 <td>
                     <?= $vehicleDetailCar->getVehicleDetail()->getName()?>
                 </td>
+                <td>
+                    <?= $vehicleDetailCar->getVehicleDetail()->getNameApl()?>
+                </td>
                 <td colspan="2">
                     <?= $vehicleDetailCar->getVehicleDetailValue()->getName()?>
                 </td>
-                <td colspan="3">
+                <td colspan="2">
                     <?= $vehicleDetailCar->getVehicleDetailValue()->getTitle()?>
                 </td>
             </tr>
