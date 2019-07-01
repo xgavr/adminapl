@@ -817,11 +817,11 @@ class AplService {
             $desc = [];
             $sf = 0;
             foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar){
-                if ($vehicleDetailCar->getVehicleDeatail()->getNameApl()){
-                    $desc[$vehicleDetailCar->getVehicleDeatail()->getNameApl()] = $vehicleDetailCar->getVehicleDeatailValue()->getNameApl();
+                if ($vehicleDetailCar->getVehicleDetail()->getNameApl()){
+                    $desc[$vehicleDetailCar->getVehicleDetail()->getNameApl()] = $vehicleDetailCar->getVehicleDetailValue()->getNameApl();
                 }
-                if ($vehicleDetailCar->getVehicleDeatail()->getName() == 'yearOfConstrFrom'){
-                   $sf = $vehicleDetailCar->getVehicleDeatailValue()->getNameApl(); 
+                if ($vehicleDetailCar->getVehicleDetail()->getName() == 'yearOfConstrFrom'){
+                   $sf = $vehicleDetailCar->getVehicleDetailValue()->getNameApl(); 
                 }
             }
             
