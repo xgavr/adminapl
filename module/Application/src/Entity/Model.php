@@ -33,6 +33,9 @@ class Model {
     const MOTO_YES       = 1; //
     const MOTO_NO       = 2; //
     
+    const TRANSFER_YES       = 1; // обмен с апл выполнен
+    const TRANSFER_NO       = 2; //
+    
     const COSTRUCTION_MAX_PERIOD = 999999;
     
     /**
@@ -86,6 +89,11 @@ class Model {
      * @ORM\Column(name="moto")  
      */
     protected $moto;
+        
+    /**
+     * @ORM\Column(name="transfer_flag")  
+     */
+    protected $transferFlag;
         
     /**
      * @ORM\Column(name="construction_from")  
@@ -281,6 +289,18 @@ class Model {
     {
         $this->status = $status;
     }   
+    
+    
+    public function getTransferFlag() 
+    {
+        return $this->transferFlag;
+    }
+
+    public function setTransferFlag($transferFlag) 
+    {
+        $this->transferFlag = $transferFlag;
+    }     
+    
     
     /*
      * Возвращает связанный make.

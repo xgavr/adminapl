@@ -772,6 +772,7 @@ class AplService {
                 if (is_numeric($response->getBody())){
 //                        var_dump($response);
                     $model->setAplId($response->getBody());
+                    $model->setTransferFlag(\Application\Entity\Model::TRANSFER_YES);
                     $this->entityManager->persist($model);
                     $this->entityManager->flush($model);
                     return;
@@ -790,7 +791,7 @@ class AplService {
         $startTime = time();
         
         $models = $this->entityManager->getRepository(\Application\Entity\Model::class)
-                ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE, 'aplId' => 0]);
+                ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE, 'transfer' => \Application\Entity\Model::TRANSFER_NO]);
         foreach ($models as $model){
             $this->getModelAplId($model);
             if (time() > $startTime + 1740){
@@ -847,6 +848,7 @@ class AplService {
                     if (is_numeric($response->getBody())){
     //                        var_dump($response);
                         $car->setAplId($response->getBody());
+                        $car->setTransferFlag(\Application\Entity\Car::TRANSFER_YES);
                         $this->entityManager->persist($car);
                         $this->entityManager->flush($car);
                         return;
@@ -866,7 +868,7 @@ class AplService {
         $startTime = time();
         
         $cars = $this->entityManager->getRepository(\Application\Entity\Car::class)
-                ->findBy(['status' => \Application\Entity\Car::STATUS_ACTIVE, 'aplId' => 0, 'updateFlag' => date('m')], null, 1000);
+                ->findBy(['status' => \Application\Entity\Car::STATUS_ACTIVE, 'transferFlag' => \Application\Entity\Car::TRANSFER_NO], null, 1000);
         foreach ($cars as $car){
             $this->getCarAplId($car);
             if (time() > $startTime + 1740){

@@ -253,10 +253,11 @@ class ExternalManager
             'name' => $data['name'],
             'constructioninterval' => $data['constructioninterval'],
             'fullname' => '',
-            'passenger' => Make::PASSENGER_NO,
-            'commerc' => Make::COMMERC_NO,
-            'moto' => Make::MOTO_NO,
-            'status' => Make::STATUS_ACTIVE,
+            'passenger' => Model::PASSENGER_NO,
+            'commerc' => Model::COMMERC_NO,
+            'moto' => Model::MOTO_NO,
+            'status' => Model::STATUS_ACTIVE,
+            'transferFlag' => Model::TRANSFER_NO,
         ];
         
         $model = $this->entityManager->getRepository(Model::class)
@@ -422,6 +423,7 @@ class ExternalManager
             $car->setMoto(Car::MOTO_NO);
             $car->setPassenger(Car::PASSENGER_NO); 
             $car->setUpdateFlag(0);
+            $car->setTransferFlag(Car::TRANSFER_NO);
             
             $car->setModel($model);
 
@@ -430,11 +432,11 @@ class ExternalManager
         } else {
             if ($data['name'] != $car->getName()){
                 $this->entityManager->getRepository(Car::class)
-                    ->updateCar($car, ['name' => $data['name'], 'fullName' => $fullName]);                            
+                    ->updateCar($car, ['name' => $data['name'], 'fullName' => $fullName, 'transferFlag' => Car::TRANSFER_NO]);                            
             } else {
                 if ($car->getFullName() != $fullName){
                     $this->entityManager->getRepository(Car::class)
-                        ->updateCar($car, ['fullName' => $fullName]);                                            
+                        ->updateCar($car, ['fullName' => $fullName, 'transferFlag' => Car::TRANSFER_NO]);                                            
                 }
             }    
         }
@@ -681,6 +683,7 @@ class ExternalManager
                 $modelConstructionFrom = $car->getModel()->getConstructionFrom(); 
 
                 $model = $car->getModel();
+                $model->setTransferFlag(Model::TRANSFER_NO);
 
                 if ($modelConstructionFrom > $carData['yearOfConstrFrom']){
                     $model->setConstructionFrom($carData['yearOfConstrFrom']);
@@ -703,6 +706,7 @@ class ExternalManager
             $this->addVehicleDetailCarKeyValue($car, 'PCON', $pcon);
 
             $car->setUpdateFlag(date('n'));
+            $car->setTransferFlag(Car::TRANSFER_NO);
             $this->entityManager->persist($car);
             $this->entityManager->flush();
         }    

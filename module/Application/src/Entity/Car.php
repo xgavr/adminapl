@@ -33,6 +33,9 @@ class Car {
     const MOTO_YES       = 1; //
     const MOTO_NO       = 2; //
     
+    const TRANSFER_YES       = 1; // обмен с апл выполнен
+    const TRANSFER_NO       = 2; //
+        
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -84,6 +87,11 @@ class Car {
      * @ORM\Column(name="update_flag")  
      */
     protected $updateFlag;
+        
+    /**
+     * @ORM\Column(name="transfer_flag")  
+     */
+    protected $transferFlag;
         
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Model", inversedBy="model") 
@@ -216,6 +224,16 @@ class Car {
     public function setUpdateFlag($updateFlag) 
     {
         $this->updateFlag = $updateFlag;
+    }     
+    
+    public function getTransferFlag() 
+    {
+        return $this->transferFlag;
+    }
+
+    public function setTransferFlag($transferFlag) 
+    {
+        $this->transferFlag = $transferFlag;
     }     
     
     
