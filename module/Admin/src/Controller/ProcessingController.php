@@ -847,7 +847,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getAplExchangeSettings();
         
-        if ($settings['car'] == 1){            
+        if ($settings['get_car_id'] == 1){            
             $this->aplService->updateMakeAplId();            
         }    
         
@@ -865,7 +865,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getAplExchangeSettings();
         
-        if ($settings['car'] == 1){            
+        if ($settings['get_car_id'] == 1){            
             $this->aplService->updateModelAplId();            
         }    
         
@@ -883,7 +883,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getAplExchangeSettings();
         
-        if ($settings['car'] == 1){            
+        if ($settings['get_car_id'] == 1){            
             $this->aplService->updateCarAplId();            
         }    
         
