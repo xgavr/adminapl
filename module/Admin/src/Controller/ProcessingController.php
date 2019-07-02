@@ -13,7 +13,6 @@ use Zend\View\Model\ViewModel;
 use Application\Entity\PriceGetting;
 use Zend\Stdlib\RequestInterface as Request;
 use Zend\Stdlib\ResponseInterface as Response;
-use Zend\Mvc\MvcEvent;
 
 
 class ProcessingController extends AbstractActionController
@@ -868,6 +867,24 @@ class ProcessingController extends AbstractActionController
         
         if ($settings['car'] == 1){            
             $this->aplService->updateModelAplId();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
+    /**
+     * Обновление aplId машин
+     * 
+     * @return JsonModel
+     */
+    public function updateCarAplIdAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['car'] == 1){            
+            $this->aplService->updateCarAplId();            
         }    
         
         return new JsonModel([
