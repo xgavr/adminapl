@@ -79,6 +79,11 @@ class VehicleDetail {
         return $this->nameApl;
     }
 
+    public function setNameApl($nameApl) 
+    {
+        $this->nameApl = $nameApl;
+    }     
+
     public function setStatusEdit($statusEdit) 
     {
         $this->statusEdit = $statusEdit;
@@ -89,10 +94,10 @@ class VehicleDetail {
         return $this->statusEdit;
     }
 
-    public function setNameApl($nameApl) 
+    public function canNameAplEdit() 
     {
-        $this->nameApl = $nameApl;
-    }     
+        return $this->statusEdit == self::CAN_VALUE_EDIT;
+    }
 
     /*
      * Возвращает values.
