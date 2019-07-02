@@ -237,6 +237,16 @@ class AplController extends AbstractActionController
         ]);
     }
 
+    public function updateCarAplIdAction()
+    {
+        
+        $this->aplService->updateCarAplId();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
     public function carAplIdAction()
     {
         $carId = $this->params()->fromRoute('id', -1);

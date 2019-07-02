@@ -860,6 +860,24 @@ class AplService {
         return;        
     }
 
+    public function updateCarAplId()
+    {
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $cars = $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->findBy(['status' => \Application\Entity\Car::STATUS_ACTIVE, 'aplId' => 0, 'updateFlag' => date('m')], null, 1000);
+        foreach ($cars as $car){
+            $this->getCarAplId($model);
+            if (time() > $startTime + 1740){
+                return;
+            }
+            usleep(100);
+        }
+        
+        return;        
+    }
+    
     /**
      * Выгрузка эквайринга с Апл
      * 
