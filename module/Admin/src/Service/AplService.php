@@ -841,6 +841,7 @@ class AplService {
                 ]);
 
                 $response = $client->send();
+                
 //                var_dump($response->getBody()); exit;
                 try {
                     if (is_numeric($response->getBody())){
