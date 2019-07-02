@@ -120,13 +120,17 @@ $this->headScript()
     }    
     
     function checkboxFormatter(value, row){
-        var checked = 'checked';
-        if (value == 2){
-            checked = '';
+        if (row.nameApl){
+            var checked = 'checked';
+            if (value == 2){
+                checked = '';
+            }
+            return [
+                '<input class="NameAplEditCheckBox" data-pk="'+row.id+'" data-url="/car/vehicle-detail-status-edit" type="checkbox" '+checked+'/>'
+            ].join(''); 
+        } else {
+            return '';
         }
-        return [
-            '<input class="NameAplEditCheckBox" data-pk="'+row.id+'" data-url="/car/vehicle-detail-status-edit" type="checkbox" '+checked+'/>'
-        ].join(''); 
     }    
         
     function responseHandler(res) {
