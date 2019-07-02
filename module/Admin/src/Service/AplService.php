@@ -791,7 +791,7 @@ class AplService {
         $startTime = time();
         
         $models = $this->entityManager->getRepository(\Application\Entity\Model::class)
-                ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE, 'transfer' => \Application\Entity\Model::TRANSFER_NO]);
+                ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE, 'transferFlag' => \Application\Entity\Model::TRANSFER_NO]);
         foreach ($models as $model){
             $this->getModelAplId($model);
             if (time() > $startTime + 1740){
