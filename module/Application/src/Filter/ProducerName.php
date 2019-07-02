@@ -34,8 +34,8 @@ class ProducerName extends AbstractFilter
     
     public function filter($value)
     {
-        $s = array('Å', 'Ë', 'Ö', 'Ü');
-        $r = array('A', 'E', 'O', 'U');
+        $s = array('Å', 'Á', 'Ë', 'Ö', 'Ü');
+        $r = array('A', 'A', 'E', 'O', 'U');
         $result = str_replace($s, $r, mb_ereg_replace('[^A-ZА-ЯЁ0-9ÅÖËÜ]', '', mb_strtoupper($value, 'utf-8')));
 //        var_dump($result);
         return $result;
