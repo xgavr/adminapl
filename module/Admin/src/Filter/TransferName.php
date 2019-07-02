@@ -34,8 +34,8 @@ class TransferName extends AbstractFilter
     
     public function filter($value)
     {
-        $s = array('Å', 'Ë', 'Ö', 'Ü');
-        $r = array('A', 'E', 'O', 'U');
+        $s = array('Å', 'Á', 'Ë', 'Ö', 'Ü');
+        $r = array('A', 'A', 'E', 'O', 'U');
         $result = str_replace($s, $r, $value);
 //        var_dump($result);
         return $result;
