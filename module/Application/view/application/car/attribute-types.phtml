@@ -75,6 +75,9 @@ $this->headScript()
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
             $('.nameAplEdit').editable();
+            $('.NameAplEditCheckBox').change(function() {
+                alert($(this).prop('checked'))
+            })        
         }
     });
     
@@ -109,10 +112,6 @@ $this->headScript()
         ].join(''); 
     }    
     
-    $('.NameAplEditCheckBox').change(function() {
-        alert($(this).prop('checked'))
-    })
-        
     function checkboxFormatter(value, row){
         return [
             '<input class="NameAplEditCheckBox" type="checkbox"/>'
@@ -123,8 +122,4 @@ $this->headScript()
         return res;
     }    
 
-//    $(document).ready(function() {
-//        $('.nameAplEdit').editable();
-//    });
-    
 </script>
