@@ -761,7 +761,7 @@ class AplService {
             $client->setParameterPost([
                 'parent' => $model->getMake()->getAplId(),
                 'type' => $model->getTdId(),
-                'name' => urlencode($model->getName()),
+                'name' => urlencode($model->getTransferName()),
                 'desc' => $model->getInterval(),
                 'sf' => $sf,
             ]);
