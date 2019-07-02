@@ -868,7 +868,7 @@ class AplService {
         $startTime = time();
         
         $cars = $this->entityManager->getRepository(\Application\Entity\Car::class)
-                ->findBy(['status' => \Application\Entity\Car::STATUS_ACTIVE, 'transferFlag' => \Application\Entity\Car::TRANSFER_NO], null, 1000);
+                ->findBy(['status' => \Application\Entity\Car::STATUS_ACTIVE, 'updateFlag' => date('m'), 'transferFlag' => \Application\Entity\Car::TRANSFER_NO], null, 1000);
         foreach ($cars as $car){
             $this->getCarAplId($car);
             if (time() > $startTime + 1740){
