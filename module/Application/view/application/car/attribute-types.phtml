@@ -108,10 +108,14 @@ $this->headScript()
             '<a href="#" class="nameAplEdit" data-type="text" data-pk="'+row.id+'" data-name="nameApl" data-url="/car/vehicle-detail-edit">' + value + '</a>'
         ].join(''); 
     }    
+    
+    $('.NameAplEditCheckBox').change(function() {
+        alert($(this).prop('checked'))
+    })
         
     function checkboxFormatter(value, row){
         return [
-            '<input type="checkbox"/>'
+            '<input class="NameAplEditCheckBox" type="checkbox"/>'
         ].join(''); 
     }    
         
