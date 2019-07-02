@@ -76,7 +76,14 @@ $this->headScript()
         onLoadSuccess: function(res){
             $('.nameAplEdit').editable();
             $('.NameAplEditCheckBox').change(function() {
-                alert($(this).attr('data-pk'))
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('data-url'),
+                    data: "pk="+$(this).attr('data-pk'),
+                    success: function(msg){
+                      alert( "Прибыли данные: " + msg );
+                    }
+                });
             })        
         }
     });
@@ -118,7 +125,7 @@ $this->headScript()
             checked = '';
         }
         return [
-            '<input class="NameAplEditCheckBox" data-pk="'+row.id+'" data-url="/car/vehicle-detail-edit" type="checkbox" '+checked+'/>'
+            '<input class="NameAplEditCheckBox" data-pk="'+row.id+'" data-url="/car/vehicle-detail-status-edit" type="checkbox" '+checked+'/>'
         ].join(''); 
     }    
         

@@ -346,6 +346,31 @@ class CarController extends AbstractActionController
         exit;
     }
 
+    public function vehicleDetailStatusEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $attributeId = $data['pk'];
+            $attribute = $this->entityManager->getRepository(\Application\Entity\VehicleDetail::class)
+                    ->findOneById($attributeId);
+                    
+            if ($attribute){
+                $currentStatusEdit = $attribute->getStatusEdit();
+                
+                if ($currentStatusEdit == \Application\Entity\VehicleDetail::CANNOT_VALUE_EDIT){
+                    $currentStatusEdit = \Application\Entity\VehicleDetail::CAN_VALUE_EDIT;
+                } else {
+                    $currentStatusEdit = \Application\Entity\VehicleDetail::CANNOT_VALUE_EDIT;
+                }
+                
+                $this->carManager->updateVehicleDetailStatusEdit($attribute, $currentStatusEdit);
+            }    
+        }
+        
+        exit;
+    }
+
     public function vehicleDetailValueEditAction()
     {
         if ($this->getRequest()->isPost()) {

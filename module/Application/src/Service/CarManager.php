@@ -84,6 +84,22 @@ class CarManager
     }
 
     /**
+     * Обновить атрибут
+     * 
+     * @param \Application\Entity\VehicleDetail $attribute
+     * @param integer $status
+     */
+    public function updateVehicleDetailStatusEdit($attribute, $status)
+    {
+        if (is_numeric($status)){
+            $attribute->setStatusEdit($status);
+            $this->entityManager->persist($attribute);
+            $this->entityManager->flush();
+        }
+        return;
+    }
+
+    /**
      * Обновить значение атрибута
      * 
      * @param \Application\Entity\VehicleDetailValue $value
