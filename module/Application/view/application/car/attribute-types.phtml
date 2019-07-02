@@ -76,7 +76,7 @@ $this->headScript()
         onLoadSuccess: function(res){
             $('.nameAplEdit').editable();
             $('.NameAplEditCheckBox').change(function() {
-                alert($(this).prop('checked'))
+                alert($(this).prop('data-pk'))
             })        
         }
     });
@@ -113,8 +113,12 @@ $this->headScript()
     }    
     
     function checkboxFormatter(value, row){
+        var checked = 'checked';
+        if (value == 2){
+            checked = '';
+        }
         return [
-            '<input class="NameAplEditCheckBox" type="checkbox"/>'
+            '<input class="NameAplEditCheckBox" data-pk="'+row.id+'" data-url="/car/vehicle-detail-edit" type="checkbox" '+checked+' onchange=""/>'
         ].join(''); 
     }    
         
