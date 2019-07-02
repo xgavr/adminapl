@@ -51,11 +51,18 @@ class MakeController extends AbstractActionController
         $totalGoods = $this->entityManager->getRepository(Make::class)
                 ->findGoods();
         
+        $totalModelEx = $this->entityManager->getRepository(Model::class)
+                ->count(['status' => Model::STATUS_ACTIVE, 'transferFlag' => Model::TRANSFER_YES]);
+        $totalCarEx = $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->count(['status' => \Application\Entity\Car::STATUS_ACTIVE, 'transferFlag' => \Application\Entity\Car::TRANSFER_YES]);
+        
         return new ViewModel([
             'totalMake' => $totalMake,
             'totalModel' => $totalModel,
             'totalCar' => $totalCar,
             'totalGoods' => $totalGoods,
+            'totalModelEx' => $totalModelEx,
+            'totalCarEx' => $totalCarEx,
         ]);  
     }
     

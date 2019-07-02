@@ -24,7 +24,7 @@ $this->headScript()
 </button>                                                                        -->
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-6">
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
@@ -55,89 +55,116 @@ $this->headScript()
             </thead>
         </table>
     </div>
-    <div class="col-md-3" id="side-nav" >
+    <div class="col-md-6" id="side-nav">
         <div class="nav nav-stacked nav-list affix">
-            <div class="panel-group">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Обновить из внешних баз
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Марки машин<sup><?= $totalMake?></sup> 
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel-group">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Обновить из внешних баз
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Марки<sup><?= $totalMake?></sup> 
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/make/fill-makes" class="btn btn-info btn-xs refresh-table-button"
+                                            title="Заполнить производителей">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                    <button value="/make/update-all-make-status" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Обновить статус марок машин">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Модели<sup><?= $totalModel?></sup> 
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/make/fill-all-models" class="btn btn-info btn-xs refresh-table-button"
+                                            title="Заполнить модели">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                    <button value="/make/update-all-model-status" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Обновить статус моделей машин">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Модификации<sup><?= $totalCar?></sup> 
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/car/update-all-status" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Обновить статус машин">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Товары<sup><?= $totalGoods?></sup>
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/goods/update-car-count" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Обновить количество машин в товарах">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                </div>
+                            </div>
                         </div>
-                        <div class="pull-right">
-                            <button value="/make/fill-makes" class="btn btn-info btn-xs refresh-table-button"
-                                    title="Заполнить производителей">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                            <button value="/make/update-all-make-status" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить статус марок машин">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Модели<sup><?= $totalModel?></sup> 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/make/fill-all-models" class="btn btn-info btn-xs refresh-table-button"
-                                    title="Заполнить модели">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                            <button value="/make/update-all-model-status" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить статус моделей машин">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Модификации<sup><?= $totalCar?></sup> 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/car/update-all-status" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить статус машин">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Товары<sup><?= $totalGoods?></sup>
-                        </div>
-                        <div class="pull-right">
-                            <button value="/goods/update-car-count" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить количество машин в товарах">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                           АПЛ Ид
-                        </div>
-                        <div class="pull-right">
-                            <button value="/apl/update-make-apl-id" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Заполнить AplId производителей">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                            <button value="/apl/update-model-apl-id" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Заполнить AplId моделей">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                            <button value="/apl/update-car-apl-id" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Заполнить AplId машин">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                <a href="<?= $this->url('car', ['action' => 'attribute-types'])?>">Атрибуты</a>                                            
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <a href="<?= $this->url('car', ['action' => 'attribute-types'])?>">Атрибуты</a>                                            
-                    </div>
+                <div class="col-md-6">
+                    <div class="panel-group">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Обновление в АПЛ
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                   Марки
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/apl/update-make-apl-id" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Заполнить AplId производителей">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                   Модели<sup><?= $totalModelEx?></sup>
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/apl/update-model-apl-id" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Заполнить AplId моделей">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                   Модификации<sup><?= $totalCarEx?></sup>
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/apl/update-car-apl-id" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Заполнить AplId машин">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>                    
                 </div>
             </div>
         </div>
