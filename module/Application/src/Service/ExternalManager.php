@@ -820,7 +820,8 @@ class ExternalManager
                 }    
             }
         }  
-        $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
+        $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED, 'status_car_ex' => Goods::CAR_EX_NEW], ['id' => $good->getId()]);
+        
         unset($makes);
         unset($models);
         unset($carsDataI);
