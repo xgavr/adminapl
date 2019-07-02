@@ -129,6 +129,12 @@ class Model {
         return $this->name;
     }
 
+    public function getTransferName() 
+    {
+        $filter = new \Admin\Filter\TransferName();
+        return $filter->filter($this->name);
+    }
+
     public function setName($name) 
     {
         $this->name = $name;

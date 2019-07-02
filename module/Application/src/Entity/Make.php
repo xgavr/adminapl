@@ -107,11 +107,13 @@ class Make {
 
     public function getTransferName() 
     {
-        $s = array('Å', 'Ë', 'Ö', 'Ü');
-        $r = array('A', 'E', 'O', 'U');
-        $result = str_replace($s, $r, mb_strtoupper($this->name, 'utf-8'));
+        $filter = new \Admin\Filter\TransferName();
+        return $filter->filter($this->name);
+//        $s = array('Å', 'Ë', 'Ö', 'Ü');
+//        $r = array('A', 'E', 'O', 'U');
+//        $result = str_replace($s, $r, mb_strtoupper($this->name, 'utf-8'));
 
-        return $result;
+//        return $result;
     }
 
     public function setName($name) 

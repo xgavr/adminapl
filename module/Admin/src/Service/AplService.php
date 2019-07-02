@@ -834,8 +834,8 @@ class AplService {
                     'type' => $car->getTdId(),
                     'sort' => $car->getTdId(),
                     'publish' => 1,
-                    'name' => urlencode($car->getName()),
-                    'comment' => urlencode($car->getFullName()),
+                    'name' => urlencode($car->getTransferName()),
+                    'comment' => urlencode($car->getTransferFullName()),
                     'desc' => Json::encode($desc),
                     'sf' => $sf,
                 ]);
