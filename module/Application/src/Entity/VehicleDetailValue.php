@@ -64,7 +64,7 @@ class VehicleDetailValue {
     public function getName() 
     {
         if ($this->vehicleDetail->getName() == 'cylinderCapacityLiter'){
-            return round($this->name/100, 1);
+            return (string) round($this->name/100, 1);
         }
         return $this->name;
     }
