@@ -257,7 +257,7 @@ class ExternalManager
             'commerc' => Model::COMMERC_NO,
             'moto' => Model::MOTO_NO,
             'status' => Model::STATUS_ACTIVE,
-            'transferFlag' => Model::TRANSFER_NO,
+            'transfer_flag' => Model::TRANSFER_NO,
         ];
         
         $model = $this->entityManager->getRepository(Model::class)
@@ -432,11 +432,11 @@ class ExternalManager
         } else {
             if ($data['name'] != $car->getName()){
                 $this->entityManager->getRepository(Car::class)
-                    ->updateCar($car, ['name' => $data['name'], 'fullName' => $fullName, 'transferFlag' => Car::TRANSFER_NO]);                            
+                    ->updateCar($car, ['name' => $data['name'], 'fullName' => $fullName, 'transfer_flag' => Car::TRANSFER_NO]);                            
             } else {
                 if ($car->getFullName() != $fullName){
                     $this->entityManager->getRepository(Car::class)
-                        ->updateCar($car, ['fullName' => $fullName, 'transferFlag' => Car::TRANSFER_NO]);                                            
+                        ->updateCar($car, ['fullName' => $fullName, 'transfer_flag' => Car::TRANSFER_NO]);                                            
                 }
             }    
         }
