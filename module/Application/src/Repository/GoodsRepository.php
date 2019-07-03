@@ -554,6 +554,31 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Количество товара группой Апл
+     * 
+     * @return integer
+     */
+    public function findAplGroups()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('count(g.id) as aplGroupCount')
+            ->from(Goods::class, 'g')
+            ->where('g.groupApl != ?1')
+            ->setParameter('1', Goods::DEFAULT_GROUP_APL_ID)    
+            ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($data as $row){
+            return $row['aplGroupCount'];
+        }
+        
+        return;
+    }
+    
+    /**
      * Найти товары для обновления машин по апи текдока
      * 
      * @return object
