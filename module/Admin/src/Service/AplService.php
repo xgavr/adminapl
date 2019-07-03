@@ -658,6 +658,44 @@ class AplService {
     }
     
     /**
+     * Получить код группы товара
+     * @param \Application\Entity\Goods $good
+     */ 
+    public function getGroupAplId($good)
+    {
+        
+        if ($good->getAplId()){
+        
+            $url = $this->aplApi().'get-group-id?api='.$this->aplApiKey();
+            
+            $post = [
+                'id' => $good->getAplId(),
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $response = $client->send();
+            $body = $response->getBody();
+
+            try {
+                if (is_numeric($body)){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($good->getId(), ['group_apl' => $body]);
+                    return;
+                }
+            } catch (Exception $ex) {
+//                var_dump($ex->getMessage());
+                return;
+            }
+        }
+        
+        return;
+    }
+    
+    /**
      * Обновить наименование товара в АПЛ
      * 
      * @param Application\Entity\Goods $good

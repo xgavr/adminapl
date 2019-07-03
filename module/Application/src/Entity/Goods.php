@@ -57,6 +57,8 @@ class Goods {
     const PRICE_EX_NEW            = 1; // не передано
     const PRICE_EX_TRANSFERRED    = 2; // передано.
     
+    const DEFAULT_GROUP_APL_ID    = -1; //группа апл по умолчнию 
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -162,6 +164,11 @@ class Goods {
      * @ORM\Column(name="markup")   
      */
     protected $markup = 0.0;
+
+    /**
+     * @ORM\Column(name="group_apl")   
+     */
+    protected $groupApl = self::DEFAULT_GROUP_APL_ID;
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
@@ -345,6 +352,16 @@ class Goods {
     public function setMarkup($markup)
     {
         $this->markup = $markup;
+    }
+
+    public function getGroupApl()
+    {
+        return $this->groupApl;
+    }
+    
+    public function setGroupApl($groupApl)
+    {
+        $this->groupApl = $groupApl;
     }
 
     /*
@@ -683,7 +700,7 @@ class Goods {
         $this->statusCarEx;
     }
     
-    public function setStatusCarEx($statusOemEx)
+    public function setStatusCarEx($statusCarEx)
     {
         $this->statusCarEx = $statusCarEx;
     }    

@@ -191,7 +191,7 @@ class AutodbManager
         $params = [
             'articleCountry' => 'RU',
             'lang' => 'RU',
-//            'searchTreeNodes' => false,
+            'searchTreeNodes' => true,
         ];
         
         return $this->getAction('getGenericArticles', $params);

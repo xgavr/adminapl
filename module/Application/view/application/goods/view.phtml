@@ -315,7 +315,7 @@ $this->headScript()
     </div>
     <div class="col-md-3" id="side-nav">
         <div class="nav nav-stacked nav-list affix">
-            <div class="panel-group">
+            <div class="col-xs-12">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <span>
@@ -329,130 +329,174 @@ $this->headScript()
                             </a>
                         </span>    
                     </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            AplId: 
-                            <?php if ($goods->getAplId()): ?>
-                            <a href="https://autopartslist.ru/goods/view/id/<?= $goods->getAplId() ?>" target="_blank">
-                                    <?= $goods->getAplId()?>
-                                </a>
-                            <?php else: ?>
-                                <?= $goods->getAplId()?>
-                            <? endif; ?>    
-                        </div>
-                        <div class="pull-right">
-                            <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить АПЛ Ид">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>
-                        </div>    
-                    </div>    
-                    <?php if ($goods->getAplId()):?>
-                        <div class="panel-body">
-                            <button value="/apl/ex-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обмен строк прайса">
-                                <span class="glyphicon glyphicon-export" ></span>
-                            </button>                             
-                            <button value="/apl/ex-oem/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обмен номеров">
-                                <span class="glyphicon glyphicon-export" ></span>
-                            </button>                             
-                            <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обмен картинок">
-                                <span class="glyphicon glyphicon-export" ></span>
-                            </button>                             
-                            <button value="/apl/ex-attr/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обмен описания">
-                                <span class="glyphicon glyphicon-export" ></span>
-                            </button>                             
-                        </div>
-                    <?php endif;?>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Поиск в TecDoc: 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/goods/external-api-search/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
-                                    title="Посик в TecDocId">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            TecDocId: 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/goods/external-api/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
-                                    title="Обновить TecDocId">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            TecDoc группа: 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/goods/generic-group/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить группу">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            TecDoc описание: 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/goods/attribute/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить описание">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            TecDoc номера: 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить номера">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            TecDoc машины: 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/goods/external-api-car/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
-                                    title="Обновить TecDocId">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                            <button value="/goods/good-cars/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить машины">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            TecDoc Картинка: 
-                        </div>
-                        <div class="pull-right">
-                            <button value="/goods/upload-image-form/<?= $goods->getId() ?>" class="btn btn-info btn-xs"
-                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить картинку">
-                                <span class="glyphicon glyphicon-export" ></span>
-                            </button>                            
-                            <button value="/goods/external-api-image/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить картинку из TecDoc">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
-                        </div>
-                    </div>
                 </div>    
+            </div>
+            <div class="col-xs-6">
+                <div class="panel-group">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Обновления из ТекДок
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                Поиск в TecDoc: 
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/external-api-search/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
+                                        title="Посик в TecDocId">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                TecDocId: 
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/external-api/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
+                                        title="Обновить TecDocId">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                TecDoc группа: 
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/generic-group/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить группу">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                TecDoc описание: 
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/attribute/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить описание">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                TecDoc номера: 
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить номера">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                TecDoc машины: 
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/external-api-car/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
+                                        title="Обновить TecDocId">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                                <button value="/goods/good-cars/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить машины">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                TecDoc Картинка: 
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/upload-image-form/<?= $goods->getId() ?>" class="btn btn-info btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Добавить картинку">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button>                            
+                                <button value="/goods/external-api-image/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить картинку из TecDoc">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                    </div>    
+                </div>                
+            </div>
+            <div class="col-xs-6">
+                <div class="panel-group">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Обновления в АПЛ
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                AplId: 
+                                <?php if ($goods->getAplId()): ?>
+                                <a href="https://autopartslist.ru/goods/view/id/<?= $goods->getAplId() ?>" target="_blank">
+                                        <?= $goods->getAplId()?>
+                                    </a>
+                                <?php else: ?>
+                                    <?= $goods->getAplId()?>
+                                <? endif; ?>    
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить АПЛ Ид">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>
+                            </div>    
+                        </div>    
+                        <?php if ($goods->getAplId()):?>
+                            <div class="pull-right">                        
+                                <button value="/apl/ex-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обмен строк прайса">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button>           
+                            </div>    
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Номера
+                                </div>
+                            </div>
+                            <div class="pull-right">                        
+                                <button value="/apl/ex-oem/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обмен номеров">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button>
+                            </div>    
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Картинки 
+                                </div>
+                            </div>
+                            <div class="pull-right">                        
+                                <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обмен картинок">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button>
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Описания 
+                                </div>
+                            </div>
+                            <div class="pull-right">                                                
+                                <button value="/apl/ex-attr/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обмен описания">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button>                             
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Строки прайсов 
+                                </div>
+                            </div>
+                        <?php endif;?>
+                    </div>    
+                </div>                
             </div>
         </div>
     </div>
