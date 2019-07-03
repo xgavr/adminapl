@@ -450,48 +450,59 @@ $this->headScript()
                             </div>    
                         </div>    
                         <?php if ($goods->getAplId()):?>
-                            <div class="pull-right">                        
-                                <button value="/apl/ex-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                        title="Обмен строк прайса">
-                                    <span class="glyphicon glyphicon-export" ></span>
-                                </button>           
-                            </div>    
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Группа
+                                </div>
+                                <div class="pull-right">                        
+                                    <button value="/apl/ex-group/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Получить группу">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>
+                                </div>    
+                            </div>
                             <div class="panel-body">
                                 <div class="pull-left">
                                     Номера
                                 </div>
+                                <div class="pull-right">                        
+                                    <button value="/apl/ex-oem/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Обмен номеров">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>
+                                </div>    
                             </div>
-                            <div class="pull-right">                        
-                                <button value="/apl/ex-oem/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                        title="Обмен номеров">
-                                    <span class="glyphicon glyphicon-export" ></span>
-                                </button>
-                            </div>    
                             <div class="panel-body">
                                 <div class="pull-left">
                                     Картинки 
                                 </div>
+                                <div class="pull-right">                        
+                                    <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Обмен картинок">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="pull-right">                        
-                                <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                        title="Обмен картинок">
-                                    <span class="glyphicon glyphicon-export" ></span>
-                                </button>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Строки прайсов 
+                                </div>
+                                <div class="pull-right">                        
+                                    <button value="/apl/ex-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Обмен строк прайса">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>           
+                                </div>    
                             </div>
                             <div class="panel-body">
                                 <div class="pull-left">
                                     Описания 
                                 </div>
-                            </div>
-                            <div class="pull-right">                                                
-                                <button value="/apl/ex-attr/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                        title="Обмен описания">
-                                    <span class="glyphicon glyphicon-export" ></span>
-                                </button>                             
-                            </div>
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                    Строки прайсов 
+                                <div class="pull-right">                                                
+                                    <button value="/apl/ex-attr/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                            title="Обмен описания">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>                             
                                 </div>
                             </div>
                         <?php endif;?>
