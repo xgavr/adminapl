@@ -359,6 +359,15 @@ class Goods {
         return $this->groupApl;
     }
     
+    public function getGroupAplAsString()
+    {
+        if ($this->groupApl == self::DEFAULT_GROUP_APL_ID){
+            return;
+        }
+        
+        return $this->groupApl;
+    }
+    
     public function setGroupApl($groupApl)
     {
         $this->groupApl = $groupApl;

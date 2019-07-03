@@ -435,7 +435,7 @@ $this->headScript()
                             <div class="pull-left">
                                 AplId: 
                                 <?php if ($goods->getAplId()): ?>
-                                <a href="https://autopartslist.ru/goods/view/id/<?= $goods->getAplId() ?>" target="_blank">
+                                    <a href="https://autopartslist.ru/goods/view/id/<?= $goods->getAplId() ?>" target="_blank">
                                         <?= $goods->getAplId()?>
                                     </a>
                                 <?php else: ?>
@@ -452,7 +452,7 @@ $this->headScript()
                         <?php if ($goods->getAplId()):?>
                             <div class="panel-body">
                                 <div class="pull-left">
-                                    Группа
+                                    Группа <?= $goods->getGroupAplAsString()?>
                                 </div>
                                 <div class="pull-right">                        
                                     <button value="/apl/ex-group/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
