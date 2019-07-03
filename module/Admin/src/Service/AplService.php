@@ -696,6 +696,29 @@ class AplService {
     }
     
     /**
+     * Обновление группы в товарах
+     * 
+     * @return type
+     */
+    public function updateGroupAplId()
+    {
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateGroupAplId();
+        
+        foreach ($goods as $good){
+            $this->getGroupAplId($good);
+            if (time() > $startTime + 1740){
+                return;
+            }
+            usleep(100);
+        }
+        return;
+    }
+    
+    /**
      * Обновить наименование товара в АПЛ
      * 
      * @param Application\Entity\Goods $good
