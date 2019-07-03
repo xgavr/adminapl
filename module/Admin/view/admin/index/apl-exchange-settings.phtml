@@ -38,6 +38,10 @@ $form->get('get_good_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('get_group_apl')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('rawprice')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -106,17 +110,17 @@ $form->prepare();
         </div>
                         
         <div class="form-group">
+            <?= $this->formLabel($form->get('get_group_apl')); ?>
+            <?= $this->formElement($form->get('get_group_apl')); ?>
+            <?= $this->formElementErrors($form->get('get_group_apl')); ?>                  
+        </div>
+                        
+        <div class="form-group">
             <?= $this->formLabel($form->get('get_car_id')); ?>
             <?= $this->formElement($form->get('get_car_id')); ?>
             <?= $this->formElementErrors($form->get('get_car_id')); ?>                  
         </div>
                         
-        <div class="form-group">
-            <?= $this->formLabel($form->get('rawprice')); ?>
-            <?= $this->formElement($form->get('rawprice')); ?>
-            <?= $this->formElementErrors($form->get('rawprice')); ?>                  
-        </div>
-                
     </div>   
     <div class="col-md-5">
         <div class="form-group">
@@ -132,17 +136,17 @@ $form->prepare();
         </div>
 
         <div class="form-group">
-            <?= $this->formLabel($form->get('attribute')); ?>
-            <?= $this->formElement($form->get('attribute')); ?>
-            <?= $this->formElementErrors($form->get('attribute')); ?>                  
-        </div>
-                        
-        <div class="form-group">
             <?= $this->formLabel($form->get('car')); ?>
             <?= $this->formElement($form->get('car')); ?>
             <?= $this->formElementErrors($form->get('car')); ?>                  
         </div>
     
+        <div class="form-group">
+            <?= $this->formLabel($form->get('attribute')); ?>
+            <?= $this->formElement($form->get('attribute')); ?>
+            <?= $this->formElementErrors($form->get('attribute')); ?>                  
+        </div>
+                        
         <div class="form-group">
             <?= $this->formLabel($form->get('good_name')); ?>
             <?= $this->formElement($form->get('good_name')); ?>
@@ -154,6 +158,13 @@ $form->prepare();
             <?= $this->formElement($form->get('good_price')); ?>
             <?= $this->formElementErrors($form->get('good_price')); ?>                  
         </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rawprice')); ?>
+            <?= $this->formElement($form->get('rawprice')); ?>
+            <?= $this->formElementErrors($form->get('rawprice')); ?>                  
+        </div>
+                
     </div>
     <div class="col-md-2" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">

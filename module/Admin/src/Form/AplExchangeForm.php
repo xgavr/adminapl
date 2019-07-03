@@ -74,7 +74,18 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                 'value_options' => [
                     1 => 'Делать',
                     2 => 'Не делать',    
-                    3 => 'Идет обновление'
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'get_group_apl',
+            'options' => [
+                'label' => 'Обновлять Id групп товаров',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',    
                 ]
             ],
         ]);
@@ -111,7 +122,6 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                 'value_options' => [
                     1 => 'Делать',
                     2 => 'Не делать',                    
-                    3 => 'Идет обновление'
                 ]
             ],
         ]);
@@ -242,7 +252,18 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'get_group_apl',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
                 ],
             ]); 
         
@@ -275,7 +296,7 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
                 ],
             ]); 
         

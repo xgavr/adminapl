@@ -783,6 +783,27 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Обновление группы Apl товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateGroupAplIdAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['get_group_apl'] == 1){
+            
+            $this->aplService->updateGroupAplId();
+
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Обновление AplId товаров
      * 
      * @return JsonModel
