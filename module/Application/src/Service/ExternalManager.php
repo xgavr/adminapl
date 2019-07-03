@@ -126,6 +126,7 @@ class ExternalManager
                 ->updateZeroGroup();
         
         $data = $this->autoDb('getGenericArticles');
+        var_dump($data); exit;
         if (isset($data['data'])){
             if (isset($data['data']['array'])){
                 foreach ($data['data']['array'] as $row){
