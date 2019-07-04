@@ -17,7 +17,7 @@ class GroupController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -49,8 +49,12 @@ class GroupController extends AbstractActionController
 
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
 
         $result = $query->getResult(2);
         
@@ -59,181 +63,31 @@ class GroupController extends AbstractActionController
             'rows' => $result,
         ]);          
     }    
-    
-    public function viewAction() 
-    {       
-        $carId = (int)$this->params()->fromRoute('id', -1);
-        $page = $this->params()->fromQuery('page', 1);
+ 
+    public function updateGroupAplAction()
+    {
+        $groupId = (int)$this->params()->fromRoute('id', -1);
         
         // Validate input parameter
-        if ($carId<0) {
+        if ($groupId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
-        $car = $this->entityManager->getRepository(Car::class)
-                ->findOneById($carId);
+        $group = $this->entityManager->getRepository(GenericGroup::class)
+                ->findOneById($groupId);
         
-        if ($car == null) {
+        if ($group == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
-        
-        $prevQuery = $this->entityManager->getRepository(Car::class)
-                        ->findAllCar($car->getModel(), ['prev1' => $car->getTdId()]);
-        $nextQuery = $this->entityManager->getRepository(Car::class)
-                        ->findAllCar($car->getModel(), ['next1' => $car->getTdId()]);        
-
-        $goodsQuery = $this->entityManager->getRepository(Car::class)
-                        ->findGoods($car);
-        
-        $goodsAdapter = new DoctrineAdapter(new ORMPaginator($goodsQuery, false));
-        $goodsPaginator = new Paginator($goodsAdapter);
-        $goodsPaginator->setDefaultItemCountPerPage(10);        
-        $goodsPaginator->setCurrentPageNumber($page);
-
-        $totalGoods = $goodsPaginator->getTotalItemCount();
-        // Render the view template.
-        return new ViewModel([
-            'car' => $car,
-            'goods' => $goodsPaginator,
-            'totalGoods' => $totalGoods,
-            'prev' => $prevQuery->getResult(), 
-            'next' => $nextQuery->getResult(),
-        ]);
-    }      
-    
-    public function updateAvailableAction()
-    {
-        $carId = (int)$this->params()->fromRoute('id', -1);
-        
-        // Validate input parameter
-        if ($carId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $car = $this->entityManager->getRepository(Car::class)
-                ->findOneById($carId);
-        
-        if ($car == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-
-        $this->entityManager->getRepository(Car::class)
-                ->updateAvailable($car);
-        
-        return new JsonModel([
-            'result' => 'ok-reload',
-        ]);                  
-    }
-
-    public function updateAllStatusAction()
-    {
 
         $this->entityManager->getRepository(GenericGroup::class)
-                ->updateGoodCount();
-        
-        return new JsonModel([
-            'result' => 'ok-reload',
-        ]);                  
-    }
-
-
-    public function fillCarsAction()
-    {
-        $modelId = (int)$this->params()->fromRoute('id', -1);
-        
-        // Validate input parameter
-        if ($modelId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $model = $this->entityManager->getRepository(Model::class)
-                ->findOneById($modelId);
-        
-        if ($model == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-
-        $this->carManager->fillCars($model);
-
-        return new JsonModel([
-            'result' => 'ok-reload',
-        ]);                  
-    }
-    
-    public function fillMakeCarsAction()
-    {
-        set_time_limit(1800);
-        
-        $makeId = (int)$this->params()->fromRoute('id', -1);
-        
-        // Validate input parameter
-        if ($makeId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $make = $this->entityManager->getRepository(Make::class)
-                ->findOneById($makeId);
-        
-        if ($make == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-
-        foreach ($make->getModels() as $model){
-            $this->carManager->fillCars($model);
-        }    
-
-        return new JsonModel([
-            'result' => 'ok-reload',
-        ]);                  
-    }
-    
-    public function fillAllModelsAction()
-    {
-
-        $this->makeManager->fillAllModels();
+                ->updateGroupApl($group);
 
         return new JsonModel([
             'result' => 'ok',
         ]);                  
+        
     }
-    
-    public function viewModelAction() 
-    {       
-        $modelId = (int)$this->params()->fromRoute('id', -1);
-        
-        // Validate input parameter
-        if ($modelId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $model = $this->entityManager->getRepository(Model::class)
-                ->findOneById($modelId);
-        
-        if ($model == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        $prevQuery = $this->entityManager->getRepository(Model::class)
-                        ->findAllModel($model->getMake(), ['prev1' => $model->getName()]);
-        $nextQuery = $this->entityManager->getRepository(Model::class)
-                        ->findAllModel($model->getMake(), ['next1' => $model->getName()]);        
-
-        // Render the view template.
-        return new ViewModel([
-            'model' => $model,
-            'prev' => $prevQuery->getResult(), 
-            'next' => $nextQuery->getResult(),
-        ]);
-    }      
-    
 }
