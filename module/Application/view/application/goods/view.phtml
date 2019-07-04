@@ -176,10 +176,10 @@ $this->headScript()
                                         </td>
                                         <td width="10">
                                             <nobr>
-<!--                                                <button value="/goods/update-attribute-form/<?= $goods->getId()?>?attr=<?= $attributeValue->getAttribute()->getId()?>" type="button"
+                                                <button value="/goods/update-attribute-form/<?= $goods->getId()?>?attr=<?= $attributeValue->getAttribute()->getId()?>" type="button"
                                                         class="btn btn-default btn-xs" title="Изменить" data-toggle="modal" data-target="#modal-dialog">
                                                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                                </button>-->
+                                                </button>
                                                 <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
                                                         class="btn btn-default btn-xs this-delete" title="Не показывать">
                                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -522,6 +522,7 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
+    
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
         $('.nameAplEdit').editable();
@@ -727,4 +728,4 @@ $this->headScript()
                 });        
         }        
     })        
-    
+</script>
