@@ -1258,7 +1258,7 @@ class AplService {
             $post = [
                 'good' => $good->getId(),
                 'good_id' => $good->getAplId(),
-                'images' => [],
+//                'images' => [],
             ];
 
             $imgQuery = $this->entityManager->getRepository(Goods::class)
