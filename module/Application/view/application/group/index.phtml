@@ -148,12 +148,13 @@ $this->headScript()
         var url = '/group/update-apl-group/'+row.id;
         var btn = '<button';
         btn += ' type="button"';
+        btn += ' value="'+url+'"';
         btn += ' class="btn btn-info btn-xs refresh-table-button"';
         btn += ' title="Обновить группу АПЛ"'; 
         btn += '<span class="glyphicon glyphicon-refresh"></span>';
         btn += '</button>';
         
-        retun value+' '+btn;
+        return value+' '+btn;
     }    
     
     function responseHandler(res) {
