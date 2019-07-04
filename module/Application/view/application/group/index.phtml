@@ -44,7 +44,7 @@ $this->headScript()
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
                      <th data-field="tdId" data-sortable="true">TD</th>
-                     <th data-field="aplId" data-sortable="true">АПЛ</th>
+                     <th data-field="aplId" data-sortable="true" data-formatter="aplFormatter">АПЛ</th>
                      <th data-field="name" data-sortable="true">Наименование</th>             
                      <th data-field="assemblyGroup" data-sortable="true">Группа сборки</th>             
                      <th data-field="masterName" data-sortable="true">Основная группа</th>             
@@ -144,29 +144,15 @@ $this->headScript()
         ].join(''); 
     }    
     
-    function statusFormatter(value, row){
-        switch (value){
-            case '1': return 'RU Словарь'; 
-            case '2': return 'RU'; 
-            case '3': return 'RU 1'; 
-            case '4': return 'RU Аббревиатура'; 
-            case '11': return 'EN Словарь'; 
-            case '12': return 'EN'; 
-            case '13': return 'EN 1'; 
-            case '14': return 'EN Аббревиатура'; 
-            case '21': return 'Число'; 
-            default: return 'Неизвестно';    
-        }
-    }
-    
-    function flagFormatter(value, row){
-        switch (value){
-            case '1': return 'Белый'; 
-            case '8': return 'Серый'; 
-            case '9': return 'Черный'; 
-            default: return 'Неизвестно';    
-        }
-    }
+    function aplFormatter(value, row){
+        var url = '/group/update-apl-group/'+row.id;
+        var btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-info btn-xs refresh-table-button"';
+        btn += ' title="Обновить группу АПЛ"'; 
+        btn += '<span class="glyphicon glyphicon-refresh"></span>';
+        btn += '</button>';
+    }    
     
     function responseHandler(res) {
         return res;
