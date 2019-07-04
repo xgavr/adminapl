@@ -1278,11 +1278,11 @@ class AplService {
             }
             
 //            var_dump($post); exit;
-            if (!count($post['images'])){
+//            if (!count($post['images'])){
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
                 return;        
-            }
+//            }
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');

@@ -181,4 +181,23 @@ class GenericGroupRepository extends EntityRepository{
         
         return;
     }
+    
+    /**
+     * Найти группу апл соответствующую общей групе
+     * 
+     * @param GenericGroup $genericGroup
+     */
+    public function findGroupApl($genericGroup)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g.groupApl')
+                ->from(\Application\Entity\Goods::class, 'g')
+                ->where('g.genericGroup = ?1')
+                ->andWhere('g.')
+                ->setParameter('1', $genericGroup->getId())
+                ;
+    }
 }
