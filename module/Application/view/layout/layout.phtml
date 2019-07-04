@@ -88,7 +88,7 @@
                     .fail(function (e) {
                         console.log(e);
                     });                
-            };
+            }
             
             // вызов проверки на авторизацию
             checkLogin();
@@ -108,7 +108,7 @@
                             alert("Ошибка открытия формы.");
                         }); 
                 }
-            });    
+            })    
 
 //удаление по классу
             $('.this-delete').on('click', function(e) {
@@ -138,7 +138,7 @@
                             });
                     }        
                 }        
-            });    
+            })    
             
             /*
             *Удаление в bootstrap таблице
@@ -171,7 +171,7 @@
                             });
                     }        
                 }        
-            };   
+            }   
 
             $('.refresh-button').on('click', function(e) {
                 var url = e.currentTarget.value;
@@ -198,11 +198,10 @@
                             bootbox.alert("Произошла ошибка при выполнении операции.");
                         });        
                 }        
-            });    
+            })    
 
-            function refreshTableButton(e){
+            $('.refresh-table-button').on('click', function(e) {
                 var url = e.currentTarget.value;
-                console.log(e);
                 if (url){
                     var dialog = bootbox.dialog({
                         message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
@@ -215,7 +214,7 @@
                     })
                         .done(function (obj) {
                             dialog.modal('hide');
-    //                            var data = jQuery.parseJSON(obj);
+//                            var data = jQuery.parseJSON(obj);
                             data = obj;
                             if (data.result == 'ok'){
                                 //bootbox.alert("Ок!");
@@ -235,18 +234,14 @@
                             bootbox.alert("Произошла ошибка при выполнении операции.");
                         });        
                 }        
-            }
-
-            $('.refresh-table-button').on('click', function(e) {                
-                refreshTableButton(e);
-            });    
+            })    
 
             //форматирование числа
             numberFormat = function(value){
                 var res = parseFloat(value).toFixed(2);
                 res = res.replace('.',',');
                 return res.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1&nbsp;")
-            };
+            }
 
             /**
             * Объект или массив в html
@@ -266,7 +261,7 @@
 
                 result = result + '</div>';
                 return result;
-            };
+            }
 
             
         </script>        
