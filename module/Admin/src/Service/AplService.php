@@ -1290,7 +1290,7 @@ class AplService {
 
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
