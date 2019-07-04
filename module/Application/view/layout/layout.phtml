@@ -202,6 +202,7 @@
 
             function refreshTableButton(e){
                 var url = e.currentTarget.value;
+                console.log(e);
                 if (url){
                     var dialog = bootbox.dialog({
                         message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
@@ -236,7 +237,7 @@
                 }        
             }
 
-            $('.refresh-table-button').on('click', function(e) {
+            $('.refresh-table-button').on('click', function(e) {                
                 refreshTableButton(e);
             });    
 
