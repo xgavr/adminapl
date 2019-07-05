@@ -56,13 +56,14 @@ class GenericGroupRepository extends EntityRepository{
             if (isset($params['next1'])){
                 $queryBuilder->where('g.name > ?1')
                     ->setParameter('1', $params['next1'])
+                    ->addOrderBy('g.name')
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
                 $queryBuilder->where('g.name < ?2')
                     ->setParameter('2', $params['prev1'])
-                    ->orderBy('g.name', 'DESC')
+                    ->addOrderBy('g.name', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }
