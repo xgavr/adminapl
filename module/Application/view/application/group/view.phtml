@@ -44,6 +44,30 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endif;?>                            
                 </td>
             </tr>
+        </table>    
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    Группа сборки
+                </th>
+                <th>
+                    Основная группа
+                </th>
+                <th>
+                    Использование
+                </th>                
+            </tr>
+            <tr>
+                <td>
+                    <?= $group->getAssemblyGroup()?>
+                </td>
+                <td>
+                    <?= $group->getMasterName()?>
+                </td>
+                <td>
+                    <?= $group->getUsageName()?>
+                </td>
+            </tr>
         </table>
         <div id="goodsToolbar">
             <div class="form-inline" role="form">

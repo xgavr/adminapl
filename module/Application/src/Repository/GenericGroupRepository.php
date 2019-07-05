@@ -72,7 +72,7 @@ class GenericGroupRepository extends EntityRepository{
                         ;
             }            
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
+                $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);                
             }            
         }
 
