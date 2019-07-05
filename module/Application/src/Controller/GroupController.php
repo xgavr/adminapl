@@ -83,9 +83,9 @@ class GroupController extends AbstractActionController
         }        
         
         $prevQuery = $this->entityManager->getRepository(GenericGroup::class)
-                        ->findAllGroup(['prev1' => $group->getCode()]);
+                        ->findAllGroup(['prev1' => $group->getName()]);
         $nextQuery = $this->entityManager->getRepository(GenericGroup::class)
-                        ->findAllGroup(['next1' => $group->getCode()]);        
+                        ->findAllGroup(['next1' => $group->getName()]);        
 
         // Render the view template.
         return new ViewModel([
