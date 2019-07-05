@@ -207,4 +207,22 @@ class GenericGroupRepository extends EntityRepository{
         
         return $queryBuilder->getQuery()->getResult();
     }
+    
+    /**
+     * Обновить группу апл
+     * 
+     * @param GenericGroup $genericGroup
+     * @return type
+     */
+    public function updateGroupApl($genericGroup)
+    {
+        $aplGroups = $this->getGroupApl($genericGroup);
+        if (count($aplGroups)){
+            foreach($aplGroups as $row){
+                $this->getEntityManager()->getConnection()->update('generic_group', ['apl_id' => $row['groupApl']], ['id' => $genericGroup->getId()]);
+                return;
+            }    
+        }
+        return;
+    }
 }
