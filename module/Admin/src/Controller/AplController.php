@@ -323,7 +323,7 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodRawprice($good);
         
         return new JsonModel([
-            'result' => 'ok-reload',
+            'ok'
         ]);
     }
     
@@ -333,7 +333,7 @@ class AplController extends AbstractActionController
         $this->aplService->updateGoodsRawprice();
         
         return new JsonModel([
-            ['ok']
+            'ok'
         ]);
     }        
     
@@ -353,7 +353,7 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodOem($good);
         
         return new JsonModel([
-            'result' => 'ok-reload',
+            'ok'
         ]);
     }
     
@@ -363,7 +363,7 @@ class AplController extends AbstractActionController
         $this->aplService->updateGoodsOem();
         
         return new JsonModel([
-            ['ok']
+            'ok'
         ]);
     }        
     
@@ -383,7 +383,7 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodImg($good);
         
         return new JsonModel([
-            'result' => 'ok-reload',
+            'ok'
         ]);
     }
     
@@ -393,7 +393,7 @@ class AplController extends AbstractActionController
         $this->aplService->updateGoodsImg();
         
         return new JsonModel([
-            ['ok']
+            'ok'
         ]);
     }        
 
@@ -413,7 +413,7 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodAttribute($good);
         
         return new JsonModel([
-            'result' => 'ok-reload',
+            'ok'
         ]);
     }
     
