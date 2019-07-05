@@ -93,6 +93,34 @@ class GroupController extends AbstractActionController
         ]);
     }      
     
+    public function updateGoodCountAction()
+    {
+        $groupId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($groupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $group = $this->entityManager->getRepository(GenericGroup::class)
+                ->findOneById($groupId);
+        
+        if ($group == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->count(['genericGroup' => $group->getId()]);
+        $this->entityManager->getConnection()->update('generic_group', ['good_count' => $goodCount], ['id' => $group->getId()]);            
+
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+                
+    }
  
     public function updateGroupAplAction()
     {
