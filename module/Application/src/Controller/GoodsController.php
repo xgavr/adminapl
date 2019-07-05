@@ -1051,7 +1051,7 @@ class GoodsController extends AbstractActionController
                     ->findOneById($attributeId);
                     
             if ($attribute){
-//                $this->goodsManager->updateAttribute($attribute, ['name' => $data['name']]);                    
+                $this->goodsManager->updateAttribute($attribute, ['name' => $data['value']]);                    
             }    
         }
         

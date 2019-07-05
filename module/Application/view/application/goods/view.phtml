@@ -160,11 +160,11 @@ $this->headScript()
                             <p>
                                 <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
                                     <tr style="text-decoration: <?= $attributeValue->getAttribute()->getStatusDecorationAsString()?>">
-                                        <td width='30%' align='right'>
+                                        <td align='right'>
                                             <a href="#" 
                                                class="nameAplEdit" data-type="text" 
                                                data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
-                                               data-name="nameApl" 
+                                               data-name="name" 
                                                data-url="/goods/attribute-edit">
                                                 <?= $attributeValue->getAttribute()->getName()?>
                                             </a>
