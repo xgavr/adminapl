@@ -256,9 +256,10 @@ class GoodsController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         $producer = $this->params()->fromQuery('producer');
+        $group = $this->params()->fromQuery('group');
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->findAllGoods(['q' => $q, 'sort' => $sort, 'order' => $order, 'producerId' => $producer]);
+                        ->findAllGoods(['q' => $q, 'sort' => $sort, 'order' => $order, 'producerId' => $producer, 'groupId' => $group]);
         
         $total = count($query->getResult(2));
         

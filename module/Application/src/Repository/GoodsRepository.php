@@ -183,6 +183,13 @@ class GoodsRepository extends EntityRepository
                     ->setMaxResults(1)    
                  ;
             }
+            if (isset($params['groupId'])){
+                if ($params['groupId']){
+                    $queryBuilder->andWhere('c.genericGroup = ?6')
+                        ->setParameter('6', $params['groupId'])
+                     ;
+                }    
+            }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
             }            
