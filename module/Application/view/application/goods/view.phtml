@@ -161,30 +161,22 @@ $this->headScript()
                                 <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
                                     <tr style="text-decoration: <?= $attributeValue->getAttribute()->getStatusDecorationAsString()?>">
                                         <td width='30%' align='right'>
-                                            <nobr>
-                                                <a href="#" 
-                                                   class="nameAplEdit" data-type="text" 
-                                                   data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
-                                                   data-name="nameApl" 
-                                                   data-url="/goods/attribute-edit">
-                                                    <?= $attributeValue->getAttribute()->getName()?>
-                                                </a>
-                                            </nobr>
+                                            <a href="#" 
+                                               class="nameAplEdit" data-type="text" 
+                                               data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
+                                               data-name="nameApl" 
+                                               data-url="/goods/attribute-edit">
+                                                <?= $attributeValue->getAttribute()->getName()?>
+                                            </a>
                                         </td>
                                         <td>
                                             <?= $attributeValue->getAttributeValue()->getValue();?>
                                         </td>
                                         <td width="10">
-                                            <nobr>
-                                                <button value="/goods/update-attribute-form/<?= $goods->getId()?>?attr=<?= $attributeValue->getAttribute()->getId()?>" type="button"
-                                                        class="btn btn-default btn-xs" title="Изменить" data-toggle="modal" data-target="#modal-dialog">
-                                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                                </button>
-                                                <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
-                                                        class="btn btn-default btn-xs this-delete" title="Не показывать">
-                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                                </button>
-                                            </nobr>
+                                            <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
+                                                    class="btn btn-default btn-xs this-delete" title="Не показывать">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </button>
                                         </td>
                                     </tr>                                              
                                 <?php endforeach;?>
