@@ -48,10 +48,10 @@ $this->pageBreadcrumbs()->setItems([
                     <div class="panel-body">
                         <div class="pull-left">
                             AplId: 
-                                <?= $car->getAplId()?>
+                                <?= $group->getAplId()?>
                         </div>
                         <div class="pull-right">
-                            <button value="/apl/car-apl-id/<?= $car->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                            <button value="/apl/car-apl-id/<?= $group->getId()?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Обновить АПЛ Ид">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
@@ -59,10 +59,10 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            Товары<sup><?= $totalGoods?></sup>
+                            Товары<sup><?= $group->goodCount()?></sup>
                         </div>
                         <div class="pull-right">
-                            <button value="/car/update-available/<?= $car->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                            <button value="/car/update-available/<?= $group->getId()?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Обновить доступность">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
