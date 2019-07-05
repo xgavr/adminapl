@@ -1,26 +1,24 @@
 <?php
-$this->headTitle($car->getName());
+$this->headTitle($group->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Машины'=>$this->url('make'),
-            $car->getModel()->getMake()->getName() => $this->url('make', ['action' => 'view', 'id' => $car->getModel()->getMake()->getId()]),
-            $car->getModel()->getName() => $this->url('make', ['action' => 'view-model', 'id' => $car->getModel()->getId()]),
-            $car->getName()=>$this->url('car', ['action'=>'view', 'id'=>$car->getId()])
+            'Группы'=>$this->url('group'),
+            $group->getName()=>$this->url('group', ['action'=>'view', 'id'=>$group->getId()])
             ]);
 
 ?>
 
 <h1>
-    <?= $car->getName();?>
+    <?= $group->getName();?>
     <sup>
-        <?= $car->getTdId();?>
+        <?= $group->getTdId();?>
     </sup>
 </h1>
 <p>
-    <?= $car->getStatusAsString();?>
+    <?= $group->getStatusAsString();?>
 </p>
 <div class="row">
     <div class="col-md-9">
@@ -29,50 +27,15 @@ $this->pageBreadcrumbs()->setItems([
             <tr>
                 <td colspan="3">            
                     <?php if ($prev):?>
-                        <a href="/car/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
+                        <a href="/group/view/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getName()?></a>
                     <?php endif;?>            
                 </td>
                 <td colspan="3" align="right">
                     <?php if ($next):?>
-                        <a href="/car/view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
+                        <a href="/group/view/<?= $next[0]->getId()?>"><?= $next[0]->getName()?>&rarr;</a>
                     <?php endif;?>                            
                 </td>
             </tr>
-            <?php foreach($car->getCarAtributeValues() as $carAttributeValue):?>
-            <tr>
-                <td>
-                    <?= $carAttributeValue->getCarAtributeType()->getCarAtributeGroup()->getName()?>
-                </td>
-                <td>
-                    <?= $carAttributeValue->getCarAtributeType()->getTitle()?>
-                </td>
-                <td colspan="4">
-                    <?= $carAttributeValue->getValue()?>
-                </td>
-            </tr>
-            <?php endforeach;?>
-        </table>
-
-        <h3>Товары<sup><?= $totalGoods?></sup></h3>
-        <table class="table table-striped">
-            <tr>
-                <td colspan="6">
-                    <?= $this->paginationControl($goods,
-                                'Sliding',
-                                'application/partial/paginator', 
-                                ['route' => array('route' => 'car', 'action' => 'view', 'id' => $car->getId())]); ?>
-
-                </td>
-            </tr>
-            <?php    foreach ($goods as $good):?>
-                <tr>
-                    <td colspan="6">
-                        <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()]);?>">
-                            <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
-                        </a>   
-                    </td>
-                </tr>
-            <?php endforeach;?>        
         </table>
     </div>
     <div class="col-md-3" id="side-nav" >

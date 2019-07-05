@@ -63,6 +63,36 @@ class GroupController extends AbstractActionController
             'rows' => $result,
         ]);          
     }    
+    
+    public function viewAction() 
+    {       
+        $groupId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($groupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $group = $this->entityManager->getRepository(GenericGroup::class)
+                ->findOneById($groupId);
+        
+        if ($group == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $prevQuery = $this->entityManager->getRepository(GenericGroup::class)
+                        ->findAllGroup(['prev1' => $group->getCode()]);
+        $nextQuery = $this->entityManager->getRepository(GenericGroup::class)
+                        ->findAllGroup(['next1' => $group->getCode()]);        
+
+        // Render the view template.
+        return new ViewModel([
+            'group' => $group,
+        ]);
+    }      
+    
  
     public function updateGroupAplAction()
     {

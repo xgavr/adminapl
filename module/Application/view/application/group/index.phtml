@@ -44,8 +44,8 @@ $this->headScript()
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
                      <th data-field="tdId" data-sortable="true">TD</th>
-                     <th data-field="aplId" data-sortable="true" data-formatter="aplFormatter">АПЛ</th>
-                     <th data-field="name" data-sortable="true">Наименование</th>             
+                     <th data-field="aplId" data-sortable="true">АПЛ</th>
+                     <th data-field="name" data-sortable="true" data-formatter="linkFormatter">Наименование</th>             
                      <th data-field="assemblyGroup" data-sortable="true">Группа сборки</th>             
                      <th data-field="masterName" data-sortable="true">Основная группа</th>             
                      <th data-field="usageName" data-sortable="true">Использование</th>             
@@ -138,23 +138,8 @@ $this->headScript()
     
     function linkFormatter(value, row){
         return [
-            '<div class="pull-left">',
-            '<a href="/make/view/' + row.id + '" target="_blank">' + value + '</a>',
-            '</div>'
+            '<a href="/group/view/' + row.id + '" target="_blank">' + value + '</a>',
         ].join(''); 
-    }    
-    
-    function aplFormatter(value, row){
-        var url = '/group/update-group-apl/'+row.id;
-        var btn = '<button';
-        btn += ' value="'+url+'"';
-        btn += ' class="btn btn-default btn-xs"';
-        btn += ' onclick="refreshTableButton(this)"';
-        btn += ' title="Обновить группу АПЛ">'; 
-        btn += '<span class="glyphicon glyphicon-refresh"></span>';
-        btn += '</button>';
-        
-        return btn+' '+value;
     }    
     
     function responseHandler(res) {
