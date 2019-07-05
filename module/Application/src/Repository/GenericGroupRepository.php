@@ -223,8 +223,8 @@ class GenericGroupRepository extends EntityRepository{
             $queryBuilder->update(Goods::class, 'g')
                     ->where('g.genericGroup = ?1')
                     ->andWhere($queryBuilder->expr()->orX(
-                            $queryBuilder->expr()->eq('a.groupApl', 0),
-                            $queryBuilder->expr()->eq('a.groupApl', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
+                            $queryBuilder->expr()->eq('g.groupApl', 0),
+                            $queryBuilder->expr()->eq('g.groupApl', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
                         )
                     )
                     ->andWhere('g.groupApl != ?2')
