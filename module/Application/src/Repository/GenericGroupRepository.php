@@ -209,6 +209,36 @@ class GenericGroupRepository extends EntityRepository{
     }
     
     /**
+     * Быстрое обновление группы апл в товарах общей группы
+     * 
+     * @param GenericGroup $genericGroup
+     * @return integer
+     */
+    public function updateGoodsGroupApl($genericGroup)
+    {
+        if ($genericGroup->getAplId()){
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->update(Goods::class, 'g')
+                    ->where('g.genericGroup = ?1')
+                    ->andWhere('g.groupApl = 0')
+                    ->andWhere('g.groupApl = ?2')
+                    ->andWhere('g.groupApl != ?3')
+                    ->set('g.groupApl', $genericGroup->getAplId())
+                    ->setParameter('1', $genericGroup->getId())
+                    ->setParameter('2', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
+                    ->setParameter('3', $genericGroup->getAplId())
+                    ;
+
+            return $queryBuilder->getQuery()->getResult();        
+        }
+        
+        return;
+    }
+    
+    
+    /**
      * Обновить группу апл
      * 
      * @param GenericGroup $genericGroup
@@ -220,6 +250,7 @@ class GenericGroupRepository extends EntityRepository{
         if (count($aplGroups)){
             foreach($aplGroups as $row){
                 $this->getEntityManager()->getConnection()->update('generic_group', ['apl_id' => $row['groupApl']], ['id' => $genericGroup->getId()]);
+                $this->updateGoodsGroupApl($genericGroup);
                 return;
             }    
         }

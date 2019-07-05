@@ -150,7 +150,22 @@ class GroupController extends AbstractActionController
 
         return new JsonModel([
             'result' => 'ok-reload',
-        ]);                  
+        ]);                          
+    }
+    
+    public function updateAplGroupsAction()
+    {
+        $groups = $this->entityManager->getRepository(GenericGroup::class)
+                ->findBy(['status' => GenericGroup::STATUS_ACTIVE]);
+        foreach ($groups as $group){
+            if ($group->getTdId()){
+                $this->entityManager->getRepository(GenericGroup::class)
+                        ->updateGroupApl($group);
+            }    
+        }
         
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                          
     }
 }
