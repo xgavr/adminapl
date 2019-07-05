@@ -201,7 +201,7 @@ class GenericGroupRepository extends EntityRepository{
                 ->andWhere('g.groupApl != 0')
                 ->setParameter('1', $genericGroup->getId())
                 ->setParameter('2', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
-                ->groupBy(['g.groupApl'])
+                ->groupBy('g.groupApl')
                 ->orderBy('goodCount', 'DESC')
                 ;
         
