@@ -26,7 +26,15 @@ $this->pageBreadcrumbs()->setItems([
     </sup>
 </h1>
 <p>
-    <?= $group->getStatusAsString();?>
+    <?= $group->getAssemblyGroup()?> 
+    <?= $group->getMasterName()?> 
+    <?= $group->getUsageName()?> 
+</p>
+<p>
+    <?php foreach ($aplGroups as $aplGroup):?>
+        <span><?= $aplGroup['aplGroup']?></span> 
+        <span>(<?= $aplGroup['goodCount']?>)</span>
+    <?php endforeach;?> 
 </p>
 <div class="row">
     <div class="col-md-9">

@@ -184,11 +184,11 @@ class GenericGroupRepository extends EntityRepository{
     }
     
     /**
-     * Обновить группу апл соответствующую общей групе
+     * Получить группы апл соответствующую общей групе
      * 
      * @param GenericGroup $genericGroup
      */
-    public function updateGroupApl($genericGroup)
+    public function getGroupApl($genericGroup)
     {
         $entityManager = $this->getEntityManager();
 
@@ -198,21 +198,13 @@ class GenericGroupRepository extends EntityRepository{
                 ->from(\Application\Entity\Goods::class, 'g')
                 ->where('g.genericGroup = ?1')
                 ->andWhere('g.groupApl != ?2')
+                ->andWhere('g.groupApl != 0')
                 ->setParameter('1', $genericGroup->getId())
                 ->setParameter('2', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
                 ->groupBy(['g.groupApl'])
                 ->orderBy('goodCount', 'DESC')
                 ;
         
-        $data = $queryBuilder->getQuery()->getResult();
-        var_dump($data); exit;
-        if (count($data)){
-            foreach ($data as $row){
-                $this->getEntityManager()->getConnection()->update('generic_group', ['apl_id' => $row['groupApl']], ['id' => $genericGroup->getId()]);
-                return;
-            }
-        }    
-        return;
-        
+        return $queryBuilder->getQuery()->getResult();
     }
 }
