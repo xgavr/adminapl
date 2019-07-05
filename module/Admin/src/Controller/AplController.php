@@ -323,7 +323,7 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodRawprice($good);
         
         return new JsonModel([
-            'ok'
+            'oke'
         ]);
     }
     
@@ -353,7 +353,7 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodOem($good);
         
         return new JsonModel([
-            'ok'
+            'oke'
         ]);
     }
     
@@ -383,7 +383,7 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodImg($good);
         
         return new JsonModel([
-            'ok'
+            'oke'
         ]);
     }
     
@@ -413,7 +413,7 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodAttribute($good);
         
         return new JsonModel([
-            'ok'
+            'oke'
         ]);
     }
     
