@@ -220,7 +220,7 @@ class GenericGroupRepository extends EntityRepository{
             $entityManager = $this->getEntityManager();
 
             $queryBuilder = $entityManager->createQueryBuilder();
-            $queryBuilder->update(Goods::class, 'g')
+            $queryBuilder->update(\Application\Entity\Goods::class, 'g')
                     ->where('g.genericGroup = ?1')
                     ->andWhere($queryBuilder->expr()->orX(
                             $queryBuilder->expr()->eq('g.groupApl', 0),
