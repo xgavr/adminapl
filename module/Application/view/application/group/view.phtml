@@ -59,7 +59,7 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            Товары<sup><?= $group->goodCount()?></sup>
+                            Товары<sup><?= $group->getGoodCount()?></sup>
                         </div>
                         <div class="pull-right">
                             <button value="/car/update-available/<?= $group->getId()?>" class="btn btn-info btn-xs refresh-table-button"
