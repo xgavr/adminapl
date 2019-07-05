@@ -90,6 +90,8 @@ class GroupController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'group' => $group,
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
         ]);
     }      
     
