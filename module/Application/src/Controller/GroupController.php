@@ -149,7 +149,7 @@ class GroupController extends AbstractActionController
                 ->updateGroupApl($group);
 
         return new JsonModel([
-            'result' => 'ok',
+            'result' => 'ok-reload',
         ]);                  
         
     }
