@@ -222,13 +222,15 @@ class GenericGroupRepository extends EntityRepository{
             $queryBuilder = $entityManager->createQueryBuilder();
             $queryBuilder->update(Goods::class, 'g')
                     ->where('g.genericGroup = ?1')
-                    ->andWhere('g.groupApl = 0')
-                    ->andWhere('g.groupApl = ?2')
-                    ->andWhere('g.groupApl != ?3')
+                    ->andWhere($queryBuilder->expr()->orX(
+                            $queryBuilder->expr()->eq('a.groupApl', 0),
+                            $queryBuilder->expr()->eq('a.groupApl', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
+                        )
+                    )
+                    ->andWhere('g.groupApl != ?2')
                     ->set('g.groupApl', $genericGroup->getAplId())
                     ->setParameter('1', $genericGroup->getId())
-                    ->setParameter('2', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
-                    ->setParameter('3', $genericGroup->getAplId())
+                    ->setParameter('2', $genericGroup->getAplId())
                     ;
 
             return $queryBuilder->getQuery()->getResult();        
