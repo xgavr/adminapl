@@ -194,7 +194,7 @@ class GenericGroupRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('g.groupApl, count(d.id) as goodCount')
+        $queryBuilder->select('g.groupApl, count(g.id) as goodCount')
                 ->from(\Application\Entity\Goods::class, 'g')
                 ->where('g.genericGroup = ?1')
                 ->andWhere('g.groupApl != ?2')
