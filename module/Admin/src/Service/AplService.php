@@ -611,6 +611,9 @@ class AplService {
                 'makerid' => $good->getProducer()->getAplId(),
                 'createnew' => 1,
             ];
+            if ($good->getGroupApl()>0){
+                $post['g2'] = $good->getGroupApl();
+            }
             
             $client = new Client();
             $client->setUri($url);
