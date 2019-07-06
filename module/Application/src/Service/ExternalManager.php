@@ -898,7 +898,7 @@ class ExternalManager
         
         if ($genericGroup){
             $data = ['generic_group_id' => $genericGroup->getId()];
-            if ($genericGroup->getAplId()>0 && $good->getGroupApl()<=0){
+            if ($genericGroup->getAplId()>0){
                 $data['group_apl'] = $genericGroup->getAplId();
             }
             $this->entityManager->getRepository(Goods::class)
