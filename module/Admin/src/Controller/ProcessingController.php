@@ -804,6 +804,33 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Обновление группы Apl общих групп
+     * 
+     * @return JsonModel
+     */
+    public function updateGenericGroupAplIdAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['get_group_apl'] == 1){
+            
+            $groups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
+                    ->findBy(['status' => \Application\Entity\GenericGroup::STATUS_ACTIVE]);
+            foreach ($groups as $group){
+                if ($group->getTdId()){
+                    $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
+                            ->updateGroupApl($group);
+                }    
+            }
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Обновление AplId товаров
      * 
      * @return JsonModel
