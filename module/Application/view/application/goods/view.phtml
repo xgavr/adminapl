@@ -59,7 +59,10 @@ $this->headScript()
                     </span>    
                 </h3>
                 <h4>
-                    <?= $goods->getGenericGroup()->getName().' ('.$goods->getGenericGroup()->getTdId().')('.$goods->getGenericGroup()->getAplId().')';?>
+                    <?= $goods->getGenericGroup()->getName().' ('.$goods->getGenericGroup()->getTdId().')'?>
+                    <?php if ($goods->getGenericGroup()->getAplId()):?>
+                        <?= '('.$goods->getGenericGroup()->getAplId().')';?>
+                    <?php endif; ?>
                 </h4>    
                 <h5>
                     <?php if ($goods->getTokenGroup()):?>
