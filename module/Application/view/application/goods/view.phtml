@@ -59,7 +59,7 @@ $this->headScript()
                     </span>    
                 </h3>
                 <h4>
-                    <a href="<?= $this->url('group', ['action' => 'view', 'id' => $goods->getTokenGroup()->getId()])?>" target="_blank">
+                    <a href="<?= $this->url('group', ['action' => 'view', 'id' => $goods->getGenericGroup()->getId()])?>" target="_blank">
                         <?= $goods->getGenericGroup()->getName().' ('.$goods->getGenericGroup()->getTdId().')'?>
                         <?php if ($goods->getGenericGroup()->getAplId()):?>
                             <?= '('.$goods->getGenericGroup()->getAplId().')';?>
