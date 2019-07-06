@@ -59,16 +59,16 @@ $this->headScript()
                     </span>    
                 </h3>
                 <h4>
-                    <?= $goods->getGenericGroup()->getName().' ('.$goods->getGenericGroup()->getTdId().')'?>
-                    <?php if ($goods->getGenericGroup()->getAplId()):?>
-                        <?= '('.$goods->getGenericGroup()->getAplId().')';?>
-                    <?php endif; ?>
+                    <a href="<?= $this->url('group', ['action' => 'view', 'id' => $goods->getTokenGroup()->getId()])?>" target="_blank">
+                        <?= $goods->getGenericGroup()->getName().' ('.$goods->getGenericGroup()->getTdId().')'?>
+                        <?php if ($goods->getGenericGroup()->getAplId()):?>
+                            <?= '('.$goods->getGenericGroup()->getAplId().')';?>
+                        <?php endif; ?>
+                    </a>
                 </h4>    
                 <h5>
                     <?php if ($goods->getTokenGroup()):?>
-                        <a href="<?= $this->url('group', ['action' => 'view', 'id' => $goods->getTokenGroup()->getId()])?>" target="_blank">
-                            <?= $goods->getTokenGroup()->getName();?>
-                        </a>
+                        <?= $goods->getTokenGroup()->getName();?>
                     <?php else: ?>
                         Группа наименований не назначена
                     <?php endif?>
