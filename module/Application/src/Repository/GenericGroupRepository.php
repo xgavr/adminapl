@@ -209,6 +209,7 @@ class GenericGroupRepository extends EntityRepository{
     }
     
     /**
+     * НЕИСПОЛЬЗУЕТСЯ
      * Быстрое обновление группы апл в товарах общей группы
      * 
      * @param GenericGroup $genericGroup
@@ -252,7 +253,6 @@ class GenericGroupRepository extends EntityRepository{
         if (count($aplGroups)){
             foreach($aplGroups as $row){
                 $this->getEntityManager()->getConnection()->update('generic_group', ['apl_id' => $row['groupApl']], ['id' => $genericGroup->getId()]);
-                $this->updateGoodsGroupApl($genericGroup);
                 return;
             }    
         }
