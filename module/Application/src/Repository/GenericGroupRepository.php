@@ -190,6 +190,10 @@ class GenericGroupRepository extends EntityRepository{
      */
     public function getGroupApl($genericGroup)
     {
+        if (!$genericGroup->getTdId()){
+            return [];
+        }
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();

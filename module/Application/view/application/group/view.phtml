@@ -31,10 +31,12 @@ $this->pageBreadcrumbs()->setItems([
     <?= $group->getUsageName()?> 
 </p>
 <p>
-    <?php foreach ($aplGroups as $aplGroup):?>
-        <span><?= $aplGroup['groupApl']?></span> 
-        <span>(<?= $aplGroup['goodCount']?>)</span>
-    <?php endforeach;?> 
+    <?php if ($group->getTdId()):?>
+        <?php foreach ($aplGroups as $aplGroup):?>
+            <span><?= $aplGroup['groupApl']?></span> 
+            <span>(<?= $aplGroup['goodCount']?>)</span>
+        <?php endforeach;?> 
+    <?php endif;?>        
 </p>
 <div class="row">
     <div class="col-md-9">
@@ -98,10 +100,12 @@ $this->pageBreadcrumbs()->setItems([
                                 <?= $group->getAplId()?>
                         </div>
                         <div class="pull-right">
-                            <button value="/group/update-group-apl/<?= $group->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                                    title="Обновить АПЛ Ид">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button>                             
+                            <?php if ($group->getTdId()):?>
+                                <button value="/group/update-group-apl/<?= $group->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновить АПЛ Ид">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>
+                            <?php endif;?>
                         </div>
                     </div>
                     <div class="panel-body">
