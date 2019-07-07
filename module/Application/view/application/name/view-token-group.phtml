@@ -19,11 +19,15 @@ $this->pageBreadcrumbs()->setItems([
     </button> 
 
 </h1>
-<?= $tokenGroup->getLemms()?>
-<?php foreach ($aplGroups as $aplGroup):?>
-    <span><?= $aplGroup['groupApl']?></span> 
-    <span>(<?= $aplGroup['goodCount']?>)</span>
-<?php endforeach;?> 
+<div>
+    <?= $tokenGroup->getLemms()?>    
+</div>
+<div>
+    <?php foreach ($aplGroups as $aplGroup):?>
+        <span><?= $aplGroup['groupApl']?></span> 
+        <span>(<?= $aplGroup['goodCount']?>)</span>
+    <?php endforeach;?>     
+</div>
 <div class="row">
     <div class="col-md-9">
         <table class="table table-striped">
