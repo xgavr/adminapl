@@ -537,6 +537,8 @@ class NameController extends AbstractActionController
                         ->findAllTokenGroup(['prev1' => $tokenGroup->getIds()]);
         $nextQuery = $this->entityManager->getRepository(TokenGroup::class)
                         ->findAllTokenGroup(['next1' => $tokenGroup->getIds()]); 
+        $aplGroups = $this->entityManager->getRepository(TokenGroup::class)
+                ->getGroupApl($tokenGroup);
         
         
         $goodsQuery = $this->entityManager->getRepository(TokenGroup::class)
@@ -563,6 +565,7 @@ class NameController extends AbstractActionController
             'totalGoodsCount' => $totalGoodsCount,
             'tdGroups' => $tdGroups,
             'tdGroupActive' => $tdGroup,
+            'aplGroups' => $aplGroups,
         ]);
     }    
     

@@ -20,6 +20,10 @@ $this->pageBreadcrumbs()->setItems([
 
 </h1>
 <?= $tokenGroup->getLemms()?>
+<?php foreach ($aplGroups as $aplGroup):?>
+    <span><?= $aplGroup['groupApl']?></span> 
+    <span>(<?= $aplGroup['goodCount']?>)</span>
+<?php endforeach;?> 
 <div class="row">
     <div class="col-md-9">
         <table class="table table-striped">

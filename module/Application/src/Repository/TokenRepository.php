@@ -701,4 +701,31 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery();            
         
     }
+    
+    /**
+     * Получить группы апл соответствующую групе токенов
+     * 
+     * @param TokenGroup $tokenGroup
+     */
+    public function getGroupApl($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g.groupApl, count(g.id) as goodCount')
+                ->from(Goods::class, 'g')
+                ->where('g.tokenGroup = ?1')
+                ->andWhere('g.groupApl != ?2')
+                ->andWhere('g.groupApl != 0')
+                ->setParameter('1', $tokenGroup->getId())
+                ->setParameter('2', Goods::DEFAULT_GROUP_APL_ID)
+                ->groupBy('g.groupApl')
+                ->orderBy('goodCount', 'DESC')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    
 }
