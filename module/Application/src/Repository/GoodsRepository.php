@@ -520,7 +520,7 @@ class GoodsRepository extends EntityRepository
      * 
      * @return object
      */
-    public function findGoodsForGroup()
+    public function findGoodsForUpdateGroup()
     {
         $entityManager = $this->getEntityManager();
 
