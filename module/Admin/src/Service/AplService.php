@@ -1338,7 +1338,7 @@ class AplService {
             $url = $this->aplApi().'update-good-group?api='.$this->aplApiKey();
 
             $post = [
-                'good' => $good->getId(),
+                'good' => $good->getAplId(),
                 'group' => $good->getGroupApl(),
             ];
             
