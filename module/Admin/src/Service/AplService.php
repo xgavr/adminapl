@@ -1280,12 +1280,6 @@ class AplService {
                 }    
             }
             
-//            var_dump($post); exit;
-//            if (!count($post['images'])){
-//                $this->entityManager->getRepository(Goods::class)
-//                        ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
-//                return;        
-//            }
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
@@ -1324,6 +1318,67 @@ class AplService {
         
         foreach ($goods as $good){
             $this->sendGoodImg($good);
+            if (time() > $startTime + 1740){
+                return;
+            }
+            usleep(1000);
+        }
+        unset($goods);
+        return;
+    }
+    
+    /**
+     * Обновить группу товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function sendGroup($good)
+    {
+        if ($good->getAplId()){
+            $url = $this->aplApi().'update-group?api='.$this->aplApiKey();
+
+            $post = [
+                'good' => $good->getId(),
+                'group' => $good->getGroupApl(),
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGood($good, ['g.statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                
+            }    
+
+            unset($post);
+        }    
+        return;
+    }
+
+    /**
+     * Обновление групп в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodsGroup()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateGroup();
+        
+        foreach ($goods as $good){
+            $this->sendGroup($good);
             if (time() > $startTime + 1740){
                 return;
             }

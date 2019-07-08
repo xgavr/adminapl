@@ -898,14 +898,16 @@ class ExternalManager
         
         if ($genericGroup){
             $data = ['generic_group_id' => $genericGroup->getId()];
-            if ($genericGroup->getAplId()>0){
+            $statusData = ['status_group' => Goods::GROUP_UPDATED];
+            if ($genericGroup->getAplId()>0 && $good->getGroupApl() != $genericGroup->getAplId()){
                 $data['group_apl'] = $genericGroup->getAplId();
+                $statusData['status_group_ex'] = Goods::GROUP_EX_NEW;
             }
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), $data);            
         }
         
-        $this->entityManager->getConnection()->update('goods', ['status_group' => Goods::GROUP_UPDATED], ['id' => $good->getId()]);
+        $this->entityManager->getConnection()->update('goods', $statusData, ['id' => $good->getId()]);
         return;
     }
     

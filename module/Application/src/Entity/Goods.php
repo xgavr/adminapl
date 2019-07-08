@@ -57,6 +57,9 @@ class Goods {
     const PRICE_EX_NEW            = 1; // не передано
     const PRICE_EX_TRANSFERRED    = 2; // передано.
     
+    const GROUP_EX_NEW            = 1; // не передано
+    const GROUP_EX_TRANSFERRED    = 2; // передано.
+    
     const DEFAULT_GROUP_APL_ID    = -1; //группа апл по умолчнию 
     
     /**
@@ -139,6 +142,11 @@ class Goods {
      * @ORM\Column(name="status_price_ex")   
      */
     protected $statusPriceEx = self::PRICE_EX_NEW;
+
+    /**
+     * @ORM\Column(name="status_group_ex")   
+     */
+    protected $statusGroupEx = self::GROUP_EX_NEW;
 
     /**
      * @ORM\Column(name="car_count")   
@@ -732,6 +740,16 @@ class Goods {
     public function setStatusPriceEx($statusPriceEx)
     {
         $this->statusPriceEx = $statusPriceEx;
+    }    
+    
+    public function getStatusGroupEx()
+    {
+        $this->statusGroupEx;
+    }
+    
+    public function setStatusGroupEx($statusGroupEx)
+    {
+        $this->statusGroupEx = $statusGroupEx;
     }    
     
 }

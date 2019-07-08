@@ -516,6 +516,27 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления групп
+     * 
+     * @return object
+     */
+    public function findGoodsForGroup()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->andWhere('g.aplId > 0')    
+            ->andWhere('g.statusGroupEx = ?1')
+            ->setParameter('1', Goods::GROUP_EX_NEW)    
+            ->setMaxResults(10000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
      * Найти товары для обновления атрибутов
      * 
      * @return object
