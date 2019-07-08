@@ -891,7 +891,7 @@ class ProcessingController extends AbstractActionController
      * 
      * @return JsonModel
      */
-    public function updateGoodsGroupAction()
+    public function updateGoodGroupAction()
     {
         $settings = $this->adminManager->getAplExchangeSettings();
         
