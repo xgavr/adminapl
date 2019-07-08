@@ -204,6 +204,8 @@ class GoodsController extends AbstractActionController
                 ->findAplIds();
         $aplGroups = $this->entityManager->getRepository(Goods::class)
                 ->findAplGroups();
+        $aplGroupsEx = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);
         $totalCar = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusCar' => Goods::CAR_UPDATED]);
         $totalOem = $this->entityManager->getRepository(Goods::class)
