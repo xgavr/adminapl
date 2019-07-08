@@ -1339,7 +1339,7 @@ class AplService {
 
             $post = [
                 'good' => $good->getAplId(),
-                'group' => $good->getGroupApl(),
+                'group' => $good->getTransferGroupApl(),
             ];
             
             $client = new Client();

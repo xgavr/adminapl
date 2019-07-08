@@ -367,6 +367,14 @@ class Goods {
         return $this->groupApl;
     }
     
+    public function getTransferGroupApl()
+    {
+        if ($this->groupApl > 0){
+            return $this->groupApl;
+        }
+        return;
+    }
+    
     public function getGroupAplAsString()
     {
         if ($this->groupApl == self::DEFAULT_GROUP_APL_ID){
