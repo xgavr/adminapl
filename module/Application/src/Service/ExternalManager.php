@@ -896,9 +896,9 @@ class ExternalManager
                     ->findGenericTokenGroup($good->getTokenGroup());
         }
         
+        $statusData = ['status_group' => Goods::GROUP_UPDATED];
         if ($genericGroup){
             $data = ['generic_group_id' => $genericGroup->getId()];
-            $statusData = ['status_group' => Goods::GROUP_UPDATED];
             if ($genericGroup->getAplId()>0 && $good->getGroupApl() != $genericGroup->getAplId()){
                 $data['group_apl'] = $genericGroup->getAplId();
                 $statusData['status_group_ex'] = Goods::GROUP_EX_NEW;
