@@ -50,6 +50,10 @@ $form->get('image')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('group')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('oem')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -133,6 +137,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('image')); ?>
             <?= $this->formElement($form->get('image')); ?>
             <?= $this->formElementErrors($form->get('image')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('group')); ?>
+            <?= $this->formElement($form->get('group')); ?>
+            <?= $this->formElementErrors($form->get('group')); ?>                  
         </div>
 
         <div class="form-group">

@@ -887,6 +887,24 @@ class ProcessingController extends AbstractActionController
     }    
 
     /**
+     * Обновление картинок товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateGoodsGroupAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['group'] == 1){            
+            $this->aplService->updateGoodsGroup();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
+    /**
      * Обновление aplId машин
      * 
      * @return JsonModel

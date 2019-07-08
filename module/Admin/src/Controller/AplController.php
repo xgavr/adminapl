@@ -423,7 +423,7 @@ class AplController extends AbstractActionController
         $this->aplService->updateGoodsGroup();
         
         return new JsonModel([
-            'ok'
+            'result' => 'ok-reload',
         ]);
     }        
 
