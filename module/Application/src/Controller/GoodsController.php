@@ -243,7 +243,8 @@ class GoodsController extends AbstractActionController
             'totalOemEx' => $totalOemEx,
             'totalImgEx' => $totalImgEx,
             'totalPriceEx' => $totalPriceEx,
-            'totalCarEx' => $totalCarEx
+            'totalCarEx' => $totalCarEx,
+            'statusGroupEx' => $aplGroupsEx,
         ]);  
     }
     
