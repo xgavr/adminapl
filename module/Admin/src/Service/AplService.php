@@ -1194,8 +1194,12 @@ class AplService {
                     ->findOems($good);
             
             $oems = $oemsQuery->getResult();
-
+            
+            $tdOnly = count($oems) > 100;
             foreach ($oems as $oem){
+                if ($tdOnly && $oem->getSource() != \Application\Entity\Oem::SOURCE_TD){
+                    continue;
+                }
                 $post['oems'][$oem->getId()] = [                
                     'parent'    => $good->getAplId(),
                     'sort'      => $oem->getSourceTagAsString(),
