@@ -1335,7 +1335,7 @@ class AplService {
     public function sendGroup($good)
     {
         if ($good->getAplId()){
-            $url = $this->aplApi().'update-group?api='.$this->aplApiKey();
+            $url = $this->aplApi().'update-good-group?api='.$this->aplApiKey();
 
             $post = [
                 'good' => $good->getId(),
