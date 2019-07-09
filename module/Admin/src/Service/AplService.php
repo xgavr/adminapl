@@ -1409,7 +1409,7 @@ class AplService {
      */
     public function sendGoodCar($good)
     {
-        if ($good->getAplId()){
+        if ($good->getAplId() && $good->getGroupApl() != Goods::DEFAULT_GROUP_APL_ID){
             $url = $this->aplApi().'update-good-car?api='.$this->aplApiKey();
 
             $post = [

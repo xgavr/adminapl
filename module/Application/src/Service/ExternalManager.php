@@ -902,6 +902,7 @@ class ExternalManager
             if ($genericGroup->getAplId()>0 && $good->getGroupApl() != $genericGroup->getAplId()){
                 $data['group_apl'] = $genericGroup->getAplId();
                 $statusData['status_group_ex'] = Goods::GROUP_EX_NEW;
+                $statusData['status_car_ex'] = Goods::CAR_EX_NEW;
             }
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), $data);            

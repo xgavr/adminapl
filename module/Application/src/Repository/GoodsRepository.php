@@ -619,7 +619,9 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
             ->where('g.statusCar = ?1')
+            ->andWhere('g.groupApl != ?2')    
             ->setParameter('1', Goods::CAR_FOR_UPDATE)    
+            ->setParameter('2', Goods::DEFAULT_GROUP_APL_ID)    
             ->setMaxResults(2000) 
                 
                 ;
