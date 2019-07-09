@@ -379,7 +379,7 @@ class GoodsManager
         $finishTime = $startTime + 800;
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
-                ->findGoodsForUpdateCar();
+                ->findGoodsForUpdateCarTd();
 
         if (count($goodsForUpdate) == 0){
             $this->entityManager->getRepository(Goods::class)

@@ -516,6 +516,29 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления машин в апл
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateCar()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.statusCarEx = ?1')
+            ->andWhere('g.groupApl != ?2')    
+            ->setParameter('1', Goods::CAR_EX_NEW)    
+            ->setParameter('2', Goods::DEFAULT_GROUP_APL_ID)    
+            ->setMaxResults(10000) 
+                
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }    
+    
+    /**
      * Найти товары для обновления групп
      * 
      * @return object
@@ -611,7 +634,7 @@ class GoodsRepository extends EntityRepository
      * 
      * @return object
      */
-    public function findGoodsForUpdateCar()
+    public function findGoodsForUpdateCarTd()
     {
         $entityManager = $this->getEntityManager();
 
@@ -619,9 +642,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
             ->where('g.statusCar = ?1')
-            ->andWhere('g.groupApl != ?2')    
             ->setParameter('1', Goods::CAR_FOR_UPDATE)    
-            ->setParameter('2', Goods::DEFAULT_GROUP_APL_ID)    
             ->setMaxResults(2000) 
                 
                 ;
