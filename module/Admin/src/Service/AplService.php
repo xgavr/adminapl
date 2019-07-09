@@ -1418,7 +1418,7 @@ class AplService {
             ];
 
             $carsQuery = $this->entityManager->getRepository(Goods::class)
-                    ->findCars($good, ['constructionFrom' => 198601]);
+                    ->findCars($good, ['constructionFrom' => 198601, 'limit' => 900]);
             
             $cars = $carsQuery->getResult();
             

@@ -652,8 +652,11 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('2', $params['constructionFrom'])
                         ;
             }
+            if (isset($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
         }
-        
+
         return $queryBuilder->getQuery();            
     }
     
