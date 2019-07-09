@@ -397,6 +397,36 @@ class AplController extends AbstractActionController
         ]);
     }        
 
+    public function exCarAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findOneById($goodId);  
+        	
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->sendGoodCar($good);
+        
+        return new JsonModel([
+            'oke'
+        ]);
+    }
+    
+    public function updateGoodCarAction()
+    {
+        
+        $this->aplService->updateGoodsCar();
+        
+        return new JsonModel([
+            'ok'
+        ]);
+    }        
+
     public function exGroupAction()
     {
         $goodId = $this->params()->fromRoute('id', -1);
