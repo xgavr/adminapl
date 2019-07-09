@@ -887,6 +887,24 @@ class ProcessingController extends AbstractActionController
     }    
 
     /**
+     * Обновление машин товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateGoodCarAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['car'] == 1){            
+            $this->aplService->updateGoodsCar();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
+    /**
      * Обновление картинок товаров
      * 
      * @return JsonModel
