@@ -1289,16 +1289,21 @@ class AplService {
             $client->setMethod('POST');
             $client->setParameterPost($post);
 
+            $ok = false;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
+                    $ok = true;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                
+                $ok = true;
             }    
+            
+            if ($ok){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);                
+            }
 
             unset($post);
             unset($images);
@@ -1351,16 +1356,21 @@ class AplService {
             $client->setMethod('POST');
             $client->setParameterPost($post);
 
+            $ok = FALSE;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['g.statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);
+                    $ok = TRUE;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                
+                $ok = TRUE;
             }    
+            
+            if ($ok){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['g.statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);                
+            }
 
             unset($post);
         }    
@@ -1383,6 +1393,87 @@ class AplService {
         
         foreach ($goods as $good){
             $this->sendGroup($good);
+            if (time() > $startTime + 1740){
+                return;
+            }
+            usleep(1000);
+        }
+        unset($goods);
+        return;
+    }
+    
+    /**
+     * Обновить машины товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function sendGoodCar($good)
+    {
+        if ($good->getAplId()){
+            $url = $this->aplApi().'update-good-car?api='.$this->aplApiKey();
+
+            $post = [
+                'good' => $good->getAplId(),
+                'cars' => [],
+            ];
+
+            $carsQuery = $this->entityManager->getRepository(Goods::class)
+                    ->findCars($good, ['constructionFrom' => 198601]);
+            
+            $cars = $carsQuery->getResult();
+            
+            foreach ($cars as $car){
+                $post['cars'][$car->getId()] = [                
+                    'parent'    => $good->getAplId(),
+                    'name'      => $car->getAplId(),
+                    'comment'   => $good->getGroupApl(),
+                ]; 
+            }
+            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $ok = FALSE;
+            try{
+                $response = $client->send();
+                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $ok = TRUE;
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = TRUE;
+            }    
+            
+            if ($ok){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['g.statusCarEx' => Goods::CAR_EX_TRANSFERRED]);
+            }
+            
+
+            unset($post);
+            unset($cars);
+        }    
+        return;
+    }
+
+    /**
+     * Обновление машин в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodsCar()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateCar();
+        
+        foreach ($goods as $good){
+            $this->sendGoodCar($good);
             if (time() > $startTime + 1740){
                 return;
             }

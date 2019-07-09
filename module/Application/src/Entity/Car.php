@@ -94,20 +94,20 @@ class Car {
     protected $transferFlag;
         
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Model", inversedBy="model") 
+     * @ORM\ManyToOne(targetEntity="\Application\Entity\Model", inversedBy="model") 
      * @ORM\JoinColumn(name="model_id", referencedColumnName="id")
      * 
      */
     protected $model;
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\CarAttributeValue", mappedBy="car")
+    * @ORM\OneToMany(targetEntity="\Application\Entity\CarAttributeValue", mappedBy="car")
     * @ORM\JoinColumn(name="id", referencedColumnName="car_id")
      */
     protected $carAttributeValues;    
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\VehicleDetailCar", mappedBy="car")
+    * @ORM\OneToMany(targetEntity="\Application\Entity\VehicleDetailCar", mappedBy="car")
     * @ORM\JoinColumn(name="id", referencedColumnName="car_id")
      */
     protected $vehicleDetailsCar;    

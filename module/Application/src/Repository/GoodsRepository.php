@@ -620,9 +620,8 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusCar = ?1')
             ->setParameter('1', Goods::CAR_FOR_UPDATE)    
-            ->setMaxResults(2000)    
-            ->orderBy('g.statusImage', 'DESC')
-            ->addOrderBy('g.id')    
+            ->setMaxResults(2000) 
+                
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
@@ -632,9 +631,10 @@ class GoodsRepository extends EntityRepository
      * Найти машины товара
      * 
      * @param Application\Entity\Goods $good
+     * @param array $params
      * @return object
      */
-    public function findCars($good)
+    public function findCars($good, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -645,6 +645,14 @@ class GoodsRepository extends EntityRepository
             ->where('g.id = ?1')    
             ->setParameter('1', $good->getId())
             ;
+        if (is_array($params)){
+            if (isset($params['constructionFrom'])){
+                $queryBuilder->join('c.model', 'm')
+                        ->andWhere('m.constructionFrom > ?2')
+                        ->setParameter('2', $params['constructionFrom'])
+                        ;
+            }
+        }
         
         return $queryBuilder->getQuery();            
     }
