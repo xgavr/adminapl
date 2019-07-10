@@ -1117,6 +1117,9 @@ class AplService {
      */
     public function sendRaw($raw)
     {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+
         if ($raw->getStatusEx() == \Application\Entity\Raw::EX_TO_TRANSFER){
             
             $this->deleteRaw($raw);
@@ -1130,7 +1133,7 @@ class AplService {
             ];
 
             $start = 0; 
-            $limit = 40;
+            $limit = 50;
             while (true){
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
                         ->findBy(['raw' => $raw->getId(), 'status' => Rawprice::STATUS_PARSED, 'statusGood' => Rawprice::GOOD_OK], null, $limit, $start);
@@ -1150,7 +1153,6 @@ class AplService {
                         'parent'    => $rawprice->getGood()->getAplId(),
                         'good'      => $rawprice->getGood()->getId(),
                         'created'   => $rawprice->getDateCreated(),
-                        'lastmod'   => date('Y-m-d H:i:s'),
                         'article'   => $rawprice->getArticle(),
                         'producer'  => $rawprice->getProducer(),
                         'goodname'  => $rawprice->getGoodname(),
@@ -1167,7 +1169,6 @@ class AplService {
                         'sale'      => $rawprice->getSale(),
                         'pack'      => $rawprice->getPack(),
                         'name'      => $raw->getSupplier()->getAplId(),
-                        'publish'   => 1,
                     ]; 
                 }
 //                var_dump($post); exit;
@@ -1197,8 +1198,6 @@ class AplService {
      */
     public function updateRaw()
     {
-        ini_set('memory_limit', '2048M');
-        set_time_limit(900);
         $startTime = time();
         
         $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
