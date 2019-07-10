@@ -1120,7 +1120,7 @@ class AplService {
         if ($raw->getStatusEx() == \Application\Entity\Raw::EX_TO_TRANSFER){
             
             $this->deleteRaw($raw);
-            exit;
+//            exit;
             
             $url = $this->aplApi().'update-raw?api='.$this->aplApiKey();
 
@@ -1135,7 +1135,7 @@ class AplService {
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
                         ->findBy(['raw' => $raw->getId(), 'status' => Rawprice::STATUS_PARSED, 'statusGood' => Rawprice::GOOD_OK], null, $limit, $start);
                 $start += $limit;
-                
+                var_dump(count($rawprices));
                 if (count($rawprices) == 0){
                     $raw->setStatusEx(\Application\Entity\Raw::EX_TRANSFERED);
                     $this->entityManager->persist($raw);
@@ -1179,7 +1179,7 @@ class AplService {
 
                 $response = $client->send();
         //        var_dump($response->getBody()); exit;
-                if ($response->isOk()) {
+                if (!$response->isOk()) {
                     break;
                 }
 
