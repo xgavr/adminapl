@@ -1086,6 +1086,31 @@ class AplService {
     }
 
     /**
+     * Удалить прайс
+     * 
+     * @param \Application\Entity\Raw $raw
+     */
+    public function deleteRaw($raw)
+    {
+        $url = $this->aplApi().'delete-raw?api='.$this->aplApiKey();
+
+        $post = [
+            'raw' => $raw->getId(),
+        ];
+
+//                var_dump($post); exit;
+        $client = new Client();
+        $client->setUri($url);
+        $client->setOptions(['timeout' => 30]);
+        $client->setMethod('POST');
+        $client->setParameterPost($post);
+
+        $response = $client->send();
+//        var_dump($response->getBody()); exit;
+        return $response;
+    }
+    
+    /**
      * Обновить прайс
      * 
      * @param \Application\Entity\Raw $raw
@@ -1093,6 +1118,10 @@ class AplService {
     public function sendRaw($raw)
     {
         if ($raw->getStatusEx() == \Application\Entity\Raw::EX_TO_TRANSFER){
+            
+            $this->deleteRaw($raw);
+            exit;
+            
             $url = $this->aplApi().'update-raw?api='.$this->aplApiKey();
 
             $post = [
@@ -1151,6 +1180,7 @@ class AplService {
                 $response = $client->send();
         //        var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
+                    break;
                 }
 
                 unset($post);
@@ -1159,7 +1189,7 @@ class AplService {
         }    
         return;
     }
-    
+
     /**
      * Обновление прайсa
      * 
