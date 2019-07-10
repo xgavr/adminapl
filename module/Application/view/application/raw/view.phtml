@@ -280,6 +280,23 @@ $this->pageBreadcrumbs()->setItems([
                             </div>    
                         </div>    
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Экспорт полей прайса
+                            <div class="clearfix"></div>
+                        </div>    
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                Строки прайсов 
+                            </div>
+                            <div class="pull-right">                        
+                                <button value="/apl/ex-rawprice/<?= $raw->getId()?>" class="btn btn-default btn-xs refresh-button"
+                                        title="Обмен строк прайса">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button>           
+                            </div>    
+                        </div>
+                    </div>    
                 <?php endif;?>
             </div>
         </div>

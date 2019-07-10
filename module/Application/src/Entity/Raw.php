@@ -39,6 +39,12 @@ class Raw {
     const STAGE_PRICE_UPDATET       = 8; //цены рассчитаны
     const STAGE_TOKEN_GROUP_PARSED  = 10; //группы наименований разобраны
     
+    const EX_NEW = 1;   // прайс готов для передачи
+    const EX_TO_TRANSFER = 2; //прайс готов к передаче
+    const EX_TRANSFERED = 3; //прайс передан
+    const EX_TO_DELETE = 4; //прайс нужно удалить
+    const EX_DELETED = 5; //прайс удален
+    
            
     /**
      * @ORM\Id
@@ -66,6 +72,11 @@ class Raw {
      * @ORM\Column(name="status")  
      */
     protected $status;
+    
+    /** 
+     * @ORM\Column(name="status_ex")  
+     */
+    protected $statusEx = self::EX_NEW;
     
     /** 
      * @ORM\Column(name="parse_stage")  
@@ -213,6 +224,59 @@ class Raw {
         $this->status = $status;
     }   
     
+    /**
+     * Returns statusEx.
+     * @return int     
+     */
+    public function getStatusEx() 
+    {
+        return $this->statusEx;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusExList() 
+    {
+        return [
+            self::EX_NEW => 'Новый',
+            self::EX_TRANSFER => 'Готов к передаче',
+            self::EX_TRANSFERED => 'Передан',
+        ];
+    }    
+    
+    /**
+     * Returns user statusEx as string.
+     * @return string
+     */
+    public function getStatusExAsString()
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$this->statusEx]))
+            return $list[$this->statusEx];
+        
+        return 'Unknown';
+    }    
+    
+    public function getStatusExName($statusEx)
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$statusEx]))
+            return $list[$statusEx];
+        
+        return 'Unknown';        
+    }
+        
+    /**
+     * Sets statusEx.
+     * @param int $statusEx     
+     */
+    public function setStatusEx($statusEx) 
+    {
+        $this->statusEx = $statusEx;
+    }   
+
     /**
      * Returns parseStage.
      * @return int     
