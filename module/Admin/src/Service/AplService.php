@@ -1130,7 +1130,7 @@ class AplService {
             ];
 
             $start = 0; 
-            $limit = 900;
+            $limit = 500;
             while (true){
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
                         ->findBy(['raw' => $raw->getId(), 'status' => Rawprice::STATUS_PARSED, 'statusGood' => Rawprice::GOOD_OK], null, $limit, $start);
