@@ -1135,7 +1135,7 @@ class AplService {
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
                         ->findBy(['raw' => $raw->getId(), 'status' => Rawprice::STATUS_PARSED, 'statusGood' => Rawprice::GOOD_OK], null, $limit, $start);
                 $start += $limit;
-                var_dump(count($rawprices));
+//                var_dump(count($rawprices));
                 if (count($rawprices) == 0){
                     $raw->setStatusEx(\Application\Entity\Raw::EX_TRANSFERED);
                     $this->entityManager->persist($raw);
