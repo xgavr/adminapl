@@ -1141,9 +1141,10 @@ class AplService {
                         'publish'   => 1,
                     ]; 
                 }
-                var_dump($post); exit;
+//                var_dump($post); exit;
                 $client = new Client();
                 $client->setUri($url);
+                $client->setOptions(['timeout' => 30]);
                 $client->setMethod('POST');
                 $client->setParameterPost($post);
 
@@ -1195,14 +1196,10 @@ class AplService {
 
             $oemsQuery = $this->entityManager->getRepository(Goods::class)
                     ->findOems($good);
-            
+            $oemsQuery->setMaxResults(900);
             $oems = $oemsQuery->getResult();
             
-            $tdOnly = count($oems) > 100;
             foreach ($oems as $oem){
-                if ($tdOnly && $oem->getSource() != \Application\Entity\Oem::SOURCE_TD){
-                    continue;
-                }
                 $post['oems'][$oem->getId()] = [                
                     'parent'    => $good->getAplId(),
                     'sort'      => $oem->getSourceTagAsString(),
