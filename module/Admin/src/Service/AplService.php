@@ -1133,7 +1133,7 @@ class AplService {
             ];
 
             $start = 0; 
-            $limit = 50;
+            $limit = 400;
             while (true){
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
                         ->findBy(['raw' => $raw->getId(), 'status' => Rawprice::STATUS_PARSED, 'statusGood' => Rawprice::GOOD_OK], null, $limit, $start);
@@ -1153,6 +1153,7 @@ class AplService {
                         'parent'    => $rawprice->getGood()->getAplId(),
                         'good'      => $rawprice->getGood()->getId(),
                         'created'   => $rawprice->getDateCreated(),
+                        'lastmod'   => date('Y-m-d H:i:s'),
                         'article'   => $rawprice->getArticle(),
                         'producer'  => $rawprice->getProducer(),
                         'goodname'  => $rawprice->getGoodname(),
