@@ -241,8 +241,10 @@ class Raw {
     {
         return [
             self::EX_NEW => 'Новый',
-            self::EX_TRANSFER => 'Готов к передаче',
+            self::EX_TO_TRANSFER => 'Готов к передаче',
             self::EX_TRANSFERED => 'Передан',
+            self::EX_TO_DELETE => 'Готов к удалению',
+            self::EX_DELETED => 'Удален',
         ];
     }    
     

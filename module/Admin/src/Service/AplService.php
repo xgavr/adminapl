@@ -1092,7 +1092,7 @@ class AplService {
      */
     public function sendRaw($raw)
     {
-        if ($good->getAplId()){
+        if ($raw->getStatusEx() == \Application\Entity\Raw::EX_TO_TRANSFER){
             $url = $this->aplApi().'update-raw?api='.$this->aplApiKey();
 
             $post = [
