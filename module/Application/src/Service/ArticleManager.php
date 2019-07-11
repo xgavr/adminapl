@@ -156,6 +156,7 @@ class ArticleManager
 
     /**
      * Выборка артиклей из прайса и добавление их в артиклулы
+     * @param Raw $raw
      */
     public function grabArticleFromRaw($raw)
     {
@@ -213,6 +214,7 @@ class ArticleManager
             foreach ($oldRaws as $oldRaw){
                                 
                 $oldRaw->setStatus(Raw::STATUS_RETIRED);
+                $oldRaw->setStatusEx(Raw::EX_TO_DELETE);
                 $this->entityManager->persist($oldRaw);
 
                 $this->entityManager->getRepository(Raw::class)

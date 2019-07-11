@@ -630,7 +630,7 @@ class AssemblyManager
     
     /**
      * Сборка товаров по прайсу
-     * @param Appllication\Entity\Raw $raw
+     * @param Raw $raw
      */
     public function assemblyGoodFromRaw($raw)
     {
@@ -653,6 +653,7 @@ class AssemblyManager
 //        var_dump(count($rawprices)); exit;
         if (count($rawprices) == 0){
             $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
+            $raw->setStatusEx(Raw::EX_TO_TRANSFER);
             $this->entityManager->persist($raw);
 
             $this->entityManager->flush();

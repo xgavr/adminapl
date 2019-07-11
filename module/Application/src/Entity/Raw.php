@@ -27,7 +27,7 @@ class Raw {
     const STATUS_LOAD         = 4; //В процессе загрузки
     const STATUS_PARSE        = 5; //Разбирается
     const STATUS_FAILED       = 6; // Не удалось загрузить.
-    const STATUS_PRE_RETIRED  = 7; // Удалить полсе разбора.
+    const STATUS_PRE_RETIRED  = 7; // Удалить после разбора.
     
     const STAGE_NOT                 = 1; //поля не разобраны
     const STAGE_PRODUCER_PARSED     = 2; //производители разобраны 
