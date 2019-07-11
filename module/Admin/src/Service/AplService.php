@@ -1118,7 +1118,7 @@ class AplService {
     public function sendRaw($raw)
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(1800);
+        set_time_limit(900);
 
         if ($raw->getStatusEx() == \Application\Entity\Raw::EX_TO_TRANSFER){
             
