@@ -1114,6 +1114,7 @@ class AplService {
      * Обновить прайс
      * 
      * @param \Application\Entity\Raw $raw
+     * 
      */
     public function sendRaw($raw)
     {
@@ -1122,6 +1123,11 @@ class AplService {
 
         if ($raw->getStatusEx() == \Application\Entity\Raw::EX_TO_TRANSFER){
             
+            $exRaws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findToExDeleteRaw($raw);
+            foreach ($exRaws as $exRaw){
+                $this->deleteRaw($exRaw);
+            }
             $this->deleteRaw($raw);
 //            exit;
             

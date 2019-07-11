@@ -464,9 +464,9 @@ class RawRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
     
-    /*
+    /**
      * Поиск старых прайсов по отношению к данному прайсу
-     * @var Apllication\Entity\Raw
+     * @param \Apllication\Entity\Raw
      * 
      */
     public function findOldRaw($raw)
@@ -488,9 +488,9 @@ class RawRepository extends EntityRepository
         
     }
     
-    /*
+    /**
      * Поиск старых прайсов по отношению к данному прайсу
-     * @var Apllication\Entity\Raw
+     * @param Apllication\Entity\Raw $raw
      * 
      */
     public function findPreRetiredRaw($raw)
@@ -512,9 +512,32 @@ class RawRepository extends EntityRepository
         
     }
     
-    /*
+    /**
+     * Поиск старых прайсов для удаления в апл
+     * @param Raw $raw
+     * 
+     */
+    public function findToExDeleteRaw($raw)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r')
+                ->from(Raw::class, 'r')
+                ->where('r.supplier = ?1')
+                ->andWhere('r.id < ?2')
+                ->andWhere('r.status = ?3')
+                ->setParameter('1', $raw->getSupplier()->getId())
+                ->setParameter('2', $raw->getId())
+                ->setParameter('3', Raw::EX_TO_DELETE)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
+    /**
      * Поиск старых прайсов по отношению к данному прайсу
-     * @var Apllication\Entity\Raw
+     * @param \Apllication\Entity\Raw
      * 
      */
     public function findOldDeletedRaw($raw)
@@ -536,7 +559,7 @@ class RawRepository extends EntityRepository
         
     }
     
-    /*
+    /**
      * Поиск прайсов для удаления
      */
     public function findRawForRemove()
