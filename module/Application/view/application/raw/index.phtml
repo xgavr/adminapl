@@ -208,7 +208,7 @@ $this->headScript()
     function statusExStageFormatter(value, row) {
         var stage = statusStageFormatter(value, row);
         var statusEx = '';
-        switch (row.parseStage){
+        switch (row.statusEx){
             case '1': stage = '<br/> Новый'; break;
             case '2': stage =  '<br/> Готов к передаче'; break;
             case '3': stage =  '<br/> Передан'; break;
@@ -216,7 +216,7 @@ $this->headScript()
             case '5': stage =  '<br/> Удален'; break;
             default: stage =  '<br/> Неизвестно';                  
         }
-        return status+stage;
+        return stage + statusEx;
     }
 
     function dateCreatedFormatter(value, row) {
