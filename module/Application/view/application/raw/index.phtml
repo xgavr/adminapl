@@ -209,12 +209,12 @@ $this->headScript()
         var stage = statusStageFormatter(value, row);
         var statusEx = '';
         switch (row.statusEx){
-            case '1': stage = '<br/> Новый'; break;
-            case '2': stage =  '<br/> Готов к передаче'; break;
-            case '3': stage =  '<br/> Передан'; break;
-            case '4': stage =  '<br/> Готов к удалению'; break;
-            case '5': stage =  '<br/> Удален'; break;
-            default: stage =  '<br/> Неизвестно';                  
+            case '1': statusEx = '<br/> Новый'; break;
+            case '2': statusEx =  '<br/> Готов к передаче'; break;
+            case '3': statusEx =  '<br/> Передан'; break;
+            case '4': statusEx =  '<br/> Готов к удалению'; break;
+            case '5': statusEx =  '<br/> Удален'; break;
+            default: statusEx =  '<br/> Неизвестно';                  
         }
         return stage + statusEx;
     }
