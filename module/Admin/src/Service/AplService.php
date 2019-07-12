@@ -1232,7 +1232,7 @@ class AplService {
 
             $oemsQuery = $this->entityManager->getRepository(Goods::class)
                     ->findOems($good);
-            $oemsQuery->setMaxResults(1000);
+            $oemsQuery->setMaxResults(500);
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){
@@ -1454,7 +1454,7 @@ class AplService {
             ];
 
             $carsQuery = $this->entityManager->getRepository(Goods::class)
-                    ->findCars($good, ['constructionFrom' => 198601, 'limit' => 4000]);
+                    ->findCars($good, ['constructionFrom' => 198601, 'limit' => 2000]);
             
             $cars = $carsQuery->getResult();
             
