@@ -300,6 +300,18 @@ class Rawprice {
         return 'Unknown';
     }  
     
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusAsAplPublish()
+    {
+        if ($this->status == self::STATUS_PARSED){
+            return 1;
+        }
+        return 0;
+    }  
+    
     public function getStatusName($status)
     {
         $list = self::getStatusList();

@@ -977,53 +977,97 @@ class AplService {
     }
     
     /**
-     * Отправить строку прайса
+     * Отправить строки прайсов товара
      * 
-     * @param \Application\Entity\Rawprice $rawprice
+     * @param \Application\Entity\Goods $good
      */
-    public function sendRawprice($rawprice)
+    public function sendGoodRawprice($good)
     {
-        $url = $this->aplApi().'add-rawprice?api='.$this->aplApiKey();
+        $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
+        
+        $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                ->findBy(['good' => $good->getId(), 'statusEx' => Rawprice::EX_NEW]);
+        
+        $post = [
+            'raw' => $raw->getId(),
+            'rawprices' => [],
+        ];
+
+        foreach ($rawprices as $rawprice){
+            $post['rawprices'][$rawprice->getId()] = [                
+                'key'       => $rawprice->getId(),
+                'type'      => $rawprice->getRaw()->getId(),
+                'parent'    => $rawprice->getGood()->getAplId(),
+                'created'   => $rawprice->getDateCreated(),
+                'article'   => $rawprice->getArticle(),
+                'producer'  => $rawprice->getProducer(),
+                'goodname'  => $rawprice->getGoodname(),
+                'price'     => $rawprice->getRealPrice(),
+                'rest'      => $rawprice->getRealRest(),
+                'iid'       => $rawprice->getIid(),
+                'lot'       => $rawprice->getLot(),
+                'unit'      => $rawprice->getUnit(),
+                'bar'       => $rawprice->getBar(),
+                'currency'  => $rawprice->getCurrency(),
+                'weight'    => $rawprice->getWeight(),
+                'country'   => $rawprice->getCountry(),
+                'markdown'  => $rawprice->getMarkdown(),
+                'sale'      => $rawprice->getSale(),
+                'pack'      => $rawprice->getPack(),
+                'name'      => $rawprice->getRaw()->getSupplier()->getAplId(),
+                'publish'   => $rawprice->getStatusAsAplPublish(),
+            ]; 
+        }
 
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');
-        $client->setParameterPost([
-            'key'       => $rawprice->getId(),
-            'parent'     => $rawprice->getGood()->getAplId(),
-            'good'      => $rawprice->getGood()->getId(),
-            'created'   => $rawprice->getDateCreated(),
-            'lastmod'   => date('Y-m-d H:i:s'),
-            'article'   => $rawprice->getArticle(),
-            'producer'  => $rawprice->getProducer(),
-            'goodname'  => $rawprice->getGoodname(),
-            'price'     => $rawprice->getRealPrice(),
-            'rest'      => $rawprice->getRealRest(),
-            'iid'       => $rawprice->getIid(),
-            'lot'       => $rawprice->getLot(),
-            'unit'      => $rawprice->getUnit(),
-            'bar'       => $rawprice->getBar(),
-            'currency'  => $rawprice->getCurrency(),
-            'weight'    => $rawprice->getWeight(),
-            'country'   => $rawprice->getCountry(),
-            'markdown'  => $rawprice->getMarkdown(),
-            'sale'      => $rawprice->getSale(),
-            'pack'      => $rawprice->getPack(),
-            'name'      => $rawprice->getRaw()->getSupplier()->getAplId(),
-            'publish'   => 1,
-        ]);
+        $client->setParameterPost($post);
 
         $response = $client->send();
-//        var_dump($response->getBody()); exit;
+        var_dump($response->getBody()); exit;
+
         if ($response->isOk()) {
-            $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
-                    
+            
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED]);
+            
+            foreach ($rawprices as $rawprice){
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
+            }                    
         }
         
+        unset($post);
+        unset($rawprices);
         return;
     }
     
+    /**
+     * Обновить строки прайсов товара
+     * 
+     */
+    public function updateGoodsRawprice()
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(900);
+        $startTime = time();
+
+        $goodCount = $this->entityManager->getRepository(Goods::class)
+                ->count([]);
+        $limit = intval($goodCount/100);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findBy(['status_rawprice_ex' => Goods::RAWPRICE_EX_NEW], null, $limit);
+        
+        foreach ($goods as $good){
+            $this->sendGoodRawprice($good);
+            if (time() > $startTime + 840){
+                return;
+            }
+        }
+        return;
+    }
     /**
      * Удалить строку прайса
      * 
@@ -1051,40 +1095,6 @@ class AplService {
         return false;
     }
     
-    /**
-     * Обновить строки прайсов товара
-     * 
-     * @param \Application\Entity\Goods $good
-     */
-    public function updateGoodRawprice($good)
-    {
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_NEW]);
-
-        if (count($rawprices)){
-            $ok = TRUE;
-
-            foreach ($rawprices as $rawprice){
-                if ($rawprice->getStatus() == Rawprice::STATUS_PARSED){
-                    if (!$this->sendRawprice($rawprice)){
-                        $ok = FALSE;
-                    }
-                } else {
-                    if (!$this->removeRawprice($rawprice)){
-                        $ok = FALSE;
-                    }
-                }    
-            }
-
-            if ($ok){
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED]);
-            }
-        }
-
-        return;
-    }
-
     /**
      * Удалить прайс
      * 
@@ -1176,6 +1186,7 @@ class AplService {
                         'sale'      => $rawprice->getSale(),
                         'pack'      => $rawprice->getPack(),
                         'name'      => $raw->getSupplier()->getAplId(),
+                        'publish'   => $rawprice->getStatusAsAplPublish(),
                     ]; 
                 }
 //                var_dump($post); exit;

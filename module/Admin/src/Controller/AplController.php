@@ -307,7 +307,7 @@ class AplController extends AbstractActionController
         ]);
     }
 
-    public function exRawpriceAction()
+    public function exRawAction()
     {
         $rawId = $this->params()->fromRoute('id', -1);
     
@@ -321,6 +321,26 @@ class AplController extends AbstractActionController
         } 
         
         $this->aplService->sendRaw($raw);
+        
+        return new JsonModel([
+            'oke'
+        ]);
+    }
+    
+    public function exRawpriceAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodId);  
+        	
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->sendGoodRawprice($good);
         
         return new JsonModel([
             'oke'
