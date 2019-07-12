@@ -983,6 +983,10 @@ class AplService {
      */
     public function sendGoodRawprice($good)
     {
+        if (!$good->getAplId()){
+            return;
+        }
+        
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
         
         $rawprices = $this->entityManager->getRepository(Goods::class)
@@ -997,7 +1001,7 @@ class AplService {
             $post['rawprices'][$rawprice->getId()] = [                
                 'key'       => $rawprice->getId(),
                 'type'      => $rawprice->getRaw()->getId(),
-                'parent'    => $rawprice->getGood()->getAplId(),
+                'parent'    => $good->getAplId(),
                 'created'   => $rawprice->getDateCreated(),
                 'article'   => $rawprice->getArticle(),
                 'producer'  => $rawprice->getProducer(),
@@ -1059,7 +1063,7 @@ class AplService {
         
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->findBy(['status_rawprice_ex' => Goods::RAWPRICE_EX_NEW], null, $limit);
-        
+        var_dump(count($goods)); exit;
         foreach ($goods as $good){
             $this->sendGoodRawprice($good);
             if (time() > $startTime + 840){
