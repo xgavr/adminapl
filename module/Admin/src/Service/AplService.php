@@ -989,7 +989,7 @@ class AplService {
                 ->findBy(['good' => $good->getId(), 'statusEx' => Rawprice::EX_NEW]);
         
         $post = [
-            'raw' => $raw->getId(),
+            'good' => $good->getId(),
             'rawprices' => [],
         ];
 
