@@ -216,7 +216,7 @@ $this->headScript()
             case '5': statusEx =  '<br/> Удален'; break;
             default: statusEx =  '<br/> Неизвестно';                  
         }
-        return stage + statusEx;
+        return stage;// + statusEx;
     }
 
     function dateCreatedFormatter(value, row) {
