@@ -332,7 +332,7 @@ class AplController extends AbstractActionController
         $goodId = $this->params()->fromRoute('id', -1);
     
         // Находим существующий пост в базе данных.    
-        $good = $this->entityManager->getRepository(Goods::class)
+        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->findOneById($goodId);  
         	
         if ($good == null) {
