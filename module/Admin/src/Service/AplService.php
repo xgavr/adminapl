@@ -1063,7 +1063,7 @@ class AplService {
         
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW], null, $limit);
-        var_dump(count($goods)); exit;
+//        var_dump(count($goods)); exit;
         foreach ($goods as $good){
             $this->sendGoodRawprice($good);
             if (time() > $startTime + 840){
