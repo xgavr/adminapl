@@ -570,19 +570,18 @@ class GoodsManager
                 ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_NEW]);
 
         $statusEx = Goods::RAWPRICE_EX_TRANSFERRED;
-        $statusRawpriceEx = Rawprice::EX_TRANSFERRED;
         foreach ($rawprices as $rawprice){
+            $statusRawpriceEx = Rawprice::EX_TRANSFERRED;
             if (!$this->entityManager->getRepository(Rawprice::class)->isOldRawpriceCompare($rawprice)){
                 $statusEx = Goods::RAWPRICE_EX_TO_TRANSFER;
                 $statusRawpriceEx = Rawprice::EX_TO_TRANSFER;
             }
-            $this->entityManager->persist($rawprice);
+            if ($rawprice->getStatusEx() != $statusRawpriceEx){
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_ex' => $statusRawpriceEx]);            
+            }
         }    
         
-        if ($rawprice->getStatusEx() != $statusRawpriceEx){
-            $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => $statusRawpriceEx]);            
-        }
         if ($good->getStatusRawpriceEx() != $statusEx){
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), ['status_rawprice_ex' => $statusEx]);
