@@ -612,7 +612,7 @@ class RawRepository extends EntityRepository
                 ->where('r.code = ?1')
                 ->andWhere('r.id < ?2')
                 ->andWhere('raw.supplier = ?3')
-                ->orderBy(['r.id'], 'DESC')
+                ->orderBy('r.id', 'DESC')
                 ->setMaxResults(1)
                 ->setParameter('1', $rawprice->getCode()->getId())
                 ->setParameter('2', $rawprice->getId())
