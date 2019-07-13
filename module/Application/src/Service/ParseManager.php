@@ -581,5 +581,5 @@ class ParseManager {
         
         $this->entityManager->flush();
     }
-                
+               
 }

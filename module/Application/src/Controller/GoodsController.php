@@ -219,6 +219,8 @@ class GoodsController extends AbstractActionController
         
         $totalRawpriceEx = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TRANSFERRED]);
+        $totalRawpriceCompare = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER]);
         $totalOemEx = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
         $totalImgEx = $this->entityManager->getRepository(Goods::class)
@@ -240,6 +242,7 @@ class GoodsController extends AbstractActionController
             'totalDesc' => $totalDesc,
             'totalImage' => $totalImage,
             'totalRawpriceEx' => $totalRawpriceEx,
+            'totalRawpriceCompare' => $totalRawpriceCompare,
             'totalOemEx' => $totalOemEx,
             'totalImgEx' => $totalImgEx,
             'totalPriceEx' => $totalPriceEx,
@@ -1154,4 +1157,37 @@ class GoodsController extends AbstractActionController
         exit;
         
     }
+    
+    public function compareRawpriceAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findOneById($goodId);  
+        	
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->goodsManager->compareRawprices($good);
+        
+        return new JsonModel([
+            'oke'
+        ]);
+        
+    }
+    
+    public function compareGoodRawpriceAction()
+    {
+        
+        $this->goodsManager->compareGoodsRawprice();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }        
+    
+    
 }

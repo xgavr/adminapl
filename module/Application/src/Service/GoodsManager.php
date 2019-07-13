@@ -559,4 +559,57 @@ class GoodsManager
         
         return;
     }
+    
+    /**
+     * Сравнить строки прайсов с предыдущими и установить метку
+     * @param Goods $good
+     */
+    public function compareRawprices($good)
+    {     
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_NEW]);
+
+        $statusEx = Goods::RAWPRICE_EX_TRANSFERRED;
+        foreach ($rawprices as $rawprice){
+            if ($this->entityManager->getRepository(Rawprice::class)->isOldRawpriceCompare($rawprice)){
+                $rawprice->setStatusEx(Rawprice::EX_TRANSFERRED);
+            } else {
+                $rawprice->setStatusEx(Rawprice::EX_TO_TRANSFER);
+                $statusEx = Goods::RAWPRICE_EX_TO_TRANSFER;
+            }
+            $this->entityManager->persist($rawprice);
+        }    
+        
+        $good->setStatusRawpriceEx($statusEx);
+        $this->entityManager->persist($good);
+        
+        $this->entityManager->flush();        
+    }
+    
+    /**
+     * Сравнить строки прайсов товара
+     * 
+     */
+    public function compareGoodsRawprice()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        $startTime = time();
+
+        $goodCount = $this->entityManager->getRepository(Goods::class)
+                ->count([]);
+        $limit = intval($goodCount/100);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW], null, $limit);
+//        var_dump(count($goods)); exit;
+        foreach ($goods as $good){
+            $this->compareRawprices($good);
+            if (time() > $startTime + 840){
+                return;
+            }
+        }
+        return;
+    }
+    
 }

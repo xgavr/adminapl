@@ -36,12 +36,20 @@ class RawManager {
 
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
+    /**
+     *
+     * @var \Application\Service\ProducerManager 
+     */
     private $producerManager;
   
+    /**
+     *
+     * @var \Applicaion\Entity\GoodsManager 
+     */
     private $goodManager;
     
   // Конструктор, используемый для внедрения зависимостей в сервис.
@@ -543,5 +551,6 @@ class RawManager {
         
         $this->entityManager->remove($raw);
         $this->entityManager->flush();
-    }    
+    }  
+
 }

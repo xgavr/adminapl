@@ -231,9 +231,13 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Строки прайсов<sup><?= $totalRawpriceEx?></sup>
+                                Строки прайсов<sup><?= $totalRawpriceCompare?>/<?= $totalRawpriceEx?></sup>
                             </div>
                             <div class="pull-right">
+                                <button value="/goods/compare-good-rawprice/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Сравнение строк прайсов">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button> 
                                 <button value="/apl/update-good-rawprice/" class="btn btn-info btn-xs refresh-table-button"
                                         title="Обновление строк прайсов">
                                     <span class="glyphicon glyphicon-export" ></span>

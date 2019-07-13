@@ -990,7 +990,7 @@ class AplService {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
         
         $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_NEW]);
+                ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_TO_TRANSFER]);
         
         $post = [
             'good' => $good->getId(),
@@ -1062,7 +1062,7 @@ class AplService {
         $limit = intval($goodCount/100);
         
         $goods = $this->entityManager->getRepository(Goods::class)
-                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW], null, $limit);
+                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER], null, $limit);
 //        var_dump(count($goods)); exit;
         foreach ($goods as $good){
             $this->sendGoodRawprice($good);

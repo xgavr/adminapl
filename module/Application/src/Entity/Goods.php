@@ -40,6 +40,7 @@ class Goods {
     const OEM_FOR_UPDATE = 1; // номера не обновлялись
 
     const RAWPRICE_EX_NEW            = 1; // не передано
+    const RAWPRICE_EX_TO_TRANSFER    = 3; //нужно передать
     const RAWPRICE_EX_TRANSFERRED    = 2; // передано.
     
     const OEM_EX_NEW            = 1; // не передано

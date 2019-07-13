@@ -508,6 +508,10 @@ $this->headScript()
                                     Строки прайсов 
                                 </div>
                                 <div class="pull-right">                                                
+                                    <button value="/goods/compare-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
+                                            title="Сравнение строк прайсов">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                             
                                     <button value="/apl/ex-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
                                             title="Обмен строк прайсов">
                                         <span class="glyphicon glyphicon-export" ></span>

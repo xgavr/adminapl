@@ -48,6 +48,7 @@ class Rawprice {
     const TOKEN_GROUP_PARSED = 3; // прошел разборку группу наименований.
     
     const EX_NEW            = 1; // не передано
+    const EX_TO_TRANSFER    = 3; // нужно передать
     const EX_TRANSFERRED    = 2; // передано.
     /**
      * @ORM\Id

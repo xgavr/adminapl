@@ -594,6 +594,49 @@ class RawRepository extends EntityRepository
         }    
         return;
     }
+    
+    /**
+     * Сравнить строку прайса с предыдущей
+     * 
+     * @param Rawprice $rawprice
+     * @return boolean
+     */
+    public function isOldRawpriceCompare($rawprice)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
+                ->join('r.raw', 'raw')
+                ->where('r.code = ?1')
+                ->andWhere('r.id < ?2')
+                ->andWhere('raw.supplier = ?3')
+                ->orderBy(['r.id'], 'DESC')
+                ->setMaxResults(1)
+                ->setParameter('1', $rawprice->getCode()->getId())
+                ->setParameter('2', $rawprice->getId())
+                ->setParameter('3', $rawprice->getRaw()->getSupplier()->getId())
+                ;
+        
+        $oldRawprices = $queryBuilder->getQuery()->getResult();
+        if (count($oldRawprices) == 0){
+            return false;
+        }
+        foreach ($oldRawprices as $oldRawprice){
+            if ($rawprice->getStatusEx() != Rawprice::EX_TRANSFERRED){
+                return false;
+            }
+            if ($rawprice->getPrice() != $oldRawprice->getPrice()){
+                return false;
+            }
+            if ($rawprice->getRest() != $oldRawprice->getRest()){
+                return false;
+            }
+        }
+        
+        return true;
+    }
         
     
     /**

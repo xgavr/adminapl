@@ -125,6 +125,12 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('get_car_id')); ?>                  
         </div>
                         
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rawprice')); ?>
+            <?= $this->formElement($form->get('rawprice')); ?>
+            <?= $this->formElementErrors($form->get('rawprice')); ?>                  
+        </div>
+                
     </div>   
     <div class="col-md-5">
         <div class="form-group">
@@ -169,12 +175,6 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('good_price')); ?>                  
         </div>
 
-        <div class="form-group">
-            <?= $this->formLabel($form->get('rawprice')); ?>
-            <?= $this->formElement($form->get('rawprice')); ?>
-            <?= $this->formElementErrors($form->get('rawprice')); ?>                  
-        </div>
-                
     </div>
     <div class="col-md-2" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
