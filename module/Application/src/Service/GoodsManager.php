@@ -600,7 +600,7 @@ class GoodsManager
 
         $goodCount = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
-        $limit = intval($goodCount/100);
+        $limit = intval($goodCount/50);
         
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW], null, $limit);
