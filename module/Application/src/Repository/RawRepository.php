@@ -624,7 +624,7 @@ class RawRepository extends EntityRepository
             return false;
         }
         foreach ($oldRawprices as $oldRawprice){
-            if ($rawprice->getStatusEx() != Rawprice::EX_TRANSFERRED){
+            if ($oldRawprice->getStatusEx() != Rawprice::EX_TRANSFERRED){
                 return false;
             }
             if ($rawprice->getPrice() != $oldRawprice->getPrice()){
