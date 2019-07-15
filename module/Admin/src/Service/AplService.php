@@ -1065,7 +1065,14 @@ class AplService {
                 ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER], null, $limit);
 //        var_dump(count($goods)); exit;
         foreach ($goods as $good){
-            $this->sendGoodRawprice($good);
+//            $this->sendGoodRawprice($good);
+            $rawprices = $this->entityManager->getRepository(Goods::class)
+                    ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_TO_TRANSFER]);
+            if (count($rawprices) == 0){                
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
+            }
+            
             if (time() > $startTime + 840){
                 return;
             }
@@ -1082,7 +1089,7 @@ class AplService {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['statusEx' => Rawprice::EX_TO_TRANSFER], ['raw' => 'ASC'], $limit);
+                ->findBy(['statusEx' => Rawprice::EX_TO_TRANSFER], ['good' => 'ASC'], $limit);
         
         $post = [
             'rawprices' => [],
