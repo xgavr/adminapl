@@ -1172,7 +1172,7 @@ class AplService {
 //        var_dump(count($limit)); exit;
         while ($timeLimit > 0){
             $this->sendRawprices($limit);
-            $$timeLimit -= $limit; 
+            $timeLimit -= $limit; 
             if (time() > $startTime + 840){
                 return;
             }
