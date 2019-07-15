@@ -1117,12 +1117,23 @@ class AplService {
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');
+        $client->setOptions(['timeout' => 30]);
         $client->setParameterPost($post);
 
         $response = $client->send();
 //        var_dump($response->getBody()); exit;
 
-        if ($response->isOk()) {
+        $ok = false;
+        try{
+            $response = $client->send();
+//                var_dump($response->getBody()); exit;
+            if ($response->isOk()) {
+                $ok = true;
+            }
+        } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            $ok = true;
+        }    
+        if ($ok) {
             
             foreach ($rawprices as $rawprice){
                 $this->entityManager->getRepository(Rawprice::class)
