@@ -1034,7 +1034,7 @@ class AplService {
         if ($response->isOk()) {
             
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED]);
+                    ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
             
             foreach ($rawprices as $rawprice){
                 $this->entityManager->getRepository(Rawprice::class)

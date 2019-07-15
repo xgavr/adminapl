@@ -208,6 +208,12 @@ class Goods {
      */
     protected $description;
     
+    /** 
+     * @ORM\Column(name="date_ex")  
+     */
+    protected $dateEx;
+
+    
     /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Article", mappedBy="good")
     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
@@ -463,6 +469,16 @@ class Goods {
     public function setDescription($description) 
     {
         $this->description = $description;
+    }     
+
+    public function getDateEx() 
+    {
+        return $this->dateEx;
+    }
+
+    public function setDateEx($dateEx) 
+    {
+        $this->dateEx = $dateEx;
     }     
 
     /**

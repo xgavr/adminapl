@@ -599,10 +599,15 @@ class RawRepository extends EntityRepository
      * Сравнить строку прайса с предыдущей
      * 
      * @param Rawprice $rawprice
+     * @param date $dateEx
      * @return boolean
      */
-    public function isOldRawpriceCompare($rawprice)
+    public function isOldRawpriceCompare($rawprice, $dateEx)
     {
+        if ($dateEx <= date('Y-m-d H:i:s', strtotime('-1 week'))){
+            return true;
+        }
+        
         if ($rawprice->getStatus() != Rawprice::STATUS_PARSED){
             return true;
         }

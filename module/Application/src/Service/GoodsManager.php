@@ -572,7 +572,7 @@ class GoodsManager
         $statusEx = Goods::RAWPRICE_EX_TRANSFERRED;
         foreach ($rawprices as $rawprice){
             $statusRawpriceEx = Rawprice::EX_TRANSFERRED;
-            if (!$this->entityManager->getRepository(Rawprice::class)->isOldRawpriceCompare($rawprice)){
+            if (!$this->entityManager->getRepository(Rawprice::class)->isOldRawpriceCompare($rawprice, $good->getDateEx())){
                 $statusEx = Goods::RAWPRICE_EX_TO_TRANSFER;
                 $statusRawpriceEx = Rawprice::EX_TO_TRANSFER;
             }

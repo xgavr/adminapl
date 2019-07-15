@@ -86,6 +86,7 @@ class AssemblyManager
         $good->setStatusImage(Goods::IMAGE_FOR_UPDATE);
         $good->setStatusOem(Goods::OEM_FOR_UPDATE);
         $good->setStatusRawpriceEx(Goods::RAWPRICE_EX_NEW);
+        $good->setDateEx(date('Y-m-d H:i:s'));
         $good->setCarCount(0);
         
         if (!$zeroGroup){
