@@ -1151,7 +1151,7 @@ class AplService {
         $rawpriceCount = 0;
         foreach ($rawStatuses as $rawStatus){
             if ($rawStatus['status'] == \Application\Entity\Raw::STATUS_PARSED){
-                $rawpriceCount = $rawStatus['status']['row_count'];
+                $rawpriceCount = $rawStatus['row_count'];
             }
         }
         var_dump($rawpriceCount); exit;
