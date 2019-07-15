@@ -605,11 +605,11 @@ class RawRepository extends EntityRepository
     public function isOldRawpriceCompare($rawprice, $dateEx)
     {
         if ($dateEx <= date('Y-m-d H:i:s', strtotime('-1 week'))){
-            return true;
+            return false;
         }
         
         if ($rawprice->getStatus() != Rawprice::STATUS_PARSED){
-            return true;
+            return false;
         }
         
         $entityManager = $this->getEntityManager();
