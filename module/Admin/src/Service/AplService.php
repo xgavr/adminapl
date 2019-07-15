@@ -1099,7 +1099,7 @@ class AplService {
             $post['rawprices'][$rawprice->getId()] = [                
                 'key'       => $rawprice->getId(),
                 'type'      => $rawprice->getRaw()->getId(),
-                'parent'    => $rawprice->getGood()->getAplId(),
+                'parent'    => $rawprice->getCode()->getGood()->getAplId(),
                 'created'   => $rawprice->getDateCreated(),
                 'article'   => $rawprice->getArticle(),
                 'producer'  => $rawprice->getProducer(),
