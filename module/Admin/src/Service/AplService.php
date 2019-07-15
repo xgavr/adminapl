@@ -1065,7 +1065,14 @@ class AplService {
                 ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER], null, $limit);
 //        var_dump(count($goods)); exit;
         foreach ($goods as $good){
-            $this->sendGoodRawprice($good);
+//            $this->sendGoodRawprice($good);
+            $rawprices = $this->entityManager->getRepository(Goods::class)
+                    ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_TO_TRANSFER]);
+            if (count($rawprices) == 0){                
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
+            }
+            
             if (time() > $startTime + 840){
                 return;
             }
@@ -1082,7 +1089,7 @@ class AplService {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['statusEx' => Rawprice::EX_TO_TRANSFER], null, $limit);
+                ->findBy(['statusEx' => Rawprice::EX_TO_TRANSFER], ['good' => 'ASC'], $limit);
         
         $post = [
             'rawprices' => [],
@@ -1092,7 +1099,7 @@ class AplService {
             $post['rawprices'][$rawprice->getId()] = [                
                 'key'       => $rawprice->getId(),
                 'type'      => $rawprice->getRaw()->getId(),
-                'parent'    => $rawprice->getGood()->getAplId(),
+                'parent'    => $rawprice->getCode()->getGood()->getAplId(),
                 'created'   => $rawprice->getDateCreated(),
                 'article'   => $rawprice->getArticle(),
                 'producer'  => $rawprice->getProducer(),
@@ -1114,16 +1121,25 @@ class AplService {
             ]; 
         }
 
+//        var_dump($post); //exit;
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');
+        $client->setOptions(['timeout' => 30]);
         $client->setParameterPost($post);
 
-        $response = $client->send();
-//        var_dump($response->getBody()); exit;
-
-        if ($response->isOk()) {
-            
+        $ok = false;
+        try{
+            $response = $client->send();
+//            var_dump($response->getBody()); exit;
+            if ($response->isOk()) {
+                $ok = true;
+            }
+        } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            $ok = true;
+        }    
+        
+        if ($ok) {            
             foreach ($rawprices as $rawprice){
                 $this->entityManager->getRepository(Rawprice::class)
                         ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
@@ -1155,13 +1171,13 @@ class AplService {
             }
         }
 //        var_dump($rawpriceCount); exit;
-        $timeLimit = intval($rawpriceCount/100);
+        $timeLimit = intval($rawpriceCount/10);
         $limit = 400;
         
 //        var_dump(count($limit)); exit;
         while ($timeLimit > 0){
             $this->sendRawprices($limit);
-            $$timeLimit -= $limit; 
+            $timeLimit -= $limit; 
             if (time() > $startTime + 840){
                 return;
             }

@@ -871,6 +871,26 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Обновление строк прайсов товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateRawpricesAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['rawprice'] == 1){
+            
+            $this->aplService->updateRawprices();
+            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Обновление номеров товаров
      * 
      * @return JsonModel

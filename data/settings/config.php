@@ -18,6 +18,8 @@ return array(
         'ftp_apl_suppliers_price_login' => 'prices',
         'ftp_apl_suppliers_price_password' => '8C0c1K4x',
         'autoru_email' => 'autoru@autopartslist.ru',
-        'autoru_email_password' => 'lbyfvj4',
+        'autoru_email_password' => 'lbyfv0',
+        'telefonistka_email' => 'telefonistka@autopartslist.ru',
+        'telefonistka_email_password' => 'kjdrf4',
     ),
 );
