@@ -611,7 +611,7 @@ class RawRepository extends EntityRepository
         }
         
         if ($rawprice->getStatus() != Rawprice::STATUS_PARSED){
-//            return false;
+            return false;
         }
         
         $entityManager = $this->getEntityManager();

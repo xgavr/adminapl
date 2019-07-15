@@ -357,6 +357,16 @@ class AplController extends AbstractActionController
         ]);
     }        
     
+    public function updateRawpricesAction()
+    {
+        
+        $this->aplService->updateRawprices();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }        
+    
     public function exOemAction()
     {
         $goodId = $this->params()->fromRoute('id', -1);
