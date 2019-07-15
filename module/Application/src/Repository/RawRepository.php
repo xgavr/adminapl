@@ -603,6 +603,10 @@ class RawRepository extends EntityRepository
      */
     public function isOldRawpriceCompare($rawprice)
     {
+        if ($rawprice->getStatus() != Rawprice::STATUS_PARSED){
+            return true;
+        }
+        
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
