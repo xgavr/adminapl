@@ -1154,7 +1154,7 @@ class AplService {
                 $rawpriceCount = $rawStatus['row_count'];
             }
         }
-        var_dump($rawpriceCount); exit;
+//        var_dump($rawpriceCount); exit;
         $timeLimit = intval($rawpriceCount/100);
         $limit = 400;
         
