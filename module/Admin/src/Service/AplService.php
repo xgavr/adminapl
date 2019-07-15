@@ -1171,7 +1171,7 @@ class AplService {
             }
         }
 //        var_dump($rawpriceCount); exit;
-        $timeLimit = intval($rawpriceCount/100);
+        $timeLimit = intval($rawpriceCount/50);
         $limit = 400;
         
 //        var_dump(count($limit)); exit;
