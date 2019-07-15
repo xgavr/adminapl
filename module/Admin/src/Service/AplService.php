@@ -1127,9 +1127,6 @@ class AplService {
         $client->setOptions(['timeout' => 30]);
         $client->setParameterPost($post);
 
-        $response = $client->send();
-//        var_dump($response->getBody()); exit;
-
         $ok = false;
         try{
             $response = $client->send();
@@ -1140,8 +1137,8 @@ class AplService {
         } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
             $ok = true;
         }    
-        if ($ok) {
-            
+        
+        if ($ok) {            
             foreach ($rawprices as $rawprice){
                 $this->entityManager->getRepository(Rawprice::class)
                         ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
