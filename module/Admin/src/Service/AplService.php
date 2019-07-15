@@ -1147,8 +1147,8 @@ class AplService {
 
         $rawStatuses = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                 ->rawStatuses();
-        var_dump($rawStatuses); exit;
-        $timeLimit = intval($rawStatuses[\Application\Entity\Raw::STATUS_PARSED]/100);
+        var_dump($rawStatuses[\Application\Entity\Raw::STATUS_PARSED]['row_count']); exit;
+        $timeLimit = intval($rawStatuses[\Application\Entity\Raw::STATUS_PARSED]['row_count']/100);
         $limit = 400;
         
 //        var_dump(count($limit)); exit;
