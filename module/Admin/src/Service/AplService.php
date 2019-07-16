@@ -1089,7 +1089,7 @@ class AplService {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
         
         $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['statusEx' => Rawprice::EX_TO_TRANSFER], ['good' => 'ASC'], $limit);
+                ->findBy(['statusEx' => Rawprice::EX_TO_TRANSFER], null, $limit);
         
         $post = [
             'rawprices' => [],
