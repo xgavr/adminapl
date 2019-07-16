@@ -1168,7 +1168,7 @@ class AplService {
         $timeLimit = max(intval($rawpriceCount/96), 40000);
         $limit = 400;
         
-        var_dump($timeLimit); exit;
+//        var_dump($timeLimit); exit;
         while ($timeLimit > 0){
             $this->sendRawprices($limit);
             $timeLimit -= $limit; 
