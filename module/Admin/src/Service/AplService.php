@@ -1164,11 +1164,11 @@ class AplService {
         $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
                 ->count(['statusEx' => Rawprice::EX_TO_TRANSFER]);
         
-        var_dump($rawpriceCount); exit;
+//        var_dump($rawpriceCount); exit;
         $timeLimit = max(intval($rawpriceCount/96), 40000);
         $limit = 400;
         
-//        var_dump(count($limit)); exit;
+        var_dump($timeLimit); exit;
         while ($timeLimit > 0){
             $this->sendRawprices($limit);
             $timeLimit -= $limit; 
