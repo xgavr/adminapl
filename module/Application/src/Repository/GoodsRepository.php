@@ -1019,7 +1019,7 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r.id, s.name as supplier, s.id as supplierId, rr.dateCreated, r.article, c.code, c.id as codeId, r.producer, identity(r.unknownProducer) as producerId, r.goodname, r.rest, r.price')
+        $queryBuilder->select('r.id, s.name as supplier, s.id as supplierId, rr.dateCreated, r.article, c.code, c.id as codeId, r.producer, identity(r.unknownProducer) as producerId, r.goodname, r.rest, r.price, r.statusEx')
             ->from(Goods::class, 'g')
             ->join('g.articles', 'c') 
             ->join('c.rawprice', 'r') 

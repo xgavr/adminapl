@@ -703,14 +703,17 @@ $this->headScript()
             case '2': strClass = "alert-success"; break;
             default: strClass = "alert-light";
         }
-        return '<span>'+value+'</span>' ;
+        return '<span></span>' ;
     }  
     
     function cellStatusExStyle(value, row, index) {
-        switch(value){
-            case '3': return "warning";
-            case '2': return "success";
-            default: return "light";
+        var classes = [
+          'light',
+          'success',
+          'danger'
+        ]
+        return {
+          classes: classes[value]
         }
     }    
     
