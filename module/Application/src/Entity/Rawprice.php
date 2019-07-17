@@ -618,6 +618,7 @@ class Rawprice {
     {
         return [
             self::EX_NEW => 'Не передано',
+            self::EX_TO_TRANSFER => 'Надо передать',
             self::EX_TRENSFERRED => 'Передано',
         ];
     }    
@@ -644,6 +645,24 @@ class Rawprice {
         }
 
         return 'Unknown';        
+    }
+    
+    public function getStyleListStatusEx()
+    {
+        return [
+            self::EX_NEW => '',
+            self::EX_TO_TRANSFER => 'alert-warning',
+            self::EX_TRENSFERRED => 'alert-success',
+        ];
+    }
+    
+    public function getStyleStatusEx()
+    {
+        $list = self::getStyleListStatusEx();
+        if (isset($list[$this->statusEx]))
+            return $list[$this->statusEx];
+        
+        return '';
     }
     
     /**

@@ -277,6 +277,7 @@ $this->headScript()
                                      <th data-field="goodname" data-formatter="goodnameFormatter">Описание</th>
                                      <th data-field="rest" data-align='right'>Наличие</th>
                                      <th data-field="price" data-formatter="priceFormatter" data-align='right'>Цена</th>
+                                     <th data-field="statusEx" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle"></th>
                                  </tr>                
                             </thead>
                         </table>
@@ -694,6 +695,23 @@ $this->headScript()
     
     function codeFormatter(value, row) {
         return '<a href="/producer/article-view/'+row.codeId+'" target="_blank">'+value+'</a> ' + producerFormatter(row.producer, row);
+    }    
+    
+    function statusExFormatter(value, row) {
+        switch(value){
+            case '3': strClass = "alert-warning"; break;
+            case '2': strClass = "alert-success"; break;
+            default: strClass = "alert-light";
+        }
+        return '<span></span>' ;
+    }  
+    
+    function cellStatusExStyle(value, row, index) {
+        switch(value){
+            case '3': return "warning";
+            case '2': return "success";
+            default: return "light";
+        }
     }    
     
     function supplierFormatter(value, row) {
