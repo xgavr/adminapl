@@ -716,7 +716,7 @@ class Goods {
     {
         return [
             self::RAWPRICE_EX_NEW => '',
-            self::RAWPRICE_EX_TO_TRANSFER => 'alert-danger',
+            self::RAWPRICE_EX_TO_TRANSFER => 'alert-warning',
             self::RAWPRICE_EX_TRANSFERRED => 'alert-success',
         ];
     }
