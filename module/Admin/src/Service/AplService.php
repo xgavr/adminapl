@@ -1088,8 +1088,6 @@ class AplService {
     {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
         
-//        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-//                ->findBy(['statusEx' => Rawprice::EX_TO_TRANSFER], null, $limit);
         $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->rawpriceGoodsEx(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER, 'statusEx' => Rawprice::EX_TO_TRANSFER, 'limit' => $limit]);
         
@@ -1099,31 +1097,29 @@ class AplService {
         ];
 
         foreach ($rawprices as $rawprice){
-            if ($rawprice->getCode()){
-                $post['rawprices'][$rawprice->getId()] = [                
-                    'key'       => $rawprice->getId(),
-                    'type'      => $rawprice->getRaw()->getId(),
-                    'parent'    => $rawprice->getCode()->getGood()->getAplId(),
-                    'created'   => $rawprice->getDateCreated(),
-                    'article'   => $rawprice->getArticle(),
-                    'producer'  => $rawprice->getProducer(),
-                    'goodname'  => $rawprice->getGoodname(),
-                    'price'     => $rawprice->getRealPrice(),
-                    'rest'      => $rawprice->getRealRest(),
-                    'iid'       => $rawprice->getIid(),
-                    'lot'       => $rawprice->getLot(),
-                    'unit'      => $rawprice->getUnit(),
-                    'bar'       => $rawprice->getBar(),
-                    'currency'  => $rawprice->getCurrency(),
-                    'weight'    => $rawprice->getWeight(),
-                    'country'   => $rawprice->getCountry(),
-                    'markdown'  => $rawprice->getMarkdown(),
-                    'sale'      => $rawprice->getSale(),
-                    'pack'      => $rawprice->getPack(),
-                    'name'      => $rawprice->getRaw()->getSupplier()->getAplId(),
-                    'publish'   => $rawprice->getStatusAsAplPublish(),
-                ]; 
-            }    
+            $post['rawprices'][$rawprice->getId()] = [                
+                'key'       => $rawprice->getId(),
+                'type'      => $rawprice->getRaw()->getId(),
+                'parent'    => $rawprice->getCode()->getGood()->getAplId(),
+                'created'   => $rawprice->getDateCreated(),
+                'article'   => $rawprice->getArticle(),
+                'producer'  => $rawprice->getProducer(),
+                'goodname'  => $rawprice->getGoodname(),
+                'price'     => $rawprice->getRealPrice(),
+                'rest'      => $rawprice->getRealRest(),
+                'iid'       => $rawprice->getIid(),
+                'lot'       => $rawprice->getLot(),
+                'unit'      => $rawprice->getUnit(),
+                'bar'       => $rawprice->getBar(),
+                'currency'  => $rawprice->getCurrency(),
+                'weight'    => $rawprice->getWeight(),
+                'country'   => $rawprice->getCountry(),
+                'markdown'  => $rawprice->getMarkdown(),
+                'sale'      => $rawprice->getSale(),
+                'pack'      => $rawprice->getPack(),
+                'name'      => $rawprice->getRaw()->getSupplier()->getAplId(),
+                'publish'   => $rawprice->getStatusAsAplPublish(),
+            ]; 
         }
 
 //        var_dump($post); //exit;
