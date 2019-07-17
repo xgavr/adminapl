@@ -48,6 +48,7 @@ $this->headScript()
                      <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
                      <th data-field="producer" data-formatter="producerFormatter">Производитель</th>             
                      <th data-field="" data-formatter="activeFormatter"></th>
+                     <th data-field="statusRawpriceEx" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle"></th>
                  </tr>                
             </thead>
         </table>
@@ -243,8 +244,8 @@ $this->headScript()
                                     <span class="glyphicon glyphicon-export" ></span>
                                 </button> 
                                 <button value="/apl/update-good-rawprice/" class="btn btn-info btn-xs refresh-table-button"
-                                        title="Обновление строк прайсов товаров">
-                                    <span class="glyphicon glyphicon-export" ></span>
+                                        title="Обновление статуса товаров">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
                                 </button> 
                             </div>
                         </div>
@@ -332,6 +333,21 @@ $this->headScript()
         btn += '</button>';
         return btn;
     }    
+    
+    function statusExFormatter(value, row) {
+        return '<span></span>' ;
+    }  
+    
+    function cellStatusExStyle(value, row, index) {
+        var classes = [
+          'light',
+          'success',
+          'warning'
+        ]
+        return {
+          classes: classes[value-1]
+        }
+    }        
     
     function responseHandler(res) {
         return res;
