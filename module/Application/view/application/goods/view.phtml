@@ -505,7 +505,9 @@ $this->headScript()
                             </div>
                             <div class="panel-body">
                                 <div class="pull-left">
-                                    Строки прайсов 
+                                    <span class="<?= $goods->getStyleStatusRawpriceEx()?>">
+                                        Строки прайсов
+                                    </span> 
                                 </div>
                                 <div class="pull-right">                                                
                                     <button value="/goods/compare-rawprice/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"

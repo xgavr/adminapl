@@ -712,6 +712,24 @@ class Goods {
         $this->statusRawpriceEx;
     }
     
+    public function getStyleListStatusRawpriceEx()
+    {
+        return [
+            self::RAWPRICE_EX_NEW => '',
+            self::RAWPRICE_EX_TO_TRANSFER => 'alert-danger',
+            self::RAWPRICE_EX_TRANSFERRED => 'alert-success',
+        ];
+    }
+    
+    public function getStyleStatusRawpriceEx()
+    {
+        $list = self::getStyleListStatusRawpriceEx();
+        if (isset($list[$this->statusPriceEx]))
+            return $list[$this->statusRawpriceEx];
+        
+        return '';
+    }
+    
     public function setStatusRawpriceEx($statusRawpriceEx)
     {
         $this->statusRawpriceEx = $statusRawpriceEx;
