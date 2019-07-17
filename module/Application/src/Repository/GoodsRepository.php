@@ -260,6 +260,44 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Строки прайсов этого товаров
+     * 
+     * @param array $params
+     * 
+     * @return object
+     */
+    public function rawpriceGoodsEx($params=null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+            ->from(Goods::class, 'g')
+            ->join('g.articles', 'a')
+            ->join(Rawprice::class, 'r', 'WITH', 'r.code = a.id')    
+            ;
+        
+        if (is_array($params)){
+            if (isset($params['statusRawpriceEx'])){
+                $queryBuilder->andWhere('g.statusRawpriceEx = ?2')
+                        ->setParameter('2', $params['statusRawpriceEx'])
+                        ;
+            }
+            if (isset($params['statusEx'])){
+                $queryBuilder->andWhere('r.statusEx = ?3')
+                        ->setParameter('3', $params['statusEx'])
+                        ;
+            }
+            if (isset($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+                        ;
+            }
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();    
+    }
+
+    /**
      * Строки прайсов этого товара
      * 
      * @param \Application\Entity\Goods $good
