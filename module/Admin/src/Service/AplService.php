@@ -622,7 +622,7 @@ class AplService {
 
             $response = $client->send();
             $body = $response->getBody();
-            var_dump($body); exit; 
+//            var_dump($body); exit; 
             try {
                 if (is_numeric($body)){
                     $this->entityManager->getRepository(Goods::class)
