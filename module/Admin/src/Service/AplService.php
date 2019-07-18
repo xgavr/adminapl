@@ -1077,6 +1077,7 @@ class AplService {
                 return;
             }
         }
+        unset($goods);
         return;
     }
 

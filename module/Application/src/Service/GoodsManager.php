@@ -606,11 +606,14 @@ class GoodsManager
                 ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW], null, $limit);
 //        var_dump(count($goods)); exit;
         foreach ($goods as $good){
-            $this->compareRawprices($good);
+            if ($good->getAplId()){
+                $this->compareRawprices($good);
+            }    
             if (time() > $startTime + 840){
                 return;
             }
         }
+        unset($goods);
         return;
     }
     

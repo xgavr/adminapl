@@ -3246,3 +3246,65 @@ Content-Length: 62
 * Connection #0 to host api.telegram.org left intact
 
  [] []
+[2019-07-18 11:00:52] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 43.240.103.228...
+* TCP_NODELAY set
+* Connection timed out after 10000 milliseconds
+* stopped the pause stream!
+* Closing connection 0
+
+ [] []
+2019-07-18T11:00:52+03:00 ERR (3): Telegram returned an invalid response! Please review your bot name and API key.
+[2019-07-18 11:02:14] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 149.154.167.220...
+* TCP_NODELAY set
+*   Trying 2001:67c:4e8:f004::9...
+* TCP_NODELAY set
+* connect to 2001:67c:4e8:f004::9 port 443 failed: Network unreachable
+* connect to 149.154.167.220 port 443 failed: Timed out
+* Failed to connect to api.telegram.org port 443: Timed out
+* Closing connection 0
+
+ [] []
+2019-07-18T11:02:15+03:00 ERR (3): Telegram returned an invalid response! Please review your bot name and API key.
+[2019-07-18 11:16:26] bot_log.DEBUG: Verbose HTTP Request output:
+*   Trying 111.223.75.181...
+* TCP_NODELAY set
+* SOCKS5 communication to api.telegram.org:443
+* SOCKS5 connect to IPv4 149.154.167.220 (locally resolved)
+* SOCKS5 request granted.
+* Connected to 111.223.75.181 (111.223.75.181) port 8888 (#0)
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: d:/ospanel/modules/php/PHP-7.2-x64/cacert.pem
+  CApath: none
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server accepted to use http/1.1
+* Server certificate:
+*  subject: OU=Domain Control Validated; CN=api.telegram.org
+*  start date: May  4 14:42:31 2018 GMT
+*  expire date: May 23 16:17:38 2020 GMT
+*  subjectAltName: host "api.telegram.org" matched cert's "api.telegram.org"
+*  issuer: C=US; ST=Arizona; L=Scottsdale; O=GoDaddy.com, Inc.; OU=http://certs.godaddy.com/repository/; CN=Go Daddy Secure Certificate Authority - G2
+*  SSL certificate verify ok.
+> POST /bot460756366:AAHb7nDcYHQ1oCW7mjGSBCIPXlYDq2sY08s/sendMessage HTTP/1.1
+Host: api.telegram.org
+User-Agent: GuzzleHttp/6.3.3 curl/7.56.0 PHP/7.2.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 62
+
+* upload completely sent off: 62 out of 62 bytes
+< HTTP/1.1 200 OK
+< Server: nginx/1.16.0
+< Date: Thu, 18 Jul 2019 08:16:26 GMT
+< Content-Type: application/json
+< Content-Length: 396
+< Connection: keep-alive
+< Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+< Access-Control-Allow-Origin: *
+< Access-Control-Allow-Methods: GET, POST, OPTIONS
+< Access-Control-Expose-Headers: Content-Length,Content-Type,Date,Server,Connection
+< 
+* Connection #0 to host 111.223.75.181 left intact
+
+ [] []
