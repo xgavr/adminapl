@@ -240,6 +240,7 @@ class GoodsRepository extends EntityRepository
             ->join('g.articles', 'a')
             ->join(Rawprice::class, 'r', 'WITH', 'r.code = a.id')    
             ->where('g.id = ?1')
+            ->andWhere('g.aplId > 0')    
             ->setParameter('1', $good->getId()) 
                 ;
         
