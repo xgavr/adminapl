@@ -275,7 +275,8 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('r')
             ->from(Goods::class, 'g')
             ->join('g.articles', 'a')
-            ->join(Rawprice::class, 'r', 'WITH', 'r.code = a.id')    
+            ->join(Rawprice::class, 'r', 'WITH', 'r.code = a.id')   
+            ->andWhere('g.aplId > 0')    
             ;
         
         if (is_array($params)){
