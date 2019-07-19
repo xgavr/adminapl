@@ -264,6 +264,7 @@ class GoodsRepository extends EntityRepository
         if (is_numeric($good)){
             $goodId = $good;
         } else {
+            var_dump($good); exit;
             $goodId = $good->getId();
         }
         
