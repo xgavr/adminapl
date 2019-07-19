@@ -617,7 +617,7 @@ class GoodsManager
 //            var_dump($row); 
                 $this->compareRawprices($row['id'], $row['dateEx']);                
             }
-            if (time() > $startTime + 5){
+            if (time() > $startTime + 840){
                 echo memory_get_usage() . "\n";
                 return;
             }
