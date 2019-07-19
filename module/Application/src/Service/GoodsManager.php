@@ -612,10 +612,11 @@ class GoodsManager
                 ->findForRawpriceEx(Goods::RAWPRICE_EX_NEW, ['limit' => $limit]);
         $iterable = $goodsQuery->iterate();
 //        var_dump(count($goods)); exit;
-        foreach($iterable as $row){
-            var_dump($row); 
-            //$this->compareRawprices($row[0]['id'], $row[0]['dateEx']);
-
+        foreach($iterable as $item){
+            foreach ($item as $row){
+//            var_dump($row); 
+                $this->compareRawprices($row['id'], $row['dateEx']);                
+            }
             if (time() > $startTime + 5){
                 return;
             }
