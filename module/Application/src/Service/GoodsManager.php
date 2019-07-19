@@ -562,17 +562,18 @@ class GoodsManager
     
     /**
      * Сравнить строки прайсов с предыдущими и установить метку
-     * @param Goods $good
+     * @param int $goodId
+     * @param date $goodDateEx
      */
-    public function compareRawprices($good)
+    public function compareRawprices($goodId, $goodDateEx)
     {     
         $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_NEW]);
+                ->rawpriceArticlesEx($goodId, ['statusEx' => Rawprice::EX_NEW]);
 
         $statusEx = Goods::RAWPRICE_EX_TRANSFERRED;
         foreach ($rawprices as $rawprice){
             $statusRawpriceEx = Rawprice::EX_TRANSFERRED;
-            if (!$this->entityManager->getRepository(Rawprice::class)->isOldRawpriceCompare($rawprice, $good->getDateEx())){
+            if (!$this->entityManager->getRepository(Rawprice::class)->isOldRawpriceCompare($rawprice, $goodDateEx)){
                 $statusEx = Goods::RAWPRICE_EX_TO_TRANSFER;
                 $statusRawpriceEx = Rawprice::EX_TO_TRANSFER;
             }
@@ -586,6 +587,9 @@ class GoodsManager
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), ['status_rawprice_ex' => $statusEx]);
         }
+        
+        unset($rawprices);
+        return;
     }
     
     /**
@@ -602,18 +606,21 @@ class GoodsManager
                 ->count([]);
         $limit = intval($goodCount/25);
         
-        $goods = $this->entityManager->getRepository(Goods::class)
-                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW], null, $limit);
+//        $goods = $this->entityManager->getRepository(Goods::class)
+//                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW], null, $limit);
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
+                ->findForRawpriceEx(Goods::RAWPRICE_EX_NEW, ['limit' => $limit]);
+        $iterable = $goodsQuery->iterate();
 //        var_dump(count($goods)); exit;
-        foreach ($goods as $good){
-            if ($good->getAplId() > 0){
-                $this->compareRawprices($good);
-            }    
+        foreach($iterable as $row){
+
+            $this->compareRawprices($row['id'], $row['dateEx']);
+
             if (time() > $startTime + 840){
                 return;
             }
         }
-        unset($goods);
+        unset($iterable);
         return;
     }
     

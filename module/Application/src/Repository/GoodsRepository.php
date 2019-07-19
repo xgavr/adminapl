@@ -199,6 +199,34 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Запрос на выборку товаров для экспорта
+     * 
+     * @param int $statusRawpriceEx
+     * @param array $params
+     * @return object
+     */
+    public function findForRawpriceEx($statusRawpriceEx, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g.id', 'g.dateEx')
+                ->from(Goods::class, 'g')
+                ->where('g.statusRawpriceEx = ?1')
+                ->andWhere('g.aplId > 0')
+                ->setParameter('1', $statusRawpriceEx)
+                ;
+        if (is_array($params)){
+            if (isset($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
+        }
+        
+        return $queryBuilder->getQuery();        
+    }
+    
+    /**
      * Количество записей в прайсах с этим товара
      * 
      * @param \Application\Entity\Goods $goods
@@ -222,16 +250,23 @@ class GoodsRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();    
     }
     
+        
     /**
      * Строки прайсов этого товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param \Application\Entity\Goods|int $good
      * @param array $params
      * 
      * @return object
      */
     public function rawpriceArticlesEx($good, $params=null)
     {
+        if (is_numeric($good)){
+            $goodId = $good;
+        } else {
+            $goodId = $good->getId();
+        }
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -241,7 +276,7 @@ class GoodsRepository extends EntityRepository
             ->join(Rawprice::class, 'r', 'WITH', 'r.code = a.id')    
             ->where('g.id = ?1')
             ->andWhere('g.aplId > 0')    
-            ->setParameter('1', $good->getId()) 
+            ->setParameter('1', $goodId) 
                 ;
         
         if (is_array($params)){
