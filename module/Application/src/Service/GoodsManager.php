@@ -614,10 +614,11 @@ class GoodsManager
 //        var_dump(count($goods)); exit;
         foreach($iterable as $item){
             foreach ($item as $row){
-//            var_dump($row); 
-                $this->compareRawprices($row['id'], $row['dateEx']);                
+            var_dump($row); 
+//                $this->compareRawprices($row['id'], $row['dateEx']);                
             }
             if (time() > $startTime + 5){
+                echo memory_get_usage() . "\n";
                 return;
             }
         }
