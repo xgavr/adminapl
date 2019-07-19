@@ -611,15 +611,12 @@ class GoodsManager
         $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findForRawpriceEx(Goods::RAWPRICE_EX_NEW, ['limit' => $limit]);
         $iterable = $goodsQuery->iterate();
-//        var_dump(count($goods)); exit;
         foreach($iterable as $item){
             foreach ($item as $row){
-//            var_dump($row); 
                 $this->compareRawprices($row['id'], $row['dateEx']);                
             }
             if (time() > $startTime + 840){
-//                echo memory_get_usage() . "\n";
-                return;
+                break;
             }
         }
         

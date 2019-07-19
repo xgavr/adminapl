@@ -1078,10 +1078,11 @@ class AplService {
             }    
             
             if (time() > $startTime + 840){
-                return;
+                break;
             }
         }
-        unset($goods);
+        
+        unset($iterable);
         return;
     }
 
