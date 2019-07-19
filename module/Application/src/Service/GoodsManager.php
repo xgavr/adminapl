@@ -584,7 +584,7 @@ class GoodsManager
         }    
         
         $this->entityManager->getRepository(Goods::class)
-                ->updateGoodId($good->getId(), ['status_rawprice_ex' => $statusEx]);
+                ->updateGoodId($goodId, ['status_rawprice_ex' => $statusEx]);
         
         unset($rawprices);
         return;
