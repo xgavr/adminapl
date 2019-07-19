@@ -613,7 +613,7 @@ class GoodsManager
         $iterable = $goodsQuery->iterate();
 //        var_dump(count($goods)); exit;
         foreach($iterable as $row){
-            var_dump($row[0]['id']); 
+            var_dump($row); 
             //$this->compareRawprices($row[0]['id'], $row[0]['dateEx']);
 
             if (time() > $startTime + 5){
