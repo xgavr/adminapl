@@ -601,6 +601,8 @@ class GoodsManager
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
         $startTime = time();
+        
+        echo memory_get_usage() . "\n";
 
         $goodCount = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
@@ -620,6 +622,9 @@ class GoodsManager
                 return;
             }
         }
+        
+        echo memory_get_usage() . "\n";
+        
         unset($iterable);
         return;
     }
