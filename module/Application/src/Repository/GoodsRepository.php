@@ -569,6 +569,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusCarEx = ?1')
             ->andWhere('g.groupApl != ?2')    
+            ->andWhere('g.aplId > 0')    
             ->setParameter('1', Goods::CAR_EX_NEW)    
             ->setParameter('2', Goods::DEFAULT_GROUP_APL_ID)    
             ->setMaxResults(10000) 
