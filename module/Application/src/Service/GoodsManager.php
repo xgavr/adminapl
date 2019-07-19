@@ -600,7 +600,7 @@ class GoodsManager
         set_time_limit(900);
         $startTime = time();
         
-        echo memory_get_usage() . "\n";
+//        echo memory_get_usage() . "\n";
 
         $goodCount = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
@@ -618,12 +618,12 @@ class GoodsManager
                 $this->compareRawprices($row['id'], $row['dateEx']);                
             }
             if (time() > $startTime + 840){
-                echo memory_get_usage() . "\n";
+//                echo memory_get_usage() . "\n";
                 return;
             }
         }
         
-        echo memory_get_usage() . "\n";
+//        echo memory_get_usage() . "\n";
         
         unset($iterable);
         return;

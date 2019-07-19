@@ -1061,17 +1061,21 @@ class AplService {
                 ->count([]);
         $limit = intval($goodCount/25);
         
-        $goods = $this->entityManager->getRepository(Goods::class)
-                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER], null, $limit);
-//        var_dump(count($goods)); exit;
-        foreach ($goods as $good){
-//            $this->sendGoodRawprice($good);
-            $rawprices = $this->entityManager->getRepository(Goods::class)
-                    ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_TO_TRANSFER]);
-            if (count($rawprices) == 0){                
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
-            }
+//        $goods = $this->entityManager->getRepository(Goods::class)
+//                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER], null, $limit);
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
+                ->findForRawpriceEx(Goods::RAWPRICE_EX_TO_TRANSFER, ['limit' => $limit]);
+        $iterable = $goodsQuery->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $row){
+                $rawprices = $this->entityManager->getRepository(Goods::class)
+                        ->rawpriceArticlesEx($row['id'], ['statusEx' => Rawprice::EX_TO_TRANSFER]);
+                if (count($rawprices) == 0){                
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($row['id'], ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
+                }
+            }    
             
             if (time() > $startTime + 840){
                 return;
