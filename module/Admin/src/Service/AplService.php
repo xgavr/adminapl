@@ -1059,7 +1059,7 @@ class AplService {
 
         $goodCount = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
-        $limit = intval($goodCount/20);
+        $limit = intval($goodCount/25);
         
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER], null, $limit);
