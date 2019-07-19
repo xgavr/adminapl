@@ -583,10 +583,8 @@ class GoodsManager
             }
         }    
         
-        if ($good->getStatusRawpriceEx() != $statusEx){
-            $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), ['status_rawprice_ex' => $statusEx]);
-        }
+        $this->entityManager->getRepository(Goods::class)
+                ->updateGoodId($good->getId(), ['status_rawprice_ex' => $statusEx]);
         
         unset($rawprices);
         return;
