@@ -353,6 +353,7 @@ class ParseManager {
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(0);
+//        echo memory_get_usage() . "\n";
         
         if (!$raw){
             $raw = $this->findRawForParse();
@@ -360,7 +361,11 @@ class ParseManager {
         
         if ($raw){
             
-            $rawprices = $this->findRawpricesForParse($raw);
+//            $rawprices = $this->findRawpricesForParse($raw);
+            $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)
+                    ->queryRawpriceForParse($raw);
+            $rawpriceIterator = $rawpriceQuery->iterate();
+            
             $priceDescriptionFunc = $this->getPriceDescriptionFunc($raw);
             
             if (count($priceDescriptionFunc)){
@@ -369,11 +374,14 @@ class ParseManager {
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();
             
-                foreach ($rawprices as $rawprice){
-
-                    if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
-                        $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSED);
+                foreach ($rawpriceIterator as $rawpriceItem){
+                    foreach ($rawpriceItem as $rawprice){
+                        if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
+                            $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSED);
+                        }
+                        unset($rawprice);
                     }    
+                    unset($rawpriceItem);
                 }
                 
                 $parsedAll = true;
@@ -395,9 +403,8 @@ class ParseManager {
                 }
 
             } 
-            unset($rawprices);
+//            echo memory_get_usage() . "\n"; // 36640
         }    
-        
         return;
     }
     

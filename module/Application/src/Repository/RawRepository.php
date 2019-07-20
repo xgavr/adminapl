@@ -443,8 +443,33 @@ class RawRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /*
+    /**
+     * Получить запрос записей для разбора
+     * 
+     * @param Raw $raw
+     */
+    public function queryRawpriceForParse($raw)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
+                ->where('r.raw = ?1')
+                ->andWhere('r.status = ?2')
+                ->setParameter('1', $raw->getId())
+                ->setParameter('2', Rawprice::STATUS_NEW)
+                ;
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+                
+        return $queryBuilder->getQuery();
+    }
+    
+    /**
      * Получить записи для разбора
+     * 
+     * @param Raw $raw
      */
     public function findRawpriceForParse($raw)
     {
