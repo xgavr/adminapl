@@ -1145,7 +1145,7 @@ class AplService {
                 $ok = true;
             }
         } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-            $ok = true;
+            return;
         }    
         
         if ($ok) {            
@@ -1464,7 +1464,7 @@ class AplService {
                     $ok = true;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                $ok = true;
+                return;
             }    
             
             if ($ok){
@@ -1531,7 +1531,7 @@ class AplService {
                     $ok = TRUE;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                $ok = TRUE;
+                return;
             }    
             
             if ($ok){
@@ -1610,7 +1610,7 @@ class AplService {
                     $ok = TRUE;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                $ok = TRUE;
+                return;
             }    
             
             if ($ok){
@@ -1699,7 +1699,7 @@ class AplService {
                             ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                
+                return;
             }    
 
             unset($post);
