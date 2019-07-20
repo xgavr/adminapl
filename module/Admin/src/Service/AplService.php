@@ -618,6 +618,7 @@ class AplService {
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
+//            $client->setOptions(['timeout' => 30]);
             $client->setParameterPost($post);
 
             $response = $client->send();
@@ -629,7 +630,7 @@ class AplService {
                             ->updateGoodId($good->getId(), ['apl_id' => $body]);
                     return;
                 }
-            } catch (Exception $ex) {
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
 //                var_dump($ex->getMessage());
                 return;
             }

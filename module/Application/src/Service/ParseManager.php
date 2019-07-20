@@ -394,7 +394,8 @@ class ParseManager {
                     $this->setOldRaw($raw);
                 }
 
-            }    
+            } 
+            unset($rawprices);
         }    
         
         return;
