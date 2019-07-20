@@ -621,10 +621,10 @@ class AplService {
 //            $client->setOptions(['timeout' => 30]);
             $client->setParameterPost($post);
 
-            $response = $client->send();
-            $body = $response->getBody();
 //            var_dump($body); exit; 
             try {
+                $response = $client->send();
+                $body = $response->getBody();
                 if (is_numeric($body)){
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGoodId($good->getId(), ['apl_id' => $body]);
