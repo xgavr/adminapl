@@ -1497,7 +1497,7 @@ class AplService {
             if (time() > $startTime + 1740){
                 return;
             }
-            usleep(1000);
+            usleep(100);
         }
         unset($goods);
         return;
@@ -1563,7 +1563,7 @@ class AplService {
             if (time() > $startTime + 1740){
                 return;
             }
-            usleep(1000);
+            usleep(100);
         }
         unset($goods);
         return;
@@ -1644,7 +1644,7 @@ class AplService {
             if (time() > $startTime + 1740){
                 return;
             }
-            usleep(1000);
+            usleep(100);
         }
         unset($goods);
         return;
