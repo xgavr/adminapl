@@ -1454,6 +1454,7 @@ class AplService {
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
+            $client->setOptions(['timeout' => 30]);
             $client->setParameterPost($post);
 
             $ok = false;
@@ -1464,7 +1465,7 @@ class AplService {
                     $ok = true;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                return;
+                $ok = true;
             }    
             
             if ($ok){
