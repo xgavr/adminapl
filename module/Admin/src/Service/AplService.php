@@ -1652,6 +1652,60 @@ class AplService {
         return;
     }
     
+    
+     /**
+     * Обновить aplId атрибутов
+     * 
+     * @param \Application\Entity\Attribute $attribute
+     * @return null
+     */
+    public function getAttributeAplId($attribute)
+    {
+        if ($attribute->getName()){
+
+            $url = $this->aplApi().'get-attribute-id?api='.$this->aplApiKey();
+            
+            $post = [
+                'id' => $attribute->getAplId(),
+                'name' => $attribute->getTransferName(),
+                'publish' => $attribute->getAplStatus(),
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if (is_numeric($response->getBody())){
+                    if ($attribute->getAplId() != $response->getBody()){
+                        $attribute->setAplId($response->getBody());
+                        $this->entityManager->persist($attribute);
+                        $this->entityManager->flush($attribute);
+                    }            
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                return;
+            }    
+        }    
+        
+        return;        
+    }
+
+    public function updateAttributeAplId()
+    {
+        $attributes = $this->entityManager->getRepository(\Application\Entity\Attribute::class)
+                ->findBy(['aplId' => 0]);
+        
+        foreach ($attributes as $attribute){
+            $this->getAttributeAplId($attribute);
+        }
+        
+        return;        
+    }
+
     /**
      * Обновить атрибуты товара
      * 

@@ -24,6 +24,10 @@ class Attribute {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
         
+    const EX_NEW            = 1; // не передано
+    const EX_TO_TRANSFER    = 3; // нужно передать
+    const EX_TRANSFERRED    = 2; // передано.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -36,6 +40,11 @@ class Attribute {
      */
     protected $tdId;
     
+    /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId = 0;
+
     /**
      * @ORM\Column(name="block_no")   
      */
@@ -82,6 +91,10 @@ class Attribute {
      */
     protected $status;   
     
+    /**
+     * @ORM\Column(name="status_ex")   
+     */
+    protected $statusEx = self::EX_TO_TRANSFER;    
     
     /**
      * @ORM\OneToMany(targetEntity="Application\Entity\GoodAttributeValue", mappedBy="attribute")
@@ -119,6 +132,16 @@ class Attribute {
         $this->tdId = $tdId;
     }     
 
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
+    }     
+    
     public function getBloockNo() 
     {
         return $this->blockNo;
@@ -164,6 +187,12 @@ class Attribute {
         return $this->name;
     }
 
+    public function getTransferName() 
+    {
+        $filter = new \Admin\Filter\TransferName();
+        return $filter->filter($this->name);
+    }
+    
     public function setName($name) 
     {
         $this->name = $name;
@@ -206,6 +235,18 @@ class Attribute {
     public function getStatus() 
     {
         return $this->status;
+    }
+
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getAplStatus() 
+    {
+        if ($this->status == self::STATUS_ACTIVE){
+            return 1;
+        }
+        return 0;
     }
 
     
@@ -267,6 +308,52 @@ class Attribute {
     {
         $this->status = $status;
     }   
+    
+    /**
+     * Returns statusEx.
+     * @return int     
+     */
+    public function getStatusEx() 
+    {
+        return $this->statusEx;
+    }
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusExList() 
+    {
+        return [
+            self::EX_NEW => 'Не передано',
+            self::EX_TO_TRANSFER => 'Надо передать',
+            self::EX_TRENSFERRED => 'Передано',
+        ];
+    }    
+    
+    /**
+     * Returns user statusEx as string.
+     * @return string
+     */
+    public function getStatusExAsString()
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$this->statusEx])) {
+            return $list[$this->statusEx];
+        }
+
+        return 'Unknown';
+    }  
+    
+    public function getStatusExName($statusEx)
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$statusEx])) {
+            return $list[$statusEx];
+        }
+
+        return 'Unknown';        
+    }
     
     // Возвращает значения аттрибутов для данного атрибута.
     public function getAttributeValues() 

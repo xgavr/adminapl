@@ -20,6 +20,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class GoodAttributeValue {
             
+    const EX_NEW            = 1; // не передано
+    const EX_TO_TRANSFER    = 3; // нужно передать
+    const EX_TRANSFERRED    = 2; // передано.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -27,6 +31,16 @@ class GoodAttributeValue {
      */
     protected $id;
             
+    /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId = 0;
+    
+    /**
+     * @ORM\Column(name="status_ex")   
+     */
+    protected $statusEx = self::EX_TO_TRANSFER;    
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="attributeValues") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
@@ -58,6 +72,62 @@ class GoodAttributeValue {
     {
         $this->id = $id;
     }     
+    
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
+    }     
+    
+    /**
+     * Returns statusEx.
+     * @return int     
+     */
+    public function getStatusEx() 
+    {
+        return $this->statusEx;
+    }
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusExList() 
+    {
+        return [
+            self::EX_NEW => 'Не передано',
+            self::EX_TO_TRANSFER => 'Надо передать',
+            self::EX_TRENSFERRED => 'Передано',
+        ];
+    }    
+    
+    /**
+     * Returns user statusEx as string.
+     * @return string
+     */
+    public function getStatusExAsString()
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$this->statusEx])) {
+            return $list[$this->statusEx];
+        }
+
+        return 'Unknown';
+    }  
+    
+    public function getStatusExName($statusEx)
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$statusEx])) {
+            return $list[$statusEx];
+        }
+
+        return 'Unknown';        
+    }    
     
     // Возвращает товар, связанный с данным атрибутом.
     public function getGood() 
