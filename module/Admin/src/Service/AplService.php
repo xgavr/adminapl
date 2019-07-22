@@ -1077,6 +1077,7 @@ class AplService {
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGoodId($row['id'], ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
                 }
+                unset($rawprices);
             }    
             
             if (time() > $startTime + 840){
