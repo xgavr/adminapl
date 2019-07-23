@@ -487,6 +487,16 @@ class AplController extends AbstractActionController
         ]);
     }        
 
+    public function updateAttributeAplIdAction()
+    {
+        
+        $this->aplService->updateAttributeAplId();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }        
+
     public function exAttrAction()
     {
         $goodId = $this->params()->fromRoute('id', -1);

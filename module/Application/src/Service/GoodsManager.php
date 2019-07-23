@@ -335,6 +335,7 @@ class GoodsManager
             $attribute->setName($data['name']);
         }
         
+        $attribute->setStatusEx(\Application\Entity\Attribute::EX_TO_TRANSFER);
         $this->entityManager->persist($attribute);
         $this->entityManager->flush();
         

@@ -973,7 +973,13 @@ class GoodsRepository extends EntityRepository
      */
     public function addGoodAttributeValue($good, $attribute, $attributeValue)
     {
-        $inserted = $this->getEntityManager()->getConnection()->insert('good_attribute_value', ['good_id' => $good->getId(), 'attribute_id' => $attribute->getId(), 'value_id' => $attributeValue->getId()]);
+        $inserted = $this->getEntityManager()->getConnection()->insert('good_attribute_value', 
+                [
+                    'good_id' => $good->getId(), 
+                    'attribute_id' => $attribute->getId(), 
+                    'value_id' => $attributeValue->getId(),
+                    'status_ex' => \Application\Entity\GoodAttributeValue::EX_TO_TRANSFER,
+                ]);
         $this->updateGoodId($good->getId(), ['status_attr_ex' => Goods::ATTR_EX_NEW]);
         return $inserted;        
     }

@@ -148,7 +148,16 @@ class AttributeValue {
 
         return 'Unknown';        
     }
-        
+     
+    /**
+     * Sets statusEx.
+     * @param int $statusEx     
+     */
+    public function setStatusEx($statusEx) 
+    {
+        $this->statusEx = $statusEx;
+    }   
+    
     // Возвращает значения аттрибутов для данного атрибута.
     public function getAttributeValues() 
     {

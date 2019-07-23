@@ -93,6 +93,15 @@ class GoodAttributeValue {
     }
     
     /**
+     * Sets statusEx.
+     * @param int $statusEx     
+     */
+    public function setStatusEx($statusEx) 
+    {
+        $this->statusEx = $statusEx;
+    }   
+    
+    /**
      * Returns possible statuses as array.
      * @return array
      */

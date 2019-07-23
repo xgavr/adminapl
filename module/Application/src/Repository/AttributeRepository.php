@@ -43,6 +43,7 @@ class AttributeRepository  extends EntityRepository{
                 'name' => $attr['attrName'],
                 'short_name' => (isset($attr['attrShortName'])) ? $attr['attrShortName']:$attr['attrName'],
                 'status' => Attribute::STATUS_ACTIVE,
+                'status_ex' => Attribute::EX_TO_TRANSFER,
             ];
         
             $this->getEntityManager()->getConnection()->insert('attribute', $data);           
@@ -94,6 +95,7 @@ class AttributeRepository  extends EntityRepository{
             $data = [
                 'td_id' => $attr['attrValueId'],
                 'value' => $value,
+                'status_ex' => AttributeValue::EX_TO_TRANSFER,
             ];
 
             $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           

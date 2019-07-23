@@ -1675,16 +1675,16 @@ class AplService {
             $client->setUri($url);
             $client->setMethod('POST');
             $client->setParameterPost($post);
+                var_dump($post); exit;
 
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
                 if (is_numeric($response->getBody())){
-                    if ($attribute->getAplId() != $response->getBody()){
-                        $attribute->setAplId($response->getBody());
-                        $this->entityManager->persist($attribute);
-                        $this->entityManager->flush($attribute);
-                    }            
+                    $attribute->setAplId($response->getBody());
+                    $attribute->setStatusEx(\Application\Entity\Attribute::EX_TRANSFERRED);
+                    $this->entityManager->persist($attribute);
+                    $this->entityManager->flush($attribute);
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
                 return;
@@ -1694,10 +1694,14 @@ class AplService {
         return;        
     }
 
+    /**
+     * 
+     * @return 
+     */
     public function updateAttributeAplId()
     {
         $attributes = $this->entityManager->getRepository(\Application\Entity\Attribute::class)
-                ->findBy(['aplId' => 0]);
+                ->findBy(['statusEx' => \Application\Entity\Attribute::EX_TO_TRANSFER]);
         
         foreach ($attributes as $attribute){
             $this->getAttributeAplId($attribute);
