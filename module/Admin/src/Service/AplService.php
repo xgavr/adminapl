@@ -1683,7 +1683,7 @@ class AplService {
 
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if (is_numeric($response->getBody())){
                     $attribute->setAplId($response->getBody());
                     $attribute->setStatusEx(\Application\Entity\Attribute::EX_TRANSFERRED);
