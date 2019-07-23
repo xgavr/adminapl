@@ -117,7 +117,8 @@ class AttributeRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->update(AttributeValue::class, 'av')
+        $queryBuilder->select('av')
+                ->from(AttributeValue::class, 'av')
                 ->where('av.statusEx = ?1')
                 ->setParameter('1', AttributeValue::EX_TO_TRANSFER)
                 ;
