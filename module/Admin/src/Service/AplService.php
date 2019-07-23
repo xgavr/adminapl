@@ -1675,11 +1675,11 @@ class AplService {
             $client->setUri($url);
             $client->setMethod('POST');
             $client->setParameterPost($post);
-                var_dump($post); exit;
+//                var_dump($post); exit;
 
             try{
                 $response = $client->send();
-//                var_dump($response->getBody()); exit;
+                var_dump($response->getBody()); exit;
                 if (is_numeric($response->getBody())){
                     $attribute->setAplId($response->getBody());
                     $attribute->setStatusEx(\Application\Entity\Attribute::EX_TRANSFERRED);
