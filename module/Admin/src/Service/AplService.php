@@ -1666,10 +1666,13 @@ class AplService {
             $url = $this->aplApi().'get-attribute-id?api='.$this->aplApiKey();
             
             $post = [
-                'id' => $attribute->getAplId(),
                 'name' => $attribute->getTransferName(),
                 'publish' => $attribute->getAplStatus(),
             ];
+            
+            if ($attribute->getAplId() > 0){
+                $post['id'] = $attribute->getAplId();
+            }
             
             $client = new Client();
             $client->setUri($url);
