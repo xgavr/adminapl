@@ -1666,6 +1666,7 @@ class AplService {
             $url = $this->aplApi().'get-attribute-id?api='.$this->aplApiKey();
             
             $post = [
+                'type' => $attribute->getId(),
                 'name' => $attribute->getTransferName(),
                 'publish' => $attribute->getAplStatus(),
             ];
