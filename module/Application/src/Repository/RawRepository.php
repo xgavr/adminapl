@@ -603,6 +603,34 @@ class RawRepository extends EntityRepository
     }
 
 
+    /**
+     * Удаление raw
+     * @param Raw $raw
+     */
+    public function deleteRawRawprices($raw)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('r.id')
+                ->from(Rawprice::class, 'r')
+                ->where('r.raw = ?1')
+                ->setParameter('1', $raw->getId())
+                ;
+        
+        $iterator = $queryBuilder->getQuery()->iterate();
+        
+        foreach ($iterator as $item){
+            foreach ($item as $row){
+                $this->getEntityManager()->getConnection()->delete('rawprice', ['id' => $row['id']]);                
+            }
+            unset($item);
+        }
+            
+        unset($iterator);
+        return;
+    }
+
     /*
      * Удаление raw
      * @var Apllication\Entity\Raw
