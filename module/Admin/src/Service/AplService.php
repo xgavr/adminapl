@@ -1709,6 +1709,78 @@ class AplService {
         
         foreach ($attributes as $attribute){
             $this->getAttributeAplId($attribute);
+            unset($attribute);
+        }
+        unset($attributes);
+        return;        
+    }
+
+     /**
+     * Обновить aplId атрибутов
+     * 
+     * @param \Application\Entity\AttributeValue $attributeValue
+     * @return null
+     */
+    public function getAttributeValueAplId($attributeValue)
+    {
+        if ($attributeValue->getName()){
+
+            $url = $this->aplApi().'get-attribute-value-id?api='.$this->aplApiKey();
+            
+            $post = [
+                'type' => $attributeValue->getId(),
+                'name' => $attributeValue->getTransferValue(),
+            ];
+            
+            if ($attributeValue->getAplId() > 0){
+                $post['id'] = $attributeValue->getAplId();
+            }
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+//                var_dump($post); exit;
+
+            try{
+                $response = $client->send();
+                var_dump($response->getBody()); exit;
+                if (is_numeric($response->getBody())){
+                    $attributeValue->setAplId($response->getBody());
+                    $attributeValue->setStatusEx(\Application\Entity\AttributeValue::EX_TRANSFERRED);
+                    $this->entityManager->persist($attributeValue);
+                    $this->entityManager->flush($attributeValue);
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                return;
+            }    
+        }    
+        
+        return;        
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public function updateAttributeValueAplId()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+
+        $startTime = time();
+        $attributeValuesQuery = $this->entityManager->getRepository(\Application\Entity\AttributeValue::class)
+                ->queryAtributeValueEx();
+
+        $iterable = $attributeValuesQuery->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $attributeValue){
+                $this->getAttributeValueAplId($attributeValue);
+            }    
+            if (time() > $startTime + 1740){
+                return;
+            }
         }
         
         return;        

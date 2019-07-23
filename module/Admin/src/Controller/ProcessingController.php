@@ -1035,6 +1035,24 @@ class ProcessingController extends AbstractActionController
     }    
 
     /**
+     * Обновление aplId значений атрибутов
+     * 
+     * @return JsonModel
+     */
+    public function updateAttributeValueAplIdAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['attribute'] == 1){            
+            $this->aplService->updateAttributeValueAplId();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
+    /**
      * Выгрузка эквайринга из апл
      * 
      * @return JsonModel

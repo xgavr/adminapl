@@ -98,6 +98,13 @@ class AttributeValue {
         return $this->value;
     }
 
+    public function getTransferValue() 
+    {
+        $filter = new \Admin\Filter\TransferName();
+        return $filter->filter($this->value);
+    }
+    
+    
     public function setValue($value) 
     {
         $this->value = $value;

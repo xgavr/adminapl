@@ -108,6 +108,24 @@ class AttributeRepository  extends EntityRepository{
     }
     
     /**
+     * Запрос значений атрибутов для экспорта
+     * 
+     * @return query;
+     */
+    public function queryAtributeValueEx()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->update(AttributeValue::class, 'av')
+                ->where('av.statusEx = ?1')
+                ->setParameter('1', AttributeValue::EX_TO_TRANSFER)
+                ;
+        
+        return $queryBuilder->getQuery();//->iterate();        
+    }
+    
+    /**
      * Добавление значения атрибута к товару
      * 
      * @param \Application\Entity\Goods $good
