@@ -539,8 +539,11 @@ class RawManager {
         $this->entityManager->flush();        
     }
     
-    /*
+    /**
      * Удаление прайса
+     * 
+     * @param Raw $raw
+     * 
      */
     public function removeRaw($raw)
     {
@@ -549,8 +552,15 @@ class RawManager {
                 
         $this->entityManager->getRepository(Raw::class)->deleteRawRawprices($raw);
         
-        $this->entityManager->remove($raw);
-        $this->entityManager->flush();
+        $rawpricesCount = $this->entityManager->getRepository(Rawprice::class)
+                ->count(['raw' => $raw->getId()]);
+        
+        if ($rawpricesCount == 0){
+            $this->entityManager->remove($raw);
+            $this->entityManager->flush($raw);
+        }
+        
+        return;
     }  
 
 }
