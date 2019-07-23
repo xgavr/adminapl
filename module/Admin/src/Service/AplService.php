@@ -1723,7 +1723,7 @@ class AplService {
      */
     public function getAttributeValueAplId($attributeValue)
     {
-        if ($attributeValue->getName()){
+        if ($attributeValue->getValue()){
 
             $url = $this->aplApi().'get-attribute-value-id?api='.$this->aplApiKey();
             
