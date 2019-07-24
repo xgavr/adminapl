@@ -981,7 +981,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('a.aplId > 0')    
             ->andWhere('av.aplId > 0')    
             ->setParameter('1', $good->getId())
-            ->setParameter('2', $params['status'])
+            ->setParameter('2', \Application\Entity\Attribute::STATUS_ACTIVE)
             ;
         
         return $queryBuilder->getQuery();            
