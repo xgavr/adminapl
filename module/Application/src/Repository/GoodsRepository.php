@@ -651,10 +651,9 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusAttrEx = ?1')
             ->setParameter('1', Goods::ATTR_EX_NEW)    
-            ->setMaxResults(50000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();//->iterate();            
     }
     
     /**
@@ -958,6 +957,32 @@ class GoodsRepository extends EntityRepository
                         ;
             }
         }
+        
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
+     * Найти атрибуты товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return object
+     */
+    public function findGoodAttributeValuesEx($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('gav')
+            ->from(\Application\Entity\GoodAttributeValue::class, 'gav')
+            ->join('gav.attribute', 'a')
+            ->join('gav.attributeValue', 'av')    
+            ->where('gav.good = ?1')    
+            ->andWhere('a.status = ?2') 
+            ->andWhere('a.aplId > 0')    
+            ->andWhere('av.aplId > 0')    
+            ->setParameter('1', $good->getId())
+            ->setParameter('2', $params['status'])
+            ;
         
         return $queryBuilder->getQuery();            
     }

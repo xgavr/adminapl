@@ -1794,48 +1794,42 @@ class AplService {
     public function sendGoodAttribute($good)
     {
         if ($good->getAplId()){
-            $url = $this->aplApi().'update-good-attribute?api='.$this->aplApiKey();
+            $url = $this->aplApi().'update-good-attribute-value?api='.$this->aplApiKey();
 
             $post = [
-                'good' => $good->getId(),
+                'good' => $good->getAplId(),
                 'attributes' => [],
             ];
 
             $attrQuery = $this->entityManager->getRepository(Goods::class)
-                    ->findGoodAttributeValues($good, ['status' => \Application\Entity\Attribute::STATUS_ACTIVE]);
+                    ->findGoodAttributeValuesEx($good, ['status' => \Application\Entity\Attribute::STATUS_ACTIVE]);
             
             $attributes = $attrQuery->getResult();                       
 
             foreach ($attributes as $attribute){
                 $post['attributes'][$attribute->getId()] = [                
-                    'parent'    => $good->getAplId(),
-                    'attrId'    => $attribute->getAttribute()->getId(),
-                    'name'      => $attribute->getAttribute()->getName(),
-                    'attrValueId' => $attribute->getAttributeValue()->getId(),
-                    'comment'   => $attribute->getAttributeValue()->getValue(),
+                    'parent' => $good->getAplId(),
+                    'type'   => $attribute->getAttribute()->getAplId(),
+                    'name'   => $attribute->getAttributeValue()->getAplId(),
                 ]; 
             }
             
-            if (!count($post['attributes'])){
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
-                return;        
-            }
-            var_dump($post); exit;
+//            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
+            $client->setOptions(['timeout' => 30]);
             $client->setParameterPost($post);
 
             try{
                 $response = $client->send();
-    //            var_dump($response->getBody()); exit;
+                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                return;
+//                return;
             }    
 
             unset($post);
@@ -1855,17 +1849,19 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $goods = $this->entityManager->getRepository(Goods::class)
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateAttribute();
-        
-        foreach ($goods as $good){
-            $this->sendGoodAttribute($good);
-            if (time() > $startTime + 1740){
-                return;
+        $iterator = $goodsQuery->iterate();
+        foreach ($iterator as $row){
+            foreach ($row as $good){
+                $this->sendGoodAttribute($good);
+                if (time() > $startTime + 1740){
+                    return;
+                }
+                unset($good);
             }
-            usleep(100);
-        }
-        unset($goods);
+        }    
+        unset($iterator);
         return;
     }
     
