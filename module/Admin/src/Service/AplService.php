@@ -1079,6 +1079,8 @@ class AplService {
                 }
                 unset($rawprices);
             }    
+
+            $this->entityManager->detach($item);
             
             if (time() > $startTime + 840){
                 break;
