@@ -527,4 +527,13 @@ class AplController extends AbstractActionController
         ]);
     }
     
+    public function updateGoodAttributeAction()
+    {
+        
+        $this->aplService->updateGoodsAttribute();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }    
 }

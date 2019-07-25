@@ -232,7 +232,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Описания<sup></sup>
+                                Описания<sup><?= $totalAttrEx?></sup>
                             </div>
                             <div class="pull-right">
                                 <button value="/apl/update-attribute-apl-id/" class="btn btn-info btn-xs refresh-table-button"
@@ -243,9 +243,9 @@ $this->headScript()
                                         title="Обновление значений атрибутов">
                                     <span class="glyphicon glyphicon-export" ></span>
                                 </button> 
-                                <button value="/apl/update-good-rawprice/" class="btn btn-info btn-xs refresh-table-button"
-                                        title="Обновление статуса товаров">
-                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                <button value="/apl/update-good-aattribute/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление атрибутов товаров">
+                                    <span class="glyphicon glyphicon-export" ></span>
                                 </button> 
                             </div>
                         </div>

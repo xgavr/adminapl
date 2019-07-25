@@ -229,6 +229,8 @@ class GoodsController extends AbstractActionController
                 ->count(['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
         $totalCarEx = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusCarEx' => Goods::CAR_EX_TRANSFERRED]);
+        $totalAttrEx = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
                 
         // Визуализируем шаблон представления.
         return new ViewModel([
@@ -248,7 +250,8 @@ class GoodsController extends AbstractActionController
             'totalPriceEx' => $totalPriceEx,
             'totalCarEx' => $totalCarEx,
             'statusGroupEx' => $aplGroupsEx,
-        ]);  
+            'totalAttrEx' => $totalAttrEx,
+         ]);  
     }
     
     public function contentAction()
