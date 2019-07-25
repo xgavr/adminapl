@@ -1671,6 +1671,7 @@ class AplService {
                 'name' => $attribute->getTransferName(),
                 'publish' => $attribute->getAplStatus(),
                 'sort' => $attribute->getTdId(),
+                'sf'  => $attribute->getValueType(),
             ];
             
             if ($attribute->getAplId() > 0){
