@@ -284,7 +284,7 @@ class ProducerManager
             if ($unknownProducer){
                 
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                        ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer'], 'status' => Rawprice::STATUS_PARSED]);
+                        ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer']]);
                 
                 foreach ($rawprices as $rawprice){
                     $this->entityManager->getRepository(Rawprice::class)
