@@ -1053,6 +1053,24 @@ class ProcessingController extends AbstractActionController
     }    
 
     /**
+     * Обновление атрибутов товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateGoodAttributeAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['attribute'] == 1){            
+            $this->aplService->updateGoodsAttribute();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
+    /**
      * Выгрузка эквайринга из апл
      * 
      * @return JsonModel

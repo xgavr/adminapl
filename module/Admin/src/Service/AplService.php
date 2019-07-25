@@ -1859,7 +1859,7 @@ class AplService {
                 if (time() > $startTime + 1740){
                     return;
                 }
-                unset($good);
+                $this->entityManager->detach($good);
             }
         }    
         unset($iterator);
