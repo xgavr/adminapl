@@ -615,7 +615,7 @@ class GoodsManager
         foreach($iterable as $item){
             foreach ($item as $row){
                 $this->compareRawprices($row['id'], $row['dateEx']);                
-                $this->entityManager->detach($row);
+                unset($row);
             }
             if (time() > $startTime + 840){
                 break;
