@@ -244,7 +244,7 @@ class GoodsController extends AbstractActionController
             'totalDesc' => $totalDesc,
             'totalImage' => $totalImage,
             'totalRawpriceEx' => $totalRawpriceEx,
-            'totalRawpriceCompare' => $totalRawpriceCompare,
+//            'totalRawpriceCompare' => $totalRawpriceCompare,
             'totalOemEx' => $totalOemEx,
             'totalImgEx' => $totalImgEx,
             'totalPriceEx' => $totalPriceEx,
