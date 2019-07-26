@@ -350,7 +350,7 @@ class AplController extends AbstractActionController
     public function deleteOldRawAction()
     {
         $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                ->findBy(['stausEx' => \Application\Entity\Raw::EX_TO_DELETE], null, 5);
+                ->findBy(['statusEx' => \Application\Entity\Raw::EX_TO_DELETE], null, 5);
         
         foreach ($raws as $raw){
             $this->aplService->deleteRaw($raw);
