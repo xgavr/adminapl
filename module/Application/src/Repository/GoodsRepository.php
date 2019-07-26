@@ -218,6 +218,10 @@ class GoodsRepository extends EntityRepository
                 ->setParameter('1', $statusRawpriceEx)
                 ;
         if (is_array($params)){
+            if (isset($params['goodId'])){
+                $queryBuilder->andWhere('g.id = ?2')
+                        ->setParameter('2', $params['goodId']);
+            }
             if (isset($params['limit'])){
                 $queryBuilder->setMaxResults($params['limit']);
             }
@@ -311,11 +315,16 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->join('g.articles', 'a')
             ->join(Rawprice::class, 'r', 'WITH', 'r.code = a.id')   
-            ->andWhere('g.aplId > 0')  
+            ->andWhere('g.aplId > 0') 
 //            ->orderBy('g.dateEx')    
             ;
         
         if (is_array($params)){
+            if (isset($params['goodId'])){
+                $queryBuilder->andWhere('g.id = ?1')
+                        ->setParameter('1', $params['goodId'])
+                        ;
+            }
             if (isset($params['statusRawpriceEx'])){
                 $queryBuilder->andWhere('g.statusRawpriceEx = ?2')
                         ->setParameter('2', $params['statusRawpriceEx'])
@@ -326,9 +335,13 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('3', $params['statusEx'])
                         ;
             }
-            if (isset($params['limit'])){
-                $queryBuilder->setMaxResults($params['limit']);
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('r.status = ?4')
+                        ->setParameter('4', $params['status'])
                         ;
+            }
+            if (isset($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);                        
             }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;

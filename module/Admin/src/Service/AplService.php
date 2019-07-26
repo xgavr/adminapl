@@ -977,129 +977,25 @@ class AplService {
         return;
         
     }
-    
-    /**
-     * Отправить строки прайсов товара
-     * 
-     * @param \Application\Entity\Goods $good
-     */
-    public function sendGoodRawprice($good)
-    {
-        if (!$good->getAplId()){
-            return;
-        }
         
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticlesEx($good, ['statusEx' => Rawprice::EX_TO_TRANSFER]);
-        
-        $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
-        
-        $post = [
-            'good' => $good->getId(),
-            'rawprices' => [],
-        ];
-
-        foreach ($rawprices as $rawprice){
-            $post['rawprices'][$rawprice->getId()] = [                
-                'key'       => $rawprice->getId(),
-                'type'      => $rawprice->getRaw()->getId(),
-                'parent'    => $good->getAplId(),
-                'created'   => $rawprice->getDateCreated(),
-                'article'   => $rawprice->getArticle(),
-                'producer'  => $rawprice->getProducer(),
-                'goodname'  => $rawprice->getGoodname(),
-                'price'     => $rawprice->getRealPrice(),
-                'rest'      => $rawprice->getRealRest(),
-                'iid'       => $rawprice->getIid(),
-                'lot'       => $rawprice->getLot(),
-                'unit'      => $rawprice->getUnit(),
-                'bar'       => $rawprice->getBar(),
-                'currency'  => $rawprice->getCurrency(),
-                'weight'    => $rawprice->getWeight(),
-                'country'   => $rawprice->getCountry(),
-                'markdown'  => $rawprice->getMarkdown(),
-                'sale'      => $rawprice->getSale(),
-                'pack'      => $rawprice->getPack(),
-                'name'      => $rawprice->getRaw()->getSupplier()->getAplId(),
-                'publish'   => $rawprice->getStatusAsAplPublish(),
-            ]; 
-        }
-
-        $client = new Client();
-        $client->setUri($url);
-        $client->setMethod('POST');
-        $client->setParameterPost($post);
-
-        $response = $client->send();
-//        var_dump($response->getBody()); exit;
-
-        if ($response->isOk()) {
-            
-            $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
-            
-            foreach ($rawprices as $rawprice){
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
-            }                    
-        }
-        
-        unset($post);
-        unset($rawprices);
-        return;
-    }
-    
-    /**
-     * Обновить строки прайсов товара
-     * 
-     */
-    public function updateGoodsRawprice()
-    {
-        ini_set('memory_limit', '4096M');
-        set_time_limit(900);
-        $startTime = time();
-
-//        $goodCount = $this->entityManager->getRepository(Goods::class)
-//                ->count([]);
-//        $limit = intval($goodCount/25);
-        
-//        $goods = $this->entityManager->getRepository(Goods::class)
-//                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER], null, $limit);
-        $goodsQuery = $this->entityManager->getRepository(Goods::class)
-                ->findForRawpriceEx(Goods::RAWPRICE_EX_TO_TRANSFER);
-        $iterable = $goodsQuery->iterate();
-
-        foreach($iterable as $item){
-            foreach ($item as $row){
-                $rawprices = $this->entityManager->getRepository(Goods::class)
-                        ->rawpriceArticlesEx($row['id'], ['statusEx' => Rawprice::EX_TO_TRANSFER]);
-                if (count($rawprices) == 0){                
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($row['id'], ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
-                }
-                unset($rawprices);
-                unset($row);
-            }    
-            
-            if (time() > $startTime + 840){
-                break;
-            }
-        }
-        
-        unset($iterable);
-        return;
-    }
-
     /**
      * Отправить строки прайсов 
+     * 
      * @param int $limit
+     * @param int $goodId
      */
-    public function sendRawprices($limit)
+    public function sendRawprices($limit, $goodId = null)
     {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
         
         $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceGoodsEx(['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW, 'statusEx' => Rawprice::EX_TO_TRANSFER, 'limit' => $limit]);
+                ->rawpriceGoodsEx([
+                    'goodId' => $goodId,
+                    'statusRawpriceEx' => Goods::RAWPRICE_EX_NEW, 
+                    'statusEx' => Rawprice::EX_NEW, 
+                    'status' => Rawprice::STATUS_PARSED,
+                    'limit' => $limit,
+                ]);
         
         
         $post = [
@@ -1163,6 +1059,44 @@ class AplService {
     }
 
     /**
+     * Обновить строки прайсов товара
+     * 
+     * @param int $goodId
+     */
+    public function updateGoodsRawprice($goodId = null)
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(900);
+        $startTime = time();
+
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
+                ->findForRawpriceEx(Goods::RAWPRICE_EX_NEW, ['goodId' => $goodId]);
+        
+        $iterable = $goodsQuery->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $row){
+                $rawprices = $this->entityManager->getRepository(Goods::class)
+                        ->rawpriceArticlesEx($row['id'], ['statusEx' => Rawprice::EX_NEW, 'status' => Rawprice::STATUS_PARSED]);
+                
+                if (count($rawprices) == 0){                
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($row['id'], ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
+                }
+                unset($rawprices);
+                unset($row);
+            }    
+            
+            if (time() > $startTime + 840){
+                break;
+            }
+        }
+        
+        unset($iterable);
+        return;
+    }
+    
+    /**
      * Обновить строки прайсов товаров
      * 
      */
@@ -1173,7 +1107,7 @@ class AplService {
         $startTime = time();
 
         $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['statusEx' => Rawprice::EX_TO_TRANSFER]);
+                ->count(['statusEx' => Rawprice::EX_NEW]);
 
 //        var_dump($rawpriceCount); exit;
         $timeLimit = max(intval($rawpriceCount/96), 40000);
@@ -1190,33 +1124,6 @@ class AplService {
         return;
     }
 
-    /**
-     * Удалить строку прайса
-     * 
-     * @param \Application\Entity\Rawprice $rawprice
-     */
-    public function removeRawprice($rawprice)
-    {
-        $url = $this->aplApi().'delete-rawprice?api='.$this->aplApiKey();
-
-        $client = new Client();
-        $client->setUri($url);
-        $client->setMethod('POST');
-        $client->setParameterPost([
-            'key'       => $rawprice->getId(),
-        ]);
-
-        $response = $client->send();
-        var_dump($response->getBody());
-        if ($response->isOk()) {
-//            $this->entityManager->getRepository(Rawprice::class)
-//                    ->updateRawpriceField($rawprice->getId(), ['status_ex' => Rawprice::EX_TRANSFERRED]);
-            return true;                    
-        }
-        
-        return false;
-    }
-    
     /**
      * Удалить прайс
      * 
@@ -1240,112 +1147,6 @@ class AplService {
         $response = $client->send();
 //        var_dump($response->getBody()); exit;
         return $response;
-    }
-    
-    /**
-     * Обновить прайс
-     * 
-     * @param \Application\Entity\Raw $raw
-     * 
-     */
-    public function sendRaw($raw)
-    {
-        ini_set('memory_limit', '4096M');
-        set_time_limit(900);
-
-        if ($raw->getStatusEx() == \Application\Entity\Raw::EX_TO_TRANSFER){
-            
-            $exRaws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findToExDeleteRaw($raw);
-            foreach ($exRaws as $exRaw){
-                $this->deleteRaw($exRaw);
-            }
-            $this->deleteRaw($raw);
-//            exit;
-            
-            $url = $this->aplApi().'update-raw?api='.$this->aplApiKey();
-
-            $post = [
-                'raw' => $raw->getId(),
-                'rawprices' => [],
-            ];
-
-            $start = 0; 
-            $limit = 800;
-            while (true){
-                $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                        ->findBy(['raw' => $raw->getId(), 'status' => Rawprice::STATUS_PARSED, 'statusGood' => Rawprice::GOOD_OK], null, $limit, $start);
-                $start += $limit;
-//                var_dump(count($rawprices));
-                if (count($rawprices) == 0){
-                    $raw->setStatusEx(\Application\Entity\Raw::EX_TRANSFERED);
-                    $this->entityManager->persist($raw);
-                    $this->entityManager->flush($raw);
-                    break;
-                }
-
-                foreach ($rawprices as $rawprice){
-                    $post['rawprices'][$rawprice->getId()] = [                
-                        'key'       => $rawprice->getId(),
-                        'type'      => $raw->getId(),
-                        'parent'    => $rawprice->getGood()->getAplId(),
-                        //'good'      => $rawprice->getGood()->getId(),
-                        'created'   => $rawprice->getDateCreated(),
-                        //'lastmod'   => date('Y-m-d H:i:s'),
-                        'article'   => $rawprice->getArticle(),
-                        'producer'  => $rawprice->getProducer(),
-                        'goodname'  => $rawprice->getGoodname(),
-                        'price'     => $rawprice->getRealPrice(),
-                        'rest'      => $rawprice->getRealRest(),
-                        'iid'       => $rawprice->getIid(),
-                        'lot'       => $rawprice->getLot(),
-                        'unit'      => $rawprice->getUnit(),
-                        'bar'       => $rawprice->getBar(),
-                        'currency'  => $rawprice->getCurrency(),
-                        'weight'    => $rawprice->getWeight(),
-                        'country'   => $rawprice->getCountry(),
-                        'markdown'  => $rawprice->getMarkdown(),
-                        'sale'      => $rawprice->getSale(),
-                        'pack'      => $rawprice->getPack(),
-                        'name'      => $raw->getSupplier()->getAplId(),
-                        'publish'   => $rawprice->getStatusAsAplPublish(),
-                    ]; 
-                }
-//                var_dump($post); exit;
-                $client = new Client();
-                $client->setUri($url);
-                $client->setOptions(['timeout' => 30]);
-                $client->setMethod('POST');
-                $client->setParameterPost($post);
-
-                $response = $client->send();
-        //        var_dump($response->getBody()); exit;
-                if (!$response->isOk()) {
-                    break;
-                }
-
-                unset($post);
-                unset($rawprices);
-            }    
-        }    
-        return;
-    }
-
-    /**
-     * Обновление прайсa
-     * 
-     * @return type
-     */
-    public function updateRaw()
-    {
-        $startTime = time();
-        
-        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                ->findRawForExchange();
-        
-        
-        unset($raw);
-        return;
     }
     
     /**
