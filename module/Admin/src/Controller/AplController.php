@@ -343,7 +343,7 @@ class AplController extends AbstractActionController
         $this->aplService->deleteRaw($raw);
         
         return new JsonModel([
-            'oke'
+            'result' => 'ok-reload',
         ]);
     }
     
