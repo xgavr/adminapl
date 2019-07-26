@@ -327,6 +327,26 @@ class AplController extends AbstractActionController
         ]);
     }
     
+    public function deleteRawAction()
+    {
+        $rawId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findOneById($rawId);  
+        	
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->deleteRaw($raw);
+        
+        return new JsonModel([
+            'oke'
+        ]);
+    }
+    
     public function exRawpriceAction()
     {
         $goodId = $this->params()->fromRoute('id', -1);
