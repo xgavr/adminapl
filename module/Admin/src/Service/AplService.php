@@ -1001,6 +1001,8 @@ class AplService {
         $post = [
             'rawprices' => [],
         ];
+        
+        $result = count($rawprices);
 
         foreach ($rawprices as $rawprice){
             $post['rawprices'][$rawprice->getId()] = [                
@@ -1043,7 +1045,7 @@ class AplService {
                 $ok = true;
             }
         } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-            return;
+            $ok = true;
         }    
         
         if ($ok) {            
@@ -1055,6 +1057,30 @@ class AplService {
         
         unset($post);
         unset($rawprices);
+        
+        return $result;
+    }
+
+    /**
+     * Обновить строки прайсов товаров
+     * 
+     */
+    public function updateRawprices()
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(900);
+        $startTime = time();
+
+        $limit = 400;
+        
+        while (true){
+            if ($this->sendRawprices($limit) == 0){
+                return;
+            }
+            if (time() > $startTime + 840){
+                return;
+            }
+        }
         return;
     }
 
@@ -1096,27 +1122,6 @@ class AplService {
         return;
     }
     
-    /**
-     * Обновить строки прайсов товаров
-     * 
-     */
-    public function updateRawprices()
-    {
-        ini_set('memory_limit', '4096M');
-        set_time_limit(900);
-        $startTime = time();
-
-        $limit = 400;
-        
-        while (true){
-            $this->sendRawprices($limit);
-            if (time() > $startTime + 840){
-                return;
-            }
-        }
-        return;
-    }
-
     /**
      * Удалить прайс
      * 
