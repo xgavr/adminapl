@@ -280,6 +280,8 @@ $this->pageBreadcrumbs()->setItems([
                             </div>    
                         </div>    
                     </div>
+                <?php endif;?>
+                <?php if ($raw->getStatus() == $raw::STATUS_RETIRED):?>
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Экспорт полей прайса
