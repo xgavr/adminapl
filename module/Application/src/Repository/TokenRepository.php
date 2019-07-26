@@ -40,10 +40,10 @@ class TokenRepository  extends EntityRepository
             ->where('r.raw = ?1')
             ->andWhere('r.statusToken = ?2')
             ->andWhere('r.code is not null')
-            ->andWhere('r.status = ?3')    
+//            ->andWhere('r.status = ?3')    
             ->setParameter('1', $raw->getId())    
             ->setParameter('2', Rawprice::TOKEN_NEW)    
-            ->setParameter('3', Rawprice::STATUS_PARSED) 
+//            ->setParameter('3', Rawprice::STATUS_PARSED) 
             ->setMaxResults(100000)    
             ;    
 
