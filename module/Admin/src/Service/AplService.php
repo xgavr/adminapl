@@ -1106,17 +1106,10 @@ class AplService {
         set_time_limit(900);
         $startTime = time();
 
-        $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['statusEx' => Rawprice::EX_NEW]);
-
-//        var_dump($rawpriceCount); exit;
-        $timeLimit = max(intval($rawpriceCount/96), 40000);
         $limit = 400;
         
-//        var_dump($timeLimit); exit;
-        while ($timeLimit > 0){
+        while (true){
             $this->sendRawprices($limit);
-            $timeLimit -= $limit; 
             if (time() > $startTime + 840){
                 return;
             }
