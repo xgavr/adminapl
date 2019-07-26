@@ -1142,9 +1142,22 @@ class AplService {
         $client->setMethod('POST');
         $client->setParameterPost($post);
 
-        $response = $client->send();
+        try{
+            $response = $client->send();
+            if ($response->isOk()) {
+                $ok = true;
+            }
+        } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            $ok = true;
+        }    
+        
+        if ($ok){
+           $raw->setStatusEx(\Application\Entity\Raw::EX_DELETED);
+           $this->entityManager->persist($raw);
+           $this->entityManager->flush($raw);
+        }
 //        var_dump($response->getBody()); exit;
-        return $response;
+        return;
     }
     
     /**

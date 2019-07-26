@@ -287,13 +287,15 @@ $this->pageBreadcrumbs()->setItems([
                         </div>    
                         <div class="panel-body">
                             <div class="pull-left">
-                                Удалить прайс
+                                <?= $raw->getStatusExAsString()?>
                             </div>
                             <div class="pull-right">     
-                                <button value="/apl/delete-raw/<?= $raw->getId()?>" class="btn btn-default btn-xs refresh-button"
-                                        title="Обмен строк прайса">
-                                    <span class="glyphicon glyphicon-export" ></span>
-                                </button>
+                                <?php if ($raw->getStatusEx() == $raw::EX_TO_DELETE):?>
+                                    <button value="/apl/delete-raw/<?= $raw->getId()?>" class="btn btn-default btn-xs refresh-button"
+                                            title="Обмен строк прайса">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>
+                                <?php endif; ?>
                             </div>    
                         </div>
                     </div>    
