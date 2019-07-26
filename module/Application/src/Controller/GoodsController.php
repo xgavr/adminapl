@@ -219,8 +219,8 @@ class GoodsController extends AbstractActionController
         
         $totalRawpriceEx = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TRANSFERRED]);
-        $totalRawpriceCompare = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER]);
+//        $totalRawpriceCompare = $this->entityManager->getRepository(Goods::class)
+//                ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER]);
         $totalOemEx = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
         $totalImgEx = $this->entityManager->getRepository(Goods::class)
