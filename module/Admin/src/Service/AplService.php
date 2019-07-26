@@ -1059,14 +1059,14 @@ class AplService {
         set_time_limit(900);
         $startTime = time();
 
-        $goodCount = $this->entityManager->getRepository(Goods::class)
-                ->count([]);
-        $limit = intval($goodCount/25);
+//        $goodCount = $this->entityManager->getRepository(Goods::class)
+//                ->count([]);
+//        $limit = intval($goodCount/25);
         
 //        $goods = $this->entityManager->getRepository(Goods::class)
 //                ->findBy(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER], null, $limit);
         $goodsQuery = $this->entityManager->getRepository(Goods::class)
-                ->findForRawpriceEx(Goods::RAWPRICE_EX_TO_TRANSFER, ['limit' => $limit]);
+                ->findForRawpriceEx(Goods::RAWPRICE_EX_TO_TRANSFER);
         $iterable = $goodsQuery->iterate();
 
         foreach($iterable as $item){
