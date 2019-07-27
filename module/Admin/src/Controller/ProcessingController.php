@@ -891,6 +891,29 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Удаление старых прайсов в АПЛ
+     */
+    public function deleteOldRawAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['rawprice'] == 1){
+            $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findBy(['statusEx' => \Application\Entity\Raw::EX_TO_DELETE], null, 5);
+
+            foreach ($raws as $raw){
+                $this->aplService->deleteRaw($raw);
+            }    
+        }    
+        
+        return new JsonModel(
+            ['ok']
+        );
+    }
+    
+    
+    /**
      * Обновление номеров товаров
      * 
      * @return JsonModel
