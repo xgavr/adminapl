@@ -181,9 +181,26 @@ $form->prepare();
             <li class="active">
                 <?= $this->formElement($form->get('submit')); ?>
             </li>
+            <li>
+                <a href="javascript:void(0)" onclick="offSelect(2)" class=""
+                        title="Отключить все">
+                    Отключить все
+                </a>
+                <a href="javascript:void(0)" onclick="offSelect(1)" class=""
+                        title="Отключить все">
+                    Включить все
+                </a>
+            </li>
         </ul>
     </div>    
     
 </div>   
 
 <?= $this->form()->closeTag(); ?>
+<script type="text/javascript">
+    function offSelect(flag){
+        $("select").each(function(){
+            $(this).val(flag);
+        })
+    }            
+</script>
