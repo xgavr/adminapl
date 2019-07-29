@@ -71,4 +71,13 @@ class CrossRepository extends EntityRepository{
         return $result;
     }    
     
+    /**
+     * Быстрая вставка строки кросса
+     * @param array $row 
+     * @return integer
+     */
+    public function insertLine($row)
+    {
+        return $this->getEntityManager()->getConnection()->insert('cross_list', $row);
+    }    
 }

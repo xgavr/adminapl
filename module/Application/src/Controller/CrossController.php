@@ -117,6 +117,45 @@ class CrossController extends AbstractActionController
         
     }    
     
+    public function decompressTmpFileAction()
+    {
+        $filename = $this->params()->fromQuery('file');
+
+        if (file_exists($filename)){
+            $this->crossManager->decompress($filename);
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
+    
+    public function uploadTmpFileAction()
+    {
+        $filename = $this->params()->fromQuery('file');
+
+        if (file_exists($filename)){
+            $this->crossManager->uploadCross($filename);
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }
+        
+    public function deleteTmpFileAction()
+    {
+        $filename = $this->params()->fromQuery('file');
+
+        if (file_exists($filename)){
+            unlink($filename);
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);
+    }    
+    
     public function contentAction()
     {
         

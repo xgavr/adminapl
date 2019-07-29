@@ -15,7 +15,7 @@ final class Version20190727163602 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->createTable('cross');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
-        $table->addColumn('supplier_id', 'integer', ['notnull'=>true]);
+        $table->addColumn('supplier_id', 'integer', ['notnull'=>false]);
         $table->addColumn('filename', 'string', ['notnull'=>true, 'length'=>512]);
         $table->addColumn('row_count', 'integer', ['notnull'=>true]);        
         $table->addColumn('status', 'integer', ['notnull'=>true]);

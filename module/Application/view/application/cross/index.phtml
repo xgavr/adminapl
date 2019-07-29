@@ -26,47 +26,27 @@ $this->headScript()
             <?php if (count($files)): ?>
                 <?php foreach($files as $fileInfo):?>
                     <?php if (file_exists($fileInfo->getPathname())):?>
-                    <div class="thumbnail">
-                        <?php if ($crossManager->isCrossFile($fileInfo->getFileName())): ?>
-                            <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
-                                <a href="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" target="_blank">
-                                    <img src="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" class="img-thumbnail" alt="<?= $fileInfo->getFileName() ?>">
-                                </a>
-                            <?php endif; ?>
-                        <?php endif;?>
                         <div class="caption panel-body small">
                             <div class="pull-left">
                                 <?= $fileInfo->getFileName() ?>
-                                <?= mime_content_type($fileInfo->getPathname()) ?>
                             </div>
                             <div class="pull-right">
-                                <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
-                                    <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
-                                        <button value="/image/upload-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
-                                                title="Привязать картинку к товару">
-                                            <span class="glyphicon glyphicon-import" ></span>
-                                        </button>
-                                    <?php endif;?>
-                                <?php endif;?>
-                                <?php if(mime_content_type($fileInfo->getPathname()) == 'image/tiff'):?>
-                                    <button value="/image/convert-to-jpg/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
-                                            title="Конвертировать в jpg">
-                                        <span class="glyphicon glyphicon-transfer" ></span>
-                                    </button>
-                                <?php endif;?>
-                                <?php if ($imageManager->isCompressFile($fileInfo->getPathName())): ?>
-                                    <button value="/image/decompress-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
+                                <button value="/cross/upload-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
+                                        title="Загрузить">
+                                    <span class="glyphicon glyphicon-import" ></span>
+                                </button>
+                                <?php if ($crossManager->isCompressFile($fileInfo->getPathName())): ?>
+                                    <button value="/cross/decompress-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
                                             title="Распаковать">
                                         <span class="glyphicon glyphicon-compressed" ></span>
                                     </button>                             
                                 <?php endif;?>
-                                <button value="/image/delete-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-warning btn-xs this-delete"
+                                <button value="/cross/delete-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-warning btn-xs this-delete"
                                         title="Удалить">
                                     <span class="glyphicon glyphicon-remove" ></span>
                                 </button>                             
                             </div>                                                                            
                         </div>                    
-                    </div>
                     <?php endif;?>
                 <?php endforeach; ?>
             <?php endif; ?>

@@ -38,11 +38,6 @@ class Cross {
     protected $id;
     
     /**
-     * @ORM\Column(name="name")   
-     */
-    protected $name;
-
-    /**
      * @ORM\Column(name="filename")   
      */
     protected $filename;
@@ -116,7 +111,7 @@ class Cross {
 
     public function setRowCount($rowCount) 
     {
-        $this->rows = $rowCount;
+        $this->rowCount = $rowCount;
     }     
 
     

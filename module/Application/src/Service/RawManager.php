@@ -354,8 +354,7 @@ class RawManager {
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
 
-                unset($excel);
-                unset($mvexcel);
+                unset($spreadsheet);
 
             }    
 
@@ -391,6 +390,7 @@ class RawManager {
                     $excel = $mvexcel->createPHPExcelObject($filename);
                 } catch (\PHPExcel_Reader_Exception $e){
                     //попытка прочитать файл не удалась
+                    $raw = new Raw();
                     $raw->setName($e->getMessage());
                     $raw->setStatus(Raw::STATUS_FAILED);
                     $this->entityManager->persist($raw);
@@ -451,8 +451,7 @@ class RawManager {
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();                    
 
-                unset($excel);
-                unset($mvexcel);
+                unset($sheets);
 
             }    
 

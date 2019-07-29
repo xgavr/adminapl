@@ -99,6 +99,32 @@ class CrossManager {
     }
     
     /**
+     * Проверка на файл с кроссами
+     * 
+     * @param string $filename
+     * @return bool
+     */
+    public function isCrossFile($filename)
+    {
+        $validator = new FileExtensionValidator(self::CROSS_FILE_EXTENSIONS);
+        
+        return $validator->isValid($filename);
+    }
+    
+    /**
+     * Проверка на файл с архивом
+     * 
+     * @param string $filename
+     * @return bool
+     */
+    public function isCompressFile($filename)
+    {
+        $validator = new IsCompressed();
+        return $validator->isValid($filename);
+    }
+    
+    
+    /**
      * Проверка почты в ящике для кроссов
      * 
      */
@@ -174,25 +200,22 @@ class CrossManager {
     
     /**
      * 
-     * Проверка папки с прайсами. Если в папке есть прайс то загружаем его
+     * Проверка папки с кроссами. Если в папке есть кросс то загружаем его
      * 
-     * @param Application\Entity\Supplier $supplier
      * @param string $folderName
      * 
      */
-    public function checkPriceFolder($supplier, $folderName)
+    public function checkCrossFolder($folderName)
     {    
         setlocale(LC_ALL,'ru_RU.UTF-8');
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
-                    if ($supplier->getStatus() == $supplier->getStatusActive()){
-                        $this->uploadRawprice($supplier, $fileInfo->getPathname());
-                    }                                                                            
+                    $this->uploadCross($fileInfo->getPathname());
                 }
                 if ($fileInfo->isDir()){
-                    $this->checkPriceFolder($supplier, $fileInfo->getPathname());                    
+                    $this->checkCrossFolder($fileInfo->getPathname());                    
                 }
             }
         }
@@ -228,34 +251,29 @@ class CrossManager {
     
     /*
      * Переместить файл в архив
-     * @var Application\Entity\Supplier
      * @var string $filename
      */
-    public function renameToArchive($supplier, $filename)            
+    public function renameToArchive($filename)            
     {
 
         if (file_exists($filename)){
             $filter = new Basename();
-            $arx_folder = self::PRICE_FOLDER_ARX.'/'.$supplier->getId();
+            $arx_folder = self::CROSS_FOLDER_ARX;
             if (is_dir($arx_folder)){
                 if (copy(realpath($filename), realpath($arx_folder).'/'.$filter->filter($filename))){
                     unlink(realpath($filename));
                 }
             }
-        }
-        
-        $this->removeOldPrices($supplier);
-        
+        }        
         return;
     }
 
     /**
-     * Загрузка сырого прайса csv, txt
-     * @var Application\Entity\Supplier
+     * Загрузка сырого кросса csv, txt
      * @var string $filename
      */
     
-    public function uploadRawpriceCsv($supplier, $filename)
+    public function uploadCrossCsv($filename)
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
@@ -267,66 +285,62 @@ class CrossManager {
                 return;
             }
 
-            if ($supplier->getStatus() == $supplier->getStatusActive()){
-                
-                $basenameFilter = new Basename();
-                
-                $lines = fopen($filename, 'r');
+            $basenameFilter = new Basename();
 
-                if($lines) {
+            $lines = fopen($filename, 'r');
 
-                    $detector = new CsvDetectDelimiterFilter();
-                    $delimiter = $detector->filter($filename);
-                
-                    $filter = new RawToStr();
+            if($lines) {
 
-                    $rows = 0;
-                    $raw = new Raw();
-                    $raw->setSupplier($supplier);
-                    $raw->setFilename($basenameFilter->filter($filename));
-                    $raw->setStatus(Raw::STATUS_LOAD);
-                    $raw->setRows($rows);                    
+                $detector = new CsvDetectDelimiterFilter();
+                $delimiter = $detector->filter($filename);
 
-                    $currentDate = date('Y-m-d H:i:s');
-                    $raw->setDateCreated($currentDate);
+                $filter = new RawToStr();
 
-                    $this->entityManager->persist($raw);
-                    $this->entityManager->flush();
+                $rows = 0;
+                $cross = new Cross();
+//                $cross->setSupplier($supplier);
+                $cross->setFilename($basenameFilter->filter($filename));
+                $cross->setStatus(Cross::STATUS_LOAD);
+                $cross->setRowCount($rows);                    
 
-                    while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
+                $currentDate = date('Y-m-d H:i:s');
+                $cross->setDateCreated($currentDate);
 
-                        $str = $filter->filter($row);
+                $this->entityManager->persist($cross);
+                $this->entityManager->flush();
 
-                        if ($str){
-                            $data = [
-                                'rawdata' => $filter->filter($row),
-                                'status'  => Rawprice::STATUS_NEW,
-                                'date_created' => date('Y-m-d H:i:s'),
-                                'raw_id' => $raw->getId(),
-                                'good_id' => null,
-                                'unknown_producer_id' => null,
-                            ];
+                while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
 
-                            $this->entityManager->getRepository(Rawprice::class)
-                                    ->insertRawprice($data);
-                            $rows ++;
-                        }                            
-                    }
-                    
-                    if ($rows > 1){
-                        $raw->setStatus(Raw::STATUS_ACTIVE);
-                    } else {
-                        $raw->setStatus(Raw::STATUS_RETIRED);                    
-                    }    
-                    $raw->setRows($rows);                    
-                    $this->entityManager->persist($raw);
-                    $this->entityManager->flush();                    
+                    $str = $filter->filter($row);
 
-                    fclose($lines);
-                }                                
-            }    
+                    if ($str){
+                        $data = [
+                            'rawdata' => $filter->filter($row),
+                            'status'  => CrossList::STATUS_NEW,
+                            'date_created' => date('Y-m-d H:i:s'),
+                            'cross_id' => $cross->getId(),
+                            'article_id' => null,
+                        ];
+
+                        $this->entityManager->getRepository(CrossList::class)
+                                ->insertLine($data);
+                        $rows ++;
+                    }                            
+                }
+
+                if ($rows > 1){
+                    $cross->setStatus(Raw::STATUS_ACTIVE);
+                } else {
+                    $cross->setStatus(Raw::STATUS_RETIRED);                    
+                }    
+                $cross->setRowCount($rows);                    
+                $this->entityManager->persist($cross);
+                $this->entityManager->flush();                    
+
+                fclose($lines);
+            }                                
             
-            $this->renameToArchive($supplier, $filename);
+            $this->renameToArchive($filename);
 
         }
         
@@ -334,12 +348,11 @@ class CrossManager {
     }
     
     /**
-     * Загрузка сырого прайса xls, xlsx
-     * @var Application\Entity\Supplier
+     * Загрузка сырого кросса xls, xlsx
      * @var string $filename
      */
     
-    public function uploadRawpriceXls($supplier, $filename)
+    public function uploadCrossXls($filename)
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
@@ -350,102 +363,89 @@ class CrossManager {
                 return;
             }
 
-            if ($supplier->getStatus() == $supplier->getStatusActive()){
-                
-                $basenameFilter = new Basename();
-                
-                $rows = 0;
-                $raw = new Raw();
-                $raw->setSupplier($supplier);
-                $raw->setFilename($basenameFilter->filter($filename));
-                $raw->setStatus(Raw::STATUS_LOAD);
-                $raw->setRows($rows);
+            $basenameFilter = new Basename();
 
-                $currentDate = date('Y-m-d H:i:s');
-                $raw->setDateCreated($currentDate);
+            $rows = 0;
+            $cross = new Cross();
+//            $cross->setSupplier($supplier);
+            $cross->setFilename($basenameFilter->filter($filename));
+            $cross->setStatus(Cross::STATUS_LOAD);
+            $cross->setRowCount($rows);
 
-                $this->entityManager->persist($raw);
-                $this->entityManager->flush();
-                    
-                $filter = new RawToStr();
-                    
-                try{
-                    $reader = IOFactory::createReaderForFile($filename);
-                } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
-                    //попытка прочитать файл старым способом
-                    $raw->setName($e->getMessage());
-                    $raw->setStatus(Raw::STATUS_FAILED);
-                    $this->entityManager->persist($raw);
-                    $this->entityManager->flush($raw);                    
-                    return $this->uploadRawpriceXls2($supplier, $filename);
-                    
-                    //if ($e->getMessage() == 'Unable to identify a reader for this file'){
-                        //$this->renameToArchive($supplier, $filename);
-                        //return;
-                    //}    
-                }    
-                $filterSubset = new \Application\Filter\ExcelColumn();
-                $reader->setReadFilter($filterSubset);
-                $spreadsheet = $reader->load($filename);
+            $currentDate = date('Y-m-d H:i:s');
+            $cross->setDateCreated($currentDate);
 
-                $sheets = $spreadsheet->getAllSheets();
-                foreach ($sheets as $sheet) { // PHPExcel_Worksheet
+            $this->entityManager->persist($cross);
+            $this->entityManager->flush();
 
-                    $excel_sheet_content = $sheet->toArray();
+            $filter = new RawToStr();
 
-                    if (count($excel_sheet_content)){
-                        
-                        foreach ($excel_sheet_content as $row){
-
-                            $str = $filter->filter($row);
-
-                            if ($str){
-                              
-                                $data = [
-                                    'rawdata' => $filter->filter($row),
-                                    'status'  => Rawprice::STATUS_NEW,
-                                    'date_created' => date('Y-m-d H:i:s'),
-                                    'raw_id' => $raw->getId(),
-                                    'good_id' => null,
-                                    'unknown_producer_id' => null,
-                                ];
-                                
-                                $this->entityManager->getRepository(Rawprice::class)
-                                        ->insertRawprice($data);
-                                $rows ++;
-                            }                               
-                        }
-                    }
-                    
-                }
-                
-                if ($rows > 1){
-                    $raw->setStatus(Raw::STATUS_ACTIVE);
-                } else {
-                    $raw->setStatus(Raw::STATUS_RETIRED);                    
-                }    
-                $raw->setRows($rows);
-                $this->entityManager->persist($raw);
-                $this->entityManager->flush();                    
-
-                unset($excel);
-                unset($mvexcel);
-
+            try{
+                $reader = IOFactory::createReaderForFile($filename);
+            } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
+                //попытка прочитать файл старым способом
+                $cross->setName($e->getMessage());
+                $cross->setStatus(Cross::STATUS_FAILED);
+                $this->entityManager->persist($cross);
+                $this->entityManager->flush($cross);                    
+                return $this->uploadCrossXls2($filename);
             }    
+            $filterSubset = new \Application\Filter\ExcelColumn();
+            $reader->setReadFilter($filterSubset);
+            $spreadsheet = $reader->load($filename);
 
-            $this->renameToArchive($supplier, $filename);
-        }
-        
+            $sheets = $spreadsheet->getAllSheets();
+            foreach ($sheets as $sheet) { // PHPExcel_Worksheet
+
+                $excel_sheet_content = $sheet->toArray();
+
+                if (count($excel_sheet_content)){
+
+                    foreach ($excel_sheet_content as $row){
+
+                        $str = $filter->filter($row);
+
+                        if ($str){
+
+                            $data = [
+                                'rawdata' => $filter->filter($row),
+                                'status'  => CrossList::STATUS_NEW,
+                                'cross_id' => $cross->getId(),
+                                'article_id' => null,
+                            ];
+
+                            $this->entityManager->getRepository(CrossList::class)
+                                    ->insertLine($data);
+                            $rows ++;
+                        }                               
+                    }
+                }
+
+            }
+
+            if ($rows > 1){
+                $cross->setStatus(Cross::STATUS_ACTIVE);
+            } else {
+                $cross->setStatus(Cross::STATUS_RETIRED);                    
+            }    
+            $cross->setRowCount($rows);
+            $this->entityManager->persist($cross);
+            $this->entityManager->flush();                    
+
+            unset($spreadsheet);
+
+        }    
+
+        $this->renameToArchive($filename);
         return;
     }    
     
     /**
-     * Загрузка сырого прайса xls, xlsx
-     * @var Application\Entity\Supplier
+     * Загрузка сырого кросса xls, xlsx
      * @var string $filename
      */
     
-    public function uploadRawpriceXls2($supplier, $filename)
+    public function uploadCrossXls2($filename)
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(0); 
@@ -456,125 +456,117 @@ class CrossManager {
                 return;
             }
             
-            if ($supplier->getStatus() == $supplier->getStatusActive()){
-                
-                $basenameFilter = new Basename();
-                
-                $mvexcel = new Service\PhpExcelService();
-                try {
-                    $excel = $mvexcel->createPHPExcelObject($filename);
-                } catch (\PHPExcel_Reader_Exception $e){
-                    //попытка прочитать файл не удалась
-                    $raw->setName($e->getMessage());
-                    $raw->setStatus(Raw::STATUS_FAILED);
-                    $this->entityManager->persist($raw);
-                    $this->entityManager->flush($raw);                    
-                    $this->renameToArchive($supplier, $filename);
-                    return;
-                }    
+            $basenameFilter = new Basename();
 
-                $rows = 0;
-                $raw = new Raw();
-                $raw->setSupplier($supplier);
-                $raw->setFilename($basenameFilter->filter($filename));
-                $raw->setStatus(Raw::STATUS_LOAD);
-                $raw->setRows($rows);
-
-                $currentDate = date('Y-m-d H:i:s');
-                $raw->setDateCreated($currentDate);
-
-                $this->entityManager->persist($raw);
-                $this->entityManager->flush();
-                    
-                $filter = new RawToStr();
-                    
-                $sheets = $excel->getAllSheets();
-                foreach ($sheets as $sheet) { // PHPExcel_Worksheet
-                    $excel_sheet_content = $sheet->toArray();
-
-                    if (count($excel_sheet_content)){
-                        foreach ($excel_sheet_content as $row){
-                            $str = $filter->filter($row);
-
-                            if ($str){
-                                
-                                $data = [
-                                    'rawdata' => $filter->filter($row),
-                                    'status'  => Rawprice::STATUS_NEW,
-                                    'date_created' => date('Y-m-d H:i:s'),
-                                    'raw_id' => $raw->getId(),
-                                    'good_id' => null,
-                                    'unknown_producer_id' => null,
-                                ];
-                                
-                                $this->entityManager->getRepository(Rawprice::class)
-                                        ->insertRawprice($data);
-                                $rows ++;
-                            }                                
-                        }
-                    }
-                    
-                }
-                
-                if ($rows > 1){
-                    $raw->setStatus(Raw::STATUS_ACTIVE);
-                } else {
-                    $raw->setStatus(Raw::STATUS_RETIRED);                    
-                }    
-                $raw->setRows($rows);
-                $this->entityManager->persist($raw);
-                $this->entityManager->flush();                    
-
-                unset($excel);
-                unset($mvexcel);
-
+            $mvexcel = new Service\PhpExcelService();
+            try {
+                $excel = $mvexcel->createPHPExcelObject($filename);
+            } catch (\PHPExcel_Reader_Exception $e){
+                //попытка прочитать файл не удалась
+                $cross = new Cross();
+                $cross->setName($e->getMessage());
+                $cross->setStatus(Cross::STATUS_FAILED);
+                $this->entityManager->persist($cross);
+                $this->entityManager->flush($cross);                    
+                $this->renameToArchive($filename);
+                return;
             }    
 
-            $this->renameToArchive($supplier, $filename);
+            $rows = 0;
+            $cross = new Cross();
+//            $cross->setSupplier($supplier);
+            $cross->setFilename($basenameFilter->filter($filename));
+            $cross->setStatus(Cross::STATUS_LOAD);
+            $cross->setRowCount($rows);
+
+            $currentDate = date('Y-m-d H:i:s');
+            $cross->setDateCreated($currentDate);
+
+            $this->entityManager->persist($cross);
+            $this->entityManager->flush();
+
+            $filter = new RawToStr();
+
+            $sheets = $excel->getAllSheets();
+            foreach ($sheets as $sheet) { // PHPExcel_Worksheet
+                $excel_sheet_content = $sheet->toArray();
+
+                if (count($excel_sheet_content)){
+                    foreach ($excel_sheet_content as $row){
+                        $str = $filter->filter($row);
+
+                        if ($str){
+
+                            $data = [
+                                'rawdata' => $filter->filter($row),
+                                'status'  => CrossList::STATUS_NEW,
+                                'cross_id' => $cross->getId(),
+                                'article_id' => null,
+                            ];
+
+                            $this->entityManager->getRepository(CrossList::class)
+                                    ->insertLine($data);
+                            $rows ++;
+                        }                                
+                    }
+                }
+
+            }
+
+            if ($rows > 1){
+                $cross->setStatus(Cross::STATUS_ACTIVE);
+            } else {
+                $cross->setStatus(Cross::STATUS_RETIRED);                    
+            }    
+            $cross->setRowCount($rows);
+            $this->entityManager->persist($cross);
+            $this->entityManager->flush();                    
+
+            unset($excel);
+            unset($mvexcel);
+
+            $this->renameToArchive($filename);
         }
         
         return;
     }
     
     /*
-     * Загрузка сырого прайса
-     * @var Application\Entity\Supplier
+     * Загрузка сырого кросса
      * @var string $filename
      */
     
-    public function uploadRawprice($supplier, $filename)
+    public function uploadCross($filename)
     {
         
         if (file_exists($filename)){
             
-            if ($supplier->getStatus() == Supplier::STATUS_ACTIVE){
-                $pathinfo = pathinfo($filename);
+            $pathinfo = pathinfo($filename);
 
-                $validator = new IsCompressed();
+            $validator = new IsCompressed();
 
-                if ($validator->isValid($filename) && $pathinfo['extension'] != 'xlsx'){
-                    setlocale(LC_ALL,'ru_RU.UTF-8');
-                    $filter = new Decompress([
-                        'adapter' => $pathinfo['extension'],
-                        'options' => [
-                            'target' => $pathinfo['dirname'],
-                        ],
-                    ]);
-                    if ($filter->filter($filename)){
-                        unlink($filename);
-                        return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
-                    }
-                }
-
-                if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-                    return $this->uploadRawpriceXls($supplier, $filename);
-                }
-                if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
-                    return $this->uploadRawpriceCsv($supplier, $filename);
+            if ($validator->isValid($filename) && $pathinfo['extension'] != 'xlsx'){
+                setlocale(LC_ALL,'ru_RU.UTF-8');
+                $filter = new Decompress([
+                    'adapter' => $pathinfo['extension'],
+                    'options' => [
+                        'target' => $pathinfo['dirname'],
+                    ],
+                ]);
+                if ($filter->filter($filename)){
+                    unlink($filename);
+                    return $this->checkCrossFolder(self::CROSS_FOLDER);
                 }
             }
+
+            if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
+                return $this->uploadCrossXls($filename);
+            }
+            if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
+                return $this->uploadCrossCsv($filename);
+            }
             
-            $this->renameToArchive($supplier, $filename);
+            $this->renameToArchive($filename);
         }
         
         return;
@@ -614,24 +606,24 @@ class CrossManager {
     }
     
     /**
-     * Удаление прайса
+     * Удаление кросса
      * 
-     * @param Raw $raw
+     * @param Cross $cross
      * 
      */
-    public function removeRaw($raw)
+    public function removeCross($cross)
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(0);
                 
-        $this->entityManager->getRepository(Raw::class)->deleteRawRawprices($raw);
+        $this->entityManager->getRepository(Cross::class)->deleteCrossList($cross);
         
-        $rawpricesCount = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['raw' => $raw->getId()]);
+        $crossListCount = $this->entityManager->getRepository(CrossList::class)
+                ->count(['cross' => $cross->getId()]);
         
-        if ($rawpricesCount == 0){
-            $this->entityManager->remove($raw);
-            $this->entityManager->flush($raw);
+        if ($crossListCount == 0){
+            $this->entityManager->remove($cros);
+            $this->entityManager->flush($cross);
         }
         
         return;

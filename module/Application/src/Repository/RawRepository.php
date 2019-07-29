@@ -26,6 +26,7 @@ class RawRepository extends EntityRepository
         return $query->setLockMode(\Doctrine\DBAL\LockMode::PESSIMISTIC_WRITE);
         
     }
+    
     /**
      * Быстрая вставка строки прайса
      * @param array $row 
