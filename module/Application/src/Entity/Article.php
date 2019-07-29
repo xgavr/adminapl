@@ -79,6 +79,12 @@ class Article {
     private $rawprice;
         
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\CrossList", mappedBy="article")
+    * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
+     */
+    private $crossList;
+        
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\OemRaw", mappedBy="article")
     * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
      */
@@ -96,6 +102,7 @@ class Article {
     public function __construct() 
     {
         $this->rawprice = new ArrayCollection();
+        $this->crossList = new ArrayCollection();
     }
     
 
@@ -205,6 +212,23 @@ class Article {
     public function addRawprice($rawprice)
     {
         $this->rawprice[] = $rawprice;
+    }
+      
+    /**
+     * Returns the array of crosslist assigned to this.
+     * @return array
+     */
+    public function getCrossList()
+    {
+        return $this->crossList;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addCrossList($crossList)
+    {
+        $this->crossList[] = $crossList;
     }
       
     /**

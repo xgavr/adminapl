@@ -1,0 +1,254 @@
+<?php
+$this->headTitle('Кроссы');
+
+$this->mainMenu()->setActiveItemId('raw');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Кроссы'=>$this->url('cross', ['action' => 'index'])
+            ]);  
+
+$this->headLink()
+//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+        ;
+
+$this->headScript()
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+            ;    
+
+?>
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel-group">
+            <?php if (count($files)): ?>
+                <?php foreach($files as $fileInfo):?>
+                    <?php if (file_exists($fileInfo->getPathname())):?>
+                    <div class="thumbnail">
+                        <?php if ($crossManager->isCrossFile($fileInfo->getFileName())): ?>
+                            <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
+                                <a href="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" target="_blank">
+                                    <img src="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" class="img-thumbnail" alt="<?= $fileInfo->getFileName() ?>">
+                                </a>
+                            <?php endif; ?>
+                        <?php endif;?>
+                        <div class="caption panel-body small">
+                            <div class="pull-left">
+                                <?= $fileInfo->getFileName() ?>
+                                <?= mime_content_type($fileInfo->getPathname()) ?>
+                            </div>
+                            <div class="pull-right">
+                                <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
+                                    <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
+                                        <button value="/image/upload-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
+                                                title="Привязать картинку к товару">
+                                            <span class="glyphicon glyphicon-import" ></span>
+                                        </button>
+                                    <?php endif;?>
+                                <?php endif;?>
+                                <?php if(mime_content_type($fileInfo->getPathname()) == 'image/tiff'):?>
+                                    <button value="/image/convert-to-jpg/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
+                                            title="Конвертировать в jpg">
+                                        <span class="glyphicon glyphicon-transfer" ></span>
+                                    </button>
+                                <?php endif;?>
+                                <?php if ($imageManager->isCompressFile($fileInfo->getPathName())): ?>
+                                    <button value="/image/decompress-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
+                                            title="Распаковать">
+                                        <span class="glyphicon glyphicon-compressed" ></span>
+                                    </button>                             
+                                <?php endif;?>
+                                <button value="/image/delete-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-warning btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                             
+                            </div>                                                                            
+                        </div>                    
+                    </div>
+                    <?php endif;?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                </div>
+                <button id="ok" type="submit" class="btn btn-default">OK</button>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/raw/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric">ID</th>
+                     <th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>
+                     <th data-field="filename"  data-formatter="filenameFormatter">Файл</th>
+                     <th data-field="rows">Строк</th>
+                     <th data-field="status" data-formatter="statusExStageFormatter">Состояние</th>
+                     <th data-field="dateCreated" data-formatter="dateCreatedFormatter">Дата</th>
+                     <th data-field="" data-formatter="activeFormatter"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Загрузить
+                    </div>
+                    <div class="panel-body">
+                        <button value="/cross/check-mail" class="btn btn-default btn-xs refresh-button"
+                                title="Проверить ящик для кроссов">
+                            <span class="glyphicon glyphicon-envelope" ></span>
+                        </button>                             
+                        <button value="/cross/upload-tmp-cross-form" class="btn btn-default btn-xs"
+                                data-toggle="modal" data-target="#modal-dialog" title="Загрузить файл">
+                            <span class="glyphicon glyphicon-export" ></span>
+                        </button>                            
+                        <button value="/cross/upload-tmp-files" class="btn btn-default btn-xs refresh-button"
+                                title="Добавить кроссы к товарам">
+                            <span class="glyphicon glyphicon-import" ></span>
+                        </button>                             
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<script type="text/javascript">
+    var $table = $('#table'),
+        $ok = $('#ok');
+
+    $(function () {
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
+        });
+    });
+    
+    function queryParams() {
+        var params = {offset: 0, limit: 10};
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        return params;
+    }
+    function responseHandler(res) {
+        return res;
+    }
+    
+    function activeFormatter(value, row){
+        var url = '/raw/delete-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }
+    
+    function supplierFormatter(value) {
+        return '<a href="/supplier/view/'+value.id+'">'+value.name+'</a>';
+    }
+    
+    function filenameFormatter(value, row) {
+        return '<a href="/raw/view/'+row.id+'">'+value+'</a>';
+    }
+    
+    function statusFormatter(value, row) {
+        switch (value){
+            case '2': return 'Удален'; 
+            case '3': return 'Разобран'; 
+            case '4': return 'Загружается'; 
+            case '5': return 'Разбирается'; 
+            case '6': return 'Не удалось загрузить<br/><small style="color:red">'+row.name+'</small>'; 
+            case '7': return 'Устарел'; 
+            default: return 'Новый';    
+        }
+    }
+    
+    function statusStageFormatter(value, row) {
+        var status = statusFormatter(value, row);
+        var stage = '';
+        if (value == '3'){
+            switch (row.parseStage){
+                case '1': stage = '<br/> Производители не разобраны'; break;
+                case '2': stage =  '<br/> Производители разобраны'; break;
+                case '3': stage =  '<br/> Артикулы разобраны'; break;
+                case '4': stage =  '<br/> Номера разобраны'; break;
+                case '5': stage =  '<br/> Наименования разобраны'; break;
+                case '6': stage =  '<br/> Производители собраны'; break;
+                case '7': stage =  '<br/> Товары собраны'; break;
+                case '8': stage =  '<br/> Цены пересчитаны'; break;
+                case '10': stage =  '<br/> Группы наименований разобраны'; break;
+                default: stage =  '<br/> Неизвестно';                  
+            }
+        }    
+        return status+stage;
+    }
+    
+    function statusExStageFormatter(value, row) {
+        var stage = statusStageFormatter(value, row);
+        var statusEx = '';
+        switch (row.statusEx){
+            case '1': statusEx = '<br/> Новый'; break;
+            case '2': statusEx =  '<br/> Готов к передаче'; break;
+            case '3': statusEx =  '<br/> Передан'; break;
+            case '4': statusEx =  '<br/> Готов к удалению'; break;
+            case '5': statusEx =  '<br/> Удален'; break;
+            default: statusEx =  '<br/> Неизвестно';                  
+        }
+        return stage;// + statusEx;
+    }
+
+    function dateCreatedFormatter(value, row) {
+        return value;
+    }
+    
+    var addCart = function(data){
+        data.num = $('#num'+data.good).val();
+        $.post(
+            '/shop/add-cart',
+            data,
+            addCartSuccess
+        );
+    };
+    
+    function addCartSuccess(data)
+    {
+        if (data.num){  
+            $('#nav_cart_badge').html(data.num);
+        }  
+        if (data.good){
+            $('#shop_index_add_cart_'+data.good).removeClass('btn-default');
+            $('#shop_index_add_cart_'+data.good).addClass('btn-success');
+        }
+    }
+</script>

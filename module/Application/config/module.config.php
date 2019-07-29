@@ -49,6 +49,20 @@ return [
                     ],
                 ],
             ],        
+            'cross' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/cross[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\CrossController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'goods' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -363,6 +377,7 @@ return [
             Controller\CarController::class => Controller\Factory\CarControllerFactory::class,
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
             Controller\ContactController::class => Controller\Factory\ContactControllerFactory::class,
+            Controller\CrossController::class => Controller\Factory\CrossControllerFactory::class,
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
             Controller\ExternalController::class => Controller\Factory\ExternalControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
@@ -391,6 +406,7 @@ return [
             Service\CarManager::class => Service\Factory\CarManagerFactory::class,
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
+            Service\CrossManager::class => Service\Factory\CrossManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
             Service\ExternalManager::class => Service\Factory\ExternalManagerFactory::class,
             Service\ExternalDB\AutodbManager::class => Service\Factory\ExternalDB\AutodbManagerFactory::class,
@@ -428,6 +444,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\ContactController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\CrossController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

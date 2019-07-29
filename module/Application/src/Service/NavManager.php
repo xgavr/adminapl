@@ -110,6 +110,12 @@ class NavManager
                     'label' => 'Настройки',
                     'link'  => $url('admin', ['action' => 'price-settings'])
                 ];
+                $priceDropdownItems[] = [
+                    'id' => 'cross',
+                    'label' => 'Кроссы',
+                    'link'  => $url('cross')
+                ];
+                
                 
                 if (count($priceDropdownItems)!=0) {
                     $items[] = [

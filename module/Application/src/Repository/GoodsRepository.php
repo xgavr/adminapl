@@ -13,6 +13,8 @@ use Application\Entity\Goods;
 use Application\Entity\Rawprice;
 use Application\Entity\OemRaw;
 
+
+
 /**
  * Description of GoodsRepository
  *
@@ -315,7 +317,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->join('g.articles', 'a')
             ->join(Rawprice::class, 'r', 'WITH', 'r.code = a.id')   
-            ->andWhere('g.aplId > 0') 
+            ->andWhere('g.aplId > 0')
 //            ->orderBy('g.dateEx')    
             ;
         

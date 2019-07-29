@@ -14,7 +14,7 @@ use Zend\Validator\File\IsCompressed;
 use Zend\Filter\Decompress;
 
 /**
- * Description of PriceManager
+ * Description of ImageManager
  *
  * @author Daddy
  */

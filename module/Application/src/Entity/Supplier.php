@@ -79,6 +79,12 @@ class Supplier {
     private $raw;
 
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Cross", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $crosses;
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\PriceDescription", mappedBy="supplier")
     * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
      */
@@ -115,6 +121,7 @@ class Supplier {
     {
         $this->contacts = new ArrayCollection();
         $this->raw = new ArrayCollection();
+        $this->crosses = new ArrayCollection();
         $this->priceDescriptions = new ArrayCollection();
         $this->priceGettings = new ArrayCollection();
         $this->billGettings = new ArrayCollection();
@@ -308,6 +315,23 @@ class Supplier {
     {
         $criteria = Criteria::create()->where(Criteria::expr()->neq("status", Contact::STATUS_LEGAL));
         return $this->getContacts()->matching($criteria);
+    }
+    
+    /**
+     * Returns the array of crosses assigned to this.
+     * @return array
+     */
+    public function getCrosses()
+    {
+        return $this->crosses;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addCross($cross)
+    {
+        $this->crosses[] = $cross;
     }
     
     /**

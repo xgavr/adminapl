@@ -1,0 +1,78 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Путь к файлу c кроссами'
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'id' => 'upload-cross-submit']);
+$form->prepare();
+
+?>
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Загрузить файл с кроссами</h5>
+                <p>
+                    Выберете файл и нажмите <i>Загрузить</i>.
+                </p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $this->form()->openTag($form); ?>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('name')); ?>
+                        <?= $this->formElement($form->get('name')); ?>
+                        <?= $this->formElementErrors($form->get('name')); ?>                  
+                    </div>
+                </div>    
+            </div>   
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="upload-cross-submit">Загрузить</button>
+            </div>
+            <?= $this->form()->closeTag(); ?>
+
+<script type="text/javascript">
+    $('#upload-cross-submit').on('click', function() {
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока идет загрузка ...</p>',
+            closeButton: false
+        });
+        
+        var file_data = $('#file').prop('files')[0];   
+        var form_data = new FormData();                  
+        form_data.append('name', file_data);
+
+        $.ajax({
+            type: 'POST',
+            url: '/cross/upload-tmp-cross-form/',
+            contentType: false,
+            processData: false,
+            data: form_data
+        })
+            .done(function (data) {
+                dialog.modal('hide');
+                if (data == 'ok'){
+                    $('#upload-cross-modal').modal('hide');
+                    //bootbox.alert("Файл успешно загружен.");
+                    window.location.reload();
+                } else {
+                    $('#upload-cross-modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                dialog.modal('hide');
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });
+    })    
+</script>

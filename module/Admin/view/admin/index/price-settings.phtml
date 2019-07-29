@@ -79,6 +79,17 @@ $form->get('image_mail_box_password')->setAttributes([
 $form->get('image_mail_box_check')->setAttributes([
     'class'=>'form-control', 
     ]);
+$form->get('cross_mail_box')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('cross_mail_box_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('cross_mail_box_check')->setAttributes([
+    'class'=>'form-control', 
+    ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
@@ -183,6 +194,21 @@ $form->prepare();
             <?= $this->formLabel($form->get('image_mail_box_check')); ?>
             <?= $this->formElement($form->get('image_mail_box_check')); ?>
             <?= $this->formElementErrors($form->get('image_mail_box_check')); ?>                  
+        </div>                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('cross_mail_box')); ?>
+            <?= $this->formElement($form->get('cross_mail_box')); ?>
+            <?= $this->formElementErrors($form->get('cross_mail_box')); ?>                  
+        </div>                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('cross_mail_box_password')); ?>
+            <?= $this->formElement($form->get('cross_mail_box_password')); ?>
+            <?= $this->formElementErrors($form->get('cross_mail_box_password')); ?>                  
+        </div>                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('cross_mail_box_check')); ?>
+            <?= $this->formElement($form->get('cross_mail_box_check')); ?>
+            <?= $this->formElementErrors($form->get('cross_mail_box_check')); ?>                  
         </div>                
     </div>
     <div class="col-sm-3" id="side-nav" >

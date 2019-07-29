@@ -152,6 +152,9 @@ class AdminManager {
         $config->price->image_mail_box = $data['image_mail_box']; //ящик для сбора картинок
         $config->price->image_mail_box_password = $data['image_mail_box_password']; //ящик для сбора картинок пароль
         $config->price->image_mail_box_check = $data['image_mail_box_check']; //ящик для сбора картинок проверять
+        $config->price->cross_mail_box = $data['cross_mail_box']; //ящик для сбора кроссов
+        $config->price->cross_mail_box_password = $data['cross_mail_box_password']; //ящик для сбора кроссов пароль
+        $config->price->cross_mail_box_check = $data['cross_mail_box_check']; //ящик для сбора кроссов проверять
         
         $writer = new PhpArray();
         
