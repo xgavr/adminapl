@@ -9,7 +9,8 @@
 namespace Application\Service;
 
 use Zend\ServiceManager\ServiceManager;
-use Application\Entity\Supplier;
+use Application\Entity\UnknownProducer;
+use Application\Entity\Article;
 use Application\Entity\Cross;
 use Application\Entity\CrossList;
 use Application\Filter\RawToStr;
@@ -550,37 +551,15 @@ class CrossManager {
         return;
     }
         
-    /*
-     * Проход по всем поставщикам - поиск файлов с прайсам в папках
-     */
-    public function checkSupplierPrice($supplier)
-    {
-        if ($supplier){
-            $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
-            $this->clearPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());            
-        } 
-        return;
-    }
-    
-    /*
-     * Получить количестов строк прайса
-     */
-    public function getRawRowcount($raw)
-    {
-        $result = $this->entityManager->getRepository(Raw::class)
-                ->rawpriceCount($raw);
-        
-        return $result;
-    }
             
-    /*
-     * Удаление строки прайса
+    /**
+     * Удаление строки кросса
+     * $param CrossList $line
      */
-    public function removeRawprice($rawprice)
+    public function removeLine($line)
     {
-        $rawprice->getOemRaw()->clear();
-        $this->entityManager->remove($rawprice);
-        $this->entityManager->flush();        
+        $this->entityManager->remove($line);
+        $this->entityManager->flush($line);        
     }
     
     /**
@@ -600,11 +579,44 @@ class CrossManager {
                 ->count(['cross' => $cross->getId()]);
         
         if ($crossListCount == 0){
-            $this->entityManager->remove($cros);
+            $this->entityManager->remove($cross);
             $this->entityManager->flush($cross);
         }
         
         return;
     }  
 
+    /**
+     * Разобрать строку
+     * 
+     * @param CrossList $line
+     */
+    public function parseLine($line)
+    {
+        $row = $line->getRawdataAsArray();
+        
+        $producerNameFilter = new \Application\Filter\ProducerName();
+        $articleFilter = new \Application\Filter\ArticleCode();
+
+        foreach ($row as $key => $value){
+            if (!$line->getProducerName()){
+                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                        ->findByName($producerNameFilter->filter($value));
+
+                if ($unknownProducer){
+                    $line->setProducerName($unknownProducer->getName());
+                    continue;
+                }
+            }                
+            if (!$line->getArticle()){
+                $article = $this->entityManager->getRepository(Article::class)
+                        ->findBy(['code' => $articleFilter->filter($value)]);
+
+                if ($unknownProducer){
+                    $line->setProducerName($unknownProducer->getName());
+                    continue;
+                }
+            }                
+        }
+    }
 }

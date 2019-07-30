@@ -103,7 +103,12 @@ class CrossRepository extends EntityRepository{
         return $this->getEntityManager()->getConnection()->insert('cross_list', $row);
     }    
     
-    public function findAllCross($status = null, $supplier = null, $exceptRaw = null)
+    /**
+     * Выборка кроссов
+     * @param integer $status
+     * @return type
+     */
+    public function findAllCross($status = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -112,8 +117,6 @@ class CrossRepository extends EntityRepository{
         $queryBuilder->select("c, s")
             ->from(Cross::class, 'c')
             ->leftJoin('c.supplier', 's')    
-            //->leftJoin('c.rawprice', 'r', 'WITH', 'r.raw = c.id')
-            //->groupBy('c.id')     
                 ;
         
         if ($status){
@@ -122,24 +125,61 @@ class CrossRepository extends EntityRepository{
                 ;                    
         }
 
-        if ($supplier){
-            $queryBuilder->andWhere('c.supplier = ?3')
-            ->setParameter('3', $supplier->getId())    
-            ->addOrderBy('c.filename', 'DESC')        
-                ;                    
-        }
-
-        if ($exceptRaw){
-            $queryBuilder->andWhere('c.id != ?4')
-            ->setParameter('4', $exceptRaw->getId())    
-            ->addOrderBy('c.filename', 'DESC')        
-                ;                    
-        }
-        
         $queryBuilder->addOrderBy('c.id', 'DESC');
         
 //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }        
+    
+    /**
+     * Выборка кросс листа
+     * @param Cross $cross
+     * @param array $params
+     * @return type
+     */
+    public function crossList($cross, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('cl')
+            ->from(CrossList::class, 'cl')
+            ->where('cl.cross = ?1')
+            ->setParameter('1', $cross->getId())    
+                ;
+        
+        if ($params){
+        }
+        
+        return $queryBuilder->getQuery();
+    }        
+    
+    /**
+     * Удаление кросса
+     * @param Cross $cross
+     */
+    public function deleteCrossList($cross)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('cl.id')
+                ->from(CrossList::class, 'cl')
+                ->where('cl.cross = ?1')
+                ->setParameter('1', $cross->getId())
+                ;
+        
+        $iterator = $queryBuilder->getQuery()->iterate();
+        
+        foreach ($iterator as $item){
+            foreach ($item as $row){
+                $this->getEntityManager()->getConnection()->delete('cross_list', ['id' => $row['id']]);                
+            }
+        }
+            
+        unset($iterator);
+        return;
+    }
     
 }

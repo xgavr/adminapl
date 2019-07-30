@@ -289,26 +289,4 @@ class CrossList {
         }    
     }
     
-    /*
-     * Получить поля со значениями и заголовками
-     */
-    public function getFieldValues()
-    {
-        $result = [];
-        
-        $form = new \Application\Form\PriceDescriptionForm();
-        $elements = $form->getElements();
-        foreach ($elements as $element){
-            if (in_array($element->getName(), ['name', 'status', 'type'])) {
-                continue;
-            }
-            $func = 'get'.ucfirst($element->getName());
-            if (method_exists($this, $func)){
-                if($this->$func()){
-                    $result[$element->getLabel()] = $this->$func();
-                }
-            }
-        }
-        return $result;
-    }    
 }

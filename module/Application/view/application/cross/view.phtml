@@ -1,13 +1,23 @@
 <?php
-$this->headTitle('Прайс '.$raw->getSupplier()->getName());
+$this->headTitle('Кросс '.$cross->getBasename());
 
 $this->mainMenu()->setActiveItemId('raw');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Прайсы'=>$this->url('raw'),
-            $raw->getBasename() => $this->url('raw', ['action'=>'view', 'id' => $raw->getId()])
+            'Кроссы'=>$this->url('cross'),
+            $cross->getBasename() => $this->url('cross', ['action'=>'view', 'id' => $cross->getId()])
             ]);  
+
+$this->headLink()
+//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+        ;
+
+$this->headScript()
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+            ;    
 
 ?>
 
@@ -17,309 +27,140 @@ $this->pageBreadcrumbs()->setItems([
             <div class="panel-heading">
                 <h3 class="panel-title">Данные из файла</h3>
             </div>
-            <div class="panel-body">
-                <?= $this->paginationControl($rawprice,
-                            'Sliding',
-                            'application/partial/paginator', 
-                            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId(), 'query' => ['status' => $status])]); ?>
-                <table class="table table-striped">
-
-                   <tr>
-                        <th>ID</th>
-                        <th>Данные</th>
-                        <th>Статус</th>
-                    </tr>
-
-                    <?php foreach ($rawprice as $row): ?>
-
-                    <tr>
-                        <td>
-                            <a href="<?= $this->url('rawprice', ['action'=>'view', 'id'=>$row->getId()]); ?>">            
-                                <?= $this->escapeHtml($row->getId()); ?>
-                            </a>    
-                        </td>
-                        <td>
-                        <?php 
-                            $rawdates = $row->getRawdataAsArray();
-                            $i = 0;
-                        ?>
-                        <?php foreach ($rawdates as $rawdata): ?>
-                            <?php $i++ ?>
-                            <div>
-                                <b><?= $i?>:</b><?= $this->escapeHtml($rawdata); ?>
-                            </div>
-                        <?php endforeach; ?>    
-                        </td>    
-                        <td>
-                            <?= $this->escapeHtml($row->getStatusAsString())?>
-                            <br/>
-                            <?php if ($row->getUnknownProducer()):?>
-                                <a href="/producer/unknown-view/<?= $row->getUnknownProducer()->getId();?>"><?=$row->getUnknownProducer()->getName()?></a>                            
-                            <?php endif?>
-                            <br/>
-                            <?php if ($row->getCode()):?>
-                                <?php if ($row->getCode()->getId()):?>
-                                    <a href="/producer/article-view/<?= $row->getCode()->getId();?>"><?=$row->getCode()->getCode()?></a>                            
-                                <?php endif?>
-                            <?php endif?>
-                            <br/>
-                            <?php if ($row->getStatusGood() == $row::GOOD_OK):?>
-                                <a href="/goods/view/<?= $row->getGood()->getId();?>"><?=$row->getGood()->getCode()?></a>                            
-                                <a href="/producer/view/<?= $row->getGood()->getProducer()->getId();?>"><?=$row->getGood()->getProducer()->getName()?></a> 
-                            <?php else:?>
-                                <?= $row->getStatusGoodName(); ?>
-                            <?php endif?>
-                        </td>    
-                    </tr>
-
-                    <?php endforeach; ?>   
-
-                </table>
-                <?= $this->paginationControl($rawprice,
-                            'Sliding',
-                            'application/partial/paginator', 
-                            ['route' => array('route' => 'raw', 'action' => 'view', 'id' => $raw->getId(), 'query' => ['status' => $status])]); ?>
-    
-            </div>
         </div> 
-        <?php if($otherRaws):?>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Еще прайсы от <?= $raw->getSupplier()->getName()?>
-                    <div class="pull-right">
-                        <button value="/rawprice/old-raw/<?= $raw->getId() ?>" class="btn btn-info btn-xs refresh-button"
-                                title="Разобрать">
-                                Проверить на удаление
-                        </button>                            
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <?php foreach($otherRaws as $otherRaw):?>
-                           <tr>
-                                <td>
-                                    <a href="<?= $this->url('raw', ['action'=>'view', 'id'=>$otherRaw->getId()]); ?>">            
-                                        <?= $this->escapeHtml($otherRaw->getBasename()); ?>
-                                    </a>    
-                                </td>
-                                <td><?= $this->escapeHtml($otherRaw->getRows()); ?></td>
-                                <td><?= $this->escapeHtml($otherRaw->getStatusAsString()); ?></td>
-                                <td><?= $this->escapeHtml($otherRaw->getDateCreated()); ?></td>
-                                <td>
-                                    <?php $compareRaw = $parseManager->compareRaw($raw, $otherRaw); ?>
-                                    <?= $compareRaw['strPer'].'/'.$compareRaw['rowPer'].' '.$parseManager->isDeleteRaw($raw, $otherRaw);?>
-                                </td>
-                                <td>
-                                    <button value="/raw/delete-form/<?= $otherRaw->getId() ?>" class="btn btn-danger btn-xs this-delete"
-                                            title="Удалить">
-                                        <span class="glyphicon glyphicon-remove" ></span>
-                                    </button>                                                           
-                                </td>    
-                           </tr>
-                        <?php endforeach;?>
-                    </table>           
-                </div>
-            </div>
-        <?php endif;?>        
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/cross/list-content/<?= $cross->getId()?>"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric">ID</th>
+                     <th data-field="rawdata">Данные</th>
+                     <th data-field="" data-formatter="activeFormatter"></th>
+                 </tr>                
+            </thead>
+        </table>
     </div>    
-    <div class="col-md-3" id="side-nav" >
+    <div class="col-md-3" id="side-nav">
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-12">
-                                <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $raw->getSupplier()->getId()])?>"><?= $raw->getSupplier()->getName() ?></a>
                             </div>    
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="pull-left">
-                                    <?= $this->escapeHtml($raw->getBasename()); ?>
+                                    <?= $this->escapeHtml($cross->getBasename()); ?>
                                     <br/>
-                                    <?= $this->escapeHtml($raw->getStatusAsString()); ?>
+                                    <?= $this->escapeHtml($cross->getStatusAsString()); ?>
                                 </div>    
                             </div>
                         </div>    
                         <div class="clearfix"></div>
                     </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="pull-left">
-                                    <?= $totalRawpriceCount; ?> строк<br/>
-                                    <?php foreach($statuses as $status):?>
-                                    <a href="<?= $this->url('raw', ['action' => 'view', 'id' => $raw->getId()], ['query' => ['status' => $status['status']]]);?>"><?= $status['name']?></a>: <?= $status['status_count']?><br/>                                
-                                    <?php endforeach;?>
-                                </div>
-                                <div class="pull-right">
-                                    <button value="/rawprice/parse-raw/<?= $raw->getId() ?>" class="btn btn-info btn-xs refresh-button"
-                                            title="Разобрать">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button> 
-                                    <button value="/raw/delete-form/<?= $raw->getId() ?>" class="btn btn-danger btn-xs this-delete"
-                                            title="Удалить">                                            
-                                        <span class="glyphicon glyphicon-remove" ></span>
-                                    </button>                            
-                                </div>
-                            </div>
-                        </div>    
-                    </div>
-                    <div>
-                        
-                    </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Описания полей                        
-                        <div class="pull-right">
-                            <button value="/supplier/price-description-form/<?= $raw->getSupplier()->getId() ?>" class="btn btn-default btn-xs"
-                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить">
-                                <span class="glyphicon glyphicon-plus" ></span>
-                            </button>                                                                        
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <?php foreach($raw->getSupplier()->getPriceDescriptions() as $priceDescription): ?>
-                        <div class="panel-body">
-                            <div class="pull-right">
-                                <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
-                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                    <span class="glyphicon glyphicon-edit" ></span>
-                                </button>                                                    
-                                <button value="/supplier/delete-price-description-form/<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                        title="Удалить">
-                                    <span class="glyphicon glyphicon-remove" ></span>
-                                </button>                                                                                                                                       
-                                <button id="pars_price_list_text_button" class="btn btn-info btn-xs"
-                                        title="Текст для АПЛ" value="<?= $priceDescription->getId() ?>">
-                                    <span class="glyphicon glyphicon-menu-hamburger" ></span>
-                                </button>                                                                                                                                       
-                            </div>
-                            <div>
-                                <i><?= $priceDescription->getName() ?></i><br/>
-                                <?php $elements = []; ?>
-                                <?php foreach($priceDescriptionElements as $element):?>
-                                    <?php if(in_array($element->getName(), ['name', 'status', 'type'])) continue; ?>
-                                    <?php $func = 'get'.ucfirst($element->getName()); ?>
-                                    <?php if (method_exists($priceDescription, $func)):?>
-                                        <?php if($priceDescription->$func()):?>
-                                            <?php $elements[$priceDescription->$func()] = $element->getLabel()?>
-                                        <?php endif;?>    
-                                    <?php endif;?>
-                                <?php endforeach; ?>
-                                <?php ksort($elements);?>
-                                <?php foreach ($elements as $key => $value):?>
-                                    <b><?= $key?></b>: <?= $value?> <br/>                                    
-                                <?php endforeach;?>            
-                            </div>
-                        </div>
-                            
-                    <?php endforeach;?>
-                </div>    
-                <?php if ($raw->getStatus() == $raw::STATUS_PARSED):?>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Разборка полей прайса
-                            <div class="clearfix"></div>
-                        </div>    
-                        <div class="panel-body">
-                            <div class="pull-left">
-                                <?= $raw->getParseStageAsString(); ?>
-                            </div>    
-                            <div class="pull-right">
-                                <?php if ($raw->getParseStage() == $raw::STAGE_NOT):?>
-                                    <button value="/producer/update-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать производителй">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_PRODUCER_PARSED):?>
-                                    <button value="/producer/update-article-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать артикулы">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_ARTICLE_PARSED):?>
-                                    <button value="/oem/update-oem-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать номера">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_OEM_PARSED):?>
-                                    <button value="/name/update-token-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать наименования">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_TOKEN_PARSED):?>
-                                    <button value="/producer/assembly-producer-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Собрать производителей">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_PRODUCER_ASSEMBLY):?>
-                                    <button value="/goods/assembly-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Собрать товары">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_GOOD_ASSEMBLY):?>
-                                    <button value="/goods/update-prices-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Рассчитать цены">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_PRICE_UPDATET):?>
-                                    <button value="/name/update-token-group-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать группы наименований">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                <?php endif;?>
-                            </div>    
-                        </div>    
-                    </div>
-                <?php endif;?>
-                <?php if ($raw->getStatus() == $raw::STATUS_RETIRED):?>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Экспорт полей прайса
-                            <div class="clearfix"></div>
-                        </div>    
-                        <div class="panel-body">
-                            <div class="pull-left">
-                                <?= $raw->getStatusExAsString()?>
-                            </div>
-                            <div class="pull-right">     
-                                <?php if ($raw->getStatusEx() == $raw::EX_TO_DELETE):?>
-                                    <button value="/apl/delete-raw/<?= $raw->getId()?>" class="btn btn-default btn-xs refresh-button"
-                                            title="Обмен строк прайса">
-                                        <span class="glyphicon glyphicon-export" ></span>
-                                    </button>
-                                <?php endif; ?>
-                            </div>    
-                        </div>
-                    </div>    
-                <?php endif;?>
             </div>
         </div>
     </div>    
 </div>    
 
-<script>
-    $('#pars_price_list_text_button').on('click', function() {        
-        $.ajax({
-            type: 'POST',
-            url: '/supplier/pars-price-list-text/'+$('#pars_price_list_text_button').val(),
-            data: $('#price-description-form').serialize()
-        })
-            .done(function (data) {
-                bootbox.alert(data.text);
-            })
-            .fail(function () {
-                bootbox.alert("Произошла ошибка при выполнении операции.");
-            });
-    })    
+<script type="text/javascript">
+    var table = $('#table'),
+        ok = $('#ok');
+
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+    });
+    
+    function queryParams() {
+        var params = {offset: 0, limit: 10};
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        return params;
+    }
+    function responseHandler(res) {
+        return res;
+    }
+    
+    function activeFormatter(value, row){
+        var url = '/cross/delete-line/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }
+    
+    function supplierFormatter(value) {
+        if (value){
+            return '<a href="/supplier/view/'+value.id+'">'+value.name+'</a>';
+        }
+        return;
+    }
+    
+    function filenameFormatter(value, row) {
+        return '<a href="/cross/view/'+row.id+'">'+value+'</a>';
+    }
+    
+    function statusFormatter(value, row) {
+        switch (value){
+            case '2': return 'Удален'; 
+            case '3': return 'Разобран'; 
+            case '4': return 'Загружается'; 
+            case '5': return 'Разбирается'; 
+            case '6': return 'Не удалось загрузить<br/><small style="color:red">'+row.name+'</small>'; 
+            case '7': return 'Устарел'; 
+            default: return 'Новый';    
+        }
+    }
+    function statusStageFormatter(value, row) {
+        var status = statusFormatter(value, row);
+        var stage = '';
+        if (value == '3'){
+            switch (row.parseStage){
+                case '1': stage = '<br/> Производители не разобраны'; break;
+                case '2': stage =  '<br/> Производители разобраны'; break;
+                case '3': stage =  '<br/> Артикулы разобраны'; break;
+                case '4': stage =  '<br/> Номера разобраны'; break;
+                case '5': stage =  '<br/> Наименования разобраны'; break;
+                case '6': stage =  '<br/> Производители собраны'; break;
+                case '7': stage =  '<br/> Товары собраны'; break;
+                case '8': stage =  '<br/> Цены пересчитаны'; break;
+                case '10': stage =  '<br/> Группы наименований разобраны'; break;
+                default: stage =  '<br/> Неизвестно';                  
+            }
+        }    
+        return status+stage;
+    }
+    
+    function dateCreatedFormatter(value, row) {
+        return value;
+    }    
     
 </script>

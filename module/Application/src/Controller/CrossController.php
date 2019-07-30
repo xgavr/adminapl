@@ -159,7 +159,6 @@ class CrossController extends AbstractActionController
     public function contentAction()
     {
         
-        $q = $this->params()->fromQuery('search', '');
         $status = $this->params()->fromQuery('status');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
@@ -169,9 +168,13 @@ class CrossController extends AbstractActionController
         
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
-        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
         $result = $query->getResult(2);
         
         return new JsonModel([
@@ -185,20 +188,16 @@ class CrossController extends AbstractActionController
     {       
         $crossId = (int)$this->params()->fromRoute('id', -1);
 
-        // Validate input parameter
         if ($crossId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
-        // Find the raw ID
         $cross = $this->entityManager->getRepository(Cross::class)
                 ->findOneById($crossId);
         
         if ($cross == null) {
             return $this->redirect()->toRoute('cross');
-//            $this->getResponse()->setStatusCode(404);
-//            return;                        
         }        
                 
         // Render the view template.
@@ -208,6 +207,44 @@ class CrossController extends AbstractActionController
         ]);
     }      
     
+    public function listContentAction()
+    {
+        $crossId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($crossId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);
+        
+        if ($cross == null) {
+            return $this->redirect()->toRoute('cross');
+        }        
+        
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(CrossList::class)
+                    ->crossList($cross);            
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);         
+    }
         
     public function deleteAction()
     {
@@ -225,6 +262,46 @@ class CrossController extends AbstractActionController
         // Перенаправляем пользователя на страницу "raw".
         return $this->redirect()->toRoute('cross', []);
     }    
+    
+    public function deleteFormAction()
+    {
+        $crossId = $this->params()->fromRoute('id', -1);
+        
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);
+        
+        if ($cross == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->crossManager->removeCross($cross);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+
+    public function deleteLineAction()
+    {
+        $lineId = $this->params()->fromRoute('id', -1);
+        
+        $line = $this->entityManager->getRepository(CrossList::class)
+                ->findOneById($lineId);        
+        
+        if ($line == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->crossManager->removeLine($line);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+
+    
 
     public function parseAction()
     {
