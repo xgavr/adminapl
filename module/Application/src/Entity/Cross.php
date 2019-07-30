@@ -13,9 +13,9 @@ use Application\Filter\Basename;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Rawprice
+ * Description of Cross
  * @ORM\Entity(repositoryClass="\Application\Repository\CrossRepository")
- * @ORM\Table(name="cross")
+ * @ORM\Table(name="cross_")
  * @author Daddy
  */
 class Cross {
@@ -184,7 +184,7 @@ class Cross {
     }   
     
     /**
-     * Returns the date of user creation.
+     * Returns the date of cross creation.
      * @return string     
      */
     public function getDateCreated() 
@@ -193,7 +193,7 @@ class Cross {
     }
     
     /**
-     * Sets the date when this user was created.
+     * Sets the date when this cross was created.
      * @param string $dateCreated     
      */
     public function setDateCreated($dateCreated) 

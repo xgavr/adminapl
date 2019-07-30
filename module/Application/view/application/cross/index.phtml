@@ -62,7 +62,7 @@ $this->headScript()
         </div>
         <table id="table" 
             data-toggle="table" 
-            data-url="/raw/content"
+            data-url="/cross/content"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -77,8 +77,8 @@ $this->headScript()
                      <th data-field="id" data-type="numeric">ID</th>
                      <th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>
                      <th data-field="filename"  data-formatter="filenameFormatter">Файл</th>
-                     <th data-field="rows">Строк</th>
-                     <th data-field="status" data-formatter="statusExStageFormatter">Состояние</th>
+                     <th data-field="rowCount">Строк</th>
+                     <th data-field="status" data-formatter="statusFormatter">Состояние</th>
                      <th data-field="dateCreated" data-formatter="dateCreatedFormatter">Дата</th>
                      <th data-field="" data-formatter="activeFormatter"></th>
                  </tr>                
@@ -142,7 +142,7 @@ $this->headScript()
     }
     
     function activeFormatter(value, row){
-        var url = '/raw/delete-form/'+row.id;
+        var url = '/cross/delete-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs this-delete"';
@@ -155,11 +155,14 @@ $this->headScript()
     }
     
     function supplierFormatter(value) {
-        return '<a href="/supplier/view/'+value.id+'">'+value.name+'</a>';
+        if (value){
+            return '<a href="/supplier/view/'+value.id+'">'+value.name+'</a>';
+        }
+        return;
     }
     
     function filenameFormatter(value, row) {
-        return '<a href="/raw/view/'+row.id+'">'+value+'</a>';
+        return '<a href="/cross/view/'+row.id+'">'+value+'</a>';
     }
     
     function statusFormatter(value, row) {
@@ -194,41 +197,8 @@ $this->headScript()
         return status+stage;
     }
     
-    function statusExStageFormatter(value, row) {
-        var stage = statusStageFormatter(value, row);
-        var statusEx = '';
-        switch (row.statusEx){
-            case '1': statusEx = '<br/> Новый'; break;
-            case '2': statusEx =  '<br/> Готов к передаче'; break;
-            case '3': statusEx =  '<br/> Передан'; break;
-            case '4': statusEx =  '<br/> Готов к удалению'; break;
-            case '5': statusEx =  '<br/> Удален'; break;
-            default: statusEx =  '<br/> Неизвестно';                  
-        }
-        return stage;// + statusEx;
-    }
-
     function dateCreatedFormatter(value, row) {
         return value;
-    }
+    }    
     
-    var addCart = function(data){
-        data.num = $('#num'+data.good).val();
-        $.post(
-            '/shop/add-cart',
-            data,
-            addCartSuccess
-        );
-    };
-    
-    function addCartSuccess(data)
-    {
-        if (data.num){  
-            $('#nav_cart_badge').html(data.num);
-        }  
-        if (data.good){
-            $('#shop_index_add_cart_'+data.good).removeClass('btn-default');
-            $('#shop_index_add_cart_'+data.good).addClass('btn-success');
-        }
-    }
 </script>

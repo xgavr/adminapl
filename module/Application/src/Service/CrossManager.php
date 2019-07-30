@@ -28,10 +28,7 @@ use Application\Filter\Basename;
  * @author Daddy
  */
 class CrossManager {
-    
-    const CROSS_FOLDER       = './data/crosses'; // папка с кроссов
-    const CROSS_FOLDER_ARX   = './data/crosses/arx'; // папка с архивами кроссов
-    
+        
     const CROSS_FILE_EXTENSIONS   = 'xls, xlsx, csv, txt'; //допустимые расширения файлов c кроссами
 
     /**
@@ -249,25 +246,6 @@ class CrossManager {
         return;
     }    
     
-    /*
-     * Переместить файл в архив
-     * @var string $filename
-     */
-    public function renameToArchive($filename)            
-    {
-
-        if (file_exists($filename)){
-            $filter = new Basename();
-            $arx_folder = self::CROSS_FOLDER_ARX;
-            if (is_dir($arx_folder)){
-                if (copy(realpath($filename), realpath($arx_folder).'/'.$filter->filter($filename))){
-                    unlink(realpath($filename));
-                }
-            }
-        }        
-        return;
-    }
-
     /**
      * Загрузка сырого кросса csv, txt
      * @var string $filename
@@ -340,7 +318,7 @@ class CrossManager {
                 fclose($lines);
             }                                
             
-            $this->renameToArchive($filename);
+            $this->entityManager->getRepository(Cross::class)->renameToArchive($filename);
 
         }
         
@@ -384,7 +362,7 @@ class CrossManager {
                 $reader = IOFactory::createReaderForFile($filename);
             } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
                 //попытка прочитать файл старым способом
-                $cross->setName($e->getMessage());
+                $cross->setFilename($e->getMessage());
                 $cross->setStatus(Cross::STATUS_FAILED);
                 $this->entityManager->persist($cross);
                 $this->entityManager->flush($cross);                    
@@ -436,7 +414,7 @@ class CrossManager {
 
         }    
 
-        $this->renameToArchive($filename);
+        $this->entityManager->getRepository(Cross::class)->renameToArchive($filename);
         return;
     }    
     
@@ -464,11 +442,11 @@ class CrossManager {
             } catch (\PHPExcel_Reader_Exception $e){
                 //попытка прочитать файл не удалась
                 $cross = new Cross();
-                $cross->setName($e->getMessage());
+                $cross->setFilename($e->getMessage());
                 $cross->setStatus(Cross::STATUS_FAILED);
                 $this->entityManager->persist($cross);
                 $this->entityManager->flush($cross);                    
-                $this->renameToArchive($filename);
+                $this->entityManager->getRepository(Cross::class)->renameToArchive($filename);
                 return;
             }    
 
@@ -525,7 +503,7 @@ class CrossManager {
             unset($excel);
             unset($mvexcel);
 
-            $this->renameToArchive($filename);
+            $this->entityManager->getRepository(Cross::class)->renameToArchive($filename);
         }
         
         return;
@@ -566,7 +544,7 @@ class CrossManager {
                 return $this->uploadCrossCsv($filename);
             }
             
-            $this->renameToArchive($filename);
+            $this->entityManager->getRepository(Cross::class)->renameToArchive($filename);
         }
         
         return;

@@ -164,8 +164,8 @@ class CrossController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         
-        $query = $this->entityManager->getRepository(Raw::class)
-                    ->findAllRaw($status);            
+        $query = $this->entityManager->getRepository(Cross::class)
+                    ->findAllCross($status);            
         
         $total = count($query->getResult(2));
         
