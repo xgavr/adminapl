@@ -183,133 +183,47 @@ class CrossController extends AbstractActionController
 
     public function viewAction() 
     {       
-        $rawId = (int)$this->params()->fromRoute('id', -1);
+        $crossId = (int)$this->params()->fromRoute('id', -1);
 
         // Validate input parameter
-        if ($rawId<0) {
+        if ($crossId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
         // Find the raw ID
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);
         
-        if ($raw == null) {
-            return $this->redirect()->toRoute('raw');
+        if ($cross == null) {
+            return $this->redirect()->toRoute('cross');
 //            $this->getResponse()->setStatusCode(404);
 //            return;                        
         }        
-        
-        $page = $this->params()->fromQuery('page', 1);
-        
-        $statuses = $this->entityManager->getRepository(Raw::class)
-                ->rawpriceStatuses($raw);
-        
-        foreach ($statuses as $key => $status){
-            $statuses[$key]['name'] = Rawprice::getStatusName($status['status']);
-        }
-        
-        $status = $this->params()->fromQuery('status');
-        
-        $query = $this->entityManager->getRepository(Rawprice::class)
-                    ->findRawRawprice($raw, $status);
                 
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);
-        
-        $priceDescriptionForm = new PriceDescriptionForm();
-        
-        $otherRaws = $this->entityManager->getRepository(Raw::class)
-            ->findAllRaw(null, $raw->getSupplier(), $raw)
-            ->getResult()
-                ;
-        
-        $totalRawpriceCount = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['raw' => $raw->getId()]);
-        
         // Render the view template.
         return new ViewModel([
-            'raw' => $raw,
-            'rawManager' => $this->rawManager,
-            'parseManager' => $this->parseManager,
-            'rawprice' => $paginator,
-            'priceDescriptionElements' => $priceDescriptionForm->getElements(),
-            'statuses' => $statuses,
-            'status' => $status,
-            'otherRaws' => $otherRaws,
-            'totalRawpriceCount' => $totalRawpriceCount,
+            'cross' => $cross,
+            'crossManager' => $this->crossManager,
         ]);
     }      
     
-    public function uploadRawFormAction()
-    {
-        
-        $supplierId = $this->params()->fromRoute('id', -1);
-        
-        $supplier = $this->entityManager->getRepository(Supplier::class)
-                ->findOneById($supplierId);        
-
-        if ($supplier == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-
-        $filename = $this->params()->fromQuery('filename');
-        
-        if (file_exists(realpath($filename))){
-            $this->rawManager->uploadRawprice($supplier, $filename);
-        }
-        
-        return new JsonModel(
-           ['ok']
-        );           
-    }
-    
-    
-    public function checkAction()
-    {
-        $this->rawManager->checkSupplierPrice();
-
-        return $this->redirect()->toRoute('raw', []);
-        
-    }
         
     public function deleteAction()
     {
-        $rawId = $this->params()->fromRoute('id', -1);
+        $crossId = $this->params()->fromRoute('id', -1);
         
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);        
-        if ($raw == null) {
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);        
+        if ($cross == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $this->rawManager->removeRaw($raw);
+        $this->crossManager->removeCross($cross);
         
         // Перенаправляем пользователя на страницу "raw".
-        return $this->redirect()->toRoute('raw', []);
-    }    
-
-    public function deleteFormAction()
-    {
-        $rawId = $this->params()->fromRoute('id', -1);
-        
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);        
-        if ($raw == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        $this->rawManager->removeRaw($raw);
-        
-        return new JsonModel(
-           ['ok']
-        );           
+        return $this->redirect()->toRoute('cross', []);
     }    
 
     public function parseAction()
@@ -330,112 +244,4 @@ class CrossController extends AbstractActionController
         return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
         
     }        
-
-    public function newUnknownProducerAction()
-    {
-        $rawId = (int)$this->params()->fromRoute('id', -1);
-
-        // Validate input parameter
-        if ($rawId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);
-        
-        $this->rawManager->addNewUnknownProducerRaw($raw);
-        
-        return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
-        
-    }        
-    
-    
-    public function unknownProducerAction()
-    {
-        $rawId = (int)$this->params()->fromRoute('id', -1);
-
-        // Validate input parameter
-        if ($rawId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);
-        
-        $this->rawManager->unknownProducerRaw($raw);
-        
-        return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
-        
-    }        
-    
-    public function newGoodsAction()
-    {
-        $rawId = (int)$this->params()->fromRoute('id', -1);
-
-        // Validate input parameter
-        if ($rawId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);
-        
-        $this->rawManager->addNewGoodsRaw($raw);
-        
-        return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
-        
-    }        
-    
-    public function goodsAction()
-    {
-        $rawId = (int)$this->params()->fromRoute('id', -1);
-
-        // Validate input parameter
-        if ($rawId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);
-        
-        $this->rawManager->addGoodRaw($raw);
-        
-        return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
-        
-    }        
-    
-    public function priceAction()
-    {
-        $rawId = (int)$this->params()->fromRoute('id', -1);
-
-        // Validate input parameter
-        if ($rawId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);
-        
-        $this->rawManager->setPriceRaw($raw);
-        
-        return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
-        
-    }    
-    
-    public function deleteRawTrainAction()
-    {
-        
-        $this->parseManager->deleteRawTrain($raw);
-        
-        return new JsonModel(
-           ['ok']
-        );           
-    }    
-
-    
 }
