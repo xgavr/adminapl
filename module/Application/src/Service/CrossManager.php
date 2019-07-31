@@ -651,6 +651,7 @@ class CrossManager {
                     if ($unknownProducerName == $producerNameFilter->filter($value)){
                         $producer = $unknownProducerName;
                         $description['producerName'] = $key;
+                        $description['articleBy'] = 'producer';
                         break;
                     }
                 }
@@ -669,6 +670,9 @@ class CrossManager {
                     if ($unknownProducerName == $producerNameFilter->filter($value)){
                         $brandProducer = $unknownProducerName;
                         $description['brandName'] = $key;
+                        if (!$description['articleBy']){
+                            $description['articleBy'] = 'brand';
+                        }
                         break;
                     }
                 }
