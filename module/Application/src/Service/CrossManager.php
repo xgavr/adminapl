@@ -641,7 +641,7 @@ class CrossManager {
                             $unknownProducerName = $article->getUnknownProducer()->getName();
                             var_dump($unknownProducerName);
                             foreach ($row as $pKey => $pValue){
-                                if ($unknownProducerName == $pValue){
+                                if ($unknownProducerName == $producerNameFilter->filter($pValue)){
                                     if (!$producer){
                                         $producer = $pValue;
                                         $description['producerName'] = $key;

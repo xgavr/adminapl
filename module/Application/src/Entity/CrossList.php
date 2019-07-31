@@ -240,7 +240,7 @@ class CrossList {
 
     public function getRawdataAsArray() 
     {        
-        return explode(';', $this->rawdata);
+        return array_filter(explode(';', $this->rawdata));
     }
 
     public function setRawdata($rawdata) 
