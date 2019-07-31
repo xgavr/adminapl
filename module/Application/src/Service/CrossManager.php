@@ -591,11 +591,11 @@ class CrossManager {
     }  
 
     /**
-     * Разобрать строку
+     * Исследовать строку
      * 
      * @param CrossList $line
      */
-    public function parseLine($line)
+    public function exploreLine($line)
     {
         $row = $line->getRawdataAsArray();
         
@@ -606,6 +606,9 @@ class CrossManager {
         $articleCode = $brandArticleCode = $producer = $brandProducer = $name = $brandName = $articles = $description = null;
 
         foreach ($row as $key => $value){
+            if (!$value){
+                continue;
+            }
             if (!$name || !$brandName){
                 if ($isRuValidator->isValid(mb_strtoupper($value, 'utf-8'))){
                     if (!$name){
@@ -621,6 +624,7 @@ class CrossManager {
             
             if (!$articleCode || !$brandArticleCode){
                 $code = $articleFilter->filter($value);
+//                var_dump($code);
                 if ($code && $code != OemRaw::LONG_CODE){
                     $articles = $this->entityManager->getRepository(Article::class)
                             ->findBy(['code' => $code]);
@@ -632,17 +636,57 @@ class CrossManager {
                             $brandArticleCode = $value;
                             $description['brandArticle'] = $key;
                         }
-                        if (count($articles) == 1){
-                            if (!$producer){
-                                $producer = $articles[0]->getUnknownProducer()->getName();
-                            } else {
-                                $brandProducer = $articles[0]->getUnknownProducer()->getName();
+                        
+                        foreach ($articles as $article){
+                            $unknownProducerName = $article->getUnknownProducer()->getName();
+                            foreach ($row as $pKey => $pValue){
+                                if ($unknownProducerName == $pValue){
+                                    if (!$producer){
+                                        $producer = $pValue;
+                                        $description['producerName'] = $key;
+                                    } else {
+                                        $brandName = $pValue;
+                                        $description['brandName'] = $key;                                        
+                                    }
+                                    break;
+                                }
                             }
-                        }    
+                        }
                         continue;
                     }
                 }
             }    
         }
+        var_dump($description);
+        if (count($row) > count($description)){
+            
+        } else {
+            $cross = $line->getCross();
+            $cross->setDescription($description);
+            $this->entityManager->persist($cross);
+            $this->entityManager->flush($cross);
+        }
+        
+        return;
+    }
+    
+    /**
+     * Исследовать кросс
+     * 
+     * @param Cross $cross
+     */
+    public function exploreCross($cross)
+    {
+        $lines = $this->entityManager->getRepository(CrossList::class)
+                ->findBy(['cross' => $cross->getId()], null, 10);
+        
+        foreach ($lines as $line){
+            $this->exploreLine($line);
+            if (is_array($cross->getDescription())){
+                return;
+            }
+        }
+        
+        return;
     }
 }

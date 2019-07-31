@@ -195,7 +195,11 @@ class Cross {
      */
     public function getDescription()
     {
-        return \Zend\Json\Json::decode($this->description);
+        if ($this->description){
+            return \Zend\Json\Json::decode($this->description);
+        }    
+        
+        return;
     }
     
     /**

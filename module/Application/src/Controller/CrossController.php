@@ -301,8 +301,46 @@ class CrossController extends AbstractActionController
         );           
     }    
 
+    public function exploreAction()
+    {
+        $crossId = $this->params()->fromRoute('id', -1);
+        
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);
+        
+        if ($cross == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->crossManager->exploreCross($cross);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+    }
     
+    public function exploreLineAction()
+    {
+        $lineId = (int)$this->params()->fromRoute('id', -1);
 
+        // Validate input parameter
+        if ($lineId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $line = $this->entityManager->getRepository(CrossList::class)
+                ->findOneById($lineId);
+        
+        $this->crossManager->exploreLine($line);
+        
+        return new JsonModel(
+           ['ok']
+        );                   
+    }
+    
     public function parseAction()
     {
         $rawId = (int)$this->params()->fromRoute('id', -1);
