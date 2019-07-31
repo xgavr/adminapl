@@ -637,22 +637,22 @@ class CrossManager {
                             $description['brandArticle'] = $key;
                         }
                         
-                        foreach ($articles as $article){
-                            $unknownProducerName = $article->getUnknownProducer()->getName();
-                            var_dump($unknownProducerName);
-                            foreach ($row as $pKey => $pValue){
-                                if ($unknownProducerName == $producerNameFilter->filter($pValue)){
-                                    if (!$producer){
-                                        $producer = $pValue;
-                                        $description['producerName'] = $key;
-                                    } else {
-                                        $brandName = $pValue;
-                                        $description['brandName'] = $key;                                        
-                                    }
-                                    break;
-                                }
-                            }
-                        }
+//                        foreach ($articles as $article){
+//                            $unknownProducerName = $article->getUnknownProducer()->getName();
+//                            var_dump($unknownProducerName);
+//                            foreach ($row as $pKey => $pValue){
+//                                if ($unknownProducerName == $producerNameFilter->filter($pValue)){
+//                                    if (!$producer){
+//                                        $producer = $pValue;
+//                                        $description['producerName'] = $key;
+//                                    } else {
+//                                        $brandName = $pValue;
+//                                        $description['brandName'] = $key;                                        
+//                                    }
+//                                    break;
+//                                }
+//                            }
+//                        }
                         continue;
                     }
                 }
