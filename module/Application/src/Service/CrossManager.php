@@ -11,6 +11,7 @@ namespace Application\Service;
 use Zend\ServiceManager\ServiceManager;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Article;
+use Application\Entity\OemRaw;
 use Application\Entity\Cross;
 use Application\Entity\CrossList;
 use Application\Filter\RawToStr;
@@ -21,6 +22,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Zend\Validator\File\IsCompressed;
 use Zend\Filter\Decompress;
 use Application\Filter\Basename;
+use Application\Filter\ProducerName;
+use Application\Filter\ArticleCode;
+use Application\Validator\IsRU;
 
 
 /**
@@ -595,28 +599,50 @@ class CrossManager {
     {
         $row = $line->getRawdataAsArray();
         
-        $producerNameFilter = new \Application\Filter\ProducerName();
-        $articleFilter = new \Application\Filter\ArticleCode();
+        $producerNameFilter = new ProducerName();
+        $articleFilter = new ArticleCode();
+        $isRuValidator = new IsRU();
+        
+        $articleCode = $brandArticleCode = $producer = $brandProducer = $name = $brandName = $articles = $description = null;
 
         foreach ($row as $key => $value){
-            if (!$line->getProducerName()){
-                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findByName($producerNameFilter->filter($value));
-
-                if ($unknownProducer){
-                    $line->setProducerName($unknownProducer->getName());
+            if (!$name || !$brandName){
+                if ($isRuValidator->isValid(mb_strtoupper($value, 'utf-8'))){
+                    if (!$name){
+                        $name = $value;
+                        $description['producerArticleName'] = $key;
+                    } else {
+                        $brandName = $value;
+                        $description['brandArticleName'] = $key;
+                    }
                     continue;
                 }
-            }                
-            if (!$line->getArticle()){
-                $article = $this->entityManager->getRepository(Article::class)
-                        ->findBy(['code' => $articleFilter->filter($value)]);
-
-                if ($unknownProducer){
-                    $line->setProducerName($unknownProducer->getName());
-                    continue;
+            }    
+            
+            if (!$articleCode || !$brandArticleCode){
+                $code = $articleFilter->filter($value);
+                if ($code && $code != OemRaw::LONG_CODE){
+                    $articles = $this->entityManager->getRepository(Article::class)
+                            ->findBy(['code' => $code]);
+                    if (count($articles)){
+                        if (!$articleCode){
+                            $articleCode = $value;
+                            $description['producerArticle'] = $key;
+                        } else {
+                            $brandArticleCode = $value;
+                            $description['brandArticle'] = $key;
+                        }
+                        if (count($articles) == 1){
+                            if (!$producer){
+                                $producer = $articles[0]->getUnknownProducer()->getName();
+                            } else {
+                                $brandProducer = $articles[0]->getUnknownProducer()->getName();
+                            }
+                        }    
+                        continue;
+                    }
                 }
-            }                
+            }    
         }
     }
 }

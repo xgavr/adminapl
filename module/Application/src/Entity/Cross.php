@@ -53,6 +53,11 @@ class Cross {
     protected $status;
     
     /** 
+     * @ORM\Column(name="description")  
+     */
+    protected $description;
+
+    /** 
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;
@@ -182,6 +187,25 @@ class Cross {
     {
         $this->status = $status;
     }   
+    
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getDescription()
+    {
+        return \Zend\Json\Json::decode($this->description);
+    }
+    
+    /**
+     * 
+     * @param array $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = \Zend\Json\Json::encode($description);
+    }
     
     /**
      * Returns the date of cross creation.

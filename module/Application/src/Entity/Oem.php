@@ -22,10 +22,11 @@ class Oem {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
-    const SOURCE_TD       = 1; // Active.
-    const SOURCE_SUP      = 2; // Retired.
-    const SOURCE_MAN      = 3; // Retired.
-    const SOURCE_CROSS    = 4; // Retired.
+    const SOURCE_TD       = 1; // ТекДок.
+    const SOURCE_SUP      = 2; // Прайс.
+    const SOURCE_MAN      = 3; // Вручную.
+    const SOURCE_CROSS    = 4; // Кросслист.
+    const SOURCE_INTERSECT    = 5; // Пересечение.
 
     /**
      * @ORM\Id
@@ -188,7 +189,8 @@ class Oem {
             self::SOURCE_TD => 'ТекДок',
             self::SOURCE_SUP => 'Поставщик',
             self::SOURCE_MAN => 'Введено вручную',
-            self::SOURCE_CROSS => 'Получено по кроссу',
+            self::SOURCE_CROSS => 'Кросс лист',
+            self::SOURCE_INTERSECT => 'Получено по кроссу',
         ];
     }    
     
@@ -216,6 +218,7 @@ class Oem {
             self::SOURCE_SUP => 1000,
             self::SOURCE_MAN => 1000,
             self::SOURCE_CROSS => 1000,
+            self::SOURCE_INTERSECT => 1000,
         ];
     }    
     

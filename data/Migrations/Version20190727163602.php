@@ -19,6 +19,7 @@ final class Version20190727163602 extends AbstractMigration
         $table->addColumn('filename', 'string', ['notnull'=>true, 'length'=>512]);
         $table->addColumn('row_count', 'integer', ['notnull'=>true]);        
         $table->addColumn('status', 'integer', ['notnull'=>true]);
+        $table->addColumn('description', 'text', ['notnull' => false]);
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint('supplier', ['supplier_id'], ['id'], 
