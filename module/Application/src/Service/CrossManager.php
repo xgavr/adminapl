@@ -635,29 +635,50 @@ class CrossManager {
                         } else {
                             $brandArticleCode = $value;
                             $description['brandArticle'] = $key;
-                        }
-                        
-//                        foreach ($articles as $article){
-//                            $unknownProducerName = $article->getUnknownProducer()->getName();
-//                            var_dump($unknownProducerName);
-//                            foreach ($row as $pKey => $pValue){
-//                                if ($unknownProducerName == $producerNameFilter->filter($pValue)){
-//                                    if (!$producer){
-//                                        $producer = $pValue;
-//                                        $description['producerName'] = $key;
-//                                    } else {
-//                                        $brandName = $pValue;
-//                                        $description['brandName'] = $key;                                        
-//                                    }
-//                                    break;
-//                                }
-//                            }
-//                        }
+                        }                        
                         continue;
                     }
                 }
             }    
         }
+        
+        if ($articleCode){
+            $articles = $this->entityManager->getRepository(Article::class)
+                    ->findBy(['code' => $articleCode]);
+            foreach ($articles as $article){
+                $unknownProducerName = $article->getUnknownProducer()->getName();
+                foreach ($row as $key => $value){
+                    if ($unknownProducerName == $producerNameFilter->filter($value)){
+                        $producer = $unknownProducerName;
+                        $description['producerName'] = $key;
+                        break;
+                    }
+                }
+                
+                if ($producer){
+                    break;
+                }
+            }        
+        }
+        if ($brandArticleCode){
+            $articles = $this->entityManager->getRepository(Article::class)
+                    ->findBy(['code' => $brandArticleCode]);
+            foreach ($articles as $article){
+                $unknownProducerName = $article->getUnknownProducer()->getName();
+                foreach ($row as $key => $value){
+                    if ($unknownProducerName == $producerNameFilter->filter($value)){
+                        $brandProducer = $unknownProducerName;
+                        $description['brandName'] = $key;
+                        break;
+                    }
+                }
+                
+                if ($brandProducer){
+                    break;
+                }
+            }        
+        }
+        
         var_dump($description);
         if (count($row) > count($description)){
             
