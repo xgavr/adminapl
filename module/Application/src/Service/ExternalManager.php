@@ -862,20 +862,24 @@ class ExternalManager
         $oemsRaw = $this->entityManager->getRepository(Goods::class)
                 ->findOemRaw($good);        
         foreach ($oemsRaw as $oemRaw){
-            $this->entityManager->getRepository(Oem::class)
-                    ->addOemToGood($good, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
+            if ($oemRaw->getCode()){
+                $this->entityManager->getRepository(Oem::class)
+                        ->addOemToGood($good, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
+            }    
         }
         
         $codeFilter = new ArticleCode();
         $crossList = $this->entityManager->getRepository(CrossList::class)
                 ->findBy(['codeId' => $good->getId()]);        
         foreach ($crossList as $line){
-            $this->entityManager->getRepository(Oem::class)
-                    ->addOemToGood($good, [
-                        'oe' => $codeFilter->filter($line->getOe()),
-                        'brandName' => $line->getOeBrand(), 
-                        'oeNumber' => $line->getOe()
-                     ], Oem::SOURCE_CROSS);            
+            if ($codeFilter->filter($line->getOe())){
+                $this->entityManager->getRepository(Oem::class)
+                        ->addOemToGood($good, [
+                            'oe' => $codeFilter->filter($line->getOe()),
+                            'brandName' => $line->getOeBrand(), 
+                            'oeNumber' => $line->getOe()
+                         ], Oem::SOURCE_CROSS);
+            }    
         }
         
 
