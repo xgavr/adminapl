@@ -141,7 +141,7 @@ class CrossManager {
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $priceSettings['cross_mail_box'],
                 'password' => $priceSettings['cross_mail_box_password'],
-                'leave_message' => true,
+                'leave_message' => false,
             ];
 
             $mailList = $this->postManager->readImap($box);
