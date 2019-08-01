@@ -684,13 +684,13 @@ class CrossManager {
         }
         
         var_dump($description);
-        if (count($row) > count($description)){
-            
-        } else {
-            $cross = $line->getCross();
-            $cross->setDescription($description);
-            $this->entityManager->persist($cross);
-            $this->entityManager->flush($cross);
+        if (isset($description['articleBy'])){
+            if ($description['articleBy'] == 'producer' && isset($description['brandArticle'])){
+                return $description;
+            }
+            if ($description['articleBy'] == 'brand' && isset($description['producerArticle'])){
+                return $description;
+            }            
         }
         
         return;
@@ -704,11 +704,14 @@ class CrossManager {
     public function exploreCross($cross)
     {
         $lines = $this->entityManager->getRepository(CrossList::class)
-                ->findBy(['cross' => $cross->getId()], null, 10);
+                ->findBy(['cross' => $cross->getId()], null, 100);
         
         foreach ($lines as $line){
-            $this->exploreLine($line);
-            if (is_array($cross->getDescription())){
+            $description = $this->exploreLine($line);
+            if (is_array($description)){
+                $cross->setDescription($description);
+                $this->entityManager->persist($cross);
+                $this->entityManager->flush($cross);                
                 return;
             }
         }
