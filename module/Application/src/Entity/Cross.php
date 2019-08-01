@@ -196,7 +196,7 @@ class Cross {
     public function getDescription()
     {
         if ($this->description){
-            return \Zend\Json\Json::decode($this->description);
+            return \Zend\Json\Json::decode($this->description, \Zend\Json\Json::TYPE_ARRAY);
         }    
         
         return;

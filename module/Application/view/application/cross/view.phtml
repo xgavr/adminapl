@@ -85,6 +85,29 @@ $this->headScript()
                         <div class="clearfix"></div>
                     </div>
                 </div>
+                <?php if (is_array($cross->getDescription())): ?>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <table>
+                                        <?php foreach($cross->getDescription() as $key => $value):?>
+                                            <tr>
+                                                <td>
+                                                    <?= $key?>
+                                                </td>
+                                                <td align="right">
+                                                    <?= $value?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach;?>                                        
+                                    </table>
+                                </div>    
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>    

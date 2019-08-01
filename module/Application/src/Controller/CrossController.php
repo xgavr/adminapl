@@ -199,7 +199,6 @@ class CrossController extends AbstractActionController
         if ($cross == null) {
             return $this->redirect()->toRoute('cross');
         }        
-                
         // Render the view template.
         return new ViewModel([
             'cross' => $cross,
