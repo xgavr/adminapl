@@ -670,7 +670,7 @@ class CrossManager {
                     if ($unknownProducerName == $producerNameFilter->filter($value)){
                         $brandProducer = $unknownProducerName;
                         $description['brandName'] = $key;
-                        if (!$description['articleBy']){
+                        if (!isset($description['articleBy'])){
                             $description['articleBy'] = 'brand';
                         }
                         break;
@@ -704,6 +704,7 @@ class CrossManager {
     public function exploreCross($cross)
     {
         $cross->setDescription(null);
+        $cross->setStatus(Cross::STATUS_ACTIVE);
         $this->entityManager->persist($cross);
         $this->entityManager->flush($cross);                
 
@@ -714,6 +715,7 @@ class CrossManager {
             $description = $this->exploreLine($line);
             if (is_array($description)){
                 $cross->setDescription($description);
+                $cross->setStatus(Cross::STATUS_EXPLORED);
                 $this->entityManager->persist($cross);
                 $this->entityManager->flush($cross);                
                 return;
@@ -722,4 +724,192 @@ class CrossManager {
         
         return;
     }
+    
+    /**
+     * Разобрать строку кросса
+     * 
+     * @param CrossList $line
+     * @param array $description
+     */
+    public function parseLine($line, $description)
+    {
+        $data = [];
+        $rawData = $line->getRawdataAsArray();
+        if (isset($description['producerName'])){
+            $data['producer_name'] = $rawData[$description['producerName']];
+        }
+        if (isset($description['producerArticle'])){
+            $data['producer_article'] = $rawData[$description['producerArticle']];
+        }
+        if (isset($description['producerArticleName'])){
+            $data['producer_article_name'] = $rawData[$description['producerArticleName']];
+        }
+        if (isset($description['brandName'])){
+            $data['brand_name'] = $rawData[$description['brandName']];
+        }
+        if (isset($description['brandArticle'])){
+            $data['brand_article'] = $rawData[$description['brandArticle']];
+        }
+        if (isset($description['brandArticleName'])){
+            $data['brand_article_name'] = $rawData[$description['brandArticleName']];
+        }
+
+        if (count($data)){
+            $data['status'] = CrossList::STATUS_PARSED;
+            $this->entityManager->getRepository(CrossList::class)
+                    ->updateCrossList($line, $data);
+        }
+        
+        return;
+    }
+    
+    /**
+     * Разобрать кросс
+     * 
+     * @param Cross $cross
+     */
+    public function parseCross($cross)
+    {
+        $cross->setStatus(Cross::STATUS_PARSE);
+        $this->entityManager->persist($cross);
+        $this->entityManager->flush($cross);
+
+        $lineQuery = $this->entityManager->getRepository(Cross::class)
+                ->crossList($cross, ['status' => CrossList::STATUS_NEW]);
+
+        $iterator = $lineQuery->iterate();
+
+        foreach ($iterator as $item){
+            foreach ($item as $row){
+                $this->parseLine($row, $cross->getDescription());
+                $this->entityManager->detach($row);
+            }
+        }
+
+        if (count($lineQuery->getResult()) == 0){
+            $cross->setStatus(Cross::STATUS_PARSED);
+            $this->entityManager->persist($cross);
+            $this->entityManager->flush($cross);
+        }
+
+        unset($iterator);
+        return;
+    }
+    
+    /**
+     * Привязать строку кросса к артикулу
+     * 
+     * @param CrossList $line
+     * @param array $description
+     */
+    public function bindLine($line, $description)
+    {
+        $data = [];
+
+        if (isset($description['articleBy'])){
+
+            $producerNameFilter = new ProducerName();
+            $articleFilter = new ArticleCode();
+
+            if ($description['articleBy'] == 'producer'){
+                $code = $articleFilter->filter($line->getProducerArticle());
+                $unknownProducerName = $producerNameFilter->filter($line->getProducerName());
+                $data['oe'] = $line->getBrandArticle();
+                $data['oe_brand'] = $line->getBrandName();
+            }
+            if ($description['articleBy'] == 'brand'){
+                $code = $articleFilter->filter($line->getBrandArticle());
+                $unknownProducerName = $producerNameFilter->filter($line->getBrandName());
+                $data['oe'] = $line->getProducerArticle();
+                $data['oe_brand'] = $line->getProducerName();
+            }
+
+            if (isset($code) && isset($unknownProducerName)){
+                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                        ->findOneByName($unknownProducerName);
+                
+                if ($unknownProducer){
+                    $article = $this->entityManager->getRepository(Article::class)
+                           ->findOneBy(['code' => $code, 'unknownProducer' => $unknownProducer->getId()]);
+                    if ($article){
+                        $data['article_id'] = $article->getId();
+                        if ($article->getGood()){
+                            $data['code_id'] = $article->getGood()->getId();
+                        }    
+                    }
+                }    
+            }    
+        }
+
+        $data['status'] = CrossList::STATUS_BIND;
+        $this->entityManager->getRepository(CrossList::class)
+                ->updateCrossList($line, $data);
+        
+        return;
+    }       
+
+    /**
+     * Привязать кросс
+     * 
+     * @param Cross $cross
+     */
+    public function bindCross($cross)
+    {
+
+        $lineQuery = $this->entityManager->getRepository(Cross::class)
+                ->crossList($cross, ['status' => CrossList::STATUS_PARSED]);
+
+        $iterator = $lineQuery->iterate();
+
+        foreach ($iterator as $item){
+            foreach ($item as $row){
+                $this->bindLine($row, $cross->getDescription());
+                $this->entityManager->detach($row);
+            }
+        }
+
+        if (count($lineQuery->getResult()) == 0){
+            $cross->setStatus(Cross::STATUS_BIND);
+            $this->entityManager->persist($cross);
+            $this->entityManager->flush($cross);
+        }
+
+        unset($iterator);
+        return;
+    }
+    
+    /**
+     * Сбросить привязки кросса
+     * 
+     * @param Cross $cross
+     */
+    public function resetCross($cross)
+    {
+
+        $lineQuery = $this->entityManager->getRepository(Cross::class)
+                ->crossList($cross);
+
+        $iterator = $lineQuery->iterate();
+
+        foreach ($iterator as $item){
+            foreach ($item as $row){
+                $this->entityManager->getRepository(CrossList::class)
+                        ->updateCrossList($row, [
+                            'status' => CrossList::STATUS_NEW, 
+                            'code_id' => null, 
+                            'oe' => null, 
+                            'oe_brand' => NULL,
+                         ]);
+                $this->entityManager->detach($row);
+            }
+        }
+
+        $cross->setStatus(Cross::STATUS_ACTIVE);
+        $this->entityManager->persist($cross);
+        $this->entityManager->flush($cross);
+
+        unset($iterator);
+        return;
+    }
+    
 }

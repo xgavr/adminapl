@@ -10,9 +10,6 @@ namespace Application\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Application\Filter\OemDetectDelimiterFilter;
-use Doctrine\Common\Collections\Criteria;
-use Application\Entity\Token;
 use Application\Filter\ProducerName;
 
 /**
@@ -27,6 +24,7 @@ class CrossList {
     const STATUS_PARSED    = 2; // прошел разборку.
     const STATUS_RETIRED   = 3; //строка не актуальна
     const STATUS_BLACK_LIST = 4; //наименовние содержит слово из черного списка
+    const STATUS_BIND = 5;//привязан к артикулу
 
     /**
      * @ORM\Id
@@ -69,6 +67,21 @@ class CrossList {
      * @ORM\Column(name="brand_article_name")   
      */
     protected $brandArticleName;
+
+    /**
+     * @ORM\Column(name="oe")   
+     */
+    protected $oe;
+
+    /**
+     * @ORM\Column(name="oe_brand")   
+     */
+    protected $oeBrand;
+
+    /**
+     * @ORM\Column(name="code_id")   
+     */
+    protected $codeId;
 
     /**
      * @ORM\Column(name="status")   
@@ -247,6 +260,36 @@ class CrossList {
     {
         $this->rawdata = $rawdata;
     }   
+    
+    public function getOe() 
+    {
+        return $this->oe;
+    }
+
+    public function setOe($oe) 
+    {
+        $this->oe = $oe;
+    }     
+    
+    public function getOeBrand() 
+    {
+        return $this->oeBrand;
+    }
+
+    public function setOeBrand($oeBrand) 
+    {
+        $this->oeBrand = $oeBrand;
+    }     
+    
+    public function getCodeId() 
+    {
+        return $this->codeId;
+    }
+
+    public function setCodeId($codeId) 
+    {
+        $this->codeId = $codeId;
+    }     
     
     /*
      * Возвращает связанный raw.

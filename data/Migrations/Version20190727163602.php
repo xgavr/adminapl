@@ -36,11 +36,15 @@ final class Version20190727163602 extends AbstractMigration
         $table->addColumn('brand_name', 'string', ['notnull'=>false, 'length'=>128]);
         $table->addColumn('brand_article', 'string', ['notnull'=>false, 'length'=>32]);
         $table->addColumn('brand_article_name', 'string', ['notnull'=>false, 'length'=>512]);
+        $table->addColumn('oe', 'string', ['notnull'=>false, 'length'=>32]);
+        $table->addColumn('oe_brand', 'string', ['notnull'=>false, 'length'=>128]);
+        $table->addColumn('code_id', 'string', ['notnull'=>false, 'length'=>32]);
         $table->addColumn('article_id', 'integer', ['notnull'=>false]);
         $table->addColumn('status', 'integer', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['cross_id'], 'cross_id');
         $table->addIndex(['article_id'], 'article_id');
+        $table->addIndex(['code_id'], 'code_id');
         $table->addForeignKeyConstraint('cross_', ['cross_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'cross_id_cross_list_cross_id_fk');                
         $table->addForeignKeyConstraint('article', ['article_id'], ['id'], 

@@ -149,11 +149,28 @@ class CrossRepository extends EntityRepository{
             ->setParameter('1', $cross->getId())    
                 ;
         
-        if ($params){
+        if (is_array($params)){
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('cl.status = ?2')
+                        ->setParameter('2', $params['status'])
+                        ;
+            }
         }
         
         return $queryBuilder->getQuery();
-    }        
+    }   
+    
+    /**
+     * Обновление строки кросс листа
+     * 
+     * @param CrossList $line
+     * @param array $data
+     */
+    public function updateCrossList($line, $data)
+    {
+        $this->getEntityManager()->getConnection()->update('cross_list', $data, ['id' => $line->getId()]);
+        return;
+    }
     
     /**
      * Удаление кросса

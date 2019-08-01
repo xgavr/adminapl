@@ -170,6 +170,23 @@ class ArticleRepository  extends EntityRepository
         return $deleted;
     }    
 
+    /**
+     * Быстрое удаление кроссов, свзанных с артикулом
+     * @param Application\Entity\Article|integer $article 
+     * @return integer
+     */
+    public function deleteArticleCross($article)
+    {
+        if (is_numeric($article)){
+            $articleId = $article;
+        } else {
+            $articleId = $article->getId();
+        }
+
+        $deleted = $this->getEntityManager()->getConnection()->delete('cross_list', ['article_id' => $articleId]);
+        return $deleted;
+    }    
+
     
     /**
      * Выборка не привязанных артикулов из прайса

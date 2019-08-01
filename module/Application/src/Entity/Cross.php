@@ -28,8 +28,11 @@ class Cross {
     const STATUS_PARSE        = 5; //Разбирается
     const STATUS_FAILED       = 6; // Не удалось загрузить.
     const STATUS_PRE_RETIRED  = 7; // Удалить после разбора.
-        
-           
+    const STATUS_EXPLORED     = 8; //исследован
+    const STATUS_BIND     = 9; //привязан
+
+
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -137,6 +140,8 @@ class Cross {
     {
         return [
             self::STATUS_ACTIVE => 'Новый',
+            self::STATUS_EXPLORED => 'Исследован',
+            self::STATUS_BIND => 'Привязан',
             self::STATUS_RETIRED => 'Удалить',
             self::STATUS_PARSED => 'Разобран',
             self::STATUS_PARSE => 'Разбирается',

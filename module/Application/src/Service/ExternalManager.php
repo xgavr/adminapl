@@ -20,6 +20,8 @@ use Application\Entity\VehicleDetailValue;
 use Application\Entity\Oem;
 use Application\Entity\GenericGroup;
 use Application\Entity\GoodAttributeValue;
+use Application\Entity\CrossList;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of ExternalManager
@@ -862,6 +864,18 @@ class ExternalManager
         foreach ($oemsRaw as $oemRaw){
             $this->entityManager->getRepository(Oem::class)
                     ->addOemToGood($good, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
+        }
+        
+        $codeFilter = new ArticleCode();
+        $crossList = $this->entityManager->getRepository(CrossList::class)
+                ->findBy(['codeId' => $good->getId()]);        
+        foreach ($crossList as $line){
+            $this->entityManager->getRepository(Oem::class)
+                    ->addOemToGood($good, [
+                        'oe' => $codeFilter->filter($line->getOe()),
+                        'brandName' => $line->getOeBrand(), 
+                        'oeNumber' => $line->getOe()
+                     ], Oem::SOURCE_CROSS);            
         }
         
 

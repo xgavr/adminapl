@@ -342,20 +342,61 @@ class CrossController extends AbstractActionController
     
     public function parseAction()
     {
-        $rawId = (int)$this->params()->fromRoute('id', -1);
+        $crossId = (int)$this->params()->fromRoute('id', -1);
 
         // Validate input parameter
-        if ($rawId<0) {
+        if ($crossId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
 
-        $raw = $this->entityManager->getRepository(Raw::class)
-                ->findOneById($rawId);
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);
         
-        $this->rawManager->parseRaw($raw);
+        $this->crossManager->parseCross($cross);
         
-        return $this->redirect()->toRoute('raw', ['action' => 'view', 'id' => $raw->getId()]);
+        return new JsonModel(
+           ['ok']
+        );                   
+    }        
+
+    public function bindAction()
+    {
+        $crossId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($crossId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);
         
+        $this->crossManager->bindCross($cross);
+        
+        return new JsonModel(
+           ['ok']
+        );                   
+    }        
+
+    public function resetAction()
+    {
+        $crossId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($crossId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);
+        
+        $this->crossManager->resetCross($cross);
+        
+        return new JsonModel(
+           ['ok']
+        );                   
     }        
 }

@@ -246,6 +246,9 @@ class ArticleManager
         $this->entityManager->getRepository(Article::class)
                 ->deleteArticleTitle($article);
         
+        $this->entityManager->getRepository(Article::class)
+                ->deleteArticleCross($article);
+        
         $this->entityManager->remove($article);
         
         if ($flush){
