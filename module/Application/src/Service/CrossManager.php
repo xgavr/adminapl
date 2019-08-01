@@ -736,22 +736,34 @@ class CrossManager {
         $data = [];
         $rawData = $line->getRawdataAsArray();
         if (isset($description['producerName'])){
-            $data['producer_name'] = $rawData[$description['producerName']];
+            if (isset($rawData[$description['producerName']])){
+                $data['producer_name'] = $rawData[$description['producerName']];
+            }    
         }
         if (isset($description['producerArticle'])){
-            $data['producer_article'] = $rawData[$description['producerArticle']];
+            if (isset($rawData[$description['producerArticle']])){
+                $data['producer_article'] = $rawData[$description['producerArticle']];
+            }    
         }
         if (isset($description['producerArticleName'])){
-            $data['producer_article_name'] = $rawData[$description['producerArticleName']];
+            if (isset($rawData[$description['producerArticleName']])){
+                $data['producer_article_name'] = $rawData[$description['producerArticleName']];
+            }    
         }
         if (isset($description['brandName'])){
-            $data['brand_name'] = $rawData[$description['brandName']];
+            if (isset($rawData[$description['brandName']])){
+                $data['brand_name'] = $rawData[$description['brandName']];
+            }    
         }
         if (isset($description['brandArticle'])){
-            $data['brand_article'] = $rawData[$description['brandArticle']];
+            if (isset($rawData[$description['brandArticle']])){
+                $data['brand_article'] = $rawData[$description['brandArticle']];
+            }    
         }
         if (isset($description['brandArticleName'])){
-            $data['brand_article_name'] = $rawData[$description['brandArticleName']];
+            if (isset($rawData[$description['brandArticleName']])){
+                $data['brand_article_name'] = $rawData[$description['brandArticleName']];
+            }    
         }
 
         if (count($data)){

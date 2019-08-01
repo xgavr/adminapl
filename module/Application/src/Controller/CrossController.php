@@ -12,12 +12,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Cross;
 use Application\Entity\CrossList;
-use Application\Entity\Supplier;
-use Application\Form\PriceDescriptionForm;
 
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
 
 class CrossController extends AbstractActionController
 {
@@ -64,8 +59,6 @@ class CrossController extends AbstractActionController
         return new ViewModel([
             'files' => $files,
             'crossManager' => $this->crossManager,
-            'rawStatuses' => $rawStatuses,
-            'rawStages' => $rawStages,
         ]);  
     }
     
