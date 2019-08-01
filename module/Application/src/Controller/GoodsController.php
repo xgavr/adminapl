@@ -628,7 +628,7 @@ class GoodsController extends AbstractActionController
 
         $data = $this->externalManager->autoDb('getInfo', ['good' => $goods]);
         if (!$data){
-            $data = $this->externalManager->autoDb('getInfo', ['good' => $goods]);            
+            $data = $this->externalManager->autoDb('getSimilarInfo', ['good' => $goods]);            
         }
         
         // Перенаправляем пользователя на страницу "goods".

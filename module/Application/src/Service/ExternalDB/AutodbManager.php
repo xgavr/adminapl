@@ -259,15 +259,6 @@ class AutodbManager
                 }
             }
             
-            $params['numberType'] = 10;
-            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
-
-            if (isset($result['data'])){
-                if (isset($result['data']['array'])){
-                    return $result;
-                }
-            }
-
             foreach ($good->getOems() as $oem){
                 $params['articleNumber'] = $oem->getOe();
                 $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
@@ -277,6 +268,15 @@ class AutodbManager
                     }
                 }
             }    
+            
+            $params['numberType'] = 10;
+            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
+
+            if (isset($result['data'])){
+                if (isset($result['data']['array'])){
+                    return $result;
+                }
+            }
         }
         
         return;
