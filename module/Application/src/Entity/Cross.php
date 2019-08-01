@@ -208,7 +208,11 @@ class Cross {
      */
     public function setDescription($description)
     {
-        $this->description = \Zend\Json\Json::encode($description);
+        if (is_array($description)){
+            $this->description = \Zend\Json\Json::encode($description);
+        } else {
+            $this->description = $description;
+        }    
     }
     
     /**

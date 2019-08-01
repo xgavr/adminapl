@@ -683,7 +683,7 @@ class CrossManager {
             }        
         }
         
-        var_dump($description);
+//        var_dump($description);
         if (isset($description['articleBy'])){
             if ($description['articleBy'] == 'producer' && isset($description['brandArticle'])){
                 return $description;
@@ -703,6 +703,10 @@ class CrossManager {
      */
     public function exploreCross($cross)
     {
+        $cross->setDescription(null);
+        $this->entityManager->persist($cross);
+        $this->entityManager->flush($cross);                
+
         $lines = $this->entityManager->getRepository(CrossList::class)
                 ->findBy(['cross' => $cross->getId()], null, 100);
         
