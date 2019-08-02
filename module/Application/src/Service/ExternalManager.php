@@ -842,6 +842,10 @@ class ExternalManager
                 ->removeGoodOem($good);
         
         $info = $this->autoDbManager->getDirectInfo($good);
+        if (!is_array($info)){
+            $info = $this->autoDbManager->getSimilarDirectInfo($good);
+        }
+        
         if (is_array($info)){
             if (isset($info['data'])){
                 if (isset($info['data']['array'])){
