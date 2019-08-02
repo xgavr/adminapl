@@ -786,6 +786,9 @@ class ExternalManager
                 ->removeGoodCars($good);
         
         $tdId = $this->autoDbManager->getBestArticleId($good);
+        if (!$tdId){
+            $tdId = $this->getSimilarArticleId($good);
+        }
         if (is_numeric($tdId)){
             $carsDataI = $this->autoDbManager->getLinked($tdId);
             if (is_array($carsDataI)){
