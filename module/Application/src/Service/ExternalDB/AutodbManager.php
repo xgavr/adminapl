@@ -250,7 +250,7 @@ class AutodbManager
                 'numberType' => 0,
                 'searchExact' => true,
             ];
-
+            var_dump($params); exit;
             $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
 
             if (isset($result['data'])){
