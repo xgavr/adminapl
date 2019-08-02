@@ -237,16 +237,21 @@ class AutodbManager
      * Получить похожий по группе articleId
      * 
      * @param \Application\Entity\Goods $good
+     * @param \Application\Entity\GenericGroup $genericGroup
      * 
      * @return array|null|Exception
      */
-    public function getArticleDirectSearchAllNumbersWithGeneric($good)
+    public function getArticleDirectSearchAllNumbersWithGeneric($good, $genericGroup = null)
     {
-        if ($good->getGenericGroup()){
+        if (!$genericGroup){
+            $genericGroup = $good->getGenericGroup();
+        }
+        
+        if ($genericGroup){
             $params = [
                 'articleNumber' => $good->getCode(), 
                 'articleCountry' => 'RU',            
-                'genericArticleId' => $good->getGenericGroup()->getTdId(),
+                'genericArticleId' => $genericGroup,
                 'numberType' => 0,
                 'searchExact' => true,
             ];
