@@ -113,7 +113,11 @@ class GenericGroup {
 
     public function getTdId() 
     {
-        return $this->tdId;
+        if ($this->tdId){
+            return $this->tdId;
+        }
+        
+        return -1;
     }
 
     public function setTdId($tdId) 
