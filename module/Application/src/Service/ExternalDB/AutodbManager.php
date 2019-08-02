@@ -320,8 +320,23 @@ class AutodbManager
      */
     public function getSimilarArticle($good)
     {
-        $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good);
-        if ($articles['data']){
+        $articles = [];
+        if ($good->getGenericGroup()->getTdid() > 0){
+            $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good);
+        } else {
+            if ($good->getTokenGroup()){
+                $genericGroups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
+                        ->genericTokenGroup($good->getTokenGroup());
+                foreach ($genericGroups as $row){
+                    $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good, $row[0]);
+                    if (is_array($articles)){
+                        break;
+                    }
+                }
+            }    
+        }    
+        
+        if (isset($articles['data'])){
             foreach ($articles['data']['array'] as $row){
                 return $row;
             }
