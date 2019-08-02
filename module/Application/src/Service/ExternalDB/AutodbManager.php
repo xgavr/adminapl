@@ -612,6 +612,14 @@ class AutodbManager
 
             $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
             $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
+            
+            if ($similar == Images::SIMILAR_SIMILAR){
+                $similarImgCount = $this->entityManager->getRepository(Images::class)
+                        ->count(['good' => $good->getId()]);
+                if ($similarImgCount > 0){
+                    return;
+                }
+            }
         
             foreach($articleInfo['data']['array'] as $articleDocuments){
                 if (isset($articleDocuments['articleDocuments'])){
