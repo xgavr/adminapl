@@ -337,9 +337,11 @@ class AutodbManager
         }    
         
         if (isset($articles['data'])){
-            foreach ($articles['data']['array'] as $row){
-                return $row;
-            }
+            if (isset($articles['data']['array'])){
+                foreach ($articles['data']['array'] as $row){
+                    return $row;
+                }
+            }    
         }
         
         return;
