@@ -356,6 +356,7 @@ class AutodbManager
         
         return;
     }
+    
 
     /**
      * Получить группу текдока
@@ -579,6 +580,11 @@ class AutodbManager
     public function getImages($good)
     {
         $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
+        $similar = Images::SIMILAR_MATCH;
+        if (!is_array($articleInfo)){
+            $articleInfo = $this->getSimilarDirectInfo($good, ['documents' => true]);
+            $similar = Images::SIMILAR_SIMILAR;            
+        }
         
         if (is_array($articleInfo)){
 
@@ -593,12 +599,12 @@ class AutodbManager
                                 if ($document['docFileTypeName'] != 'URL'){
                                     $uri = $this->getDocImageUri($document['docId']);
                                     $this->entityManager->getRepository(Images::class)
-                                            ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
+                                            ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, $similar);
                                 } else {   
                                     if (isset($document['docUrl'])){
                                         $url = $document['docUrl'];
                                         $this->entityManager->getRepository(Images::class)
-                                                ->saveImageUrl($good, $url, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_MATCH);
+                                                ->saveImageUrl($good, $url, $document['docFileName'], Images::STATUS_TD, $similar);
                                     }    
                                 }    
                             }
@@ -609,39 +615,5 @@ class AutodbManager
         }
         
         return;
-    }
-    
-    /**
-     * Скачать картинку похожего товара
-     * 
-     * @param \Application\Entity\Goods $good
-     * 
-     */
-    public function getSimilarImages($good)
-    {
-        $articleInfo = $this->getSimilarDirectInfo($good, ['documents' => true]);
-        
-        if (is_array($articleInfo)){
-
-            $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
-            $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
-        
-            foreach($articleInfo['data']['array'] as $articleDocuments){
-                if (isset($articleDocuments['articleDocuments'])){
-                    if (isset($articleDocuments['articleDocuments']['array'])){
-                        foreach($articleDocuments['articleDocuments']['array'] as $document){
-                            if ($document['docId'] && isset($document['docFileName'])){
-                                $uri = $this->getDocImageUri($document['docId']);
-                                $this->entityManager->getRepository(Images::class)
-                                        ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, Images::SIMILAR_SIMILAR);
-                            }
-                        }
-                    }    
-                }    
-            }
-        }
-        
-        return;
-    }
-    
+    }    
 }

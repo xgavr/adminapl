@@ -78,6 +78,7 @@ class ExternalManager
             case 'getInfo': $result = $this->autoDbManager->getDirectInfo($params['good']); break;
             case 'getSimilarInfo': $result = $this->autoDbManager->getSimilarDirectInfo($params['good']); break;
             case 'getLinked': $result = $this->autoDbManager->getGoodLinked($params['good']); break;
+            case 'getSimilarLinked': $result = $this->autoDbManager->getSimilarGoodLinked($params['good']); break;
             case 'getImages': $result = $this->autoDbManager->getImages($params['good']); break;
             case 'getGenericArticles': $result = $this->autoDbManager->getGenericArticles(); break;
             default: break;
@@ -920,7 +921,6 @@ class ExternalManager
             if ($genericGroup->getAplId()>0 && $good->getGroupApl() != $genericGroup->getAplId()){
                 $data['group_apl'] = $genericGroup->getAplId();
                 $statusData['status_group_ex'] = Goods::GROUP_EX_NEW;
-                $statusData['status_car_ex'] = Goods::CAR_EX_NEW;
             }
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), $data);            
