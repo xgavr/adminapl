@@ -565,7 +565,10 @@ class AutodbManager
      */
     public function getGoodLinked($good)
     {
-        $article = $this->getBestArticleId($good);        
+        $article = $this->getBestArticleId($good);    
+        if (!$article){
+            $article = $this->getSimilarArticleId($good);
+        }
         return $this->getLinked($article);        
     }
     
