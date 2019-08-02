@@ -251,7 +251,7 @@ class AutodbManager
             $params = [
                 'articleNumber' => $good->getCode(), 
                 'articleCountry' => 'RU',            
-                'genericArticleId' => $genericGroup,
+                'genericArticleId' => $genericGroup->getTdId(),
                 'numberType' => 0,
                 'searchExact' => true,
             ];
