@@ -787,7 +787,7 @@ class ExternalManager
         
         $tdId = $this->autoDbManager->getBestArticleId($good);
         if (!$tdId){
-            $tdId = $this->getSimilarArticleId($good);
+            $tdId = $this->autoDbManager->getSimilarArticleId($good);
         }
         if (is_numeric($tdId)){
             $carsDataI = $this->autoDbManager->getLinked($tdId);
