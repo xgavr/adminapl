@@ -158,10 +158,13 @@ class GroupController extends AbstractActionController
         $groups = $this->entityManager->getRepository(GenericGroup::class)
                 ->findBy(['status' => GenericGroup::STATUS_ACTIVE]);
         foreach ($groups as $group){
-            if ($group->getTdId()){
+            if ($group->getTdId() > 0){
                 $this->entityManager->getRepository(GenericGroup::class)
                         ->updateGroupApl($group);
-            }    
+            } else {
+                $this->entityManager->getRepository(GenericGroup::class)
+                        ->updateGroupApl(0);                
+            }   
         }
         
         return new JsonModel([
