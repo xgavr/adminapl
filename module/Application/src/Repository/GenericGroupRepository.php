@@ -256,7 +256,11 @@ class GenericGroupRepository extends EntityRepository{
         $aplGroups = $this->getGroupApl($genericGroup);
         if (count($aplGroups)){
             foreach($aplGroups as $row){
-                $this->getEntityManager()->getConnection()->update('generic_group', ['apl_id' => $row['groupApl']], ['id' => $genericGroup->getId()]);
+                if ($genericGroup->getTdId() > 0){
+                    $this->getEntityManager()->getConnection()->update('generic_group', ['apl_id' => $row['groupApl']], ['id' => $genericGroup->getId()]);
+                } else {
+                    $this->getEntityManager()->getConnection()->update('generic_group', ['apl_id' => 0], ['id' => $genericGroup->getId()]);                    
+                }    
                 return;
             }    
         }
