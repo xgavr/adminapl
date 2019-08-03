@@ -924,7 +924,7 @@ class ExternalManager
         $statusData = ['status_group' => Goods::GROUP_UPDATED];
         if ($genericGroup){
             $data = ['generic_group_id' => $genericGroup->getId()];
-            if ($genericGroup->getAplId()>0 && $good->getGroupApl() != $genericGroup->getAplId()){
+            if (($genericGroup->getAplId()>0 && $good->getGroupApl() != $genericGroup->getAplId()) || ($genericGroup->getTdId()<0 && $good->getGroupApl() == 644)){
                 $data['group_apl'] = $genericGroup->getAplId();
                 $statusData['status_group_ex'] = Goods::GROUP_EX_NEW;
             }
