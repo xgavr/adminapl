@@ -1425,7 +1425,7 @@ class AplService {
                     $ok = TRUE;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                return;
+                return $ok;
             }    
             
             if ($ok){
@@ -1437,7 +1437,7 @@ class AplService {
             unset($post);
             unset($cars);
         }    
-        return;
+        return $ok;
     }
 
     /**
@@ -1455,7 +1455,9 @@ class AplService {
                 ->findGoodsForUpdateCar();
         
         foreach ($goods as $good){
-            $this->sendGoodCar($good);
+            if (!$this->sendGoodCar($good)){
+                return;
+            }
             if (time() > $startTime + 1740){
                 return;
             }
