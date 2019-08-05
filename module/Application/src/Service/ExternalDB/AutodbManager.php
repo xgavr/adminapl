@@ -374,8 +374,7 @@ class AutodbManager
         $tdData = $this->getSimilarArticle($good);
         if (is_numeric($tdData['articleId'])){
             return $tdData['articleId'];
-        }
-        
+        }        
         return;
     }
     
@@ -391,6 +390,11 @@ class AutodbManager
         $tdData = $this->getBestArticle($good);
         if (is_numeric($tdData['genericArticleId'])){
             return $tdData['genericArticleId'];
+        }
+        
+        $tdSimilarData = $this->getSimilarArticleId($good);
+        if (is_numeric($tdSimilarData['genericArticleId'])){
+            return $tdSimilarData['genericArticleId'];
         }
         
         return;
