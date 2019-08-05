@@ -1417,15 +1417,15 @@ class AplService {
             $client->setMethod('POST');
             $client->setParameterPost($post);
 
-            $ok = FALSE;
+            $ok = $result = FALSE;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
-                    $ok = TRUE;
+                    $ok = $result = TRUE;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                return $ok;
+                $ok = TRUE;
             }    
             
             if ($ok){
@@ -1437,7 +1437,7 @@ class AplService {
             unset($post);
             unset($cars);
         }    
-        return $ok;
+        return $result;
     }
 
     /**
