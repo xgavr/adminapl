@@ -383,6 +383,32 @@ class Attribute {
     }
         
     /**
+     * Returns possible similarGood as array.
+     * @return array
+     */
+    public static function getSimilarGoodHtmlList() 
+    {
+        return [
+            self::FOR_SIMILAR_GOOD => 'checked',
+            self::FOR_SIMILAR_NO_GOOD => '',
+        ];
+    }    
+
+    /**
+     * Returns user similarGood as html.
+     * @return string
+     */
+    public function getSimilarGoodAsHtml()
+    {
+        $list = self::getSimilarGoodHtmlList();
+        if (isset($list[$this->similarGood])) {
+            return $list[$this->similarGood];
+        }
+
+        return 'Unknown';
+    }  
+    
+    /**
      * Sets similarGood.
      * @param int $similarGood     
      */

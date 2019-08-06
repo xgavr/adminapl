@@ -175,7 +175,7 @@ $this->headScript()
                                             </a>
                                         </td>
                                         <td width="5">
-                                            <input type="checkbox"/>
+                                            <input type="checkbox" class="similarGoodCheckbox" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
                                         </td>
                                         <td>
                                             <?= $attributeValue->getAttributeValue()->getValue();?>
@@ -760,5 +760,24 @@ $this->headScript()
                     bootbox.alert("Произошла ошибка при выполнении операции.");
                 });        
         }        
+    })        
+
+    $('.similarGoodCheckbox').on('change', function(e, node) {
+        console.log(node);
+        console.log(e);
+//        var url = "/goods/attribute-similar-good-edit";
+//
+//        if (url){
+//            $.ajax({
+//                type: 'POST',
+//                url: url,
+//                data: {attributeId: }
+//            })
+//                .done(function (data) {
+//                })
+//                .fail(function () {
+//                    bootbox.alert("Произошла ошибка при выполнении операции.");
+//                });        
+//        }        
     })        
 </script>
