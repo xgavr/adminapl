@@ -175,7 +175,7 @@ $this->headScript()
                                             </a>
                                         </td>
                                         <td width="5">
-                                            <input type="checkbox" class="similarGoodCheckbox" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
+                                            <input type="checkbox" class="similarGoodCheckbox" value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
                                         </td>
                                         <td>
                                             <?= $attributeValue->getAttributeValue()->getValue();?>
@@ -763,8 +763,8 @@ $this->headScript()
     })        
 
     $('.similarGoodCheckbox').on('change', function(e, node) {
-        console.log(node);
-        console.log(e);
+        console.log(e.target.checked);
+        console.log(e.target.value);
 //        var url = "/goods/attribute-similar-good-edit";
 //
 //        if (url){
