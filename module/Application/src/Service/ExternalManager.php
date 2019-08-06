@@ -947,6 +947,11 @@ class ExternalManager
                 ->removeGoodAttributeValues($good);
         
         $info = $this->autoDbManager->getDirectInfo($good);
+        $similarGood = false;
+        if (!is_array($info)){
+            $info = $this->autoDbManager->getSimilarDirectInfo($good);
+            $similarGood = true;            
+        }
         if (is_array($info)){
             if (isset($info['data'])){
                 if (isset($info['data']['array'])){
@@ -955,7 +960,7 @@ class ExternalManager
                             if (isset($infoArray['articleAttributes']['array'])){
                                 foreach ($infoArray['articleAttributes']['array'] as $attr){
                                     $this->entityManager->getRepository(GoodAttributeValue::class)
-                                            ->addGoodAttributeValue($good, $attr);
+                                            ->addGoodAttributeValue($good, $attr, $similarGood);
                                 }
                             }    
                         }    

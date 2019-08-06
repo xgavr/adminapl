@@ -343,6 +343,24 @@ class GoodsManager
     }
 
     /**
+     * Обновить атрибут
+     * 
+     * @param \Application\Entity\Attribute $attribute
+     * @param array $data
+     */
+    public function updateAttributeSimilarGood($attribute, $data)
+    {
+        if (isset($data['similarGood'])){
+            $attribute->setSimilarGood($data['similarGood']);
+        }
+        
+        $this->entityManager->persist($attribute);
+        $this->entityManager->flush();
+        
+        return;
+    }
+
+    /**
      * Обновить картинки из текдока у товаров
      */
     public function updateImageTd()

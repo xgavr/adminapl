@@ -131,13 +131,20 @@ class AttributeRepository  extends EntityRepository{
      * 
      * @param \Application\Entity\Goods $good
      * @param array $attr
+     * @param bool $similarGood
      */
-    public function addGoodAttributeValue($good, $attr)
+    public function addGoodAttributeValue($good, $attr, $similarGood = false)
     {
 
         $attribute = $this->addAtribute($attr);
         
         if ($attribute){            
+            
+            if ($similarGood){
+                if ($attribute->getSimilarGood() == Attribute::FOR_SIMILAR_NO_GOOD){
+                    return;
+                }
+            }
             
             $attributeValue = $this->addAtributeValue($attr);
             

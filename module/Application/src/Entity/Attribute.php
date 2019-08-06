@@ -27,6 +27,10 @@ class Attribute {
     const EX_NEW            = 1; // не передано
     const EX_TO_TRANSFER    = 3; // нужно передать
     const EX_TRANSFERRED    = 2; // передано.
+    
+    const FOR_SIMILAR_GOOD = 1;// подходит для похожых товаров
+    const FOR_SIMILAR_NO_GOOD = 2;// не подходит для похожых товаров
+    
 
     /**
      * @ORM\Id
@@ -96,6 +100,11 @@ class Attribute {
      */
     protected $statusEx = self::EX_TO_TRANSFER;    
     
+    /**
+     * @ORM\Column(name="similar_good")   
+     */
+    protected $similarGood = self::FOR_SIMILAR_NO_GOOD;    
+
     /**
      * @ORM\OneToMany(targetEntity="Application\Entity\GoodAttributeValue", mappedBy="attribute")
      * @ORM\JoinColumn(name="id", referencedColumnName="attribute_id")
@@ -364,6 +373,24 @@ class Attribute {
         $this->statusEx = $statusEx;
     }       
     
+    /**
+     * Returns similarGood.
+     * @return int     
+     */
+    public function getSimilarGood() 
+    {
+        return $this->similarGood;
+    }
+        
+    /**
+     * Sets similarGood.
+     * @param int $similarGood     
+     */
+    public function setSimilarGood($similarGood) 
+    {
+        $this->similarGood = $similarGood;
+    }       
+
     // Возвращает значения аттрибутов для данного атрибута.
     public function getAttributeValues() 
     {
