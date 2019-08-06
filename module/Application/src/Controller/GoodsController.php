@@ -1082,7 +1082,7 @@ class GoodsController extends AbstractActionController
                     ->findOneById($attributeId);
                     
             if ($attribute){
-                $this->goodsManager->updateAttributeSimilarGood($attribute, ['similarGood' => ($data['value']) ? \Application\Entity\Attribute::FOR_SIMILAR_GOOD:\Application\Entity\Attribute::FOR_SIMILAR_NO_GOOD]);                    
+                $this->goodsManager->updateAttributeSimilarGood($attribute, ['similarGood' => ($data['value'] == 'true') ? \Application\Entity\Attribute::FOR_SIMILAR_GOOD:\Application\Entity\Attribute::FOR_SIMILAR_NO_GOOD]);                    
             }    
         }
         
