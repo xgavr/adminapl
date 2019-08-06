@@ -763,21 +763,19 @@ $this->headScript()
     })        
 
     $('.similarGoodCheckbox').on('change', function(e, node) {
-        console.log(e.target.checked);
-        console.log(e.target.value);
-//        var url = "/goods/attribute-similar-good-edit";
-//
-//        if (url){
-//            $.ajax({
-//                type: 'POST',
-//                url: url,
-//                data: {attributeId: }
-//            })
-//                .done(function (data) {
-//                })
-//                .fail(function () {
-//                    bootbox.alert("Произошла ошибка при выполнении операции.");
-//                });        
-//        }        
+        var url = "/goods/attribute-similar-good-edit";
+
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: e.target.value, value: e.target.checked}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
     })        
 </script>

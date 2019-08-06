@@ -1072,6 +1072,23 @@ class GoodsController extends AbstractActionController
         exit;
     }
     
+    public function attributeSimilarGoodEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $attributeId = $data['pk'];
+            $attribute = $this->entityManager->getRepository(\Application\Entity\Attribute::class)
+                    ->findOneById($attributeId);
+                    
+            if ($attribute){
+                $this->goodsManager->updateAttributeSimilarGood($attribute, ['similarGood' => ($data['value']) ? \Application\Entity\Attribute::FOR_SIMILAR_GOOD:\Application\Entity\Attribute::FOR_SIMILAR_NO_GOOD]);                    
+            }    
+        }
+        
+        exit;
+    }
+    
     public function updateAttributeFormAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);
