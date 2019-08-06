@@ -1080,8 +1080,8 @@ class GoodsController extends AbstractActionController
             $attributeId = $data['pk'];
             $attribute = $this->entityManager->getRepository(\Application\Entity\Attribute::class)
                     ->findOneById($attributeId);
-            var_dump($data); exit;
-            $similarGood = ($data['value']) ? \Application\Entity\Attribute::FOR_SIMILAR_GOOD:\Application\Entity\Attribute::FOR_SIMILAR_NO_GOOD;
+//            var_dump($data); exit;
+            $similarGood = ($data['value'] == 'true') ? \Application\Entity\Attribute::FOR_SIMILAR_GOOD:\Application\Entity\Attribute::FOR_SIMILAR_NO_GOOD;
                     
             if ($attribute){
                 $this->goodsManager->updateAttributeSimilarGood($attribute, ['similarGood' => $similarGood]);                    
