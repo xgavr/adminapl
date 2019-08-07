@@ -140,8 +140,9 @@ class GenericGroupRepository extends EntityRepository{
      * Поиск группы по группе наименований
      * 
      * @param \Application\Entity\TokenGroup $tokenGroup
+     * @param \Application\Entity\Goods $good
      */
-    public function genericTokenGroup($tokenGroup)
+    public function genericTokenGroup($tokenGroup, $good = null)
     {
         if ($tokenGroup){
             $entityManager = $this->getEntityManager();
@@ -157,6 +158,11 @@ class GenericGroupRepository extends EntityRepository{
                     ->orderBy('goodCount', 'DESC')
                     ->setParameter('1', $tokenGroup->getId())
                     ;
+            if (isset($good)){
+                $queryBuilder->andWhere('gg.id != ?2')
+                        ->setParameter('2', $good->getId())
+                        ;
+            }
 
             return $queryBuilder->getQuery()->getResult();
         }    

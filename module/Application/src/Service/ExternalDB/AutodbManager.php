@@ -326,7 +326,7 @@ class AutodbManager
         } else {
             if ($good->getTokenGroup()){
                 $genericGroups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
-                        ->genericTokenGroup($good->getTokenGroup());
+                        ->genericTokenGroup($good->getTokenGroup(), $good);
                 foreach ($genericGroups as $row){
                     $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good, $row[0]);
                     if (is_array($articles)){
