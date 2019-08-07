@@ -315,13 +315,14 @@ class AutodbManager
      * Плучить похожий товару артикул
      * 
      * @param \Application\Entity\Goods $good
+     * @param bool $newSearch
      * 
      * @return array
      */
-    public function getSimilarArticle($good)
+    public function getSimilarArticle($good, $newSearch = false)
     {
         $articles = [];
-        if ($good->getGenericGroup()->getTdId() > 0){
+        if ($good->getGenericGroup()->getTdId() > 0 && !$newSearch){
             $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good);
         } else {
             if ($good->getTokenGroup()){
@@ -383,16 +384,18 @@ class AutodbManager
      * Получить группу текдока
      * 
      * @param Application\Entity\Goods $good
+     * @param bool $newSearch
+     * 
      * @return integer|null
      */
-    public function getGenericArticleId($good)
+    public function getGenericArticleId($good, $newSearch = false)
     {
         $tdData = $this->getBestArticle($good);
         if (is_numeric($tdData['genericArticleId'])){
             return $tdData['genericArticleId'];
         }
         
-        $tdSimilarData = $this->getSimilarArticle($good);
+        $tdSimilarData = $this->getSimilarArticle($good, $newSearch);
         if (is_numeric($tdSimilarData['genericArticleId'])){
             return $tdSimilarData['genericArticleId'];
         }

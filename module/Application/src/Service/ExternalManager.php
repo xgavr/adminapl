@@ -901,11 +901,8 @@ class ExternalManager
      */
     public function updateGoodGenericGroup($good)
     {
-        
-        $this->entityManager->getRepository(GenericGroup::class)
-                ->updateZeroGroupInGood($good);
-                
-        $genericArticleId = $this->autoDbManager->getGenericArticleId($good);
+                        
+        $genericArticleId = $this->autoDbManager->getGenericArticleId($good, true);
 
         $genericGroup = null;
         if (is_numeric($genericArticleId)){
@@ -913,7 +910,7 @@ class ExternalManager
                     ->findOneByTdId($genericArticleId);
 
             if ($genericGroup == null){
-                $this->updateGenericGroup();
+                $this->updateGenericGroup(); //обновить справочник групп из ТД
                 $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
                         ->findOneByTdId($genericArticleId);
             }
@@ -925,6 +922,21 @@ class ExternalManager
         }
         
         $statusData = ['status_group' => Goods::GROUP_UPDATED];
+
+        if (!$genericGroup){
+            if ($good->getGenericGroup()){
+                $this->entityManager->getRepository(GenericGroup::class)
+                        ->updateZeroGroupInGood($good);
+            }    
+            
+            if ($good->getGroupApl()>0){
+                $data['group_apl'] = 0;
+                $statusData['status_group_ex'] = Goods::GROUP_EX_NEW;
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), $data);            
+            }
+        }
+        
         if ($genericGroup){
             $data = ['generic_group_id' => $genericGroup->getId()];
             if (($genericGroup->getAplId()>0 && $good->getGroupApl() != $genericGroup->getAplId()) || ($genericGroup->getTdId()<0 && $good->getGroupApl() == 644)){
