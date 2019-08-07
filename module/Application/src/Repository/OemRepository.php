@@ -80,7 +80,7 @@ class OemRepository  extends EntityRepository{
                 'status' => Oem::STATUS_ACTIVE,
                 'source' => $source,
             ];
-            var_dump($data);
+//            var_dump($data);
             $this->getEntityManager()->getRepository(Goods::class)
                     ->addGoodOem($data);
         }
