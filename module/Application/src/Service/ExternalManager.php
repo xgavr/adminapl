@@ -855,6 +855,7 @@ class ExternalManager
                         if (isset($infoArray['oenNumbers'])){
                             if (isset($infoArray['oenNumbers']['array'])){
                                 foreach ($infoArray['oenNumbers']['array'] as $oen){
+        var_dump($oen);
                                     $this->entityManager->getRepository(Oem::class)
                                             ->addOemToGood($good, $oen, Oem::SOURCE_TD);
                                 }
