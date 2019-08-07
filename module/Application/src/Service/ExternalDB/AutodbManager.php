@@ -393,7 +393,6 @@ class AutodbManager
         }
         
         $tdSimilarData = $this->getSimilarArticle($good);
-        var_dump($tdSimilarData); exit;
         if (is_numeric($tdSimilarData['genericArticleId'])){
             return $tdSimilarData['genericArticleId'];
         }
