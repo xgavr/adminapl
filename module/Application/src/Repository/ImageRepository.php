@@ -286,7 +286,7 @@ class ImageRepository extends EntityRepository
         if(preg_match("|200|", $headers[0])) {
             
             $image = file_get_contents($uri);
-            $path = $this->getImageFolder($good, $status)."/".$docFileName;
+            $path = $this->getImageFolder($good, $status)."/".addcslashes($docFileName, "! @ # $ & ~ % * ( ) [ ] { } ' \" \\ : ; > <\`");
             file_put_contents($path, $image);
 
             if (file_exists($path)){
