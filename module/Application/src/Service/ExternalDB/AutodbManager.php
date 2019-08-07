@@ -388,12 +388,12 @@ class AutodbManager
     public function getGenericArticleId($good)
     {
         $tdData = $this->getBestArticle($good);
-        var_dump($tdData); exit;
         if (is_numeric($tdData['genericArticleId'])){
             return $tdData['genericArticleId'];
         }
         
         $tdSimilarData = $this->getSimilarArticle($good);
+        var_dump($tdSimilarData); exit;
         if (is_numeric($tdSimilarData['genericArticleId'])){
             return $tdSimilarData['genericArticleId'];
         }
