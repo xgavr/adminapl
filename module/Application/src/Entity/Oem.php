@@ -27,6 +27,8 @@ class Oem {
     const SOURCE_MAN      = 3; // Вручную.
     const SOURCE_CROSS    = 4; // Кросслист.
     const SOURCE_INTERSECT    = 5; // Пересечение.
+    
+    const SOURCE_TD_NAME = 'ТекДок';
 
     /**
      * @ORM\Id
@@ -186,7 +188,7 @@ class Oem {
     public static function getSourceList() 
     {
         return [
-            self::SOURCE_TD => 'ТекДок',
+            self::SOURCE_TD => self::SOURCE_TD_NAME,
             self::SOURCE_SUP => 'Поставщик',
             self::SOURCE_MAN => 'Введено вручную',
             self::SOURCE_CROSS => 'Кросс лист',

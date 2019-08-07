@@ -1172,6 +1172,8 @@ class AplService {
 
             $post = [
                 'good' => $good->getId(),
+                'parent' => $good->getAplId(),
+                'sf' => \Application\Entity\Oem::SOURCE_TD_NAME,
                 'oems' => [],
             ];
 
