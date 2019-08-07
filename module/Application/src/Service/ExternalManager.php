@@ -906,7 +906,7 @@ class ExternalManager
                 ->updateZeroGroupInGood($good);
                 
         $genericArticleId = $this->autoDbManager->getGenericArticleId($good);
-        
+        var_dump($genericArticleId); exit;
         $genericGroup = null;
         if (is_numeric($genericArticleId)){
             $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
