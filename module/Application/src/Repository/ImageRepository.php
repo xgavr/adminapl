@@ -284,14 +284,14 @@ class ImageRepository extends EntityRepository
         $headers = get_headers($uri);
         
         if(preg_match("|200|", $headers[0])) {
-            
+            $saveDocFileName = addcslashes($docFileName, "! @ # $ & ~ % * ( ) [ ] { } ' \" \\ : ; > <\`");
             $image = file_get_contents($uri);
-            $path = $this->getImageFolder($good, $status)."/".addcslashes($docFileName, "! @ # $ & ~ % * ( ) [ ] { } ' \" \\ : ; > <\`");
+            $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
             file_put_contents($path, $image);
 
             if (file_exists($path)){
                 $this->addImage([
-                    'name' => $docFileName,
+                    'name' => $saveDocFileName,
                     'path' => $path,
                     'status' => $status,
                     'similar' => $similar,
