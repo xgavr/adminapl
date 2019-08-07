@@ -848,7 +848,7 @@ class ExternalManager
         if (!is_array($info)){
             $info = $this->autoDbManager->getSimilarDirectInfo($good);
         }
-        
+        var_dump($info);
         if (is_array($info)){
             if (isset($info['data'])){
                 if (isset($info['data']['array'])){
