@@ -902,6 +902,9 @@ class ExternalManager
     public function updateGoodGenericGroup($good)
     {
         
+        $this->entityManager->getRepository(GenericGroup::class)
+                ->updateZeroGroupInGood($good);
+                
         $genericArticleId = $this->autoDbManager->getGenericArticleId($good);
         
         $genericGroup = null;

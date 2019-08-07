@@ -321,7 +321,7 @@ class AutodbManager
     public function getSimilarArticle($good)
     {
         $articles = [];
-        if ($good->getGenericGroup()->getTdid() > 0){
+        if ($good->getGenericGroup()->getTdId() > 0){
             $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good);
         } else {
             if ($good->getTokenGroup()){

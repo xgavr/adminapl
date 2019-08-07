@@ -92,6 +92,21 @@ class GenericGroupRepository extends EntityRepository{
     }
     
     /**
+     * Установить пустую группу в товаре
+     * @param \Application\Entity\Goods $good
+     * @return type
+     */
+    public function updateZeroGroupInGood($good)
+    {
+        $zeroGroup = $this->getEntityManager()->getRepository(GenericGroup::class)
+                ->findOneByTdId(0);
+        
+        $this->getEntityManager()->getConnection()->update('goods', ['generic_group_id' => $zeroGroup->getId()], ['id' => $good->getId()]);
+        
+        return;
+    }
+    
+    /**
      * Обновление количества товаров в группах
      */
     public function updateGoodCount()
