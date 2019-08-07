@@ -1177,6 +1177,19 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Удаления oem товара по источнику
+     * 
+     * @param Application\Entity\Goods $good
+     * @param integer $source
+     * @return integer
+     */
+    public function removeGoodSourceOem($good, $source)
+    {
+        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => $source]);
+        return;        
+    }
+
+    /**
      * Удаление картинок товара
      * 
      * @param Applcation\Entity\Goods $good

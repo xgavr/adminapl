@@ -842,7 +842,7 @@ class ExternalManager
     public function addOemsToGood($good)
     {
         $this->entityManager->getRepository(Goods::class)
-                ->removeGoodOem($good);
+                ->removeGoodSourceOem($good, Oem::SOURCE_TD);
         
         $info = $this->autoDbManager->getDirectInfo($good);
         if (!is_array($info)){
@@ -866,6 +866,9 @@ class ExternalManager
             }
         }
         
+        $this->entityManager->getRepository(Goods::class)
+                ->removeGoodSourceOem($good, Oem::SOURCE_SUP);
+        
         $oemsRaw = $this->entityManager->getRepository(Goods::class)
                 ->findOemRaw($good);        
         foreach ($oemsRaw as $oemRaw){
@@ -874,6 +877,9 @@ class ExternalManager
                         ->addOemToGood($good, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
             }    
         }
+        
+        $this->entityManager->getRepository(Goods::class)
+                ->removeGoodSourceOem($good, Oem::SOURCE_CROSS);
         
         $codeFilter = new ArticleCode();
         $crossList = $this->entityManager->getRepository(CrossList::class)
