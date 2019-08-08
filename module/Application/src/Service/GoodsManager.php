@@ -159,14 +159,20 @@ class GoodsManager
         }           
         
         $attributeValues = $this->entityManager->getRepository(Goods::class)
-                ->findGoodAttributeValues($good);        
+                ->findGoodAttributeValues($good);  
+        
         foreach ($attributeValues as $attributeValue){
             $good->removeAttributeValueAssociation($attributeValue);
         }           
         
         $this->entityManager->getRepository(Images::class)
                 ->removeGoodImages($good);
+        
+        $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                ->removeAllGoodOem($good);
                 
+        $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                ->deleteIntesectOem($good);
                 
         $this->entityManager->remove($good);
         

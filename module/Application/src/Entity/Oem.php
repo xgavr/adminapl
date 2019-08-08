@@ -26,7 +26,7 @@ class Oem {
     const SOURCE_SUP      = 2; // Прайс.
     const SOURCE_MAN      = 3; // Вручную.
     const SOURCE_CROSS    = 4; // Кросслист.
-    const SOURCE_INTERSECT    = 5; // Пересечение.
+    const SOURCE_INTERSECT = 5; // Пересечение.
     
     const SOURCE_TD_NAME = 'ТекДок';
 
@@ -68,6 +68,11 @@ class Oem {
      */
     protected $good;    
         
+    /**
+     * @ORM\Column(name="intersect_good_id")  
+     */
+    protected $intersectGoodId;        
+
     public function getId() 
     {
         return $this->id;
@@ -106,6 +111,16 @@ class Oem {
     public function setBrandName($brandName) 
     {
         $this->brandName = $brandName;
+    }     
+
+    public function getIntersectGoodId() 
+    {
+        return $this->intersectGoodId;
+    }
+
+    public function setIntersectGoodId($intersectGoodId) 
+    {
+        $this->intersectGoodId = $intersectGoodId;
     }     
 
     /**

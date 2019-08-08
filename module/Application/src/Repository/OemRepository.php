@@ -70,6 +70,10 @@ class OemRepository  extends EntityRepository{
         if (isset($oems['brandName'])){
             $brandName = $oems['brandName'];
         }
+        $intescetGoodId = NULL;
+        if (isset($oems['intescetGoodId'])){
+            $intescetGoodId = $oems['intescetGoodId'];
+        }
         
         if ($oem == null){
             $data = [
@@ -79,6 +83,7 @@ class OemRepository  extends EntityRepository{
                 'brand_name' => $brandName,
                 'status' => Oem::STATUS_ACTIVE,
                 'source' => $source,
+                'intersect_good_id' => $intescetGoodId,
             ];
 //            var_dump($data);
             $this->getEntityManager()->getRepository(Goods::class)
@@ -404,31 +409,64 @@ class OemRepository  extends EntityRepository{
      * @param Goods $good
      * @param string $oe
      */
-    public function intersectGood($good, $oe)
+    public function addIntersectOemGood($good, $oe)
     {
-        if ($good->getGenericGroup()->getTdId() > 0){
-            $entityManager = $this->getEntityManager();
+        if (!$good->getGenericGroup()){
+            return;
+        }
+        if ($good->getGenericGroup()->getTdId() <= 0){
+            return;
+        }
 
-            $queryBuilder = $entityManager->createQueryBuilder();
-            $queryBuilder->select('g')
-                    ->from(Goods::class)
-                    ->join('g.oems', 'o')
-                    ->where('g.genericGroup = ?1')
-                    ->andWhere('o.oe = ?2')
-                    ->setParameter('1', $good->getGenericGroup()->getId())
-                    ->setParameter('2', $oe)
-                    ;
+        $entityManager = $this->getEntityManager();
 
-            $iterable = $queryBuilder->getQuery()->iterate();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+                ->from(Goods::class)
+                ->join('g.oems', 'o')
+                ->where('g.genericGroup = ?1')
+                ->andWhere('o.oe = ?2')
+                ->setParameter('1', $good->getGenericGroup()->getId())
+                ->setParameter('2', $oe)
+                ;
 
-            foreach($iterable as $item){
-                foreach ($item as $rowGood){
-                    $this->addOemToGood($rowGood, ['oeNumber' => $good->getCode(), 'brandName' => $good->getProducer()->getName()], Oem::SOURCE_INTERSECT);
-                    $this->getEntityManager()->detach($rowGood);
-                }
+        $iterable = $queryBuilder->getQuery()->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $rowGood){
+                $this->addOemToGood($rowGood, [
+                    'oeNumber' => $good->getCode(), 
+                    'brandName' => $good->getProducer()->getName(),
+                    'intescetGoodId' => $good->getId(),
+                  ], Oem::SOURCE_INTERSECT);
+                $this->getEntityManager()->detach($rowGood);
             }
-        }    
+        }
         
+        return;
+    }
+    
+    /**
+     * Удаление номеров товара
+     * @param \Application\Entity\Goods $good
+     * @param integer $status
+     * 
+     */
+    public function removeAllGoodOem($good)
+    {
+        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId()]);        
+        return;
+    }
+
+    
+    /**
+     * Удаление пересечений номеров товара
+     * 
+     * @param Goods $good
+     */
+    public function deleteIntesectOem($good)
+    {
+        $this->getEntityManager()->getConnection()->delete('oem', ['intersect_good_id' => $good->getId()]);        
         return;
     }
 }
