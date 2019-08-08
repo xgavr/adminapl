@@ -83,6 +83,15 @@ class OemRepository  extends EntityRepository{
 //            var_dump($data);
             $this->getEntityManager()->getRepository(Goods::class)
                     ->addGoodOem($data);
+        } else {
+            if ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
+                $oem->setSource(Oem::SOURCE_TD);
+                $oem->setOe($oe);
+                $oem->setOeNumber($oems['oeNumber']);
+                $oem->setBrandName($brandName);
+                $this->getEntityManager()->persist($oem);
+                $this->getEntityManager()->flush($oem);
+            }
         }
         
         return $oem;

@@ -842,31 +842,6 @@ class ExternalManager
     public function addOemsToGood($good)
     {
         $this->entityManager->getRepository(Goods::class)
-                ->removeGoodSourceOem($good, Oem::SOURCE_TD);
-        
-        $info = $this->autoDbManager->getDirectInfo($good);
-        if (!is_array($info)){
-            $info = $this->autoDbManager->getSimilarDirectInfo($good);
-        }
-        if (is_array($info)){
-            if (isset($info['data'])){
-                if (isset($info['data']['array'])){
-                    foreach ($info['data']['array'] as $infoArray){
-                        if (isset($infoArray['oenNumbers'])){
-                            if (isset($infoArray['oenNumbers']['array'])){
-                                foreach ($infoArray['oenNumbers']['array'] as $oen){
-//        var_dump($oen);
-                                    $this->entityManager->getRepository(Oem::class)
-                                            ->addOemToGood($good, $oen, Oem::SOURCE_TD);
-                                }
-                            }    
-                        }    
-                    }    
-                }
-            }
-        }
-        
-        $this->entityManager->getRepository(Goods::class)
                 ->removeGoodSourceOem($good, Oem::SOURCE_SUP);
         
         $oemsRaw = $this->entityManager->getRepository(Goods::class)
@@ -895,7 +870,30 @@ class ExternalManager
             }    
         }
         
-
+        $this->entityManager->getRepository(Goods::class)
+                ->removeGoodSourceOem($good, Oem::SOURCE_TD);
+        
+        $info = $this->autoDbManager->getDirectInfo($good);
+        if (!is_array($info)){
+            $info = $this->autoDbManager->getSimilarDirectInfo($good);
+        }
+        if (is_array($info)){
+            if (isset($info['data'])){
+                if (isset($info['data']['array'])){
+                    foreach ($info['data']['array'] as $infoArray){
+                        if (isset($infoArray['oenNumbers'])){
+                            if (isset($infoArray['oenNumbers']['array'])){
+                                foreach ($infoArray['oenNumbers']['array'] as $oen){
+                                    $this->entityManager->getRepository(Oem::class)
+                                            ->addOemToGood($good, $oen, Oem::SOURCE_TD);
+                                }
+                            }    
+                        }    
+                    }    
+                }
+            }
+        }
+        
         $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
         return;
     }
