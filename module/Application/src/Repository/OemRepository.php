@@ -398,5 +398,37 @@ class OemRepository  extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();            
     }
 
-    
+    /**
+     * Добавить артикул товара в список номеров по кроссу
+     * 
+     * @param Goods $good
+     * @param string $oe
+     */
+    public function intersectGood($good, $oe)
+    {
+        if ($good->getGenericGroup()->getTdId() > 0){
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('g')
+                    ->from(Goods::class)
+                    ->join('g.oems', 'o')
+                    ->where('g.genericGroup = ?1')
+                    ->andWhere('o.oe = ?2')
+                    ->setParameter('1', $good->getGenericGroup()->getId())
+                    ->setParameter('2', $oe)
+                    ;
+
+            $iterable = $queryBuilder->getQuery()->iterate();
+
+            foreach($iterable as $item){
+                foreach ($item as $rowGood){
+                    $this->addOemToGood($rowGood, ['oeNumber' => $good->getCode(), 'brandName' => $good->getProducer()->getName()], Oem::SOURCE_INTERSECT);
+                    $this->getEntityManager()->detach($rowGood);
+                }
+            }
+        }    
+        
+        return;
+    }
 }

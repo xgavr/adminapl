@@ -180,7 +180,22 @@ class Goods {
     protected $groupApl = self::DEFAULT_GROUP_APL_ID;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
+     * @ORM\Column(name="available")   
+     */
+    protected $available;
+    
+    /**
+     * @ORM\Column(name="description")   
+     */
+    protected $description;
+    
+    /** 
+     * @ORM\Column(name="date_ex")  
+     */
+    protected $dateEx;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="\Application\Entity\Producer", inversedBy="goods") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
      * 
      */
@@ -197,22 +212,6 @@ class Goods {
      * @ORM\JoinColumn(name="generic_group_id", referencedColumnName="id")
      */
     protected $genericGroup;
-    
-    /**
-     * @ORM\Column(name="available")   
-     */
-    protected $available;
-    
-    /**
-     * @ORM\Column(name="description")   
-     */
-    protected $description;
-    
-    /** 
-     * @ORM\Column(name="date_ex")  
-     */
-    protected $dateEx;
-
     
     /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Article", mappedBy="good")
