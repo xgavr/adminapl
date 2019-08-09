@@ -842,35 +842,6 @@ class ExternalManager
     public function addOemsToGood($good)
     {
         $this->entityManager->getRepository(Goods::class)
-                ->removeGoodSourceOem($good, Oem::SOURCE_SUP);
-        
-        $oemsRaw = $this->entityManager->getRepository(Goods::class)
-                ->findOemRaw($good);        
-        foreach ($oemsRaw as $oemRaw){
-            if ($oemRaw->getCode()){
-                $this->entityManager->getRepository(Oem::class)
-                        ->addOemToGood($good, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
-            }    
-        }
-        
-        $this->entityManager->getRepository(Goods::class)
-                ->removeGoodSourceOem($good, Oem::SOURCE_CROSS);
-        
-        $codeFilter = new ArticleCode();
-        $crossList = $this->entityManager->getRepository(CrossList::class)
-                ->findBy(['codeId' => $good->getId()]);        
-        foreach ($crossList as $line){
-            if ($codeFilter->filter($line->getOe())){
-                $this->entityManager->getRepository(Oem::class)
-                        ->addOemToGood($good, [
-                            'oe' => $codeFilter->filter($line->getOe()),
-                            'brandName' => $line->getOeBrand(), 
-                            'oeNumber' => $line->getOe()
-                         ], Oem::SOURCE_CROSS);
-            }    
-        }
-        
-        $this->entityManager->getRepository(Goods::class)
                 ->removeGoodSourceOem($good, Oem::SOURCE_TD);
         
         $info = $this->autoDbManager->getDirectInfo($good);
@@ -894,7 +865,6 @@ class ExternalManager
             }
         }
         
-        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
         return;
     }
 

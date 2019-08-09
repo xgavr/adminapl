@@ -56,7 +56,7 @@ class OemRepository  extends EntityRepository{
     /**
      * Добавление номера к товару
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      * @param array $oems
      */
     public function addOemToGood($good, $oems, $source = Oem::SOURCE_TD)
@@ -409,7 +409,7 @@ class OemRepository  extends EntityRepository{
      * @param Goods $good
      * @param string $oe
      */
-    public function addIntersectOemGood($good, $oe)
+    public function addIntersectOem($good, $oe)
     {
         if (!$good->getGenericGroup()){
             return;
@@ -422,6 +422,7 @@ class OemRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g')
+                ->distinct()
                 ->from(Goods::class)
                 ->join('g.oems', 'o')
                 ->where('g.genericGroup = ?1')
@@ -446,7 +447,75 @@ class OemRepository  extends EntityRepository{
         }
         
         return;
+    }    
+    
+    /**
+     * Добавить пересечение номеров товаров
+     * 
+     * @param Goods $good
+     * @return type
+     */
+    public function addIntersectGood($good)
+    {
+        $oemsQuery = $this->getEntityManager()->getRepository(Goods::class)
+                ->findOems($good);
+
+        $iterable = $oemsQuery->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $oe){
+                $this->addIntersectOem($good, $oe);
+                $this->getEntityManager()->detach($oe);
+            }
+        }
+        
+        return;
+        
     }
+
+    /**
+     * Добавить номера из прайса
+     * 
+     * @param Goods $good
+     */
+    public function addSupOem($good)
+    {
+        $this->getEntityManager()->getRepository(Goods::class)
+                ->removeGoodSourceOem($good, Oem::SOURCE_SUP);
+        
+        $oemsRaw = $this->getEntityManager()->getRepository(Goods::class)
+                ->findOemRaw($good);
+        
+        foreach ($oemsRaw as $oemRaw){
+            if ($oemRaw->getCode()){
+                $this->addOemToGood($good, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
+            }    
+        }        
+    }    
+        
+    /**
+     * Добавить номера из кросса
+     * 
+     * @param Goods $good
+     */
+    public function addCrosOem($good)
+    {
+        $this->getEntityManager()->getRepository(Goods::class)
+                ->removeGoodSourceOem($good, Oem::SOURCE_CROSS);
+        
+        $codeFilter = new ArticleCode();
+        $crossList = $this->getEntityManager()->getRepository(CrossList::class)
+                ->findBy(['codeId' => $good->getId()]);        
+        foreach ($crossList as $line){
+            if ($codeFilter->filter($line->getOe())){
+                $this->addOemToGood($good, [
+                            'oe' => $codeFilter->filter($line->getOe()),
+                            'brandName' => $line->getOeBrand(), 
+                            'oeNumber' => $line->getOe()
+                         ], Oem::SOURCE_CROSS);
+            }    
+        }
+    }        
     
     /**
      * Удаление номеров товара

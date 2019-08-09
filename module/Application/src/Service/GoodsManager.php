@@ -249,22 +249,29 @@ class GoodsManager
     {        
         set_time_limit(900);
         $startTime = time();
-        $finishTime = $startTime + 800;
+        $finishTime = $startTime + 840;
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateOemTd();
-        
-        if (count($goodsForUpdate) == 0){
-            $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateOemTd();
-            return;
-        }
-        
-        foreach ($goodsForUpdate as $good){
+        $i = 0;
+
+        $iterable = $goodsForUpdate->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $good){
+                $this->externalManager->addOemsToGood($good);
+                $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
+            }
+            unset($item);
             if (time() >= $finishTime){
                 return;
             }
-            $this->externalManager->addOemsToGood($good);
+        }
+        
+        if ($i == 0){
+            $this->entityManager->getRepository(Goods::class)
+                    ->resetUpdateOemTd();
+            return;
         }
         
         return;
