@@ -841,9 +841,9 @@ class ExternalManager
      */
     public function addOemsToGood($good)
     {
-        $this->entityManager->getRepositoru(Oem::class)
+        $this->entityManager->getRepository(Oem::class)
                 ->addSupOem($good);
-        $this->entityManager->getRepositoru(Oem::class)
+        $this->entityManager->getRepository(Oem::class)
                 ->addCrosOem($good);
 
         $this->entityManager->getRepository(Goods::class)
@@ -870,7 +870,7 @@ class ExternalManager
             }
         }
         
-        $this->entityManager->getRepositoru(Oem::class)
+        $this->entityManager->getRepository(Oem::class)
                 ->addIntersectGood($good);
         $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
         
