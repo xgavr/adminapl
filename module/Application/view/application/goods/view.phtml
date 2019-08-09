@@ -391,8 +391,10 @@ $this->headScript()
                             </div>
                         </div>
                         <div class="panel-body">
-                            <div class="pull-left" class="<?= $goods->getStyleStatusOem()?>">
-                                TecDoc номера: 
+                            <div class="pull-left">
+                                <span class="<?= $goods->getStyleStatusOem()?>">
+                                    TecDoc номера: 
+                                </span> 
                             </div>
                             <div class="pull-right">
                                 <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
