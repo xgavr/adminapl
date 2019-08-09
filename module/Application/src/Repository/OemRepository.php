@@ -12,6 +12,7 @@ use Application\Entity\Article;
 use Application\Entity\Goods;
 use Application\Entity\OemRaw;
 use Application\Entity\Oem;
+use Application\Entity\CrossList;
 use Application\Entity\Rawprice;
 use Application\Filter\ArticleCode;
 
