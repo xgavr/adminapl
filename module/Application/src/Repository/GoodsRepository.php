@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Goods;
 use Application\Entity\Rawprice;
 use Application\Entity\OemRaw;
+use Application\Filter\ArticleCode;
 
 
 
@@ -161,9 +162,15 @@ class GoodsRepository extends EntityRepository
                         ;
             }
             if (isset($params['q'])){
-                if ($params['q']){
-                    $queryBuilder->andWhere('c.code like :search')
-                        ->setParameter('search', '%' . $params['q'] . '%')                            
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['q']);
+                if ($q){
+                    $orX = $queryBuilder->expr()->orX(
+                            $queryBuilder->expr()->eq('c.code', $q),
+                            $queryBuilder->expr()->eq('o.oe', $q)    
+                        );
+                    $queryBuilder->join('c.oems', 'o')
+                        ->andWhere($orX)    
                         ;
                 } else {
                     $queryBuilder
@@ -196,7 +203,7 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
             }            
         }
-//var_dump($queryBuilder->getQuery()->getDQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }
     
