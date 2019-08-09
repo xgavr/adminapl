@@ -691,6 +691,24 @@ class Goods {
         $this->statusOem;
     }
     
+    public function getStyleListStatusOem()
+    {
+        return [
+            self::OEM_FOR_UPDATE => '',
+            self::OEM_UPDATED => 'alert-success',
+        ];
+    }
+    
+    public function getStyleStatusOem()
+    {
+        $list = self::getStyleListStatusOem();
+        if (isset($list[$this->statusOem])) {
+            return $list[$this->statusOem];
+        }
+
+        return '';
+    }
+    
     public function setStatusOem($statusOem)
     {
         $this->statusOem = $statusOem;
@@ -723,9 +741,10 @@ class Goods {
     public function getStyleStatusRawpriceEx()
     {
         $list = self::getStyleListStatusRawpriceEx();
-        if (isset($list[$this->statusPriceEx]))
+        if (isset($list[$this->statusPriceEx])) {
             return $list[$this->statusRawpriceEx];
-        
+        }
+
         return '';
     }
     
