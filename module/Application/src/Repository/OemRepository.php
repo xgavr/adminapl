@@ -424,7 +424,7 @@ class OemRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g')
                 ->distinct()
-                ->from(Goods::class)
+                ->from(Goods::class, 'g')
                 ->join('g.oems', 'o')
                 ->where('g.genericGroup = ?1')
                 ->andWhere('g.id != ?2')
