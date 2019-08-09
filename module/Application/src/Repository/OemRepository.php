@@ -425,9 +425,11 @@ class OemRepository  extends EntityRepository{
                 ->from(Goods::class)
                 ->join('g.oems', 'o')
                 ->where('g.genericGroup = ?1')
-                ->andWhere('o.oe = ?2')
+                ->andWhere('g.id != ?2')
+                ->andWhere('o.oe = ?3')
                 ->setParameter('1', $good->getGenericGroup()->getId())
-                ->setParameter('2', $oe)
+                ->setParameter('2', $good->getId())
+                ->setParameter('3', $oe)
                 ;
 
         $iterable = $queryBuilder->getQuery()->iterate();
