@@ -837,10 +837,15 @@ class ExternalManager
     /**
      * Добавление номеров к товару
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      */
     public function addOemsToGood($good)
     {
+        $this->entityManager->getRepositoru(Oem::class)
+                ->addSupOem($good);
+        $this->entityManager->getRepositoru(Oem::class)
+                ->addCrosOem($good);
+
         $this->entityManager->getRepository(Goods::class)
                 ->removeGoodSourceOem($good, Oem::SOURCE_TD);
         
@@ -864,6 +869,10 @@ class ExternalManager
                 }
             }
         }
+        
+        $this->entityManager->getRepositoru(Oem::class)
+                ->addIntersectGood($good);
+        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
         
         return;
     }

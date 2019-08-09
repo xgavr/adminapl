@@ -259,14 +259,7 @@ class GoodsManager
 
         foreach($iterable as $item){
             foreach ($item as $good){
-                $this->entityManager->getRepositoru(\Application\Entity\Oem::class)
-                        ->addSupOem($good);
-                $this->entityManager->getRepositoru(\Application\Entity\Oem::class)
-                        ->addCrosOem($good);
                 $this->externalManager->addOemsToGood($good);
-                $this->entityManager->getRepositoru(\Application\Entity\Oem::class)
-                        ->addIntersectGood($good);
-                $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
             }
             unset($item);
             if (time() >= $finishTime){
