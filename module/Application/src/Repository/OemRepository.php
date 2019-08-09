@@ -457,6 +457,8 @@ class OemRepository  extends EntityRepository{
      */
     public function addIntersectGood($good)
     {
+        $this->removeIntesectOem($good);
+        
         $oemsQuery = $this->getEntityManager()->getRepository(Goods::class)
                 ->findOems($good);
 
@@ -484,7 +486,7 @@ class OemRepository  extends EntityRepository{
                 ->removeGoodSourceOem($good, Oem::SOURCE_SUP);
         
         $oemsRaw = $this->getEntityManager()->getRepository(Goods::class)
-                ->findOemRaw($good);
+                ->findOems($good);
         
         foreach ($oemsRaw as $oemRaw){
             if ($oemRaw->getCode()){
@@ -519,13 +521,24 @@ class OemRepository  extends EntityRepository{
     
     /**
      * Удаление номеров товара
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param integer $status
      * 
      */
     public function removeAllGoodOem($good)
     {
-        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId()]);        
+        $oemsQuery = $this->getEntityManager()->getRepository(Goods::class)
+                ->findOems($good);
+        
+        $iterable = $oemsQuery->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $oe){
+                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);        
+            }
+            unset($item);
+        }
+        
         return;
     }
 
@@ -535,9 +548,27 @@ class OemRepository  extends EntityRepository{
      * 
      * @param Goods $good
      */
-    public function deleteIntesectOem($good)
+    public function removeIntesectOem($good)
     {
-        $this->getEntityManager()->getConnection()->delete('oem', ['intersect_good_id' => $good->getId()]);        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('o')
+            ->from(Oem::class, 'o')
+            ->where('o.intersectGoodId = ?1')    
+            ->setParameter('1', $good->getId())
+            ;
+                
+        $oemsQuery = $queryBuilder->getQuery();            
+        
+        $iterable = $oemsQuery->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $oe){
+                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);        
+            }
+            unset($item);
+        }        
         return;
     }
 }
