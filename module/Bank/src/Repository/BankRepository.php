@@ -26,9 +26,10 @@ class BankRepository extends EntityRepository
      * 
      * @param string $q поисковый запрос
      * @param string $rs счет
+     * @param array $params
      * @return object
      */
-    public function findStatement($q = null, $rs = null)
+    public function findStatement($q = null, $rs = null, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -70,6 +71,17 @@ class BankRepository extends EntityRepository
             }
             $queryBuilder->andWhere($or);
         }
+        
+        if (is_array($params)){
+            if (isset($params['date'])){
+                if ($params['date']){
+                    $queryBuilder->andWhere('s.chargeDate = ?2')
+                            ->setParameter('2', $params['date'])
+                            ;
+                }    
+            }
+        }
+        
         
         return $queryBuilder->getQuery();
     }    
