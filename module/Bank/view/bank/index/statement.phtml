@@ -54,6 +54,7 @@ $this->headScript()
                     >
                     <thead>
                         <tr>
+                             <th data-field="id" data-formatter="swapFormatter"></th>
                              <th data-field="id" data-formatter="avatar"></th>
                              <th data-field="chargeDate" data-formatter="formatDateId">Дата/ID</th>
                              <th data-field="amount" data-formatter="amountIn" data-align='right'>Поступило</th>             
@@ -339,8 +340,18 @@ $this->headScript()
         return res;
     }
     
+    function swapFormatter(value, row){
+        var swapChecked = 'checked';
+        if (row.swap1 == 2){
+            swapChecked = '';
+        }
+        var swapCheckbox = '<input type="checkbox" onchange="swapChange(this)" value="'+value+'" '+swapChecked+'/>';
+        return swapCheckbox;
+    }
+    
     function avatar(value, row){
-        return '<img src="/bank/avatar-account/'+row.account+'" width="24" height="24" style="border-radius: 100%"/>';
+        var avatar = '<img src="/bank/avatar-account/'+row.account+'" width="24" height="24" style="border-radius: 100%"/>';            
+        return avatar;
     }
     
     function transDateFormatter(value, row){
@@ -470,5 +481,22 @@ $this->headScript()
     function responseHandler(res) {
         return res;
     }       
+        
+    function swapChange(node)  {
+        console.log(node);
+        var url = "/bank/update-statement-swap";
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: node.value, value: node.checked}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    }        
         
 </script>

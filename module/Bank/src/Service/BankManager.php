@@ -31,25 +31,25 @@ class BankManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Tochka Statetment manager
-     * @var Bankapi\Service\Tochka\Statement
+     * @var \Bankapi\Service\Tochka\Statement
      */
     private $tochkaStatement;
     
     /**
      * AdminManager manager
-     * @var Admin\Service\AdminManager
+     * @var \Admin\Service\AdminManager
      */
     private $adminManager;
 
     /**
      * PostManager manager
-     * @var Admin\Service\PostManager
+     * @var \Admin\Service\PostManager
      */
     private $postManager;
 
@@ -140,6 +140,20 @@ class BankManager
         
         $this->entityManager->persist($statement);
         $this->entityManager->flush($statement);
+    }
+    
+    /**
+     * Обновление метки обмена
+     * 
+     * @param Statement $statement
+     * @param integer $swap
+     */
+    public function updateStatementSwap($statement, $swap)
+    {
+        $statement->setSwap1($swap);
+        $this->entityManager->persist($statement);
+        $this->entityManager->flush();
+        return;
     }
     
     /**

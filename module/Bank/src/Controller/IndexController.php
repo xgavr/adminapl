@@ -124,6 +124,25 @@ class IndexController extends AbstractActionController
             'rows' => $result,
         ]);          
     }
+    
+    public function updateStatementSwapAction()
+    {
+       if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $statementId = $data['pk'];
+            $statement = $this->entityManager->getRepository(Statement::class)
+                    ->findOneById($statementId);
+//            var_dump($data); exit;
+            $swap = ($data['value'] == 'true') ? Statement::SWAP1_TRANSFERED:Statement::SWAP1_TO_TRANSFER;
+                    
+            if ($statement){
+                $this->bankManager->updateStatementSwap($statement, $swap);                    
+            }    
+        }     
+        
+        exit;
+    }
 
     public function tochkaStatementUpdateAction()
     {
