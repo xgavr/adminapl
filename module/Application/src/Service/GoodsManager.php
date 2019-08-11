@@ -192,15 +192,11 @@ class GoodsManager
         $startTime = time();
         $finishTime = $startTime + 840;
 
-        $goodsForDeleteQuery = $this->entityManager->getRepository(Goods::class)
+        $goodsForDelete = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForDelete();
 
-        $iterable = $goodsForDeleteQuery->iterate();
-        
-        foreach ($iterable as $item){
-            foreach ($item as $row){
-                $this->removeGood($row[0]);
-            }    
+        foreach ($goodsForDelete as $row){
+            $this->removeGood($row[0]);
             if (time() >= $finishTime){
                 return;
             }

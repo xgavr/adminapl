@@ -504,10 +504,10 @@ class GoodsRepository extends EntityRepository
             ->leftJoin('g.articles', 'a')
             ->groupBy('g.id')
             ->having('articleCount = 0')
-//            ->setMaxResults(5000)    
+            ->setMaxResults(5000)    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery();//->getResult();            
+        return $queryBuilder->getQuery()->getResult();            
     }
 
     
