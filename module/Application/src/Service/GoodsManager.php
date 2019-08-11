@@ -172,7 +172,7 @@ class GoodsManager
                 ->removeAllGoodOem($good);
                 
         $this->entityManager->getRepository(\Application\Entity\Oem::class)
-                ->deleteIntesectOem($good);
+                ->removeIntesectOem($good);
                 
         $this->entityManager->remove($good);
         
