@@ -172,7 +172,7 @@ class GoodsManager
                 ->removeAllGoodOem($good);
                 
         $this->entityManager->getRepository(\Application\Entity\Oem::class)
-                ->removeIntesectOem($good);
+                ->removeIntersectOem($good);
                 
         $this->entityManager->remove($good);
         
@@ -189,15 +189,24 @@ class GoodsManager
     {
         set_time_limit(900);        
         ini_set('memory_limit', '2048M');
+        $startTime = time();
+        $finishTime = $startTime + 840;
 
-        $goodsForDelete = $this->entityManager->getRepository(Goods::class)
+        $goodsForDeleteQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForDelete();
 
-        foreach ($goodsForDelete as $row){
-            $this->removeGood($row[0]);
+        $iterable = $goodsForDeleteQuery->iterate();
+        
+        foreach ($iterable as $item){
+            foreach ($item as $row){
+                $this->removeGood($row[0]);
+            }    
+            if (time() >= $finishTime){
+                return;
+            }
         }
         
-        return count($goodsForDelete);
+        return;
     }
     
     

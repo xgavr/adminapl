@@ -458,7 +458,7 @@ class OemRepository  extends EntityRepository{
      */
     public function addIntersectGood($good)
     {
-        $this->removeIntesectOem($good);
+        $this->removeIntersectOem($good);
         
         $oemsQuery = $this->getEntityManager()->getRepository(Goods::class)
                 ->findOems($good);
@@ -549,7 +549,7 @@ class OemRepository  extends EntityRepository{
      * 
      * @param Goods $good
      */
-    public function removeIntesectOem($good)
+    public function removeIntersectOem($good)
     {
         $entityManager = $this->getEntityManager();
 

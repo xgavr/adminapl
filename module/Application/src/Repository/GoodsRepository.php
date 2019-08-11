@@ -490,10 +490,11 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти товары для удаления
      * 
-     * @return object
+     * @return \Doctrine\ORM\Query
      */
     public function findGoodsForDelete()
     {
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -503,10 +504,10 @@ class GoodsRepository extends EntityRepository
             ->leftJoin('g.articles', 'a')
             ->groupBy('g.id')
             ->having('articleCount = 0')
-            ->setMaxResults(5000)    
+//            ->setMaxResults(5000)    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getgetQuery();//->getResult();            
     }
 
     
