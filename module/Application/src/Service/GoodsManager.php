@@ -176,7 +176,7 @@ class GoodsManager
                 
         $this->entityManager->remove($good);
         
-        $this->entityManager->flush();
+        $this->entityManager->flush($good);
         
         return true;
     }    
