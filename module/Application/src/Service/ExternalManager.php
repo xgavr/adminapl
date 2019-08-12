@@ -840,12 +840,12 @@ class ExternalManager
     public function addOemsToGood($good)
     {
         $this->entityManager->getRepository(Oem::class)
+                ->removeIntersectOem($good);
+        
+        $this->entityManager->getRepository(Oem::class)
                 ->addSupOem($good);
         $this->entityManager->getRepository(Oem::class)
                 ->addCrosOem($good);
-
-        $this->entityManager->getRepository(Oem::class)
-                ->addIntersectGood($good);
 
         $this->entityManager->getRepository(Goods::class)
                 ->removeGoodSourceOem($good, Oem::SOURCE_TD);
