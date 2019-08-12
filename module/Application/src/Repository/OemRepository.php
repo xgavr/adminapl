@@ -433,18 +433,15 @@ class OemRepository  extends EntityRepository{
                 ->setParameter('2', $good->getId())
                 ->setParameter('3', $oe)
                 ;
-        $iterable = $queryBuilder->getQuery()->iterate();
+        
+        $data = $queryBuilder->getQuery()->getResult();
 
-        foreach($iterable as $item){
-            var_dump($item); exit;
-            foreach ($item as $rowGood){
-                $this->addOemToGood($rowGood, [
-                    'oeNumber' => $good->getCode(), 
-                    'brandName' => $good->getProducer()->getName(),
-                    'intescetGoodId' => $good->getId(),
-                  ], Oem::SOURCE_INTERSECT);
-                $this->getEntityManager()->detach($rowGood);
-            }
+        foreach($data as $rowGood){
+            $this->addOemToGood($rowGood, [
+                'oeNumber' => $good->getCode(), 
+                'brandName' => $good->getProducer()->getName(),
+                'intescetGoodId' => $good->getId(),
+              ], Oem::SOURCE_INTERSECT);
         }
         
         return;
