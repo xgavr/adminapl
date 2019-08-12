@@ -483,7 +483,7 @@ class OemRepository  extends EntityRepository{
                 ->removeGoodSourceOem($good, Oem::SOURCE_SUP);
         
         $oemsRaw = $this->getEntityManager()->getRepository(Goods::class)
-                ->findOems($good);
+                ->findOemRaw($good);
         
         foreach ($oemsRaw as $oemRaw){
             if ($oemRaw->getCode()){
