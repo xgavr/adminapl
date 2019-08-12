@@ -1074,7 +1074,7 @@ class GoodsRepository extends EntityRepository
      * 
      * @param \Application\Entity\Goods $good
      * @param array $params
-     * @return object
+     * @return Query
      */
     public function findOems($good, $params = null)
     {
