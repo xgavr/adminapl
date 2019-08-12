@@ -433,7 +433,7 @@ class OemRepository  extends EntityRepository{
                 ->setParameter('2', $good->getId())
                 ->setParameter('3', $oe)
                 ;
-
+                var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $iterable = $queryBuilder->getQuery()->iterate();
 
         foreach($iterable as $item){
