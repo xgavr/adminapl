@@ -463,7 +463,6 @@ class OemRepository  extends EntityRepository{
 
         foreach($iterable as $item){
             foreach ($item as $oe){
-                var_dump($oe->getOe()); exit;
                 $this->addIntersectOem($good, $oe->getOe());
                 $this->getEntityManager()->detach($oe);
             }
