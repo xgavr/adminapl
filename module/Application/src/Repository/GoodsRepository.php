@@ -1161,13 +1161,16 @@ class GoodsRepository extends EntityRepository
      * Добавление номера к товару
      * 
      * @param array $data
+     * @param integer $statusOemEx
      * @return integer
      */
-    public function addGoodOem($data)
+    public function addGoodOem($data, $statusOemEx = 0)
     {
-       $inserted = $this->getEntityManager()->getConnection()->insert('oem', $data);
-       $this->updateGoodId($data['good_id'], ['status_oem_ex' => Goods::OEM_EX_NEW]);
-       return $inserted;        
+        $inserted = $this->getEntityManager()->getConnection()->insert('oem', $data);
+        if ($statusOemEx != Goods::ATTR_EX_NEW){
+            $this->updateGoodId($data['good_id'], ['status_oem_ex' => Goods::OEM_EX_NEW]);
+        }    
+        return $inserted;        
     }
 
     /**

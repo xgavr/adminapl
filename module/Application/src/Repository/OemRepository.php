@@ -88,7 +88,7 @@ class OemRepository  extends EntityRepository{
             ];
 //            var_dump($data);
             $this->getEntityManager()->getRepository(Goods::class)
-                    ->addGoodOem($data);
+                    ->addGoodOem($data, $good->getStatusOemEx());
             
             if ($source != Oem::SOURCE_INTERSECT){
                 $this->addIntersectOem($good, $oe);
