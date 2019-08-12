@@ -435,7 +435,7 @@ class OemRepository  extends EntityRepository{
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
-
+        var_dump(count($data)); exit;
         foreach($data as $rowGood){
             $this->addOemToGood($rowGood, [
                 'oeNumber' => $good->getCode(), 
