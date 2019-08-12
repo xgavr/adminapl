@@ -435,10 +435,6 @@ class OemRepository  extends EntityRepository{
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
-//        var_dump($queryBuilder->getQuery()->getSQL());
-//        var_dump($good->getGenericGroup()->getId());
-//        var_dump($good->getId());
-        var_dump($oe); exit;
         foreach($data as $rowGood){
             $this->addOemToGood($rowGood, [
                 'oeNumber' => $good->getCode(), 
@@ -467,6 +463,7 @@ class OemRepository  extends EntityRepository{
 
         foreach($iterable as $item){
             foreach ($item as $oe){
+                var_dump($oe); exit;
                 $this->addIntersectOem($good, $oe);
                 $this->getEntityManager()->detach($oe);
             }
