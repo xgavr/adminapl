@@ -20,8 +20,6 @@ use Application\Entity\VehicleDetailValue;
 use Application\Entity\Oem;
 use Application\Entity\GenericGroup;
 use Application\Entity\GoodAttributeValue;
-use Application\Entity\CrossList;
-use Application\Filter\ArticleCode;
 
 /**
  * Description of ExternalManager
@@ -846,6 +844,9 @@ class ExternalManager
         $this->entityManager->getRepository(Oem::class)
                 ->addCrosOem($good);
 
+        $this->entityManager->getRepository(Oem::class)
+                ->addIntersectGood($good);
+
         $this->entityManager->getRepository(Goods::class)
                 ->removeGoodSourceOem($good, Oem::SOURCE_TD);
         
@@ -870,8 +871,6 @@ class ExternalManager
             }
         }
         
-        $this->entityManager->getRepository(Oem::class)
-                ->addIntersectGood($good);
         $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
         
         return;

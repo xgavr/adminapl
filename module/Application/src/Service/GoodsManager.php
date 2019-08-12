@@ -198,10 +198,11 @@ class GoodsManager
         foreach ($goodsForDelete as $row){
             $this->removeGood($row[0]);
             if (time() >= $finishTime){
-                return;
+                break;;
             }
         }
         
+        unset($goodsForDelete);
         return;
     }
     
