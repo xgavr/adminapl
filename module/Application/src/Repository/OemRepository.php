@@ -434,10 +434,10 @@ class OemRepository  extends EntityRepository{
                 ->setParameter('3', $oe)
                 ;
         
-//        $data = $queryBuilder->getQuery()->getResult();
+        $data = $queryBuilder->getQuery()->getResult();
 //        var_dump($queryBuilder->getQuery()->getSQL());
 //        var_dump($good->getGenericGroup()->getId());
-        var_dump($good->getId());
+//        var_dump($good->getId());
         var_dump($oe); exit;
         foreach($data as $rowGood){
             $this->addOemToGood($rowGood, [
