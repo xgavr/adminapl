@@ -203,7 +203,7 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
             }            
         }
-//        var_dump($queryBuilder->sgetQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }
     
