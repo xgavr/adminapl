@@ -669,17 +669,22 @@ class GoodsManager
      */
     public function addOeAsMyCode()
     {
-        ini_set('memory_limit', '1024M');
-        set_time_limit(900);
+        ini_set('memory_limit', '4096M');
+        set_time_limit(1800);
         
-        $goods = $this->entityManager->getRepository(Goods::class)
-                ->findBy([]);
-        foreach ($goods as $good){
-            $this->entityManager->getRepository(\Application\Entity\Oem::class)
-                    ->addMyCodeAsOe($good);
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
+                ->findAllGoods();
+        
+        $iterable = $goodsQuery->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+//                var_dump($good); exit;
+                $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                        ->addMyCodeAsOe($good);
+            }    
+            unset($row);
         }
             
-        unset($goods);
         return;
     }
     
