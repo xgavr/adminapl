@@ -1214,7 +1214,7 @@ class GoodsController extends AbstractActionController
     public function addMyCodeAction()
     {
         $this->goodsManager->addOeAsMyCode();
-        
+        echo 'ok';
         exit;
     }
 }
