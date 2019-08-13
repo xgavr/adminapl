@@ -137,6 +137,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('c', 'p')
+            ->distinct()    
             ->from(Goods::class, 'c')
             ->join('c.producer', 'p', 'WITH')    
                 ;
@@ -166,11 +167,12 @@ class GoodsRepository extends EntityRepository
                 $q = $codeFilter->filter($params['q']);
                 if ($q){
                     $orX = $queryBuilder->expr()->orX(
-                            $queryBuilder->expr()->eq('c.code', $q),
-                            $queryBuilder->expr()->eq('o.oe', $q)    
+                            $queryBuilder->expr()->eq('c.code', '?4'),
+                            $queryBuilder->expr()->eq('o.oe', '?4')    
                         );
                     $queryBuilder->join('c.oems', 'o')
-                        ->andWhere($orX)    
+                        ->andWhere($orX) 
+                        ->setParameter('4', $q)    
                         ;
                 } else {
                     $queryBuilder
@@ -180,22 +182,22 @@ class GoodsRepository extends EntityRepository
                 }    
             }
             if (isset($params['next1'])){
-                $queryBuilder->andWhere('c.code > ?4')
-                    ->setParameter('4', $params['next1'])
+                $queryBuilder->andWhere('c.code > ?5')
+                    ->setParameter('5', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->andWhere('c.code < ?5')
-                    ->setParameter('5', $params['prev1'])
+                $queryBuilder->andWhere('c.code < ?6')
+                    ->setParameter('6', $params['prev1'])
                     ->orderBy('c.code', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['groupId'])){
                 if ($params['groupId']){
-                    $queryBuilder->andWhere('c.genericGroup = ?6')
-                        ->setParameter('6', $params['groupId'])
+                    $queryBuilder->andWhere('c.genericGroup = ?7')
+                        ->setParameter('7', $params['groupId'])
                      ;
                 }    
             }
@@ -203,7 +205,7 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
             }            
         }
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }
     
@@ -1083,8 +1085,10 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('o')
             ->from(\Application\Entity\Oem::class, 'o')
-            ->where('o.good = ?1')    
+            ->where('o.good = ?1')
+            ->andWhere('o.source != ?2')    
             ->setParameter('1', $good->getId())
+            ->setParameter('2', \Application\Entity\Oem::SOURCE_MY_CODE)    
             ;
         
         if (is_array($params)){
@@ -1172,7 +1176,7 @@ class GoodsRepository extends EntityRepository
         }    
         return $inserted;        
     }
-
+    
     /**
      * Удаления oem товара
      * 

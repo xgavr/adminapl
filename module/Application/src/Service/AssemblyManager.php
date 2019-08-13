@@ -103,6 +103,9 @@ class AssemblyManager
         
         $this->entityManager->flush($good);
         
+        $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                ->addMyCodeAsOe($good);
+        
         return $good;
     }   
     

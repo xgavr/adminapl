@@ -664,4 +664,23 @@ class GoodsManager
         return;
     }
     
+    /**
+     * Добавить свои артикулы в номера
+     */
+    public function addOeAsMyCode()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findBy([]);
+        foreach ($goods as $good){
+            $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                    ->addMyCodeAsOe($good);
+        }
+            
+        unset($goods);
+        return;
+    }
+    
 }

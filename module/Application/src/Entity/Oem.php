@@ -27,6 +27,7 @@ class Oem {
     const SOURCE_MAN      = 3; // Вручную.
     const SOURCE_CROSS    = 4; // Кросслист.
     const SOURCE_INTERSECT = 5; // Пересечение.
+    const SOURCE_MY_CODE = 6; //Артикул товара
     
     const SOURCE_TD_NAME = 'ТекДок';
     const INTERSECT_NAME = 'ОЕ кросс';
@@ -209,6 +210,7 @@ class Oem {
             self::SOURCE_MAN => 'Введено вручную',
             self::SOURCE_CROSS => 'Кросс лист',
             self::SOURCE_INTERSECT => self::INTERSECT_NAME,
+            self::SOURCE_MY_CODE => 'Свой артикул',
         ];
     }    
     

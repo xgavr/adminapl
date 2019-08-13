@@ -90,7 +90,7 @@ class OemRepository  extends EntityRepository{
             $this->getEntityManager()->getRepository(Goods::class)
                     ->addGoodOem($data, $good->getStatusOemEx());
             
-            if ($source != Oem::SOURCE_INTERSECT){
+            if ($source != Oem::SOURCE_INTERSECT && $source != Oem::SOURCE_MY_CODE){
                 $this->addIntersectOem($good, $oe);
             }    
         } else {
@@ -107,6 +107,23 @@ class OemRepository  extends EntityRepository{
         return $oem;
     }
         
+    /**
+     * Добавить свой артикул в таблицу номеров
+     * 
+     * @param Goods $good
+     */
+    public function addMyCodeAsOe($good)
+    {
+        $this->addOemToGood($good, [
+            'oeNumber' => $good->getCode(), 
+            'brandName' => $good->getProducer()->getName(),
+          ], Oem::SOURCE_MY_CODE);
+            
+        return;
+    }
+
+    
+    
     /**
      * Выборка не привязанных артикулов из прайса
      */
@@ -538,6 +555,12 @@ class OemRepository  extends EntityRepository{
                 $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);        
             }
             unset($item);
+        }
+        
+        $myCodes = $this->getEntityManager()->getRepository(Oem::class)
+                ->findBy(['good' => $good->getId()]);
+        foreach ($myCodes as $myCode){
+            $this->getEntityManager()->getConnection()->delete('oem', ['id' => $myCode->getId()]);                    
         }
         
         return;
