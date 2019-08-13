@@ -29,6 +29,7 @@ class Oem {
     const SOURCE_INTERSECT = 5; // Пересечение.
     
     const SOURCE_TD_NAME = 'ТекДок';
+    const INTERSECT_NAME = 'ОЕ кросс';
 
     /**
      * @ORM\Id
@@ -207,7 +208,7 @@ class Oem {
             self::SOURCE_SUP => 'Поставщик',
             self::SOURCE_MAN => 'Введено вручную',
             self::SOURCE_CROSS => 'Кросс лист',
-            self::SOURCE_INTERSECT => 'Получено по кроссу',
+            self::SOURCE_INTERSECT => self::INTERSECT_NAME,
         ];
     }    
     
