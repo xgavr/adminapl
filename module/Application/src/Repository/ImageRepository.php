@@ -282,12 +282,15 @@ class ImageRepository extends EntityRepository
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
         $headers = get_headers($uri);
-//        var_dump($headers);
+        var_dump($headers);
+        if (preg_match("|301|", $headers[0])){
+            $uri = $headers['Location'];
+            var_dump($uri);
+        }
         
-        if(preg_match("|200|", $headers[0]) || preg_match("|301|", $headers[0])) {
+        if(preg_match("|200|", $headers[0])) {
             $saveDocFileName = mb_ereg_replace("[\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`]", '_',  $docFileName);
             $image = file_get_contents(urlencode($uri));
-            var_dump($image);
             if ($image){
                 $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
                 file_put_contents($path, $image);
