@@ -281,8 +281,8 @@ class ImageRepository extends EntityRepository
      */
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
-        var_dump($docFileName);
         $headers = get_headers($uri);
+        var_dump($headers);
         
         if(preg_match("|200|", $headers[0])) {
             $saveDocFileName = mb_ereg_replace("[\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`]", '_',  $docFileName);
