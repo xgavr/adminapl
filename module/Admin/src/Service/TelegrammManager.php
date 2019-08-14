@@ -337,8 +337,8 @@ class TelegrammManager
 //            }    
 //        }    
 
-        $uri = 'https://www.proxy-list.download/api/v1/get?type=socks5';
-//        $uri = 'https://api.proxyscrape.com?request=getproxies&proxytype=socks5&timeout=10000&country=all';
+//        $uri = 'https://www.proxy-list.download/api/v1/get?type=socks5';
+        $uri = 'https://api.proxyscrape.com?request=getproxies&proxytype=socks5&timeout=10000&country=all';
         $list = file_get_contents($uri);
         
         return array_filter(explode(PHP_EOL, $list));
