@@ -137,7 +137,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('c', 'p')
-            ->distinct()    
+//            ->distinct()    
             ->from(Goods::class, 'c')
             ->join('c.producer', 'p', 'WITH')    
                 ;
