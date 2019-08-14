@@ -287,6 +287,7 @@ class ImageRepository extends EntityRepository
         if(preg_match("|200|", $headers[0]) || preg_match("|301|", $headers[0])) {
             $saveDocFileName = mb_ereg_replace("[\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`]", '_',  $docFileName);
             $image = file_get_contents(urlencode($uri));
+            var_dump($image);
             if ($image){
                 $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
                 file_put_contents($path, $image);
