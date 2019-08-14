@@ -340,6 +340,7 @@ class ImageRepository extends EntityRepository
                 ->rawpriceArticles($good);
         foreach ($rawprices as $rawprice){
             if ($rawprice->getImage()){
+                var_dump($rawprice->getIamge());
                 $this->saveImageGood($rawprice->getGood(), $rawprice->getImage(), basename($rawprice->getImage()), Images::STATUS_SUP, Images::SIMILAR_MATCH);
             }
         }
