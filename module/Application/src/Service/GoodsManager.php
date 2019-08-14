@@ -670,7 +670,7 @@ class GoodsManager
     public function addOeAsMyCode()
     {
         ini_set('memory_limit', '4096M');
-        set_time_limit(1800);
+        set_time_limit(3600);
         
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('g')
@@ -683,12 +683,8 @@ class GoodsManager
         foreach ($iterable as $row){
             foreach ($row as $good){
 //                var_dump($good); exit;
-                $myOe = $this->entityManager->getRepository(\Application\Entity\Oem::class)
-                        ->findOneBy(['good' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_MY_CODE]);
-                if ($myOe == null){                
-                    $this->entityManager->getRepository(\Application\Entity\Oem::class)
-                            ->addMyCodeAsOe($good);
-                }
+                $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                        ->addMyCodeAsOe($good);
                 
                 $this->entityManager->detach($good);
             }    
