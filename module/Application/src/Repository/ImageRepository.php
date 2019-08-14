@@ -286,19 +286,20 @@ class ImageRepository extends EntityRepository
         
         if(preg_match("|200|", $headers[0]) || preg_match("|301|", $headers[0])) {
             $saveDocFileName = mb_ereg_replace("[\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`]", '_',  $docFileName);
-        var_dump($saveDocFileName);
-            $image = file_get_contents($uri);
-            $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
-            file_put_contents($path, $image);
+            $image = file_get_contents(urlencode($uri));
+            if ($image){
+                $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
+                file_put_contents($path, $image);
 
-            if (file_exists($path)){
-                $this->addImage([
-                    'name' => $saveDocFileName,
-                    'path' => $path,
-                    'status' => $status,
-                    'similar' => $similar,
-                    'good_id' => $good->getId(),
-                ]);
+                if (file_exists($path)){
+                    $this->addImage([
+                        'name' => $saveDocFileName,
+                        'path' => $path,
+                        'status' => $status,
+                        'similar' => $similar,
+                        'good_id' => $good->getId(),
+                    ]);
+                }    
             }    
         } 
         
