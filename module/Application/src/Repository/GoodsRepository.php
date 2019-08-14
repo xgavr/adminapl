@@ -167,7 +167,7 @@ class GoodsRepository extends EntityRepository
                 $q = $codeFilter->filter($params['q']);
                 if ($q){
                     $orX = $queryBuilder->expr()->orX(
-                            $queryBuilder->expr()->eq('c.code', '?4'),
+//                            $queryBuilder->expr()->eq('c.code', '?4'),
                             $queryBuilder->expr()->eq('o.oe', '?4')    
                         );
                     $queryBuilder->join('c.oems', 'o')
