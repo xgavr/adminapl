@@ -286,7 +286,7 @@ class ImageRepository extends EntityRepository
         if (preg_match("|301|", $headers[0])){
             $uri = $headers['Location'];
             $headers = get_headers($uri);
-//            var_dump($uri);
+            var_dump($headers);
         }
         
         if(preg_match("|200|", $headers[0])) {
