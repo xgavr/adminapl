@@ -863,12 +863,12 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusImage = ?1')
             ->setParameter('1', Goods::IMAGE_FOR_UPDATE)    
-            ->setMaxResults(2000)    
-            ->orderBy('g.statusDescription', 'DESC')
-            ->addOrderBy('g.id')    
+//            ->setMaxResults(2000)    
+//            ->orderBy('g.statusDescription', 'DESC')
+//            ->addOrderBy('g.id')    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
     
     /**

@@ -387,21 +387,26 @@ class GoodsManager
         $startTime = time();
         $finishTime = $startTime + 800;
         
-        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+        $goodsForUpdateQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateImageTd();
+        
+        $iterable = $goodsForUpdateQuery->iterate();
+        
+        $i = 0;
+        foreach ($iterable as $row){            
+            foreach ($row as $good){
+                $this->externalManager->addImageToGood($good);
+            }
+            $i++;
+            if (time() >= $finishTime){
+                break;
+            }
+        }    
 
-        if (count($goodsForUpdate) == 0){
+        if ($i == 0){
             $this->entityManager->getRepository(Goods::class)
                     ->resetUpdateImageTd();
-            return;
         }        
-        
-        foreach ($goodsForUpdate as $good){
-            if (time() >= $finishTime){
-                return;
-            }
-            $this->externalManager->addImageToGood($good);
-        }
         
         return;
     }

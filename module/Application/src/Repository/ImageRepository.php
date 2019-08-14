@@ -330,6 +330,25 @@ class ImageRepository extends EntityRepository
     }
     
     /**
+     * Сохранить картинку из прайса
+     * 
+     * @param \Application\Entyti\Goods $good
+     */
+    public function saveImageFromGoodRawprice($good)
+    {
+        $rawprices = $this->getEntityManager()->getRepository(\Application\Entity\Goods::class)
+                ->rawpriceArticles($good);
+        foreach ($rawprices as $rawprice){
+            if ($rawprice->getImage()){
+                $this->saveImageGood($rawprice->getGood(), $rawprice->getImage(), basename($rawprice->getImage()), Images::STATUS_SUP, Images::SIMILAR_MATCH);
+            }
+        }
+        
+        unset($rawprices);
+        return;
+    }
+    
+    /**
      * Сохранить картинку товара загруженная вручную
      * 
      * @param \Application\Entity\Goods $good

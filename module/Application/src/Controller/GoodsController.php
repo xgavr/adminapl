@@ -672,7 +672,7 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $data = $this->externalManager->autoDb('getImages', ['good' => $goods]);
+        $data = $this->externalManager->addImageToGood($goods);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([
