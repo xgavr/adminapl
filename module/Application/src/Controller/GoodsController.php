@@ -434,10 +434,10 @@ class GoodsController extends AbstractActionController
         $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->rawprices($goods);
         
-//        $prevQuery = $this->entityManager->getRepository(Goods::class)
-//                        ->findAllGoods(['prev1' => $goods->getCode()]);
-//        $nextQuery = $this->entityManager->getRepository(Goods::class)
-//                        ->findAllGoods(['next1' => $goods->getCode()]);        
+        $prevQuery = $this->entityManager->getRepository(Goods::class)
+                        ->findAllGoods(['prev1' => $goods->getCode()]);
+        $nextQuery = $this->entityManager->getRepository(Goods::class)
+                        ->findAllGoods(['next1' => $goods->getCode()]);        
 
         $carQuery = $this->entityManager->getRepository(Goods::class)
                         ->findCars($goods);
@@ -458,8 +458,8 @@ class GoodsController extends AbstractActionController
             'cars' => $carPaginator,
             'totalCars' => $totalCars,
             'rawprices' => $rawprices,
-            //'prev' => $prevQuery->getResult(), 
-            //'next' => $nextQuery->getResult(),
+            'prev' => $prevQuery->getResult(), 
+            'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
             'goodsManager' => $this->goodsManager,
             'bestName' => $this->nameManager->findBestName($goods),
