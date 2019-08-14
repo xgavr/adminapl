@@ -281,6 +281,7 @@ class ImageRepository extends EntityRepository
      */
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
+        var_dump($uri);
         $headers = get_headers($uri);
         
         if(preg_match("|200|", $headers[0])) {
