@@ -385,7 +385,7 @@ class GoodsManager
     {        
         set_time_limit(900);
         $startTime = time();
-        $finishTime = $startTime + 800;
+        $finishTime = $startTime + 840;
         
         $goodsForUpdateQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateImageTd();
@@ -396,6 +396,7 @@ class GoodsManager
         foreach ($iterable as $row){            
             foreach ($row as $good){
                 $this->externalManager->addImageToGood($good);
+                $this->entityManager->detach($good);
             }
             $i++;
             if (time() >= $finishTime){
