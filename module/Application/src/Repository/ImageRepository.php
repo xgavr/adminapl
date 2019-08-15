@@ -32,7 +32,11 @@ class ImageRepository extends EntityRepository
      */
     public function getImageFolder($good, $status)
     {
-        return self::GOOD_IMAGE_DIR.'/'.$good->getId().'/'.$status;
+        $result = self::GOOD_IMAGE_DIR.'/'.$good->getId().'/'.$status;
+        if (!is_dir($result)){
+            $this->addImageFolder($good, $status);
+        }
+        return $result;
     }
 
     /**
@@ -292,11 +296,9 @@ class ImageRepository extends EntityRepository
         if(preg_match("|200|", $headers[0])) {
             $saveDocFileName = mb_ereg_replace("[\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`]", '_',  $docFileName);
             $image = file_get_contents($uri);
-            var_dump($saveDocFileName);
             if ($image){
                 $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
                 file_put_contents($path, $image);
-
                 if (file_exists($path)){
                     $this->addImage([
                         'name' => $saveDocFileName,
