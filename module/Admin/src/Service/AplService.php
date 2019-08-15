@@ -1261,6 +1261,7 @@ class AplService {
      */
     public function sendGoodImg($good)
     {
+        $result = true;
         if ($good->getAplId()){
             $url = $this->aplApi().'update-good-img?api='.$this->aplApiKey();
 
@@ -1292,12 +1293,12 @@ class AplService {
             $client->setOptions(['timeout' => 30]);
             $client->setParameterPost($post);
 
-            $ok = false;
+            $ok = $result = false;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
-                    $ok = true;
+                    $ok = $result = true;                    
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
@@ -1311,7 +1312,7 @@ class AplService {
             unset($post);
             unset($images);
         }    
-        return;
+        return $result;
     }
     
     /**
@@ -1325,17 +1326,24 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $goods = $this->entityManager->getRepository(Goods::class)
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateImg();
+        $iterable = $goodsQuery->iterate();
         
-        foreach ($goods as $good){
-            $this->sendGoodImg($good);
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $result = $this->sendGoodImg($good);
+                $this->entityManager->detach($good);
+                if (!$result){
+                    return;
+                }
+            }    
+            usleep(100);
             if (time() > $startTime + 1740){
                 return;
             }
-            usleep(100);
         }
-        unset($goods);
+        
         return;
     }
     
