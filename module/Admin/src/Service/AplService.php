@@ -1354,6 +1354,7 @@ class AplService {
      */
     public function sendGroup($good)
     {
+        $result = true;
         if ($good->getAplId()){
             $url = $this->aplApi().'update-good-group?api='.$this->aplApiKey();
 
@@ -1367,15 +1368,15 @@ class AplService {
             $client->setMethod('POST');
             $client->setParameterPost($post);
 
-            $ok = FALSE;
+            $result = $ok = FALSE;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
-                    $ok = TRUE;
+                    $result = $ok = TRUE;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-                return;
+                $ok = true;
             }    
             
             if ($ok){
@@ -1385,7 +1386,7 @@ class AplService {
 
             unset($post);
         }    
-        return;
+        return $result;
     }
 
     /**
@@ -1399,17 +1400,24 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $goods = $this->entityManager->getRepository(Goods::class)
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateGroup();
+        $iterable = $goodsQuery->iterate();
         
-        foreach ($goods as $good){
-            $this->sendGroup($good);
-            if (time() > $startTime + 1740){
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $result = $this->sendGroup($good);
+                $this->entityManager->detach($good);
+            }    
+            if (!$result){
                 return;
             }
             usleep(100);
+            if (time() > $startTime + 1740){
+                return;
+            }
         }
-        unset($goods);
+
         return;
     }
     

@@ -655,10 +655,10 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusGroupEx = ?1')
             ->setParameter('1', Goods::GROUP_EX_NEW)    
-            ->setMaxResults(10000)    
+//            ->setMaxResults(10000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
     
     /**
