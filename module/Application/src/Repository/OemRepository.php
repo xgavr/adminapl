@@ -120,8 +120,10 @@ class OemRepository  extends EntityRepository{
             'oeNumber' => $good->getCode(), 
             'brandName' => $good->getProducer()->getName(),
           ], Oem::SOURCE_MY_CODE);
-            
-        $this->getEntityManager()->detach($oem);
+        
+        if ($oem){    
+            $this->getEntityManager()->detach($oem);
+        }    
         
         return;
     }
