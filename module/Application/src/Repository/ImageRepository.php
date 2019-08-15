@@ -285,6 +285,8 @@ class ImageRepository extends EntityRepository
      */
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
+        ini_set('memory_limit', '2048M');
+        
         $headers = get_headers($uri, 1);
 //        var_dump($headers);
         if (preg_match("|301|", $headers[0])){
@@ -294,10 +296,10 @@ class ImageRepository extends EntityRepository
         }
         
         if(preg_match("|200|", $headers[0])) {
+            $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
             $saveDocFileName = mb_ereg_replace("[\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`]", '_',  $docFileName);
             $image = file_get_contents($uri);
             if ($image){
-                $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
                 file_put_contents($path, $image);
                 if (file_exists($path)){
                     $this->addImage([
