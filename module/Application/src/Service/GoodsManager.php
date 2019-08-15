@@ -266,8 +266,9 @@ class GoodsManager
         foreach($iterable as $item){
             foreach ($item as $good){
                 $this->externalManager->addOemsToGood($good);
+                $this->entityManager->detach($good);
             }
-            unset($item);
+            $i++;
             if (time() >= $finishTime){
                 return;
             }
