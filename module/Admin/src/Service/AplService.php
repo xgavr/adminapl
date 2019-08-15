@@ -1199,13 +1199,20 @@ class AplService {
             $client->setMethod('POST');
             $client->setParameterPost($post);
 
-            $result = false;
-            $response = $client->send();
-//            var_dump($response->getBody()); exit;
-            if ($response->isOk()) {
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+    //            var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $ok = $result = true;
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok){
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['g.statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
-                $result = true;
             }
 
             unset($post);
