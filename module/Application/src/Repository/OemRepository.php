@@ -71,12 +71,14 @@ class OemRepository  extends EntityRepository{
         if (isset($oems['brandName'])){
             $brandName = $oems['brandName'];
         }
-        $intescetGoodId = NULL;
-        if (isset($oems['intescetGoodId'])){
-            $intescetGoodId = $oems['intescetGoodId'];
-        }
         
         if ($oem == null){
+
+            $intescetGoodId = NULL;
+            if (isset($oems['intescetGoodId'])){
+                $intescetGoodId = $oems['intescetGoodId'];
+            }
+
             $data = [
                 'good_id' => $good->getId(),
                 'oe' => $oe,
@@ -114,11 +116,13 @@ class OemRepository  extends EntityRepository{
      */
     public function addMyCodeAsOe($good)
     {
-        $this->addOemToGood($good, [
+        $oem = $this->addOemToGood($good, [
             'oeNumber' => $good->getCode(), 
             'brandName' => $good->getProducer()->getName(),
           ], Oem::SOURCE_MY_CODE);
             
+        $this->getEntityManager()->detach($oem);
+        
         return;
     }
 
