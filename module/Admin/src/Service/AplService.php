@@ -1167,6 +1167,7 @@ class AplService {
      */
     public function sendGoodOem($good)
     {
+        $result = true;
         if ($good->getAplId()){
             $url = $this->aplApi().'update-good-oem?api='.$this->aplApiKey();
 
@@ -1198,17 +1199,19 @@ class AplService {
             $client->setMethod('POST');
             $client->setParameterPost($post);
 
+            $result = false;
             $response = $client->send();
 //            var_dump($response->getBody()); exit;
             if ($response->isOk()) {
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['g.statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
+                $result = true;
             }
 
             unset($post);
             unset($oems);
         }    
-        return;
+        return $result;
     }
     
     /**
@@ -1222,17 +1225,25 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $goods = $this->entityManager->getRepository(Goods::class)
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateOem();
         
-        foreach ($goods as $good){
-            $this->sendGoodOem($good);
+        $iterable = $goodsQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $result = $this->sendGoodOem($good);
+                $this->entityManager->detach($good);
+                
+                if (!$result){
+                    return;
+                }
+            }    
+            usleep(100);
             if (time() > $startTime + 1740){
                 return;
             }
-            usleep(100);
         }
-        unset($goods);
         return;
     }
     
