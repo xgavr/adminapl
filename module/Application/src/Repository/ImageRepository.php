@@ -32,11 +32,7 @@ class ImageRepository extends EntityRepository
      */
     public function getImageFolder($good, $status)
     {
-        $result = self::GOOD_IMAGE_DIR.'/'.$good->getId().'/'.$status;
-        if (!is_dir($result)){
-            $this->addImageFolder($good, $status);
-        }
-        return $result;
+        return self::GOOD_IMAGE_DIR.'/'.$good->getId().'/'.$status;;
     }
 
     /**
@@ -285,8 +281,6 @@ class ImageRepository extends EntityRepository
      */
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
-        ini_set('memory_limit', '2048M');
-        
         $headers = get_headers($uri, 1);
 //        var_dump($headers);
         if (preg_match("|301|", $headers[0])){
@@ -296,8 +290,8 @@ class ImageRepository extends EntityRepository
         }
         
         if(preg_match("|200|", $headers[0])) {
-            $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
             $saveDocFileName = mb_ereg_replace("[\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`]", '_',  $docFileName);
+            $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
             $image = file_get_contents($uri);
             if ($image){
                 file_put_contents($path, $image);
@@ -353,6 +347,7 @@ class ImageRepository extends EntityRepository
                 ->rawpriceArticles($good);
         foreach ($rawprices as $rawprice){
             if ($rawprice->getImage()){
+                $this->addImageFolder($good, Images::STATUS_SUP);
                 $this->saveImageGood($good, $rawprice->getImage(), basename($rawprice->getImage()), Images::STATUS_SUP, Images::SIMILAR_MATCH);
             }
         }
