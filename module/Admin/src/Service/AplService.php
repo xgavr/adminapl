@@ -1647,6 +1647,7 @@ class AplService {
      */
     public function sendGoodAttribute($good)
     {
+        $result = true;
         if ($good->getAplId()){
             $url = $this->aplApi().'update-good-attribute-value?api='.$this->aplApiKey();
 
@@ -1675,21 +1676,26 @@ class AplService {
             $client->setOptions(['timeout' => 30]);
             $client->setParameterPost($post);
 
+            $result = $ok = false;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
+                    $result = $ok = true;
                 }
             } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
-//                return;
+                $result = false;
             }    
+            
+            if ($ok){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);                
+            }
 
             unset($post);
             unset($attributes);
         }    
-        return;
+        return $result;
     }
     
     /**
@@ -1708,14 +1714,17 @@ class AplService {
         $iterator = $goodsQuery->iterate();
         foreach ($iterator as $row){
             foreach ($row as $good){
-                $this->sendGoodAttribute($good);
+                $result = $this->sendGoodAttribute($good);
+                $this->entityManager->detach($good);
+                if (!$result){
+                    return;
+                }
                 if (time() > $startTime + 1740){
                     return;
                 }
-                $this->entityManager->detach($good);
             }
         }    
-        unset($iterator);
+        
         return;
     }
     
