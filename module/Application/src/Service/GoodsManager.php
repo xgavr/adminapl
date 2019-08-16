@@ -433,25 +433,29 @@ class GoodsManager
     {        
         set_time_limit(900);
         $startTime = time();
-        $finishTime = $startTime + 800;
+        $finishTime = $startTime + 840;
         
-        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+        $goodsForUpdateQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateCarTd();
-
-        if (count($goodsForUpdate) == 0){
-            $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateCarTd();
-            return;
-        }        
-        
-        foreach ($goodsForUpdate as $good){
+        $iterable = $goodsForUpdateQuery->iterate();
+        $i = 0;
+                
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $this->externalManager->addCarsToGood($good);
+                $this->entityManager->detach($good);
+            }    
+            $i++;
             if (time() >= $finishTime){
                 return;
             }
-//            $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
-            $this->externalManager->addCarsToGood($good);
-//            $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED], ['id' => $good->getId()]);
         }
+
+        if ($i == 0){
+            $this->entityManager->getRepository(Goods::class)
+                    ->resetUpdateCarTd();
+        }        
+        
         
         return;
     }

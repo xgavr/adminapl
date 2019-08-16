@@ -1157,6 +1157,10 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    /**
+     * Обновление машин из текдока
+     * @return JsonModel
+     */
     public function tdUpdateCarsAction()
     {
         $settings = $this->adminManager->getTdExchangeSettings();
@@ -1212,6 +1216,10 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    /**
+     * Обновление номеров из Текдока
+     * @return JsonModel
+     */
     public function tdUpdateOemAction()
     {
         $settings = $this->adminManager->getTdExchangeSettings();
@@ -1227,6 +1235,10 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    /**
+     * Обновление групп из текдока
+     * @return JsonModel
+     */
     public function tdUpdateGroupAction()
     {
         $settings = $this->adminManager->getTdExchangeSettings();

@@ -744,11 +744,11 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusCar = ?1')
             ->setParameter('1', Goods::CAR_FOR_UPDATE)    
-            ->setMaxResults(2000) 
+            //->setMaxResults(2000) 
                 
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
     
     /**
