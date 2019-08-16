@@ -10,7 +10,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Application\Filter\ProducerName;
+use Admin\Filter\TransferName;
 
 /**
  * Description of Producer
@@ -113,7 +113,7 @@ class Oem {
 
     public function getTransferBrandName() 
     {
-        $filter = new ProducerName();
+        $filter = new TransferName();
         return $filter->filter($this->brandName);
     }
 
