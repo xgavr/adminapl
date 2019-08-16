@@ -451,11 +451,11 @@ class TokenRepository  extends EntityRepository
                 ->setParameter('2', Rawprice::GOOD_OK)
                 ->setParameter('3', Rawprice::TOKEN_PARSED)
                 ->setParameter('4', Rawprice::STATUS_PARSED)
-                ->setMaxResults(100000)
+                //->setMaxResults(100000)
                 ;
 
 //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();        
+        return $queryBuilder->getQuery();        
         
     }
     

@@ -772,32 +772,35 @@ class NameManager
     
     /**
      * Выборка токенов из прайса и добавление их в таблицу токенов
-     * @param \Appllication\Entity\Raw $raw
+     * @param Raw $raw
      */
     public function grabTokenGroupFromRaw($raw)
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(900);
+        $startTime = time();
         
-        $rawprices = $this->entityManager->getRepository(Token::class)
-//                ->findBy(['raw' => $raw->getId(), 'statusGood' => Rawprice::GOOD_OK, 'statusToken' => Rawprice::TOKEN_PARSED]);
+        $rawpricesQuery = $this->entityManager->getRepository(Token::class)
                 ->findTokenGroupsForAccembly($raw);
+        $iterable = $rawpricesQuery->iterate();
+        $i = 0;
         
-        foreach ($rawprices as $rawprice){
-            $this->addGroupTokenFromGood($rawprice->getGood());                
-
-            $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]);                        
-            
+        foreach ($iterable as $row){
+            foreach ($row as $rawprice){
+                $this->addGroupTokenFromGood($rawprice->getGood());
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
+                $this->entityManager->detach($rawprice);
+            }
+            $i++;
+            if (time() > $startTime + 840){
+                break;
+            }            
         }
         
-        $rawprices = $this->entityManager->getRepository(Token::class)
-                ->findTokenGroupsForAccembly($raw);
-        
-        if (count($rawprices) == 0){
+        if ($raw->getRows() >= $i){
             $raw->setParseStage(Raw::STAGE_TOKEN_GROUP_PARSED);
             $this->entityManager->persist($raw);
-
             $this->entityManager->flush();
         }
         
