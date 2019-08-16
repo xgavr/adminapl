@@ -1259,6 +1259,10 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    /**
+     * Обновление описаний из текдока
+     * @return JsonModel
+     */
     public function tdUpdateAttributeAction()
     {
         $settings = $this->adminManager->getTdExchangeSettings();
@@ -1274,7 +1278,10 @@ class ProcessingController extends AbstractActionController
         
     }
     
-    
+    /**
+     * Обновление картинок из текдока
+     * @return JsonModel
+     */
     public function tdUpdateImagesAction()
     {
         $settings = $this->adminManager->getTdExchangeSettings();

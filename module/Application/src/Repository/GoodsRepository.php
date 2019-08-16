@@ -807,7 +807,7 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
-     * Найти товары для обновления групп по апи текдока
+     * Найти товары для обновления описаний по апи текдока
      * 
      * @return object
      */
@@ -820,12 +820,12 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusDescription = ?1')
             ->setParameter('1', Goods::DESCRIPTION_FOR_UPDATE)    
-            ->setMaxResults(2000)    
-            ->orderBy('g.statusGroup', 'DESC')
-            ->addOrderBy('g.id')    
+            //->setMaxResults(2000)    
+            //->orderBy('g.statusGroup', 'DESC')
+            //->addOrderBy('g.id')    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
     
     /**
