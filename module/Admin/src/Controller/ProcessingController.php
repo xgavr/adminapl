@@ -968,7 +968,7 @@ class ProcessingController extends AbstractActionController
     }    
 
     /**
-     * Обновление картинок товаров
+     * Обновление групп товаров
      * 
      * @return JsonModel
      */

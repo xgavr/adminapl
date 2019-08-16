@@ -1488,19 +1488,23 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $goods = $this->entityManager->getRepository(Goods::class)
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateCar();
+        $iterable = $goodsQuery->iterate();
         
-        foreach ($goods as $good){
-            if (!$this->sendGoodCar($good)){
-                return;
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $result = $this->sendGoodCar($good);
+                $this->entityManager->detach($good);
+                if (!$result){
+                    return;
+                }
             }
             if (time() > $startTime + 1740){
                 return;
             }
             usleep(100);
         }
-        unset($goods);
         return;
     }
     

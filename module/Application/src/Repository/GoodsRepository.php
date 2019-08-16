@@ -633,11 +633,11 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->setParameter('1', Goods::CAR_EX_NEW)    
             ->setParameter('2', Goods::DEFAULT_GROUP_APL_ID)    
-            ->setMaxResults(10000) 
+            //->setMaxResults(10000) 
                 
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }    
     
     /**
