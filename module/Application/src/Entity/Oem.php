@@ -10,6 +10,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Application\Filter\ProducerName;
 
 /**
  * Description of Producer
@@ -108,6 +109,12 @@ class Oem {
     public function getBrandName() 
     {
         return $this->brandName;
+    }
+
+    public function getTransferBrandName() 
+    {
+        $filter = new ProducerName();
+        return $filter->filter($this->brandName);
     }
 
     public function setBrandName($brandName) 

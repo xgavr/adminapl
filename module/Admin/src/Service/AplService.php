@@ -1189,7 +1189,7 @@ class AplService {
                     'parent'    => $good->getAplId(),
                     'sort'      => $oem->getSourceTagAsString(),
                     'name'      => $oem->getOeNumber(),
-                    'desc'      => $oem->getBrandName(),
+                    'desc'      => $oem->getTransferBrandName(),
                     'sf'        => $oem->getSourceAsString(),
                 ]; 
             }
