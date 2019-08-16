@@ -783,7 +783,6 @@ class NameManager
         $rawpricesQuery = $this->entityManager->getRepository(Token::class)
                 ->findTokenGroupsForAccembly($raw);
         $iterable = $rawpricesQuery->iterate();
-        $i = 0;
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
@@ -792,17 +791,14 @@ class NameManager
                         ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
                 $this->entityManager->detach($rawprice);
             }
-            $i++;
             if (time() > $startTime + 840){
-                break;
+                return;
             }            
         }
         
-        if ($raw->getRows() >= $i){
-            $raw->setParseStage(Raw::STAGE_TOKEN_GROUP_PARSED);
-            $this->entityManager->persist($raw);
-            $this->entityManager->flush();
-        }
+        $raw->setParseStage(Raw::STAGE_TOKEN_GROUP_PARSED);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
         
         return;
     }
