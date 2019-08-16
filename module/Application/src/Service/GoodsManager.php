@@ -290,24 +290,31 @@ class GoodsManager
     {        
         set_time_limit(900);
         $startTime = time();
-        $finishTime = $startTime + 800;
+        $finishTime = $startTime + 840;
         
-        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+        $goodsForUpdateQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateGroupTd();
+        
+        $iterable = $goodsForUpdateQuery->iterate();
+        
+        $i = 0;
 
-        if (count($goodsForUpdate) == 0){
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $this->externalManager->updateGoodGenericGroup($good);
+                $this->entityManager->detach($good);
+            }    
+            $i++;
+            if (time() >= $finishTime){
+                break;
+            }
+        }
+        
+        if ($i == 0){
             $this->entityManager->getRepository(Goods::class)
                     ->resetUpdateGroupTd();
-            return;
         }
-        
-        foreach ($goodsForUpdate as $good){
-            if (time() >= $finishTime){
-                return;
-            }
-            $this->externalManager->updateGoodGenericGroup($good);
-        }
-        
+                
         return;
     }
 

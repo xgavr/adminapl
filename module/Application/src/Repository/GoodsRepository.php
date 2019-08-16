@@ -798,12 +798,12 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusGroup = ?1')
             ->setParameter('1', Goods::GROUP_FOR_UPDATE)    
-            ->setMaxResults(2000)    
-            ->orderBy('g.statusOem', 'DESC')
-            ->addOrderBy('g.id')    
+            //->setMaxResults(2000)    
+            //->orderBy('g.statusOem', 'DESC')
+            //->addOrderBy('g.id')    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
     
     /**
