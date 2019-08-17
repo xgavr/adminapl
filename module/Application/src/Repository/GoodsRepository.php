@@ -1092,7 +1092,7 @@ class GoodsRepository extends EntityRepository
             ;
         
         if (is_array($params)){
-            if ($params['q']){
+            if (isset($params['q'])){
                 $filter = new \Application\Filter\ArticleCode();
                 $queryBuilder->andWhere('o.oe like :search')
                     ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
