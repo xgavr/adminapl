@@ -290,7 +290,7 @@ class GoodsManager
     {        
         set_time_limit(900);
         $startTime = time();
-        $finishTime = $startTime + 840;
+        $finishTime = $startTime + 60;
         
         $goodsForUpdateQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateGroupTd();

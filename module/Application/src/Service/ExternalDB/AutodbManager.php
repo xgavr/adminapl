@@ -344,6 +344,7 @@ class AutodbManager
                 }
             }    
         }
+        unset($articles);
         
         return;
     }
