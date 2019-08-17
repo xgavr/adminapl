@@ -247,7 +247,7 @@ class AutodbManager
             $genericGroup = $good->getGenericGroup();
         }
         
-        if ($genericGroup){
+        if ($genericGroup->getTdId()>0){
             $params = [
                 'articleNumber' => $good->getCode(), 
                 'articleCountry' => 'RU',            
@@ -264,7 +264,9 @@ class AutodbManager
                 }
             }
             
-            foreach ($good->getOems() as $oem){
+            $oems = $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                    ->findOems($good, ['limit' => 100]);
+            foreach ($oems as $oem){
                 $params['articleNumber'] = $oem->getOe();
                 $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
                 if (isset($result['data'])){

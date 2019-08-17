@@ -1098,6 +1098,11 @@ class GoodsRepository extends EntityRepository
                     ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
                         ;
             }
+            if (isset($params['limit'])){
+                if (is_numeric($params['limit'])){
+                    $queryBuilder->setMaxResults($params['limit']);
+                }    
+            }
         }
         
         return $queryBuilder->getQuery();            
