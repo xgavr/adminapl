@@ -613,7 +613,7 @@ class GoodsManager
                     if ($good){
                         $this->updatePrices($good);
                         $this->entityManager->detach($good);
-                        $this->entityManager->detach($article);
+                        //$this->entityManager->detach($article);
                         $this->entityManager->detach($rawprice);
                     }    
                 }    
