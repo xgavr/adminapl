@@ -607,15 +607,11 @@ class GoodsManager
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
-                $article = $rawprice->getCode();
-                if ($article){
-                    $good = $article->getGood();
-                    if ($good){
-                        $this->updatePrices($good);
-                        $this->entityManager->detach($good);
-                        //$this->entityManager->detach($article);
-                        $this->entityManager->detach($rawprice);
-                    }    
+                $good = $rawprice->getGood();
+                if ($good){
+                    $this->updatePrices($good);
+                    $this->entityManager->detach($good);
+                    $this->entityManager->detach($rawprice);
                 }    
             }    
             if (time() > $startTime + 840){
