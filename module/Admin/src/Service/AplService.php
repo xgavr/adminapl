@@ -1046,6 +1046,7 @@ class AplService {
             }
         } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
             $ok = true;
+            $result = 0;
         }    
         
         if ($ok) {            

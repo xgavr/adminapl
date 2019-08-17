@@ -851,6 +851,7 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * НЕИСПОЛЬЗУЕТСЯ
      * Сравнение строк прайсов товаров
      * 
      * @return JsonModel
