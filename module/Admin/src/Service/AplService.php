@@ -691,7 +691,7 @@ class AplService {
                             ->updateGoodId($good->getId(), ['group_apl' => $body]);
                     return;
                 }
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
 //                var_dump($ex->getMessage());
                 return;
             }
@@ -710,15 +710,18 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $goods = $this->entityManager->getRepository(Goods::class)
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateGroupAplId();
-        
-        foreach ($goods as $good){
-            $this->getGroupAplId($good);
+        $iterable = $goodsQuery->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $this->getGroupAplId($good);
+                $this->entityManager->detach($good);
+            }    
+            usleep(100);
             if (time() > $startTime + 1740){
                 return;
             }
-            usleep(100);
         }
         return;
     }

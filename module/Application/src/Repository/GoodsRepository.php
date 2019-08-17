@@ -547,10 +547,10 @@ class GoodsRepository extends EntityRepository
             ->where('g.aplId != 0')
             ->andWhere('g.groupApl = ?1')
             ->setParameter('1', Goods::DEFAULT_GROUP_APL_ID)    
-            ->setMaxResults(10000)    
+            //->setMaxResults(10000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
     
     /**
