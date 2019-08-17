@@ -526,10 +526,10 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
             ->where('g.aplId = 0')
-            ->setMaxResults(10000)    
+            //->setMaxResults(10000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
     
     /**

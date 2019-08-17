@@ -601,7 +601,7 @@ class AplService {
      */ 
     public function getGoodAplId($good)
     {
-        
+        $result = true;
         if ($good->getProducer()->getAplId()){
         
             $url = $this->aplApi().'get-good-id?api='.$this->aplApiKey();
@@ -622,21 +622,22 @@ class AplService {
             $client->setParameterPost($post);
 
 //            var_dump($body); exit; 
+            $result = false;
             try {
                 $response = $client->send();
                 $body = $response->getBody();
                 if (is_numeric($body)){
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGoodId($good->getId(), ['apl_id' => $body]);
-                    return;
+                    $result = true;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $ex){
 //                var_dump($ex->getMessage());
-                return;
+                $result = false;
             }
         }
         
-        return;
+        return $result;
     }
     
     /**
@@ -649,15 +650,21 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $goods = $this->entityManager->getRepository(Goods::class)
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateAplId();
-        
-        foreach ($goods as $good){
-            $this->getGoodAplId($good);
+        $iterable = $goodsQuery->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $result = $this->getGoodAplId($good);
+                $this->entityManager->detach($good);
+                if (!$result){
+                    return;
+                }
+            }    
+            usleep(100);
             if (time() > $startTime + 1740){
                 return;
             }
-            usleep(100);
         }
         return;
     }
