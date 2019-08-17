@@ -640,28 +640,31 @@ class AssemblyManager
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 840;
         
-        $rawprices = $this->entityManager->getRepository(Goods::class)
+        $rawpricesQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForAccembly($raw);
 
         $zeroGroup = $this->entityManager->getRepository(GenericGroup::class)
                 ->findOneByTdId(0);
+        $iterable = $rawpricesQuery->iterate();
         
-        foreach ($rawprices as $rawprice){
-            $this->addNewGoodFromRawprice($rawprice, $zeroGroup);
+        foreach ($iterable as $row){
+            foreach ($row as $rawprice){
+                $this->addNewGoodFromRawprice($rawprice, $zeroGroup);
+                $this->entityManager->detach($rawprice);
+            }    
+            if (time() >= $finishTime){
+                return;
+            }
         }
         
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->findGoodsForAccembly($raw);
-        
-//        var_dump(count($rawprices)); exit;
-        if (count($rawprices) == 0){
-            $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
-            $raw->setStatusEx(Raw::EX_TO_TRANSFER);
-            $this->entityManager->persist($raw);
-
-            $this->entityManager->flush();
-        }    
+        $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
+        $raw->setStatusEx(Raw::EX_TO_TRANSFER);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
+        return;
     }
     
 }

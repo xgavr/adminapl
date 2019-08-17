@@ -87,11 +87,11 @@ class GoodsRepository extends EntityRepository
                 ->setParameter('1', $raw->getId())
                 ->setParameter('2', Rawprice::GOOD_NEW)
                 ->setParameter('3', Rawprice::STATUS_PARSED)
-                ->setMaxResults(100000)
+                //->setMaxResults(100000)
                 ;
 
 //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();        
+        return $queryBuilder->getQuery();        
         
     }
 
