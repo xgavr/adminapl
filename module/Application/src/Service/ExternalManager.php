@@ -892,6 +892,7 @@ class ExternalManager
                     ->findOneByTdId($genericArticleId);
 
             if ($genericGroup == null){
+                var_dump(111); exit;
                 $this->updateGenericGroup(); //обновить справочник групп из ТД
                 $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
                         ->findOneByTdId($genericArticleId);
