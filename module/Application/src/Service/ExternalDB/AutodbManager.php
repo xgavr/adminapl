@@ -265,7 +265,7 @@ class AutodbManager
             }
             
             $oems = $this->entityManager->getRepository(\Application\Entity\Oem::class)
-                    ->findOems($good, ['limit' => 100]);
+                    ->findOems($good, ['limit' => 10]);
             foreach ($oems as $oem){
                 $params['articleNumber'] = $oem->getOe();
                 $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
