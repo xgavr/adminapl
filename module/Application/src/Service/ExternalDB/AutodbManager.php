@@ -264,7 +264,7 @@ class AutodbManager
                 }
             }
             
-            $oems = $this->entityManager->getRepository(\Application\Entity\Oem::class)
+            $oems = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                     ->findOems($good, ['limit' => 10]);
             foreach ($oems as $oem){
                 $params['articleNumber'] = $oem->getOe();
