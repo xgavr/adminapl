@@ -898,10 +898,10 @@ class ExternalManager
             }
         }   
         
-//        if (!$genericGroup && $good->getTokenGroup()){
-//            $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
-//                    ->findGenericTokenGroup($good->getTokenGroup());
-//        }
+        if (!$genericGroup && $good->getTokenGroup()){
+            $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
+                    ->findGenericTokenGroup($good->getTokenGroup());
+        }
         
         $statusData = ['status_group' => Goods::GROUP_UPDATED];
 
