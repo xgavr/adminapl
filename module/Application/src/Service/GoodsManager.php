@@ -601,14 +601,22 @@ class GoodsManager
         set_time_limit(900);
         $startTime = time();
         
-        $goodsQuery = $this->entityManager->getRepository(Goods::class)
-                ->findGoodsForUpdatePrice($raw);
+        $rawpriceQuery = $this->entityManager->getRepository(Goods::class)
+                ->findRawpriceForUpdatePrice($raw);
         $iterable = $goodsQuery->iterate();
         
         foreach ($iterable as $row){
-            foreach ($row as $good){
-                $this->updatePrices($good);
-                $this->entityManager->detach($good);
+            foreach ($row as $rawprice){
+                $article = $rawprice->getCode();
+                if ($article){
+                    $good = $article->getGood();
+                    if ($good){
+                        $this->updatePrices($good);
+                        $this->entityManager->detach($good);
+                        $this->entityManager->detach($article);
+                        $this->entityManager->detach($rawprice);
+                    }    
+                }    
             }    
             if (time() > $startTime + 840){
                 return;

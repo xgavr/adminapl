@@ -101,15 +101,13 @@ class GoodsRepository extends EntityRepository
      * @param Application\Entity\Rawprice $raw
      * @return array
      */
-    public function findGoodsForUpdatePrice($raw)
+    public function findRawpriceForUpdatePrice($raw)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g')
-                ->from(Goods::class, 'g')
-                ->join('g.articles', 'a')
-                ->join('a.rawprice', 'r')
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusPrice = ?2')
                 ->andWhere('r.status = ?3')
