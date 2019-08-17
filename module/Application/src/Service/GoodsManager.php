@@ -599,24 +599,25 @@ class GoodsManager
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
+        $startTime = time();
         
-        $goods = $this->entityManager->getRepository(Goods::class)
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdatePrice($raw);
+        $iterable = $goodsQuery->iterate();
         
-        foreach ($goods as $good){
-//            var_dump($good->getId()); exit;
-            $this->updatePrices($good);
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $this->updatePrices($good);
+                $this->entityManager->detach($good);
+            }    
+            if (time() > $startTime + 840){
+                return;
+            }
         }
         
-        $goods = $this->entityManager->getRepository(Goods::class)
-                ->findGoodsForUpdatePrice($raw);
-        
-        if (count($goods) == 0){
-            $raw->setParseStage(\Application\Entity\Raw::STAGE_PRICE_UPDATET);
-            $this->entityManager->persist($raw);
-
-            $this->entityManager->flush();
-        } 
+        $raw->setParseStage(\Application\Entity\Raw::STAGE_PRICE_UPDATET);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
         
         return;
     }
