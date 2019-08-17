@@ -603,7 +603,7 @@ class GoodsManager
         
         $rawpriceQuery = $this->entityManager->getRepository(Goods::class)
                 ->findRawpriceForUpdatePrice($raw);
-        $iterable = $goodsQuery->iterate();
+        $iterable = $rawpriceQuery->iterate();
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
