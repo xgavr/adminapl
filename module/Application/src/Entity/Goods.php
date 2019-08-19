@@ -411,7 +411,7 @@ class Goods {
     public function setProducer($producer) 
     {
         $this->producer = $producer;
-        $producer->addGoods($this);
+//        $producer->addGoods($this);
     }     
 
     /*

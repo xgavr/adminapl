@@ -589,8 +589,8 @@ class AssemblyManager
      * Добавление нового товара из прайса
      * 
      * @param \Application\Entity\Rawprice $rawprice
-     * @param \Application\Entity\Rawprice $zeroGroup
-     * @param bool $flush
+     * @param \Application\Entity\GenericGroup $zeroGroup
+     * 
      */
     public function addNewGoodFromRawprice($rawprice, $zeroGroup = null) 
     {
@@ -625,14 +625,14 @@ class AssemblyManager
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['g.statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);
                 
-                $this->entityManager->detach($article);
-                $this->entityManager->detach($producer);
-                $this->entityManager->detach($good);
             }
             
             $this->entityManager->getRepository(Rawprice::class)
                     ->updateRawpriceField($rawprice->getId(), ['good_id' => $good->getId(), 'status_good' => Rawprice::GOOD_OK]);
             
+            $this->entityManager->detach($article);
+            $this->entityManager->detach($producer);
+            $this->entityManager->detach($good);
         }
         return;
     }
