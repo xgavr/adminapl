@@ -97,12 +97,14 @@ class OemRepository  extends EntityRepository{
             }    
         } else {
             if ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
-                $oem->setSource(Oem::SOURCE_TD);
-                $oem->setOe($oe);
-                $oem->setOeNumber($oems['oeNumber']);
-                $oem->setBrandName($brandName);
-                $this->getEntityManager()->persist($oem);
-                $this->getEntityManager()->flush($oem);
+                $this->getEntityManager()->getConnection()->update('oem', 
+                        [
+                            'oe' => $oe, 
+                            'oe_number' => $oems['oeNumber'],
+                            'brand_name' => $brandName,
+                            'source' => Oem::SOURCE_TD,
+                        ], 
+                        ['id' => $oem->getId()]);
             }
         }
         
