@@ -624,16 +624,15 @@ class AssemblyManager
                 
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['g.statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);
+                
+                $this->entityManager->detach($article);
+                $this->entityManager->detach($producer);
+                $this->entityManager->detach($good);
             }
             
             $this->entityManager->getRepository(Rawprice::class)
                     ->updateRawpriceField($rawprice->getId(), ['good_id' => $good->getId(), 'status_good' => Rawprice::GOOD_OK]);
             
-            $this->entityManager->detach($article);
-            $this->entityManager->detach($producer);
-            if ($good){
-                $this->entityManager->detach($good);
-            }    
         }
         return;
     }
