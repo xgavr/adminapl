@@ -684,8 +684,7 @@ class AssemblyManager
                         ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
                 
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);
-                
+                        ->updateGood($good, ['g.statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);                
             }
             
             $this->entityManager->getRepository(Rawprice::class)
@@ -693,7 +692,6 @@ class AssemblyManager
             
             $this->entityManager->detach($good);
             $this->entityManager->detach($article);
-            $this->entityManager->detach($producer);
         }
         return;
     }
