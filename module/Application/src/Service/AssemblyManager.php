@@ -631,7 +631,9 @@ class AssemblyManager
             
             $this->entityManager->detach($article);
             $this->entityManager->detach($producer);
-            $this->entityManager->detach($good);
+            if ($good){
+                $this->entityManager->detach($good);
+            }    
         }
         return;
     }
