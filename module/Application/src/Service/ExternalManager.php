@@ -839,6 +839,9 @@ class ExternalManager
      */
     public function addOemsToGood($good)
     {
+        $this->entityManager->getRepository(Goods::class)
+                ->removeGoodSourceOem($good, Oem::SOURCE_TD);
+        
         $this->entityManager->getRepository(Oem::class)
                 ->removeIntersectOem($good);
         
@@ -847,9 +850,6 @@ class ExternalManager
         $this->entityManager->getRepository(Oem::class)
                 ->addCrosOem($good);
 
-        $this->entityManager->getRepository(Goods::class)
-                ->removeGoodSourceOem($good, Oem::SOURCE_TD);
-        
         $info = $this->autoDbManager->getDirectInfo($good);
         if (!is_array($info)){
             $info = $this->autoDbManager->getSimilarDirectInfo($good);
