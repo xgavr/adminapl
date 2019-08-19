@@ -147,6 +147,7 @@ class AssemblyManager
             'fix_price' => 0.0,
             'markup' => 0.0,
             'group_apl' => Goods::DEFAULT_GROUP_APL_ID,
+            'token_group_id' => NULL,
         ];
 
         if (!$zeroGroup){
