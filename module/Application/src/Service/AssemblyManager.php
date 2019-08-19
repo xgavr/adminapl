@@ -69,7 +69,7 @@ class AssemblyManager
      * @param \Application\Entity\GenericGroup $zeroGroup
      * @return Goods
      */
-    public function addNewGood($code, $producer, $zeroGroup = null) 
+    public function addNewGoodFlush($code, $producer, $zeroGroup = null) 
     {
         // Создаем новую сущность Goods.
         $good = new Goods();
@@ -109,6 +109,66 @@ class AssemblyManager
         return $good;
     }   
     
+    /**
+     * Добавление новой карточки товара
+     * 
+     * @param string $code
+     * @param \Application\Entity\Producer $producer
+     * @param \Application\Entity\GenericGroup $zeroGroup
+     * @return Goods
+     */
+    public function addNewGood($code, $producer, $zeroGroup = null) 
+    {
+        // Создаем новую сущность Goods.
+        $data = [
+            'code' => $code,
+            'producer_id' => $producer->getId(),
+            'name' => '',
+            'available' => Goods::AVAILABLE_TRUE,
+            'description' => '',
+            'price' => 0,
+            'status_car' => Goods::CAR_FOR_UPDATE,
+            'status_description' => Goods::DESCRIPTION_FOR_UPDATE,
+            'status_group' => Goods::GROUP_FOR_UPDATE,
+            'status_image' => Goods::IMAGE_FOR_UPDATE,
+            'status_oem' => Goods::OEM_FOR_UPDATE,
+            'status_rawprice_ex' => Goods::RAWPRICE_EX_NEW,
+            'date_ex' => date('Y-m-d H:i:s'),
+            'car_count' => 0,
+            'apl_id' => 0,
+            'status_oem_ex' => Goods::OEM_EX_NEW,
+            'status_attr_ex' => Goods::ATTR_EX_NEW,
+            'status_car_ex' => Goods::CAR_EX_NEW,
+            'status_img_ex' => Goods::IMG_EX_NEW,
+            'status_price_ex' => Goods::PRICE_EX_NEW,
+            'status_group_ex' => Goods::GROUP_EX_NEW,
+            'min_price' => 0.0,
+            'mean_price' => 0.0,
+            'fix_price' => 0.0,
+            'markup' => 0.0,
+            'group_apl' => Goods::DEFAULT_GROUP_APL_ID,
+        ];
+
+        if (!$zeroGroup){
+            $zeroGroup = $this->entityManager->getRepository(GenericGroup::class)
+                    ->findOneByTdId(0);
+        }                
+        if ($zeroGroup){
+            $data['generic_group_id'] = $zeroGroup->getId();
+        }
+        
+        $this->entityManager->getConnection()->insert('goods', $data);
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+        
+        if ($good){
+            $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                    ->addMyCodeAsOe($good);
+        }    
+        
+        return $good;
+    }   
+
     /**
      * Добавление новой карточки товара из артикула
      * 
@@ -630,9 +690,9 @@ class AssemblyManager
             $this->entityManager->getRepository(Rawprice::class)
                     ->updateRawpriceField($rawprice->getId(), ['good_id' => $good->getId(), 'status_good' => Rawprice::GOOD_OK]);
             
+            $this->entityManager->detach($good);
             $this->entityManager->detach($article);
             $this->entityManager->detach($producer);
-            $this->entityManager->detach($good);
         }
         return;
     }
