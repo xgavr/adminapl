@@ -23,7 +23,7 @@ class OemManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
@@ -39,7 +39,7 @@ class OemManager
      * @param Application\Entity\Goods $good
      * @param array $data
      * 
-     * @return Application\Entity\Oem;
+     * @return \Application\Entity\Oem;
      */
     public function addOem($good, $data)
     {
@@ -155,55 +155,48 @@ class OemManager
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
+        $startTime = time();
         
         $filter = new ArticleCode();
         
-//        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-//                ->findBy(['raw' => $raw->getId(), 'statusOem' => Rawprice::OEM_NEW]);
-        
-        $rows = $this->entityManager->getRepository(OemRaw::class)
+        $rawpriceQuery = $this->entityManager->getRepository(OemRaw::class)
                 ->findOemForInsert($raw);
+        $iterable = $rawpriceQuery->iterate();
         
-        foreach ($rows as $row){
-            
-//            $rawprice->getOemRaw()->clear();
-        
-            $oems = Rawprice::getOemVendorAsArray($row['oem'], $row['vendor']);
-            
-            if (is_array($oems)){
-                foreach ($oems as $oemCode){
-                    
-                    $filteredCode = mb_strcut(trim($filter->filter($oemCode)), 0, 24, 'UTF-8');
-                    
-                    try{
-                        $inserted = $this->entityManager->getRepository(OemRaw::class)
-                                ->insertOemRaw([
-                                    'code' => $filteredCode,
-                                    'fullcode' => mb_substr($oemCode, 0, 36),
-                                    'article_id' => $row['articleId'],                                
-                                ]);
-                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
-                        //дубликат;
+        foreach ($iterable as $row){
+            foreach($row as $rawprice){    
+                if ($rawprice->getCode()){
+                    $oems = $rawprice->getOemAsArray();            
+                    if (is_array($oems)){
+                        foreach ($oems as $oemCode){                    
+                            $filteredCode = mb_strcut(trim($filter->filter($oemCode)), 0, 24, 'UTF-8');                    
+                            try{
+                                $inserted = $this->entityManager->getRepository(OemRaw::class)
+                                        ->insertOemRaw([
+                                            'code' => $filteredCode,
+                                            'fullcode' => mb_substr($oemCode, 0, 36),
+                                            'article_id' => $rawprice->getCode()->getId(),                                
+                                        ]);
+                            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
+                                //дубликат;
+                            }                        
+                            $this->entityManager->getRepository(Rawprice::class)
+                                    ->updateRawpriceField($rawprice->getId(), ['status_oem' => Rawprice::OEM_PARSED]);
+                        }
                     }    
-                    
-//                    $oem = $this->entityManager->getRepository(OemRaw::class)
-//                            ->findOneBy(['code' => $filteredCode, 'article' => $rawprice->getCode()->getId()]);
-//                            
-//                    if ($oem){
-//                        $rawprice->getCode()->addOemRaw($oem);
-//                        $rawprice->addOemRaw($oem);
-//                    }   
                 }    
-                
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($row['id'], ['status_oem' => Rawprice::OEM_PARSED]);
+                $this->entityManager->detach($rawprice);
             }                
+            if (time() > $startTime + 840){
+                return;
+            }            
         }
                 
         $raw->setParseStage(Raw::STAGE_OEM_PARSED);
-        $this->entityManager->persist($raw);
-        
+        $this->entityManager->persist($raw);        
         $this->entityManager->flush();
+        
+        return;
     }
     
     /**
