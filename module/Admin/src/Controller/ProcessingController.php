@@ -295,7 +295,7 @@ class ProcessingController extends AbstractActionController
         );
     }
     
-    /*
+    /**
      * Разборка прайсов
      */
     public function parseRawAction()
