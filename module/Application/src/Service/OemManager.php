@@ -169,17 +169,17 @@ class OemManager
                     $oems = $rawprice->getOemAsArray();            
                     if (is_array($oems)){
                         foreach ($oems as $oemCode){                    
-                            $filteredCode = mb_strcut(trim($filter->filter($oemCode)), 0, 24, 'UTF-8');                    
-                            try{
-                                $inserted = $this->entityManager->getRepository(OemRaw::class)
+                            $filteredCode = mb_strcut(trim($filter->filter($oemCode)), 0, 24, 'UTF-8');
+                            $oem = $this->entityManager->getRepository(OemRaw::class)
+                                    ->findOneBy(['code' => $filteredCode, 'article' => $rawprice->getCode()->getId()]);
+                            if ($oem == null){
+                                $this->entityManager->getRepository(OemRaw::class)
                                         ->insertOemRaw([
                                             'code' => $filteredCode,
                                             'fullcode' => mb_substr($oemCode, 0, 36),
                                             'article_id' => $rawprice->getCode()->getId(),                                
                                         ]);
-                            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
-                                //дубликат;
-                            }                        
+                            }    
                             $this->entityManager->getRepository(Rawprice::class)
                                     ->updateRawpriceField($rawprice->getId(), ['status_oem' => Rawprice::OEM_PARSED]);
                         }
