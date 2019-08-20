@@ -1152,7 +1152,8 @@ class AplService {
         $client->setOptions(['timeout' => 30]);
         $client->setMethod('POST');
         $client->setParameterPost($post);
-
+        
+        $ok = false;
         try{
             $response = $client->send();
             if ($response->isOk()) {

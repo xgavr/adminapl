@@ -111,7 +111,7 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрое обновлеие строки прайса
-     * @param Application\Entity\Rawprice $rawprice
+     * @param \Application\Entity\Rawprice $rawprice
      * @return integer
      */
     public function updateRawprice($rawprice)

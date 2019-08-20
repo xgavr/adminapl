@@ -156,7 +156,7 @@ class ParseManager {
      * @param integer $status
      */
     
-    public function updateRawprice($rawprice, $priceDescriptionFunc = null, $flushnow = true, $status = Rawprice::STATUS_PARSED)
+    public function updateRawprice($rawprice, $priceDescriptionFunc = null, $status = Rawprice::STATUS_PARSED)
     {
         $data = $this->parseRawdata($rawprice, $priceDescriptionFunc);
         
@@ -333,9 +333,6 @@ class ParseManager {
                     $oldRaw->setStatus(Raw::STATUS_PRE_RETIRED);
                     $this->entityManager->persist($oldRaw);
                     $this->entityManager->flush($oldRaw);            
-
-//                    $this->entityManager->getRepository(Raw::class)
-//                            ->updateAllRawpriceStatus($oldRaw, Rawprice::STATUS_RETIRED);
                 }                      
             }    
             
@@ -352,16 +349,15 @@ class ParseManager {
     public function parseRaw($raw = null)
     {
         ini_set('memory_limit', '4096M');
-        set_time_limit(0);
-//        echo memory_get_usage() . "\n";
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 840;
         
         if (!$raw){
             $raw = $this->findRawForParse();
         }    
         
         if ($raw){
-            
-//            $rawprices = $this->findRawpricesForParse($raw);
             $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)
                     ->queryRawpriceForParse($raw);
             $rawpriceIterator = $rawpriceQuery->iterate();
@@ -377,33 +373,21 @@ class ParseManager {
                 foreach ($rawpriceIterator as $rawpriceItem){
                     foreach ($rawpriceItem as $rawprice){
                         if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
-                            $this->updateRawprice($rawprice, $priceDescriptionFunc, false, Rawprice::STATUS_PARSED);
+                            $this->updateRawprice($rawprice, $priceDescriptionFunc, Rawprice::STATUS_PARSED);
                         }
-                        unset($rawprice);
+                        $this->entityManager->detach($rawprice);
                     }    
-                    unset($rawpriceItem);
-                }
-                
-                $parsedAll = true;
-                $statuses = $this->entityManager->getRepository(Raw::class)
-                        ->rawpriceStatuses($raw);
-                
-                foreach ($statuses as $status){
-                    if ($status['status'] == Rawprice::STATUS_NEW && $status['status_count']){
-                        $parsedAll = false;
+                    if (time() >= $finishTime){
+                        return;
                     }
                 }
+                
+                $raw->setStatus(Raw::STATUS_PARSED);
+                $this->entityManager->persist($raw);                    
+                $this->entityManager->flush($raw);
 
-                if ($parsedAll){            
-                    $raw->setStatus(Raw::STATUS_PARSED);
-                    $this->entityManager->persist($raw);                    
-                    $this->entityManager->flush($raw);
-                    
-                    $this->setOldRaw($raw);
-                }
-
+                $this->setOldRaw($raw);
             } 
-//            echo memory_get_usage() . "\n"; // 36640
         }    
         return;
     }
