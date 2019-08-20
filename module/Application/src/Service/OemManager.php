@@ -180,11 +180,12 @@ class OemManager
                                             'article_id' => $rawprice->getCode()->getId(),                                
                                         ]);
                             }    
-                            $this->entityManager->getRepository(Rawprice::class)
-                                    ->updateRawpriceField($rawprice->getId(), ['status_oem' => Rawprice::OEM_PARSED]);
                         }
                     }    
                 }    
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_oem' => Rawprice::OEM_PARSED]);
+                
                 $this->entityManager->detach($rawprice);
             }                
             if (time() > $startTime + 840){
