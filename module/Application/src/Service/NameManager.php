@@ -623,11 +623,11 @@ class NameManager
                         $this->entityManager->getRepository(Article::class)
                                 ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $title, 'title_md5' => $titleMd5]);
                     }    
+                    $this->entityManager->detach($article);
                 }    
                 $this->entityManager->getRepository(Rawprice::class)
                         ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);
                 
-                $this->entityManager->detach($article);
                 $this->entityManager->detach($rawprice);
             }    
             
