@@ -33,22 +33,16 @@ class TokenRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('r.id, identity(r.code) as articleId, r.goodname, r.statusToken, a.tokenUpdateFlag')
-            ->distinct()    
+        $queryBuilder->select('r')
             ->from(Rawprice::class, 'r')
-            ->join('r.code', 'a')    
             ->where('r.raw = ?1')
             ->andWhere('r.statusToken = ?2')
-            ->andWhere('r.code is not null')
-//            ->andWhere('r.status = ?3')    
             ->setParameter('1', $raw->getId())    
             ->setParameter('2', Rawprice::TOKEN_NEW)    
-//            ->setParameter('3', Rawprice::STATUS_PARSED) 
-            ->setMaxResults(100000)    
             ;    
 
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery();
         
     }
     

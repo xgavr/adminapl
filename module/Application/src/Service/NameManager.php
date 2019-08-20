@@ -562,76 +562,84 @@ class NameManager
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
+        $startTime = time();
         
-        $rawprices = $this->entityManager->getRepository(Token::class)
+        $rawpricesQuery = $this->entityManager->getRepository(Token::class)
                 ->findRawpriceTitle($raw);
+        $iterable = $rawpricesQuery->iterate();
         
-        foreach ($rawprices as $row){
-            
-            $this->checkUpdateTokenFlag($row['articleId'], $row['tokenUpdateFlag']);
+        foreach ($iterable as $row){
+            foreach ($row as $rawprice){
+                $article = $rawprice->getCode();
+                if ($article){
+                    $this->checkUpdateTokenFlag($article->getId(), $article->getTokenUpdateFlag());
 
-            $title = mb_strtoupper(trim($row['goodname']), 'UTF-8');
-            $titleMd5 = md5($title);
+                    $title = mb_strtoupper(trim($rawprice->getTitle()), 'UTF-8');
+                    $titleMd5 = md5($title);
 
-            $articleTitle = $this->entityManager->getRepository(\Application\Entity\ArticleTitle::class)
-                    ->findOneBy(['article' => $row['articleId'], 'titleMd5' => $titleMd5]);
-            
-            if ($articleTitle == null){
-                
-                $lemms = $this->lemmsFromStr($row['goodname']);
-                foreach ($lemms as $key => $words){
-                    $words = array_filter($words);
-                    foreach ($words as $word){
+                    $articleTitle = $this->entityManager->getRepository(\Application\Entity\ArticleTitle::class)
+                            ->findOneBy(['article' => $article->getId(), 'titleMd5' => $titleMd5]);
 
-                        $token = $this->entityManager->getRepository(Token::class)
-                                ->findOneByLemma($word);
+                    if ($articleTitle == null){
 
-                        if (!$token){
-                            try{
-                                $this->entityManager->getRepository(Token::class)
-                                        ->insertToken([
-                                            'lemma' => $word,
-                                            'status' => $key,
-                                        ]);
-                            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                                //дубликат
-                            }   
-                        }    
+                        $lemms = $this->lemmsFromStr($rawprice->getTitle());
+                        foreach ($lemms as $key => $words){
+                            $words = array_filter($words);
+                            foreach ($words as $word){
 
-                        $articleToken = $this->entityManager->getRepository(ArticleToken::class)
-                                ->findOneBy(['article' => $row['articleId'], 'lemma' => $word]);
+                                $token = $this->entityManager->getRepository(Token::class)
+                                        ->findOneByLemma($word);
 
-                        if (!$articleToken){
-                            try{
-                                $this->entityManager->getRepository(Token::class)
-                                        ->insertArticleToken([
-                                            'article_id' => $row['articleId'],
-                                            'lemma' => $word,
-                                            'status' => $key,
-                                        ]);
-                            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                                //дубликат
+                                if (!$token){
+                                    try{
+                                        $this->entityManager->getRepository(Token::class)
+                                                ->insertToken([
+                                                    'lemma' => $word,
+                                                    'status' => $key,
+                                                ]);
+                                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                                        //дубликат
+                                    }   
+                                }    
+
+                                $articleToken = $this->entityManager->getRepository(ArticleToken::class)
+                                        ->findOneBy(['article' => $article->getId(), 'lemma' => $word]);
+
+                                if (!$articleToken){
+                                    try{
+                                        $this->entityManager->getRepository(Token::class)
+                                                ->insertArticleToken([
+                                                    'article_id' => $article->getId(),
+                                                    'lemma' => $word,
+                                                    'status' => $key,
+                                                ]);
+                                    } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
+                                        //дубликат
+                                    }
+                                }    
                             }
                         }    
-                    }
+
+                        $this->entityManager->getRepository(Article::class)
+                                ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $title, 'title_md5' => $titleMd5]);
+                    }    
                 }    
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);
                 
-                $this->entityManager->getRepository(Article::class)
-                        ->insertArticleTitle(['article_id' => $row['articleId'], 'title' => $title, 'title_md5' => $titleMd5]);
+                $this->entityManager->detach($article);
+                $this->entityManager->detach($rawprice);
             }    
-                
-            $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($row['id'], ['status_token' => Rawprice::TOKEN_PARSED]);                        
+            
+            if (time() > $startTime + 840){
+                return;
+            }            
         }
 
-        $rawprices = $this->entityManager->getRepository(Token::class)
-                ->findRawpriceTitle($raw);
-        if (count($rawprices) == 0){
-            $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
-            $this->entityManager->persist($raw);
-
-            $this->entityManager->flush();
-        }
+        $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
+        
         return;
     }
     
