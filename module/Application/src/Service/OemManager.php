@@ -181,10 +181,10 @@ class OemManager
                                         ]);
                             }    
                         }
+                        $this->entityManager->getRepository(Rawprice::class)
+                                ->updateRawpriceField($rawprice->getId(), ['status_oem' => Rawprice::OEM_PARSED]);
                     }    
                 }    
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_oem' => Rawprice::OEM_PARSED]);
                 
                 $this->entityManager->detach($rawprice);
             }                
