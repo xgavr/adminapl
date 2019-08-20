@@ -30,7 +30,7 @@ class OemRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r.id, r.oem, r.vendor, identity(r.code) as articleId')
+        $queryBuilder->select('r')
                 ->from(Rawprice::class, 'r')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusOem = ?2')
@@ -40,7 +40,7 @@ class OemRepository  extends EntityRepository{
                 ->setParameter('3', Rawprice::STATUS_PARSED)
                 ;
         
-        return $queryBuilder->getQuery()->getResult();        
+        return $queryBuilder->getQuery();        
     }
     
     /**
