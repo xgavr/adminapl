@@ -173,8 +173,7 @@ class ProcessingController extends AbstractActionController
     }    
 
     public function indexAction()
-    {
-        set_time_limit(180);
+    {       
         $this->autoruManager->postOrder();
         
         return new JsonModel(
@@ -241,12 +240,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['receiving_link'] == 1){
-            $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
-                    ->findBy(['status' => PriceGetting::STATUS_ACTIVE]);
-
-            foreach ($priceGettings as $priceGetting){
-                $this->priceManager->getPriceByLink($priceGetting);
-            }
+            $this->priceManager->getPricesByLink();
         }    
         
         return new JsonModel(
@@ -260,8 +254,6 @@ class ProcessingController extends AbstractActionController
      */
     public function pricesByMailAction()
     {
-        set_time_limit(180);
-        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['receiving_mail'] == 1){

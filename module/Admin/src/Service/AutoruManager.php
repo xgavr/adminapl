@@ -60,6 +60,9 @@ class AutoruManager {
     
     public function postOrder()
     {
+        set_time_limit(300);
+        $startTime = time();
+        
         $settings = $this->adminManager->getSettings();
         $telegramSettings = $this->adminManager->getTelegramSettings();
         
@@ -118,7 +121,11 @@ class AutoruManager {
                     ]);
 
                 }
+                if (time() > $startTime + 240){
+                    return;
+                }                
             }
-        }
+        }        
+        return;
     }
 }

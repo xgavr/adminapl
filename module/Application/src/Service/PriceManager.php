@@ -167,6 +167,8 @@ class PriceManager {
      */
     public function readQueyeMailBox()
     {
+        set_time_limit(300);
+                
         $priceGetting = $this->entityManager->getRepository(PriceGetting::class)
                 ->findOneBy(['status' => PriceGetting::STATUS_ACTIVE, 'mailBoxCheck' => PriceGetting::MAILBOX_TO_CHECK]);
         
@@ -247,5 +249,25 @@ class PriceManager {
         }
         
         return;
+    }
+    
+    /**
+     * Получить прайсы по ссылке
+     */
+    public function getPricesByLink()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
+                ->findBy(['status' => PriceGetting::STATUS_ACTIVE]);
+
+        foreach ($priceGettings as $priceGetting){
+            $this->getPriceByLink($priceGetting);
+            if (time() > $startTime + 840){
+                return;
+            }            
+        }        
     }
 }
