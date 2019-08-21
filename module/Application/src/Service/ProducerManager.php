@@ -286,8 +286,8 @@ class ProducerManager
                         ->findAllRawprice(['raw' => $raw->getId(), 'producerName' => $row['producer']]);
                 $iterable = $rawpricesQuery->iterate();
                 
-                foreach ($iterable as $row){
-                    foreach ($row as $rawprice){
+                foreach ($iterable as $rawpriceRow){
+                    foreach ($rawpriceRow as $rawprice){
                         $this->entityManager->getRepository(Rawprice::class)
                             ->updateRawpriceUnknownProducer($rawprice, $unknownProducer);
                         $this->entityManager->detach($rawprice);
