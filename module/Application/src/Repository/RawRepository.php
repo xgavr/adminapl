@@ -83,7 +83,7 @@ class RawRepository extends EntityRepository
             if (isset($params['producerName'])){
                 if ($params['producerName']){
                     $queryBuilder->andWhere('r.producer = ?5')
-                        ->setParameter('4', $params['producerName'])
+                        ->setParameter('5', $params['producerName'])
                      ;
                 }    
             }
