@@ -66,6 +66,20 @@ class RawRepository extends EntityRepository
                      ;
                 }    
             }
+            if (isset($params['rawId'])){
+                if ($params['rawId']){
+                    $queryBuilder->andWhere('r.raw = ?3')
+                        ->setParameter('3', $params['rawId'])
+                     ;
+                }    
+            }
+            if (isset($params['status'])){
+                if ($params['status']){
+                    $queryBuilder->andWhere('r.status = ?4')
+                        ->setParameter('4', $params['status'])
+                     ;
+                }    
+            }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('r.'.$params['sort'], $params['order']);                
             }            
@@ -159,7 +173,7 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрое обновлеие некоторых полей всех строк прайса
-     * @param Application\Entity\Raw $raw
+     * @param \Application\Entity\Raw $raw
      * @param array $data 
      * @return integer
      */
@@ -170,8 +184,8 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрая привязка неизвестного производителя
-     * @param Application\Entity\Rawprice $rawprice
-     * @param Application\Entity\UnknownProducer $unknownProducer 
+     * @param \Application\Entity\Rawprice $rawprice
+     * @param \Application\Entity\UnknownProducer $unknownProducer 
      * @return integer
      */
     public function updateRawpriceUnknownProducer($rawprice, $unknownProducer)
@@ -310,18 +324,20 @@ class RawRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(Rawprice::class, 'c')
-            ->where('c.raw = ?1')
-            ->andWhere('c.code is null')    
-            ->setParameter('1', $raw->getId())    
+        $queryBuilder->select('r')
+            ->from(Rawprice::class, 'r')
+            ->where('r.raw = ?1')
+            ->andWhere('r.code is null')    
+            ->andWhere('r.status = ?2')    
+            ->setParameter('1', $raw->getId())
+            ->setParameter('2', Rawprice::STATUS_PARSED)    
                 ;
 
         if ($limit){
             $queryBuilder->setMaxResults($limit);
         }
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery();
     }
 
     /**

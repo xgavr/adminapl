@@ -114,7 +114,7 @@ class ArticleRepository  extends EntityRepository
     
 
     /**
-     * Быстрая обновление строки прайса кодом артикула
+     * Быстрое обновление строки прайса кодом артикула
      * @param Application\Entity\Rawprice $rawprice
      * @param Application\Entity\Article $code 
      * @return integer

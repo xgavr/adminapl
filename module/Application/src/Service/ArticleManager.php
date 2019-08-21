@@ -162,70 +162,70 @@ class ArticleManager
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(900);
-        
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'code' => null, 'status' => Rawprice::STATUS_PARSED]);
+        $startTime = time();
+        $finishTime = $startTime + 840;
         
         $filter = new \Application\Filter\ArticleCode();
         
-        foreach ($rawprices as $rawprice){
-
-            $filteredCode = $filter->filter($rawprice->getArticle());
+        $rawpricesQuery = $this->entityManager->getRepository(Rawprice::class)
+                ->findCodeRawprice($raw);
+        $iterable = $rawpricesQuery->iterate();
         
-            $article = $this->entityManager->getRepository(Article::class)
-                    ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $rawprice->getUnknownProducer()->getId()]);
-            
-            if (!$article){
-                try{
+        foreach ($iterable as $row){
+            foreach ($row as $rawprice){
+                $filteredCode = $filter->filter($rawprice->getArticle());
+        
+                $article = $this->entityManager->getRepository(Article::class)
+                        ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $rawprice->getUnknownProducer()->getId()]);
+
+                if (!$article){
                     $this->entityManager->getRepository(Article::class)
                             ->insertArticle([
                                 'code' => $filteredCode,
                                 'fullcode' => mb_substr($rawprice->getArticle(), 0, 36),
                                 'unknown_producer_id' => $rawprice->getUnknownProducer()->getId(),
                             ]);
-                } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){ 
-                    //дубликат;
+                    
+                    $article = $this->entityManager->getRepository(Article::class)
+                            ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $rawprice->getUnknownProducer()->getId()]);
                 }    
+                $this->entityManager->getRepository(Article::class)
+                        ->updateRawpriceCode($rawprice, $article);
                 
-                $article = $this->entityManager->getRepository(Article::class)
-                        ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $rawprice->getUnknownProducer()->getId()]);
+                $this->entityManager->detach($rawprice);
             }    
-
-
-            $this->entityManager->getRepository(Article::class)
-                    ->updateRawpriceCode($rawprice, $article);
-            
-            $article->addRawprice($rawprice);
-            
-            $rawprice->getUnknownProducer()->addCode($article);
-            
-//            $this->updatePriceRest($article);
-            
+            if (time() >= $finishTime){
+                return;
+            }
         }    
                 
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['raw' => $raw->getId(), 'code' => null, 'status' => Rawprice::STATUS_PARSED]);
-        
-        if (count($rawprices) === 0){
-            
-            $oldRaws = $this->entityManager->getRepository(Raw::class)
-                    ->findPreRetiredRaw($raw);
+        $oldRaws = $this->entityManager->getRepository(Raw::class)
+                ->findPreRetiredRaw($raw);
 
-            foreach ($oldRaws as $oldRaw){
-                                
-                $oldRaw->setStatus(Raw::STATUS_RETIRED);
-                $oldRaw->setStatusEx(Raw::EX_TO_DELETE);
-                $this->entityManager->persist($oldRaw);
+        foreach ($oldRaws as $oldRaw){
 
-                $this->entityManager->getRepository(Raw::class)
-                        ->updateAllRawpriceField($oldRaw, ['status' => Rawprice::STATUS_RETIRED, 'status_ex' => Rawprice::EX_NEW]);
-            }    
-            
-            $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
-            $this->entityManager->persist($raw);
-            $this->entityManager->flush();
-        }        
-        
+            $oldRaw->setStatus(Raw::STATUS_RETIRED);
+            $oldRaw->setStatusEx(Raw::EX_TO_DELETE);
+            $this->entityManager->persist($oldRaw);
+
+            $oldRawpriceQuery = $this->entityManager->getRepository(Raw::class)
+                    ->findAllRawprice(['rawId' => $oldRaw->getId(), 'status' => Rawprice::STATUS_PARSED]);
+            $oldIterable = $oldRawpriceQuery->iterate();
+            foreach ($oldIterable as $row){
+                foreach ($row as $oldRawprice){
+                    $this->entityManager->getRepository(Rawprice::class)
+                            ->updateRawpriceField($oldRawprice->getId(), ['status' => Rawprice::STATUS_RETIRED]);
+                    $this->entityManager->detach($oldRawprice);
+                }
+                if (time() >= $finishTime){
+                    return;
+                }
+            }
+        }    
+
+        $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();        
     }
     
 
@@ -286,72 +286,7 @@ class ArticleManager
         return $this->entityManager->getRepository(Article::class)
                 ->randRawpriceBy($params);
     }
-    
-    /**
-     * Выборка артикулов из прайсов и добавление их в артикулы
-     * привязка к строкам прайса
-     * 
-     * @param Application\Entity\Raw $raw
-     */
-    public function grabArticleFromRaw2($raw)
-    {
-        ini_set('memory_limit', '2048M');
-
-        $articles = $this->entityManager->getRepository(Article::class)
-                ->findArticleFromRaw($raw);
-
-        $filter = new \Application\Filter\ArticleCode();
-
-        foreach ($articles as $row){
-
-            $filteredCode = $filter->filter($row['code']);        
-            $unknownProducerId = $row['unknownProducer'];
-            
-            $data = [
-                'code' => $filteredCode,
-                'fullcode' => trim($row['code']),
-                'unknown_producer_id' => $unknownProducerId,
-            ];
-            try{
-                $this->entityManager->getRepository(UnknownProducer::class)
-                        ->insertUnknownProducer($data);
-            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                //дубликат
-            }   
-            
-            $article = $this->entityManager->getRepository(Article::class)
-                    ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $unknownProducerId]);
-            
-            if ($article){
-                
-                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneById($unknownProducerId);
-                
-                $article->setUnknownProducer($unknownProducer);
-                $this->entityManager->persist($article);
-                
-                $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                        ->findBy(['raw' => $raw->getId(), 'unknownProducer' => $unknownProducerId, 'code' => $article->getId()]);
-                
-                foreach ($rawprices as $rawprice){
-                    $rawprice->setCode($article);
-                    $this->entityManager->persist($rawprice);
-                }
-            }            
-        }
         
-        $this->entityManager->flush();
-        
-        $rawprices = $this->entityManager->getRepository(Raw::class)
-                ->findCodeRawprice($raw);
-        
-        if (count($rawprices) === 0){
-            $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
-            $this->entityManager->persist($raw);
-            $this->entityManager->flush($raw);
-        }        
-    }
-    
     /**
      * Массив цен из строк прайсов
      * 
