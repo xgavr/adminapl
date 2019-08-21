@@ -598,21 +598,23 @@ class AssemblyManager
 
     
     /**
+     * УСТАРЕЛО
      * Собрать производителей из прайса
      * 
      * @param Application\Entity\Raw $raw
      */
-    public function assemblyProducerFromRaw($raw)
+    public function assemblyProducerFromRaw_old($raw)
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(900);
+        $startTime = time();        
         
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findUnknownProducerForAssemblyFromRaw($raw);
         
         foreach ($unknownProducers as $unknownProducer){
             
-            if (!$unknownProducer->getProducer() || $unknownProducer->getIntersectUpdateFlag() != UnknownProducer::INTERSECT_UPDATE_FLAG){            
+            if (!$unknownProducer->getProducer() || ($unknownProducer->getIntersectUpdateFlag() != UnknownProducer::INTERSECT_UPDATE_FLAG)){            
                 $this->addProducerFromUnknownProducer($unknownProducer);
             }    
             
@@ -622,6 +624,10 @@ class AssemblyManager
             foreach ($rawprices as $rawprice){
                 $this->entityManager->getRepository(Rawprice::class)
                     ->updateRawpriceAssemblyProducerStatus($rawprice);                    
+                
+                if (time() > $startTime + 840){
+                    return;
+                }            
             }    
         }
         
@@ -631,6 +637,50 @@ class AssemblyManager
         
     }
        
+    /**
+     * УСТАРЕЛО
+     * Собрать производителей из прайса
+     * 
+     * @param Application\Entity\Raw $raw
+     */
+    public function assemblyProducerFromRaw($raw)
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        $startTime = time();        
+        
+        $rawpricesQuery = $this->entityManager->getRepository(Rawprice::class)
+                ->findAllRawprice(['rawId' => $raw->getId(), 'status' => Rawprice::STATUS_PARSED, 'statusProducer' => Rawprice::PRODUCER_NEW]);
+        $iterable = $rawpricesQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $rawprice){
+                $unknownProducer = $rawprice->getUnknownProducer();
+                $article = $rawprice->getCode();
+                
+                if ($unknownProducer && $article){                
+                    if (!$unknownProducer->getProducer() || ($unknownProducer->getIntersectUpdateFlag() != UnknownProducer::INTERSECT_UPDATE_FLAG)){            
+                        $this->addProducerFromUnknownProducer($unknownProducer);
+                    }    
+                }    
+
+                $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceAssemblyProducerStatus($rawprice);                    
+
+                if (time() > $startTime + 840){
+                    return;
+                }          
+                
+                $this->entityManager->detach($rawprice);
+            }    
+        }
+        
+        $raw->setParseStage(Raw::STAGE_PRODUCER_ASSEMBLY);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush($raw);
+        
+    }
+
     /**
      * Обработка неполных данных
      * @param \Application\Entity\Rawprice $rawprice

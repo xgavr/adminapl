@@ -85,6 +85,13 @@ class RawRepository extends EntityRepository
                     ->setParameter('5', $params['producerName'])
                  ;
             }
+            if (isset($params['statusProducer'])){
+                if ($params['statusProducer']){
+                    $queryBuilder->andWhere('r.statusProducer = ?6')
+                        ->setParameter('6', $params['statusProducer'])
+                     ;
+                }    
+            }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('r.'.$params['sort'], $params['order']);                
             }            

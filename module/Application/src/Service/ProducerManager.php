@@ -40,6 +40,12 @@ class ProducerManager
         $this->goodsManager = $goodsManager;
     }
     
+    /**
+     * Добавить нового производителя
+     * 
+     * @param array $data
+     * @return Producer
+     */
     public function addNewProducer($data) 
     {
         
@@ -50,25 +56,13 @@ class ProducerManager
             return $producer;
         }
         
-        // Создаем новую сущность Producer.
-        $producer = new Producer();
-        $producer->setName($data['name']);
-
-//        $country = $this->entityManager->getRepository(Country::class)
-//                    ->findOneById($data['country']);
-//        if ($country == null){
-//            $country = new Country();
-//        }
-//
-//        $producer->setCountry($country);
+        $this->entityManager->getConnection()->insert('producer', 
+                [
+                    'name' => trim($data['name']),
+                    'apl_id' => 0,
+                ]);
         
-        // Добавляем сущность в менеджер сущностей.
-        $this->entityManager->persist($producer);
-        
-        // Применяем изменения к базе данных.
-        $this->entityManager->flush($producer);
-        
-        return $producer;
+        return $this->addNewProducer($data);
     }   
     
     public function updateProducer($producer, $data) 
@@ -82,14 +76,6 @@ class ProducerManager
 
         $producer->setName($data['name']);
         
-//        $country = $this->entityManager->getRepository(Country::class)
-//                    ->findOneById($data['country']);
-//        if ($country == null){
-//            $country = new Country();
-//        }
-//        
-//        $producer->setCountry($country);
-               
         // Применяем изменения к базе данных.
         $this->entityManager->flush($producer);
         
@@ -140,9 +126,9 @@ class ProducerManager
     }
     
     
-    /*
+    /**
      * Создать производителя из неизвестного производителя
-     *@var Application\Entity\UnknownProducer $unknownProducer
+     *@param UnknownProducer $unknownProducer
      *  
      */
     
@@ -159,17 +145,24 @@ class ProducerManager
     {
         return $this->addNewProducer(['name' => $article->getUnknownProducer()->getName()]);        
     }
-    
-    /*
+
+    /**
+     * Связать производителя с неизвестным
      * 
+     * @param UnknowmProducer $unknownProducer
+     * @param Producer $producer
      */
     public function bindUnknownProducer($unknownProducer, $producer)
     {
-        $unknownProducer->setIntersectUpdateFlag(UnknownProducer::INTERSECT_UPDATE_FLAG);
-        $unknownProducer->setProducer($producer);
-        $this->entityManager->persist($unknownProducer);
-
-        $this->entityManager->flush();            
+        $this->entityManager->getConnection()->update('unknown_producer',
+                [
+                    'producer_id' => $producer->getId(),
+                    'intersect_update_flag' => UnknownProducer::INTERSECT_UPDATE_FLAG,
+                ],
+                [
+                    'id' => $unknownProducer->getId(),
+                ]);
+        return;
     }        
     
     /*

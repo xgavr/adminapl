@@ -531,6 +531,7 @@ class ProcessingController extends AbstractActionController
     }
 
     /**
+     * Не работает
      * Удаление пустых номеров производителей
      */
     public function deleteOemAction()
