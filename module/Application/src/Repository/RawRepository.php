@@ -80,6 +80,13 @@ class RawRepository extends EntityRepository
                      ;
                 }    
             }
+            if (isset($params['producerName'])){
+                if ($params['producerName']){
+                    $queryBuilder->andWhere('r.producer = ?5')
+                        ->setParameter('4', $params['producerName'])
+                     ;
+                }    
+            }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('r.'.$params['sort'], $params['order']);                
             }            

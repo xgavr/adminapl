@@ -23,13 +23,13 @@ class ProducerManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
     /**
      * Goods manager.
-     * @var Application\Entity\GoodsManager
+     * @var \Application\Entity\GoodsManager
      */
     private $goodsManager;
   
@@ -250,9 +250,10 @@ class ProducerManager
      */
     public function grabUnknownProducerFromRaw($raw)
     {
-        set_time_limit(900);
-        
         ini_set('memory_limit', '4096M');
+        set_time_limit(900);        
+        $startTime = time();
+        $finishTime = $startTime + 840;
 
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findUnknownProducerFromRaw($raw);
@@ -271,24 +272,29 @@ class ProducerManager
                     'name' => $unknownProducerName,
                     'date_created' => date('Y-m-d H:i:s'),
                 ];
-                try{
-                    $this->entityManager->getRepository(UnknownProducer::class)
-                            ->insertUnknownProducer($data);
-                } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                    //дубликат
-                }   
+
+                $this->entityManager->getRepository(UnknownProducer::class)
+                        ->insertUnknownProducer($data);
+
                 $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                         ->findOneByName($unknownProducerName);
             }
             
             if ($unknownProducer){
                 
-                $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                        ->findBy(['raw' => $raw->getId(), 'producer' => $row['producer']]);
+                $rawpricesQuery = $this->entityManager->getRepository(Rawprice::class)
+                        ->findAllRawprice(['raw' => $raw->getId(), 'producerName' => $row['producer']]);
+                $iterable = $rawpricesQuery->iterate();
                 
-                foreach ($rawprices as $rawprice){
-                    $this->entityManager->getRepository(Rawprice::class)
-                                            ->updateRawpriceUnknownProducer($rawprice, $unknownProducer);                    
+                foreach ($iterable as $row){
+                    foreach ($row as $rawprice){
+                        $this->entityManager->getRepository(Rawprice::class)
+                            ->updateRawpriceUnknownProducer($rawprice, $unknownProducer);
+                        $this->entityManager->detach($rawprice);
+                    }    
+                    if (time() >= $finishTime){
+                        return;
+                    }
                 }    
             }            
         }
