@@ -156,7 +156,7 @@ class ProducerManager
     {
         $this->entityManager->getConnection()->update('unknown_producer',
                 [
-                    'producer_id' => $producer->getId(),
+                    'producer_id' => ($producer) ? $producer->getId():NULL,
                     'intersect_update_flag' => UnknownProducer::INTERSECT_UPDATE_FLAG,
                 ],
                 [
