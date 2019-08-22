@@ -62,9 +62,12 @@ $this->pageBreadcrumbs()->setItems([
                                 <?//= $car->getStatusAsString()?>
                             </small>
                         </td>
+                        <td>
+                            <?= $car->getGoodCount()?>
+                        </td>
                     </tr>    
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             <div>
                                 <small>
                                    <?php foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
