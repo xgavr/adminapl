@@ -85,23 +85,18 @@ class ProducerManager
     /**
      * Удаление производителя
      * 
-     * @param Application\Entity\Producer $producer
+     * @param \Application\Entity\Producer $producer
      * @return boolean
      */
     public function removeProducer($producer) 
     {   
-        foreach ($producer->getGoods() as $good){
-            if (!$this->goodsManager->allowRemove($good)){
-                return false;
-            }
-            $this->entityManager->remove($good);
+        $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->count(['producer' => $producer->getId()]);
+        if ($goodCount > 0){
+            return false;
         }
         
-        foreach ($producer->getUnknownProducer() as $unknownProducer){
-            $unknownProducer->setProducer(null);
-            $this->entityManager->persist($unknownProducer);
-        }
-        $this->entityManager->flush();
+        $this->entityManager->getConnection()->update('unknown_producer', ['producer_id' => null], ['producer_id' => $producer->getId()]);
         
         $this->entityManager->remove($producer);
         
