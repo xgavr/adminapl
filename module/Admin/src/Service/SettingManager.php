@@ -70,19 +70,23 @@ class SettingManager {
                 ->findOneBy(['controller' => $controller, 'action' => $action]);
         
         if ($proc == null){
-            $proc = new Setting();
-            $proc->setController($controller);
-            $proc->setAction($action);
-            $proc->setStatus(Setting::STATUS_ACTIVE);            
+            $this->entityManager->getConnection()->insert('setting',
+                    [
+                        'controller' => $controller,
+                        'action' => $action,
+                        'status' => Setting::STATUS_ACTIVE,
+                        'last_mod' => date('Y-m-d H:i:s'),
+                    ]);
         } else {
             if ($proc->getStatus() == Setting::STATUS_RETIRED){
-                $proc->setStatus(Setting::STATUS_ACTIVE);                
+                $this->entityManager->getConnection()->update('setting',
+                        [
+                            'status' => Setting::STATUS_ACTIVE,
+                            'last_mod' => date('Y-m-d H:i:s'),
+                        ], ['id' => $proc->getId()]);
             }
         }
-        $proc->setLastMod(date('Y-m-d H:i:s'));
-        
-        $this->entityManager->persist($proc);
-        $this->entityManager->flush($proc);
+        return;
     }    
     
     /**
@@ -135,16 +139,17 @@ class SettingManager {
                 ->findOneBy(['controller' => $controller, 'action' => $action]);
         
         if ($proc){
-            $proc->setStatus(Setting::STATUS_RETIRED);                
-            $proc->setLastMod(date('Y-m-d H:i:s'));
-            
             try {
-                $this->entityManager->persist($proc);
-                $this->entityManager->flush($proc);
+                $this->entityManager->getConnection()->update('setting',
+                        [
+                            'status' => Setting::STATUS_RETIRED,
+                            'last_mod' => date('Y-m-d H:i:s'),
+                        ], ['id' => $proc->getId()]);
             } catch(\Doctrine\ORM\ORMException $e){
                 
             }    
-        }        
+        }
+        return;
     }
     
 }
