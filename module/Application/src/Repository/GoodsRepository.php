@@ -1155,7 +1155,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Удаления машин товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * @return integer
      */
     public function removeGoodCars($good)

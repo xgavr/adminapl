@@ -638,7 +638,7 @@ class AssemblyManager
     }
        
     /**
-     * УСТАРЕЛО
+     *
      * Собрать производителей из прайса
      * 
      * @param Application\Entity\Raw $raw
