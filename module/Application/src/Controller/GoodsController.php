@@ -477,6 +477,8 @@ class GoodsController extends AbstractActionController
 
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
         
         // Validate input parameter
         if ($goodsId<0) {

@@ -777,6 +777,9 @@ class GoodsRepository extends EntityRepository
             if (isset($params['limit'])){
                 $queryBuilder->setMaxResults($params['limit']);
             }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
+            }            
         }
 
         return $queryBuilder->getQuery();            
