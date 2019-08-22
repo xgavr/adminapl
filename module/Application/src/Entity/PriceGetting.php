@@ -256,9 +256,10 @@ class PriceGetting {
     public function getStatusAsString()
     {
         $list = self::getStatusList();
-        if (isset($list[$this->status]))
+        if (isset($list[$this->status])) {
             return $list[$this->status];
-        
+        }
+
         return 'Unknown';
     }    
     
@@ -411,9 +412,10 @@ class PriceGetting {
     public function getMailBoxCheckAsString()
     {
         $list = self::getMailBoxCheckList();
-        if (isset($list[$this->mailBoxCheck]))
+        if (isset($list[$this->mailBoxCheck])) {
             return $list[$this->mailBoxCheck];
-        
+        }
+
         return 'Unknown';
     }    
     

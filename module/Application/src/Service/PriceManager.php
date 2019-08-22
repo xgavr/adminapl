@@ -28,17 +28,17 @@ class PriceManager {
 
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /*
-     * @var Admin\Service\PostManager
+     * @var \Admin\Service\PostManager
      */
     private $postManager;
   
     /*
-     * @var Admin\Service\FtpManager
+     * @var \Admin\Service\FtpManager
      */
     private $ftpManager;
   
@@ -72,7 +72,9 @@ class PriceManager {
     {
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
-                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isDot()) {
+                    continue;
+                }
                 if ($fileInfo->isFile()){
                     unlink($fileInfo->getFilename());                            
                 }
@@ -175,18 +177,19 @@ class PriceManager {
         if ($priceGetting){
             $this->getPriceByMail($priceGetting);
             
-            $priceGetting->setMailBoxCheck(PriceGetting::MAILBOX_CHECKED);
-            $this->entityManager->persist($priceGetting);
-            $this->entityManager->flush($priceGetting);
+            $this->entityManager->getConnection()->update('price_gettings', 
+                    ['mailbox_check' => PriceGetting::MAILBOX_CHECKED], 
+                    ['id' =>$priceGetting->getId()]);
+            
         } else {
             $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
                     ->findBy(['status' => PriceGetting::STATUS_ACTIVE, 'mailBoxCheck' => PriceGetting::MAILBOX_CHECKED]);
             
             foreach ($priceGettings as $priceGetting){
-                $priceGetting->setMailBoxCheck(PriceGetting::MAILBOX_TO_CHECK);
-                $this->entityManager->persist($priceGetting);                
+                $this->entityManager->getConnection()->update('price_gettings', 
+                        ['mailbox_check' => PriceGetting::MAILBOX_TO_CHECK], 
+                        ['id' =>$priceGetting->getId()]);
             }
-            $this->entityManager->flush();
             
             $this->readQueyeMailBox();
         }           
