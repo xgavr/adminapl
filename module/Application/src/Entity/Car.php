@@ -94,6 +94,11 @@ class Car {
     protected $transferFlag;
         
     /**
+     * @ORM\Column(name="good_count")  
+     */
+    protected $goodCount;
+
+    /**
      * @ORM\ManyToOne(targetEntity="\Application\Entity\Model", inversedBy="model") 
      * @ORM\JoinColumn(name="model_id", referencedColumnName="id")
      * 
@@ -236,7 +241,16 @@ class Car {
         $this->transferFlag = $transferFlag;
     }     
     
-    
+    public function getGoodCount() 
+    {
+        return $this->goodCount;
+    }
+
+    public function setGoodCount($goodCount) 
+    {
+        $this->goodCount = $goodCount;
+    }         
+        
     /**
      * Returns status.
      * @return int     

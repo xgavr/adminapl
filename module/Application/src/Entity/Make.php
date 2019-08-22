@@ -81,6 +81,11 @@ class Make {
     protected $moto;
     
     /**
+     * @ORM\Column(name="good_count")  
+     */
+    protected $goodCount;
+    
+    /**
      * @ORM\OneToMany(targetEntity="\Application\Entity\Model", mappedBy="make")
      * @ORM\JoinColumn(name="id", referencedColumnName="make_id")
      */
@@ -176,6 +181,15 @@ class Make {
         $this->moto = $moto;
     }     
     
+    public function getGoodCount() 
+    {
+        return $this->goodCount;
+    }
+
+    public function setGoodCount($goodCount) 
+    {
+        $this->goodCount = $goodCount;
+    }         
     
     /**
      * Returns status.
@@ -206,9 +220,10 @@ class Make {
     public function getStatusAsString()
     {
         $list = self::getStatusList();
-        if (isset($list[$this->status]))
+        if (isset($list[$this->status])) {
             return $list[$this->status];
-        
+        }
+
         return 'Unknown';
     }    
     

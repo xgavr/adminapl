@@ -163,7 +163,7 @@ class CarRepository extends EntityRepository
                 default: $status = Car::STATUS_ACTIVE; break;
             }
             
-            $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $car->getId()]);
+            $this->getEntityManager()->getConnection()->update('car', ['status' => $status, 'good_count' => $row['goodCount']], ['id' => $car->getId()]);
         }      
         
         return $result;
@@ -241,7 +241,7 @@ class CarRepository extends EntityRepository
      */
     public function updateAllCarStatus()
     {
-        set_time_limit(900);
+        set_time_limit(600);
         
         $entityManager = $this->getEntityManager();
 
@@ -260,7 +260,7 @@ class CarRepository extends EntityRepository
                 default: $status = Car::STATUS_ACTIVE; break;
             }
             
-            $this->getEntityManager()->getConnection()->update('car', ['status' => $status], ['id' => $row['id']]);
+            $this->getEntityManager()->getConnection()->update('car', ['status' => $status, 'good_count' => $row['goodCount']], ['id' => $row['id']]);
         }      
         
         return;        
@@ -272,24 +272,25 @@ class CarRepository extends EntityRepository
      */
     public function updateAllModelStatus()
     {
-        set_time_limit(900);
+        set_time_limit(200);
         
         $entityManager = $this->getEntityManager();
 
-        $this->getEntityManager()->getConnection()->update('model', ['status' => Model::STATUS_RETIRED], [1 => 1]);
-        
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m.id')
+        $queryBuilder->select('m.id, sum(c.goodCount) as goodCount')
             ->from(Model::class, 'm')
             ->join('m.cars', 'c')  
-            ->where('c.status = ?1')    
-            ->setParameter('1', Car::STATUS_ACTIVE)    
+            ->groupBy('m.id')
             ;
                 
         $modelIds = $queryBuilder->getQuery()->getResult();
         
         foreach ($modelIds as $row){            
-            $this->getEntityManager()->getConnection()->update('model', ['status' => Model::STATUS_ACTIVE], ['id' => $row['id']]);
+            switch ($row['goodCount']){
+                case 0: $result = true; $status = Model::STATUS_RETIRED; break;
+                default: $status = Model::STATUS_ACTIVE; break;
+            }
+            $this->getEntityManager()->getConnection()->update('model', ['status' => $status, 'good_count' => $row['goodCount']], ['id' => $row['id']]);
         }      
         
         return;        
@@ -301,24 +302,25 @@ class CarRepository extends EntityRepository
      */
     public function updateAllMakeStatus()
     {
-        set_time_limit(900);
+        set_time_limit(100);
         
         $entityManager = $this->getEntityManager();
 
-        $this->getEntityManager()->getConnection()->update('make', ['status' => Make::STATUS_RETIRED], [1 => 1]);
-        
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m.id')
+        $queryBuilder->select('m.id, sum(mm.goodCount) as goodCount')
             ->from(Make::class, 'm')
             ->join('m.models', 'mm')  
-            ->where('mm.status = ?1')    
-            ->setParameter('1', Model::STATUS_ACTIVE)    
+            ->groupBy('m.id')    
             ;
                 
         $makeIds = $queryBuilder->getQuery()->getResult();
         
         foreach ($makeIds as $row){            
-            $this->getEntityManager()->getConnection()->update('make', ['status' => Make::STATUS_ACTIVE], ['id' => $row['id']]);
+            switch ($row['goodCount']){
+                case 0: $result = true; $status = Model::STATUS_RETIRED; break;
+                default: $status = Model::STATUS_ACTIVE; break;
+            }
+            $this->getEntityManager()->getConnection()->update('make', ['status' => $status, 'good_count' => $row['goodCount']], ['id' => $row['id']]);
         }      
         
         return;        
@@ -354,6 +356,5 @@ class CarRepository extends EntityRepository
             ;
         
         return $queryBuilder->getQuery();
-    }
-    
+    } 
 }

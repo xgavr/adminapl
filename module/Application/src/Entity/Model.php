@@ -104,6 +104,12 @@ class Model {
      * @ORM\Column(name="construction_to")  
      */
     protected $constructionTo = self::COSTRUCTION_MAX_PERIOD;
+    
+    /**
+     * @ORM\Column(name="good_count")  
+     */
+    protected $goodCount;
+
         
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Make", inversedBy="models") 
@@ -245,7 +251,16 @@ class Model {
         $this->constructionTo = $constructionTo;
     }     
     
-    
+    public function getGoodCount() 
+    {
+        return $this->goodCount;
+    }
+
+    public function setGoodCount($goodCount) 
+    {
+        $this->goodCount = $goodCount;
+    }         
+        
     /**
      * Returns status.
      * @return int     
