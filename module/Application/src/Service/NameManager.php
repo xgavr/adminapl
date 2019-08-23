@@ -645,17 +645,15 @@ class NameManager
     /**
      * Удаление токена
      * 
-     * @param Application\Entity\Token $token
+     * @param \Application\Entity\Token $token
      */
     public function removeToken($token) 
     {   
         
         $this->entityManager->getRepository(Token::class)
                 ->deleteArticleToken($token);
-        
-        $this->entityManager->remove($token);
-        
-        $this->entityManager->flush($token);
+        $this->entityManager->getConnection()->delete('token_group_token', ['token_id' => $token->getId()]);
+        $this->entityManager->getConnection()->delete('token', ['id' => $token->getId()]);
     }    
     
     /**
@@ -665,15 +663,19 @@ class NameManager
     {
         set_time_limit(900);        
         ini_set('memory_limit', '2048M');
+        $startTime = time();
         
         $tokenForDelete = $this->entityManager->getRepository(Token::class)
                 ->findTokenForDelete();
 
         foreach ($tokenForDelete as $row){
             $this->removeToken($row[0]);
+            if (time() > $startTime + 840){
+                return;
+            }            
         }
         
-        return count($tokenForDelete);
+        return;
     }
 
     /**
@@ -863,20 +865,19 @@ class NameManager
     /**
      * Удаление TokenGroup
      * 
-     * @param Application\Entity\TokenGroup $tokenGroup
+     * @param \Application\Entity\TokenGroup $tokenGroup
      */
-    public function removeTokenGroup($tokenGroup, $flush = true)
+    public function removeTokenGroup($tokenGroup)
     {
-        foreach ($tokenGroup->getGoods() as $good){
-            $good->setTokenGroup(null);
+        $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findByTokenGroup($tokenGroup->getId());
+        foreach ($goods as $good){
+            $this->entityManager->getConnection()->update('goods', ['token_group_id' => null], ['id' => $good->getId()]);
         }
         
-        $tokenGroup->getTokens()->clear();
+        $this->entityManager->getConnection()->delete('token_group_token', ['token_group_id' => $tokenGroup->getId()]);
         
-        $this->entityManager->remove($tokenGroup);
-        if ($flush){
-            $this->entityManager->flush();
-        }    
+        $this->entityManager->getConnection()->delete('token_group', ['id' => $tokenGroup->getId()]);
     }
     
     /**
@@ -885,16 +886,19 @@ class NameManager
     public function removeEmptyTokenGroup()
     {
         ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        $startTime = time();
         
         $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
                 ->findBy(['goodCount' => 0]);
 
         foreach ($tokenGroups as $tokenGroup){
-            $this->removeTokenGroup($tokenGroup, false);
+            $this->removeTokenGroup($tokenGroup);
+            if (time() > $startTime + 840){
+                return;
+            }
         }
         
-        $this->entityManager->flush();
-        
-        return count($tokenGroups);
+        return;
     }    
 }
