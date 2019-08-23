@@ -179,7 +179,7 @@ class PriceManager {
             
             $this->entityManager->getConnection()->update('price_gettings', 
                     ['mailbox_check' => PriceGetting::MAILBOX_CHECKED], 
-                    ['id' =>$priceGetting->getId()]);
+                    ['id' => $priceGetting->getId()]);
             
         } else {
             $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
@@ -188,11 +188,12 @@ class PriceManager {
             foreach ($priceGettings as $priceGetting){
                 $this->entityManager->getConnection()->update('price_gettings', 
                         ['mailbox_check' => PriceGetting::MAILBOX_TO_CHECK], 
-                        ['id' =>$priceGetting->getId()]);
+                        ['id' => $priceGetting->getId()]);
             }
             
             $this->readQueyeMailBox();
-        }           
+        }     
+        return;
     }
     
 
