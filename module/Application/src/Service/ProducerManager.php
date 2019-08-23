@@ -370,9 +370,9 @@ class ProducerManager
     public function removeUnknownProducer($unknownProducer) 
     {   
         $codeCount = $this->entityManager->getRepository(\Application\Entity\Article::class)
-                ->count(['unknownPriducer' => $unknownProducer->getId()]);
+                ->count(['unknownProducer' => $unknownProducer->getId()]);
         $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['unknownPriducer' => $unknownProducer->getId()]);
+                ->count(['unknownProducer' => $unknownProducer->getId()]);
         
         if ($codeCount == 0 && $rawpriceCount == 0){
 
