@@ -365,16 +365,23 @@ class ProducerManager
     /**
      * Удаление неизвестного производителя
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param \Application\Entity\UnknownProducer $unknownProducer
      */
     public function removeUnknownProducer($unknownProducer) 
     {   
-        foreach ($unknownProducer->getCode() as $article){
-            $this->entityManager->remove($article);
-        }
-        $this->entityManager->remove($unknownProducer);
+        $codeCount = $this->entityManager->getRepository(\Application\Entity\Article::class)
+                ->count(['unknownPriducer' => $unknownProducer->getId()]);
+        $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
+                ->count(['unknownPriducer' => $unknownProducer->getId()]);
         
-        $this->entityManager->flush($unknownProducer);
+        if ($codeCount == 0 && $rawpriceCount == 0){
+
+            $this->entityManager->remove($unknownProducer);
+
+            $this->entityManager->flush($unknownProducer);
+        }
+        
+        return;
     }    
     
     /**
@@ -393,14 +400,21 @@ class ProducerManager
      */
     public function removeEmptyUnknownProducer()
     {
+        set_time_limit(900);        
+        $startTime = time();
+        $finishTime = $startTime + 840;
+
         $unknownProducersForDelete = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findUnknownProducerForDelete();
 
         foreach ($unknownProducersForDelete as $row){
             $this->removeUnknownProducer($row[0]);
+            if (time() >= $finishTime){
+                return;
+            }
         }
         
-        return count($unknownProducersForDelete);
+        return;
     }
     
     public function searchProducerNameAssistant($search)
