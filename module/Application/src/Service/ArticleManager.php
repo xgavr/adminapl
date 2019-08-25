@@ -263,17 +263,20 @@ class ArticleManager
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(900);        
+        $startTime = time();
+        $finishTime = $startTime + 840;
         
         $articlesForDelete = $this->entityManager->getRepository(Article::class)
                 ->findArticlesForDelete();
 
         foreach ($articlesForDelete as $row){
             $this->removeArticle($row[0]);
+            if (time() >= $finishTime){
+                return;
+            }
         }
         
-        //$this->entityManager->flush();
-        
-        return count($articlesForDelete);
+        return;
     }    
     
     /**
