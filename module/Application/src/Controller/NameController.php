@@ -553,6 +553,9 @@ class NameController extends AbstractActionController
         
         $tdGroups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
                 ->genericTokenGroup($tokenGroup);
+        
+        $meanFrequency = $this->entityManager->getRepository(TokenGroup::class)
+                ->meanFrequency($tokenGroup);
 //        var_dump($tdGroups); exit;
 
         // Render the view template.
@@ -566,6 +569,7 @@ class NameController extends AbstractActionController
             'tdGroups' => $tdGroups,
             'tdGroupActive' => $tdGroup,
             'aplGroups' => $aplGroups,
+            '$meanFrequency' => $meanFrequency,
         ]);
     }    
     
