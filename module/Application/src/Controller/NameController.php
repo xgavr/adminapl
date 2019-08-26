@@ -569,7 +569,7 @@ class NameController extends AbstractActionController
             'tdGroups' => $tdGroups,
             'tdGroupActive' => $tdGroup,
             'aplGroups' => $aplGroups,
-            '$meanFrequency' => $meanFrequency,
+            'meanFrequency' => $meanFrequency,
         ]);
     }    
     
