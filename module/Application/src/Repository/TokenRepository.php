@@ -743,7 +743,7 @@ class TokenRepository  extends EntityRepository
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $row){
             if ($row['tokenCount']){
-                $result = $row['frequencySum'] % $row['tokenCount'];
+                $result = round($row['frequencySum'] / $row['tokenCount'], 0);
             }    
         }
         
