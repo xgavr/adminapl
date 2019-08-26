@@ -721,5 +721,32 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
     
-    
+    /**
+     * Средняя частота токенов группы
+     * 
+     * @param TokenGroup $tokenGroup
+     * @return int
+     */
+    public function meanFrequency($tokenGroup)
+    {
+        $result = 0;
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g.id, count(t.id) as tokenCount, sum(t.frequency) as frequencySum')
+                ->from(TokenGroup::class, 'g')
+                ->join('g.tokens', 't')
+                ->where('g.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ->groupBy('g.id')
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $row){
+            if ($row['tokenCount']){
+                $result = $row['frequencySum'] % $row['tokenCount'];
+            }    
+        }
+        
+        return $result;
+    }
 }
