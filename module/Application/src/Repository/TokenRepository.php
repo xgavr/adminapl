@@ -733,9 +733,9 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g.id, count(t.id) as tokenCount, sum(t.frequency) as frequencySum')
-                ->from(TokenGroup::class, 'g')
+                ->from(TokenGroup::classclass, 'g')
                 ->join('g.tokens', 't')
-                ->where('g.tokenGroup = ?1')
+                ->where('g.id = ?1')
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('g.id')
                 ;
