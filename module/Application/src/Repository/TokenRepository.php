@@ -744,8 +744,7 @@ class TokenRepository  extends EntityRepository
         foreach ($data as $row){
             $frequencies[] = $row['frequency'];
         }
-        var_dump($frequencies);
-        if (count($frquensies)){
+        if (count($frequencies)){
             $result = \Phpml\Math\Statistic\Mean::arithmetic($frequencies);
         }    
         

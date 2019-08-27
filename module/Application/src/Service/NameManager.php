@@ -921,7 +921,7 @@ class NameManager
                         ->findOneByLemma($word);
                 $frequencies[] = $token->getFrequency();
             }
-            if (count($frquensies)){
+            if (count($frequencies)){
                 $result[$key] = \Phpml\Math\Statistic\Mean::arithmetic($frequencies);
             }    
         }    
