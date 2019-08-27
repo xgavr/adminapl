@@ -739,11 +739,12 @@ class TokenRepository  extends EntityRepository
                 ->setParameter('1', $tokenGroup->getId())
                 ;
         
-        $data = $queryBuilder->getQuery()->getResult();
+        $data = $queryBuilder->getQuery()->getResult(2);
         $frequencies = [];
         foreach ($data as $row){
             $frequencies[] = $row['frequency'];
         }
+        var_dump($frequencies);
         if (count($frquensies)){
             $result = \Phpml\Math\Statistic\Mean::arithmetic($frequencies);
         }    
