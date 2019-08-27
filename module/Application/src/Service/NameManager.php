@@ -915,14 +915,14 @@ class NameManager
         $lemms = $this->lemmsFromStr($str);
         foreach ($lemms as $key => $words){
             $words = array_filter($words);
-            $frquensies = [];
+            $frequencies = [];
             foreach ($words as $word){
                 $token = $this->entityManager->getRepository(Token::class)
                         ->findOneByLemma($word);
-                $frquensies[] = $token->getFrequency();
+                $frequencies[] = $token->getFrequency();
             }
             if (count($frquensies)){
-                $result[$key] = \Phpml\Math\Statistic\Mean::arithmetic($frquensies);
+                $result[$key] = \Phpml\Math\Statistic\Mean::arithmetic($frequencies);
             }    
         }    
         

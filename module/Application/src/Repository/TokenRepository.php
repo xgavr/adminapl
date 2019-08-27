@@ -732,20 +732,21 @@ class TokenRepository  extends EntityRepository
         $result = 0;
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g.id, count(t.id) as tokenCount, sum(t.frequency) as frequencySum')
+        $queryBuilder->select('t.frequency')
                 ->from(TokenGroup::class, 'g')
                 ->join('g.tokens', 't')
                 ->where('g.id = ?1')
                 ->setParameter('1', $tokenGroup->getId())
-                ->groupBy('g.id')
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
+        $frequencies = [];
         foreach ($data as $row){
-            if ($row['tokenCount']){
-                $result = round($row['frequencySum'] / $row['tokenCount'], 0);
-            }    
+            $frequencies[] = $row['frequency'];
         }
+        if (count($frquensies)){
+            $result = \Phpml\Math\Statistic\Mean::arithmetic($frequencies);
+        }    
         
         return $result;
     }
