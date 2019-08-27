@@ -25,14 +25,21 @@ class MlManager
 
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
+    /**
+     * Name manager.
+     * @var \Application\Service\NameManager
+     */
+    private $nameManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $nameManager)
     {
         $this->entityManager = $entityManager;
+        $this->nameManager = $nameManager;
     }
     
     /**
