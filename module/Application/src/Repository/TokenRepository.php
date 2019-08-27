@@ -748,6 +748,6 @@ class TokenRepository  extends EntityRepository
             $result = \Phpml\Math\Statistic\Mean::arithmetic($frequencies);
         }    
         
-        return $result;
+        return round($result);
     }
 }

@@ -922,7 +922,7 @@ class NameManager
                 $frequencies[] = $token->getFrequency();
             }
             if (count($frequencies)){
-                $result[$key] = \Phpml\Math\Statistic\Mean::arithmetic($frequencies);
+                $result[$key] = round(\Phpml\Math\Statistic\Mean::arithmetic($frequencies));
             }    
         }    
         
