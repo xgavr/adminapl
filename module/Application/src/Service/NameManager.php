@@ -901,4 +901,31 @@ class NameManager
         
         return;
     }    
+    
+    
+    /**
+     * Средняя частота строки
+     * 
+     * @param string $str
+     * @return array
+     */
+    public function meanFrequency($str)
+    {
+        $result = [];
+        $lemms = $this->lemmsFromStr($str);
+        foreach ($lemms as $key => $words){
+            $words = array_filter($words);
+            $frquensies = [];
+            foreach ($words as $word){
+                $token = $this->entityManager->getRepository(Token::class)
+                        ->findOneByLemma($word);
+                $frquensies[] = $token->getFrequency();
+            }
+            if (count($frquensies)){
+                $result[$key] = \Phpml\Math\Statistic\Mean::arithmetic($frquensies);
+            }    
+        }    
+        
+        return $result;
+    }
 }
