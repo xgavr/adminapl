@@ -89,7 +89,7 @@ class MlController extends AbstractActionController
                 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setDefaultItemCountPerPage(5);        
         $paginator->setCurrentPageNumber($page);
 
         
