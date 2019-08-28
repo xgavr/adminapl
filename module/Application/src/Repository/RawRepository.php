@@ -752,7 +752,8 @@ class RawRepository extends EntityRepository
         
         $queryBuilder->select('g.id')
                 ->from(\Application\Entity\Goods::class, 'g')
-                ->setMaxResults(1000)
+                ->where('g.tokenGroup > 0')
+                ->setMaxResults(2000)
                 ->orderBy('RAND()')
                 ;
         
@@ -763,11 +764,12 @@ class RawRepository extends EntityRepository
         }
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r')
+        $queryBuilder->select('max(r.id) as rid')
                 ->from(Rawprice::class, 'r')
                 ->where('r.status = ?1')
                 ->andWhere('r.good in ('.implode(',', $data).')')
                 ->setParameter('1', Rawprice::STATUS_PARSED)
+                ->groupBy('r.goodname')
 //                ->setParameter('2', implode(',', $data))
                 ;
         
@@ -775,8 +777,8 @@ class RawRepository extends EntityRepository
 //        var_dump(implode(',', $data)); exit;        
         $data = $queryBuilder->getQuery()->getResult(); 
         
-        foreach ($data as $rawprice){
-            $this->getEntityManager()->getConnection()->insert('ml_title', ['rawprice_id' => $rawprice->getId()]);            
+        foreach ($data as $row){
+            $this->getEntityManager()->getConnection()->insert('ml_title', ['rawprice_id' => $row['rid']]);            
         }
         
         return;

@@ -907,11 +907,24 @@ class NameManager
      * Средняя частота строки
      * 
      * @param string $str
+     * @param string $article
      * @return array
      */
-    public function meanFrequency($str)
+    public function meanFrequency($str, $article = null)
     {
-        $result = [];
+        $result = [
+            Token::IS_DICT => 0, 
+            Token::IS_RU => 0,
+            Token::IS_RU_1 => 0,
+            Token::IS_RU_ABBR => 0,
+            Token::IS_EN_DICT => 0,
+            Token::IS_EN => 0,
+            Token::IS_EN_1 => 0,
+            Token::IS_EN_ABBR => 0,
+            Token::IS_NUMERIC => 0, 
+            Token::IS_ARTICLE => 0,
+        ];
+        
         $lemms = $this->lemmsFromStr($str);
         foreach ($lemms as $key => $words){
             $words = array_filter($words);
@@ -919,12 +932,19 @@ class NameManager
             foreach ($words as $word){
                 $token = $this->entityManager->getRepository(Token::class)
                         ->findOneByLemma($word);
-                $frequencies[] = $token->getFrequency();
+                if ($token){
+                    $frequencies[] = $token->getFrequency();
+                }    
             }
             if (count($frequencies)){
                 $result[$key] = round(\Phpml\Math\Statistic\Mean::arithmetic($frequencies));
             }    
         }    
+        
+        if ($article){
+            $toIntFilter = new \Zend\Filter\ToInt();
+            $result[Token::IS_ARTICLE] = $toIntFilter->filter(mb_stripos($str, $article) !== FALSE);
+        }
         
         return $result;
     }

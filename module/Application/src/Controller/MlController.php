@@ -26,7 +26,7 @@ class MlController extends AbstractActionController
     
     /**
      * Менеджер ml.
-     * @var Application\Service\MlManager 
+     * @var \Application\Service\MlManager 
      */
     private $mlManager;    
     
@@ -95,10 +95,35 @@ class MlController extends AbstractActionController
         
         // Визуализируем шаблон представления.
         return new ViewModel([
-            'goods' => $paginator,
-            'mlManager' => $this->mlManager,
+            'mlTitles' => $paginator,
+            'mlManager' => $this->mlManager,            
         ]);  
         
+    }
+    
+    public function updateMlTitleStatusAction()
+    {
+        $mlTitleId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status');
+        
+        if ($mlTitleId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $mlTitle = $this->entityManager->getRepository(\Application\Entity\MlTitle::class)
+                ->findOneById($mlTitleId);
+        
+        if ($mlTitle == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->mlManager->updateMlTitleStatus($mlTitle, $status);
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
     }
 
 }

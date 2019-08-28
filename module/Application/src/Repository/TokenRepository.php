@@ -678,20 +678,9 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-//        $queryBuilder->select('r')
-//                ->from(Rawprice::class, 'r')
-//                ->join(\Application\Entity\MlTitle::class, 'mt', 'WITH', 'r.id = mt.rawprice')
-//                ->orderBy('r.good')
+        $queryBuilder->select('m')
+                ->from(\Application\Entity\MlTitle::class, 'm')
                 ;
-        $queryBuilder->select('g')
-                ->distinct()
-                ->from(Goods::class, 'g')
-                ->join(Rawprice::class, 'r', 'WITH', 'r.good = g.id')
-                ->join(\Application\Entity\MlTitle::class, 'mt', 'WITH', 'r.id = mt.rawprice')
-                ;
-                
-
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
         
     }
@@ -749,5 +738,27 @@ class TokenRepository  extends EntityRepository
         }    
         
         return round($result);
+    }
+    
+    /**
+     * Наименования товара
+     * 
+     * @param Goods $good
+     */
+    public function goodTitles($good)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r.goodname')
+                ->distinct()
+                ->from(Goods::class, 'g')
+                ->join('g.articles', 'a')
+                ->join('a.rawprice', 'r')
+                ->where('g.id = ?1')
+                ->andWhere('r.status = ?2')
+                ->setParameter('1', $good->getId())
+                ->setParameter('2', Rawprice::STATUS_PARSED)
+                ;
+        return $queryBuilder->getQuery()->getResult();
     }
 }

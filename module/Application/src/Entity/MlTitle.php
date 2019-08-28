@@ -18,16 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MlTitle {
     
-    const IS_D  = 1; //описание
-    const IS_F  = 2; //характеристики
-    const IS_A  = 2; //применимость
-    const IS_S  = 4; //служебное
-    const IS_O  = 5; //прочее
-    
-    const IS_SD  = 14; //описание + служебное
-    const IS_DF  = 12; //описание + характеристик
-    const IS_FA  = 22; //характеристики + применимость
-    const IS_AS  = 24; //применимость + служебное
+    const STATUS_BAD  = 1; //плохо
+    const STATUS_MID  = 2; //ничего
+    const STATUS_EX   = 3;//хорошо
     
     /**
      * @ORM\Id
@@ -42,7 +35,7 @@ class MlTitle {
     protected $status;    
     
      /**
-    * @ORM\OneToOne(targetEntity="Application\Entity\Rawprice", mappedBy="mlTitles")
+    * @ORM\OneToOne(targetEntity="Application\Entity\Rawprice")
     * @ORM\JoinColumn(name="rawprice_id", referencedColumnName="id")
      */
     private $rawprice;    

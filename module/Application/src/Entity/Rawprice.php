@@ -256,6 +256,7 @@ class Rawprice {
      */
     private $tokens;
     
+    
     /**
      * Constructor.
      */

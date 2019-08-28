@@ -64,10 +64,10 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
+            return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'crosses', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
         }
 
-        return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
+        return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'crosses', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
     }
 
     /**
@@ -450,6 +450,28 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getOtherContacts', []);
 
         return parent::getOtherContacts();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCrosses()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCrosses', []);
+
+        return parent::getCrosses();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addCross($cross)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addCross', [$cross]);
+
+        return parent::addCross($cross);
     }
 
     /**

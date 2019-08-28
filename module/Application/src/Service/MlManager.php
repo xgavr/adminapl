@@ -10,6 +10,7 @@ namespace Application\Service;
 use Phpml\Classification\KNearestNeighbors;
 use Phpml\ModelManager;
 use Phpml\Clustering\DBSCAN;
+use Application\Entity\MlTitle;
 
 use Application\Filter\TokenizerQualifier;
 
@@ -180,5 +181,56 @@ class MlManager
                 $maxRowCount = count($row);
             }
         }
+    }
+    
+    /**
+     * Средняя частота строки
+     * 
+     * @param string $str
+     * @param string $article
+     * @return array
+     */
+    public function strMeanFrequency($str, $article = null)
+    {
+        return $this->nameManager->meanFrequency($str, $article);
+    }
+    
+    /**
+     * Средняя частота группы токенов
+     * 
+     * @param \Application\Entity\TokenGroup $tokenGroup
+     * @return int
+     */
+    public function tokenGroupMeanFrequency($tokenGroup)
+    {
+        return $this->entityManager->getRepository(\Application\Entity\TokenGroup::class)
+                ->meanFrequency($tokenGroup);
+    }
+    
+    /**
+     * Наименования товара
+     * 
+     * @param Goods $good
+     * @return QueryResult
+     */
+    public function goodTitles($good)
+    {
+        return $this->entityManager->getRepository(\Application\Entity\Token::class)
+                ->goodTitles($good);
+    }
+    
+    /**
+     * Обновление статуса наименования
+     * 
+     * @param MlTitle $mlTitle
+     * @param integer $status
+     */
+    public function updateMlTitleStatus($mlTitle, $status)
+    {
+        $mlTitle->setStatus($status);
+        $this->entityManager->persist($mlTitle);
+        $this->entityManager->flush($mlTitle);
+        
+        return;
     }
 }
