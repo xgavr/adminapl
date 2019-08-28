@@ -103,27 +103,20 @@ class MlController extends AbstractActionController
     
     public function updateMlTitleStatusAction()
     {
-        $mlTitleId = $this->params()->fromRoute('id', -1);
-        $status = $this->params()->fromQuery('status');
-        
-        if ($mlTitleId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $mlTitleId = $data['pk'];
+            $status = $data['value'];
+
+            $mlTitle = $this->entityManager->getRepository(\Application\Entity\MlTitle::class)
+                    ->findOneById($mlTitleId);
+            
+            if ($mlTitle) {
+                $this->mlManager->updateMlTitleStatus($mlTitle, $status);
+            }        
         }
-        
-        $mlTitle = $this->entityManager->getRepository(\Application\Entity\MlTitle::class)
-                ->findOneById($mlTitleId);
-        
-        if ($mlTitle == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        $this->mlManager->updateMlTitleStatus($mlTitle, $status);
-        
-        return new JsonModel([
-            'result' => 'ok',
-        ]);          
-    }
+        exit;
+    }    
 
 }

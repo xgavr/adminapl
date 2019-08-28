@@ -107,9 +107,14 @@ $this->pageBreadcrumbs()->setItems([
                         </a>
                     </td>
                     <td>
-                        <input type="radio" name="status_<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_BAD?>"><?= Application\Entity\MlTitle::STATUS_BAD?><br>
-                        <input type="radio" name="status_<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_MID?>"><?= Application\Entity\MlTitle::STATUS_MID?><br>
-                        <input type="radio" name="status_<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_EX?>"><?= Application\Entity\MlTitle::STATUS_EX?><br>
+                        <?php
+                            $checked1 = ($mlTitle->getStatus() == Application\Entity\MlTitle::STATUS_BAD) ? 'checked':'';
+                            $checked2 = ($mlTitle->getStatus() == Application\Entity\MlTitle::STATUS_MID) ? 'checked':'';
+                            $checked3 = ($mlTitle->getStatus() == Application\Entity\MlTitle::STATUS_EX) ? 'checked':'';
+                        ?>
+                        <input class="statusMlTitle" type="radio" name="<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_BAD?>" <?= $checked1?>><?= Application\Entity\MlTitle::STATUS_BAD?><br>
+                        <input class="statusMlTitle"  type="radio" name="<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_MID?>" <?= $checked2?>><?= Application\Entity\MlTitle::STATUS_MID?><br>
+                        <input class="statusMlTitle"  type="radio" name="<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_EX?>" <?= $checked3?>><?= Application\Entity\MlTitle::STATUS_EX?><br>
                     </td>
                 </tr>
             <?php endforeach;?>        
@@ -150,4 +155,23 @@ $this->pageBreadcrumbs()->setItems([
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('.statusMlTitle').on('change', function(e, node) {
+        var url = "/ml/update-ml-title-status/";
+
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: e.target.name, value: e.target.value}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })            
+</script>
 
