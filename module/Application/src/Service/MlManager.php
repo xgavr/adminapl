@@ -188,6 +188,31 @@ class MlManager
     }
     
     /**
+     * Разложить наименование из строки прайса
+     * 
+     * @param \Application\Entity\Rawprice $rawprice
+     * @return array
+     */
+    public function rawpriceToMlTitle($rawprice)
+    {
+        $frequencies = $this->strMeanFrequency($rawprice->getTitle(), $rawprice->getArticle());
+        $result = [
+            $this->tokenGroupMeanFrequency($rawprice->getGood()->getTokenGroup()),
+            $frequencies[\Application\Entity\Token::IS_DICT],
+            $frequencies[\Application\Entity\Token::IS_RU],
+            $frequencies[\Application\Entity\Token::IS_RU_1],
+            $frequencies[\Application\Entity\Token::IS_RU_ABBR],
+            $frequencies[\Application\Entity\Token::IS_EN_DICT],
+            $frequencies[\Application\Entity\Token::IS_EN],
+            $frequencies[\Application\Entity\Token::IS_EN_1],
+            $frequencies[\Application\Entity\Token::IS_EN_ABBR],
+            $frequencies[\Application\Entity\Token::IS_NUMERIC],
+            $frequencies[\Application\Entity\Token::IS_ARTICLE],
+        ];        
+        return $result;
+    }
+    
+    /**
      * Сохранить выборку в dataset
      */
     public function mlTitlesToCsv()
@@ -206,21 +231,9 @@ class MlManager
         $fp = fopen(self::ML_TITLE_FILE, 'w');
         foreach ($iterable as $row) {
             foreach ($row as $mlTitle){
-                $frequencies = $this->strMeanFrequency($mlTitle->getRawprice()->getTitle(), $mlTitle->getRawprice()->getArticle());
-                fputcsv($fp, [
-                    $this->tokenGroupMeanFrequency($mlTitle->getRawprice()->getGood()->getTokenGroup()),
-                    $frequencies[\Application\Entity\Token::IS_DICT],
-                    $frequencies[\Application\Entity\Token::IS_RU],
-                    $frequencies[\Application\Entity\Token::IS_RU_1],
-                    $frequencies[\Application\Entity\Token::IS_RU_ABBR],
-                    $frequencies[\Application\Entity\Token::IS_EN_DICT],
-                    $frequencies[\Application\Entity\Token::IS_EN],
-                    $frequencies[\Application\Entity\Token::IS_EN_1],
-                    $frequencies[\Application\Entity\Token::IS_EN_ABBR],
-                    $frequencies[\Application\Entity\Token::IS_NUMERIC],
-                    $frequencies[\Application\Entity\Token::IS_ARTICLE],
-                    $mlTitle->getStatus(),
-                ]);
+                $sample = $this->rawpriceToMlTitle($mlTitle->getRawprice());
+                $sample[] = $mlTitle->getStatus();
+                fputcsv($fp, $sample);
                 $this->entityManager->detach($mlTitle);
             }    
         }
