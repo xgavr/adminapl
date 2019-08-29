@@ -193,31 +193,36 @@ class MlManager
     public function mlTitlesToCsv()
     {
         ini_set('memory_limit', '2048M');
+        set_time_limit(0);
         
         if (!is_dir(self::ML_TITLE_DIR)){
             mkdir(self::ML_TITLE_DIR);
         }        
 
-        $mlTitles = $this->entityManager->getRepository(\Application\Entity\Token::class)
-                    ->findMlTitles()->getResult();
+        $mlTitlesQuery = $this->entityManager->getRepository(\Application\Entity\Token::class)
+                    ->findMlTitles();
+        $iterable = $mlTitlesQuery->iterate();
         
         $fp = fopen(self::ML_TITLE_FILE, 'w');
-        foreach ($mlTitles as $mlTitle) {
-            $frequencies = $this->strMeanFrequency($mlTitle->getRawprice()->getTitle(), $mlTitle->getRawprice()->getArticle());
-            fputcsv($fp, [
-                $this->tokenGroupMeanFrequency($mlTitle->getRawprice()->getGood()->getTokenGroup()),
-                $frequencies[\Application\Entity\Token::IS_DICT],
-                $frequencies[\Application\Entity\Token::IS_RU],
-                $frequencies[\Application\Entity\Token::IS_RU_1],
-                $frequencies[\Application\Entity\Token::IS_RU_ABBR],
-                $frequencies[\Application\Entity\Token::IS_EN_DICT],
-                $frequencies[\Application\Entity\Token::IS_EN],
-                $frequencies[\Application\Entity\Token::IS_EN_1],
-                $frequencies[\Application\Entity\Token::IS_EN_ABBR],
-                $frequencies[\Application\Entity\Token::IS_NUMERIC],
-                $frequencies[\Application\Entity\Token::IS_ARTICLE],
-                $mlTitle->getStatus(),
-            ]);
+        foreach ($iterable as $row) {
+            foreach ($row as $mlTitle){
+                $frequencies = $this->strMeanFrequency($mlTitle->getRawprice()->getTitle(), $mlTitle->getRawprice()->getArticle());
+                fputcsv($fp, [
+                    $this->tokenGroupMeanFrequency($mlTitle->getRawprice()->getGood()->getTokenGroup()),
+                    $frequencies[\Application\Entity\Token::IS_DICT],
+                    $frequencies[\Application\Entity\Token::IS_RU],
+                    $frequencies[\Application\Entity\Token::IS_RU_1],
+                    $frequencies[\Application\Entity\Token::IS_RU_ABBR],
+                    $frequencies[\Application\Entity\Token::IS_EN_DICT],
+                    $frequencies[\Application\Entity\Token::IS_EN],
+                    $frequencies[\Application\Entity\Token::IS_EN_1],
+                    $frequencies[\Application\Entity\Token::IS_EN_ABBR],
+                    $frequencies[\Application\Entity\Token::IS_NUMERIC],
+                    $frequencies[\Application\Entity\Token::IS_ARTICLE],
+                    $mlTitle->getStatus(),
+                ]);
+                $this->entityManager->detach($mlTitle);
+            }    
         }
 
         fclose($fp);
