@@ -128,4 +128,12 @@ class MlController extends AbstractActionController
         exit;
     }    
 
+    public function mlTitlePredictAction()
+    {
+        $this->mlManager->mlTitlePredict();
+
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+    }
 }
