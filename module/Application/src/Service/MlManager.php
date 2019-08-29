@@ -278,7 +278,7 @@ class MlManager
         set_time_limit(0);
         
         $csvDataset = new \Phpml\Dataset\CsvDataset(self::ML_TITLE_FILE, 11, false);
-        $dataset = new \Phpml\CrossValidation\StratifiedRandomSplit($csvDataset, 0.3, 1234);
+        $dataset = new \Phpml\CrossValidation\StratifiedRandomSplit($csvDataset, 0.2, 1234);
 
         $mlp = new \Phpml\Classification\MLPClassifier(9, [5], ['1', '2', '3']);
         $trainSamples = $dataset->getTrainSamples();
