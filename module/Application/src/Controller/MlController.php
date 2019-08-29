@@ -101,7 +101,16 @@ class MlController extends AbstractActionController
         
     }
     
-    public function updateMlTitleStatusAction()
+    public function mlTitlesToCsvAction()
+    {
+        $this->mlManager->mlTitlesToCsv();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+    }
+
+        public function updateMlTitleStatusAction()
     {
         if ($this->getRequest()->isPost()) {
             // Получаем POST-данные.

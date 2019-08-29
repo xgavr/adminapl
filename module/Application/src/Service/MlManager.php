@@ -23,6 +23,8 @@ class MlManager
 {
     
     const ML_DATA_PATH     = './data/ann/'; //путь к папке с моделями ml
+    const ML_TITLE_DIR    = './data/ann/ml_title/'; //путь к папке с моделями mlTitle
+    const ML_TITLE_FILE   = './data/ann/ml_title/dataset.csv'; //данные mlTitle
 
     /**
      * Doctrine entity manager.
@@ -161,28 +163,6 @@ class MlManager
         return $tokenizer->filter($text);
     }
     
-    public function mlTitlesToCsv()
-    {
-        $rawprices = $this->entityManager->getRepository(\Application\Entity\Token::class)
-                    ->findMlTitles()->getResult();
-        
-        $tokenizer = new TokenizerQualifier();
-        
-        $maxRowCount = 0;
-        foreach ($rawprices as $rawprice){
-            $row = $tokenizer->filter($rawprice->getGoodName());
-            if (count($row) > $maxRowCount){
-                $maxRowCount = count($row);
-            }
-        }
-        foreach ($rawprices as $rawprice){
-            $row = $tokenizer->filter($rawprice->getGoodName());
-            if (count($row) > $maxRowCount){
-                $maxRowCount = count($row);
-            }
-        }
-    }
-    
     /**
      * Средняя частота строки
      * 
@@ -205,6 +185,43 @@ class MlManager
     {
         return $this->entityManager->getRepository(\Application\Entity\TokenGroup::class)
                 ->meanFrequency($tokenGroup);
+    }
+    
+    /**
+     * Сохранить выборку в dataset
+     */
+    public function mlTitlesToCsv()
+    {
+        ini_set('memory_limit', '2048M');
+        
+        if (!is_dir(self::ML_TITLE_DIR)){
+            mkdir(self::ML_TITLE_DIR);
+        }        
+
+        $mlTitles = $this->entityManager->getRepository(\Application\Entity\Token::class)
+                    ->findMlTitles()->getResult();
+        
+        $fp = fopen(self::ML_TITLE_FILE, 'w');
+        foreach ($mlTitles as $mlTitle) {
+            $frequencies = $this->strMeanFrequency($mlTitle->getRawprice()->getTitle(), $mlTitle->getRawprice()->getArticle());
+            fputcsv($fp, [
+                $this->tokenGroupMeanFrequency($mlTitle->getRawprice()->getGood()->getTokenGroup()),
+                $frequencies[\Application\Entity\Token::IS_DICT],
+                $frequencies[\Application\Entity\Token::IS_RU],
+                $frequencies[\Application\Entity\Token::IS_RU_1],
+                $frequencies[\Application\Entity\Token::IS_RU_ABBR],
+                $frequencies[\Application\Entity\Token::IS_EN_DICT],
+                $frequencies[\Application\Entity\Token::IS_EN],
+                $frequencies[\Application\Entity\Token::IS_EN_1],
+                $frequencies[\Application\Entity\Token::IS_EN_ABBR],
+                $frequencies[\Application\Entity\Token::IS_NUMERIC],
+                $frequencies[\Application\Entity\Token::IS_ARTICLE],
+                $mlTitle->getStatus(),
+            ]);
+        }
+
+        fclose($fp);
+        return;
     }
     
     /**
