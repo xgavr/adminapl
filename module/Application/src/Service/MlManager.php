@@ -201,11 +201,11 @@ class MlManager
             $frequencies[\Application\Entity\Token::IS_DICT],
             $frequencies[\Application\Entity\Token::IS_RU],
             $frequencies[\Application\Entity\Token::IS_RU_1],
-            $frequencies[\Application\Entity\Token::IS_RU_ABBR],
+//            $frequencies[\Application\Entity\Token::IS_RU_ABBR],
             $frequencies[\Application\Entity\Token::IS_EN_DICT],
             $frequencies[\Application\Entity\Token::IS_EN],
             $frequencies[\Application\Entity\Token::IS_EN_1],
-            $frequencies[\Application\Entity\Token::IS_EN_ABBR],
+//            $frequencies[\Application\Entity\Token::IS_EN_ABBR],
             $frequencies[\Application\Entity\Token::IS_NUMERIC],
             $frequencies[\Application\Entity\Token::IS_ARTICLE],
         ];        
@@ -280,9 +280,9 @@ class MlManager
         $csvDataset = new \Phpml\Dataset\CsvDataset(self::ML_TITLE_FILE, 11, false);
         $dataset = new \Phpml\CrossValidation\StratifiedRandomSplit($csvDataset, 0.3, 1234);
 
-        $mlp = new \Phpml\Classification\MLPClassifier(11, [5], ['1', '2', '3']);
+        $mlp = new \Phpml\Classification\MLPClassifier(9, [5], ['1', '2', '3']);
         $trainSamples = $dataset->getTrainSamples();
-        $testSamples = $dataset->getTestsamples();
+        $testSamples = $dataset->getTestSamples();
         array_walk($trainSamples, function(&$x) { $x=array_map('intval', $x);});
         array_walk($testSamples, function(&$x) { $x=array_map('intval', $x);});
         $mlp->train($trainSamples, $dataset->getTrainLabels());
