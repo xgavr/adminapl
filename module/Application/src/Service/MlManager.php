@@ -10,6 +10,11 @@ namespace Application\Service;
 use Phpml\Classification\KNearestNeighbors;
 use Phpml\ModelManager;
 use Phpml\Clustering\DBSCAN;
+use Phpml\Dataset\CsvDataset;
+use Phpml\CrossValidation\StratifiedRandomSplit;
+use Phpml\Metric\Accuracy;
+use Phpml\Classification\MLPClassifier;
+use Phpml\Preprocessing\Normalizer;
 use Application\Entity\MlTitle;
 
 use Application\Filter\TokenizerQualifier;
@@ -274,23 +279,30 @@ class MlManager
      */
     public function mlTitlePredict()
     {
-        //ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(0);
         
-        $csvDataset = new \Phpml\Dataset\CsvDataset(self::ML_TITLE_FILE, 11, false);
-        $dataset = new \Phpml\CrossValidation\StratifiedRandomSplit($csvDataset, 0.2, 1234);
+        $csvDataset = new CsvDataset(self::ML_TITLE_FILE, 9, false);
+        $dataset = new StratifiedRandomSplit($csvDataset, 0.2, 1234);
 
-        $mlp = new \Phpml\Classification\MLPClassifier(9, [5], ['1', '2', '3']);
         $trainSamples = $dataset->getTrainSamples();
         $testSamples = $dataset->getTestSamples();
         array_walk($trainSamples, function(&$x) { $x=array_map('intval', $x);});
         array_walk($testSamples, function(&$x) { $x=array_map('intval', $x);});
+        
+        $normalizer = new Normalizer();
+        $normalizer->fit($trainSamples);
+        $normalizer->transform($trainSamples);
+        $normalizer->fit($testSamples);
+        $normalizer->transform($testSamples);
+        
+        $mlp = new MLPClassifier(9, [5], ['1', '2', '3']);        
         $mlp->train($trainSamples, $dataset->getTrainLabels());
         
         $predictLabels = $mlp->predict($testSamples);
         
         $result = [
-            'accuracy' => \Phpml\Metric\Accuracy::score($dataset->getTestLabels(), $predictedLabels),
+            'accuracy' => Accuracy::score($dataset->getTestLabels(), $predictLabels),
         ];
                 
         var_dump($result);        

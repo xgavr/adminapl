@@ -752,8 +752,8 @@ class RawRepository extends EntityRepository
         
         $queryBuilder->select('g.id')
                 ->from(\Application\Entity\Goods::class, 'g')
-                ->where('g.tokenGroup > 0')
-                ->setMaxResults(2000)
+                ->where('g.tokenGroup is not null')
+                ->setMaxResults(3000)
                 ->orderBy('RAND()')
                 ;
         
