@@ -54,7 +54,7 @@
 <?php if (isset($this->next)): ?>
     <?php $routeQuery['page'] = $this->next;?>
     <li>
-      <a href="<?php echo $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['page'=>$routeQuery]]); ?>" aria-label="Next">
+      <a href="<?= $this->url($this->route['route'], ['action' => $action, 'id' => $id], ['query'=>['page'=>$routeQuery]]); ?>" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>  
