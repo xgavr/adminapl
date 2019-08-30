@@ -949,10 +949,9 @@ class NameManager
         }    
         
         $stru = iconv('UTF-8', 'UTF-8//IGNORE', $str);
-        $strut = preg_replace( "/(^\s+)|(\s+$)/us", "", $stru);
-        $punktuation = mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/->-+()]', '', mb_strtoupper($strut));
+        $punktuation = mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/->-+()]', '', mb_strtoupper($stru));
         if ($punktuation){
-            var_dump($punktuation);
+//            var_dump($punktuation);
             $result[Token::IS_UNKNOWN] = count(array_unique(str_split($punktuation)));
         }    
         
