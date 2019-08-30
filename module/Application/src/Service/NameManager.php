@@ -950,7 +950,7 @@ class NameManager
         
         $punktuation = mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/->-+()]', '', mb_strtoupper($str));
         if ($punktuation){
-            $result[Token::IS_UNKNOWN] = count(array_unique(array_diff(preg_split('//u', $punktuation, -1, PREG_SPLIT_NO_EMPTY)), array(' ')));
+            $result[Token::IS_UNKNOWN] = count(array_unique(array_diff(preg_split('//u', $punktuation, -1, PREG_SPLIT_NO_EMPTY)), array('')));
 //            var_dump(array_unique(preg_split('//u', $punktuation, -1, PREG_SPLIT_NO_EMPTY)));
         }    
         
