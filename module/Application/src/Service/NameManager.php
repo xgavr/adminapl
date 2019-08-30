@@ -948,10 +948,10 @@ class NameManager
             }    
         }    
         
-        $punktuation = mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/->-+()]', '', mb_strtoupper($str));
+        $punktuation = mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/->-+() ]', '', mb_strtoupper($str));
         if ($punktuation){
-            $result[Token::IS_UNKNOWN] = count(array_unique(preg_split('//', $punktuation, -1, PREG_SPLIT_NO_EMPTY)));
-            var_dump(array_unique(preg_split('//u', $punktuation, -1, PREG_SPLIT_NO_EMPTY)));
+            $result[Token::IS_UNKNOWN] = count(array_unique(preg_split('//u', $punktuation, -1, PREG_SPLIT_NO_EMPTY)));
+//            var_dump(array_unique(preg_split('//u', $punktuation, -1, PREG_SPLIT_NO_EMPTY)));
         }    
         
         $toIntFilter = new \Zend\Filter\ToInt();
