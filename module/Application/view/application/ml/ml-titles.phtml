@@ -16,7 +16,7 @@ $this->pageBreadcrumbs()->setItems([
 
         <table class="table table-striped">
             <tr>
-                <td colspan="13">
+                <td colspan="11">
                     <?= $this->paginationControl($mlTitles,
                                 'Sliding',
                                 'application/partial/paginator', 
@@ -37,9 +37,9 @@ $this->pageBreadcrumbs()->setItems([
                 <th>
                     ru1
                 </th>
-                <th>
+<!--                <th>
                     ruA
-                </th>
+                </th>-->
                 <th>
                     EN
                 </th>
@@ -49,9 +49,9 @@ $this->pageBreadcrumbs()->setItems([
                 <th>
                     en1
                 </th>
-                <th>
+<!--                <th>
                     enA
-                </th>
+                </th>-->
                 <th>
                     N
                 </th>                    
@@ -67,39 +67,62 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <?php foreach ($mlTitles as $mlTitle):?>
                 <tr>
-                    <?php $frequencies = $this->mlManager->strMeanFrequency($mlTitle->getRawprice()->getTitle(), $mlTitle->getRawprice()->getArticle())?>
+                    <?php $frequencies = $this->mlManager->strMeanFrequency($mlTitle->getRawprice()->getTitle(), $mlTitle->getRawprice()->getArticle(), $mlTitle->getRawprice()->getProducer())?>
                     <td>
-                        <?= $this->mlManager->tokenGroupMeanFrequency($mlTitle->getRawprice()->getGood()->getTokenGroup())?>
+                        <?php $tokenGroupFrequencies = $this->mlManager->tokenGroupMeanFrequency($mlTitle->getRawprice()->getGood()->getTokenGroup())?>
+                        <div><?= $tokenGroupFrequencies['sum']?></div>
+                        <div><?= $tokenGroupFrequencies['mean']?></div>
+                        <div><?= $tokenGroupFrequencies['sd']?></div>
                     </td>
                     <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_DICT]?>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_DICT]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_DICT]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_DICT]['sd']?></div>
                     </td>
                     <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_RU]?>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU]['sd']?></div>
                     </td>
                     <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_RU_1]?>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_1]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_1]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_1]['sd']?></div>
+                    </td>
+<!--                    <td>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_ABBR]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_ABBR]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_ABBR]['sd']?></div>
+                    </td>-->
+                    <td>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_DICT]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_DICT]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_DICT]['sd']?></div>
                     </td>
                     <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_RU_ABBR]?>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN]['sd']?></div>
                     </td>
                     <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_EN_DICT]?>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_1]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_1]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_1]['sd']?></div>
+                    </td>
+<!--                    <td>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_ABBR]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_ABBR]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_ABBR]['sd']?></div>
+                    </td>-->
+                    <td>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_NUMERIC]['sum']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_NUMERIC]['mean']?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_NUMERIC]['sd']?></div>
                     </td>
                     <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_EN]?>
-                    </td>
-                    <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_EN_1]?>
-                    </td>
-                    <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_EN_ABBR]?>
-                    </td>
-                    <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_NUMERIC]?>
-                    </td>
-                    <td>
-                        <?= $frequencies[\Application\Entity\Token::IS_ARTICLE]?>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_ARTICLE]?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_PRODUCER]?></div>
+                        <div><?= $frequencies[\Application\Entity\Token::IS_UNKNOWN]?></div>
                     </td>
                     <td>
                         <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $mlTitle->getRawprice()->getId()])?>" target="_blank">
@@ -119,7 +142,7 @@ $this->pageBreadcrumbs()->setItems([
                 </tr>
             <?php endforeach;?>        
             <tr>
-                <td colspan="13">
+                <td colspan="11">
                     <?= $this->paginationControl($mlTitles,
                                 'Sliding',
                                 'application/partial/paginator', 

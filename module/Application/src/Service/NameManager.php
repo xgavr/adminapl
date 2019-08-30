@@ -249,7 +249,7 @@ class NameManager
     /**
      * Поставить слову метку аббревиатуры
      * 
-     * @param Application\Entity\Token $token
+     * @param \Application\Entity\Token $token
      */
     public function abbrStatus($token)
     {
@@ -908,21 +908,24 @@ class NameManager
      * 
      * @param string $str
      * @param string $article
+     * @param string $producer Description
      * @return array
      */
-    public function meanFrequency($str, $article = null)
+    public function meanFrequency($str, $article = null, $producer = null)
     {
         $result = [
-            Token::IS_DICT => 0, 
-            Token::IS_RU => 0,
-            Token::IS_RU_1 => 0,
-            Token::IS_RU_ABBR => 0,
-            Token::IS_EN_DICT => 0,
-            Token::IS_EN => 0,
-            Token::IS_EN_1 => 0,
-            Token::IS_EN_ABBR => 0,
-            Token::IS_NUMERIC => 0, 
+            Token::IS_DICT => ['mean' => 0, 'sd' => 0, 'sum' => 0], 
+            Token::IS_RU => ['mean' => 0, 'sd' => 0, 'sum' => 0],
+            Token::IS_RU_1 => ['mean' => 0, 'sd' => 0, 'sum' => 0],
+            Token::IS_RU_ABBR => ['mean' => 0, 'sd' => 0, 'sum' => 0],
+            Token::IS_EN_DICT => ['mean' => 0, 'sd' => 0, 'sum' => 0],
+            Token::IS_EN => ['mean' => 0, 'sd' => 0, 'sum' => 0],
+            Token::IS_EN_1 => ['mean' => 0, 'sd' => 0, 'sum' => 0],
+            Token::IS_EN_ABBR => ['mean' => 0, 'sd' => 0, 'sum' => 0],
+            Token::IS_NUMERIC => ['mean' => 0, 'sd' => 0, 'sum' => 0], 
             Token::IS_ARTICLE => 0,
+            Token::IS_PRODUCER => 0,
+            Token::IS_UNKNOWN => 0,
         ];
         
         $lemms = $this->lemmsFromStr($str);
@@ -936,14 +939,27 @@ class NameManager
                     $frequencies[] = $token->getFrequency();
                 }    
             }
+            $result[$key]['sum'] = array_sum($frequencies);
             if (count($frequencies)){
-                $result[$key] = round(\Phpml\Math\Statistic\Mean::arithmetic($frequencies));
+                $result[$key]['mean'] = round(\Phpml\Math\Statistic\Mean::arithmetic($frequencies));
+                if (count($frequencies) > 1){
+                    $result[$key]['sd'] = round(\Phpml\Math\Statistic\StandardDeviation::population($frequencies));                    
+                }
             }    
         }    
         
+        $punktuation = mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/-]', '', mb_strtoupper($str));
+        if ($punktuation){
+            $result[Token::IS_UNKNOWN] = count(array_unique(str_split($punktuation)));
+        }    
+        
+        $toIntFilter = new \Zend\Filter\ToInt();
         if ($article){
-            $toIntFilter = new \Zend\Filter\ToInt();
             $result[Token::IS_ARTICLE] = $toIntFilter->filter(mb_stripos($str, $article) !== FALSE);
+        }
+        if ($producer){
+            $producerFilter = new \Application\Filter\ProducerName();
+            $result[Token::IS_PRODUCER] = $toIntFilter->filter(mb_stripos($producerFilter->filter($str), $producerFilter->filter($producer)) !== FALSE);
         }
         
         return $result;

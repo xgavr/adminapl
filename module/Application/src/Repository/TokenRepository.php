@@ -718,7 +718,7 @@ class TokenRepository  extends EntityRepository
      */
     public function meanFrequency($tokenGroup)
     {
-        $result = 0;
+        $result = ['mean' => 0, 'sd' => 0, 'sum' => 0];
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('t.frequency')
@@ -733,11 +733,15 @@ class TokenRepository  extends EntityRepository
         foreach ($data as $row){
             $frequencies[] = $row['frequency'];
         }
+        $result['sum'] = array_sum($frequencies);
         if (count($frequencies)){
-            $result = \Phpml\Math\Statistic\Mean::arithmetic($frequencies);
+            $result['mean'] = round(\Phpml\Math\Statistic\Mean::arithmetic($frequencies));
+            if (count($frequencies) > 1){
+                $result['sd'] = round(\Phpml\Math\Statistic\StandardDeviation::population($frequencies));
+            }    
         }    
         
-        return round($result);
+        return $result;
     }
     
     /**

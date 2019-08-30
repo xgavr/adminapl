@@ -173,11 +173,12 @@ class MlManager
      * 
      * @param string $str
      * @param string $article
+     * @param string $producer
      * @return array
      */
-    public function strMeanFrequency($str, $article = null)
+    public function strMeanFrequency($str, $article = null, $producer = null)
     {
-        return $this->nameManager->meanFrequency($str, $article);
+        return $this->nameManager->meanFrequency($str, $article, $producer);
     }
     
     /**
@@ -200,7 +201,7 @@ class MlManager
      */
     public function rawpriceToMlTitle($rawprice)
     {
-        $frequencies = $this->strMeanFrequency($rawprice->getTitle(), $rawprice->getArticle());
+        $frequencies = $this->strMeanFrequency($rawprice->getTitle(), $rawprice->getArticle(), $rawprice->getProducer());
         $result = [
             $this->tokenGroupMeanFrequency($rawprice->getGood()->getTokenGroup()),
             $frequencies[\Application\Entity\Token::IS_DICT],
