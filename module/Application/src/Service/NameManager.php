@@ -951,7 +951,7 @@ class NameManager
         $punktuation = mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/->-+()]', '', mb_strtoupper($str));
         if ($punktuation){
             $result[Token::IS_UNKNOWN] = count(array_unique(mb_split ('//', $punktuation)));
-            var_dump(array_unique(mb_split ('//', $punktuation)));
+            var_dump(array_unique(mb_split ('//u', $punktuation)));
         }    
         
         $toIntFilter = new \Zend\Filter\ToInt();
