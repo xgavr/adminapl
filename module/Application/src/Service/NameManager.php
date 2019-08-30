@@ -948,7 +948,7 @@ class NameManager
             }    
         }    
         
-        $punktuation = trim(iconv('utf-8',  'utf-8//IGNORE', mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/->-+()]', '', mb_strtoupper($str))));
+        $punktuation = mb_ereg_replace('[A-ZА-ЯЁ0-9 .,/->-+()]', '', mb_strtoupper(iconv('utf-8', 'utf-8//IGNORE', $str)));
         if ($punktuation){
             var_dump($punktuation);
             $result[Token::IS_UNKNOWN] = count(array_unique(str_split($punktuation)));
