@@ -202,18 +202,37 @@ class MlManager
     public function rawpriceToMlTitle($rawprice)
     {
         $frequencies = $this->strMeanFrequency($rawprice->getTitle(), $rawprice->getArticle(), $rawprice->getProducer());
+        $groupFrequencies = $this->tokenGroupMeanFrequency($rawprice->getGood()->getTokenGroup());
         $result = [
-            $this->tokenGroupMeanFrequency($rawprice->getGood()->getTokenGroup()),
-            $frequencies[\Application\Entity\Token::IS_DICT],
-            $frequencies[\Application\Entity\Token::IS_RU],
-            $frequencies[\Application\Entity\Token::IS_RU_1],
+            $groupFrequencies['sum'],
+            $groupFrequencies['mean'],
+            $groupFrequencies['sd'],
+            $frequencies[\Application\Entity\Token::IS_DICT]['sum'],
+            $frequencies[\Application\Entity\Token::IS_DICT]['mean'],
+            $frequencies[\Application\Entity\Token::IS_DICT]['sd'],
+            $frequencies[\Application\Entity\Token::IS_RU]['sum'],
+            $frequencies[\Application\Entity\Token::IS_RU]['mean'],
+            $frequencies[\Application\Entity\Token::IS_RU]['sd'],
+            $frequencies[\Application\Entity\Token::IS_RU_1]['sum'],
+            $frequencies[\Application\Entity\Token::IS_RU_1]['mean'],
+            $frequencies[\Application\Entity\Token::IS_RU_1]['sd'],
 //            $frequencies[\Application\Entity\Token::IS_RU_ABBR],
-            $frequencies[\Application\Entity\Token::IS_EN_DICT],
-            $frequencies[\Application\Entity\Token::IS_EN],
-            $frequencies[\Application\Entity\Token::IS_EN_1],
+            $frequencies[\Application\Entity\Token::IS_EN_DICT]['sum'],
+            $frequencies[\Application\Entity\Token::IS_EN_DICT]['mean'],
+            $frequencies[\Application\Entity\Token::IS_EN_DICT]['sd'],
+            $frequencies[\Application\Entity\Token::IS_EN]['sum'],
+            $frequencies[\Application\Entity\Token::IS_EN]['mean'],
+            $frequencies[\Application\Entity\Token::IS_EN]['sd'],
+            $frequencies[\Application\Entity\Token::IS_EN_1]['sum'],
+            $frequencies[\Application\Entity\Token::IS_EN_1]['mean'],
+            $frequencies[\Application\Entity\Token::IS_EN_1]['sd'],
 //            $frequencies[\Application\Entity\Token::IS_EN_ABBR],
-            $frequencies[\Application\Entity\Token::IS_NUMERIC],
+            $frequencies[\Application\Entity\Token::IS_NUMERIC]['sum'],
+            $frequencies[\Application\Entity\Token::IS_NUMERIC]['mean'],
+            $frequencies[\Application\Entity\Token::IS_NUMERIC]['sd'],
             $frequencies[\Application\Entity\Token::IS_ARTICLE],
+            $frequencies[\Application\Entity\Token::IS_PRODUCER],
+            $frequencies[\Application\Entity\Token::IS_UNKNOWN],
         ];        
         return $result;
     }
