@@ -164,6 +164,11 @@ $this->pageBreadcrumbs()->setItems([
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
     });
+    
+    $('#featureTab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })    
 
     function refreshTable(){
         $('#goods').bootstrapTable('refresh');
