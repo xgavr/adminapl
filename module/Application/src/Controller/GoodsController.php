@@ -462,7 +462,7 @@ class GoodsController extends AbstractActionController
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
             'goodsManager' => $this->goodsManager,
-            'bestName' => $this->nameManager->findBestName($goods),
+            //'bestName' => $this->nameManager->findBestName($goods),
             'images' => $images,
             'oemStatuses' => \Application\Entity\Oem::getStatusList(),
             'oemSources' => \Application\Entity\Oem::getSourceList(),
@@ -611,9 +611,9 @@ class GoodsController extends AbstractActionController
         }        
         $bestname = $this->nameManager->findBestName($goods);
         
-        if ($bestname){
-            $this->goodsManager->updateGoodName($goods, $bestname);
-        }    
+//        if ($bestname){
+//            $this->goodsManager->updateGoodName($goods, $bestname);
+//        }    
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

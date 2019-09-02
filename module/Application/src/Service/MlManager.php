@@ -201,40 +201,7 @@ class MlManager
      */
     public function rawpriceToMlTitle($rawprice)
     {
-        $frequencies = $this->strMeanFrequency($rawprice->getTitle(), $rawprice->getArticle(), $rawprice->getProducer());
-        $groupFrequencies = $this->tokenGroupMeanFrequency($rawprice->getGood()->getTokenGroup());
-        $result = [
-            $groupFrequencies['sum'],
-            $groupFrequencies['mean'],
-            $groupFrequencies['sd'],
-            $frequencies[\Application\Entity\Token::IS_DICT]['sum'],
-            $frequencies[\Application\Entity\Token::IS_DICT]['mean'],
-            $frequencies[\Application\Entity\Token::IS_DICT]['sd'],
-            $frequencies[\Application\Entity\Token::IS_RU]['sum'],
-            $frequencies[\Application\Entity\Token::IS_RU]['mean'],
-            $frequencies[\Application\Entity\Token::IS_RU]['sd'],
-            $frequencies[\Application\Entity\Token::IS_RU_1]['sum'],
-            $frequencies[\Application\Entity\Token::IS_RU_1]['mean'],
-            $frequencies[\Application\Entity\Token::IS_RU_1]['sd'],
-//            $frequencies[\Application\Entity\Token::IS_RU_ABBR],
-            $frequencies[\Application\Entity\Token::IS_EN_DICT]['sum'],
-            $frequencies[\Application\Entity\Token::IS_EN_DICT]['mean'],
-            $frequencies[\Application\Entity\Token::IS_EN_DICT]['sd'],
-            $frequencies[\Application\Entity\Token::IS_EN]['sum'],
-            $frequencies[\Application\Entity\Token::IS_EN]['mean'],
-            $frequencies[\Application\Entity\Token::IS_EN]['sd'],
-            $frequencies[\Application\Entity\Token::IS_EN_1]['sum'],
-            $frequencies[\Application\Entity\Token::IS_EN_1]['mean'],
-            $frequencies[\Application\Entity\Token::IS_EN_1]['sd'],
-//            $frequencies[\Application\Entity\Token::IS_EN_ABBR],
-            $frequencies[\Application\Entity\Token::IS_NUMERIC]['sum'],
-            $frequencies[\Application\Entity\Token::IS_NUMERIC]['mean'],
-            $frequencies[\Application\Entity\Token::IS_NUMERIC]['sd'],
-            $frequencies[\Application\Entity\Token::IS_ARTICLE],
-            $frequencies[\Application\Entity\Token::IS_PRODUCER],
-            $frequencies[\Application\Entity\Token::IS_UNKNOWN],
-        ];        
-        return $result;
+        return $this->nameManager->rawpriceToMlTitle($rawprice);
     }
     
     /**
@@ -302,29 +269,49 @@ class MlManager
         ini_set('memory_limit', '4096M');
         set_time_limit(0);
         
-        $csvDataset = new CsvDataset(self::ML_TITLE_FILE, 9, false);
-        $dataset = new StratifiedRandomSplit($csvDataset, 0.2, 1234);
+        $csvDataset = new CsvDataset(self::ML_TITLE_FILE, 27, false);
+        $dataset = new StratifiedRandomSplit($csvDataset, 0.33, 1234);
 
         $trainSamples = $dataset->getTrainSamples();
         $testSamples = $dataset->getTestSamples();
         array_walk($trainSamples, function(&$x) { $x=array_map('intval', $x);});
         array_walk($testSamples, function(&$x) { $x=array_map('intval', $x);});
+//        var_dump($dataset->getTrainLabels()); exit;
         
         $normalizer = new Normalizer();
         $normalizer->fit($trainSamples);
         $normalizer->transform($trainSamples);
         $normalizer->fit($testSamples);
         $normalizer->transform($testSamples);
+//        var_dump($testSamples); exit;
         
-        $mlp = new MLPClassifier(9, [5], ['1', '2', '3']);        
-        $mlp->train($trainSamples, $dataset->getTrainLabels());
+//        $classifierSVC = new \Phpml\Classification\SVC(\Phpml\SupportVectorMachine\Kernel::LINEAR, $cost = 1000);
+//        $classifierSVC->train($trainSamples, $dataset->getTrainLabels());
+//        $predictLabelsSVC = $classifierSVC->predict($testSamples);
         
-        $predictLabels = $mlp->predict($testSamples);
+        $classifierKNN = new KNearestNeighbors($k=3);
+        $classifierKNN->train($trainSamples, $dataset->getTrainLabels());
+        $predictLabelsKNN = $classifierKNN->predict($testSamples);
+        
+        $modelManager = new ModelManager();
+        $modelManager->saveToFile($classifierKNN, \Application\Entity\Token::ML_TITLE_MODEL_FILE);
+        
+//        $classifierNB = new \Phpml\Classification\NaiveBayes();
+//        $classifierNB->train($trainSamples, $dataset->getTrainLabels());
+//        $predictLabelsNB = $classifierNB->predict($testSamples);
+        
+//        $mlp = new MLPClassifier(27, [14], ['1', '2', '3']);        
+//        $mlp->train($trainSamples, $dataset->getTrainLabels());        
+//        $predictLabelsMLP = $mlp->predict($testSamples);
         
         $result = [
-            'accuracy' => Accuracy::score($dataset->getTestLabels(), $predictLabels),
+//            'accuracySVC' => Accuracy::score($dataset->getTestLabels(), $predictLabelsSVC),
+            'accuracyKNN' => Accuracy::score($dataset->getTestLabels(), $predictLabelsKNN),
+//            'accuracyNB' => Accuracy::score($dataset->getTestLabels(), $predictLabelsNB),
+//            'accuracyMLP' => Accuracy::score($dataset->getTestLabels(), $predictLabelsMLP),
         ];
                 
-        var_dump($result);        
+        var_dump($result);  
+        return;
     }
 }

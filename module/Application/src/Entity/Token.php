@@ -47,6 +47,8 @@ class Token {
     const MY_BLACK_LIST = './data/dict/black_list.php'; //путь к черному списку
     const MY_GRAY_LIST = './data/dict/gray_list.php'; //путь к серому списку
     
+    const ML_TITLE_MODEL_FILE = './data/ann/ml_title/model.csv'; //путь к файлу модели угадывания наименования
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

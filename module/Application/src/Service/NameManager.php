@@ -681,25 +681,34 @@ class NameManager
     /**
      * Поиск лучшего наименования для товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param \Application\Entity\Goods $good
      * @return string
      */
     public function findBestName($good)
     {
-        $result = '';
-        $dict = 0;
-//        foreach ($good->getArtiles() as $article){
-//            foreach ($article->getRawprice() as $rawprice()){
-//                $dictRu = $rawprice->getDictRuTokens()->count();
-//                $dictEn = $rawprice->getDictEnTokens()->count();
-//                if ($dict < (2*$dictRu + $dictEn)){
-//                    $dict = 2*$dictRu + $dictEn;
-//                    $result = $rawprice->getTitle();
-//                }
-//            }    
-//        }
+        if (!file_exists(Token::ML_TITLE_MODEL_FILE)){
+            return;
+        }
         
-        return $result;
+        $modelManager = new \Phpml\ModelManager();
+        $classifier = $modelManager->restoreFromFile(Token::ML_TITLE_MODEL_FILE);
+        
+        $normalizer = new \Phpml\Preprocessing\Normalizer();
+        
+        $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->rawpriceArticles($good);
+        $predicted = NULL;
+        $mlTitleSamples = [];
+        foreach ($rawprices as $rawprice){
+            $mlTitleSamples[] = $this->rawpriceToMlTitle($rawprice);
+//            var_dump($mlTitleSamples);
+            $normalizer->fit($mlTitleSamples);
+            $normalizer->transform($mlTitleSamples);
+//            var_dump($mlTitleSamples);
+            $predicted = $classifier->predict($mlTitleSamples);
+            var_dump($predicted);
+        }
+        return;
     }
     
     /**
@@ -966,4 +975,52 @@ class NameManager
         
         return $result;
     }
+    
+    /**
+     * Характеристики наименованя из строки прайса
+     * 
+     * @param Rawprice $rawprice
+     * @return array
+     */
+    public function rawpriceToMlTitle($rawprice)
+    {
+        $result = [];
+        if ($rawprice->getCode()->getGood()->getTokenGroup()){
+            $frequencies = $this->meanFrequency($rawprice->getTitle(), $rawprice->getArticle(), $rawprice->getProducer());
+            $groupFrequencies = $this->entityManager->getRepository(TokenGroup::class)
+                ->meanFrequency($rawprice->getCode()->getGood()->getTokenGroup());
+            $result = [
+                $groupFrequencies['sum'],
+                $groupFrequencies['mean'],
+                $groupFrequencies['sd'],
+                $frequencies[Token::IS_DICT]['sum'],
+                $frequencies[Token::IS_DICT]['mean'],
+                $frequencies[Token::IS_DICT]['sd'],
+                $frequencies[Token::IS_RU]['sum'],
+                $frequencies[Token::IS_RU]['mean'],
+                $frequencies[Token::IS_RU]['sd'],
+                $frequencies[Token::IS_RU_1]['sum'],
+                $frequencies[Token::IS_RU_1]['mean'],
+                $frequencies[Token::IS_RU_1]['sd'],
+    //            $frequencies[Token::IS_RU_ABBR],
+                $frequencies[Token::IS_EN_DICT]['sum'],
+                $frequencies[Token::IS_EN_DICT]['mean'],
+                $frequencies[Token::IS_EN_DICT]['sd'],
+                $frequencies[Token::IS_EN]['sum'],
+                $frequencies[Token::IS_EN]['mean'],
+                $frequencies[Token::IS_EN]['sd'],
+                $frequencies[Token::IS_EN_1]['sum'],
+                $frequencies[Token::IS_EN_1]['mean'],
+                $frequencies[Token::IS_EN_1]['sd'],
+    //            $frequencies[Token::IS_EN_ABBR],
+                $frequencies[Token::IS_NUMERIC]['sum'],
+                $frequencies[Token::IS_NUMERIC]['mean'],
+                $frequencies[Token::IS_NUMERIC]['sd'],
+                $frequencies[Token::IS_ARTICLE],
+                $frequencies[Token::IS_PRODUCER],
+                $frequencies[Token::IS_UNKNOWN],
+            ];
+        }    
+        return $result;
+    }    
 }
