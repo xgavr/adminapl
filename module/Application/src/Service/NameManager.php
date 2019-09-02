@@ -698,7 +698,6 @@ class NameManager
         $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->rawpriceArticles($good);
         $predicted = NULL;
-        $mlTitleSamples = [];
         foreach ($rawprices as $rawprice){
             $mlTitleSample = $this->rawpriceToMlTitle($rawprice);
             if (count($mlTitleSample)){
