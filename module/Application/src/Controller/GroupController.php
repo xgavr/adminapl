@@ -98,6 +98,49 @@ class GroupController extends AbstractActionController
         ]);
     }      
     
+    public function tokenGroupContentAction()
+    {
+        $groupId = $this->params()->fromRoute('id', -1);
+
+        if ($groupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $group = $this->entityManager->getRepository(GenericGroup::class)
+                ->findOneById($groupId);
+        
+        if ($group == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        $limit = $this->params()->fromQuery('limit');
+        
+        $query = $this->entityManager->getRepository(GenericGroup::class)
+                        ->tokenGenericGroup($group, ['q' => $q, 'sort' => $sort, 'order' => $order]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+
     public function updateGoodCountAction()
     {
         $groupId = (int)$this->params()->fromRoute('id', -1);

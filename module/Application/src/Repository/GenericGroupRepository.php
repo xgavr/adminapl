@@ -208,9 +208,9 @@ class GenericGroupRepository extends EntityRepository{
      * Поиск групп наименований по группе 
      * 
      * @param \Application\Entity\GenericGroup $genericGroup
-     * @param \Application\Entity\Goods $good
+     * @param array $params
      */
-    public function tokenGenericGroup($genericGroup, $good = null)
+    public function tokenGenericGroup($genericGroup, $params = null)
     {
         if ($genericGroup){
             $entityManager = $this->getEntityManager();
@@ -232,7 +232,7 @@ class GenericGroupRepository extends EntityRepository{
                         ;
             }
 
-            return $queryBuilder->getQuery()->getResult();
+            return $queryBuilder->getQuery();
         }    
         return;        
     }

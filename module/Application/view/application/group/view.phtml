@@ -83,11 +83,7 @@ $this->pageBreadcrumbs()->setItems([
                     <thead>
                         <tr>
                              <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                             <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true">AplId</th>
-                             <th data-field="groupApl" data-type="numeric" data-sortable="true">Группа АПЛ</th>
-                             <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
-                             <th data-field="producer" data-formatter="producerFormatter">Производитель</th>             
-                             <th data-field="" data-formatter="activeFormatter"></th>
+                             <th data-field="name" data-sortable="true">Наименование</th>
                          </tr>                
                     </thead>
                 </table>
@@ -103,14 +99,14 @@ $this->pageBreadcrumbs()->setItems([
                 </div>
                 <table id="tokenGroupTable" 
                     data-toggle="table" 
-                    data-url="/goods/content"
+                    data-url="/group/token-group-content"
                     data-side-pagination="server"
                     data-pagination="true" 
                     data-page-list="[5, 10, 20, 50]"
-                    data-toolbar="#goodsToolbar"
+                    data-toolbar="#tokenGroupToolbar"
                     data-show-refresh="true"
                     data-show-toggle="true"
-                    data-query-params="goodsQueryParams"
+                    data-query-params="tokenGroupQueryParams"
                     data-response-handler="responseHandler"
                     >
                     <thead>
@@ -166,16 +162,29 @@ $this->pageBreadcrumbs()->setItems([
 </div>
 
 <script type="text/javascript">
+    $(window).on('load', function() {
+        $('.nav-tabs a:first').tab('show');
+    });
+
     function refreshTable(){
         $('#goods').bootstrapTable('refresh');
     }
 
+    function refreshTokenGroupTable(){
+        $('#tokenGroupTable').bootstrapTable('refresh');
+    }
+
     var goodsTable = $('#goods'),
-        goodsOk = $('#goodsOk');
+        goodsOk = $('#goodsOk'),
+        tokenGroupTable = $('#tokenGroupTable'),
+        tokenGroupOk = $('#tokenGroupOk');
 
     $(function () {
         goodsOk.click(function () {
             goodsTable.bootstrapTable('refresh');
+        });
+        tokenGroupOk.click(function () {
+            tokenGroupTable.bootstrapTable('refresh');
         });
     });
     
@@ -199,6 +208,10 @@ $this->pageBreadcrumbs()->setItems([
     
     function goodsQueryParams(params) {
         return tabQueryParams('#goods', params);
+    }    
+
+    function tokenGroupQueryParams(params) {
+        return tabQueryParams('#tokenGroups', params);
     }    
     
     function linkFormatter(value, row){
