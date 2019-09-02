@@ -700,6 +700,7 @@ class NameManager
         $predicted = NULL;
         foreach ($rawprices as $rawprice){
             $mlTitleSample = $this->rawpriceToMlTitle($rawprice);
+            $mlTitleSamples = [];
             if (count($mlTitleSample)){
                 $mlTitleSamples[] = $mlTitleSample;
     //            var_dump($mlTitleSamples);
