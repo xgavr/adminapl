@@ -205,6 +205,39 @@ class GenericGroupRepository extends EntityRepository{
     }
     
     /**
+     * Поиск групп наименований по группе 
+     * 
+     * @param \Application\Entity\GenericGroup $genericGroup
+     * @param \Application\Entity\Goods $good
+     */
+    public function tokenGenericGroup($genericGroup, $good = null)
+    {
+        if ($genericGroup){
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('tg, count(g.id) as goodCount')
+                    ->from(\Application\Entity\TokenGroup::class, 'tg')
+                    ->join('tg.goods', 'g')
+                    ->where('g.genericGroup = ?1')
+                    ->groupBy('tg.id')
+                    ->orderBy('goodCount', 'DESC')
+                    ->setParameter('1', $genericGroup->getId())
+                    ;
+            
+            if (isset($good)){
+                $queryBuilder->andWhere('tg.id != ?2')
+                        ->setParameter('2', $good->getId())
+                        ;
+            }
+
+            return $queryBuilder->getQuery()->getResult();
+        }    
+        return;        
+    }
+
+    /**
      * Получить группы апл соответствующую общей групе
      * 
      * @param GenericGroup $genericGroup

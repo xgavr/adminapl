@@ -40,7 +40,6 @@ $this->pageBreadcrumbs()->setItems([
 </p>
 <div class="row">
     <div class="col-md-9">
-
         <table class="table table-striped">
             <tr>
                 <td colspan="3">            
@@ -55,37 +54,78 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
             </tr>
         </table>    
-        <div id="goodsToolbar">
-            <div class="form-inline" role="form">
-                <div class="form-group">
-                    <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
+        <ul class="nav nav-tabs" id="featureTab" role="tablist">
+            <li role="presentation"><a href="#goods" role="tab" id="goods-tab" data-toggle="tab" aria-controls="goods" aria-expanded="true">Товары</a></li>
+            <li role="presentation"><a href="#tokenGropus" role="tab" id="token-group-tab" data-toggle="tab" aria-controls="tokenGroups" aria-expanded="true">Группы наименований</a></li>
+        </ul>
+        <div class="tab-content" id="featureTabContent">
+            <div class="tab-pane fade" role="tabpanel" id="goods" aria-labelledby="goods-tab">
+                <div id="goodsToolbar">
+                    <div class="form-inline" role="form">
+                        <div class="form-group">
+                            <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
+                        </div>
+                        <button id="goodsOk" type="submit" class="btn btn-default">OK</button>                        
+                    </div>
                 </div>
-                <button id="goodsOk" type="submit" class="btn btn-default">OK</button>                        
+                <table id="goodsTable" 
+                    data-toggle="table" 
+                    data-url="/goods/content"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#goodsToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="goodsQueryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                             <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true">AplId</th>
+                             <th data-field="groupApl" data-type="numeric" data-sortable="true">Группа АПЛ</th>
+                             <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
+                             <th data-field="producer" data-formatter="producerFormatter">Производитель</th>             
+                             <th data-field="" data-formatter="activeFormatter"></th>
+                         </tr>                
+                    </thead>
+                </table>
             </div>
-        </div>
-        <table id="goodsTable" 
-            data-toggle="table" 
-            data-url="/goods/content"
-            data-side-pagination="server"
-            data-pagination="true" 
-            data-page-list="[5, 10, 20, 50]"
-            data-toolbar="#goodsToolbar"
-            data-show-refresh="true"
-            data-show-toggle="true"
-            data-query-params="goodsQueryParams"
-            data-response-handler="responseHandler"
-            >
-            <thead>
-                <tr>
-                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                     <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true">AplId</th>
-                     <th data-field="groupApl" data-type="numeric" data-sortable="true">Группа АПЛ</th>
-                     <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
-                     <th data-field="producer" data-formatter="producerFormatter">Производитель</th>             
-                     <th data-field="" data-formatter="activeFormatter"></th>
-                 </tr>                
-            </thead>
-        </table>
+            <div class="tab-pane fade" role="tabpanel" id="tokenGroups" aria-labelledby="token-group-tab">
+                <div id="tokenGroupToolbar">
+                    <div class="form-inline" role="form">
+                        <div class="form-group">
+                            <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
+                        </div>
+                        <button id="tokenGroupOk" type="submit" class="btn btn-default">OK</button>                        
+                    </div>
+                </div>
+                <table id="tokenGroupTable" 
+                    data-toggle="table" 
+                    data-url="/goods/content"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#goodsToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="goodsQueryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                             <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true">AplId</th>
+                             <th data-field="groupApl" data-type="numeric" data-sortable="true">Группа АПЛ</th>
+                             <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
+                             <th data-field="producer" data-formatter="producerFormatter">Производитель</th>             
+                             <th data-field="" data-formatter="activeFormatter"></th>
+                         </tr>                
+                    </thead>
+                </table>
+            </div>
+        </div>    
     </div>
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
