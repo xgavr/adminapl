@@ -682,16 +682,19 @@ class NameManager
      * Поиск лучшего наименования для товара
      * 
      * @param \Application\Entity\Goods $good
+     * @param \Phpml\Classification\KNearestNeighbors $$classifier
      * @return string
      */
-    public function findBestName($good)
+    public function findBestName($good, $classifier = null)
     {
         if (!file_exists(Token::ML_TITLE_MODEL_FILE)){
             return;
         }
         
-        $modelManager = new \Phpml\ModelManager();
-        $classifier = $modelManager->restoreFromFile(Token::ML_TITLE_MODEL_FILE);
+        if ($classifier == null){
+            $modelManager = new \Phpml\ModelManager();
+            $classifier = $modelManager->restoreFromFile(Token::ML_TITLE_MODEL_FILE);
+        }    
         
         $normalizer = new \Phpml\Preprocessing\Normalizer();
         
