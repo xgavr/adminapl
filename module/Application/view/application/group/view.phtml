@@ -83,7 +83,7 @@ $this->pageBreadcrumbs()->setItems([
                     <thead>
                         <tr>
                              <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                             <th data-field="name" data-type="numeric" data-sortable="true">Группа АПЛ</th>
+                             <th data-field="name" data-type="numeric" data-sortable="true" data-formatter="aplFormatter">Группа АПЛ</th>
                              <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
                              <th data-field="producer" data-formatter="producerFormatter">Производитель</th>             
                              <th data-field="" data-formatter="activeFormatter"></th>
@@ -102,7 +102,7 @@ $this->pageBreadcrumbs()->setItems([
                 </div>
                 <table id="tokenGroupTable" 
                     data-toggle="table" 
-                    data-url="/group/token-group-content"
+                    data-url="/group/token-group-content/<?= $group->getId()?>"
                     data-side-pagination="server"
                     data-pagination="true" 
                     data-page-list="[5, 10, 20, 50]"
