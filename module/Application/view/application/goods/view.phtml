@@ -54,9 +54,6 @@ $this->headScript()
                             title="Обновить наименование">
                         <span class="glyphicon glyphicon-refresh" ></span>
                     </button> 
-                    <span>
-                        <?= ($bestName) ? $bestName:'Нет наименования';?>
-                    </span>    
                 </h3>
                 <h4>
                     <a href="<?= $this->url('group', ['action' => 'view', 'id' => $goods->getGenericGroup()->getId()])?>" target="_blank">
