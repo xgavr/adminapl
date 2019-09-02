@@ -697,20 +697,23 @@ class NameManager
         
         $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->rawpriceArticles($good);
-        $predicted = NULL;
+        $predicted = [];
+        $titles = [];
+        $mlTitleSamples = [];
         foreach ($rawprices as $rawprice){
             $mlTitleSample = $this->rawpriceToMlTitle($rawprice);
-            $mlTitleSamples = [];
+            $titles[] = $rawprice->getTitle();
             if (count($mlTitleSample)){
                 $mlTitleSamples[] = $mlTitleSample;
-    //            var_dump($mlTitleSamples);
-                $normalizer->fit($mlTitleSamples);
-                $normalizer->transform($mlTitleSamples);
-    //            var_dump($mlTitleSamples);
-                $predicted = $classifier->predict($mlTitleSamples);
-                var_dump($predicted);
             }    
         }
+        if (count($mlTitleSamples)){
+            $normalizer->fit($mlTitleSamples);
+            $normalizer->transform($mlTitleSamples);
+            $predicted = $classifier->predict($mlTitleSamples);
+            var_dump($predicted);
+            var_dump($titles);
+        }    
         return;
     }
     
