@@ -700,13 +700,16 @@ class NameManager
         $predicted = NULL;
         $mlTitleSamples = [];
         foreach ($rawprices as $rawprice){
-            $mlTitleSamples[] = $this->rawpriceToMlTitle($rawprice);
-//            var_dump($mlTitleSamples);
-            $normalizer->fit($mlTitleSamples);
-            $normalizer->transform($mlTitleSamples);
-            var_dump($mlTitleSamples);
-            $predicted = $classifier->predict($mlTitleSamples);
-            var_dump($predicted);
+            $mlTitleSample = $this->rawpriceToMlTitle($rawprice);
+            if (count($mlTitleSample)){
+                $mlTitleSamples[] = $mlTitleSample;
+    //            var_dump($mlTitleSamples);
+                $normalizer->fit($mlTitleSamples);
+                $normalizer->transform($mlTitleSamples);
+    //            var_dump($mlTitleSamples);
+                $predicted = $classifier->predict($mlTitleSamples);
+                var_dump($predicted);
+            }    
         }
         return;
     }
