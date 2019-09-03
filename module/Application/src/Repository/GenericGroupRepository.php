@@ -217,20 +217,18 @@ class GenericGroupRepository extends EntityRepository{
 
             $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('tg, count(g.id) as goodCount')
+            $queryBuilder->select('tg')
                     ->from(\Application\Entity\TokenGroup::class, 'tg')
-                    ->join('tg.goods', 'g')
                     ->where('g.genericGroup = ?1')
-                    ->groupBy('tg.id')
-                    ->orderBy('goodCount', 'DESC')
                     ->setParameter('1', $genericGroup->getId())
                     ;
             
-            if (isset($good)){
-                $queryBuilder->andWhere('tg.id != ?2')
-                        ->setParameter('2', $good->getId())
-                        ;
-            }
+            if (is_array($params)){
+                if (isset($params['sort'])){
+                    $queryBuilder->orderBy($params['sort'], $params['order'])
+                            ;
+                }
+            }    
 
             return $queryBuilder->getQuery();
         }    
