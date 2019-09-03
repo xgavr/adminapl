@@ -1110,6 +1110,12 @@ class GoodsRepository extends EntityRepository
                             ->setParameter('3', $params['exclude_source']);
                 }    
             }
+            if (isset($params['source'])){
+                if (is_numeric($params['source'])){
+                    $queryBuilder->andWhere('o.source = ?4')
+                            ->setParameter('4', $params['source']);
+                }    
+            }
         }
         
         return $queryBuilder->getQuery();            
