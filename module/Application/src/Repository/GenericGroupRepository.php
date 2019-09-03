@@ -220,7 +220,7 @@ class GenericGroupRepository extends EntityRepository{
             $queryBuilder->select('tg')
                     ->distinct()
                     ->from(\Application\Entity\TokenGroup::class, 'tg')
-                    ->join('g.goods', 'g')
+                    ->join('tg.goods', 'g')
                     ->where('g.genericGroup = ?1')
                     ->setParameter('1', $genericGroup->getId())
                     ;
