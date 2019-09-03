@@ -1104,6 +1104,12 @@ class GoodsRepository extends EntityRepository
                     $queryBuilder->setMaxResults($params['limit']);
                 }    
             }
+            if (isset($params['exclude_source'])){
+                if (is_numeric($params['exclude_source'])){
+                    $queryBuilder->andWhere('o.source != ?3')
+                            ->setParameter('3', $params['exclude_source']);
+                }    
+            }
         }
         
         return $queryBuilder->getQuery();            

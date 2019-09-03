@@ -265,7 +265,7 @@ class AutodbManager
             }
             
             $oemsQuery = $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                    ->findOems($good, ['limit' => 10]);
+                    ->findOems($good, ['limit' => 10, 'exclude_source' => \Application\Entity\Oem::SOURCE_INTERSECT]);
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){
