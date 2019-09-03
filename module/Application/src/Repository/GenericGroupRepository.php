@@ -227,7 +227,7 @@ class GenericGroupRepository extends EntityRepository{
             
             if (is_array($params)){
                 if (isset($params['sort'])){
-                    $queryBuilder->orderBy($params['sort'], $params['order'])
+                    $queryBuilder->orderBy('tg.'.$params['sort'], $params['order'])
                             ;
                 }
             }    
