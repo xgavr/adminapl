@@ -257,7 +257,7 @@ class AutodbManager
             ];
 
             $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
-
+            var_dump($result);
             if (isset($result['data'])){
                 if (isset($result['data']['array'])){
                     return $result;
