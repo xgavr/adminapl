@@ -954,7 +954,18 @@ class GoodsRepository extends EntityRepository
         return;  
     }
 
-
+    /**
+     * Очистить группу товаров связанных с группой нименований
+     * 
+     * @param \Application\Entity\GenericGroup $genericGroup
+     * @param \Application\Entity\TokenGroup $tokenGroup
+     */
+    public function resetGoodGenericTokenGroup($genericGroup, $tokenGroup)
+    {
+        $this->getEntityManager()->getConnection()->update('goods', ['generic_group_id' => 0], 
+                ['generic_group_id' => $genericGroup->getId(), 'token_group_id' => $tokenGroup->getId()]);                
+        return;
+    }
     
     /**
      * Найти атрибуты товара

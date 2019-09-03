@@ -917,6 +917,36 @@ class GoodsController extends AbstractActionController
         
     }
     
+    public function resetGoodGenericTokenGroupAction()
+    {
+        $genericGroupId = $this->params()->fromQuery('generic', -1);
+        $tokenGroupId = $this->params()->fromQuery('token', -1);
+        
+        $genericGroup = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
+                ->findOneById($genericGroupId);
+        
+        if ($genericGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $tokenGroup = $this->entityManager->getRepository(\Application\Entity\TokenGroup::class)
+                ->findOneById($tokenGroupId);
+        
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(Goods::class)
+                ->resetGoodGenericTokenGroup($genericGroup, $tokenGroup);
+        
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
     public function deleteImageAction()
     {
         $imageId = (int)$this->params()->fromRoute('id', -1);
