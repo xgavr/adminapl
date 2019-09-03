@@ -218,7 +218,9 @@ class GenericGroupRepository extends EntityRepository{
             $queryBuilder = $entityManager->createQueryBuilder();
 
             $queryBuilder->select('tg')
+                    ->distinct()
                     ->from(\Application\Entity\TokenGroup::class, 'tg')
+                    ->join('g.goods', 'g')
                     ->where('g.genericGroup = ?1')
                     ->setParameter('1', $genericGroup->getId())
                     ;
