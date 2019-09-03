@@ -257,7 +257,6 @@ class AutodbManager
             ];
 
             $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
-            var_dump($result);
             if (isset($result['data'])){
                 if (isset($result['data']['array'])){
                     return $result;
@@ -265,7 +264,7 @@ class AutodbManager
             }
             
             $oemsQuery = $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                    ->findOems($good, ['limit' => 10, 'source' => \Application\Entity\Oem::SOURCE_SUP]);
+                    ->findOems($good, ['limit' => 10]);
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){
