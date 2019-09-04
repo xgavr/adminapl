@@ -532,10 +532,11 @@ class RawRepository extends EntityRepository
                 ->from(Raw::class, 'r')
                 ->where('r.supplier = ?1')
                 ->andWhere('r.id < ?2')
-                ->andWhere('r.status = ?3')
+                ->andWhere('r.status = ?3 or r.status = ?4')
                 ->setParameter('1', $raw->getSupplier()->getId())
                 ->setParameter('2', $raw->getId())
                 ->setParameter('3', Raw::STATUS_PARSED)
+                ->setParameter('4', Raw::STATUS_ACTIVE)
                 ;
         
         return $queryBuilder->getQuery()->getResult();
