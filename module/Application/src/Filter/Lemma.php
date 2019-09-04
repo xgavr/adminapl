@@ -189,22 +189,10 @@ class Lemma extends AbstractFilter
                     $result[Token::IS_RU_1][] = $ruWord;
                 } else {
                 
-//                    $collectionRU = $morphyRU->findWord($ruWord, phpMorphy::IGNORE_PREDICT);
                     $collectionRU = $this->_searchWord($ruWord, $morphyRU);
 
                     if (false === $collectionRU) {
-                        $prdcts = $this->predictWord($ruWord, $morphyRU);
-                        foreach ($prdcts as $prdctWord){
-//                            $collectionRU = $morphyRU->findWord($prdctWord, phpMorphy::IGNORE_PREDICT);
-                            $collectionRU = $this->_searchWord($prdctWord, $morphyRU);
-                            if (false === $collectionRU) {
-                                $result[Token::IS_RU][] = $prdctWord;                    
-                            } else {
-                                foreach($collectionRU as $paradigm) {                
-                                    $result[Token::IS_DICT][] = $paradigm->getBaseForm();
-                                }                                
-                            }
-                        }
+                        $result[Token::IS_RU][] = $ruWord;                    
                     } else {
                         foreach($collectionRU as $paradigm) {                
                             $result[Token::IS_DICT][] = $paradigm->getBaseForm();
