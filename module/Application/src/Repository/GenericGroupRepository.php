@@ -236,7 +236,68 @@ class GenericGroupRepository extends EntityRepository{
         }    
         return;        
     }
+    
+    /**
+     * Получить токены группы
+     * 
+     * @param GenericGroup $genericGroup
+     * @params array
+     */
+    public function getTokens($genericGroup)
+    {
+        $entityManager = $this->getEntityManager();
 
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('t')
+                ->from(\Application\Entity\Token::class, 't')
+                ->join('t.genericGroups', 'gg')
+                ->where('gg.id = ?1')
+                ->setParameter('1', $genericGroup->getId())
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();       
+    }
+
+    /**
+     * Заплнить токены группы
+     * 
+     * @param GenericGroup $genericGroup
+     * @return void
+     */
+    public function updateGenericGroupToken($genericGroup)
+    {
+        $existingTokens = $this->getTokens($genericGroup);
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('t')
+                ->distinct()
+                ->from(\Application\Entity\Token::class, 't')
+                ->join('t.tokenGroups', 'tg')
+                ->join('tg.goods', 'g')
+                ->where('g.genericGroup = ?1')
+                ->setParameter('1', $genericGroup->getId())
+                ;
+                if (count($existingTokens)){
+                    foreach ($existingTokens as $existingToken) {
+                        $queryBuilder->andWhere($queryBuilder->expr()->neq('t,id', $existingToken->getId()));
+                    }
+                }    
+        
+        $tokens = $queryBuilder->getQuery()->getResult();
+        
+        if (count($tokens)){
+            foreach ($tokens as $token){
+                $this->getEntityManager()->getConnection()->insert('generic_group_token', 
+                        ['generic_group_id' => $genericGroup->getId(), 'token_id' => $token->getId()]);
+            }
+        }    
+        return;
+    }
+    
     /**
      * Получить группы апл соответствующую общей групе
      * 

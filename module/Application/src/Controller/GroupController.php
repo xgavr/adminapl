@@ -214,4 +214,31 @@ class GroupController extends AbstractActionController
             'result' => 'ok',
         ]);                          
     }
+    
+    public function updateGenericGroupTokenAction()
+    {
+        $groupId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($groupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $group = $this->entityManager->getRepository(GenericGroup::class)
+                ->findOneById($groupId);
+        
+        if ($group == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(GenericGroup::class)
+                ->updateGenericGroupToken($group);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                          
+        
+    }
 }

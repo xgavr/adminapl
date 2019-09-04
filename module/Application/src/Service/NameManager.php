@@ -653,6 +653,7 @@ class NameManager
         $this->entityManager->getRepository(Token::class)
                 ->deleteArticleToken($token);
         $this->entityManager->getConnection()->delete('token_group_token', ['token_id' => $token->getId()]);
+        $this->entityManager->getConnection()->delete('generic_group_token', ['token_id' => $token->getId()]);
         $this->entityManager->getConnection()->delete('token', ['id' => $token->getId()]);
     }    
     
