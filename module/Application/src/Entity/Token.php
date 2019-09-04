@@ -104,7 +104,7 @@ class Token {
      * @ORM\ManyToMany(targetEntity="Application\Entity\GenericGroup")
      * @ORM\JoinTable(name="generic_group_token",
      *      joinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="token_generic_group_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="generic_group_id", referencedColumnName="id")}
      *      )
      */
     private $genericGroups;
