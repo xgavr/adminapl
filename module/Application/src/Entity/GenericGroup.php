@@ -76,6 +76,14 @@ class GenericGroup {
      */
     protected $goods;    
     
+     /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Token")
+     * @ORM\JoinTable(name="generic_group_token",
+     *      joinColumns={@ORM\JoinColumn(name="generic_group_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")}
+     *      )
+     */
+    private $tokens;
 
     public function __construct() {
        $this->goods = new ArrayCollection();
@@ -221,4 +229,46 @@ class GenericGroup {
     {
         $this->goods[] = $good;        
     }     
+    
+    public function getTokens() {
+       return $this->tokens;
+    }    
+   
+    /**
+     * Содержет ли строка токен?
+     * 
+     * @param \Application\Entity\Token $token
+     * @return bool
+     */
+    public function hasToken($token)
+    {
+        return $this->tokens->contains($token);
+    }
+
+    /**
+     * 
+     * @param \Application\Entity\Token $token
+     */
+    public function addToken($token)
+    {
+        //if (!$this->hasToken($token)){
+            $this->tokens->add($token);
+        //}    
+    }
+
+    
+    public function getTokenView()
+    {
+        $result = [];
+        
+        foreach ($this->tokens as $token){
+            $result[] = $token->getLemma();
+        }
+        
+        if (count($result)){
+            return implode(' ', $result);
+        }
+        
+        return 'NaN';
+    }    
 }

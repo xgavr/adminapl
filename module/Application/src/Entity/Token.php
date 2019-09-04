@@ -100,6 +100,15 @@ class Token {
      */
     private $tokenGroups;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\GenericGroup")
+     * @ORM\JoinTable(name="generic_group_token",
+     *      joinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="token_generic_group_id", referencedColumnName="id")}
+     *      )
+     */
+    private $genericGroups;
+    
 
     public function getId() 
     {
@@ -288,6 +297,15 @@ class Token {
     public function getTokenGroups()
     {
         return $this->tokenGroups;
+    }        
+    
+    /**
+     * Returns the array of genericGroups assigned to this oemRaw.
+     * @return array
+     */
+    public function getGenericGroups()
+    {
+        return $this->genericGroups;
     }        
     
     public function wordInMyDict($word)
