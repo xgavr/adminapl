@@ -256,6 +256,13 @@ class GenericGroupRepository extends EntityRepository{
                 ->where('gg.id = ?1')
                 ->setParameter('1', $genericGroup->getId())
                 ;
+
+        if (is_array($params)){
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('t.'.$params['sort'], $params['order'])
+                        ;
+            }
+        }    
         
         return $queryBuilder->getQuery();       
     }

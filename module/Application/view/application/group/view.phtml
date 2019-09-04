@@ -149,7 +149,8 @@ $this->pageBreadcrumbs()->setItems([
                     <thead>
                         <tr>
                              <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                             <th data-field="name" data-sortable="true">Наименование</th>
+                             <th data-field="lemma" data-sortable="true">Лемма</th>
+                             <th data-field="frequency" data-sortable="true">Частота</th>
                          </tr>                
                     </thead>
                 </table>
@@ -190,7 +191,7 @@ $this->pageBreadcrumbs()->setItems([
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            Токены<
+                            Токены
                         </div>
                         <div class="pull-right">
                             <button value="/group/update-generic-group-token/<?= $group->getId()?>" class="btn btn-info btn-xs refresh-table-button"
