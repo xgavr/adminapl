@@ -241,9 +241,10 @@ class GenericGroupRepository extends EntityRepository{
      * Получить токены группы
      * 
      * @param GenericGroup $genericGroup
+     * @params array $params
      * @params array
      */
-    public function getTokens($genericGroup)
+    public function getTokens($genericGroup, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -256,7 +257,7 @@ class GenericGroupRepository extends EntityRepository{
                 ->setParameter('1', $genericGroup->getId())
                 ;
         
-        return $queryBuilder->getQuery()->getResult();       
+        return $queryBuilder->getQuery();       
     }
 
     /**
@@ -267,7 +268,7 @@ class GenericGroupRepository extends EntityRepository{
      */
     public function updateGenericGroupToken($genericGroup)
     {
-        $existingTokens = $this->getTokens($genericGroup);
+        $existingTokens = $this->getTokens($genericGroup)->getResult();
         
         $entityManager = $this->getEntityManager();
 
