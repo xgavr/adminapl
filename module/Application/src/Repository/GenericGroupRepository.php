@@ -291,7 +291,7 @@ class GenericGroupRepository extends EntityRepository{
                 ;
                 if (count($existingTokens)){
                     foreach ($existingTokens as $existingToken) {
-                        $queryBuilder->andWhere($queryBuilder->expr()->neq('t,id', $existingToken->getId()));
+                        $queryBuilder->andWhere($queryBuilder->expr()->neq('t.id', $existingToken->getId()));
                     }
                 }    
         
