@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Article {
     
-    const TOKEN_UPDATE_FLAG = 1; // установить любое число, для запуска обновления токенов артикулов
+    const TOKEN_UPDATE_FLAG = 3; // установить любое число, для запуска обновления токенов артикулов
     
     const LONG_CODE_NAME = 'moreThan24'; //наименование для длинных артикулов
     
