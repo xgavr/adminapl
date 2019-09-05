@@ -526,26 +526,28 @@ class NameManager
         foreach ($lemms as $key => $words){
             $words = array_filter($words);
             foreach ($words as $word){
-                $token = $this->entityManager->getRepository(Token::class)
-                        ->findOneByLemma($word);
-                if (!$token){
-                    $this->entityManager->getRepository(Token::class)
-                            ->insertToken([
-                                'lemma' => $word,
-                                'status' => $key,
+                if (mb_strlen($word) < 64){
+                    $token = $this->entityManager->getRepository(Token::class)
+                            ->findOneByLemma($word);
+                    if (!$token){
+                        $this->entityManager->getRepository(Token::class)
+                                ->insertToken([
+                                    'lemma' => $word,
+                                    'status' => $key,
+                                    ]);
+                    }    
+
+                    $articleToken = $this->entityManager->getRepository(ArticleToken::class)
+                            ->findOneBy(['article' => $article->getId(), 'lemma' => $word]);
+
+                    if (!$articleToken){
+                        $this->entityManager->getRepository(Token::class)
+                                ->insertArticleToken([
+                                    'article_id' => $article->getId(),
+                                    'lemma' => $word,
+                                    'status' => $key,
                                 ]);
-                }    
-
-                $articleToken = $this->entityManager->getRepository(ArticleToken::class)
-                        ->findOneBy(['article' => $article->getId(), 'lemma' => $word]);
-
-                if (!$articleToken){
-                    $this->entityManager->getRepository(Token::class)
-                            ->insertArticleToken([
-                                'article_id' => $article->getId(),
-                                'lemma' => $word,
-                                'status' => $key,
-                            ]);
+                    }    
                 }    
             }    
         }    
