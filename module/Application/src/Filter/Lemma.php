@@ -149,10 +149,7 @@ class Lemma extends AbstractFilter
             }
             unset($word);
         }        
-        
-        $morphyRU = new phpMorphy($this->dictsPath, 'ru_RU', $this->options);
-        $morphyEN = new phpMorphy($this->dictsPath, 'en_EN', $this->options);
-        
+
         $result = [
             Token::IS_DICT => [], //ru словарь
             Token::IS_RU => [], //ru не словарь
@@ -167,6 +164,10 @@ class Lemma extends AbstractFilter
             Token::IS_ARTICLE => [], //артикул 
             Token::IS_UNKNOWN => [], //нечто 
         ];
+        
+        
+        $morphyRU = new phpMorphy($this->dictsPath, 'ru_RU', $this->options);
+        $morphyEN = new phpMorphy($this->dictsPath, 'en_EN', $this->options);
         
         foreach ($value as $word){
             
