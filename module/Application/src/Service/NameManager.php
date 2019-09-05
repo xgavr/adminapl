@@ -51,8 +51,9 @@ class NameManager
      * Добавить слово в локальный словарь
      * 
      * @param \Application\Entity\Token $token
+     * @param string $lemma
      */
-    public function addToMyDict($token)
+    public function addToMyDict($token, $lemma = null)
     {
         ini_set('memory_limit', '2048M');
         
@@ -66,7 +67,8 @@ class NameManager
             $dict = new Config([], true);
         }
         $word = $token->getLemma();
-        $dict->$word = $word;
+        
+        $dict->$word = ($lemma) ? $lemma:$word;
 
         $writer = new PhpArray();
         
