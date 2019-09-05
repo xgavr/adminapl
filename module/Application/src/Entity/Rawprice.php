@@ -712,8 +712,9 @@ class Rawprice {
 
     public function setProducer($producer) 
     {
-        $producerNameFilter = new ProducerName();
-        $this->producer = $producerNameFilter->filter($producer);
+//        $producerNameFilter = new ProducerName();
+//        $this->producer = $producerNameFilter->filter($producer);
+        $this->producer = $producer;
     }     
     
     public function getGoodname() 
