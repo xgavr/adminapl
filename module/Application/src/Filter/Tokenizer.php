@@ -31,9 +31,7 @@ class Tokenizer extends AbstractFilter
         // Задает опции фильтра (если они предоставлены).
         if(is_array($options)) {
             $this->options = $options;
-        }    
-        
-        $this->lemmaFilter = new Lemma();
+        }            
     }
     
     public function filter($value)
