@@ -251,6 +251,49 @@ class NameManager
     }
     
     /**
+     * Обновить исправление токена
+     * 
+     * @param Token $token
+     * @param string $correctStr
+     */
+    public function updateCorrect($token, $correctStr = null)
+    {
+        $token->setCorrect($correctStr);
+                
+        $ruValidator = new IsRU();
+        if ($correctStr){
+            if ($ruValidator->isValid($token->getLemma())){
+                $status = Token::IS_DICT;
+            } else {
+                $status = Token::IS_EN_DICT;
+            }
+        } else {    
+            if ($ruValidator->isValid($token->getLemma())){
+                if (mb_strlen($token->getLemma()) == 1){
+                    $status = Token::IS_RU_1;
+                } else {
+                    $status = Token::IS_RU;
+                }    
+            } else {
+                if (mb_strlen($token->getLemma()) == 1){
+                    $status = Token::IS_EN_1;
+                } else {
+                    $status = Token::IS_EN;
+                }    
+            }
+        }    
+        $token->setStatus($status);        
+        
+        $this->entityManager->persist($token);
+        $this->entityManager->flush($token);
+
+        $this->entityManager->getRepository(Article::class)
+                ->updateTokenUpdateFlag($token->getLemma());
+        
+        return;
+    }
+    
+    /**
      * Поставить слову метку аббревиатуры
      * 
      * @param \Application\Entity\Token $token
@@ -462,7 +505,7 @@ class NameManager
      */
     public function lemmsFromStr($str)
     {
-        $lemmaFilter = new Lemma();
+        $lemmaFilter = new Lemma($this->entityManager);
         $tokenFilter = new Tokenizer();
 
         $lemms = $lemmaFilter->filter($tokenFilter->filter($str));
@@ -472,13 +515,19 @@ class NameManager
             foreach ($words as $word){
                 if ($key == Token::IS_RU){
                     
-                    $predictWords = $this->entityManager->getRepository(Token::class)
+                    $predictTokens = $this->entityManager->getRepository(Token::class)
                            ->findNearToken($word);
                     
-                    if (count($predictWords)){
-                        foreach($predictWords as $predictWord){
-//                                var_dump($predictWord['lemma']); exit;
-                            $result[Token::IS_DICT][] = $predictWord['lemma'];
+                    if (count($predictTokens)){
+                        foreach($predictTokens as $predictToken){
+                            if ($predictToken->getCorrect()){
+                                $predictLemms = $predictToken->getCorrectAsArray();
+                                foreach ($predictLemms as $predictLemma){
+                                    $result[Token::IS_DICT][] = $predictLemma;
+                                }
+                            } else {
+                                $result[Token::IS_DICT][] = $predictToken->getLemma();
+                            }    
                         }    
                     } else {
                         $result[$key][] = $word;

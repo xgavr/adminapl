@@ -62,6 +62,11 @@ class Token {
     protected $lemma;
     
     /**
+     * @ORM\Column(name="correct")   
+     */
+    protected $correct;
+
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status = self::IS_UNKNOWN;        
@@ -142,6 +147,26 @@ class Token {
     {
         $this->lemma = mb_strcut(trim($lemma), 0, 64, 'UTF-8');
     }     
+    
+    public function getCorrect() 
+    {
+        return $this->correct;
+    }
+    
+    public function getCorrectAsArray()
+    {
+        return explode(' ', $this->correct);
+    }
+        
+    public function setCorrect($str) 
+    {
+        if ($str){
+            $this->correct = mb_strtoupper(mb_strcut(trim($str), 0, 64, 'UTF-8'));
+        } else {
+            $this->correct = null;
+        }    
+    }     
+    
     
     public function setFrequency($frequency)
     {
@@ -316,6 +341,25 @@ class Token {
         }        
         
         return false;
+    }
+    
+    public function fromMyDict()
+    {
+        return $this->wordFromMyDict($this->lemma);
+    }
+
+    public function fromMyDictAsArray()
+    {
+        return explode(' ', $this->wordFromMyDict($this->lemma));
+    }
+
+    public function wordFromMyDict($word)
+    {
+        if (file_exists(self::MY_DICT_FILE)){
+            $dict = new Config(include self::MY_DICT_FILE, true);
+            return $dict->get($word);            
+        }                
+        return;
     }
     
     public function inMyDict()

@@ -23,25 +23,25 @@ class NameController extends AbstractActionController
    
     /**
     * Менеджер сущностей.
-    * @var Doctrine\ORM\EntityManager
+    * @var \Doctrine\ORM\EntityManager
     */
     private $entityManager;
     
     /**
      * Менеджер производителей.
-     * @var Application\Service\ProducerManager 
+     * @var \Application\Service\ProducerManager 
      */
     private $producerManager;    
     
     /**
      * Менеджер артикулов производителей.
-     * @var Application\Service\ArticleManager 
+     * @var \Application\Service\ArticleManager 
      */
     private $articleManager;    
     
     /**
      * Менеджер наименований товаров.
-     * @var Application\Service\NameManager 
+     * @var \Application\Service\NameManager 
      */
     private $nameManager;    
     
@@ -205,6 +205,58 @@ class NameController extends AbstractActionController
         ]);          
     }
 
+    
+    public function updateTokenFormAction()
+    {
+        $tokenId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($tokenId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $token = $this->entityManager->getRepository(Token::class)
+                ->findOneById($tokenId);
+        
+        if ($token == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $form = new \Application\Form\TokenForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                $newLemma = mb_strtoupper($data['name']);
+                if ($token->getLemma() != $newLemma){
+                    $this->nameManager->updateCorrect($token, $newLemma);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($token){
+                $data = [
+                    'name' => ($token->getCorrect()) ? $token->getCorrect():$token->getLemma(),  
+                ];
+                $form->setData($data);
+            }  
+        }    
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'token' => $token,
+        ]);                                
+    }    
+    
+    
     public function abbrAction()
     {
         $tokenId = (int)$this->params()->fromRoute('id', -1);
@@ -246,7 +298,7 @@ class NameController extends AbstractActionController
             return;                        
         }        
         
-        $this->nameManager->removeFromMyDict($token);
+        $this->nameManager->updateCorrect($token);
         
         return new JsonModel([
             'result' => 'ok-reload',

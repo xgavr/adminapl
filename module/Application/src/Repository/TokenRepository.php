@@ -632,7 +632,7 @@ class TokenRepository  extends EntityRepository
                 ->setMaxResults(1)
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult(2);            
+        return $queryBuilder->getQuery()->getResult();            
     }
     
     

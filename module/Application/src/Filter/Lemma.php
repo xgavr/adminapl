@@ -59,6 +59,8 @@ class Lemma extends AbstractFilter
     
     protected $myDict;
     
+    private $entityManager;
+    
     // Конструктор.
     public function __construct($options = null) 
     {     
@@ -70,6 +72,8 @@ class Lemma extends AbstractFilter
         if (file_exists(Token::MY_DICT_FILE)){
             $this->myDict = new Config(include Token::MY_DICT_FILE, true);
         }    
+        
+        $this->entityManager = $entityManager;
     }
     
     /**
@@ -84,13 +88,22 @@ class Lemma extends AbstractFilter
         $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
         
         if (false === $collection) {
-            if ($this->myDict){
-                $word = $this->myDict->get($word);
-                if ($word){                    
+              $token = $this->entityManager->getRepository(Token::class)
+                      ->findOneByLemma($word);
+              if ($token){
+                  if ($token->getCorrect()){
                     $paradigm = new myDict($word);
-                    $collection = [$paradigm];
-                }
-            }        
+                    $collection = $token->getCorrectAsArray();                      
+                  }
+              }
+            
+//            if ($this->myDict){
+//                $word = $this->myDict->get($word);
+//                if ($word){                    
+//                    $paradigm = new myDict($word);
+//                    $collection = explode(' ', $paradigm);
+//                }
+//            }        
         }
         
         return $collection;

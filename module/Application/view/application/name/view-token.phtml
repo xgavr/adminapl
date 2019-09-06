@@ -19,17 +19,22 @@ $this->pageBreadcrumbs()->setItems([
     </sup>
 </h1>
 <p>
+    <small class="text-success">
+        <?= $token->getCorrect();?>
+    </small>
+</p>
+<p>
     <?php if ($token->getStatus() != $token::IS_DICT && $token->getStatus() != $token::IS_EN_DICT):?>
         <span>
             <small>
-                <button value="/name/add-token-to-my-dict/<?= $token->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                        title="Добавить в свой словарь">
+                <button value="/name/update-token-form/<?= $token->getId() ?>"" class="btn btn-info btn-xs"
+                        data-toggle="modal" data-target="#modal-dialog" title="Добавить в свой словарь">
                     <span class="glyphicon glyphicon-plus-sign" ></span>
                 </button> 
             </small>
         </span>
     <?php endif; ?>    
-    <?php if ($token->inMyDict() && ($token->getStatus() == $token::IS_DICT || $token->getStatus() == $token::IS_EN_DICT)):?>
+    <?php if ($token->getCorrect() && ($token->getStatus() == $token::IS_DICT || $token->getStatus() == $token::IS_EN_DICT)):?>
         <span>
             <small>
                 <button value="/name/delete-token-from-my-dict/<?= $token->getId()?>" class="btn btn-info btn-xs refresh-table-button"
