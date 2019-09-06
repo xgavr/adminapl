@@ -567,11 +567,15 @@ class NameManager
      * Добавление нового слова из прайса
      * 
      * @param Rawprice $rawprice
-     * @param bool $flush
+     * @param bool $updateArticleToken
      */
-    public function addNewTokenFromRawprice($rawprice, $flush = true) 
+    public function addNewTokenFromRawprice($rawprice, $updateArticleToken = false) 
     {
         $article = $rawprice->getCode();
+        if ($article && $updateArticleToken){
+            $this->entityManager->getRepository(Article::class)
+                    ->deleteArticleToken($article->getId());
+        }    
 
         $lemms = $this->lemmsFromRawprice($rawprice);
         foreach ($lemms as $key => $words){

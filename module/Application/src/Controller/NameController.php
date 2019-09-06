@@ -356,7 +356,7 @@ class NameController extends AbstractActionController
             return;                        
         }        
 
-        $this->nameManager->addNewTokenFromRawprice($rawprice);
+        $this->nameManager->addNewTokenFromRawprice($rawprice, true);
         
         return new JsonModel([
             'ok',
