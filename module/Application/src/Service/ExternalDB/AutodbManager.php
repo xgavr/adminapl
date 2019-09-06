@@ -399,10 +399,10 @@ class AutodbManager
             return $tdData['genericArticleId'];
         }
         
-        $tdSimilarData = $this->getSimilarArticle($good, $newSearch);
-        if (is_numeric($tdSimilarData['genericArticleId'])){
-            return $tdSimilarData['genericArticleId'];
-        }
+//        $tdSimilarData = $this->getSimilarArticle($good, $newSearch);
+//        if (is_numeric($tdSimilarData['genericArticleId'])){
+//            return $tdSimilarData['genericArticleId'];
+//        }
         
         return;
     }
