@@ -62,7 +62,7 @@ class Lemma extends AbstractFilter
     private $entityManager;
     
     // Конструктор.
-    public function __construct($options = null) 
+    public function __construct($entityManager, $options = null) 
     {     
         // Задает опции фильтра (если они предоставлены).
         if(is_array($options)) {
@@ -70,7 +70,7 @@ class Lemma extends AbstractFilter
         }    
         
         if (file_exists(Token::MY_DICT_FILE)){
-            $this->myDict = new Config(include Token::MY_DICT_FILE, true);
+            //$this->myDict = new Config(include Token::MY_DICT_FILE, true);
         }    
         
         $this->entityManager = $entityManager;

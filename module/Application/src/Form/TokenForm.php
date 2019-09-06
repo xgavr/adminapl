@@ -84,7 +84,7 @@ class TokenForm extends Form
                         'name'    => 'StringLength',
                         'options' => [
                             'min' => 1,
-                            'max' => 1024
+                            'max' => 256
                         ],
                     ],
                 ],
