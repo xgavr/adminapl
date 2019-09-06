@@ -92,8 +92,12 @@ class Lemma extends AbstractFilter
                       ->findOneByLemma($word);
               if ($token){
                   if ($token->getCorrect()){
-                    $paradigm = new myDict($word);
-                    $collection = $token->getCorrectAsArray();                      
+                      $collection = [];
+                      $lemms = $token->getCorrectAsArray();
+                      foreach ($lemms as $lemma){
+                        $paradigm = new myDict($lemma);
+                        $collection[] = $paradigm;
+                      }          
                   }
               }
             
