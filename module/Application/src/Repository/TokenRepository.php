@@ -599,6 +599,7 @@ class TokenRepository  extends EntityRepository
         $queryBuilder->select('t')
             ->addSelect('count(at.id) as articleCount')    
             ->from(Token::class, 't')
+            ->where('t.correct is null')    
             ->leftJoin(ArticleToken::class, 'at', 'WITH', 'at.lemma = t.lemma')
             ->groupBy('t.id')
             ->having('articleCount = 0')    
