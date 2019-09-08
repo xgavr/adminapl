@@ -232,9 +232,9 @@ class NameController extends AbstractActionController
 
             if ($form->isValid()) {
                 $newLemma = mb_strtoupper($data['name']);
-                if ($token->getLemma() != $newLemma){
+//                if ($token->getLemma() != $newLemma){
                     $this->nameManager->updateCorrect($token, $newLemma);
-                }    
+//                }    
                 
                 return new JsonModel(
                    ['ok']
