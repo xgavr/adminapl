@@ -627,6 +627,7 @@ class TokenRepository  extends EntityRepository
                 ->from(Token::class, 't')
                 ->where('t.status = ?1')
                 ->andWhere('t.lemma like ?2')
+                ->andWhere('t.correct is null')
                 ->orderBy('t.lemma')
                 ->setParameter('1', $dict)
                 ->setParameter('2', $token.'%')
