@@ -30,6 +30,7 @@ class MlManager
     const ML_DATA_PATH     = './data/ann/'; //путь к папке с моделями ml
     const ML_TITLE_DIR    = './data/ann/ml_title/'; //путь к папке с моделями mlTitle
     const ML_TITLE_FILE   = './data/ann/ml_title/dataset.csv'; //данные mlTitle
+    const ML_TOKEN_GROUP_FILE   = './data/ann/ml_title/token_group_dataset.csv'; //данные групп наименований
 
     /**
      * Doctrine entity manager.
@@ -232,6 +233,48 @@ class MlManager
 
         fclose($fp);
         return;
+    }
+    
+    /**
+     * Выгрузить токены групп наименований
+     */
+    public function tokenGroupsToCsv()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+        
+        if (!is_dir(self::ML_TITLE_DIR)){
+            mkdir(self::ML_TITLE_DIR);
+        }   
+        
+        $tokenGroupHeader = [];
+        $tokens = $this->entityManager->getRepository(\Application\Entity\Token::class)
+                ->findBy(['status' => \Application\Entity\Token::IS_DICT, 'flag' => \Application\Entity\Token::WHITE_LIST]);
+        foreach ($tokens as $token){
+            if (!$token->getCorrect()){
+                $tokenGroupHeader[$token->getId()] = $token->getLemma(); 
+            }
+        }
+
+        $tokenGroupsQuery = $this->entityManager->getRepository(\Application\Entity\Token::class)
+                    ->findAllTokenGroup();
+        $iterable = $tokenGroupsQuery->iterate();
+        
+        $fp = fopen(self::ML_TOKEN_GROUP_FILE, 'w');
+        foreach ($iterable as $row) {
+            foreach ($row as $tokenGroup){
+                $tokenGroupTokens = $this->entityManager->getRepository(\Application\Entity\TokenGroup::class)
+                        ->findTokenGroupTokens($tokenGroup);
+                foreach ($tokenGroupTokens as $tokenGroupToken){
+                    
+                }                
+                fputcsv($fp, $sample);
+                $this->entityManager->detach($tokenGroup);
+            }    
+        }
+
+        fclose($fp);
+        return;        
     }
     
     /**

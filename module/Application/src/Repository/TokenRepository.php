@@ -476,6 +476,27 @@ class TokenRepository  extends EntityRepository
     }    
     
     /**
+     * Получить токены группы наименований
+     * 
+     * @param TokenGroup $tokenGroup
+     */
+    public function findTokenGroupTokens($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('t')
+                ->from(TokenGroup::class, 'tg')
+                ->join('tg.tokens', 't')
+                ->where('tg.id = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ;
+
+        return $queryBuilder->getQuery()->getResult();        
+                
+    }
+    
+    /**
      * Быстрое обновление полей группы наименований
      * 
      * @param integer $tokenGroupId
