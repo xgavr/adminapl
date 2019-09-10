@@ -486,8 +486,8 @@ class TokenRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('t')
-                ->from(TokenGroup::class, 'tg')
-                ->join('tg.tokens', 't')
+                ->from(Token::class, 't')
+                ->join('t.tokenGroups', 'tg')
                 ->where('tg.id = ?1')
                 ->setParameter('1', $tokenGroup->getId())
                 ;
@@ -759,6 +759,8 @@ class TokenRepository  extends EntityRepository
         $result['sum'] = array_sum($frequencies);
         if (count($frequencies)){
             $result['mean'] = round(\Phpml\Math\Statistic\Mean::arithmetic($frequencies));
+            $result['median'] = \Phpml\Math\Statistic\Mean::median($frequencies);
+            $result['mode'] = \Phpml\Math\Statistic\Mean::mode($frequencies);
             if (count($frequencies) > 1){
                 $result['sd'] = round(\Phpml\Math\Statistic\StandardDeviation::population($frequencies));
             }    

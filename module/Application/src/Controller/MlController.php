@@ -110,7 +110,7 @@ class MlController extends AbstractActionController
         ]);          
     }
 
-        public function updateMlTitleStatusAction()
+    public function updateMlTitleStatusAction()
     {
         if ($this->getRequest()->isPost()) {
             // Получаем POST-данные.
@@ -136,4 +136,14 @@ class MlController extends AbstractActionController
             'result' => 'ok',
         ]);          
     }
+    
+    public function tokenGroupsToCsvAction()
+    {
+        $this->mlManager->tokenGroupsToCsv();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+    }
+    
 }

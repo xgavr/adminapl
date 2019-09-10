@@ -57,7 +57,7 @@ class TokenGroup {
    private $goods;
 
      /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Token")
+     * @ORM\ManyToMany(targetEntity="\Application\Entity\Token")
      * @ORM\JoinTable(name="token_group_token",
      *      joinColumns={@ORM\JoinColumn(name="token_group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="token_id", referencedColumnName="id")}

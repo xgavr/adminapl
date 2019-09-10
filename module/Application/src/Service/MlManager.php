@@ -247,27 +247,15 @@ class MlManager
             mkdir(self::ML_TITLE_DIR);
         }   
         
-        $tokenGroupHeader = [];
-        $tokens = $this->entityManager->getRepository(\Application\Entity\Token::class)
-                ->findBy(['status' => \Application\Entity\Token::IS_DICT, 'flag' => \Application\Entity\Token::WHITE_LIST]);
-        foreach ($tokens as $token){
-            if (!$token->getCorrect()){
-                $tokenGroupHeader[$token->getId()] = $token->getLemma(); 
-            }
-        }
-
         $tokenGroupsQuery = $this->entityManager->getRepository(\Application\Entity\Token::class)
                     ->findAllTokenGroup();
         $iterable = $tokenGroupsQuery->iterate();
         
         $fp = fopen(self::ML_TOKEN_GROUP_FILE, 'w');
         foreach ($iterable as $row) {
-            foreach ($row as $tokenGroup){
-                $tokenGroupTokens = $this->entityManager->getRepository(\Application\Entity\TokenGroup::class)
-                        ->findTokenGroupTokens($tokenGroup);
-                foreach ($tokenGroupTokens as $tokenGroupToken){
-                    
-                }                
+            foreach ($row as $tokenGroup){                
+                $sample = $this->tokenGroupMeanFrequency($tokenGroup);
+                $sample[] = $tokenGroup->getId();
                 fputcsv($fp, $sample);
                 $this->entityManager->detach($tokenGroup);
             }    
