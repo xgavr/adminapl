@@ -741,7 +741,7 @@ class TokenRepository  extends EntityRepository
      */
     public function meanFrequency($tokenGroup)
     {
-        $result = ['mean' => 0, 'sd' => 0, 'sum' => 0];
+        $result = [ 'sum' => 0, 'mean' => 0, 'median' => 0, 'mode' => 0, 'sd' => 0];
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('t.frequency')
