@@ -270,6 +270,9 @@ class MlManager
      */
     public function clusteringTokenGroup()
     {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(0);
+
         $dataset = new CsvDataset(self::ML_TOKEN_GROUP_FILE, 5, false);
         $kmeans = new \Phpml\Clustering\KMeans(3000);
         
