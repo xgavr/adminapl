@@ -276,11 +276,20 @@ class MlManager
         $dataset = new CsvDataset(self::ML_TOKEN_GROUP_FILE, 5, false);
         $kmeans = new \Phpml\Clustering\KMeans(3000);
         
+        //array_walk($dataset, function(&$x) { $x=array_map('intval', $x);});
+        
         $samples = $dataset->getSamples();
+//        var_dump(array_slice($samples, 0, 5, true)); exit;
+
+        $normalizer = new Normalizer();
+        $normalizer->fit($samples);
+        $normalizer->transform($samples);
+//        var_dump(array_slice($samples, 0, 5, true)); exit;
+
         $targets = $dataset->getTargets();
         $result = $kmeans->cluster($samples);
         
-        var_dump(array_slice($result, 0, 105, true));
+        var_dump(array_slice($result, 0, 5, true));
         
         return;
     }

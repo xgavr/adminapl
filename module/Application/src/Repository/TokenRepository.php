@@ -634,8 +634,9 @@ class TokenRepository  extends EntityRepository
      * 
      * @param Application\Entity\Token $token
      * @param integer $dict
+     * @param integer $flag 
      */
-    public function findNearToken($token, $dict = Token::IS_DICT)
+    public function findNearToken($token, $dict = Token::IS_DICT, $flag = Token::WHITE_LIST)
     {
         if (mb_strlen($token) < 3){
             return [];
@@ -647,11 +648,13 @@ class TokenRepository  extends EntityRepository
         $queryBuilder->select('t')
                 ->from(Token::class, 't')
                 ->where('t.status = ?1')
-                ->andWhere('t.lemma like ?2')
+                ->andWhere('t.flag = ?2')
+                ->andWhere('t.lemma like ?3')
                 ->andWhere('t.correct is null')
                 ->orderBy('t.lemma')
                 ->setParameter('1', $dict)
-                ->setParameter('2', $token.'%')
+                ->setParameter('2', $flag)
+                ->setParameter('3', $token.'%')
                 ->setMaxResults(1)
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
