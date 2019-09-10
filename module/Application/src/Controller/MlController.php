@@ -146,4 +146,13 @@ class MlController extends AbstractActionController
         ]);          
     }
     
+    public function clusterTokenGroupAction()
+    {
+        $this->mlManager->clusteringTokenGroup();
+
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+    }
+    
 }

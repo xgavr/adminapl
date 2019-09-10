@@ -266,6 +266,23 @@ class MlManager
     }
     
     /**
+     * Класетеризация групп наименований
+     */
+    public function clusteringTokenGroup()
+    {
+        $dataset = new CsvDataset(self::ML_TOKEN_GROUP_FILE, 5, false);
+        $kmeans = new \Phpml\Clustering\KMeans(3000);
+        
+        $samples = $dataset->getSamples();
+        $targets = $dataset->getTargets();
+        $result = $kmeans->cluster($samples);
+        
+        var_dump(array_slice($result, 0, 105, true));
+        
+        return;
+    }
+    
+    /**
      * Наименования товара
      * 
      * @param Goods $good
