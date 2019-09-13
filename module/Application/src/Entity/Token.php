@@ -49,6 +49,16 @@ class Token {
     
     const ML_TITLE_MODEL_FILE = './data/ann/ml_title/model.csv'; //путь к файлу модели угадывания наименования
     
+    const PART_ADJECTIVE = 1; //прилагательное
+    const PART_PARTICIPLE = 2; //причастие
+    const PART_VERB = 3; //глагол
+    const PART_NOUN = 4; //существительное
+    const PART_ADVERB = 5; //наречие
+    const PART_NUMERAL = 6; //числительное
+    const PART_UNION = 7; //союз
+    const PART_PREPOSITION = 8; //предлог
+    const PART_UNKNOWN = 99; //неизвестно
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

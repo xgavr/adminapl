@@ -18,11 +18,12 @@ use Company\Entity\Legal;
 class LegalRepository extends EntityRepository
 {
 
-    /*
-     * Поиск юрлийа по инн и кпп
-     * $inn string
-     * $kpp string
-     * $resultMode null or 2 - array
+    /**
+     * Поиск юрлица по инн и кпп
+     * 
+     * @param string $inn
+     * @param string $kpp 
+     * @param null|integer $resultMode
      */
     public function findOneByInnKpp($inn, $kpp = null, $resultMode = null)
     {

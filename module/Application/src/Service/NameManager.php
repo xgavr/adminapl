@@ -509,8 +509,9 @@ class NameManager
         $tokenFilter = new Tokenizer();
 
         $lemms = $lemmaFilter->filter($tokenFilter->filter($str));
+        var_dump($lemms);
         $result = [];
-        
+
         foreach ($lemms as $key => $words){            
             foreach ($words as $word){
                 if ($key == Token::IS_RU){

@@ -99,17 +99,8 @@ class Lemma extends AbstractFilter
                         $collection[] = $paradigm;
                       }          
                   }
-              }
-            
-//            if ($this->myDict){
-//                $word = $this->myDict->get($word);
-//                if ($word){                    
-//                    $paradigm = new myDict($word);
-//                    $collection = explode(' ', $paradigm);
-//                }
-//            }        
+              }            
         }
-        
         return $collection;
     }
     
