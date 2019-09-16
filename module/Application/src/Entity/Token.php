@@ -72,6 +72,11 @@ class Token {
     protected $lemma;
     
     /**
+     * @ORM\Column(name="pseudo_root")   
+     */
+//    protected $pseudoRoot;
+
+    /**
      * @ORM\Column(name="correct")   
      */
     protected $correct;
@@ -177,6 +182,16 @@ class Token {
         }    
     }     
     
+    public function setPseudoRoot($pseudoRoot)
+    {
+        $this->pseudoRoot = mb_strcut(trim($pseudoRoot), 0, 64, 'UTF-8');
+    }
+    
+    public function getPseudoRoot()
+    {
+        return $this->pseudoRoot;
+    }
+
     
     public function setFrequency($frequency)
     {

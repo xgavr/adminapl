@@ -46,7 +46,7 @@ class Tokenizer extends AbstractFilter
 
         $tokens = [];
         preg_match_all('/\w+/u', $text, $tokens);
-
+//        var_dump($tokens);
         return $tokens[0];
     }
     

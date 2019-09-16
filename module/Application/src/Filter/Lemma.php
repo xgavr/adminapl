@@ -52,7 +52,7 @@ class Lemma extends AbstractFilter
         // Enable prediction by prefix
         'predict_by_db' => true,
         // TODO: comment this
-        'graminfo_as_text' => true,
+        'graminfo_as_text' => false,
     ];
 
     protected $dictsPath = 'vendor/cijic/phpmorphy/libs/phpmorphy/dicts';
@@ -202,8 +202,14 @@ class Lemma extends AbstractFilter
                         $result[Token::IS_RU][] = $ruWord;                    
                     } else {
                         foreach($collectionRU as $paradigm) {         
-                            var_dump([$paradigm->getPseudoRoot(), $morphyRU->getPartOfSpeech($paradigm->getBaseForm())]);
+                            var_dump([$paradigm->getBaseForm(), 
+                                $paradigm->getPseudoRoot(), 
+                                $morphyRU->getPartOfSpeech($paradigm->getBaseForm()),
+                               // $morphyRU->getGramInfoMergeForms($paradigm->getBaseForm(), phpMorphy::IGNORE_PREDICT),
+                                ]
+                                    );
                             $result[Token::IS_DICT][] = $paradigm->getBaseForm();
+                            break;
                         }
                     }
                 }    
