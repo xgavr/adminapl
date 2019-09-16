@@ -86,7 +86,6 @@ class Lemma extends AbstractFilter
     protected function _searchWord($word, $morphy)
     {
         $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
-        
         if (false === $collection) {
               $token = $this->entityManager->getRepository(Token::class)
                       ->findOneByLemma($word);
@@ -150,7 +149,6 @@ class Lemma extends AbstractFilter
     
     public function filter($value)
     {
-        
         if(function_exists('iconv')) {
             foreach($value as &$word) {
                 $word = mb_strtoupper($word, 'utf-8');        
@@ -203,7 +201,8 @@ class Lemma extends AbstractFilter
                     if (false === $collectionRU) {
                         $result[Token::IS_RU][] = $ruWord;                    
                     } else {
-                        foreach($collectionRU as $paradigm) {                
+                        foreach($collectionRU as $paradigm) {         
+                            var_dump([$paradigm->getPseudoRoot(), $morphyRU->getPartOfSpeech($paradigm->getBaseForm())]);
                             $result[Token::IS_DICT][] = $paradigm->getBaseForm();
                         }
                     }

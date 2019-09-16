@@ -137,6 +137,19 @@ class ProducerRepository  extends EntityRepository{
     }    
 
     /**
+     * Быстрое изменение неизвестного производителя
+     * 
+     * @param UnknownProducer $unknownProducer
+     * @param array $data 
+     * 
+     * @return integer
+     */
+    public function updateUnknownProducer($unknownProducer, $data)
+    {
+        return $this->getEntityManager()->getConnection()->update('unknown_producer', $data, ['id' => $unknownProducer->getId()]);
+    }    
+
+    /**
      * Количество записей в прайсах с этим неизвестным производителем
      * в разрезе поставщиков
      * 

@@ -321,17 +321,42 @@ class ProducerManager
      * @param Application\Entity\UnknownProducer $unknownProducer
      * @param bool $flush
      */
-    public function updateUnknownProducerRawpriceCount($unknownProducer, $flush = true)
+    public function updateUnknownProducerRawpriceCount($unknownProducer)
     {
         $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
                 ->count(['unknownProducer' => $unknownProducer->getId(), 'status' => Rawprice::STATUS_PARSED]);
         
-        $unknownProducer->setRawpriceCount($rawpriceCount);
-        $this->entityManager->persist($unknownProducer);
+        $this->entityManager->getRepository(UnknownProducer::class)
+                ->updateUnknownProducer($unknownProducer, ['rawprice_count' => $rawpriceCount]);
+    }
+    
+    /**
+     * Пересчет количество строк прайсов у неизвестного производителя
+     */
+    public function unknownProducerRawpriceCount()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(1800);
+        $startTime = time();
         
-        if ($flush){
-            $this->entityManager->flush($unknownProducer);
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('up')
+                ->from(UnknownProducer::class, 'up')
+                ;
+        $query = $qb->getQuery();
+        
+        $iterable = $query->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $unnknownProducer){
+                $this->updateUnknownProducerRawpriceCount($unknownProducer);
+                $this->entityManager->detach($unknownProducer);
+                if (time() > $startTime + 1740){
+                    return;
+                }
+            }
         }
+        
+        return;
     }
     
     /**
@@ -340,19 +365,49 @@ class ProducerManager
      * @param Application\Entity\UnknownProducer $unknownProducer
      * @param bool $flush
      */
-    public function updateUnknownProducerSupplierCount($unknownProducer, $flush = true)
+    public function updateUnknownProducerSupplierCount($unknownProducer)
     {
         $supplierCount = $this->entityManager->getRepository(UnknownProducer::class)
                 ->unknownProducerSupplierCount($unknownProducer);
 
-        $unknownProducer->setSupplierCount($supplierCount);
-        $this->entityManager->persist($unknownProducer);
-        
-        if ($flush){
-            $this->entityManager->flush($unknownProducer);
-        }
+        $this->entityManager->getRepository(UnknownProducer::class)
+                ->updateUnknownProducer($unknownProducer, ['supplier_count' => $rawpriceCount]);
     }
     
+    /**
+     * Пересчет количества поставщиков у неизвестного производителя
+     */
+    public function unknownProducerSupplierCount()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('up')
+                ->from(UnknownProducer::class, 'up')
+                ;
+        $query = $qb->getQuery();
+        
+        $iterable = $query->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $unnknownProducer){
+                $this->updateUnknownProducerSupplierCount($unknownProducer);
+                $this->entityManager->detach($unknownProducer);
+                if (time() > $startTime + 1740){
+                    return;
+                }
+            }
+        }
+        
+        return;
+    }    
+    
+    /**
+     * Пересечение артикулов производителей
+     * 
+     * @return null
+     */
     public function updateUnknownProducerIntersect()
     {
         set_time_limit(900);

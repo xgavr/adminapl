@@ -402,19 +402,10 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerRawpriceCountAction()
     {
-        set_time_limit(900);
-        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_producer'] == 1){
-            
-            $unknownProducers = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
-                    ->findBy([]);
-            
-            foreach ($unknownProducers as $unknownProducer){
-                $this->producerManager->updateUnknownProducerRawpriceCount($unknownProducer, false);
-            }   
-            $this->entityManager->flush();
+            $this->producerManager->unknownProducerRawpriceCount();            
         }    
                 
         return new JsonModel(
@@ -427,19 +418,10 @@ class ProcessingController extends AbstractActionController
      */
     public function unknownProducerSupplierCountAction()
     {
-        set_time_limit(900);
-        
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_producer'] == 1){
-            
-            $unknownProducers = $this->entityManager->getRepository(\Application\Entity\UnknownProducer::class)
-                    ->findBy([]);
-            
-            foreach ($unknownProducers as $unknownProducer){
-                $this->producerManager->updateUnknownProducerSupplierCount($unknownProducer, false);
-            }   
-            $this->entityManager->flush();
+            $this->producerManager->unknownProducerSupplierCount();                        
         }    
                 
         return new JsonModel(
