@@ -1181,7 +1181,7 @@ class AplService {
                 ->findBy(['statusEx' => \Application\Entity\Raw::EX_TO_DELETE], null, 5);
 
         foreach ($raws as $raw){
-            $result = $this->aplService->deleteRaw($raw);
+            $result = $this->deleteRaw($raw);
             if (!$result){
                 return;
             }
