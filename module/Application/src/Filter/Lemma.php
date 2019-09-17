@@ -11,7 +11,6 @@ namespace Application\Filter;
 use Zend\Filter\AbstractFilter;
 use Application\Entity\Token;
 use phpMorphy;
-use Zend\Config\Config;
 
 /**
  * Вспомогательный класс
@@ -202,12 +201,12 @@ class Lemma extends AbstractFilter
                         $result[Token::IS_RU][] = $ruWord;                    
                     } else {
                         foreach($collectionRU as $paradigm) {         
-                            var_dump([$paradigm->getBaseForm(), 
-                                $paradigm->getPseudoRoot(), 
-                                $morphyRU->getPartOfSpeech($paradigm->getBaseForm()),
-                               // $morphyRU->getGramInfoMergeForms($paradigm->getBaseForm(), phpMorphy::IGNORE_PREDICT),
-                                ]
-                                    );
+//                            var_dump([$paradigm->getBaseForm(), 
+//                                $paradigm->getPseudoRoot(), 
+//                                $morphyRU->getPartOfSpeech($paradigm->getBaseForm()),
+//                               // $morphyRU->getGramInfoMergeForms($paradigm->getBaseForm(), phpMorphy::IGNORE_PREDICT),
+//                                ]
+//                                    );
                             $result[Token::IS_DICT][] = $paradigm->getBaseForm();
                             break;
                         }

@@ -1149,15 +1149,15 @@ class AplService {
 //                var_dump($post); exit;
         $client = new Client();
         $client->setUri($url);
-        $client->setOptions(['timeout' => 30]);
+        $client->setOptions(['timeout' => 210]);
         $client->setMethod('POST');
         $client->setParameterPost($post);
         
-        $ok = false;
+        $ok = $result = false;
         try{
             $response = $client->send();
             if ($response->isOk()) {
-                $ok = true;
+                $ok = $result = true;
             }
         } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
             $ok = true;
@@ -1169,6 +1169,27 @@ class AplService {
            $this->entityManager->flush($raw);
         }
 //        var_dump($response->getBody()); exit;
+        return $result;
+    }
+    
+    public function deleteRaws()
+    {
+        set_time_limit(900);
+        $startTime = time();
+
+        $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findBy(['statusEx' => \Application\Entity\Raw::EX_TO_DELETE], null, 5);
+
+        foreach ($raws as $raw){
+            $result = $this->aplService->deleteRaw($raw);
+            if (!$result){
+                return;
+            }
+            usleep(100);
+            if (time() > $startTime + 840){
+                return;
+            }
+        }    
         return;
     }
     

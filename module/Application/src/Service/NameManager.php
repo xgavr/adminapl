@@ -510,7 +510,7 @@ class NameManager
 
         $lemms = $lemmaFilter->filter($tokenFilter->filter($str));
         $result = [];
-        exit;
+//        exit;
         foreach ($lemms as $key => $words){            
             foreach ($words as $word){
                 if ($key == Token::IS_RU){

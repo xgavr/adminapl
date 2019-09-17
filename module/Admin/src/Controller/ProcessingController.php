@@ -874,12 +874,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
         
         if ($settings['rawprice'] == 1){
-            $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findBy(['statusEx' => \Application\Entity\Raw::EX_TO_DELETE], null, 5);
-
-            foreach ($raws as $raw){
-                $this->aplService->deleteRaw($raw);
-            }    
+            $this->aplService->deleteRaws();
         }    
         
         return new JsonModel(
