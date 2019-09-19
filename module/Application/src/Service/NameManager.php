@@ -504,8 +504,10 @@ class NameManager
         foreach ($iterable as $row){
             foreach ($row as $token){
                 $this->updateTokenArticleCount($token->getLemma());
+                $this->entityManager->detach($token);
             }   
         }    
+        return;
     }
     
     
