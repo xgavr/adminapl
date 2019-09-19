@@ -106,6 +106,7 @@ class TokenRepository  extends EntityRepository
     {
         unset($data['flag']);
         unset($data['frequency']);
+        unset($data['idf']);
         
         if (!count($data)){
             return;
