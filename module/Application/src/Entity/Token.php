@@ -72,9 +72,9 @@ class Token {
     protected $lemma;
     
     /**
-     * @ORM\Column(name="pseudo_root")   
+     * @ORM\Column(name="idf")   
      */
-//    protected $pseudoRoot;
+    protected $idf;
 
     /**
      * @ORM\Column(name="correct")   
@@ -182,14 +182,14 @@ class Token {
         }    
     }     
     
-    public function setPseudoRoot($pseudoRoot)
+    public function setIdf($idf)
     {
-        $this->pseudoRoot = mb_strcut(trim($pseudoRoot), 0, 64, 'UTF-8');
+        $this->idf = $idf;
     }
     
-    public function getPseudoRoot()
+    public function getIdf()
     {
-        return $this->pseudoRoot;
+        return $this->idf;
     }
 
     

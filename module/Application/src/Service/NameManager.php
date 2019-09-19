@@ -479,14 +479,14 @@ class NameManager
                     ->count([]);
         }
         
-        $idf = 0; 
+        $idf = null; 
         if ($articleCount){
             $idf = log10($articles/$articleCount);
             //var_dump($idf);
         }    
 
         $this->entityManager->getRepository(Token::class)
-                ->updateToken($lemma, ['frequency' => $articleCount]);
+                ->updateToken($lemma, ['frequency' => $articleCount, 'idf' => $idf]);
         
     }
     
