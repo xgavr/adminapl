@@ -468,11 +468,21 @@ class NameManager
      * @param string $lemma
      * @param integer $articleCount
      */
-    public function updateTokenArticleCount($lemma, $articleCount = null)
+    public function updateTokenArticleCount($lemma, $articleCount = null, $articles = null)
     {
-        if ($articleCount === null){
+        if ($articleCount == null){
             $articleCount = $this->entityManager->getRepository(ArticleToken::class)
                     ->count(['lemma' => $lemma]);
+        }    
+        if ($articles == null){
+            $articles = $this->entityManager->getRepository(Article::class)
+                    ->count([]);
+        }
+        
+        $idf = 0; 
+        if ($articleCount){
+            $idf = log10($articles/$articleCount);
+            var_dump($idf);
         }    
 
         $this->entityManager->getRepository(Token::class)
@@ -485,15 +495,17 @@ class NameManager
      */
     public function updateAllTokenArticleCount()
     {
-        set_time_limit(900);        
+        set_time_limit(1800);        
         ini_set('memory_limit', '2048M');
 
-        $tokens = $this->entityManager->getRepository(Token::class)
-                ->tokenFrequencies();
-
-        foreach ($tokens as $token){
-            $this->updateTokenArticleCount($token['lemma']);
-        }   
+        $tokensQuery = $this->entityManager->getRepository(Token::class)
+                ->findAllToken();
+        $iterable = $tokensQuery->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $token){
+                $this->updateTokenArticleCount($token->getLemma());
+            }   
+        }    
     }
     
     
