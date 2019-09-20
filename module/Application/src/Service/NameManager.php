@@ -482,7 +482,8 @@ class NameManager
         $idf = null; 
         if ($articleCount){
             $idf = log10($articles/$articleCount);
-            //var_dump($idf);
+        } else {
+            $idf = log10(0);            
         }    
 
         $this->entityManager->getRepository(Token::class)
