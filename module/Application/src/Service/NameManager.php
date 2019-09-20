@@ -731,10 +731,12 @@ class NameManager
                 ->findTokenForDelete();
 
         foreach ($tokenForDelete as $row){
-            $this->removeToken($row[0]);
+            foreach($row as $token){
+                $this->removeToken($token);
+            }    
             if (time() > $startTime + 840){
                 return;
-            }            
+            }
         }
         
         return;
