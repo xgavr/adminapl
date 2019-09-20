@@ -497,13 +497,16 @@ class NameManager
     {
         set_time_limit(1800);        
         ini_set('memory_limit', '2048M');
+        
+        $articles = $this->entityManager->getRepository(Article::class)
+                ->count([]);
 
         $tokensQuery = $this->entityManager->getRepository(Token::class)
                 ->findAllToken();
         $iterable = $tokensQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $token){
-                $this->updateTokenArticleCount($token->getLemma());
+                $this->updateTokenArticleCount($token->getLemma(), null, $articles);
                 $this->entityManager->detach($token);
             }   
         }    
