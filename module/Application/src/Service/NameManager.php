@@ -727,10 +727,10 @@ class NameManager
         ini_set('memory_limit', '2048M');
         $startTime = time();
         
-        $tokenForDelete = $this->entityManager->getRepository(Token::class)
+        $tokenForDeleteQuery = $this->entityManager->getRepository(Token::class)
                 ->findTokenForDelete();
-
-        foreach ($tokenForDelete as $row){
+        $iterable = $tokenForDeleteQuery->iterate();
+        foreach ($iterable as $row){
             foreach($row as $token){
                 $this->removeToken($token);
             }    

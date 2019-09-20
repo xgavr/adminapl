@@ -624,7 +624,7 @@ class TokenRepository  extends EntityRepository
             ->andWhere('t.frequency = 0')    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
 
     /**
