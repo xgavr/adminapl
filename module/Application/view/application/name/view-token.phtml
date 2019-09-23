@@ -111,14 +111,14 @@ $this->pageBreadcrumbs()->setItems([
         </td>
     </tr>
     <tr>
-        <td colspan="4">
+        <td colspan="3">
             <?= $this->paginationControl($rawprices,
                         'Sliding',
                         'application/partial/paginator', 
                         ['route' => array('route' => 'name', 'action' => 'view-token', 'id' => $token->getId())]); ?>
             
         </td>
-        <td align="right" valign="center">
+        <td align="right" valign="center" colspan="2">
             <?= $totalRawpriceCount?>
             (<b><?= $token->getFrequency()?></b>
              <?= round($token->getIdf(), 2)?>
