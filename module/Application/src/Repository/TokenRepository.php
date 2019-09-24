@@ -398,15 +398,14 @@ class TokenRepository  extends EntityRepository
      * Найти токены товара по типу
      * 
      * @param \Application\Entity\Goods $good
-     * @param integer $tokenType Description
      * @return object
      */
-    public function findTokenGoodsByStatus($good, $tokenType = Token::IS_DICT)
+    public function findTokenGoodsByStatus($good)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('t.id, t.lemma, t.status')
+        $queryBuilder->select('t.id, t.lemma, t.status, t.idf')
             ->distinct()
             ->from(\Application\Entity\Article::class, 'a')    
             ->join('a.articleTokens', 'at')
@@ -414,11 +413,9 @@ class TokenRepository  extends EntityRepository
             ->where('a.good = ?1')   
             ->andWhere('(at.status = ?2 or at.status = ?5 or at.status = ?6)')
             ->andWhere('t.flag = ?4')    
-//            ->andWhere('t.frequency > ?3')    
             ->setParameter('1', $good->getId())
-            ->setParameter('2', $tokenType)
-//            ->setParameter('3', TokenGroup::FREQUENCY_MIN)
             ->setParameter('4', Token::WHITE_LIST)
+            ->setParameter('2', Token::IS_DICT)
             ->setParameter('5', Token::IS_EN_ABBR)
             ->setParameter('6', Token::IS_RU_ABBR)
             ;
@@ -769,6 +766,25 @@ class TokenRepository  extends EntityRepository
         }    
         
         return $result;
+    }
+    
+    /**
+     * Количество товаров с этим токеном
+     * @param string $lemma
+     */
+    public function tokenGoodCount($lemma)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('identity(a.good)')
+                ->distinct()
+                ->from(ArticleToken::class, 'at')
+                ->join('at.article', 'a')
+                ->where('at.lemma = ?1')
+                ->setParameter('1', $lemma)
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());
     }
     
     /**

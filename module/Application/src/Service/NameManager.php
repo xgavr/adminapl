@@ -14,6 +14,7 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
 
+use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Application\Filter\NameTokenizer;
 use Application\Filter\Lemma;
@@ -463,31 +464,33 @@ class NameManager
     
     
     /**
-     * Обновление количества артикулов у токена
+     * Обновление количества товаров у токена
      * 
      * @param string $lemma
-     * @param integer $articleCount
+     * @param integer $goodCount
+     * @param integer $goods
      */
-    public function updateTokenArticleCount($lemma, $articleCount = null, $articles = null)
+    public function updateTokenArticleCount($lemma, $goodCount = null, $goods = null)
     {
-        if ($articleCount == null){
-            $articleCount = $this->entityManager->getRepository(ArticleToken::class)
-                    ->count(['lemma' => $lemma]);
+        if ($goodCount == null){
+            $goodCount = $this->entityManager->getRepository(ArticleToken::class)
+                    ->tokenGoodCount($lemma);
+//            var_dump($articleCount);
         }    
-        if ($articles == null){
-            $articles = $this->entityManager->getRepository(Article::class)
+        if ($goods == null){
+            $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                     ->count([]);
         }
         
         $idf = null; 
-        if ($articleCount){
-            $idf = log10($articles/$articleCount);
+        if ($goodCount){
+            $idf = log10($goods/$goodCount);
         } else {
-            $idf = log10($articles);            
+            $idf = log10($goods);            
         }    
 
         $this->entityManager->getRepository(Token::class)
-                ->updateToken($lemma, ['frequency' => $articleCount, 'idf' => $idf]);
+                ->updateToken($lemma, ['frequency' => $goodCount, 'idf' => $idf]);
         
     }
     
@@ -499,7 +502,7 @@ class NameManager
         set_time_limit(1800);        
         ini_set('memory_limit', '2048M');
         
-        $articles = $this->entityManager->getRepository(Article::class)
+        $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->count([]);
 
         $tokensQuery = $this->entityManager->getRepository(Token::class)
@@ -507,7 +510,7 @@ class NameManager
         $iterable = $tokensQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $token){
-                $this->updateTokenArticleCount($token->getLemma(), null, $articles);
+                $this->updateTokenArticleCount($token->getLemma(), null, $goods);
                 $this->entityManager->detach($token);
             }   
         }    
@@ -795,7 +798,7 @@ class NameManager
     {
         
         $dictTokens = $this->entityManager->getRepository(Token::class)
-                ->findTokenGoodsByStatus($good, Token::IS_DICT);
+                ->findTokenGoodsByStatus($good);
         
 //        var_dump(count($dictTokens)); exit;
         if (count($dictTokens) == 0){
@@ -804,14 +807,17 @@ class NameManager
             return;
         }
         
+        $tf = $this->goodNamesVectorizer($good);
+        
         $tokenIds = [];
         $tokenLemms = [];
         foreach ($dictTokens as $token){
             $tokenIds[] = $token['id'];
             $tokenLemms[] = $token['lemma'];
+            $tokenTfIdf[] = $tf[$token['lemma']]*$token['idf'];
         }
         
-//        var_dump($dictTokens); exit;
+        var_dump($tokenTfIdf); exit;
         $idsFilter = new IdsFormat();
         $tokenIdsStr = md5($idsFilter->filter($tokenIds));
         
@@ -984,6 +990,49 @@ class NameManager
         return;
     }    
     
+    
+    /**
+     * Подготовка наименований товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function goodNames($good)
+    {
+        $result = [];
+        $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->rawpriceArticles($good);
+
+        foreach($rawprices as $rawprice){
+            $lemms = $this->lemmsFromRawprice($rawprice);
+            foreach ($lemms as $lemma){
+                foreach ($lemma as $key => $value){
+                    $result[] = $value;
+                }    
+            }
+        }
+        return [implode(' ', $result)];
+    }
+    
+    /**
+     * Векторизация наименований товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return array
+     */
+    public function goodNamesVectorizer($good)
+    {
+        $words = $this->goodNames($good);
+        $vectorizer = new TokenCountVectorizer(new WhitespaceTokenizer());
+        $vectorizer->fit($words);
+        $vectorizer->transform($words);
+        $vocabular = $vectorizer->getVocabulary();
+        $wordCount = array_sum($words[0]);
+        $result = [];
+        foreach($vocabular as $key => $value){
+            $result[$value] = $words[0][$key]/$wordCount;
+        }            
+        return $result;
+    }
     
     /**
      * Средняя частота строки
