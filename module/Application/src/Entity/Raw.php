@@ -304,6 +304,7 @@ class Raw {
             self::STAGE_PRODUCER_ASSEMBLY => 'Производители собраны',
             self::STAGE_GOOD_ASSEMBLY => 'Товары собраны',
             self::STAGE_PRICE_UPDATET => 'Цены рассчитаны',
+            self::STAGE_GOOD_TOKEN => 'Токены товаров разобраны',
             self::STAGE_TOKEN_GROUP_PARSED => 'Группы наименований разобраны',
         ];
     }    
