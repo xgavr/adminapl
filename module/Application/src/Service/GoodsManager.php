@@ -158,6 +158,9 @@ class GoodsManager
         $this->entityManager->getRepository(Goods::class)
                 ->removeGoodAttributeValues($good);  
         
+        $this->entityManager->getRepository(\Application\Entity\GoodToken::class)
+                ->deleteTokenGood($good);
+
         $this->entityManager->getRepository(Images::class)
                 ->removeGoodImages($good);
         

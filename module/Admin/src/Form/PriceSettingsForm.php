@@ -198,6 +198,18 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([            
+            'type'  => 'select',
+            'name' => 'good_token',
+            'options' => [
+                'label' => 'Разборка токенов товаров',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+
+        $this->add([            
             'type'  => 'email',
             'name' => 'image_mail_box',
             'attributes' => [
@@ -416,6 +428,17 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'update_good_price',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'good_token',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

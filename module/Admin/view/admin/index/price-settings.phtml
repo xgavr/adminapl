@@ -68,6 +68,10 @@ $form->get('assembly_group_name')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('good_token')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('image_mail_box')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -140,13 +144,13 @@ $form->prepare();
             <?= $this->formElement($form->get('parse_producer')); ?>
             <?= $this->formElementErrors($form->get('parse_producer')); ?>                  
         </div>        
-    </div>
-    <div class="col-md-3">    
         <div class="form-group">
             <?= $this->formLabel($form->get('parse_article')); ?>
             <?= $this->formElement($form->get('parse_article')); ?>
             <?= $this->formElementErrors($form->get('parse_article')); ?>                  
         </div>  
+    </div>
+    <div class="col-md-3">    
         <div class="form-group">
             <?= $this->formLabel($form->get('parse_oem')); ?>
             <?= $this->formElement($form->get('parse_oem')); ?>
@@ -173,13 +177,18 @@ $form->prepare();
             <?= $this->formElement($form->get('update_good_price')); ?>
             <?= $this->formElementErrors($form->get('update_good_price')); ?>                  
         </div>        
-    </div>   
-    <div class="col-md-3">
+        <div class="form-group">
+            <?= $this->formLabel($form->get('good_token')); ?>
+            <?= $this->formElement($form->get('good_token')); ?>
+            <?= $this->formElementErrors($form->get('good_token')); ?>                  
+        </div>                
         <div class="form-group">
             <?= $this->formLabel($form->get('assembly_group_name')); ?>
             <?= $this->formElement($form->get('assembly_group_name')); ?>
             <?= $this->formElementErrors($form->get('assembly_group_name')); ?>                  
         </div>                
+    </div>   
+    <div class="col-md-3">
         <div class="form-group">
             <?= $this->formLabel($form->get('image_mail_box')); ?>
             <?= $this->formElement($form->get('image_mail_box')); ?>

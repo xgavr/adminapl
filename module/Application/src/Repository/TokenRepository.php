@@ -176,14 +176,37 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();        
         
     }
+    
     /**
      * Быстрое удаление article токенов, свзанных с token
-     * @param Application\Entity\Token $token 
+     * @param \Application\Entity\Token $token 
      * @return integer
      */
     public function deleteArticleToken($token)
     {
         $deleted = $this->getEntityManager()->getConnection()->delete('article_token', ['lemma' => $token->getLemma()]);
+        return $deleted;
+    }    
+    
+    /**
+     * Быстрое удаление good токенов, свзанных с token
+     * @param \Application\Entity\Token $token 
+     * @return integer
+     */
+    public function deleteGoodToken($token)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('good_token', ['lemma' => $token->getLemma()]);
+        return $deleted;
+    }    
+    
+    /**
+     * Быстрое удаление good токенов, свзанных с token
+     * @param \Application\Entity\Goods $good 
+     * @return integer
+     */
+    public function deleteTokenGood($good)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('good_token', ['good_id' => $good->getId()]);
         return $deleted;
     }    
     
@@ -453,7 +476,36 @@ class TokenRepository  extends EntityRepository
     /**
      * Выборка строк прайса для создания групп наименований
      * 
-     * @param Application\Entity\Rawprice $raw
+     * @param \Application\Entity\Raw $raw
+     * @return array
+     */
+    public function findGoodTokenForParse($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
+                ->where('r.raw = ?1')
+                ->andWhere('r.statusGood = ?2')
+                ->andWhere('r.statusToken = ?3')
+                ->andWhere('r.status = ?4')
+                ->setParameter('1', $raw->getId())
+                ->setParameter('2', Rawprice::GOOD_OK)
+                ->setParameter('3', Rawprice::TOKEN_PARSED)
+                ->setParameter('4', Rawprice::STATUS_PARSED)
+                //->setMaxResults(100000)
+                ;
+
+//var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();        
+        
+    }
+    
+    /**
+     * Выборка строк прайса для создания групп наименований
+     * 
+     * @param \Application\Entity\Raw $raw
      * @return array
      */
     public function findTokenGroupsForAccembly($raw)
@@ -469,7 +521,7 @@ class TokenRepository  extends EntityRepository
                 ->andWhere('r.status = ?4')
                 ->setParameter('1', $raw->getId())
                 ->setParameter('2', Rawprice::GOOD_OK)
-                ->setParameter('3', Rawprice::TOKEN_PARSED)
+                ->setParameter('3', Rawprice::TOKEN_GOOD_PARSED)
                 ->setParameter('4', Rawprice::STATUS_PARSED)
                 //->setMaxResults(100000)
                 ;

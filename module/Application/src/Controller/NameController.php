@@ -448,6 +448,30 @@ class NameController extends AbstractActionController
         ]);          
     }
     
+    public function updateGoodTokenFromRawAction()
+    {
+        $rawId = $this->params()->fromRoute('id', -1);
+
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findOneById($rawId);
+
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->grabGoodTokenFromRaw($raw);
+                
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
+    
     public function updateTokenGroupFromRawAction()
     {
         set_time_limit(0);
@@ -642,6 +666,29 @@ class NameController extends AbstractActionController
         }        
 
         $this->nameManager->addGroupTokenFromGood($good);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
+    public function goodTokenAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findOneById($goodId);
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->addGoodTokenFromGood($good);
         
         return new JsonModel([
             'result' => 'ok-reload',

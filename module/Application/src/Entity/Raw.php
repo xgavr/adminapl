@@ -37,6 +37,7 @@ class Raw {
     const STAGE_PRODUCER_ASSEMBLY   = 6; //производители собраны
     const STAGE_GOOD_ASSEMBLY       = 7; //карточки товара собрана
     const STAGE_PRICE_UPDATET       = 8; //цены рассчитаны
+    const STAGE_GOOD_TOKEN          = 9; //токены товаров
     const STAGE_TOKEN_GROUP_PARSED  = 10; //группы наименований разобраны
     
     const EX_NEW = 1;   // прайс готов для передачи

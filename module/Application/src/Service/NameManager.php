@@ -717,6 +717,8 @@ class NameManager
         
         $this->entityManager->getRepository(Token::class)
                 ->deleteArticleToken($token);
+        $this->entityManager->getRepository(GoodToken::class)
+                ->deleteGoodToken($token);
         $this->entityManager->getConnection()->delete('token_group_token', ['token_id' => $token->getId()]);
         $this->entityManager->getConnection()->delete('generic_group_token', ['token_id' => $token->getId()]);
         $this->entityManager->getConnection()->delete('token', ['id' => $token->getId()]);
@@ -803,33 +805,70 @@ class NameManager
         
         foreach ($tokens as $token){
             $tf = $tokensTf[$token->getLemma()];
+            $tf_idf = round($tf * $token->getIdf(), 5);
             $goodToken = $this->entityManager->getRepository(GoodToken::class)
                 ->findOneBy(['good' => $good->getId(), 'lemma' => $token->getLemma()]);
 
             if (!$goodToken){
                 $this->entityManager->getRepository(GoodToken::class)
                         ->insertGoodToken([
+                            'good_id' => $good->getId(),
                             'lemma' => $token->getLemma(),
                             'status' => $token->getStatus(),
                             'tf' => $tf[$token->getLemma()],
-                            'tf_idf' => $tf * $token->getIdf(),
+                            'tf_idf' => $tf_idf,
                         ]);
 
             } else {
-                if ($tf != $goodToken->getTf()){
-                $this->entityManager->getRepository(GoodToken::class)
-                        ->updateGoodToken(
-                                $goodToken,
-                                [
-                                    'tf' => $tf,
-                                    'tf_idf' => $tf * $token->getIdf(),
-                                ]);                    
+                if ($tf_idf != $goodToken->getTfIdf()){
+                    $this->entityManager->getRepository(GoodToken::class)
+                            ->updateGoodToken(
+                                    $goodToken,
+                                    [
+                                        'tf' => $tf,
+                                        'tf_idf' => $tf_idf,
+                                    ]);                    
                 }
             }
         }    
         return;
     }
     
+    /**
+     * Выборка токенов товара из прайса и добавление их в таблицу токенов
+     * @param Raw $raw
+     */
+    public function grabGoodTokenFromRaw($raw)
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $rawpricesQuery = $this->entityManager->getRepository(Token::class)
+                ->findGoodTokenForParse($raw);
+        
+        $iterable = $rawpricesQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $rawprice){
+                $this->addGoodTokenFromGood($rawprice->getGood());
+                
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GOOD_PARSED]);
+                
+                $this->entityManager->detach($rawprice);
+            }
+            if (time() > $startTime + 840){
+                return;
+            }            
+        }
+        
+        $raw->setParseStage(Raw::STAGE_GOOD_TOKEN);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
+        
+        return;
+    }
     
     /**
      * Добавить группу наименований по токенам товара
