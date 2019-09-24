@@ -804,8 +804,11 @@ class NameManager
         $tokensTf = $this->goodNamesVectorizer($good);
 
         foreach ($tokens as $token){
-            $tf = $tokensTf[$token->getLemma()];
-            $tf_idf = round($tf * $token->getIdf(), 5);
+            $tf = $tf_idf = null;
+            if (isset($tokensTf[$token->getLemma()])){
+                $tf = $tokensTf[$token->getLemma()];
+                $tf_idf = round($tf * $token->getIdf(), 5);
+            }    
             $goodToken = $this->entityManager->getRepository(GoodToken::class)
                 ->findOneBy(['good' => $good->getId(), 'lemma' => $token->getLemma()]);
 
