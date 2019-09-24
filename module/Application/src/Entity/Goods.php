@@ -254,6 +254,12 @@ class Goods {
      */
     protected $attributeValues;
 
+     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\GoodToken", mappedBy="good")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+     */
+    private $goodTokens;
+
     /**
      * Конструктор.
      */
@@ -813,4 +819,13 @@ class Goods {
         $this->statusGroupEx = $statusGroupEx;
     }    
     
+    /**
+     * Returns the array of good tokens assigned to this token.
+     * @return array
+     */
+    public function getGoodTokens()
+    {
+        return $this->goodTokens;
+    }        
+        
 }

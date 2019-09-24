@@ -13,6 +13,7 @@ use Application\Entity\ArticleToken;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
+use Application\Entity\GoodToken;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -786,6 +787,49 @@ class NameManager
         }    
         return;
     }
+    
+    /**
+     * Добавить токены товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function addGoodTokenFromGood($good)
+    {        
+        $tokens = $this->entityManager->getRepository(Token::class)
+                ->findGoodsToken($good);
+        
+        
+        $tokensTf = $this->goodNamesVectorizer($good);
+        
+        foreach ($tokens as $token){
+            $tf = $tokensTf[$token->getLemma()];
+            $goodToken = $this->entityManager->getRepository(GoodToken::class)
+                ->findOneBy(['good' => $good->getId(), 'lemma' => $token->getLemma()]);
+
+            if (!$goodToken){
+                $this->entityManager->getRepository(GoodToken::class)
+                        ->insertGoodToken([
+                            'lemma' => $token->getLemma(),
+                            'status' => $token->getStatus(),
+                            'tf' => $tf[$token->getLemma()],
+                            'tf_idf' => $tf * $token->getIdf(),
+                        ]);
+
+            } else {
+                if ($tf != $goodToken->getTf()){
+                $this->entityManager->getRepository(GoodToken::class)
+                        ->updateGoodToken(
+                                $goodToken,
+                                [
+                                    'tf' => $tf,
+                                    'tf_idf' => $tf * $token->getIdf(),
+                                ]);                    
+                }
+            }
+        }    
+        return;
+    }
+    
     
     /**
      * Добавить группу наименований по токенам товара

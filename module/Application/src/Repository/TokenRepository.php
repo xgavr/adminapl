@@ -10,6 +10,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Token;
 use Application\Entity\ArticleToken;
+use Application\Entity\GoodToken;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
 use Application\Entity\Goods;
@@ -395,6 +396,32 @@ class TokenRepository  extends EntityRepository
     }
 
     /**
+     * Найти токены товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @return object
+     */
+    public function findGoodsToken($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('t')
+            ->distinct()
+            ->from(\Application\Entity\Article::class, 'a')    
+            ->join('a.articleTokens', 'at')
+            ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')    
+            ->where('a.good = ?1')   
+            ->andWhere('t.flag = ?2')    
+            ->setParameter('1', $good->getId())
+            ->setParameter('2', Token::WHITE_LIST)
+                ;
+        
+//            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
+    /**
      * Найти токены товара по типу
      * 
      * @param \Application\Entity\Goods $good
@@ -460,6 +487,30 @@ class TokenRepository  extends EntityRepository
     public function insertTokenGroup($row)
     {
         $inserted = $this->getEntityManager()->getConnection()->insert('token_group', $row);
+        return $inserted;
+    }    
+
+    /**
+     * Быстрая вставка наименований товара
+     * @param array $row 
+     * @return integer
+     */
+    public function insertGoodToken($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('good_token', $row);
+        return $inserted;
+    }    
+
+    /**
+     * Быстрая обновление наименований товара
+     * 
+     * @param GoodToken $goodToken
+     * @param array $data 
+     * @return integer
+     */
+    public function updateGoodToken($goodToken, $data)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->update('good_token', $data, ['id' => $goodToken->getId()]);
         return $inserted;
     }    
 
