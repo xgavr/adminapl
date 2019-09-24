@@ -802,7 +802,7 @@ class NameManager
         
         
         $tokensTf = $this->goodNamesVectorizer($good);
-        
+        var_dump($tokensTf);
         foreach ($tokens as $token){
             $tf = $tokensTf[$token->getLemma()];
             $tf_idf = round($tf * $token->getIdf(), 5);
