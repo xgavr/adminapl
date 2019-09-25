@@ -485,6 +485,9 @@ class NameManager
         
         $idf = null; 
         $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
+        if ($idf < 0){
+            $idf = null;
+        }
 
         $this->entityManager->getRepository(Token::class)
                 ->updateToken($lemma, ['frequency' => $goodCount, 'idf' => $idf]);
