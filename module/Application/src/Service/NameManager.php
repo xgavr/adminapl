@@ -790,15 +790,36 @@ class NameManager
     }
     
     /**
+     * Средняя длина наименования товара
+     */
+    private function avgD()
+    {
+        $goodsCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->count([]);
+        $goodsTokenCount = $this->entityManager->getRepository(GoodToken::class)
+                ->count([]);
+        if ($goodsCount){
+            return $goodsTokenCount/$goodsCount;
+        }
+        return 0;
+    }
+    
+    /**
      * Добавить токены товара
      * 
      * @param \Application\Entity\Goods $good
+     * @param float avgD
      */
-    public function addGoodTokenFromGood($good)
+    public function addGoodTokenFromGood($good, $avgD = null)
     {        
         $tokens = $this->entityManager->getRepository(Token::class)
                 ->findGoodsToken($good);
         
+        if ($avgD == null){
+            $avgD = $this->avgD();
+        }        
+        $k1 = 2;
+        $b = 0.75;
         
         $tokensTf = $this->goodNamesVectorizer($good);
 
@@ -806,7 +827,7 @@ class NameManager
             $tf = $tf_idf = null;
             if (isset($tokensTf[$token->getLemma()])){
                 $tf = $tokensTf[$token->getLemma()];
-                $tf_idf = round($tf * $token->getIdf(), 5);
+                $tf_idf = round($token->getIdf() * ($tf * ($k1 + 1))/($tf + $k1 * (1 - $b + $b * (count($tokensTf)/$avgD))), 5);
             }    
             $goodToken = $this->entityManager->getRepository(GoodToken::class)
                 ->findOneBy(['good' => $good->getId(), 'lemma' => $token->getLemma()]);
@@ -845,6 +866,8 @@ class NameManager
         ini_set('memory_limit', '2048M');
         set_time_limit(900);
         $startTime = time();
+
+        $avgD = $this->avgD();
         
         $rawpricesQuery = $this->entityManager->getRepository(Token::class)
                 ->findGoodTokenForParse($raw);
@@ -853,7 +876,7 @@ class NameManager
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
-                $this->addGoodTokenFromGood($rawprice->getGood());
+                $this->addGoodTokenFromGood($rawprice->getGood(), $avgD);
                 
                 $this->entityManager->getRepository(Rawprice::class)
                         ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GOOD_PARSED]);
