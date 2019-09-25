@@ -654,9 +654,7 @@ class RawRepository extends EntityRepository
             foreach ($item as $row){
                 $this->getEntityManager()->getConnection()->delete('rawprice', ['id' => $row['id']]);                
             }
-        }
-            
-        unset($iterator);
+        }            
         return;
     }
 
