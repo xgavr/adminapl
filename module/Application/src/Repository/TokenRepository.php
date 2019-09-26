@@ -724,7 +724,8 @@ class TokenRepository  extends EntityRepository
         $queryBuilder->select('t')
             ->from(Token::class, 't')
             ->where('t.correct is null')
-            ->andWhere('t.frequency = 0')    
+            ->andWhere('t.frequency > ?1')
+            ->setParameter('1', Token::MIN_DF)    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
