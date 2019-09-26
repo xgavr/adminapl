@@ -59,6 +59,7 @@ class Token {
     const PART_PREPOSITION = 8; //предлог
     const PART_UNKNOWN = 99; //неизвестно
 
+    const MIN_DF = 5; // минимальная частота
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
