@@ -14,7 +14,7 @@ final class Version20190121091217 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('token');
-        $table->addColumn('frequency', 'integer', ['notnull' => true, 'default' => 9999]);
+        $table->addColumn('frequency', 'integer', ['notnull' => true, 'default' => -1]);
 
     }
 

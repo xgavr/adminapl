@@ -439,7 +439,7 @@ class TokenRepository  extends EntityRepository
             ->andWhere('t.frequency > ?3')    
             ->setParameter('1', $good->getId())
             ->setParameter('2', Token::WHITE_LIST)
-            ->setParameter('5', Token::MIN_DF)    
+            ->setParameter('3', Token::MIN_DF)    
                 ;
         
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
