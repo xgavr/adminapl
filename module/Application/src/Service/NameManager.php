@@ -915,6 +915,13 @@ class NameManager
             return;
         }
         
+        $tokenIds = [];
+        $tokenLemms = [];
+        foreach ($dictTokens as $token){
+            $tokenIds[] = $token['id'];
+            $tokenLemms[] = $token['lemma'];
+        }
+        
         $idsFilter = new IdsFormat();
         $tokenIdsStr = md5($idsFilter->filter($tokenIds));
         
@@ -932,6 +939,9 @@ class NameManager
                         'ids' => $tokenIdsStr,
                         'good_count' => 0,
                     ]);
+
+            $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneByIds($tokenIdsStr);
         }    
         
         if ($tokenGroup){
