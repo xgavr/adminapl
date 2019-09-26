@@ -942,6 +942,14 @@ class NameManager
 
             $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                 ->findOneByIds($tokenIdsStr);
+
+            foreach($dictTokens as $token){
+                $this->entityManager->getRepository(TokenGroup::class)
+                        ->insertTokenGroupToken([
+                            'token_group_id' => $tokenGroup->getId(),
+                            'token_id' => $token['id'],
+                        ]);
+            }        
         }    
         
         if ($tokenGroup){
