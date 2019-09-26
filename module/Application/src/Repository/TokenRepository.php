@@ -464,7 +464,7 @@ class TokenRepository  extends EntityRepository
             ->where('gt.good = ?1')   
             ->andWhere('(t.status = ?2 or t.status = ?3 or t.status = ?4)')
             ->andWhere('t.flag = ?6')
-            ->andWhere('t.tfIdf is not null')    
+            ->andWhere('t.tfidf is not null')    
             ->setParameter('1', $good->getId())
             ->setParameter('2', Token::IS_DICT)
             ->setParameter('3', Token::IS_EN_ABBR)
