@@ -915,17 +915,6 @@ class NameManager
             return;
         }
         
-        $tf = $this->goodNamesVectorizer($good);
-        
-        $tokenIds = [];
-        $tokenLemms = [];
-        foreach ($dictTokens as $token){
-            $tokenIds[] = $token['id'];
-            $tokenLemms[] = $token['lemma'];
-            $tokenTfIdf[] = $tf[$token['lemma']]*$token['idf'];
-        }
-        
-        var_dump($tokenTfIdf); exit;
         $idsFilter = new IdsFormat();
         $tokenIdsStr = md5($idsFilter->filter($tokenIds));
         
@@ -936,32 +925,13 @@ class NameManager
             ->findOneByIds($tokenIdsStr);
         
         if (!$tokenGroup){
-            try{
-                $this->entityManager->getRepository(TokenGroup::class)
-                        ->insertTokenGroup([
-                            'name' => '',
-                            'lemms' => $tokenLemmsStr,
-                            'ids' => $tokenIdsStr,
-                            'good_count' => 0,
-                        ]);
-            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-                //дубликат
-            }   
-
-            $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                ->findOneByIds($tokenIdsStr);
-
-            foreach($dictTokens as $token){
-                try{
-                    $this->entityManager->getRepository(TokenGroup::class)
-                            ->insertTokenGroupToken([
-                                'token_group_id' => $tokenGroup->getId(),
-                                'token_id' => $token['id'],
-                            ]);
-                } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-    //                var_dump($e->getMessage()); exit;
-                }   
-            }        
+            $this->entityManager->getRepository(TokenGroup::class)
+                    ->insertTokenGroup([
+                        'name' => '',
+                        'lemms' => $tokenLemmsStr,
+                        'ids' => $tokenIdsStr,
+                        'good_count' => 0,
+                    ]);
         }    
         
         if ($tokenGroup){

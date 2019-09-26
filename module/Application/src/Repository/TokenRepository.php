@@ -457,19 +457,19 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('t.id, t.lemma, t.status, t.idf')
+        $queryBuilder->select('t.id, t.lemma, t.status')
             ->distinct()
-            ->from(\Application\Entity\Article::class, 'a')    
-            ->join('a.articleTokens', 'at')
-            ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')    
-            ->where('a.good = ?1')   
-            ->andWhere('(at.status = ?2 or at.status = ?5 or at.status = ?6)')
-            ->andWhere('t.flag = ?4')    
+            ->from(GoodToken::class, 'gt')    
+            ->join(Token::class, 't', 'WITH', 't.lemma = gt.lemma')    
+            ->where('gt.good = ?1')   
+            ->andWhere('(t.status = ?2 or t.status = ?3 or t.status = ?4)')
+            ->andWhere('t.flag = ?6')
+            ->andWhere('t.tfIdf is not null')    
             ->setParameter('1', $good->getId())
-            ->setParameter('4', Token::WHITE_LIST)
             ->setParameter('2', Token::IS_DICT)
-            ->setParameter('5', Token::IS_EN_ABBR)
-            ->setParameter('6', Token::IS_RU_ABBR)
+            ->setParameter('3', Token::IS_EN_ABBR)
+            ->setParameter('4', Token::IS_RU_ABBR)
+            ->setParameter('6', Token::WHITE_LIST)
             ;
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
