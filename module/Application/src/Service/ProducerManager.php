@@ -460,10 +460,10 @@ class ProducerManager
         $finishTime = $startTime + 840;
 
         $unknownProducersForDelete = $this->entityManager->getRepository(UnknownProducer::class)
-                ->findUnknownProducerForDelete();
+                ->findBy(['rawpriceCount' => 0]);
 
-        foreach ($unknownProducersForDelete as $row){
-            $this->removeUnknownProducer($row[0]);
+        foreach ($unknownProducersForDelete as $unknownProducer){
+            $this->removeUnknownProducer($unknownProducer);
             if (time() >= $finishTime){
                 return;
             }
