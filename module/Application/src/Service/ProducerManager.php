@@ -371,7 +371,7 @@ class ProducerManager
                 ->unknownProducerSupplierCount($unknownProducer);
 
         $this->entityManager->getRepository(UnknownProducer::class)
-                ->updateUnknownProducer($unknownProducer, ['supplier_count' => $rawpriceCount]);
+                ->updateUnknownProducer($unknownProducer, ['supplier_count' => $supplierCount]);
     }
     
     /**
