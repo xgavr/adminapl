@@ -249,7 +249,7 @@ class GoodsManager
      */
     public function updateOemTd()
     {        
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(900);
         $startTime = time();
         $finishTime = $startTime + 840;
@@ -428,7 +428,7 @@ class GoodsManager
      */
     public function updateCars()
     {        
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(900);
         $startTime = time();
         $finishTime = $startTime + 840;
