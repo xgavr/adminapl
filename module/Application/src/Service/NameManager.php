@@ -826,7 +826,7 @@ class NameManager
         foreach ($tokens as $token){
             $tf = $tf_idf = null;
             if (isset($tokensTf[$token->getLemma()])){
-                $tf = $tokensTf[$token->getLemma()];
+                $tf = round($tokensTf[$token->getLemma()], 5);
                 $tf_idf = round($token->getIdf() * ($tf * ($k1 + 1))/($tf + $k1 * (1 - $b + $b * (count($tokensTf)/$avgD))), 5);
             }    
             $goodToken = $this->entityManager->getRepository(GoodToken::class)
