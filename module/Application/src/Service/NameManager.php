@@ -864,7 +864,7 @@ class NameManager
      */
     public function goodTitlesIds($good)
     {
-        $articleTitles = $this->getRepository(\Application\Entity\Goods::class)
+        $articleTitles = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->findArticleTitles($good);
         
         if (count($articleTitles)){
