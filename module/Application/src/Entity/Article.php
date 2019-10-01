@@ -96,6 +96,12 @@ class Article {
      */
     private $articleTokens;
 
+     /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\ArticleTitle", mappedBy="article")
+    * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
+     */
+    private $articleTitles;
+
     /**
      * Constructor.
      */
@@ -274,6 +280,15 @@ class Article {
     public function getArticleTokens()
     {
         return $this->articleTokens;
+    }        
+    
+    /**
+     * Returns the array of article titles assigned to this token.
+     * @return array
+     */
+    public function getArticleTitles()
+    {
+        return $this->articleTitles;
     }        
     
 }

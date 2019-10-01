@@ -164,6 +164,9 @@ class GoodsManager
         $this->entityManager->getRepository(Images::class)
                 ->removeGoodImages($good);
         
+        $this->entityManager->getRepository(Goods::class)
+                ->removeGoodTitles($good);
+        
         $this->entityManager->getRepository(\Application\Entity\Oem::class)
                 ->removeAllGoodOem($good);
                 

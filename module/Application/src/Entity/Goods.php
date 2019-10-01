@@ -259,6 +259,12 @@ class Goods {
     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
      */
     private $goodTokens;
+    
+     /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\GoodTitle", mappedBy="good")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+     */
+    private $goodTitles;    
 
     /**
      * Конструктор.
@@ -826,6 +832,15 @@ class Goods {
     public function getGoodTokens()
     {
         return $this->goodTokens;
+    }        
+        
+    /**
+     * Returns the array of good tokens assigned to this token.
+     * @return array
+     */
+    public function getGoodTitles()
+    {
+        return $this->goodTitles;
     }        
         
 }

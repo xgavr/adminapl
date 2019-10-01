@@ -858,6 +858,27 @@ class NameManager
     }
     
     /**
+     * Получить строку наименований товара
+     * 
+     * @param \Application\Entity\Goods $good
+     */
+    public function goodTitlesIdsMd5($good)
+    {
+        $articleTitles = $this->getRepository(\Application\Entity\Goods::class)
+                ->findArticleTitles($good);
+        
+        if (count($articleTitles)){
+            $articleTitleIds = [];
+            foreach ($articleTitles as $articleTitle){
+                $articleTitleIds[] = $articleTitle->getId();
+            } 
+
+            $idsFilter = new IdsFormat();
+            return $idsFilter->filter($articleTitleIds);
+        }    
+    }
+    
+    /**
      * Выборка токенов товара из прайса и добавление их в таблицу токенов
      * @param Raw $raw
      */
@@ -876,8 +897,24 @@ class NameManager
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
-                $this->addGoodTokenFromGood($rawprice->getGood(), $avgD);
-                
+                $good = $rawprice->getGood();
+                if ($good){
+                    $goodTitleStr = $this->goodTitlesIds($good);
+                    $goodTitleStrMd5 = md5($goodTitleStr);
+
+                    if ($goodTitleStr){ 
+                        $goodTitle = $this->entityManager->getRepository(\Application\Entity\GoodTitle::class)
+                                ->findOneBy(['good' => $good->getId(), 'titleMd5' => $goodTitleStrMd5]);
+
+                        if ($goodTitle == null){
+                            $this->addGoodTokenFromGood($good, $avgD);
+
+                            $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                                    ->insertGoodTitle(['good_id' => $good->getId(), 'title' => $goodTitleStr, 'title_md5' => $goodTitleStrMd5]);
+                        }    
+                    }    
+                }    
+
                 $this->entityManager->getRepository(Rawprice::class)
                         ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GOOD_PARSED]);
                 

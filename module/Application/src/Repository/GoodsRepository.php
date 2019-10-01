@@ -1282,6 +1282,56 @@ class GoodsRepository extends EntityRepository
         
         return;        
     }
+    
+    /**
+     * Быстрая вставка товара наименования
+     * @param array $row 
+     * @return integer
+     */
+    public function insertGoodTitle($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('good_title', $row);
+        return $inserted;
+    }    
+    
+    
+    /**
+     * Выбрать наименования артикулов
+     * 
+     * @param Goods $good
+     * 
+     */
+    public function findArticleTitles($good)
+    {
+        $entityManager = $this->getEntityManager();
 
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('at')
+                ->from(\Application\Entity\Article::class, 'a')
+                ->join('a.articleTitles', 'at')
+                ->where('a.good = ?1')
+                ->setParameter('1', $good->getId())
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * Удаление наименований товара
+     * 
+     * @param \Applcation\Entity\Goods $good
+     * @return integer
+     */
+    public function removeGoodTitles($good)
+    {
+        $where = [
+            'good_id' => $good->getId(),
+        ];
+        
+        
+        $deleted = $this->getEntityManager()->getConnection()->delete('good_title', $where);
+        return $deleted;        
+        
+    }
     
 }
