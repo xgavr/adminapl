@@ -862,7 +862,7 @@ class NameManager
      * 
      * @param \Application\Entity\Goods $good
      */
-    public function goodTitlesIdsMd5($good)
+    public function goodTitlesIds($good)
     {
         $articleTitles = $this->getRepository(\Application\Entity\Goods::class)
                 ->findArticleTitles($good);
