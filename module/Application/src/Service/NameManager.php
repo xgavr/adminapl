@@ -870,7 +870,7 @@ class NameManager
         if (count($articleTitles)){
             $articleTitleIds = [];
             foreach ($articleTitles as $articleTitle){
-                $articleTitleIds[] = $articleTitle->getId();
+                $articleTitleIds[] = $articleTitle['id'];
             } 
 
             $idsFilter = new IdsFormat();

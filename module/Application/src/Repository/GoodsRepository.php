@@ -1306,7 +1306,7 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('at')
+        $queryBuilder->select('at.id')
                 ->from(\Application\Entity\Article::class, 'a')
                 ->join('a.articleTitles', 'at')
                 ->where('a.good = ?1')
