@@ -689,6 +689,7 @@ class ExternalManager
                 if ($modelConstructionFrom > $carData['yearOfConstrFrom']){
                     $model->setConstructionFrom($carData['yearOfConstrFrom']);
                     $this->entityManager->persist($model);
+                    $this->entityManager->flush($model);
                 }
 
                 if (!empty($carData['yearOfConstrTo'])){
@@ -698,10 +699,12 @@ class ExternalManager
                     if ($modelConstructionTo < $carData['yearOfConstrTo'] || $modelConstructionTo == Model::COSTRUCTION_MAX_PERIOD){
                         $model->setConstructionTo($carData['yearOfConstrTo']);
                         $this->entityManager->persist($model);
+                        $this->entityManager->flush($model);
                     }
                 } else {
                     $model->setConstructionTo(date('Ym'));
                     $this->entityManager->persist($model);                    
+                    $this->entityManager->flush($model);
                 }
             }
             $this->addVehicleDetailCarKeyValue($car, 'PCON', $pcon);
@@ -709,7 +712,7 @@ class ExternalManager
             $car->setUpdateFlag(date('n'));
             $car->setTransferFlag(Car::TRANSFER_NO);
             $this->entityManager->persist($car);
-            $this->entityManager->flush();
+            $this->entityManager->flush($car);
         }    
         
         return;
