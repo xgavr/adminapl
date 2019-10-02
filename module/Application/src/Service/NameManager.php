@@ -191,9 +191,9 @@ class NameManager
         
         $writer->toFile(Token::MY_GRAY_LIST, $dict);
         
-        $this->updateTokenFlag($token, Token::GRAY_LIST);
         $this->entityManager->getRepository(Article::class)
                 ->updateTokenUpdateFlag($word);
+        $this->updateTokenFlag($token, Token::GRAY_LIST);
         
         return;
     }
@@ -534,28 +534,29 @@ class NameManager
 //        exit;
         foreach ($lemms as $key => $words){            
             foreach ($words as $word){
-                if ($key == Token::IS_RU){
-                    
-                    $predictTokens = $this->entityManager->getRepository(Token::class)
-                           ->findNearToken($word);
-                    
-                    if (count($predictTokens)){
-                        foreach($predictTokens as $predictToken){
-                            if ($predictToken->getCorrect()){
-                                $predictLemms = $predictToken->getCorrectAsArray();
-                                foreach ($predictLemms as $predictLemma){
-                                    $result[Token::IS_DICT][] = $predictLemma;
-                                }
-                            } else {
-                                $result[Token::IS_DICT][] = $predictToken->getLemma();
-                            }    
-                        }    
-                    } else {
-                        $result[$key][] = $word;
-                    }
-                } else {
-                    $result[$key][] = $word;                    
-                }
+                $result[$key][] = $word; 
+//                if ($key == Token::IS_RU){
+//                    
+//                    $predictTokens = $this->entityManager->getRepository(Token::class)
+//                           ->findNearToken($word);
+//                    
+//                    if (count($predictTokens)){
+//                        foreach($predictTokens as $predictToken){
+//                            if ($predictToken->getCorrect()){
+//                                $predictLemms = $predictToken->getCorrectAsArray();
+//                                foreach ($predictLemms as $predictLemma){
+//                                    $result[Token::IS_DICT][] = $predictLemma;
+//                                }
+//                            } else {
+//                                $result[Token::IS_DICT][] = $predictToken->getLemma();
+//                            }    
+//                        }    
+//                    } else {
+//                        $result[$key][] = $word;
+//                    }
+//                } else {
+//                    $result[$key][] = $word;                    
+//                }
             }            
         } 
             
