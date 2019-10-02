@@ -734,7 +734,7 @@ $this->headScript()
             inSigma                
         );
         return [
-            '<span id="rawprice'+row.id+'">'+Math.round(parseFloat(value))+'</span>',
+            '<span id="rawprice'+row.id+'">'+Math.round(parseFloat(value.replace(/\s/g, '')))+'</span>',
         ].join(''); 
     }        
     
