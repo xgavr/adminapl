@@ -354,7 +354,7 @@ class ExternalManager
             $carAttributeGroup->setName($data['name']);
 
             $this->entityManager->persist($carAttributeGroup);
-            $this->entityManager->flush();
+            $this->entityManager->flush($carAttributeGroup);
         }
             
         return $carAttributeGroup;    
@@ -379,7 +379,7 @@ class ExternalManager
             $carAttributeType->setCarAttributeGroup($carAttributeGroup);
             
             $this->entityManager->persist($carAttributeType);
-            $this->entityManager->flush();
+            $this->entityManager->flush($carAttributeType);
         }
             
         return $carAttributeType;    
@@ -429,7 +429,7 @@ class ExternalManager
             $car->setModel($model);
 
             $this->entityManager->persist($car);
-            $this->entityManager->flush();
+            $this->entityManager->flush($car);
         } else {
             if ($data['name'] != $car->getName()){
                 $this->entityManager->getRepository(Car::class)
@@ -466,7 +466,7 @@ class ExternalManager
         $carAttributeValue->setCarAttributeType($carAttributeType);
 
         $this->entityManager->persist($carAttributeValue);
-        $this->entityManager->flush();
+        $this->entityManager->flush($carAttributeValue);
     }
     
     
