@@ -82,7 +82,7 @@ class NameController extends AbstractActionController
         $order = $this->params()->fromQuery('order');
         $limit = $this->params()->fromQuery('limit');
         $status = $this->params()->fromQuery('status', Token::IS_DICT);
-        $flag = $this->params()->fromQuery('status', Token::WHITE_LIST);
+        $flag = $this->params()->fromQuery('flag', Token::WHITE_LIST);
         
         $query = $this->entityManager->getRepository(Token::class)
                         ->findAllToken([
