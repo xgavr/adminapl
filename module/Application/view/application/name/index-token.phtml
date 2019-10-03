@@ -59,6 +59,7 @@ $this->headScript()
                      <th data-field="lemma" data-formatter="tokenFormatter" data-sortable="true">Токен</th>
                      <th data-field="status" data-formatter="statusFormatter" data-sortable="true">Статус</th>             
                      <th data-field="flag" data-formatter="flagFormatter" data-sortable="true">Список</th>             
+                     <th data-field="idf" data-sortable="true">IDF</th>             
                      <th data-field="frequency" data-sortable="true">Частота</th>             
                  </tr>                
             </thead>
@@ -169,11 +170,18 @@ $this->headScript()
     }
     
     function tokenFormatter(value, row){
-        return [
+        var result = [
             '<div class="pull-left">',
             '<a href="/name/view-token/' + row.id + '" target="_blank">' + value + '</a>',
             '</div>'
-        ].join(''); 
+        ];
+        if (row.correct){
+            result.join([
+                '<div class="success"><small>'+row.coorect+'</small></div>'
+            ]);
+        }
+
+        return result.join(''); 
     }    
     
     function statusFormatter(value, row){
