@@ -66,6 +66,7 @@ class NameController extends AbstractActionController
         return new ViewModel([
             'stages' => $stages,
             'statuses' => Token::getStatusList(),
+            'flags' => Token::getFlagList(),
             'total' => $total,
             'statusTokenCount' => $statusTokenCount,
         ]);  
@@ -80,10 +81,17 @@ class NameController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         $limit = $this->params()->fromQuery('limit');
-        $status = $this->params()->fromQuery('status', 1);
+        $status = $this->params()->fromQuery('status', Token::IS_DICT);
+        $flag = $this->params()->fromQuery('status', Token::WHITE_LIST);
         
         $query = $this->entityManager->getRepository(Token::class)
-                        ->findAllToken(['q' => $q, 'sort' => $sort, 'order' => $order, 'status' => $status]);
+                        ->findAllToken([
+                            'q' => $q, 
+                            'sort' => $sort, 
+                            'order' => $order, 
+                            'status' => $status,
+                            'flag' => $flag,
+                                ]);
         
         $total = count($query->getResult(2));
         
