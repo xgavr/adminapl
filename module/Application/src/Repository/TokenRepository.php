@@ -254,6 +254,11 @@ class TokenRepository  extends EntityRepository
                     ->setParameter('3', $params['status'])
                         ;                
             }            
+            if (isset($params['flag'])){
+                $queryBuilder->andWhere('t.flag = ?4')
+                    ->setParameter('4', $params['flag'])
+                        ;                
+            }            
         }
 
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
