@@ -176,9 +176,7 @@ $this->headScript()
             '</div>'
         ];
         if (row.correct){
-            result.join([
-                '<div class="success"><small>'+row.coorect+'</small></div>'
-            ]);
+            result.join('<div class="success"><small>'+row.coorect+'</small></div>');
         }
 
         return result.join(''); 
