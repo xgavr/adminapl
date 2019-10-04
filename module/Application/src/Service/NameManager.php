@@ -471,7 +471,7 @@ class NameManager
      * @param integer $goodCount
      * @param integer $goods
      */
-    public function updateTokenArticleCount($lemma, $goodCount = null, $goods = null)
+    public function updateTokenArticleCount($lemma, $goodCount = null, $goods = null, $avgD = null)
     {
         if ($goodCount == null){
             $goodCount = $this->entityManager->getRepository(ArticleToken::class)
@@ -483,8 +483,15 @@ class NameManager
                     ->count([]);
         }
         
-        $idf = null; 
-        $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
+        if ($avgD == null){
+            $avgD = $this->avgD();
+        }
+
+//        $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
+        
+        $k1 = 2;
+        $b = 0.75;        
+        $idf = ($goodCount * ($k1 + 1))/($goodCount + $k1 * (1 - $b + $b * ($goods/$avgD)));
         if ($idf < 0){
             $idf = null;
         }
@@ -504,13 +511,15 @@ class NameManager
         
         $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->count([]);
+        
+        $avgD = $this->avgD();
 
         $tokensQuery = $this->entityManager->getRepository(Token::class)
                 ->findAllToken();
         $iterable = $tokensQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $token){
-                $this->updateTokenArticleCount($token->getLemma(), null, $goods);
+                $this->updateTokenArticleCount($token->getLemma(), null, $goods, $avgD);
                 $this->entityManager->detach($token);
             }   
         }    
