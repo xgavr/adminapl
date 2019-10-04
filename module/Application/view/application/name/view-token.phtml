@@ -24,7 +24,7 @@ $this->pageBreadcrumbs()->setItems([
     </small>
 </p>
 <p>
-    <?php if ($token->getStatus() != $token::IS_DICT && $token->getStatus() != $token::IS_EN_DICT):?>
+    <?php if ($token->getStatus() != $token::IS_RU_ABBR && $token->getStatus() != $token::IS_EN_ABBR):?>
         <span>
             <small>
                 <button value="/name/update-token-form/<?= $token->getId() ?>"" class="btn btn-info btn-xs"
