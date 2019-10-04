@@ -170,16 +170,14 @@ $this->headScript()
     }
     
     function tokenFormatter(value, row){
-        var result = [
-            '<div class="pull-left">',
-            '<a href="/name/view-token/' + row.id + '" target="_blank">' + value + '</a>',
-            '</div>'
-        ];
+        var str = '<div class="pull-left">';
+        str += '<a href="/name/view-token/' + row.id + '" target="_blank">' + value + '</a>';
+        str += '</div>';
         if (row.correct){
-            result.push('<div class="success"><small>'+row.correct+'</small></div>');
+            str += '<div class="success"><small>'+row.correct+'</small></div>';
         }
 
-        return result.join(''); 
+        return str; 
     }    
     
     function statusFormatter(value, row){
