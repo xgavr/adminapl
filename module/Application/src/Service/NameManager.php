@@ -543,29 +543,21 @@ class NameManager
 //        exit;
         foreach ($lemms as $key => $words){            
             foreach ($words as $word){
-                $result[$key][] = $word; 
-//                if ($key == Token::IS_RU){
-//                    
-//                    $predictTokens = $this->entityManager->getRepository(Token::class)
-//                           ->findNearToken($word);
-//                    
-//                    if (count($predictTokens)){
-//                        foreach($predictTokens as $predictToken){
-//                            if ($predictToken->getCorrect()){
-//                                $predictLemms = $predictToken->getCorrectAsArray();
-//                                foreach ($predictLemms as $predictLemma){
-//                                    $result[Token::IS_DICT][] = $predictLemma;
-//                                }
-//                            } else {
-//                                $result[Token::IS_DICT][] = $predictToken->getLemma();
-//                            }    
-//                        }    
-//                    } else {
-//                        $result[$key][] = $word;
-//                    }
-//                } else {
-//                    $result[$key][] = $word;                    
-//                }
+                $wordMd5 = md5($word);
+                $result[$key][$wordMd5] = $word;
+                if ($key == Token::IS_DICT){
+                    $token = $this->entityManager->getRepository(Token::class)
+                            ->findOneByLemma($word);
+                    if ($token){
+                        if ($token->getCorrect()){
+                            unset($result[Token::IS_DICT][$wordMd5]);
+                            $lemms = $token->getCorrectAsArray();
+                            foreach ($lemms as $lemma){
+                                $result[Token::IS_DICT][md5($lemma)] = $lemma;
+                            }
+                        }                        
+                    }    
+                }   
             }            
         } 
             
