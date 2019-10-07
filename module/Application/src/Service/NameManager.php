@@ -812,8 +812,13 @@ class NameManager
      * @param \Application\Entity\Goods $good
      * @param float avgD
      */
-    public function addGoodTokenFromGood($good, $avgD = null)
+    public function addGoodTokenFromGood($good, $avgD = null, $update = true)
     {        
+        if ($update){
+            $this->entityManager->getRepository(GoodToken::class)
+                    ->deleteTokenGood($good);                    
+        }
+        
         $tokens = $this->entityManager->getRepository(Token::class)
                 ->findGoodsToken($good);
         
@@ -909,6 +914,10 @@ class NameManager
                                 ->findOneBy(['good' => $good->getId(), 'titleMd5' => $goodTitleStrMd5]);
 
                         if ($goodTitle == null){
+                            
+                            $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                                    ->removeGoodTitles($good);
+                            
                             $this->addGoodTokenFromGood($good, $avgD);
 
                             $this->entityManager->getRepository(\Application\Entity\Goods::class)
