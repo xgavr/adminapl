@@ -475,6 +475,8 @@ class TokenRepository  extends EntityRepository
             ->setParameter('3', Token::IS_EN_ABBR)
             ->setParameter('4', Token::IS_RU_ABBR)
             ->setParameter('6', Token::WHITE_LIST)
+            ->orderBy('gt.tfidf', 'DESC')
+            ->setMaxResults(Token::MIN_TOKENS_FOR_GROUP)    
             ;
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
