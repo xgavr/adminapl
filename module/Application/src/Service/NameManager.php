@@ -496,7 +496,7 @@ class NameManager
             $idf = 0;
         }
 
-        if (round($token->getIdf(), 3) != round($idf, 3)){
+        if (round($token->getIdf(), 2) != round($idf, 2)){
             $this->entityManager->getRepository(Article::class)
                     ->updateTokenUpdateFlag($token->getLemma());
         }
