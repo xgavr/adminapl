@@ -140,7 +140,9 @@ class TokenRepository  extends EntityRepository
             return;
         }
         
-        $this->updateArticleToken($lemma, $data);
+        if (isset($data['status'])){
+            $this->updateArticleToken($lemma, $data);
+        }    
         
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -733,7 +735,7 @@ class TokenRepository  extends EntityRepository
             ->where('t.correct is null')
             ->andWhere('t.frequency <= ?1')
             ->andWhere('t.flag = ?2')    
-            ->setParameter('1', Token::MIN_DF)    
+            ->setParameter('1', 0)    
             ->setParameter('2', Token::WHITE_LIST)    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;

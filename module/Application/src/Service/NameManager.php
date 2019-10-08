@@ -467,15 +467,15 @@ class NameManager
     /**
      * Обновление количества товаров у токена
      * 
-     * @param string $lemma
+     * @param Token $token
      * @param integer $goodCount
      * @param integer $goods
      */
-    public function updateTokenArticleCount($lemma, $goodCount = null, $goods = null, $avgD = null)
+    public function updateTokenArticleCount($token, $goodCount = null, $goods = null, $avgD = null)
     {
         if ($goodCount == null){
             $goodCount = $this->entityManager->getRepository(ArticleToken::class)
-                    ->tokenGoodCount($lemma);
+                    ->tokenGoodCount($token->getLemma());
 //            var_dump($articleCount);
         }    
         if ($goods == null){
@@ -496,9 +496,16 @@ class NameManager
             $idf = null;
         }
 
+        if ($idf && $token->getIdf()){
+            if (round($token->getIdf(), 3) != round($idf, 3)){
+                $this->entityManager->getRepository(Article::class)
+                        ->updateTokenUpdateFlag($token->getLemma());
+            }
+        }    
+
         $this->entityManager->getRepository(Token::class)
-                ->updateToken($lemma, ['frequency' => $goodCount, 'idf' => $idf]);
-        
+                ->updateToken($token->getLemma(), ['frequency' => $goodCount, 'idf' => $idf]);
+
     }
     
     /**
@@ -519,7 +526,7 @@ class NameManager
         $iterable = $tokensQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $token){
-                $this->updateTokenArticleCount($token->getLemma(), null, $goods, $avgD);
+                $this->updateTokenArticleCount($token, null, $goods, $avgD);
                 $this->entityManager->detach($token);
             }   
         }    
