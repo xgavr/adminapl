@@ -89,7 +89,7 @@ class ArticleRepository  extends EntityRepository
      */
     public function updateTokenUpdateFlag($lemma, $flag = 10)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         
         if ($flag == Article::TOKEN_UPDATE_FLAG){
             return;
