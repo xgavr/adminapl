@@ -493,15 +493,13 @@ class NameManager
         $b = 0.75;        
         $idf = ($goodCount * ($k1 + 1))/($goodCount + $k1 * (1 - $b + $b * ($goods/$avgD)));
         if ($idf < 0){
-            $idf = null;
+            $idf = 0;
         }
 
-        if ($idf && $token->getIdf()){
-            if (round($token->getIdf(), 3) != round($idf, 3)){
-                $this->entityManager->getRepository(Article::class)
-                        ->updateTokenUpdateFlag($token->getLemma());
-            }
-        }    
+        if (round($token->getIdf(), 3) != round($idf, 3)){
+            $this->entityManager->getRepository(Article::class)
+                    ->updateTokenUpdateFlag($token->getLemma());
+        }
 
         $this->entityManager->getRepository(Token::class)
                 ->updateToken($token->getLemma(), ['frequency' => $goodCount, 'idf' => $idf]);
