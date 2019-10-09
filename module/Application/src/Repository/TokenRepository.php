@@ -469,7 +469,7 @@ class TokenRepository  extends EntityRepository
             ->from(GoodToken::class, 'gt')    
             ->join(Token::class, 't', 'WITH', 't.lemma = gt.lemma')    
             ->where('gt.good = ?1')   
-            ->andWhere('gt.tfidf is not null')    
+            ->andWhere('gt.tfidf >= ?7')    
             ->andWhere('(t.status = ?2 or t.status = ?3 or t.status = ?4)')
             ->andWhere('t.flag = ?6')
             ->setParameter('1', $good->getId())
@@ -477,8 +477,9 @@ class TokenRepository  extends EntityRepository
             ->setParameter('3', Token::IS_EN_ABBR)
             ->setParameter('4', Token::IS_RU_ABBR)
             ->setParameter('6', Token::WHITE_LIST)
+            ->setParameter('7', Token::MIN_TFIDF_FOR_GROUP)
             ->orderBy('gt.tfidf', 'DESC')
-            ->setMaxResults(Token::MIN_TOKENS_FOR_GROUP)    
+            ->setMaxResults(Token::MAX_TOKENS_FOR_GROUP)    
             ;
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            

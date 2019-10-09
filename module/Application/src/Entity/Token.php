@@ -60,7 +60,8 @@ class Token {
     const PART_UNKNOWN = 99; //неизвестно
 
     const MIN_DF = 5; // минимальная частота
-    const MIN_TOKENS_FOR_GROUP = 4; // максимальное количество токенов для группы
+    const MAX_TOKENS_FOR_GROUP = 6; // максимальное количество токенов для группы
+    const MIN_TFIDF_FOR_GROUP = 0.003; // максимальный tfidf для группы
 
     /**
      * @ORM\Id

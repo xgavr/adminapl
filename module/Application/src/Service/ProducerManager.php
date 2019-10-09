@@ -347,7 +347,7 @@ class ProducerManager
         
         $iterable = $query->iterate();
         foreach ($iterable as $row){
-            foreach ($row as $unnknownProducer){
+            foreach ($row as $unknownProducer){
                 $this->updateUnknownProducerRawpriceCount($unknownProducer);
                 $this->entityManager->detach($unknownProducer);
                 if (time() > $startTime + 1740){
@@ -391,7 +391,7 @@ class ProducerManager
         
         $iterable = $query->iterate();
         foreach ($iterable as $row){
-            foreach ($row as $unnknownProducer){
+            foreach ($row as $unknownProducer){
                 $this->updateUnknownProducerSupplierCount($unknownProducer);
                 $this->entityManager->detach($unknownProducer);
                 if (time() > $startTime + 1740){
