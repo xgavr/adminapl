@@ -813,6 +813,24 @@ class ProducerController extends AbstractActionController
         exit;
     }
     
+    public function editUnknownProducerNameTdAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $unknownProducerId = $data['pk'];
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneById($unknownProducerId);
+                    
+            if ($unknownProducer){
+                $this->producerManager->updateUnknownProducerNameTd($unknownProducer, $data['value']);
+            }    
+        }
+        
+        exit;
+    }
+    
+    
     public function deleteUnknownAction()
     {
         $page = $this->params()->fromQuery('page', 1);

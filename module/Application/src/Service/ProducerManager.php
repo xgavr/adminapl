@@ -314,6 +314,22 @@ class ProducerManager
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
     }    
+    
+    /**
+     * Заменить наименование для ТекДок неизвестного производителя
+     * 
+     * @param UnknownProducer $unknownProducer
+     * @param string $nameTd
+     * @return type
+     */
+    public function updateUnknownProducerNameTd($unknownProducer, $nameTd) 
+    {
+        $unknownProducer->setNameTd($nameTd);
+        $this->entityManager->persist($unknownProducer);
+        $this->entityManager->flush($unknownProducer);
+        
+        return;
+    }        
 
     /**
      * Обновление количества товара у неизвестного производителя

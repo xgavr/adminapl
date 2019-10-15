@@ -38,6 +38,11 @@ class UnknownProducer {
     protected $name;
     
     /**
+     * @ORM\Column(name="name_td")   
+     */
+    protected $nameTd;
+    
+    /**
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;        
@@ -105,6 +110,16 @@ class UnknownProducer {
     {
         $filter = new \Application\Filter\ProducerName();
         $this->name = $filter->filter($name);
+    }     
+
+    public function getNameTd() 
+    {
+        return $this->nameTd;
+    }
+
+    public function setNameTd($nameTd) 
+    {
+        $this->nameTd = $nameTd;
     }     
 
     public function getDateCreated() 
