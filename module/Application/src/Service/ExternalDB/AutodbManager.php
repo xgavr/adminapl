@@ -307,6 +307,11 @@ class AutodbManager
                     if ($filter->filter($row['brandName']) == $filter->filter($unknownProducer->getName())){
                         return $row;
                     }
+                    if ($unknownProducer->getNameTd()){
+                        if ($filter->filter($row['brandName']) == $filter->filter($unknownProducer->getNameTd())){
+                            return $row;
+                        }                        
+                    }
                 }        
             }
         }
