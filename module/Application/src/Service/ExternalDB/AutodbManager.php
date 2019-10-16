@@ -12,6 +12,7 @@ use Zend\Json\Decoder;
 use Zend\Json\Encoder;
 use Application\Filter\ProducerName;
 use Application\Entity\Images;
+use Application\Entity\AutoDbRespose;
 
 /**
  * Description of AutodbManager
@@ -81,6 +82,32 @@ class AutodbManager
         throw new \Exception('Неопознаная ошибка');
     }    
     
+    /**
+     * Добавить обновить запись в auto_db_response
+     * 
+     * @param string $uri
+     * @param string $response
+     * @return boolean
+     */
+    private function updateAutoDbResponse($uri, $response)
+    {
+        $autoDbRespose = $this->entityManager->getRepository(AutoDbRespose::class)
+                ->findOneByUriMd5(mb_strtoupper(trim($uri), 'UTF-8'));
+        
+        if ($autoDbRespose == null){
+            $this->entityManager->getRepository(AutoDbRespose::class)
+                    ->insertAutoDbResponse($url, $response);
+            return true;
+        }
+        
+        if ($autoDbRespose->getResponseMd5() != mb_strtoupper(trim($response), 'UTF-8')){
+            $this->entityManager->getRepository(AutoDbRespose::class)
+                    ->updateAutoDbResponse($url, $response);
+            return true;            
+        }
+        
+        return false;
+    }
     
     /**
      * Базовый метод доступа к апи
@@ -116,6 +143,7 @@ class AutodbManager
         
         if ($response->isOk()){
             try {
+                $this->updateAutoDbResponse($uri, $response->getBody());
                 return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
             } catch (\Zend\Json\Exception\RuntimeException $e){
                // var_dump($response->getBody()); exit;
