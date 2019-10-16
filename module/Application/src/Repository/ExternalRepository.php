@@ -9,7 +9,7 @@
 namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\AutoDbRespose;
+use Application\Entity\AutoDbResponse;
 /**
  * Description of ExternalRepository
  *

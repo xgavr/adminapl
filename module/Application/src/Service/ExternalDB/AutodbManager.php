@@ -12,7 +12,7 @@ use Zend\Json\Decoder;
 use Zend\Json\Encoder;
 use Application\Filter\ProducerName;
 use Application\Entity\Images;
-use Application\Entity\AutoDbRespose;
+use Application\Entity\AutoDbResponse;
 
 /**
  * Description of AutodbManager
@@ -91,17 +91,17 @@ class AutodbManager
      */
     private function updateAutoDbResponse($uri, $response)
     {
-        $autoDbRespose = $this->entityManager->getRepository(AutoDbRespose::class)
+        $autoDbRespose = $this->entityManager->getRepository(AutoDbResponse::class)
                 ->findOneByUriMd5(mb_strtoupper(trim($uri), 'UTF-8'));
         
         if ($autoDbRespose == null){
-            $this->entityManager->getRepository(AutoDbRespose::class)
+            $this->entityManager->getRepository(AutoDbResponse::class)
                     ->insertAutoDbResponse($url, $response);
             return true;
         }
         
         if ($autoDbRespose->getResponseMd5() != mb_strtoupper(trim($response), 'UTF-8')){
-            $this->entityManager->getRepository(AutoDbRespose::class)
+            $this->entityManager->getRepository(AutoDbResponse::class)
                     ->updateAutoDbResponse($url, $response);
             return true;            
         }

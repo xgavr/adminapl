@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="article_title")
  * @author Daddy
  */
-class AutoDbRespose {
+class AutoDbResponse {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
