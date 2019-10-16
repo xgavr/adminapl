@@ -13,12 +13,13 @@ final class Version20191016122351 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $table = $schema->createTable('auto_db_responce');
+        $table = $schema->createTable('auto_db_response');
         $table->addColumn('id', 'bigint', ['autoincrement'=>true]);
         $table->addColumn('uri_md5', 'string', ['notnull'=>true, 'length' => 128]);        
         $table->addColumn('uri', 'text', ['notnull'=>true]);
         $table->addColumn('response_md5', 'string', ['notnull'=>true, 'length' => 128]);        
         $table->addColumn('response', 'text', ['notnull'=>true]);        
+        $table->addColumn('date_created', 'datetime', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['uri_md5'], 'auto_db_uri_md5_uindx');
         $table->addOption('engine' , 'InnoDB'); 

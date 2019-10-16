@@ -32,9 +32,10 @@ class ExternalRepository extends EntityRepository
             'uri_md5' => md5($url),
             'response' => $resp,
             'response_md5' => md5($resp),
+            'date_created' => date('Y-m-d H:i:s'),
         ];
                 
-        $this->getEntityManager()->getConnection()->insert('auto_db_responce', $data);        
+        $this->getEntityManager()->getConnection()->insert('auto_db_response', $data);        
         
         return;
     }        
@@ -51,9 +52,10 @@ class ExternalRepository extends EntityRepository
         $data = [
             'response' => $resp,
             'response_md5' => md5($resp),
+            'date_created' => date('Y-m-d H:i:s'),
         ];
                 
-        $this->getEntityManager()->getConnection()->update('auto_db_responce', $data, ['uri_md5' => md5($url)]); 
+        $this->getEntityManager()->getConnection()->update('auto_db_response', $data, ['uri_md5' => md5($url)]); 
         
         return;
     }        

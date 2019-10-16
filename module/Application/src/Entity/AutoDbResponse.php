@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description of Producer
  * @ORM\Entity(repositoryClass="\Application\Repository\ExternalRepository")
- * @ORM\Table(name="auto_db_responce")
+ * @ORM\Table(name="auto_db_response")
  * @author Daddy
  */
 class AutoDbResponse {
@@ -43,6 +43,11 @@ class AutoDbResponse {
      * @ORM\Column(name="response_md5")  
      */
     protected $responseMd5;    
+    
+    /** 
+     * @ORM\Column(name="date_created")  
+     */
+    protected $dateCreated;
     
 
     public function getId() 
@@ -86,4 +91,23 @@ class AutoDbResponse {
     {
         return $this->responseMd5;
     }
+    
+    /**
+     * Returns the date of user creation.
+     * @return string     
+     */
+    public function getDateCreated() 
+    {
+        return $this->dateCreated;
+    }
+    
+    /**
+     * Sets the date when this user was created.
+     * @param string $dateCreated     
+     */
+    public function setDateCreated($dateCreated) 
+    {
+        $this->dateCreated = $dateCreated;
+    }    
+    
 }
