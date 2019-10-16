@@ -100,7 +100,7 @@ class AutodbManager
             return true;
         }
         
-        if ($autoDbResponse->getResponseMd5() != mb_strtoupper(trim($response), 'UTF-8')){
+        if ($autoDbResponse->getResponseMd5() != md5(mb_strtoupper(trim($response), 'UTF-8'))){
             $this->entityManager->getRepository(AutoDbResponse::class)
                     ->updateAutoDbResponse($uri, $response);
             return true;            
