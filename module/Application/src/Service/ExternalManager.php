@@ -792,6 +792,7 @@ class ExternalManager
         }
         if (is_numeric($tdId)){
             $carsDataI = $this->autoDbManager->getLinked($tdId);
+            var_dump($carsDataI);
             if (is_array($carsDataI)){
                 $addFlag = count($carsDataI)<=10;
                 $makes = [];
