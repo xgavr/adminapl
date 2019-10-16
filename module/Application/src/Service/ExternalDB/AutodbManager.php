@@ -92,7 +92,7 @@ class AutodbManager
     private function updateAutoDbResponse($uri, $response)
     {
         $autoDbResponse = $this->entityManager->getRepository(AutoDbResponse::class)
-                ->findOneByUriMd5(mb_strtoupper(trim($uri), 'UTF-8'));
+                ->findOneByUriMd5(md5(mb_strtoupper(trim($uri), 'UTF-8')));
         
         if ($autoDbResponse == null){
             $this->entityManager->getRepository(AutoDbResponse::class)
