@@ -782,57 +782,61 @@ class ExternalManager
         ini_set('memory_limit', '512M');
         
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
+        $updateStatuses = ['status_car' => Goods::CAR_UPDATED];
     
-        $this->entityManager->getRepository(Goods::class)
-                ->removeGoodCars($good);
-        
         $tdId = $this->autoDbManager->getBestArticleId($good);
         if (!$tdId){
             $tdId = $this->autoDbManager->getSimilarArticleId($good);
+            if (!$tdId){
+                $this->entityManager->getRepository(Goods::class)
+                        ->removeGoodCars($good);                
+            }
         }
         if (is_numeric($tdId)){
             $carsDataI = $this->autoDbManager->getLinked($tdId);
-            var_dump($carsDataI);
             if (is_array($carsDataI)){
-                $addFlag = count($carsDataI)<=10;
-                $makes = [];
-                $models = [];
-                foreach ($carsDataI as $carsData){
-                    if (isset($carsData['data'])){
-                        if (isset($carsData['data']['array'])){
-                            foreach ($carsData['data']['array'] as $carData){
-                                if (isset($carData['vehicleDetails'])){
-                                    $vehicleDetails = $carData['vehicleDetails'];
-                                    if (!isset($makes[$vehicleDetails['manuId']])){
-                                        $makes[$vehicleDetails['manuId']] = $this->addMake([
-                                            'tdId' => $vehicleDetails['manuId'], 
-                                            'aplId' => 0, 
-                                            'name' => $vehicleDetails['manuName']
-                                        ]);
-                                    }
-                                    if (!isset($models[$vehicleDetails['modId']])){
-                                        $models[$vehicleDetails['modId']] = $this->addModel(
-                                                $makes[$vehicleDetails['manuId']],[
-                                                    'tdId' => $vehicleDetails['modId'], 
-                                                    'aplId' => 0, 
-                                                    'name' => $vehicleDetails['modelName'],
-                                                    'constructioninterval' => '',
-                                                ]);
-                                    }
-                                    
-                                    $this->updateGoodCar($good, $models[$vehicleDetails['modId']], $vehicleDetails, $addFlag);
-                                }    
+                if ($carsDataI['change']){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->removeGoodCars($good);                
+                    $updateStatuses['status_car_ex'] = Goods::CAR_EX_NEW;
+                    
+                    $addFlag = count($carsDataI)<=10;
+                    $makes = [];
+                    $models = [];
+                    foreach ($carsDataI as $carsData){
+                        if (isset($carsData['data'])){
+                            if (isset($carsData['data']['array'])){
+                                foreach ($carsData['data']['array'] as $carData){
+                                    if (isset($carData['vehicleDetails'])){
+                                        $vehicleDetails = $carData['vehicleDetails'];
+                                        if (!isset($makes[$vehicleDetails['manuId']])){
+                                            $makes[$vehicleDetails['manuId']] = $this->addMake([
+                                                'tdId' => $vehicleDetails['manuId'], 
+                                                'aplId' => 0, 
+                                                'name' => $vehicleDetails['manuName']
+                                            ]);
+                                        }
+                                        if (!isset($models[$vehicleDetails['modId']])){
+                                            $models[$vehicleDetails['modId']] = $this->addModel(
+                                                    $makes[$vehicleDetails['manuId']],[
+                                                        'tdId' => $vehicleDetails['modId'], 
+                                                        'aplId' => 0, 
+                                                        'name' => $vehicleDetails['modelName'],
+                                                        'constructioninterval' => '',
+                                                    ]);
+                                        }
+
+                                        $this->updateGoodCar($good, $models[$vehicleDetails['modId']], $vehicleDetails, $addFlag);
+                                    }    
+                                }
                             }
-                        }
+                        }    
                     }
                 }    
             }
         }  
-        $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATED, 'status_car_ex' => Goods::CAR_EX_NEW], ['id' => $good->getId()]);
         
-        unset($makes);
-        unset($models);
-        unset($carsDataI);
+        $this->entityManager->getConnection()->update('goods', $updateStatuses, ['id' => $good->getId()]);        
         return;
     }
         
