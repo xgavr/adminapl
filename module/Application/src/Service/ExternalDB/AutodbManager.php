@@ -96,13 +96,13 @@ class AutodbManager
         
         if ($autoDbRespose == null){
             $this->entityManager->getRepository(AutoDbResponse::class)
-                    ->insertAutoDbResponse($url, $response);
+                    ->insertAutoDbResponse($uri, $response);
             return true;
         }
         
         if ($autoDbRespose->getResponseMd5() != mb_strtoupper(trim($response), 'UTF-8')){
             $this->entityManager->getRepository(AutoDbResponse::class)
-                    ->updateAutoDbResponse($url, $response);
+                    ->updateAutoDbResponse($uri, $response);
             return true;            
         }
         
