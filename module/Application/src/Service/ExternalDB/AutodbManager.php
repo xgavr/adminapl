@@ -91,16 +91,16 @@ class AutodbManager
      */
     private function updateAutoDbResponse($uri, $response)
     {
-        $autoDbRespose = $this->entityManager->getRepository(AutoDbResponse::class)
+        $autoDbResponse = $this->entityManager->getRepository(AutoDbResponse::class)
                 ->findOneByUriMd5(mb_strtoupper(trim($uri), 'UTF-8'));
         
-        if ($autoDbRespose == null){
+        if ($autoDbResponse == null){
             $this->entityManager->getRepository(AutoDbResponse::class)
                     ->insertAutoDbResponse($uri, $response);
             return true;
         }
         
-        if ($autoDbRespose->getResponseMd5() != mb_strtoupper(trim($response), 'UTF-8')){
+        if ($autoDbResponse->getResponseMd5() != mb_strtoupper(trim($response), 'UTF-8')){
             $this->entityManager->getRepository(AutoDbResponse::class)
                     ->updateAutoDbResponse($uri, $response);
             return true;            
