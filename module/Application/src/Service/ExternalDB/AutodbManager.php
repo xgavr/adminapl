@@ -569,7 +569,6 @@ class AutodbManager
     public function getLinked($tdId)
     {
         $cars = $this->getArticleLinkedAllLinkingTarget3($tdId);
-        var_dump($cars);
         $carIds = [];
         $i = 0;
         if (isset($cars['data'])){
@@ -593,6 +592,7 @@ class AutodbManager
 
         if (count($carIds)){
             $result = [];
+            $result['change'] = $cars['change'];
             foreach($carIds as $key => $value){
                 $result[$key] = $this->getVehicleByIds3($value);
             } 
