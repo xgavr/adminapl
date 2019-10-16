@@ -794,7 +794,6 @@ class ExternalManager
         }
         if (is_numeric($tdId)){
             $carsDataI = $this->autoDbManager->getLinked($tdId);
-            var_dump($carsDataI);
             if (is_array($carsDataI)){
                 if ($carsDataI['change']){
                     $this->entityManager->getRepository(Goods::class)
