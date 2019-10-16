@@ -118,10 +118,10 @@ class AutodbManager
      */    
     public function getAction($action, $params = null)
     {
-        ini_set('memory_limit', '512M');
-        var_dump($_SERVER['REQUEST_URI']);
+        ini_set('memory_limit', '512M');        
         $uri = $this->getUri().'?action='.$action;
         if (is_array($params)){
+            $params['apl_key'] = md5($_SERVER['REQUEST_URI']);
             foreach ($params as $key => $value){
                 $uri .= "&$key=$value";
             }    
