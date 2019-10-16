@@ -143,8 +143,10 @@ class AutodbManager
         
         if ($response->isOk()){
             try {
-                $this->updateAutoDbResponse($uri, $response->getBody());
-                return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
+                $body = $response->getBody();
+                $result = Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);
+                $result['change'] = $this->updateAutoDbResponse($uri, $body);
+                return $result;            
             } catch (\Zend\Json\Exception\RuntimeException $e){
                // var_dump($response->getBody()); exit;
             }    
