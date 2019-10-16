@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Description of Producer
- * @ORM\Entity(repositoryClass="\Application\Repository\TokenRepository")
+ * @ORM\Entity(repositoryClass="\Application\Repository\ExternalRepository")
  * @ORM\Table(name="auto_db_responce")
  * @author Daddy
  */
