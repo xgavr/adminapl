@@ -119,7 +119,7 @@ class AutodbManager
     public function getAction($action, $params = null)
     {
         ini_set('memory_limit', '512M');
-        var_dump($_SERVER['PATH_INFO']);
+        var_dump($_SERVER['REQUEST_URI']);
         $uri = $this->getUri().'?action='.$action;
         if (is_array($params)){
             foreach ($params as $key => $value){
