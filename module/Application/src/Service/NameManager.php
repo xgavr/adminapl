@@ -483,29 +483,8 @@ class NameManager
                     ->count([]);
         }
         
-        if ($avgD == null){
-            $avgD = $this->avgD();
-        }
-
-//        $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
+        $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
         
-        $k1 = 2;
-        $b = 0.75;        
-        $idf = ($goodCount * ($k1 + 1))/($goodCount + $k1 * (1 - $b + $b * ($goods/$avgD)));
-        if ($idf < 0){
-            $idf = 0;
-        }
-
-//        if ($token->getFlag() == Token::WHITE_LIST && 
-//                ($token->getStatus() == Token::IS_DICT || 
-//                $token->getStatus() == Token::IS_EN_ABBR || 
-//                $token->getStatus() == Token::IS_RU_ABBR)){
-//            if (round($token->getIdf(), 3) != round($idf, 3)){
-//                $this->entityManager->getRepository(Article::class)
-//                        ->updateTokenUpdateFlag($token->getLemma());
-//            }
-//        }    
-
         $this->entityManager->getRepository(Token::class)
                 ->updateToken($token->getLemma(), ['frequency' => $goodCount, 'idf' => $idf]);
 
@@ -522,14 +501,12 @@ class NameManager
         $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->count([]);
         
-        $avgD = $this->avgD();
-
         $tokensQuery = $this->entityManager->getRepository(Token::class)
                 ->findAllToken();
         $iterable = $tokensQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $token){
-                $this->updateTokenArticleCount($token, null, $goods, $avgD);
+                $this->updateTokenArticleCount($token, null, $goods);
                 $this->entityManager->detach($token);
             }   
         }    
