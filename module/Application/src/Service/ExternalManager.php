@@ -847,21 +847,30 @@ class ExternalManager
      */
     public function addOemsToGood($good)
     {
-        $this->entityManager->getRepository(Goods::class)
-                ->removeGoodSourceOem($good, Oem::SOURCE_TD);
-        
-        $this->entityManager->getRepository(Oem::class)
-                ->removeIntersectOem($good);
+        $info = $this->autoDbManager->getDirectInfo($good, null, 'oe');
+        if (!is_array($info)){
+            $info = $this->autoDbManager->getSimilarDirectInfo($good, null, 'oe');
+            if (!is_array($info)){
+                $this->entityManager->getRepository(Goods::class)
+                        ->removeGoodSourceOem($good, Oem::SOURCE_TD);
+                $this->entityManager->getRepository(Oem::class)
+                        ->removeIntersectOem($good);
+            }
+        }
+        if (is_array($info)){
+            if ($info['change']){
+                $this->entityManager->getRepository(Goods::class)
+                        ->removeGoodSourceOem($good, Oem::SOURCE_TD);
+                $this->entityManager->getRepository(Oem::class)
+                        ->removeIntersectOem($good);
+            }            
+        }
         
         $this->entityManager->getRepository(Oem::class)
                 ->addSupOem($good);
         $this->entityManager->getRepository(Oem::class)
-                ->addCrosOem($good);
-
-        $info = $this->autoDbManager->getDirectInfo($good, null, 'oe');
-        if (!is_array($info)){
-            $info = $this->autoDbManager->getSimilarDirectInfo($good, null, 'oe');
-        }
+                ->addCrosOem($good);                                
+        
         if (is_array($info)){
             if ($info['change']){
                 if (isset($info['data'])){
