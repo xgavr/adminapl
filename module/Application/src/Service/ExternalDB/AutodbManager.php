@@ -674,36 +674,37 @@ class AutodbManager
         }
         
         if (is_array($articleInfo)){
-            var_dump($articleInfo);
-            $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
-            $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
-            
-            if ($similar == Images::SIMILAR_SIMILAR){
-                $similarImgCount = $this->entityManager->getRepository(Images::class)
-                        ->count(['good' => $good->getId()]);
-                if ($similarImgCount > 0){
-                    return;
+            if ($articleInfo['change']){            
+                $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
+                $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
+
+                if ($similar == Images::SIMILAR_SIMILAR){
+                    $similarImgCount = $this->entityManager->getRepository(Images::class)
+                            ->count(['good' => $good->getId()]);
+                    if ($similarImgCount > 0){
+                        return;
+                    }
                 }
-            }
-        
-            foreach($articleInfo['data']['array'] as $articleDocuments){
-                if (isset($articleDocuments['articleDocuments'])){
-                    if (isset($articleDocuments['articleDocuments']['array'])){
-                        foreach($articleDocuments['articleDocuments']['array'] as $document){
-                            if ($document['docId'] && isset($document['docFileName']) && isset($document['docFileTypeName'])){
-                                if ($document['docFileTypeName'] != 'URL'){
-                                    $uri = $this->getDocImageUri($document['docId']);
-                                    $this->entityManager->getRepository(Images::class)
-                                            ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, $similar);
-                                } else {   
-                                    if (isset($document['docUrl'])){
-                                        $url = $document['docUrl'];
+
+                foreach($articleInfo['data']['array'] as $articleDocuments){
+                    if (isset($articleDocuments['articleDocuments'])){
+                        if (isset($articleDocuments['articleDocuments']['array'])){
+                            foreach($articleDocuments['articleDocuments']['array'] as $document){
+                                if ($document['docId'] && isset($document['docFileName']) && isset($document['docFileTypeName'])){
+                                    if ($document['docFileTypeName'] != 'URL'){
+                                        $uri = $this->getDocImageUri($document['docId']);
                                         $this->entityManager->getRepository(Images::class)
-                                                ->saveImageUrl($good, $url, $document['docFileName'], Images::STATUS_TD, $similar);
+                                                ->saveImageGood($good, $uri, $document['docFileName'], Images::STATUS_TD, $similar);
+                                    } else {   
+                                        if (isset($document['docUrl'])){
+                                            $url = $document['docUrl'];
+                                            $this->entityManager->getRepository(Images::class)
+                                                    ->saveImageUrl($good, $url, $document['docFileName'], Images::STATUS_TD, $similar);
+                                        }    
                                     }    
-                                }    
+                                }
                             }
-                        }
+                        }    
                     }    
                 }    
             }
