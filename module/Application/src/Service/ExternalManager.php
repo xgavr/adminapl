@@ -991,9 +991,6 @@ class ExternalManager
         $this->entityManager->getRepository(\Application\Entity\Images::class)
                 ->saveImageFromGoodRawprice($good);
         
-        $this->entityManager->getRepository(\Application\Entity\Images::class)
-                ->removeGoodImages($good, \Application\Entity\Images::STATUS_TD);
-        
         $this->autoDbManager->getImages($good);
         
         $this->entityManager->getConnection()->update('goods', ['status_image' => Goods::IMAGE_UPDATED], ['id' => $good->getId()]);

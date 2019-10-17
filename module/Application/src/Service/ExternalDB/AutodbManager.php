@@ -235,10 +235,10 @@ class AutodbManager
      * Получить articleId
      * 
      * @param \Application\Entity\Goods $good
-     * 
+     * @param string $oper
      * @return array|Esception
      */
-    public function getArticleDirectSearchAllNumbersWithState($good)
+    public function getArticleDirectSearchAllNumbersWithState($good, $oper = null)
     {
         $params = [
             'articleNumber' => $good->getCode(), 
@@ -247,7 +247,7 @@ class AutodbManager
             'searchExact' => true,
         ];
         
-        $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
+        $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params, $good->getId(), $oper);
 
         if (isset($result['data'])){
             if (isset($result['data']['array'])){
@@ -256,7 +256,7 @@ class AutodbManager
         }
         
         $params['numberType'] = 10;
-        $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
+        $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params, $good->getId(), $oper);            
 
         if (isset($result['data'])){
             if (isset($result['data']['array'])){
@@ -272,10 +272,10 @@ class AutodbManager
      * 
      * @param \Application\Entity\Goods $good
      * @param \Application\Entity\GenericGroup $genericGroup
-     * 
+     * @param string $oper
      * @return array|null|Exception
      */
-    public function getArticleDirectSearchAllNumbersWithGeneric($good, $genericGroup = null)
+    public function getArticleDirectSearchAllNumbersWithGeneric($good, $genericGroup = null, $oper = null)
     {
         if (!$genericGroup){
             $genericGroup = $good->getGenericGroup();
@@ -290,7 +290,7 @@ class AutodbManager
                 'searchExact' => true,
             ];
 
-            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
+            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params, $good->getId(), $oper);
             if (isset($result['data'])){
                 if (isset($result['data']['array'])){
                     return $result;
@@ -303,7 +303,7 @@ class AutodbManager
             
             foreach ($oems as $oem){
                 $params['articleNumber'] = $oem->getOe();
-                $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);
+                $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params, $good->getId(), $oper);
                 if (isset($result['data'])){
                     if (isset($result['data']['array'])){
                         return $result;
@@ -312,7 +312,7 @@ class AutodbManager
             }    
             
             $params['numberType'] = 10;
-            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params);            
+            $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params, $good->getId(), $oper);            
 
             if (isset($result['data'])){
                 if (isset($result['data']['array'])){
@@ -328,13 +328,13 @@ class AutodbManager
      * Плучить наиболее подходящий к товару артикул
      * 
      * @param \Application\Entity\Goods $good
-     * 
+     * @param string $oper
      * @return array
      */
-    public function getBestArticle($good)
+    public function getBestArticle($good, $oper = null)
     {
         $filter = new ProducerName();
-        $articles = $this->getArticleDirectSearchAllNumbersWithState($good);
+        $articles = $this->getArticleDirectSearchAllNumbersWithState($good, $oper);
         if ($articles['data']){
             foreach ($articles['data']['array'] as $row){
                 foreach($good->getProducer()->getUnknownProducer() as $unknownProducer){
@@ -358,20 +358,21 @@ class AutodbManager
      * 
      * @param \Application\Entity\Goods $good
      * @param bool $newSearch
+     * @param string $oper
      * 
      * @return array
      */
-    public function getSimilarArticle($good, $newSearch = false)
+    public function getSimilarArticle($good, $newSearch = false, $oper = null)
     {
         $articles = [];
         if ($good->getGenericGroup()->getTdId() > 0 && !$newSearch){
-            $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good);
+            $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good, null, $oper);
         } else {
             if ($good->getTokenGroup()){
                 $genericGroups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
                         ->genericTokenGroup($good->getTokenGroup(), $good);
                 foreach ($genericGroups as $row){
-                    $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good, $row[0]);
+                    $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good, $row[0], $oper);
                     if (is_array($articles)){
                         break;
                     }
@@ -450,10 +451,11 @@ class AutodbManager
      * Получить детальную информацию об артикуле
      * 
      * @param array $articleIds
-     * 
+     * @param integer $goodId
+     * @param string $oper
      * @return array|Esception
      */
-    public function getDirectArticlesByIds6($articleIds, $params = null)
+    public function getDirectArticlesByIds6($articleIds, $params = null, $goodId = null, $oper = null)
     {
         if (!$params){
             $params = [
@@ -479,7 +481,7 @@ class AutodbManager
         $params['lang'] = 'RU';
         $params['articleId'] = Encoder::encode(['array' => $articleIds]);
 
-        $result = $this->getAction('getDirectArticlesByIds6', $params);
+        $result = $this->getAction('getDirectArticlesByIds6', $params, $goodId, $oper);
 
         return $result;
     }
@@ -488,14 +490,15 @@ class AutodbManager
      * Получить информацию по товару
      * 
      * @param Application\Entity\Goods $good
+     * @param string $oper
      * @return array
      */
-    public function getDirectInfo($good, $params = null)
+    public function getDirectInfo($good, $params = null, $oper = null)
     {
-        $article = $this->getBestArticle($good);
+        $article = $this->getBestArticle($good, $oper);
         
         if (is_array($article)){
-            return $this->getDirectArticlesByIds6([$article['articleId']], $params);
+            return $this->getDirectArticlesByIds6([$article['articleId']], $params, $good->getId(), $oper);
         }
         
         return;
@@ -505,14 +508,15 @@ class AutodbManager
      * Получить информацию по похожему товару
      * 
      * @param \Application\Entity\Goods $good
+     * @param string $oper
      * @return array
      */
-    public function getSimilarDirectInfo($good, $params = null)
+    public function getSimilarDirectInfo($good, $params = null, $oper = null)
     {
-        $article = $this->getSimilarArticle($good);
+        $article = $this->getSimilarArticle($good, $oper);
         
         if (is_array($article)){
-            return $this->getDirectArticlesByIds6([$article['articleId']], $params);
+            return $this->getDirectArticlesByIds6([$article['articleId']], $params, $good->getId(), $oper);
         }
         
         return;
@@ -659,15 +663,18 @@ class AutodbManager
      */
     public function getImages($good)
     {
-        $articleInfo = $this->getDirectInfo($good, ['documents' => true]);
+        $articleInfo = $this->getDirectInfo($good, ['documents' => true], 'img');
         $similar = Images::SIMILAR_MATCH;
         if (!is_array($articleInfo)){
-            $articleInfo = $this->getSimilarDirectInfo($good, ['documents' => true]);
-            $similar = Images::SIMILAR_SIMILAR;            
+            $articleInfo = $this->getSimilarDirectInfo($good, ['documents' => true], 'img');
+            $similar = Images::SIMILAR_SIMILAR;   
+            if (!is_array($articleInfo)){
+                $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);                
+            }
         }
         
         if (is_array($articleInfo)){
-
+            var_dump($articleInfo);
             $this->entityManager->getRepository(Images::class)->addImageFolder($good, Images::STATUS_TD);
             $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);
             
