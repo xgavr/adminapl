@@ -858,24 +858,26 @@ class ExternalManager
         $this->entityManager->getRepository(Oem::class)
                 ->addCrosOem($good);
 
-        $info = $this->autoDbManager->getDirectInfo($good);
+        $info = $this->autoDbManager->getDirectInfo($good, null, 'oe');
         if (!is_array($info)){
-            $info = $this->autoDbManager->getSimilarDirectInfo($good);
+            $info = $this->autoDbManager->getSimilarDirectInfo($good, null, 'oe');
         }
         if (is_array($info)){
-            if (isset($info['data'])){
-                if (isset($info['data']['array'])){
-                    foreach ($info['data']['array'] as $infoArray){
-                        if (isset($infoArray['oenNumbers'])){
-                            if (isset($infoArray['oenNumbers']['array'])){
-                                foreach ($infoArray['oenNumbers']['array'] as $oen){
-                                    $this->entityManager->getRepository(Oem::class)
-                                            ->addOemToGood($good, $oen, Oem::SOURCE_TD);
-                                }
+            if ($info['change']){
+                if (isset($info['data'])){
+                    if (isset($info['data']['array'])){
+                        foreach ($info['data']['array'] as $infoArray){
+                            if (isset($infoArray['oenNumbers'])){
+                                if (isset($infoArray['oenNumbers']['array'])){
+                                    foreach ($infoArray['oenNumbers']['array'] as $oen){
+                                        $this->entityManager->getRepository(Oem::class)
+                                                ->addOemToGood($good, $oen, Oem::SOURCE_TD);
+                                    }
+                                }    
                             }    
                         }    
-                    }    
-                }
+                    }
+                }    
             }
         }
         
