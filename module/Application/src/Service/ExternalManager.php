@@ -948,16 +948,19 @@ class ExternalManager
      */
     public function addAttributesToGood($good)
     {
-        $this->entityManager->getRepository(Goods::class)
-                ->removeGoodAttributeValues($good);
         
-        $info = $this->autoDbManager->getDirectInfo($good);
+        $info = $this->autoDbManager->getDirectInfo($good, 'attr');
         $similarGood = false;
         if (!is_array($info)){
-            $info = $this->autoDbManager->getSimilarDirectInfo($good);
-            $similarGood = true;            
+            $info = $this->autoDbManager->getSimilarDirectInfo($good, 'attr');
+            $similarGood = true;
+            if (!$info){
+                $this->entityManager->getRepository(Goods::class)
+                        ->removeGoodAttributeValues($good);                
+            }
         }
         if (is_array($info)){
+            var_dump($info);
             if (isset($info['data'])){
                 if (isset($info['data']['array'])){
                     foreach ($info['data']['array'] as $infoArray){
