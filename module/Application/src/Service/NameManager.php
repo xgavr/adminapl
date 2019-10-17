@@ -496,15 +496,15 @@ class NameManager
             $idf = 0;
         }
 
-        if ($token->getFlag() == Token::WHITE_LIST && 
-                ($token->getStatus() == Token::IS_DICT || 
-                $token->getStatus() == Token::IS_EN_ABBR || 
-                $token->getStatus() == Token::IS_RU_ABBR)){
-            if (round($token->getIdf(), 3) != round($idf, 3)){
-                $this->entityManager->getRepository(Article::class)
-                        ->updateTokenUpdateFlag($token->getLemma());
-            }
-        }    
+//        if ($token->getFlag() == Token::WHITE_LIST && 
+//                ($token->getStatus() == Token::IS_DICT || 
+//                $token->getStatus() == Token::IS_EN_ABBR || 
+//                $token->getStatus() == Token::IS_RU_ABBR)){
+//            if (round($token->getIdf(), 3) != round($idf, 3)){
+//                $this->entityManager->getRepository(Article::class)
+//                        ->updateTokenUpdateFlag($token->getLemma());
+//            }
+//        }    
 
         $this->entityManager->getRepository(Token::class)
                 ->updateToken($token->getLemma(), ['frequency' => $goodCount, 'idf' => $idf]);
