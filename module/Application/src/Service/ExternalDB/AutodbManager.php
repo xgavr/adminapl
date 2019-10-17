@@ -114,14 +114,18 @@ class AutodbManager
      * 
      * @param string $action
      * @param array $params
+     * @param integer $goodId
+     * @param string $oper
      * @return array|Exception
      */    
-    public function getAction($action, $params = null)
+    public function getAction($action, $params = null, $goodId = null, $oper = null)
     {
         ini_set('memory_limit', '512M');        
         $uri = $this->getUri().'?action='.$action;
         if (is_array($params)){
             $params['apl_key'] = md5($_SERVER['REQUEST_URI']);
+            if ($goodId){$params['apl_goodId'] = $goodId;}
+            if ($oper) {$params['apl_oper'] = $oper;}
             foreach ($params as $key => $value){
                 $uri .= "&$key=$value";
             }    
@@ -518,10 +522,12 @@ class AutodbManager
      * Получить машины, связанные с артикулом
      * 
      * @param integer $articleId
+     * @param integer $goodId
+     * @param string $oper
      * 
      * @return array|Esception
      */
-    public function getArticleLinkedAllLinkingTarget3($articleId)
+    public function getArticleLinkedAllLinkingTarget3($articleId, $goodId = null, $oper = null)
     {
         $params = [
             'articleCountry' => 'RU',            
@@ -529,11 +535,11 @@ class AutodbManager
             'linkingTargetType' => 'P',
          ];
 
-        $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
+        $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params, $goodId, $oper);
         
         if (!$result){
             $params['linkingTargetType'] = 'O';
-            $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params);
+            $result = $this->getAction('getArticleLinkedAllLinkingTarget3', $params, $goodId, $oper);
         }
 
         return $result;
@@ -564,11 +570,13 @@ class AutodbManager
      * Получить машины, связанные с артикулом
      * 
      * @param integer $tdId
+     * @param integer $goodId
+     * @param string $oper
      * @return array|null
      */
-    public function getLinked($tdId)
+    public function getLinked($tdId, $goodId = null, $oper = null)
     {
-        $cars = $this->getArticleLinkedAllLinkingTarget3($tdId);
+        $cars = $this->getArticleLinkedAllLinkingTarget3($tdId, $goodId, $oper);
         $carIds = [];
         $i = 0;
         if (isset($cars['data'])){

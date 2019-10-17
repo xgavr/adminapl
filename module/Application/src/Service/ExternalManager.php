@@ -793,7 +793,7 @@ class ExternalManager
             }
         }
         if (is_numeric($tdId)){
-            $carsDataI = $this->autoDbManager->getLinked($tdId);
+            $carsDataI = $this->autoDbManager->getLinked($tdId, $good->getId(), 'cars');
             if (is_array($carsDataI)){
                 if ($carsDataI['change']){
                     $this->entityManager->getRepository(Goods::class)
