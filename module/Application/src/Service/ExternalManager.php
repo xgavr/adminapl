@@ -960,20 +960,25 @@ class ExternalManager
             }
         }
         if (is_array($info)){
-            var_dump($info);
-            if (isset($info['data'])){
-                if (isset($info['data']['array'])){
-                    foreach ($info['data']['array'] as $infoArray){
-                        if (isset($infoArray['articleAttributes'])){
-                            if (isset($infoArray['articleAttributes']['array'])){
-                                foreach ($infoArray['articleAttributes']['array'] as $attr){
-                                    $this->entityManager->getRepository(GoodAttributeValue::class)
-                                            ->addGoodAttributeValue($good, $attr, $similarGood);
-                                }
+            if ($info['change']){
+
+                $this->entityManager->getRepository(Goods::class)
+                        ->removeGoodAttributeValues($good);                
+
+                if (isset($info['data'])){
+                    if (isset($info['data']['array'])){
+                        foreach ($info['data']['array'] as $infoArray){
+                            if (isset($infoArray['articleAttributes'])){
+                                if (isset($infoArray['articleAttributes']['array'])){
+                                    foreach ($infoArray['articleAttributes']['array'] as $attr){
+                                        $this->entityManager->getRepository(GoodAttributeValue::class)
+                                                ->addGoodAttributeValue($good, $attr, $similarGood);
+                                    }
+                                }    
                             }    
                         }    
-                    }    
-                }
+                    }
+                }    
             }
         }
         
