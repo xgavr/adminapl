@@ -526,30 +526,8 @@ class NameManager
         $tokenFilter = new Tokenizer();
 
         $lemms = $lemmaFilter->filter($tokenFilter->filter($str));
-        var_dump($lemms);
-        $result = [];
-        exit;
-        foreach ($lemms as $key => $words){            
-            foreach ($words as $word){
-                $wordMd5 = md5($word);
-                $result[$key][$wordMd5] = $word;
-                if ($key == Token::IS_DICT){
-                    $token = $this->entityManager->getRepository(Token::class)
-                            ->findOneByLemma($word);
-                    if ($token){
-                        if ($token->getCorrect()){
-                            unset($result[Token::IS_DICT][$wordMd5]);
-                            $lemms = $token->getCorrectAsArray();
-                            foreach ($lemms as $lemma){
-                                $result[Token::IS_DICT][md5($lemma)] = $lemma;
-                            }
-                        }                        
-                    }    
-                }   
-            }            
-        } 
             
-        return $result;    
+        return $lemms;    
     }
     
     /**
@@ -626,9 +604,9 @@ class NameManager
         }    
 
         $lemms = $this->lemmsFromRawprice($rawprice);
-        foreach ($lemms as $key => $words){
-            $words = array_filter($words);
-            foreach ($words as $word){
+//        var_dump($lemms);
+        foreach ($lemms as $k => $words){
+            foreach ($words as $key => $word){
                 if (mb_strlen($word) < 64){
                     $token = $this->entityManager->getRepository(Token::class)
                             ->findOneByLemma($word);
