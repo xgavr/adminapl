@@ -14,6 +14,7 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
 use Application\Entity\GoodToken;
+use Application\Entity\Bigram;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -605,6 +606,7 @@ class NameManager
 
         $lemms = $this->lemmsFromRawprice($rawprice);
 //        var_dump($lemms);
+        $preWord = null;
         foreach ($lemms as $k => $words){
             foreach ($words as $key => $word){
                 if (mb_strlen($word) < 64){
@@ -628,7 +630,13 @@ class NameManager
                                     'lemma' => $word,
                                     'status' => $key,
                                 ]);
-                    }    
+                    }   
+                    
+                    if ($k > 0){
+                        $this->entityManager->getRepository(Bigram::class)
+                                ->insertBigram($preWord, $word);
+                    }
+                    $preWord = $word;
                 }    
             }    
         }    
