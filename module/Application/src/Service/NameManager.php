@@ -526,6 +526,44 @@ class NameManager
         $tokenFilter = new Tokenizer();
 
         $lemms = $lemmaFilter->filter($tokenFilter->filter($str));
+        var_dump($lemms);
+        $result = [];
+        exit;
+        foreach ($lemms as $key => $words){            
+            foreach ($words as $word){
+                $wordMd5 = md5($word);
+                $result[$key][$wordMd5] = $word;
+                if ($key == Token::IS_DICT){
+                    $token = $this->entityManager->getRepository(Token::class)
+                            ->findOneByLemma($word);
+                    if ($token){
+                        if ($token->getCorrect()){
+                            unset($result[Token::IS_DICT][$wordMd5]);
+                            $lemms = $token->getCorrectAsArray();
+                            foreach ($lemms as $lemma){
+                                $result[Token::IS_DICT][md5($lemma)] = $lemma;
+                            }
+                        }                        
+                    }    
+                }   
+            }            
+        } 
+            
+        return $result;    
+    }
+    
+    /**
+     * Получить биграммы из сторки
+     * 
+     * @param string $str
+     * @return array Description
+     */
+    public function bigramFromStr($str)
+    {
+        $lemmaFilter = new Lemma($this->entityManager);
+        $tokenFilter = new Tokenizer();
+
+        $lemms = $lemmaFilter->filter($tokenFilter->filter($str));
         $result = [];
 //        exit;
         foreach ($lemms as $key => $words){            
@@ -550,7 +588,7 @@ class NameManager
             
         return $result;    
     }
-    
+
     /**
      * Разбить наименование товара из строки прайса
      * 

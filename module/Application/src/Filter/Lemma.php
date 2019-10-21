@@ -86,18 +86,25 @@ class Lemma extends AbstractFilter
     {
         $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
         if (false === $collection) {
-              $token = $this->entityManager->getRepository(Token::class)
-                      ->findOneByLemma($word);
-              if ($token){
-                  if ($token->getCorrect()){
-                      $collection = [];
-                      $lemms = $token->getCorrectAsArray();
-                      foreach ($lemms as $lemma){
-                        $paradigm = new myDict($lemma);
-                        $collection[] = $paradigm;
-                      }          
-                  }
-              }            
+            $token = $this->entityManager->getRepository(Token::class)
+                    ->findOneByLemma($word);
+            if ($token){
+                if ($token->getCorrect()){
+                    $result = [];
+                    $lemms = $token->getCorrectAsArray();
+                    foreach ($lemms as $lemma){
+                      $paradigm = new myDict($lemma);
+                      $result[] = $paradigm;
+                    }          
+                    return $result;
+                }
+            }             
+        } else {
+            $result = [];
+            foreach($collection as $paradigm) {
+                $result[] = $paradigm;
+                return $result;
+            }    
         }
         return $collection;
     }
@@ -173,6 +180,7 @@ class Lemma extends AbstractFilter
         
         $morphyRU = new phpMorphy($this->dictsPath, 'ru_RU', $this->options);
         $morphyEN = new phpMorphy($this->dictsPath, 'en_EN', $this->options);
+        $i = 0;
         
         foreach ($value as $word){
             
@@ -182,55 +190,54 @@ class Lemma extends AbstractFilter
             $unWord = mb_ereg_replace('[A-ZА-ЯЁ0-9]', '', $word);
             
             if (is_numeric($unWord)){
-                $result[Token::IS_UNKNOWN][] = $unWord;
+                $result[Token::IS_UNKNOWN][$i] = $unWord;
             }
             
             if (is_numeric($nuWord)){
-                $result[Token::IS_NUMERIC][] = $nuWord;
+                $result[Token::IS_NUMERIC][$i] = $nuWord;
             }
             
             if ($ruWord){
                 
                 if (mb_strlen($ruWord, 'utf-8') === 1){
-                    $result[Token::IS_RU_1][] = $ruWord;
+                    $result[Token::IS_RU_1][$i] = $ruWord;
                 } else {
                 
                     $collectionRU = $this->_searchWord($ruWord, $morphyRU);
 
                     if (false === $collectionRU) {
-                        $result[Token::IS_RU][] = $ruWord;                    
+                        $result[Token::IS_RU][$i] = $ruWord;                    
                     } else {
                         foreach($collectionRU as $paradigm) {         
-//                            var_dump([$paradigm->getBaseForm(), 
-//                                $paradigm->getPseudoRoot(), 
-//                                $morphyRU->getPartOfSpeech($paradigm->getBaseForm()),
-//                               // $morphyRU->getGramInfoMergeForms($paradigm->getBaseForm(), phpMorphy::IGNORE_PREDICT),
-//                                ]
-//                                    );
-                            $result[Token::IS_DICT][] = $paradigm->getBaseForm();
-                            break;
+                            $result[Token::IS_DICT][$i] = $paradigm->getBaseForm();
+                            $i++;
                         }
+                        $i--;
                     }
                 }    
             }    
             if ($enWord){
                 
                 if (mb_strlen($enWord, 'utf-8') === 1){
-                    $result[Token::IS_EN_1][] = $enWord;
+                    $result[Token::IS_EN_1][$i] = $enWord;
                 } else {
                 
 //                    $collectionEN = $morphyEN->findWord($enWord, phpMorphy::IGNORE_PREDICT);
                     $collectionEN = $this->_searchWord($enWord, $morphyEN);
 
                     if (false === $collectionEN) {
-                        $result[Token::IS_EN][] = $enWord;                    
+                        $result[Token::IS_EN][$i] = $enWord;                    
                     } else {
                         foreach($collectionEN as $paradigm) {                
-                            $result[Token::IS_EN_DICT][] = $paradigm->getBaseForm();
+                            $result[Token::IS_EN_DICT][$i] = $paradigm->getBaseForm();
+                            $i++;
                         }
+                        $i--;
                     }
                 }    
-            }    
+            } 
+            
+            $i++;
         }    
         
         return $result;
