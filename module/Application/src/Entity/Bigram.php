@@ -66,6 +66,11 @@ class Bigram {
      */
     protected $idf;
 
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleBigram", mappedBy="bigram")
+    * @ORM\JoinColumn(name="id", referencedColumnName="bigram_id")
+     */
+    private $articleBigrams;
     
 
     public function getId() 
@@ -224,4 +229,14 @@ class Bigram {
     {
         $this->flag = $flag;
     }           
+    
+    /**
+     * Returns the array of article bigrams assigned to this bigram.
+     * @return array
+     */
+    public function getArticleBigrams()
+    {
+        return $this->articleBigrams;
+    }        
+    
 }

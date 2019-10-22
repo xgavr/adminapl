@@ -9,6 +9,8 @@
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Bigram;
+use Application\Entity\Article;
+use Application\Entity\ArticleBigram;
 
 
 /**
@@ -115,9 +117,40 @@ class BigramRepository  extends EntityRepository
                 ];
 
                 $this->getEntityManager()->getConnection()->insert('bigram', $row);
-            }    
+                
+                $bigram = $this->getEntityManager()->getRepository(Bigram::class)
+                        ->findOneByBilemmaMd5($bilemmaMd5);
+            } 
+            
+            return $bigram;
         }    
         return;
     }    
 
+    /**
+     * Быстрая вставка артикула биграм
+     * @param Article $article
+     * @param Bigram $bigram 
+     * @return null
+     */
+    public function insertArticleBigram($article, $bigram)
+    {
+        if ($article && $bigram){
+            $articleBigram = $this->getEntityManager()->getRepository(ArticleBigram::class)
+                    ->findOneBy(['article' => $article->getId(), 'bigram' => $bigram->getId()]);
+
+            if (!$articleBigram){
+                $row = [
+                    'article_id' => $article->getId(),
+                    'bigram_id' => $bigram->getId(),
+                    'bilemma' => $bigram->getBilemma(),
+                    'status' => $bigram->getStatus(),
+                ];
+                $inserted = $this->getEntityManager()->getConnection()->insert('article_bigram', $row);
+            }    
+        }
+        
+        return;
+    }    
+    
 }

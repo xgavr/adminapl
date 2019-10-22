@@ -633,8 +633,11 @@ class NameManager
                     }   
                     
                     if ($k > 0){
+                        $bigram = $this->entityManager->getRepository(Bigram::class)
+                                        ->insertBigram($preWord, $word);
+                        
                         $this->entityManager->getRepository(Bigram::class)
-                                ->insertBigram($preWord, $word);
+                                ->insertArticleBigram($article, $bigram);
                     }
                     $preWord = $word;
                 }    

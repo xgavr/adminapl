@@ -97,6 +97,12 @@ class Article {
     private $articleTokens;
 
      /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleBigram", mappedBy="article")
+    * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
+     */
+    private $articleBigrams;
+
+    /**
     * @ORM\OneToMany(targetEntity="\Application\Entity\ArticleTitle", mappedBy="article")
     * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
      */
@@ -282,6 +288,15 @@ class Article {
         return $this->articleTokens;
     }        
     
+    /**
+     * Returns the array of article bigrams assigned to this article.
+     * @return array
+     */
+    public function getArticleBigrams()
+    {
+        return $this->articleBigrams;
+    }        
+
     /**
      * Returns the array of article titles assigned to this token.
      * @return array
