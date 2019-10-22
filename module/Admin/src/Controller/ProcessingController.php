@@ -553,7 +553,7 @@ class ProcessingController extends AbstractActionController
     }
 
     /**
-     * Удаление пустых номеров производителей
+     * Удаление пустых токенов
      */
     public function deleteTokenAction()
     {
@@ -562,6 +562,24 @@ class ProcessingController extends AbstractActionController
         if ($settings['parse_name'] == 1){
             $this->nameManager->updateAllTokenArticleCount();
             $this->nameManager->removeEmptyToken();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    /**
+     * Удаление пустых биграм
+     */
+    public function deleteBigramAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            $this->nameManager->updateAllBigramArticleCount();
+            $this->nameManager->removeEmptyBigram();
         }    
                 
         return new JsonModel(
