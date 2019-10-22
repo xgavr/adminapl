@@ -153,4 +153,21 @@ class BigramRepository  extends EntityRepository
         return;
     }    
     
+    /**
+     * Быстрое удаление артикулов биграм, свзанных с биграммой
+     * @param Bigram $bigram 
+     * @return integer
+     */
+    public function deleteArticleBigram($bigram)
+    {
+        if (is_numeric($bigram)){
+            $bigramId = $bigram;
+        } else {
+            $bigramId = $bigram->getId();
+        }
+
+        $deleted = $this->getEntityManager()->getConnection()->delete('article_bigram', ['bigram_id' => $bigramId]);
+        return $deleted;
+    }        
+    
 }

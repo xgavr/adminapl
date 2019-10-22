@@ -244,6 +244,9 @@ class ArticleManager
                 ->deleteArticleToken($article);
         
         $this->entityManager->getRepository(Article::class)
+                ->deleteArticleBigram($article);
+
+        $this->entityManager->getRepository(Article::class)
                 ->deleteArticleTitle($article);
         
         $this->entityManager->getRepository(Article::class)

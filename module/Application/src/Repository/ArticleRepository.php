@@ -156,6 +156,23 @@ class ArticleRepository  extends EntityRepository
     }    
 
     /**
+     * Быстрое удаление биграм, свзанных с артикулом
+     * @param Application\Entity\Article|integer $article 
+     * @return integer
+     */
+    public function deleteArticleBigram($article)
+    {
+        if (is_numeric($article)){
+            $articleId = $article;
+        } else {
+            $articleId = $article->getId();
+        }
+
+        $deleted = $this->getEntityManager()->getConnection()->delete('article_bigram', ['article_id' => $articleId]);
+        return $deleted;
+    }    
+
+    /**
      * Быстрое удаление наименований, свзанных с артикулом
      * @param Application\Entity\Article|integer $article 
      * @return integer
