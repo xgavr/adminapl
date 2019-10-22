@@ -709,6 +709,9 @@ class NameManager
             $this->entityManager->getRepository(Article::class)
                     ->deleteArticleToken($articleId);
 
+            $this->entityManager->getRepository(Bigram::class)
+                    ->deleteArticleBigram($articleId);
+
             $this->entityManager->getRepository(Article::class)
                     ->deleteArticleTitle($articleId);
 
