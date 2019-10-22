@@ -1,0 +1,88 @@
+<?php
+$this->headTitle($bigram->getBilemma());
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Биграмы'=>$this->url('name', ['action' => 'index-bigram']),
+            $bigram->getBilemma()=>$this->url('name', ['action'=>'view-bigram', 'id'=>$bigram->getId()])
+            ]);
+
+?>
+<h1>
+    <?= $this->escapeHtml($bigram->getBilemma()); ?>    
+    <sup>
+        <small>
+            <?= $bigram->getStatusAsString();?>
+        </small>
+    </sup>
+</h1>
+<p>
+</p>
+<table class="table table-striped">
+    <tr>
+        <td colspan="2">            
+            <?php if ($prev):?>
+                <a href="/name/view-bigram/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getBilemma()?></a>
+            <?php endif;?>            
+        </td>
+        <td  colspan="3" align="right">
+            <?php if ($next):?>
+                <a href="/name/view-bigram/<?= $next[0]->getId()?>"><?= $next[0]->getBilemma()?>&rarr;</a>
+            <?php endif;?>                            
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <?= $this->paginationControl($rawprices,
+                        'Sliding',
+                        'application/partial/paginator', 
+                        ['route' => array('route' => 'name', 'action' => 'view-bigram', 'id' => $bigram->getId())]); ?>
+            
+        </td>
+        <td align="right" valign="center" colspan="2">
+            <?= $totalRawpriceCount?>
+            (<b><?= $bigram->getFrequency()?></b>
+             <?= round($bigram->getIdf(), 2)?>
+            <button value="/name/update-article-count-bigram/<?= $bigram->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                    title="Обновить количество товара">
+                <span class="glyphicon glyphicon-refresh" ></span>
+            </button>) 
+        </td>
+    </tr>
+    <?php    foreach ($rawprices as $rawprice):?>
+        <tr>
+            <td>
+                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
+                    <?= $rawprice->getArticle();?>
+                </a>   
+            </td>
+            <td>
+                <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
+                    <?= $rawprice->getUnknownProducer()->getName();?>
+                </a>   
+            </td>
+            <td>
+                <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
+                    <?= $rawprice->getGoodname();?>
+                </a>    
+            </td>
+            <td align="right">
+                <?= $rawprice->getPrice();?>
+            </td>
+            <td align="right">
+                <?= $rawprice->getRest();?>
+            </td>
+        </tr>
+    <?php endforeach;?>        
+    <tr>
+        <td colspan="5">
+            <?= $this->paginationControl($rawprices,
+                        'Sliding',
+                        'application/partial/paginator', 
+                        ['route' => array('route' => 'name', 'action' => 'view-bigram', 'id' => $bigram->getId())]); ?>
+            
+        </td>
+    </tr>
+</table>

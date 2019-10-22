@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Bigram;
 use Application\Entity\Article;
 use Application\Entity\ArticleBigram;
+use Application\Entity\Rawprice;
 
 
 /**
@@ -20,28 +21,6 @@ use Application\Entity\ArticleBigram;
  */
 class BigramRepository  extends EntityRepository
 {
-    /**
-     * 
-     * @param integer $articleId
-     * @return type
-     */
-    public function findArticleTitle($articleId)
-    {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('r.id, r.goodname, r.statusToken')
-            ->from(Rawprice::class, 'r')
-            ->where('r.code = ?1')
-            ->andWhere('r.status = ?2')    
-            ->setParameter('1', $articleId)    
-            ->setParameter('2', Rawprice::STATUS_PARSED)    
-            ;    
-
-        return $queryBuilder->getQuery()->getResult();
-        
-    }
     
     /**
      * Возвращает статус биграмы
@@ -128,6 +107,57 @@ class BigramRepository  extends EntityRepository
     }    
 
     /**
+     * Быстрое обновление биграм
+     * 
+     * @param Bigram $bigram
+     * @param array $data
+     * @return integer
+     */
+    public function updateBigram($bigram, $data)
+    {
+        if (!count($data)){
+            return;
+        }
+        
+        if (isset($data['status'])){
+            $this->updateArticleBigram($bigram, $data);
+        }    
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->update(Bigram::class, 'b')
+                ->where('b.id = ?1')
+                ->setParameter('1', $bigram->getId())
+                ;
+        foreach ($data as $key => $value){
+            $queryBuilder->set('b.'.$key, $value);
+        }
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
+    /**
+     * Найти биграмы для удаления
+     * 
+     * @return object
+     */
+    public function findBigramForDelete()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('b')
+            ->from(Bigram::class, 'b')
+            ->andWhere('b.frequency <= ?1')
+            ->andWhere('b.flag = ?2')    
+            ->setParameter('1', 0)    
+            ->setParameter('2', Bigram::WHITE_LIST)    
+                ;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
      * Быстрая вставка артикула биграм
      * @param Article $article
      * @param Bigram $bigram 
@@ -154,6 +184,36 @@ class BigramRepository  extends EntityRepository
     }    
     
     /**
+     * Быстрое обновление биграм артикула
+     * 
+     * @param Bigram $bigram
+     * @param array $data
+     * @return integer
+     */
+    public function updateArticleBigram($bigram, $data)
+    {
+        unset($data['flag']);
+        unset($data['frequency']);
+        unset($data['idf']);
+        
+        if (!count($data)){
+            return;
+        }
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->update(ArticleBigram::class, 'ab')
+                ->where('ab.bigram = ?1')
+                ->setParameter('1', $bigram)
+                ;
+        foreach ($data as $key => $value){
+            $queryBuilder->set('ab.'.$key, $value);
+        }
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
+    /**
      * Быстрое удаление артикулов биграм, свзанных с биграммой
      * @param Bigram $bigram 
      * @return integer
@@ -169,5 +229,121 @@ class BigramRepository  extends EntityRepository
         $deleted = $this->getEntityManager()->getConnection()->delete('article_bigram', ['bigram_id' => $bigramId]);
         return $deleted;
     }        
+    
+    /**
+     * Количество биграм по статусу
+     * 
+     * @return array
+     */
+    public function statusBigramCount()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('b.status, count(b.id) as bigramCount')
+                ->from(Bigram::class, 'b')
+                ->groupBy('b.status')
+            ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
+    /**
+     * Запрос по биграмам по разным параметрам
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function findAllBigram($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('b')
+            ->from(Bigram::class, 'b')
+            ->addOrderBy('b.bilemma')                
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['q'])){
+                $queryBuilder->where('b.bilemma like :search')
+                    ->setParameter('search', '%' . $params['q'] . '%')
+                        ;
+            }
+            if (isset($params['next1'])){
+                $queryBuilder->where('b.bilemma > ?1')
+                    ->setParameter('1', $params['next1'])
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['prev1'])){
+                $queryBuilder->where('b.bilemma < ?2')
+                    ->setParameter('2', $params['prev1'])
+                    ->orderBy('b.bilemma', 'DESC')
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('b.'.$params['sort'], $params['order']);                
+            }            
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('b.status = ?3')
+                    ->setParameter('3', $params['status'])
+                        ;                
+            }            
+            if (isset($params['flag'])){
+                $queryBuilder->andWhere('b.flag = ?4')
+                    ->setParameter('4', $params['flag'])
+                        ;                
+            }            
+        }
+
+//            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }            
+    
+    /**
+     * Найти строки прайсов биграма
+     * 
+     * @param Bigram $bigram
+     * @return object
+     */
+    public function findBigramRawprice($bigram)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+            ->from(Rawprice::class, 'r')
+            ->join('r.code', 'a')
+            ->join('a.articleBigrams', 'ab')
+            ->where('ab.bigram = ?1')    
+            ->andWhere('r.status = ?2')    
+            ->setParameter('1', $bigram->getId())
+            ->setParameter('2', Rawprice::STATUS_PARSED)
+            ;
+        
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
+     * Количество товаров с этим биграмом
+     * @param Bigram $bigram
+     */
+    public function bigramGoodCount($bigram)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('identity(a.good)')
+                ->distinct()
+                ->from(ArticleBigram::class, 'ab')
+                ->join('ab.article', 'a')
+                ->where('ab.bigram = ?1')
+                ->setParameter('1', $bigram->getId())
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());
+    }
     
 }

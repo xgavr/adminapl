@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Rawprice;
 use Application\Entity\Token;
+use Application\Entity\Bigram;
 use Application\Entity\TokenGroup;
 use Zend\View\Model\JsonModel;
 
@@ -313,41 +314,133 @@ class NameController extends AbstractActionController
         ]);          
     }
 
-    public function viewAction() 
-    {       
-        $oemId = (int)$this->params()->fromRoute('id', -1);
+    public function indexBigramAction()
+    {
+        $total = $this->entityManager->getRepository(Bigram::class)
+                ->count([]);
+        $statusBigramCount = $this->entityManager->getRepository(Bigram::class)
+                ->statusBigramCount();
+                
+        return new ViewModel([
+            'statuses' => Bigram::getStatusList(),
+            'flags' => Bigram::getFlagList(),
+            'total' => $total,
+            'statusBigramCount' => $statusBigramCount,
+        ]);  
+    }
+    
+    public function contentBigramAction()
+    {
+        ini_set('memory_limit', '512M');
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        $limit = $this->params()->fromQuery('limit');
+        $status = $this->params()->fromQuery('status', Bigram::RU_RU);
+        $flag = $this->params()->fromQuery('flag', Bigram::WHITE_LIST);
+        
+        $query = $this->entityManager->getRepository(Bigram::class)
+                        ->findAllBigram([
+                            'q' => $q, 
+                            'sort' => $sort, 
+                            'order' => $order, 
+                            'status' => $status,
+                            'flag' => $flag,
+                                ]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) $query->setFirstResult( $offset );
+        if ($limit) $query->setMaxResults( $limit );
 
-        if ($oemId<0) {
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }  
+    
+    public function viewBigramAction() 
+    {       
+        $bigramId = (int)$this->params()->fromRoute('id', -1);
+        $page = $this->params()->fromQuery('page', 1);
+
+        if ($bigramId<0) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
-        $oem = $this->entityManager->getRepository(OemRaw::class)
-                ->findOneById($oemId);
+        $bigram = $this->entityManager->getRepository(Bigram::class)
+                ->findOneById($bigramId);
         
-        if ($oem == null) {
+        if ($bigram == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $rawpriceCountBySupplier = $this->entityManager->getRepository(OemRaw::class)
-                ->rawpriceCountBySupplier($oem);
+        $prevQuery = $this->entityManager->getRepository(Bigram::class)
+                        ->findAllBigram(['prev1' => $bigram->getBilemma()]);
+        $nextQuery = $this->entityManager->getRepository(Bigram::class)
+                        ->findAllBigram(['next1' => $bigram->getBilemma()]); 
         
-        $prevQuery = $this->entityManager->getRepository(OemRaw::class)
-                        ->findAllOemRaw(['prev1' => $oem->getCode()]);
-        $nextQuery = $this->entityManager->getRepository(OemRaw::class)
-                        ->findAllOemRaw(['next1' => $oem->getCode()]);        
+        
+        $rawpriceQuery = $this->entityManager->getRepository(Bigram::class)
+                        ->findBigramRawprice($bigram);
+
+        $adapter = new DoctrineAdapter(new ORMPaginator($rawpriceQuery, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setCurrentPageNumber($page);
+
+        $totalRawpriceCount = $paginator->getTotalItemCount();
+        
 
         // Render the view template.
         return new ViewModel([
-            'oem' => $oem,
-            'rawpriceCountBySupplier' => $rawpriceCountBySupplier,
+            'bigram' => $bigram,
+            'rawprices' => $paginator,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
-            'oemManager' => $this->oemManager,
+            'nameManager' => $this->nameManager,
+            'totalRawpriceCount' => $totalRawpriceCount,
         ]);
     }
     
+    public function updateArticleCountBigramAction()
+    {
+        $bigramId = (int)$this->params()->fromRoute('id', -1);
+        if ($bigramId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $bigram = $this->entityManager->getRepository(Bigram::class)
+                ->findOneById($bigramId);
+        
+        if ($bigram == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->updateBigramArticleCount($bigram);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
+    public function articleCountBigramAction()
+    {
+        $this->nameManager->updateAllBigramArticleCount();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }    
+
     public function parseAction()
     {
         $rawpriceId = (int)$this->params()->fromRoute('id', -1);
@@ -427,9 +520,7 @@ class NameController extends AbstractActionController
             'result' => 'ok-reload',
         ]);          
     }
-    
-    
-    
+        
     public function updateTokenGroupFromRawpriceAction()
     {
         $rawpriceId = $this->params()->fromRoute('id', -1);
@@ -548,6 +639,16 @@ class NameController extends AbstractActionController
     public function deleteEmptyAction()
     {
         $deleted = $this->nameManager->removeEmptyToken();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }    
+
+    public function deleteEmptyBigramAction()
+    {
+        $deleted = $this->nameManager->removeEmptyBigram();
                 
         return new JsonModel([
             'result' => 'ok-reload',

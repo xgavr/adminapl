@@ -138,7 +138,7 @@ class Bigram {
             self::RU_RU => 'RU+RU',
             self::RU_EN => 'RU+EN',
             self::RU_NUM => 'RU+NUM',
-            self::EN_EN => 'EN+NUM',
+            self::EN_EN => 'EN+EN',
             self::EN_NUM => 'EN+NUM',
             self::NUM_NUM => 'NUM+NUM',
         ];

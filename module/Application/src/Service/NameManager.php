@@ -15,6 +15,7 @@ use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
 use Application\Entity\GoodToken;
 use Application\Entity\Bigram;
+use Application\Entity\ArticleBigram;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -514,6 +515,53 @@ class NameManager
         return;
     }
     
+    /**
+     * Обновление количества товаров у биграм
+     * 
+     * @param Bigram $bigram
+     * @param integer $goodCount
+     * @param integer $goods
+     */
+    public function updateBigramArticleCount($bigram, $goodCount = null, $goods = null)
+    {
+        if ($goodCount == null){
+            $goodCount = $this->entityManager->getRepository(ArticleBigram::class)
+                    ->bigramGoodCount($bigram);
+        }    
+        if ($goods == null){
+            $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    ->count([]);
+        }
+        
+        $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
+        
+        $this->entityManager->getRepository(Bigram::class)
+                ->updateBigram($bigram, ['frequency' => $goodCount, 'idf' => $idf]);
+
+    }
+    
+    /**
+     * Обновление количества артикулов у всех биграм
+     */
+    public function updateAllBigramArticleCount()
+    {
+        set_time_limit(1800);        
+        ini_set('memory_limit', '2048M');
+        
+        $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->count([]);
+        
+        $bigramsQuery = $this->entityManager->getRepository(Bigram::class)
+                ->findAllBigram();
+        $iterable = $bigramsQuery->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $bigram){
+                $this->updateBigramArticleCount($bigram, null, $goods);
+                $this->entityManager->detach($bigram);
+            }   
+        }    
+        return;
+    }
     
     /**
      * Дополнительная проверка лемм
@@ -740,7 +788,7 @@ class NameManager
     }    
     
     /**
-     * Поиск и удаление токенов не привязаных к строкам прайсов
+     * Поиск и удаление токенов не привязаных к товарам
      */
     public function removeEmptyToken()
     {
@@ -754,6 +802,44 @@ class NameManager
         foreach ($iterable as $row){
             foreach($row as $token){
                 $this->removeToken($token);
+            }    
+            if (time() > $startTime + 840){
+                return;
+            }
+        }
+        
+        return;
+    }
+
+    /**
+     * Удаление биграм
+     * 
+     * @param Bigram $bigram
+     */
+    public function removeBigram($bigram) 
+    {   
+        
+        $this->entityManager->getRepository(Bigram::class)
+                ->deleteArticleBigram($bigram);
+
+        $this->entityManager->getConnection()->delete('bigram', ['id' => $bigram->getId()]);
+    }    
+
+    /**
+     * Поиск и удаление биграм не привязаных к товарам
+     */
+    public function removeEmptyBigram()
+    {
+        set_time_limit(900);        
+        ini_set('memory_limit', '2048M');
+        $startTime = time();
+        
+        $bigramForDeleteQuery = $this->entityManager->getRepository(Bigram::class)
+                ->findBigramForDelete();
+        $iterable = $bigramForDeleteQuery->iterate();
+        foreach ($iterable as $row){
+            foreach($row as $bigram){
+                $this->removeBigram($bigram);
             }    
             if (time() > $startTime + 840){
                 return;

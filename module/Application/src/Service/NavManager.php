@@ -178,6 +178,12 @@ class NavManager
                         ];
                 
                 $rbDropdownItems[] = [
+                            'id' => 'bigram',
+                            'label' => 'Биграмы',
+                            'link' => $url('name', ['action'=>'index-bigram'])
+                        ];
+                
+                $rbDropdownItems[] = [
                             'id' => 'tokenGroup',
                             'label' => 'Группы наименований',
                             'link' => $url('name', ['action'=>'token-group'])
