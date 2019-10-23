@@ -1361,12 +1361,12 @@ class NameManager
                         ->findOneByLemma($word);
                 if ($token){
                     if ($token->getStatus() == Token::IS_DICT){
-                        $result[$k] = $token->getIdf();
+                        $result[$token->getIdf().'_'.$k] = $token;
                     }    
                 }    
             }
         }
-        arsort($result);
+        ksort($result);
         $result = array_slice($result, 0, 10, true);
         $empt = array_fill(200, 13 - count($result), false);
 //        var_dump($empt);
