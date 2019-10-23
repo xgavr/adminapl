@@ -1354,42 +1354,22 @@ class NameManager
     public function rawpriceToMlTitle($rawprice)
     {
         $result = [];
-        if ($rawprice->getCode()->getGood()->getTokenGroup()){
-            $frequencies = $this->meanFrequency($rawprice->getTitle(), $rawprice->getArticle(), $rawprice->getProducer());
-            $groupFrequencies = $this->entityManager->getRepository(TokenGroup::class)
-                ->meanFrequency($rawprice->getCode()->getGood()->getTokenGroup());
-            $result = [
-                $groupFrequencies['sum'],
-                $groupFrequencies['mean'],
-                $groupFrequencies['sd'],
-                $frequencies[Token::IS_DICT]['sum'],
-                $frequencies[Token::IS_DICT]['mean'],
-                $frequencies[Token::IS_DICT]['sd'],
-                $frequencies[Token::IS_RU]['sum'],
-                $frequencies[Token::IS_RU]['mean'],
-                $frequencies[Token::IS_RU]['sd'],
-                $frequencies[Token::IS_RU_1]['sum'],
-                $frequencies[Token::IS_RU_1]['mean'],
-                $frequencies[Token::IS_RU_1]['sd'],
-    //            $frequencies[Token::IS_RU_ABBR],
-                $frequencies[Token::IS_EN_DICT]['sum'],
-                $frequencies[Token::IS_EN_DICT]['mean'],
-                $frequencies[Token::IS_EN_DICT]['sd'],
-                $frequencies[Token::IS_EN]['sum'],
-                $frequencies[Token::IS_EN]['mean'],
-                $frequencies[Token::IS_EN]['sd'],
-                $frequencies[Token::IS_EN_1]['sum'],
-                $frequencies[Token::IS_EN_1]['mean'],
-                $frequencies[Token::IS_EN_1]['sd'],
-    //            $frequencies[Token::IS_EN_ABBR],
-                $frequencies[Token::IS_NUMERIC]['sum'],
-                $frequencies[Token::IS_NUMERIC]['mean'],
-                $frequencies[Token::IS_NUMERIC]['sd'],
-                $frequencies[Token::IS_ARTICLE],
-                $frequencies[Token::IS_PRODUCER],
-                $frequencies[Token::IS_UNKNOWN],
-            ];
-        }    
-        return $result;
+        $lemms = $this->lemmsFromRawprice($rawprice);
+        foreach ($lemms as $k => $words){
+            foreach ($words as $key => $word){
+                $token = $this->entityManager->getRepository(Token::class)
+                        ->findOneByLemma($word);
+                if ($token){
+                    if ($token->getStatus() == Token::IS_DICT){
+                        $result[$k] = $token->getIdf();
+                    }    
+                }    
+            }
+        }
+        arsort($result);
+        $result = array_slice($result, 0, 10, true);
+        $empt = array_fill(200, 13 - count($result), false);
+//        var_dump($empt);
+        return array_merge($result, $empt);
     }    
 }

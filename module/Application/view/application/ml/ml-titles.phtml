@@ -67,35 +67,21 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <?php foreach ($mlTitles as $mlTitle):?>
                 <tr>
-                    <td>
+                    <td colspan="13">
                         <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $mlTitle->getRawprice()->getId()])?>" target="_blank">
                             <small><?= $mlTitle->getRawprice()->getGoodname();?></small>
                         </a>
                     </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
+                </tr>
+                <tr>
+                    <?php $tokens = $this->mlManager->rawpriceToMlTitle($mlTitle->getRawprice())?>
+                    <?php foreach ($tokens as $token):?>
+                        <td>
+                            <?php if ($token):?>
+                                <small><?= $token->getLemma()?></small>
+                            <?php endif; ?>
+                        </td>
+                    <?php endforeach;?>
                 </tr>
             <?php endforeach;?>        
             <tr>
