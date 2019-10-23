@@ -16,7 +16,7 @@ $this->pageBreadcrumbs()->setItems([
 
         <table class="table table-striped">
             <tr>
-                <td colspan="11">
+                <td colspan="13">
                     <?= $this->paginationControl($mlTitles,
                                 'Sliding',
                                 'application/partial/paginator', 
@@ -37,9 +37,9 @@ $this->pageBreadcrumbs()->setItems([
                 <th>
                     ru1
                 </th>
-<!--                <th>
+                <th>
                     ruA
-                </th>-->
+                </th>
                 <th>
                     EN
                 </th>
@@ -49,9 +49,9 @@ $this->pageBreadcrumbs()->setItems([
                 <th>
                     en1
                 </th>
-<!--                <th>
+                <th>
                     enA
-                </th>-->
+                </th>
                 <th>
                     N
                 </th>                    
@@ -67,77 +67,34 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <?php foreach ($mlTitles as $mlTitle):?>
                 <tr>
-                    <?php $frequencies = $this->mlManager->strMeanFrequency($mlTitle->getRawprice()->getTitle(), $mlTitle->getRawprice()->getArticle(), $mlTitle->getRawprice()->getProducer())?>
-                    <td>
-                        <?php $tokenGroupFrequencies = $this->mlManager->tokenGroupMeanFrequency($mlTitle->getRawprice()->getGood()->getTokenGroup())?>
-                        <div><?= $tokenGroupFrequencies['sum']?></div>
-                        <div><?= $tokenGroupFrequencies['mean']?></div>
-                        <div><?= $tokenGroupFrequencies['sd']?></div>
-                    </td>
-                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_DICT]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_DICT]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_DICT]['sd']?></div>
-                    </td>
-                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU]['sd']?></div>
-                    </td>
-                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_1]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_1]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_1]['sd']?></div>
-                    </td>
-<!--                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_ABBR]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_ABBR]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_RU_ABBR]['sd']?></div>
-                    </td>-->
-                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_DICT]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_DICT]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_DICT]['sd']?></div>
-                    </td>
-                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN]['sd']?></div>
-                    </td>
-                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_1]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_1]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_1]['sd']?></div>
-                    </td>
-<!--                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_ABBR]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_ABBR]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_EN_ABBR]['sd']?></div>
-                    </td>-->
-                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_NUMERIC]['sum']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_NUMERIC]['mean']?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_NUMERIC]['sd']?></div>
-                    </td>
-                    <td>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_ARTICLE]?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_PRODUCER]?></div>
-                        <div><?= $frequencies[\Application\Entity\Token::IS_UNKNOWN]?></div>
-                    </td>
                     <td>
                         <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $mlTitle->getRawprice()->getId()])?>" target="_blank">
                             <small><?= $mlTitle->getRawprice()->getGoodname();?></small>
                         </a>
                     </td>
                     <td>
-                        <?php
-                            $checked1 = ($mlTitle->getStatus() == Application\Entity\MlTitle::STATUS_BAD) ? 'checked':'';
-                            $checked2 = ($mlTitle->getStatus() == Application\Entity\MlTitle::STATUS_MID) ? 'checked':'';
-                            $checked3 = ($mlTitle->getStatus() == Application\Entity\MlTitle::STATUS_EX) ? 'checked':'';
-                        ?>
-                        <input class="statusMlTitle" type="radio" name="<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_BAD?>" <?= $checked1?>><?= Application\Entity\MlTitle::STATUS_BAD?><br>
-                        <input class="statusMlTitle"  type="radio" name="<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_MID?>" <?= $checked2?>><?= Application\Entity\MlTitle::STATUS_MID?><br>
-                        <input class="statusMlTitle"  type="radio" name="<?= $mlTitle->getId()?>" value="<?= Application\Entity\MlTitle::STATUS_EX?>" <?= $checked3?>><?= Application\Entity\MlTitle::STATUS_EX?><br>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
                     </td>
                 </tr>
             <?php endforeach;?>        
@@ -180,9 +137,9 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-left">
                         </div>
                         <div class="pull-right">
-                            <button value="/ml/ml-title-predict" class="btn btn-info btn-xs refresh-button">
+<!--                            <button value="/ml/ml-title-predict" class="btn btn-info btn-xs refresh-button">
                                 Обучить
-                            </button> 
+                            </button> -->
                         </div>
                     </div>
                     <div class="panel-body">
