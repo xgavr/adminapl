@@ -1371,7 +1371,7 @@ class NameManager
                     if ($bigram){
                         $pwt = $preToken->getFrequency()*$token->getFrequency()/$bigram->getFrequency();
                         
-                        if (in_array($bigram->getStatus(), [Bigram::RU_RU])){
+                        if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN])){
                             $result[round($pwt).'_'.round($preToken->getFrequency()).'_'.round($token->getFrequency()).'_'.round($bigram->getFrequency())] = $bigram;
                         }    
                     }    
