@@ -36,8 +36,8 @@ $this->pageBreadcrumbs()->setItems([
                 <tr>
                     <?php foreach ($tokens as $token):?>
                         <td>
-                            <?php if ($token):?>
-                                <small><?= $token->getBilemma()?></small>
+                            <?php if (is_array($token)):?>
+                                <small><?= $token['bilemma']->getBilemma()?></small>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>
@@ -45,8 +45,11 @@ $this->pageBreadcrumbs()->setItems([
                 <tr>
                     <?php foreach ($tokens as $pwt => $token):?>
                         <td>
-                            <?php if ($token):?>
-                            <small><?= str_replace('_', ' ', $pwt)?></small>
+                            <?php if (is_array($token)):?>
+                            <small><?= $pwt ?></small> 
+                            <small><?= $token['token1']->getFrequency(); ?></small> 
+                            <small><?= $token['token2']->getFrequency(); ?></small> 
+                            <small><?= $token['bigram']->getFrequency(); ?></small>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>
