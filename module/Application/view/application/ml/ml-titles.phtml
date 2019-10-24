@@ -46,7 +46,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>
-                            <small><?= $token['token1'] ?></small> 
+                            <small><?= $token['pwt'] ?></small> 
                             <small><?= $token['token1']->getFrequency(); ?></small> 
                             <small><?= $token['token2']->getFrequency(); ?></small> 
                             <small><?= $token['bigram']->getFrequency(); ?></small>
