@@ -126,9 +126,10 @@ class BigramRepository  extends EntityRepository
     {
         $bigram = $this->findBigram($lemma1, $lemma2);
         
-        if (!$bigram){                
+        if (!$bigram){                 
+            $bilemmaMd5 = $this->bilemmaMd5($lemma1, $lemma2);
             $row = [
-                'bilemma_md5' => $this->bilemmaMd5($lemma1, $lemma2),
+                'bilemma_md5' => $bilemmaMd5,
                 'bilemma' => $this->bilemma($lemma1, $lemma2),
                 'status' => $this->biStatus($lemma1, $lemma2),
             ];
