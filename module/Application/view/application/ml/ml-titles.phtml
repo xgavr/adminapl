@@ -78,7 +78,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if ($token):?>
-                                <small><?= $token->getLemma()?></small>
+                                <small><?= $token->getBilemma()?></small>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>

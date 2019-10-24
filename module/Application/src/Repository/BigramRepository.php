@@ -72,6 +72,37 @@ class BigramRepository  extends EntityRepository
     }
 
     /**
+     * Получить билему в md5
+     * 
+     * @param string $lemma1
+     * @param string $lemma2
+     */
+    private function bilemmaMd5($lemma1, $lemma2)
+    {
+        $lemms = [$lemma1, $lemma2];
+        $bilemma = implode(' ', $lemms);
+        return md5($bilemma);        
+    }
+    
+    /**
+     * Поиск биграмы
+     * 
+     * @param string $lemma1
+     * @param string $lemma2
+     * @return type
+     */
+    public function findBigram($lemma1, $lemma2)
+    {
+        if ($lemma1 && $lemma2){
+            $bigram = $this->getEntityManager()->getRepository(Bigram::class)
+                    ->findOneByBilemmaMd5($this->bilemmaMd5($lemma1, $lemma2));            
+            return $bigram;
+        }
+        
+        return;
+    }
+    
+    /**
      * Быстрая вставка bigram
      * @param string $lemma1 
      * @param string $lemma2 
@@ -80,30 +111,22 @@ class BigramRepository  extends EntityRepository
      */
     public function insertBigram($lemma1, $lemma2)
     {
-        if ($lemma1 && $lemma2){
-            $lemms = [$lemma1, $lemma2];
-            $bilemma = implode(' ', $lemms);
-            $bilemmaMd5 = md5($bilemma);
+        $bigram = $this->findBigram($lemma1, $lemma2);
+        
+        if (!$bigram){                
+            $row = [
+                'bilemma_md5' => $this->bilemmaMd5($lemma1, $lemma2),
+                'bilemma' => $bilemma,
+                'status' => $this->biStatus($lemma1, $lemma2),
+            ];
+
+            $this->getEntityManager()->getConnection()->insert('bigram', $row);
 
             $bigram = $this->getEntityManager()->getRepository(Bigram::class)
                     ->findOneByBilemmaMd5($bilemmaMd5);
+        } 
 
-            if (!$bigram){                
-                $row = [
-                    'bilemma_md5' => $bilemmaMd5,
-                    'bilemma' => $bilemma,
-                    'status' => $this->biStatus($lemma1, $lemma2),
-                ];
-
-                $this->getEntityManager()->getConnection()->insert('bigram', $row);
-                
-                $bigram = $this->getEntityManager()->getRepository(Bigram::class)
-                        ->findOneByBilemmaMd5($bilemmaMd5);
-            } 
-            
-            return $bigram;
-        }    
-        return;
+        return $bigram;
     }    
 
     /**

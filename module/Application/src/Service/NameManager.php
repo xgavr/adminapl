@@ -1355,15 +1355,26 @@ class NameManager
     {
         $result = [];
         $lemms = $this->lemmsFromRawprice($rawprice);
+        $preWord = null;
         foreach ($lemms as $k => $words){
             foreach ($words as $key => $word){
                 $token = $this->entityManager->getRepository(Token::class)
                         ->findOneByLemma($word);
                 if ($token){
-                    if ($token->getStatus() == Token::IS_DICT){
-                        $result[$token->getIdf().'_'.$token->getId()] = $token;
+                    if ($token->getStatus() === Token::IS_DICT){
+//                        $result[$token->getIdf().'_'.$token->getId()] = $token;
                     }    
-                }    
+                } 
+                if ($k > 0){
+                    $bigram = $this->entityManager->getRepository(Bigram::class)
+                            ->findBigram($preWord, $word);
+                    if ($bigram){
+                        if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+                            $result[$bigram->getIdf().'_'.$bigram->getId()] = $bigram;
+                        }    
+                    }    
+                }
+                $preWord = $word;
             }
         }
         ksort($result);
