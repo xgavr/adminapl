@@ -1377,7 +1377,7 @@ class NameManager
                 $preWord = $word;
             }
         }
-        krsort($result);
+        ksort($result);
         $result = array_slice($result, 0, 5, true);
         $empt = array_fill(200, 13 - count($result), false);
 //        var_dump($empt);
