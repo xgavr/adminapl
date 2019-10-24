@@ -72,16 +72,29 @@ class BigramRepository  extends EntityRepository
     }
 
     /**
+     * Получить билемму
+     * 
+     * @param string $lemma1
+     * @param string $lemma2
+     * @return string
+     */
+    private function bilemma($lemma1, $lemma2)
+    {
+        $lemms = [$lemma1, $lemma2];
+        return implode(' ', $lemms);        
+    }
+    
+    /**
      * Получить билему в md5
      * 
      * @param string $lemma1
      * @param string $lemma2
+     * 
+     * @return string
      */
     private function bilemmaMd5($lemma1, $lemma2)
     {
-        $lemms = [$lemma1, $lemma2];
-        $bilemma = implode(' ', $lemms);
-        return md5($bilemma);        
+        return md5($this->bilemma($lemma1, $lemma2));        
     }
     
     /**
@@ -116,7 +129,7 @@ class BigramRepository  extends EntityRepository
         if (!$bigram){                
             $row = [
                 'bilemma_md5' => $this->bilemmaMd5($lemma1, $lemma2),
-                'bilemma' => $bilemma,
+                'bilemma' => $this->bilemma($lemma1, $lemma2),
                 'status' => $this->biStatus($lemma1, $lemma2),
             ];
 
