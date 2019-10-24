@@ -1369,7 +1369,7 @@ class NameManager
                     $bigram = $this->entityManager->getRepository(Bigram::class)
                             ->findBigram($preWord, $word);
                     if ($bigram){
-                        $pwt = ($preToken->getFrequency()+$token->getFrequency())/($bigram->getFrequency() + 0.5);
+                        $pwt = ($preToken->getIdf()+$token->getIdf())/($bigram->getIdf());
                         
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                             $result[] = ['pwt' => $pwt, 'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];

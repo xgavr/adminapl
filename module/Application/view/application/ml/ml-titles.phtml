@@ -46,10 +46,10 @@ $this->pageBreadcrumbs()->setItems([
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>
-                            <small><?= round($token['pwt']) ?></small> 
-                            <small>t1:<?= $token['token1']->getFrequency(); ?></small> 
-                            <small>t2:<?= $token['token2']->getFrequency(); ?></small> 
-                            <small>b:<?= $token['bigram']->getFrequency(); ?></small>
+                            <small><?= round($token['pwt'], 3) ?></small> 
+                            <small>t1:<?= round($token['token1']->getIdf(), 3); ?></small> 
+                            <small>t2:<?= round($token['token2']->getIdf(), 3); ?></small> 
+                            <small>b:<?= round($token['bigram']->getIdf(), 3); ?></small>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>
