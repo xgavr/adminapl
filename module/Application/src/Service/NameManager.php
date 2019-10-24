@@ -1370,14 +1370,14 @@ class NameManager
                             ->findBigram($preWord, $word);
                     if ($bigram){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $result[round($bigram->getIdf()/2**$k, 10).'_'.$bigram->getId()] = $bigram;
+                            $result[round($bigram->getIdf()/2**$k-1, 10).'_'.$bigram->getId()] = $bigram;
                         }    
                     }    
                 }
                 $preWord = $word;
             }
         }
-        ksort($result);
+        krsort($result);
         $result = array_slice($result, 0, 5, true);
         $empt = array_fill(200, 13 - count($result), false);
 //        var_dump($empt);
