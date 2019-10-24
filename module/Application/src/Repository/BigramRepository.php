@@ -78,7 +78,7 @@ class BigramRepository  extends EntityRepository
      * @param string $lemma2
      * @return string
      */
-    private function bilemma($lemma1, $lemma2)
+    protected function bilemma($lemma1, $lemma2)
     {
         $lemms = [$lemma1, $lemma2];
         return implode(' ', $lemms);        
@@ -92,7 +92,7 @@ class BigramRepository  extends EntityRepository
      * 
      * @return string
      */
-    private function bilemmaMd5($lemma1, $lemma2)
+    protected function bilemmaMd5($lemma1, $lemma2)
     {
         return md5($this->bilemma($lemma1, $lemma2));        
     }
@@ -119,7 +119,7 @@ class BigramRepository  extends EntityRepository
      * Быстрая вставка bigram
      * @param string $lemma1 
      * @param string $lemma2 
-     *      * 
+     *      
      * @return null
      */
     public function insertBigram($lemma1, $lemma2)
@@ -136,8 +136,7 @@ class BigramRepository  extends EntityRepository
 
             $this->getEntityManager()->getConnection()->insert('bigram', $row);
 
-            $bigram = $this->getEntityManager()->getRepository(Bigram::class)
-                    ->findOneByBilemmaMd5($bilemmaMd5);
+            $bigram = $this->findBigram($lemma1, $lemma2);
         } 
 
         return $bigram;
