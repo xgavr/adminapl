@@ -73,13 +73,21 @@ $this->pageBreadcrumbs()->setItems([
                         </a>
                     </td>
                 </tr>
+                <?php $tokens = $this->mlManager->rawpriceToMlTitle($mlTitle->getRawprice())?>
                 <tr>
-                    <?php $tokens = $this->mlManager->rawpriceToMlTitle($mlTitle->getRawprice())?>
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if ($token):?>
-                                <small><?= $token->getBilemma()?></small><br/>
-                                <small><b><?= $token->getIdf()?></b></small>
+                                <small><?= $token->getBilemma()?></small>
+                            <?php endif; ?>
+                        </td>
+                    <?php endforeach;?>
+                </tr>
+                <tr>
+                    <?php foreach ($tokens as $token):?>
+                        <td>
+                            <?php if ($token):?>
+                                <small><?= round($token->getIdf(), 5)?></small>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>
