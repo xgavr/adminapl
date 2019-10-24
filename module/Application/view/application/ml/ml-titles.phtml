@@ -84,10 +84,10 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endforeach;?>
                 </tr>
                 <tr>
-                    <?php foreach ($tokens as $token):?>
+                    <?php foreach ($tokens as $pwt => $token):?>
                         <td>
                             <?php if ($token):?>
-                                <small><?= round($token->getIdf(), 5)?></small>
+                                <small><?= round($pwt, 5)?></small>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>
