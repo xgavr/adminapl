@@ -1361,13 +1361,13 @@ class NameManager
                         ->findOneByLemma($word);
                 if ($token){
                     if ($token->getStatus() == Token::IS_DICT){
-                        $result[$token->getIdf().'_'.$k] = $token;
+                        $result[$token->getIdf().'_'.$token->getId()] = $token;
                     }    
                 }    
             }
         }
         ksort($result);
-        $result = array_slice($result, 0, 10, true);
+        $result = array_slice($result, 0, 5, true);
         $empt = array_fill(200, 13 - count($result), false);
 //        var_dump($empt);
         return array_merge($result, $empt);
