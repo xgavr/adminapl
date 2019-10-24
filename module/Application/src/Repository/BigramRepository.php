@@ -128,6 +128,7 @@ class BigramRepository  extends EntityRepository
         
         if (!$bigram){                 
             $bilemmaMd5 = $this->bilemmaMd5($lemma1, $lemma2);
+            var_dump($bilemmaMd5); exit;
             $row = [
                 'bilemma_md5' => $bilemmaMd5,
                 'bilemma' => $this->bilemma($lemma1, $lemma2),
