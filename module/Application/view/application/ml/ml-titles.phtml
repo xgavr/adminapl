@@ -46,7 +46,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php foreach ($tokens as $pwt => $token):?>
                         <td>
                             <?php if ($token):?>
-                                <small><?= $pwt?></small>
+                            <small><?= str_replace('_', ' ', $pwt)?></small>
                             <?php endif; ?>
                         </td>
                     <?php endforeach;?>
