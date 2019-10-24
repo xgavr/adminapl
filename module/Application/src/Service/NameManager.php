@@ -1369,10 +1369,10 @@ class NameManager
                     $bigram = $this->entityManager->getRepository(Bigram::class)
                             ->findBigram($preWord, $word);
                     if ($bigram){
-                        $pwt = $preToken->getIdf()*$token->getIdf()/$bigram->getIdf();
+                        $pwt = $preToken->getFrequency()*$token->getFrequency()/$bigram->getFrequency();
                         
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $result[round($pwt, 5).'_'.round($preToken->getIdf(), 5).'_'.round($token->getIdf(), 5).'_'.round($bigram->getIdf(), 5).'_'.$bigram->getId()] = $bigram;
+                            $result[round($pwt, 5).'_'.round($preToken->getFrequency(), 5).'_'.round($token->getFrequency(), 5).'_'.round($bigram->getFrequency(), 5).'_'.$bigram->getFrequency()] = $bigram;
                         }    
                     }    
                 }
