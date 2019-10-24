@@ -1382,7 +1382,10 @@ class NameManager
         }
 //        ksort($result);
         usort($result, function($a, $b){
-            return ($a['pwt'] - $b['pwt']);
+            if ($a['pwt'] == $b['pwt']) {
+                return 0;
+            }
+            return ($a['pwt'] < $b['pwt']) ? -1 : 1;            
         }); 
         
         $result = array_slice($result, 0, 5, true);
