@@ -16,7 +16,7 @@ $this->pageBreadcrumbs()->setItems([
 
         <table class="table table-striped">
             <tr>
-                <td colspan="13">
+                <td colspan="5">
                     <?= $this->paginationControl($mlTitles,
                                 'Sliding',
                                 'application/partial/paginator', 
@@ -24,50 +24,9 @@ $this->pageBreadcrumbs()->setItems([
 
                 </td>
             </tr>
-            <tr>
-                <th>
-                    Гр
-                </th>
-                <th>
-                    RU
-                </th>
-                <th>
-                    ru
-                </th>
-                <th>
-                    ru1
-                </th>
-                <th>
-                    ruA
-                </th>
-                <th>
-                    EN
-                </th>
-                <th>
-                    en
-                </th>
-                <th>
-                    en1
-                </th>
-                <th>
-                    enA
-                </th>
-                <th>
-                    N
-                </th>                    
-                <th>
-                    A
-                </th>                    
-                <th>
-                    Наименование
-                </th>           
-                <th>
-                    Оценка
-                </th>                    
-            </tr>
             <?php foreach ($mlTitles as $mlTitle):?>
                 <tr>
-                    <td colspan="13">
+                    <td colspan="5">
                         <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $mlTitle->getRawprice()->getId()])?>" target="_blank">
                             <small><?= $mlTitle->getRawprice()->getGoodname();?></small>
                         </a>
@@ -94,7 +53,7 @@ $this->pageBreadcrumbs()->setItems([
                 </tr>
             <?php endforeach;?>        
             <tr>
-                <td colspan="13">
+                <td colspan="5">
                     <?= $this->paginationControl($mlTitles,
                                 'Sliding',
                                 'application/partial/paginator', 
