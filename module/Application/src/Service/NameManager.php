@@ -1370,7 +1370,7 @@ class NameManager
                             ->findBigram($preWord, $word);
                     if ($bigram){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $result[round($bigram->getIdf()/$k, 5).'_'.$bigram->getId()] = $bigram;
+                            $result[round($bigram->getIdf()/$k*100, 10).'_'.$bigram->getId()] = $bigram;
                         }    
                     }    
                 }
