@@ -487,6 +487,36 @@ class TokenRepository  extends EntityRepository
     }
     
     /**
+     * Проверить вхождение в группу наименований токенов
+     * 
+     * @param integer $groupId
+     * @param array $tokens
+     * 
+     * @return TokenGroup|null
+     */
+    protected function checkTokenGroupByGroupTokens($groupId, $tokens)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('tg')
+            ->from(TokenGroup::class, 'tg')    
+            ->join('tg.tokens', 't') 
+            ->where('tg.id = ?1')    
+            ->setParameter('1', $groupId)    
+            ;
+        
+        $orX = $queryBuilder->expr()->orX();
+        foreach ($tokens as $token){
+            $orX->add($queryBuilder->expr()->eq('t.id', $token['id']));
+        }
+        $queryBuilder->andWhere($orX);
+
+        return $queryBuilder->getQuery()->getResult();            
+        
+    }
+    
+    /**
      * Найди группу наименований по токенам
      * 
      * @param array $tokens
@@ -499,19 +529,25 @@ class TokenRepository  extends EntityRepository
             $entityManager = $this->getEntityManager();
 
             $queryBuilder = $entityManager->createQueryBuilder();
-            $queryBuilder->select('tg')
-                ->distinct()    
+            $queryBuilder->select('tg.id, count(t.id) as tokenCount')
                 ->from(TokenGroup::class, 'tg')    
                 ->join('tg.tokens', 't') 
-                ->orderBy('tg.id', 'DESC')
-                ->setMaxResults(1)    
+                ->groupBy('tg.id')    
+                ->orderBy('tokenCount', 'DESC')
                 ;
+            $orX = $queryBuilder->expr()->orX();
             foreach ($tokens as $token){
-                $queryBuilder->andWhere('t.id = '.$token['id']);
+                $orX->add($queryBuilder->expr()->eq('t.id', $token['id']));
             }
-
-            var_dump($queryBuilder->getQuery()->getSQL()); exit;
-            return $queryBuilder->getQuery()->getResult();            
+            $queryBuilder->andWhere($orX);
+            
+            $data = $queryBuilder->getQuery()->getResult();
+            foreach ($data as $row){
+                $tokenGroup = $this->checkTokenGroupByGroupTokens($row['id'], $tokens);
+                if ($tokenGroup){
+                    return $tokenGroup[0];
+                }
+            }            
         }
         
         return;
