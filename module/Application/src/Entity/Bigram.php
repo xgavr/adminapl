@@ -47,6 +47,11 @@ class Bigram {
     protected $bilemmaMd5;
     
     /**
+     * @ORM\Column(name="correct")   
+     */
+    protected $correct;
+
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        
@@ -91,6 +96,7 @@ class Bigram {
     public function setBilemma($bilemma) 
     {
         $this->bilemma = $bilemma;
+        $this->bilemmaMd5 = md5($bilemma);
     }     
     
     public function getBilemmaAsArray()
@@ -98,6 +104,30 @@ class Bigram {
         return explode(' ', $this->bilemma);
     }
         
+    public function getBilemmaMd5() 
+    {
+        return $this->bilemmaMd5;
+    }
+    
+    public function getCorrect() 
+    {
+        return $this->correct;
+    }
+    
+    public function getCorrectAsArray()
+    {
+        return explode(' ', $this->correct);
+    }
+        
+    public function setCorrect($str) 
+    {
+        if ($str){
+            $this->correct = mb_strtoupper(mb_strcut(trim($str), 0, 256, 'UTF-8'));
+        } else {
+            $this->correct = null;
+        }    
+    }     
+
     public function setIdf($idf)
     {
         $this->idf = $idf;
@@ -206,9 +236,10 @@ class Bigram {
     public function getFlagAsString()
     {
         $list = self::getFlagList();
-        if (isset($list[$this->flag]))
+        if (isset($list[$this->flag])) {
             return $list[$this->flag];
-        
+        }
+
         return 'Unknown';
     }  
     
