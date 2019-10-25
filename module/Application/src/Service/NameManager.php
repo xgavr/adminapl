@@ -545,7 +545,7 @@ class NameManager
      */
     public function updateAllBigramArticleCount()
     {
-        set_time_limit(1800);        
+        set_time_limit(3600);        
         ini_set('memory_limit', '2048M');
         
         $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
@@ -1353,7 +1353,8 @@ class NameManager
      */
     public function rawpriceToMlTitle($rawprice)
     {
-        $result = [];
+        $gc = 1035342;
+        $result = [];               
         $lemms = $this->lemmsFromRawprice($rawprice);
         $preWord = $preToken = null;
         foreach ($lemms as $k => $words){
@@ -1369,7 +1370,11 @@ class NameManager
                     $bigram = $this->entityManager->getRepository(Bigram::class)
                             ->findBigram($preWord, $word);
                     if ($bigram){
-                        $pwt = ($preToken->getIdf()*$token->getIdf())/($bigram->getIdf());
+                        $tf1 = $preToken->getFrequency()/$gc;
+                        $tf2 = $token->getFrequency()/$gc;
+                        $bf = $bigram->getFrequency()/$gc;
+                        
+                        $pwt = ($tf1*$tf2)/$bf;
                         
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                             $result[] = ['pwt' => $pwt, 'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
