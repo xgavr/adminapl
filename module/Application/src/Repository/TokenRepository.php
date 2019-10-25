@@ -464,25 +464,57 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('t.id, t.lemma, t.status')
+        $queryBuilder->select('t.id, t.lemma, t.status, t.frequency')
             ->distinct()
-            ->from(GoodToken::class, 'gt')    
-            ->join(Token::class, 't', 'WITH', 't.lemma = gt.lemma')    
-            ->where('gt.good = ?1')   
-            ->andWhere('gt.tfidf >= ?7')    
+            ->from(ArticleToken::class, 'at')    
+            ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')
+            ->join('at.article', 'a')    
+            ->where('a.good = ?1')   
             ->andWhere('(t.status = ?2 or t.status = ?3 or t.status = ?4)')
             ->andWhere('t.flag = ?6')
+            ->andWhere('t.frequency > ?7')    
             ->setParameter('1', $good->getId())
             ->setParameter('2', Token::IS_DICT)
             ->setParameter('3', Token::IS_EN_ABBR)
             ->setParameter('4', Token::IS_RU_ABBR)
             ->setParameter('6', Token::WHITE_LIST)
-            ->setParameter('7', Token::MIN_TFIDF_FOR_GROUP)
-            ->orderBy('gt.tfidf', 'DESC')
+            ->setParameter('7', Token::MIN_DF)
+            ->orderBy('t.frequency', 'DESC')    
             ->setMaxResults(Token::MAX_TOKENS_FOR_GROUP)    
             ;
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
+    }
+    
+    /**
+     * Найди группу наименований по токенам
+     * 
+     * @param array $tokens
+     * 
+     * @return TokenGroup|null
+     */
+    public function findTokenGroupByTokens($tokens)
+    {
+        if (count($tokens)){
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('tg')
+                ->distinct()    
+                ->from(TokenGroup::class, 'tg')    
+                ->join('tg.tokens', 't') 
+                ->orderBy('tg.id', 'DESC')
+                ->setMaxResults(1)    
+                ;
+            foreach ($tokens as $token){
+                $queryBuilder->andWhere('t.id = '.$token['id']);
+            }
+
+            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+            return $queryBuilder->getQuery()->getResult();            
+        }
+        
+        return;
     }
 
     /**

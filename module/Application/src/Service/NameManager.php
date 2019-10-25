@@ -1080,7 +1080,7 @@ class NameManager
         $tokenLemmsStr = $lemmsFilter->filter($tokenLemms);
         
         $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-            ->findOneByIds($tokenIdsStr);
+            ->findTokenGroupByTokens($dictTokens);
         
         if (!$tokenGroup){
             $this->entityManager->getRepository(TokenGroup::class)
@@ -1190,7 +1190,7 @@ class NameManager
                 ->goodCountAllTokenGroup();
 
         foreach ($tokenGroups as $tokenGroup){
-            $goodCount = ($tokenGroup['goodCount'] === null) ? 0:$tokenGroup['goodCount']; 
+            $goodCount = ($tokenGroup['goodCount'] == null) ? 0:$tokenGroup['goodCount']; 
             $this->updateTokenGroupGoodCount($tokenGroup['id'], $goodCount);
         }   
     }
