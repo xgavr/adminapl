@@ -1378,7 +1378,7 @@ class NameManager
                             $pwt = log($bf/($tf1*$tf2));
 
                             if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                                $result[] = ['pwt' => $pwt, 'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+                                $result[] = ['bf' => $bf, 'pwt' => $pwt, 'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
                             }    
 //                        }    
                     }    
@@ -1394,14 +1394,14 @@ class NameManager
             $bf = $token->getFrequency()/$gc;
 
             $pwt = log($bf/($tf1*$tf2));
-            $result[] = ['pwt' => $pwt, 'token1' => $token, 'token2' => $token];            
+            $result[] = ['bf' => $bf, 'pwt' => $pwt, 'token1' => $token, 'token2' => $token];            
         }
 //        ksort($result);
         usort($result, function($a, $b){
-            if ($a['pwt'] == $b['pwt']) {
+            if ($a['bf'] == $b['bf']) {
                 return 0;
             }
-            return ($a['pwt'] > $b['pwt']) ? -1 : 1;            
+            return ($a['bf'] > $b['bf']) ? -1 : 1;            
         }); 
         
         $result = array_slice($result, 0, 6, true);
