@@ -1373,9 +1373,10 @@ class NameManager
 //                        if ($bigram->getFrequency()>5){
                             $tf1 = $preToken->getFrequency()/$gc;
                             $tf2 = $token->getFrequency()/$gc;
+                            $atf = ($preToken->getFrequency() + $token->getFrequency())/2/$gc;
                             $bf = $bigram->getFrequency()/$gc;
 
-                            $pwt = log($bf/($tf1+$tf2));
+                            $pwt = log($bf/$atf);
 
                             if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                                 $result[] = ['bf' => $bf, 'pwt' => $pwt, 'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
@@ -1391,9 +1392,10 @@ class NameManager
         if ($k == 0){
             $tf1 = $token->getFrequency()/$gc;
             $tf2 = $token->getFrequency()/$gc;
+            $atf = ($token->getFrequency() + $token->getFrequency())/2/$gc;
             $bf = $token->getFrequency()/$gc;
 
-            $pwt = log($bf/($tf1+$tf2));
+            $pwt = log($bf/$atf);
             $result[] = ['bf' => $bf, 'pwt' => $pwt, 'token1' => $token, 'token2' => $token];            
         }
 //        ksort($result);
