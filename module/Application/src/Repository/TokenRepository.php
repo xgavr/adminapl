@@ -535,6 +535,7 @@ class TokenRepository  extends EntityRepository
                 ->groupBy('tg.id')    
                 ->orderBy('tokenCount', 'DESC')
                 ;
+            
             $orX = $queryBuilder->expr()->orX();
             foreach ($tokens as $token){
                 $orX->add($queryBuilder->expr()->eq('t.id', $token['id']));
