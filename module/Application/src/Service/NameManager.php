@@ -1394,7 +1394,7 @@ class NameManager
             $bf = $token->getFrequency()/$gc;
 
             $pwt = log($bf/($tf1*$tf2), 2);
-            $result[] = ['pwt' => $pwt, 'token1' => $token, 'token2' => $token, 'bigram' => $token];            
+            $result[] = ['pwt' => $pwt, 'token1' => $token, 'token2' => $token];            
         }
 //        ksort($result);
         usort($result, function($a, $b){
