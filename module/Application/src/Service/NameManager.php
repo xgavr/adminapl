@@ -1404,8 +1404,8 @@ class NameManager
             return ($a['pwt'] > $b['pwt']) ? -1 : 1;            
         }); 
         
-        $result = array_slice($result, 0, 5, true);
-        $empt = array_fill(200, 5 - count($result), false);
+        $result = array_slice($result, 0, 6, true);
+        $empt = array_fill(200, 6 - count($result), false);
 //        var_dump($empt);
         return array_merge($result, $empt);
     }    

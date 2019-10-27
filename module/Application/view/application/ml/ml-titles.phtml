@@ -16,7 +16,7 @@ $this->pageBreadcrumbs()->setItems([
 
         <table class="table table-striped">
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     <?= $this->paginationControl($mlTitles,
                                 'Sliding',
                                 'application/partial/paginator', 
@@ -26,7 +26,7 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <?php foreach ($mlTitles as $mlTitle):?>
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $mlTitle->getRawprice()->getId()])?>" target="_blank">
                             <small><?= $mlTitle->getRawprice()->getGoodname();?></small>
                         </a>
@@ -62,7 +62,7 @@ $this->pageBreadcrumbs()->setItems([
                 </tr>
             <?php endforeach;?>        
             <tr>
-                <td colspan="5">
+                <td colspan="6">
                     <?= $this->paginationControl($mlTitles,
                                 'Sliding',
                                 'application/partial/paginator', 
