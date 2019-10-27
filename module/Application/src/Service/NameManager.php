@@ -1379,7 +1379,7 @@ class NameManager
                                 $tf2 = $token->getFrequency();
                             }    
                             
-                            $atf = ($tf1 + $tf2)/2/$gc;
+                            $atf = ($tf1 + $tf2)/$gc;
                             $bf = $bigram->getFrequency()/$gc;
 
                             $pwt = log($bf/$atf);
@@ -1401,7 +1401,7 @@ class NameManager
                 $tf1 = $token->getFrequency();
                 $tf2 = $token->getFrequency();
             }    
-            $atf = ($tf1 + $tf2)/2/$gc;
+            $atf = ($tf1 + $tf2)/$gc;
             $bf = $token->getFrequency()/$gc;
 
             $pwt = log($bf/$atf);
