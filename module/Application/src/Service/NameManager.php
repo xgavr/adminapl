@@ -1371,7 +1371,7 @@ class NameManager
                             ->findBigram($preWord, $word);
                     if ($bigram){
 //                        if ($bigram->getFrequency()>5){
-                            $tf1 = $tf2 = 0;
+                            $tf1 = $tf2 = 1;
                             if ($preToken->getStatus() == Token::IS_DICT){
                                 $tf1 = $preToken->getFrequency();
                             }    
@@ -1382,7 +1382,7 @@ class NameManager
                             $atf = ($tf1 + $tf2)/2/$gc;
                             $bf = $bigram->getFrequency()/$gc;
 
-                            $pwt = log($atf/$bf);
+                            $pwt = log($bf/$atf);
 
                             if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                                 $result[] = ['bf' => $bf, 'pwt' => $pwt, 'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
@@ -1396,7 +1396,7 @@ class NameManager
         }
         
         if ($k == 0){
-            $tf1 = $tf2 = 0;
+            $tf1 = $tf2 = 1;
             if ($token->getStatus() == Token::IS_DICT){
                 $tf1 = $token->getFrequency();
                 $tf2 = $token->getFrequency();
