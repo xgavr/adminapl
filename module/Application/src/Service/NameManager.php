@@ -1372,10 +1372,10 @@ class NameManager
                     if ($bigram){
 //                        if ($bigram->getFrequency()>5){
                             $tf1 = $tf2 = 0;
-                            if ($preToken->getStatus() === Token::IS_DICT){
+                            if ($preToken->getStatus() == Token::IS_DICT){
                                 $tf1 = $preToken->getFrequency();
                             }    
-                            if ($token->getStatus() === Token::IS_DICT){
+                            if ($token->getStatus() == Token::IS_DICT){
                                 $tf2 = $token->getFrequency();
                             }    
                             
@@ -1397,7 +1397,7 @@ class NameManager
         
         if ($k == 0){
             $tf1 = $tf2 = 0;
-            if ($token->getStatus() === Token::IS_DICT){
+            if ($token->getStatus() == Token::IS_DICT){
                 $tf1 = $token->getFrequency();
                 $tf2 = $token->getFrequency();
             }    
