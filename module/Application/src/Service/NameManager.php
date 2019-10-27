@@ -1373,7 +1373,7 @@ class NameManager
 //                        if ($bigram->getFrequency()>5){
                             $tf1 = $preToken->getFrequency()/$gc;
                             $tf2 = $token->getFrequency()/$gc;
-                            $atf = ($preToken->getFrequency() + $token->getFrequency())/2/$gc;
+                            $atf = ($preToken->getFrequency() + $token->getFrequency())/$gc;
                             $bf = $bigram->getFrequency()/$gc;
 
                             $pwt = log($bf/$atf);
@@ -1392,7 +1392,7 @@ class NameManager
         if ($k == 0){
             $tf1 = $token->getFrequency()/$gc;
             $tf2 = $token->getFrequency()/$gc;
-            $atf = ($token->getFrequency() + $token->getFrequency())/2/$gc;
+            $atf = ($token->getFrequency() + $token->getFrequency())/$gc;
             $bf = $token->getFrequency()/$gc;
 
             $pwt = log($bf/$atf);
