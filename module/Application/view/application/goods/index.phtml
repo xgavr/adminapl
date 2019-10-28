@@ -62,7 +62,7 @@ $this->headScript()
                     </div>
                     <div class="panel-body">
                         <div class="pull-left">
-                            <?= $total?>
+                            <span id="total" class="badge">0</span>
                         </div>
                         <div class="pull-right">
                             <button value="/goods/assembly-queue/" class="btn btn-info btn-xs refresh-table-button"
@@ -85,7 +85,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Группы<sup><?= $totalGroup?></sup>
+                                Группы <span id="totalGroup" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/goods/td-group/" class="btn btn-info btn-xs refresh-button"
@@ -100,7 +100,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Описания<sup><?= $totalDesc?></sup>
+                                Описания <span id="totalDesc" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/goods/td-description/" class="btn btn-info btn-xs refresh-button"
@@ -115,7 +115,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Номера<sup><?= $totalOem?></sup>
+                                Номера <span id="totalOem" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/goods/td-oem/" class="btn btn-info btn-xs refresh-button"
@@ -130,7 +130,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Mашины<sup><?= $totalCar?></sup>
+                                Mашины <span id="totalCar" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/goods/update-cars/" class="btn btn-info btn-xs refresh-table-button"
@@ -145,7 +145,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Картинки<sup><?= $totalImage?></sup>
+                                Картинки <span id="totalImage" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <a href="/image" class="btn btn-info btn-xs" target='_blank'
@@ -173,7 +173,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">
                             <div class="pull-left">
-                                AplId<sup><?= $aplIds?></sup>
+                                AplId <span id="aplIds" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/apl/update-good-apl-id/" class="btn btn-info btn-xs refresh-table-button"
@@ -184,7 +184,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">
                             <div class="pull-left">
-                                Группы<sup><?= $aplGroups?>/<?= $statusGroupEx?></sup>
+                                Группы <span id="aplGroups" class="badge">0</span>/<span id="statusGroupEx" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/apl/update-group-apl-id/" class="btn btn-info btn-xs refresh-table-button"
@@ -199,7 +199,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Номера<sup><?= $totalOemEx?></sup>
+                                Номера <span id="totalOemEx" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/apl/update-good-oem/" class="btn btn-info btn-xs refresh-table-button"
@@ -210,7 +210,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Картинки<sup><?= $totalImgEx?></sup>
+                                Картинки <span id="totalImgEx" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/apl/update-good-img/" class="btn btn-info btn-xs refresh-table-button"
@@ -221,7 +221,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Mашины<sup><?= $totalCarEx?></sup>
+                                Mашины <span id="totalCarEx" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/apl/update-good-car/" class="btn btn-info btn-xs refresh-table-button"
@@ -232,7 +232,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Описания<sup><?= $totalAttrEx?></sup>
+                                Описания <span id="totalAttrEx" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                                 <button value="/apl/update-attribute-apl-id/" class="btn btn-info btn-xs refresh-table-button"
@@ -251,7 +251,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Строки прайсов<sup><?= $totalRawpriceEx?></sup>
+                                Строки прайсов <span id="totalRawpriceEx" class="badge">0</span>
                             </div>
                             <div class="pull-right">
 <!--                                <button value="/goods/compare-good-rawprice/" class="btn btn-info btn-xs refresh-table-button"
@@ -270,7 +270,7 @@ $this->headScript()
                         </div>
                         <div class="panel-body">                        
                             <div class="pull-left">
-                                Цены<sup><?= $totalPriceEx?></sup>
+                                Цены <span id="totalPriceEx" class="badge">0</span>
                             </div>
                             <div class="pull-right">
                             </div>
@@ -283,16 +283,29 @@ $this->headScript()
 </div>    
 
 <script type="text/javascript">
+    function totalFeatures(){
+        $(".badge").each(function( index ) {
+            var node = $(this).attr('id');
+            $.getJSON('/goods/total-feature/?feature=' + node, function(data){
+                $('#'+node).text(data['total']);
+            });
+        });        
+    }
+
+    $(window).on('load', function() {
+        totalFeatures();
+    });
+    
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
 
-    var $table = $('#table'),
-        $ok = $('#ok');
+    var table = $('#table'),
+        ok = $('#ok');
 
     $(function () {
-        $ok.click(function () {
-            $table.bootstrapTable('refresh');
+        ok.click(function () {
+            table.bootstrapTable('refresh');
         });
     });
     

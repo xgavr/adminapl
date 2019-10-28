@@ -196,62 +196,55 @@ class GoodsController extends AbstractActionController
     public function indexAction()
     {
         
-        $total = $this->entityManager->getRepository(Goods::class)
-                ->count([]);
-//        $totalCar = $this->entityManager->getRepository(\Application\Entity\Make::class)
-//                ->findGoods();
-        $aplIds = $this->entityManager->getRepository(Goods::class)
-                ->findAplIds();
-        $aplGroups = $this->entityManager->getRepository(Goods::class)
-                ->findAplGroups();
-        $aplGroupsEx = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);
-        $totalCar = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusCar' => Goods::CAR_UPDATED]);
-        $totalOem = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusOem' => Goods::OEM_UPDATED]);
-        $totalGroup = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusGroup' => Goods::GROUP_UPDATED]);
-        $totalDesc = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusDescription' => Goods::DESCRIPTION_UPDATED]);
-        $totalImage = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusImage' => Goods::IMAGE_UPDATED]);
-        
-        $totalRawpriceEx = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TRANSFERRED]);
-//        $totalRawpriceCompare = $this->entityManager->getRepository(Goods::class)
-//                ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TO_TRANSFER]);
-        $totalOemEx = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
-        $totalImgEx = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusImgEx' => Goods::IMG_EX_TRANSFERRED]);
-        $totalPriceEx = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
-        $totalCarEx = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusCarEx' => Goods::CAR_EX_TRANSFERRED]);
-        $totalAttrEx = $this->entityManager->getRepository(Goods::class)
-                ->count(['statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);
-                
         // Визуализируем шаблон представления.
         return new ViewModel([
             'goodsManager' => $this->goodsManager,
-            'total' => $total,
-            'totalCar' => $totalCar,
-            'aplIds' => $aplIds,
-            'aplGroups' => $aplGroups,
-            'totalOem' => $totalOem,
-            'totalGroup' => $totalGroup,
-            'totalDesc' => $totalDesc,
-            'totalImage' => $totalImage,
-            'totalRawpriceEx' => $totalRawpriceEx,
-//            'totalRawpriceCompare' => $totalRawpriceCompare,
-            'totalOemEx' => $totalOemEx,
-            'totalImgEx' => $totalImgEx,
-            'totalPriceEx' => $totalPriceEx,
-            'totalCarEx' => $totalCarEx,
-            'statusGroupEx' => $aplGroupsEx,
-            'totalAttrEx' => $totalAttrEx,
          ]);  
+    }
+    
+    public function totalFeatureAction()
+    {
+        $feature = $this->params()->fromQuery('feature');
+        
+        switch ($feature){
+            case 'totalOem': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusOem' => Goods::OEM_UPDATED]); break;
+            case 'totalDesc': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusDescription' => Goods::DESCRIPTION_UPDATED]); break;
+            case 'totalCar': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusCar' => Goods::CAR_UPDATED]); break;
+            case 'totalImage': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusImage' => Goods::IMAGE_UPDATED]); break;
+            case 'totalGroup': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusGroup' => Goods::GROUP_UPDATED]); break;
+            case 'aplIds': $result = $this->entityManager->getRepository(Goods::class)
+                ->findAplIds(); break;
+            case 'aplIds': $result = $this->entityManager->getRepository(Goods::class)
+                ->findAplIds(); break;
+            case 'aplGroups': $result = $this->entityManager->getRepository(Goods::class)
+                ->findAplGroups(); break;
+            case 'statusGroupEx': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]); break;
+            case 'totalOemEx': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusOemEx' => Goods::OEM_EX_TRANSFERRED]); break;
+            case 'totalImgEx': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusImgEx' => Goods::IMG_EX_TRANSFERRED]); break;
+            case 'totalCarEx': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusCarEx' => Goods::CAR_EX_TRANSFERRED]); break;
+            case 'totalAttrEx': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]); break;
+            case 'totalRawpriceEx': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TRANSFERRED]); break;        
+            case 'totalPriceEx': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]); break;        
+            case 'total': $result = $this->entityManager->getRepository(Goods::class)
+                ->count([]); break;        
+            default: $result = 0;
+        }
+        
+        return new JsonModel([
+            'total' => $result,
+        ]);                  
     }
     
     public function contentAction()
