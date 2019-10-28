@@ -174,7 +174,7 @@ class GoodsRepository extends EntityRepository
                         ;
                 } else {
                     $queryBuilder
-                        ->orderBy('c.id', 'DESC')    
+//                        ->orderBy('c.id', 'DESC')    
                         ->setMaxResults(100)    
                      ;                    
                 }    
