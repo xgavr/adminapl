@@ -201,12 +201,17 @@ class GoodsRepository extends EntityRepository
             }
             if (isset($params['next1'])){
                 $queryBuilder->andWhere('c.code > ?5')
+                    ->select('c')
+                    ->resetDQLPart('join')    
                     ->setParameter('5', $params['next1'])
+                    ->orderBy('c.code', 'ASC')
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
                 $queryBuilder->andWhere('c.code < ?6')
+                    ->select('c')
+                    ->resetDQLPart('join')    
                     ->setParameter('6', $params['prev1'])
                     ->orderBy('c.code', 'DESC')
                     ->setMaxResults(1)    
