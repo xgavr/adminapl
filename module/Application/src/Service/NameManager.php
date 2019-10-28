@@ -1370,24 +1370,9 @@ class NameManager
                     $bigram = $this->entityManager->getRepository(Bigram::class)
                             ->findBigram($preWord, $word);
                     if ($bigram){
-//                        if ($bigram->getFrequency()>5){
-                            $tf1 = $tf2 = 0;
-                            if ($preToken->getStatus() == Token::IS_DICT){
-                                $tf1 = $preToken->getFrequency();
-                            }    
-                            if ($token->getStatus() == Token::IS_DICT){
-                                $tf2 = $token->getFrequency();
-                            }    
-                            
-                            $atf = ($tf1 * $tf2)/$gc;
-                            $bf = $bigram->getFrequency()/$gc;
-
-                            $pwt = log($bf/($atf + 0.5));
-
-                            if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                                $result[] = ['bf' => $bf, 'pwt' => $pwt, 'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
-                            }    
-//                        }    
+                        if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+                            $result[] = ['token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+                        }    
                     }    
                 }
                 $preWord = $word;
@@ -1396,27 +1381,17 @@ class NameManager
         }
         
         if ($k == 0){
-            $tf1 = $tf2 = 0;
-            if ($token->getStatus() == Token::IS_DICT){
-                $tf1 = $token->getFrequency();
-                $tf2 = $token->getFrequency();
-            }    
-            $atf = ($tf1 * $tf2)/$gc;
-            $bf = $token->getFrequency()/$gc;
-
-            $pwt = log($bf/($atf + 0.5));
-            $result[] = ['bf' => $bf, 'pwt' => $pwt, 'token1' => $token, 'token2' => $token];            
+            $result[] = ['token1' => $token];            
         }
-//        ksort($result);
-        usort($result, function($a, $b){
-            if ($a['bf'] == $b['bf']) {
-                return 0;
-            }
-            return ($a['bf'] > $b['bf']) ? -1 : 1;            
-        }); 
+//        usort($result, function($a, $b){
+//            if ($a['bf'] == $b['bf']) {
+//                return 0;
+//            }
+//            return ($a['bf'] > $b['bf']) ? -1 : 1;            
+//        }); 
         
-        $result = array_slice($result, 0, 6, true);
-        $empt = array_fill(200, 6 - count($result), false);
+        $result = array_slice($result, 0, 10, true);
+        $empt = array_fill(200, 10 - count($result), false);
 //        var_dump($empt);
         return array_merge($result, $empt);
     }    
