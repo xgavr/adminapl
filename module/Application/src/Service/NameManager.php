@@ -266,7 +266,7 @@ class NameManager
                 
         $ruValidator = new IsRU();
         if ($correctStr){
-            if ($ruValidator->isValid($token->getLemma())){
+            if ($ruValidator->isValid($correctStr)){
                 $status = Token::IS_DICT;
             } else {
                 $status = Token::IS_EN_DICT;
