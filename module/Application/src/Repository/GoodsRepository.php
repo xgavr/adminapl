@@ -140,16 +140,13 @@ class GoodsRepository extends EntityRepository
         
         if (is_array($params)){
             if (isset($params['producer'])){
-                $queryBuilder->andWhere('g.producer = ?1')
-                        ->setParameter('1', $params['producer']->getId());
+                return 0;
             }
             if (isset($params['producerId'])){
-                $queryBuilder->andWhere('g.producer = ?2')
-                        ->setParameter('2', $params['producerId']);
+                return 0;
             }
             if (isset($params['groupId'])){
-                $queryBuilder->andWhere('g.genericGroup = ?3')
-                        ->setParameter('3', $params['groupId']);
+                return 0;
             }
         }
         
