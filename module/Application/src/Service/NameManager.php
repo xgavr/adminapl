@@ -654,7 +654,7 @@ class NameManager
 
         $lemms = $this->lemmsFromRawprice($rawprice);
 //        var_dump($lemms);
-        $preWord = null;
+        $preWord = $preToken = $token = null;
         foreach ($lemms as $k => $words){
             foreach ($words as $key => $word){
                 if (mb_strlen($word) < 64){
@@ -666,6 +666,8 @@ class NameManager
                                     'lemma' => $word,
                                     'status' => $key,
                                     ]);
+                        $token = $this->entityManager->getRepository(Token::class)
+                                ->findOneByLemma($word);
                     }    
 
                     $articleToken = $this->entityManager->getRepository(ArticleToken::class)
@@ -681,16 +683,28 @@ class NameManager
                     }   
                     
                     if ($k > 0){
+                        $flag = Bigram::WHITE_LIST;
+                        if ($token && $preToken){
+                            $flag = max($token->getFlag(), $preToken->getFlag());
+                        }
                         $bigram = $this->entityManager->getRepository(Bigram::class)
-                                        ->insertBigram($preWord, $word);
+                                        ->insertBigram($preWord, $word, $flag);
                         
                         $this->entityManager->getRepository(Bigram::class)
                                 ->insertArticleBigram($article, $bigram);
                     }
                     $preWord = $word;
+                    $preToken = $token;
                 }    
             }    
         }    
+        if ($k == 0 && $token){
+            $bigram = $this->entityManager->getRepository(Bigram::class)
+                            ->insertBigram($token->getLemma(), null, $token->getFlag());
+
+            $this->entityManager->getRepository(Bigram::class)
+                    ->insertArticleBigram($article, $bigram);
+        }
         $this->entityManager->getRepository(Rawprice::class)
                 ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);        
         return;

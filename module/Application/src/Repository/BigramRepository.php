@@ -30,13 +30,16 @@ class BigramRepository  extends EntityRepository
      * 
      * @return integer
      */
-    protected function biStatus($lemma1, $lemma2)
+    protected function biStatus($lemma1, $lemma2 = null)
     {
         $isRU = new \Application\Validator\IsRU();
         $isEN = new \Application\Validator\IsEN();
         $isNUM = new \Application\Validator\IsNUM();
         
         if ($isRU->isValid($lemma1)){
+            if (!$lemma2){
+                return Bigram::RU_RU;
+            }
             if ($isRU->isValid($lemma2)){
                 return Bigram::RU_RU;
             }
@@ -48,6 +51,9 @@ class BigramRepository  extends EntityRepository
             }
         }
         if ($isEN->isValid($lemma1)){
+            if (!$lemma2){
+                return Bigram::EN_EN;
+            }
             if ($isRU->isValid($lemma2)){
                 return Bigram::RU_EN;
             }
@@ -59,6 +65,9 @@ class BigramRepository  extends EntityRepository
             }
         }
         if ($isNUM->isValid($lemma1)){
+            if (!$lemma2){
+                return Bigram::NUM_NUM;
+            }
             if ($isRU->isValid($lemma2)){
                 return Bigram::RU_NUM;
             }
@@ -78,7 +87,7 @@ class BigramRepository  extends EntityRepository
      * @param string $lemma2
      * @return string
      */
-    protected function bilemma($lemma1, $lemma2)
+    protected function bilemma($lemma1, $lemma2 = null)
     {
         $lemms = [$lemma1, $lemma2];
         return implode(' ', $lemms);        
@@ -92,7 +101,7 @@ class BigramRepository  extends EntityRepository
      * 
      * @return string
      */
-    protected function bilemmaMd5($lemma1, $lemma2)
+    protected function bilemmaMd5($lemma1, $lemma2 = null)
     {
         return md5($this->bilemma($lemma1, $lemma2));        
     }
@@ -104,7 +113,7 @@ class BigramRepository  extends EntityRepository
      * @param string $lemma2
      * @return type
      */
-    public function findBigram($lemma1, $lemma2)
+    public function findBigram($lemma1, $lemma2 = null)
     {
         return $this->getEntityManager()->getRepository(Bigram::class)
                     ->findOneByBilemmaMd5($this->bilemmaMd5($lemma1, $lemma2));            
@@ -114,10 +123,11 @@ class BigramRepository  extends EntityRepository
      * Быстрая вставка bigram
      * @param string $lemma1 
      * @param string $lemma2 
+     * @param integer $flag
      *      
      * @return null
      */
-    public function insertBigram($lemma1, $lemma2)
+    public function insertBigram($lemma1, $lemma2 = null, $flag = Bigram::WHITE_LIST)
     {
         $bigram = $this->findBigram($lemma1, $lemma2);
         
@@ -127,6 +137,7 @@ class BigramRepository  extends EntityRepository
                 'bilemma_md5' => $bilemmaMd5,
                 'bilemma' => $this->bilemma($lemma1, $lemma2),
                 'status' => $this->biStatus($lemma1, $lemma2),
+                'flag' => $flag,
             ];
 
             $this->getEntityManager()->getConnection()->insert('bigram', $row);
