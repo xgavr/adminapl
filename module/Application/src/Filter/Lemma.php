@@ -10,6 +10,10 @@ namespace Application\Filter;
 
 use Zend\Filter\AbstractFilter;
 use Application\Entity\Token;
+use Application\Entity\Bigram;
+use Application\Validator\IsRU;
+use Application\Validator\IsEN;
+use Application\Validator\IsNum;
 use phpMorphy;
 
 /**
@@ -128,47 +132,62 @@ class Lemma extends AbstractFilter
     }
     
     /**
-     * Все слова должны быть из словаря, 
-     * 
-     * @param string $word
-     * @param phpMorphy $morphy
+     * Получить статус леммы
+     * @param string $lemma
+     * @return integer 
      */
-    protected function predictWord($word, $morphy)
+    protected function _lemmaStatus($lemma)
     {
-//        $collection = $morphy->findWord($word, phpMorphy::IGNORE_PREDICT);
-        $collection = $this->_searchWord($word, $morphy);
-        if (false !== $collection){
-            $predicts = [$word];        
-            return $predicts;
+        $isRu = new IsRU();
+        $isEn = new IsEN();
+        $isNum = new IsNum();
+        
+        if ($isRu->isValid($lemma)){
+            return Token::IS_DICT;
+        }
+        if ($isEn->isValid($lemma)){
+            return Token::IS_EN_DICT;
+        }
+        if ($isNum->isValid($lemma)){
+            return Token::IS_NUMERIC;
         }
         
-        $wordPredict = $word;
-        while (mb_strlen($wordPredict) > 3){
-            $wordLen = mb_strlen($wordPredict);
-            $wordPredict = mb_substr($wordPredict, 0, $wordLen-1);
-//            $collection = $morphy->findWord($wordPredict, phpMorphy::IGNORE_PREDICT);
-            $collection = $this->_searchWord($wordPredict, $morphy);
-            if (false !== $collection){
-                $predicts[] = $wordPredict;
-                return array_merge($predicts, $this->predictWord(str_replace($wordPredict, '', $word), $morphy));
+        return Token::IS_UNKNOWN;
+    }
+    
+    /**
+     * Корректировка биграмами
+     * 
+     * @param type $words
+     * @return array
+     */
+    protected function _correctBigram($lemms)
+    {
+        $preWord = null;
+        foreach ($lemms as $k => $words){
+            foreach ($words as $key => $word){                
+                if ($k > 0){
+                    $bigram = $this->entityManager->getRepository(Bigram::class)
+                                    ->findBigram($preWord, $word);
+                    if ($bigram){
+                        if ($bigram->getCorrect()){
+                            $bilemma = $bigram->getCorrectAsArray();
+                            $lemms[$k-1] = null;
+                            $lemms[$k] = null;
+                            
+                            $words[$k-1][$this->_lemmaStatus($bilemma[0])] = $bilemma[0];
+                            if (isset($bilemma[1])){
+                                $lemms[$k][$this->_lemmaStatus($bilemma[1])] = $bilemma[1];                                
+                                $word = $bilemma[1];
+                            }
+                        }
+                    }
+                }
+                $preWord = $word;
             }
-        }
-        
-        if (mb_strlen($word) > 3){
-            $wordPredict = $word;
-            while (mb_strlen($wordPredict) > 3){
-                $wordPredict = mb_substr($wordPredict, 1);
-//                var_dump($wordPredict);
-                return $this->predictWord($wordPredict, $morphy);
-//                $collection = $morphy->findWord($wordPredict, phpMorphy::IGNORE_PREDICT);
-//                if (false !== $collection){
-//                    $predicts[] = $wordPredict;
-//                    return array_merge($predicts, $this->predictWord(str_replace($wordPredict, '', $word), $morphy));
-//                }
-            }    
-        }
-        
-        return [$word];
+        }    
+        ksort($lemms);
+        return $lemms;
     }
     
     public function filter($value)
@@ -180,20 +199,6 @@ class Lemma extends AbstractFilter
             unset($word);
         }        
 //
-//        $result = [
-//            Token::IS_DICT => [], //ru словарь
-//            Token::IS_RU => [], //ru не словарь
-//            Token::IS_RU_1 => [], //ru 1 буква
-//            Token::IS_RU_ABBR => [], //ru аббревиатура
-//            Token::IS_EN_DICT => [], //en словарь
-//            Token::IS_EN => [], //en 
-//            Token::IS_EN_1 => [], //en 1 
-//            Token::IS_EN_ABBR => [], //en abbr 
-//            Token::IS_NUMERIC => [], //число 
-//            Token::IS_PRODUCER => [], //производитель 
-//            Token::IS_ARTICLE => [], //артикул 
-//            Token::IS_UNKNOWN => [], //нечто 
-//        ];
         $result = [];
         
         
@@ -258,6 +263,7 @@ class Lemma extends AbstractFilter
             }             
         }    
         ksort($result);
+        $result = $this->_correctBigram($result);
         return $result;
     }
     
