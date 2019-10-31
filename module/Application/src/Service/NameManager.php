@@ -1385,7 +1385,7 @@ class NameManager
                             ->findBigram($preWord, $word);
                     if ($bigram){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $result[] = ['token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+                            $result[] = ['idf' => $bigram->getIdf(),  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
                         }    
                     }    
                 }
@@ -1394,15 +1394,12 @@ class NameManager
             }
         }
         
-        if ($k == 0){
-            $result[] = ['token1' => $token];            
-        }
-//        usort($result, function($a, $b){
-//            if ($a['bf'] == $b['bf']) {
-//                return 0;
-//            }
-//            return ($a['bf'] > $b['bf']) ? -1 : 1;            
-//        }); 
+        usort($result, function($a, $b){
+            if ($a['idf'] == $b['idf']) {
+                return 0;
+            }
+            return ($a['idf'] < $b['idf']) ? -1 : 1;            
+        }); 
         
         $result = array_slice($result, 0, 10, true);
         $empt = array_fill(200, 10 - count($result), false);
