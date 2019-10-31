@@ -263,8 +263,7 @@ class NameController extends AbstractActionController
             'form' => $form,
             'token' => $token,
         ]);                                
-    }    
-    
+    }        
     
     public function abbrAction()
     {
@@ -409,6 +408,51 @@ class NameController extends AbstractActionController
         ]);
     }
     
+    public function bigramFlagAction()
+    {
+        $bigramId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($bigramId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $bigram = $this->entityManager->getRepository(Bigram::class)
+                ->findOneById($bigramId);
+        
+        if ($bigram == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $flag = $this->params()->fromQuery('flag', 1);
+        
+        switch ($flag){
+            case Bigram::BLACK_LIST:
+                $this->entityManager->getRepository(Bigram::class)
+                    ->updateBigram($bigram, ['flag' => Bigram::BLACK_LIST]);                
+                $this->entityManager->getRepository(\Application\Entity\Article::class)
+                        ->updateBigramUpdateFlag($bigram);
+                break;
+            case Bigram::GRAY_LIST: 
+                $this->entityManager->getRepository(Bigram::class)
+                    ->updateBigram($bigram, ['flag' => Bigram::GRAY_LIST]);                
+                $this->entityManager->getRepository(\Application\Entity\Article::class)
+                        ->updateBigramUpdateFlag($bigram);
+                break;
+            default:
+                $this->entityManager->getRepository(Bigram::class)
+                    ->updateBigram($bigram, ['flag' => Bigram::WHITE_LIST]);                
+                $this->entityManager->getRepository(\Application\Entity\Article::class)
+                        ->updateBigramUpdateFlag($bigram);
+                break;
+        }    
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
     public function updateArticleCountBigramAction()
     {
         $bigramId = (int)$this->params()->fromRoute('id', -1);
@@ -441,6 +485,54 @@ class NameController extends AbstractActionController
         ]);          
     }    
 
+    public function updateBigramFormAction()
+    {
+        $bigramId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($bigramId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $bigram = $this->entityManager->getRepository(Bigram::class)
+                ->findOneById($bigramId);
+        
+        if ($bigram == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $form = new \Application\Form\BigramForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                $newBilemma = mb_strtoupper($data['name']);
+                $this->nameManager->updateBigramCorrect($bigram, $newBilemma);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($bigram){
+                $data = [
+                    'name' => ($bigram->getCorrect()) ? $bigram->getCorrect():$bigram->getBilemma(),  
+                ];
+                $form->setData($data);
+            }  
+        }    
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'bigram' => $bigram,
+        ]);                                
+    }    
+    
     public function parseAction()
     {
         $rawpriceId = (int)$this->params()->fromRoute('id', -1);

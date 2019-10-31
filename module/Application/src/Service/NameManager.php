@@ -514,6 +514,27 @@ class NameManager
         }    
         return;
     }
+
+    /**
+     * Обновить исправление bigram
+     * 
+     * @param Bigram $bigram
+     * @param string $correctStr
+     */
+    public function updateBigramCorrect($bigram, $correctStr = null)
+    {
+        $bigram->setCorrect($correctStr);
+        $bilemms = explode(' ', $correctStr); 
+        $bigram->setStatus($this->entityManager->getRepository(Bigram::class)->biStatus($bilemms[0], $bilemms[1]));        
+        
+        $this->entityManager->persist($bigram);
+        $this->entityManager->flush($bigram);
+
+        $this->entityManager->getRepository(Article::class)
+                ->updateBigramUpdateFlag($bigram);
+        
+        return;
+    }
     
     /**
      * Обновление количества товаров у биграм

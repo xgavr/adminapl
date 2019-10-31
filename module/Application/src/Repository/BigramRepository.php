@@ -30,7 +30,7 @@ class BigramRepository  extends EntityRepository
      * 
      * @return integer
      */
-    protected function biStatus($lemma1, $lemma2 = null)
+    public function biStatus($lemma1, $lemma2 = null)
     {
         $isRU = new \Application\Validator\IsRU();
         $isEN = new \Application\Validator\IsEN();
@@ -115,8 +115,17 @@ class BigramRepository  extends EntityRepository
      */
     public function findBigram($lemma1, $lemma2 = null)
     {
-        return $this->getEntityManager()->getRepository(Bigram::class)
-                    ->findOneByBilemmaMd5($this->bilemmaMd5($lemma1, $lemma2));            
+        $bigram = $this->getEntityManager()->getRepository(Bigram::class)
+                    ->findOneByBilemmaMd5($this->bilemmaMd5($lemma1, $lemma2));
+        if ($bigram){
+            if ($bigram->getCorrect()){
+                $correct = $bigram->getCorrectAsArray();
+                $bigram = $this->getEntityManager()->getRepository(Bigram::class)
+                            ->findOneByBilemmaMd5($this->bilemmaMd5($correct[0], $correct[1]));
+            }    
+        }
+        
+        return $bigram;
     }
     
     /**
@@ -191,7 +200,8 @@ class BigramRepository  extends EntityRepository
         $queryBuilder->select('b')
             ->from(Bigram::class, 'b')
             ->andWhere('b.frequency <= ?1')
-            ->andWhere('b.flag = ?2')    
+            ->andWhere('b.flag = ?2') 
+            ->andWhere('b.correct is null')    
             ->setParameter('1', 0)    
             ->setParameter('2', Bigram::WHITE_LIST)    
                 ;

@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Article;
 use Application\Entity\ArticleToken;
 use Application\Entity\Token;
+use Application\Entity\Bigram;
+use Application\Entity\ArticleBigram;
 use Application\Entity\Rawprice;
 use Application\Entity\Raw;
 
@@ -104,6 +106,40 @@ class ArticleRepository  extends EntityRepository
                 ->where('at.lemma = ?1')
                 ->andWhere('a.tokenUpdateFlag = ?2')
                 ->setParameter('1', $lemma)
+                ->setParameter('2', Article::TOKEN_UPDATE_FLAG)
+                ;
+        
+        $articles = $queryBuilder->getQuery()->getResult();
+
+        foreach ($articles as $article){
+            $this->getEntityManager()->getConnection()->update('article', ['token_update_flag' => $flag], ['id' => $article->getId()]);            
+        }
+    }
+    
+    /**
+     * Быстрое обновление флагов биграм артикула по билемме
+     * 
+     * @param Bigram $bigram
+     * @param int $flag
+     * @return integer
+     */
+    public function updateBigramUpdateFlag($bigram, $flag = 10)
+    {
+        ini_set('memory_limit', '2048M');
+        
+        if ($flag == Article::TOKEN_UPDATE_FLAG){
+            return;
+        }
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('a')
+                ->distinct()
+                ->from(ArticleBigram::class, 'ab')
+                ->join(Article::class, 'a', 'WITH', 'a.id = ab.article')
+                ->where('ab.bigram = ?1')
+                ->andWhere('a.tokenUpdateFlag = ?2')
+                ->setParameter('1', $bigram->getId())
                 ->setParameter('2', Article::TOKEN_UPDATE_FLAG)
                 ;
         
