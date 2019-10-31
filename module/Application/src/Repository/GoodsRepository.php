@@ -125,9 +125,10 @@ class GoodsRepository extends EntityRepository
     /**
      * Получить последний ид товаров
      * 
+     * @param array $params
      * @return array
      */
-    public function findLastGoodId()
+    public function findLastGoodId($params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -136,6 +137,18 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('max(g.id) as maxId')
                 ->from(Goods::class, 'g')
                 ;
+        
+        if (is_array($params)){
+            if (isset($params['producer'])){
+                return 0;
+            }
+            if (isset($params['producerId'])){
+                return 0;
+            }
+            if (isset($params['groupId'])){
+                return 0;
+            }
+        }
         
         return $queryBuilder->getQuery()->getOneOrNullResult();        
     }
@@ -190,7 +203,7 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('4', $q)    
                         ;
                 } else {
-                    $lastGood = $this->findLastGoodId();   
+                    $lastGood = $this->findLastGoodId($params);   
                     $queryBuilder
                         ->andWhere('c.id > :lastId')   
                         ->orderBy('c.id', 'DESC')    
