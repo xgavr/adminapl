@@ -381,7 +381,6 @@ class BigramRepository  extends EntityRepository
             ->andWhere('r.status = ?2')    
             ->setParameter('1', $bigram->getId())
             ->setParameter('2', Rawprice::STATUS_PARSED)
-            ->setMaxResults(1000)    
             ;
         
         return $queryBuilder->getQuery();            

@@ -74,13 +74,12 @@ $this->pageBreadcrumbs()->setItems([
             
         </td>
         <td align="right" valign="center" colspan="2">
-            <?= $totalRawpriceCount?>
-            (<b><?= $bigram->getFrequency()?></b>
+            <b><?= $bigram->getFrequency()?></b>
              <?= round($bigram->getIdf(), 2)?>
             <button value="/name/update-article-count-bigram/<?= $bigram->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
                     title="Обновить количество товара">
                 <span class="glyphicon glyphicon-refresh" ></span>
-            </button>) 
+            </button>
         </td>
     </tr>
     <?php    foreach ($rawprices as $rawprice):?>

@@ -402,9 +402,6 @@ class NameController extends AbstractActionController
         $paginator->setDefaultItemCountPerPage(10);        
         $paginator->setCurrentPageNumber($page);
 
-        $totalRawpriceCount = $paginator->getTotalItemCount();
-        
-
         // Render the view template.
         return new ViewModel([
             'bigram' => $bigram,
@@ -412,7 +409,6 @@ class NameController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'nameManager' => $this->nameManager,
-            'totalRawpriceCount' => $totalRawpriceCount,
         ]);
     }
     
