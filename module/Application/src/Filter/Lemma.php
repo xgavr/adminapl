@@ -13,7 +13,7 @@ use Application\Entity\Token;
 use Application\Entity\Bigram;
 use Application\Validator\IsRU;
 use Application\Validator\IsEN;
-use Application\Validator\IsNum;
+use Application\Validator\IsNUM;
 use phpMorphy;
 
 /**
@@ -140,7 +140,7 @@ class Lemma extends AbstractFilter
     {
         $isRu = new IsRU();
         $isEn = new IsEN();
-        $isNum = new IsNum();
+        $isNum = new IsNUM();
         
         if ($isRu->isValid($lemma)){
             return Token::IS_DICT;
