@@ -1369,7 +1369,9 @@ class NameManager
                             ->findBigram($preWord, $word);
                     if ($bigram){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $result[] = ['idf' => $bigram->getIdf()/$bigram->getStatus()/$bigram->getFlag(),  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+                            if ($bigram->getFlag() == Bigram::WHITE_LIST){
+                                $result[] = ['idf' => $bigram->getIdf()/$bigram->getStatus(),  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+                            }    
                         }    
                     }    
                 }
@@ -1382,7 +1384,7 @@ class NameManager
             if ($a['idf'] == $b['idf']) {
                 return 0;
             }
-            return ($a['idf'] > $b['idf']) ? -1 : 1;            
+            return ($a['idf'] < $b['idf']) ? -1 : 1;            
         }); 
         
         $result = array_slice($result, 0, 10, true);
