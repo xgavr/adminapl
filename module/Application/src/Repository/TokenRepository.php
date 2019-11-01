@@ -265,6 +265,9 @@ class TokenRepository  extends EntityRepository
                 if ($params['isCorrect'] == 1){
                     $queryBuilder->andWhere('t.correct is not null');                
                 }    
+                if ($params['isCorrect'] == 0){
+                    $queryBuilder->andWhere('t.correct is null');                
+                }    
             }            
         }
 

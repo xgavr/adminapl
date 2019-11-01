@@ -354,6 +354,9 @@ class BigramRepository  extends EntityRepository
                 if ($params['isCorrect'] == 1){
                     $queryBuilder->andWhere('b.correct is not null');                
                 }    
+                if ($params['isCorrect'] == 0){
+                    $queryBuilder->andWhere('b.correct is null');                
+                }    
             }            
         }
 
