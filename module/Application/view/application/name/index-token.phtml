@@ -37,6 +37,10 @@ $this->headScript()
                         <option value="<?= $key?>"><?= $value?></option>
                     <?php endforeach;?>
                 </select>
+                <select id="correctSelect" style="width: 150px" class="form-control">
+                    <option value="0">Без корректировки</option>
+                    <option value="1">С корректировкой</option>
+                </select>
             </div>
         </div>
         <table id="table" 
@@ -133,20 +137,24 @@ $this->headScript()
         $('#table').bootstrapTable('refresh');
     }
 
-    var $table = $('#table'),
-        $ok = $('#ok'), 
-        $statusSelect = $('#statusSelect');
-        $flagSelect = $('#flagSelect');
+    var table = $('#table'),
+        ok = $('#ok'), 
+        statusSelect = $('#statusSelect'),
+        flagSelect = $('#flagSelect'),
+        correctSelect = $('#correctSelect');
 
     $(function () {
-        $ok.click(function () {
-            $table.bootstrapTable('refresh');
+        ok.click(function () {
+            table.bootstrapTable('refresh');
         });
-        $statusSelect.change(function () {
-            $table.bootstrapTable('refresh');
+        statusSelect.change(function () {
+            table.bootstrapTable('refresh');
         });
-        $flagSelect.change(function () {
-            $table.bootstrapTable('refresh');
+        flagSelect.change(function () {
+            table.bootstrapTable('refresh');
+        });
+        correctSelect.change(function () {
+            table.bootstrapTable('refresh');
         });
     });
     
@@ -163,8 +171,9 @@ $this->headScript()
             params.offset = params.limit * (offset - 1);
         }
         
-        params.status = $statusSelect.val();
-        params.flag = $flagSelect.val();
+        params.status = statusSelect.val();
+        params.flag = flagSelect.val();
+        params.isCorrect = correctSelect.val();
         
         return params;
     }
@@ -174,7 +183,7 @@ $this->headScript()
         str += '<a href="/name/view-token/' + row.id + '" target="_blank">' + value + '</a>';
         str += '</div>';
         if (row.correct){
-            str += '<div><small class="text-success">'+row.correct+'</small></div>';
+            str += ' <div><small class="text-success">'+row.correct+'</small></div>';
         }
 
         return str; 

@@ -111,20 +111,21 @@ class BigramRepository  extends EntityRepository
      * 
      * @param string $lemma1
      * @param string $lemma2
+     * @param bool $outCorrect
+     * 
      * @return type
      */
-    public function findBigram($lemma1, $lemma2 = null)
+    public function findBigram($lemma1, $lemma2 = null, $outCorrect = true)
     {
         $bigram = $this->getEntityManager()->getRepository(Bigram::class)
                     ->findOneByBilemmaMd5($this->bilemmaMd5($lemma1, $lemma2));
-        if ($bigram){
+        if ($bigram && $outCorrect){
             if ($bigram->getCorrect()){
                 $correct = $bigram->getCorrectAsArray();
                 $bigram = $this->getEntityManager()->getRepository(Bigram::class)
                             ->findOneByBilemmaMd5($this->bilemmaMd5($correct[0], $correct[1]));
             }    
-        }
-        
+        }        
         return $bigram;
     }
     
@@ -349,8 +350,14 @@ class BigramRepository  extends EntityRepository
                     ->setParameter('4', $params['flag'])
                         ;                
             }            
+            if (isset($params['isCorrect'])){
+                if ($params['isCorrect'] == 1){
+                    $queryBuilder->andWhere('b.correct is not null');                
+                }    
+            }            
         }
 
+//            var_dump($params); exit;
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }            

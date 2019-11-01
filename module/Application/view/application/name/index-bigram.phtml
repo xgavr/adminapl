@@ -27,15 +27,19 @@ $this->headScript()
                     <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
-                <select id="statusSelect" style="width: 170px" class="form-control">
+                <select id="statusSelect" style="width: 150px" class="form-control">
                     <?php foreach ($statuses as $key => $value):?>
                         <option value="<?= $key?>"><?= $value?></option>
                     <?php endforeach;?>
                 </select>
-                <select id="flagSelect" style="width: 170px" class="form-control">
+                <select id="flagSelect" style="width: 150px" class="form-control">
                     <?php foreach ($flags as $key => $value):?>
                         <option value="<?= $key?>"><?= $value?></option>
                     <?php endforeach;?>
+                </select>
+                <select id="correctSelect" style="width: 150px" class="form-control">
+                    <option value="0">Без корректировки</option>
+                    <option value="1">С корректировкой</option>
                 </select>
             </div>
         </div>
@@ -115,20 +119,24 @@ $this->headScript()
         $('#table').bootstrapTable('refresh');
     }
 
-    var $table = $('#table'),
-        $ok = $('#ok'), 
-        $statusSelect = $('#statusSelect');
-        $flagSelect = $('#flagSelect');
+    var table = $('#table'),
+        ok = $('#ok'), 
+        statusSelect = $('#statusSelect'),
+        flagSelect = $('#flagSelect'),
+        correctSelect = $('#correctSelect');
 
     $(function () {
-        $ok.click(function () {
-            $table.bootstrapTable('refresh');
+        ok.click(function () {
+            table.bootstrapTable('refresh');
         });
-        $statusSelect.change(function () {
-            $table.bootstrapTable('refresh');
+        statusSelect.change(function () {
+            table.bootstrapTable('refresh');
         });
-        $flagSelect.change(function () {
-            $table.bootstrapTable('refresh');
+        flagSelect.change(function () {
+            table.bootstrapTable('refresh');
+        });
+        correctSelect.change(function () {
+            table.bootstrapTable('refresh');
         });
     });
     
@@ -145,8 +153,9 @@ $this->headScript()
             params.offset = params.limit * (offset - 1);
         }
         
-        params.status = $statusSelect.val();
-        params.flag = $flagSelect.val();
+        params.status = statusSelect.val();
+        params.flag = flagSelect.val();
+        params.isCorrect = correctSelect.val();
         
         return params;
     }
@@ -155,6 +164,9 @@ $this->headScript()
         var str = '<div class="pull-left">';
         str += '<a href="/name/view-bigram/' + row.id + '" target="_blank">' + value + '</a>';
         str += '</div>';
+        if (row.correct){
+            str += ' <div><small class="text-success">'+row.correct+'</small></div>';
+        }
 
         return str; 
     }    

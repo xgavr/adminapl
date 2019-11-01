@@ -84,6 +84,7 @@ class NameController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $status = $this->params()->fromQuery('status', Token::IS_DICT);
         $flag = $this->params()->fromQuery('flag', Token::WHITE_LIST);
+        $isCorrect = $this->params()->fromQuery('isCorrect');
         
         $query = $this->entityManager->getRepository(Token::class)
                         ->findAllToken([
@@ -92,6 +93,7 @@ class NameController extends AbstractActionController
                             'order' => $order, 
                             'status' => $status,
                             'flag' => $flag,
+                            'isCorrect' => $isCorrect,
                                 ]);
         
         $total = count($query->getResult(2));
@@ -339,6 +341,7 @@ class NameController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $status = $this->params()->fromQuery('status', Bigram::RU_RU);
         $flag = $this->params()->fromQuery('flag', Bigram::WHITE_LIST);
+        $isCorrect = $this->params()->fromQuery('isCorrect');
         
         $query = $this->entityManager->getRepository(Bigram::class)
                         ->findAllBigram([
@@ -347,12 +350,17 @@ class NameController extends AbstractActionController
                             'order' => $order, 
                             'status' => $status,
                             'flag' => $flag,
+                            'isCorrect' => $isCorrect,
                                 ]);
         
         $total = count($query->getResult(2));
         
-        if ($offset) $query->setFirstResult( $offset );
-        if ($limit) $query->setMaxResults( $limit );
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
 
         $result = $query->getResult(2);
         

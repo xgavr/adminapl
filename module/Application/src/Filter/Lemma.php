@@ -158,26 +158,30 @@ class Lemma extends AbstractFilter
     /**
      * Корректировка биграмами
      * 
-     * @param type $words
+     * @param string $lemms
      * @return array
      */
     protected function _correctBigram($lemms)
     {
+//        var_dump($lemms);
+        $result = [];
         $preWord = null;
         foreach ($lemms as $k => $words){
-            foreach ($words as $key => $word){                
+            foreach ($words as $key => $word){
+                $result[$k][$key] = $word;
                 if ($k > 0){
                     $bigram = $this->entityManager->getRepository(Bigram::class)
-                                    ->findBigram($preWord, $word);
+                                    ->findBigram($preWord, $word, false);
                     if ($bigram){
+//                        var_dump($bigram->getCorrect());
                         if ($bigram->getCorrect()){
                             $bilemma = $bigram->getCorrectAsArray();
-                            $lemms[$k-1] = null;
-                            $lemms[$k] = null;
+                            unset($result[$k-1]);
+                            unset($result[$k]);
                             
-                            $words[$k-1][$this->_lemmaStatus($bilemma[0])] = $bilemma[0];
+                            $result[$k-1][$this->_lemmaStatus($bilemma[0])] = $bilemma[0];
                             if (isset($bilemma[1])){
-                                $lemms[$k][$this->_lemmaStatus($bilemma[1])] = $bilemma[1];                                
+                                $result[$k][$this->_lemmaStatus($bilemma[1])] = $bilemma[1];                                
                                 $word = $bilemma[1];
                             }
                         }
@@ -186,8 +190,9 @@ class Lemma extends AbstractFilter
                 $preWord = $word;
             }
         }    
-        ksort($lemms);
-        return $lemms;
+        ksort($result);
+//        var_dump($result); exit;
+        return $result;
     }
     
     public function filter($value)
