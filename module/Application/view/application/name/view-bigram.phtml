@@ -67,7 +67,7 @@ $this->pageBreadcrumbs()->setItems([
     </tr>
     <tr>
         <td colspan="3">
-            <?= $this->paginationControl($rawprices,
+            <?= $this->paginationControl($articles,
                         'Sliding',
                         'application/partial/paginator', 
                         ['route' => array('route' => 'name', 'action' => 'view-bigram', 'id' => $bigram->getId())]); ?>
@@ -82,34 +82,37 @@ $this->pageBreadcrumbs()->setItems([
             </button>
         </td>
     </tr>
-    <?php    foreach ($rawprices as $rawprice):?>
-        <tr>
-            <td>
-                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
-                    <?= $rawprice->getArticle();?>
-                </a>   
-            </td>
-            <td>
-                <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
-                    <?= $rawprice->getUnknownProducer()->getName();?>
-                </a>   
-            </td>
-            <td>
-                <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
-                    <?= $rawprice->getGoodname();?>
-                </a>    
-            </td>
-            <td align="right">
-                <?= $rawprice->getPrice();?>
-            </td>
-            <td align="right">
-                <?= $rawprice->getRest();?>
-            </td>
-        </tr>
+    <?php    foreach ($articles as $article):?>
+        <?php $rawprices = $articleManager->articleRawprices($article);?>
+        <?php    foreach ($rawprices as $rawprice):?>
+            <tr>
+                <td>
+                    <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
+                        <?= $rawprice->getArticle();?>
+                    </a>   
+                </td>
+                <td>
+                    <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
+                        <?= $rawprice->getUnknownProducer()->getName();?>
+                    </a>   
+                </td>
+                <td>
+                    <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
+                        <?= $rawprice->getGoodname();?>
+                    </a>    
+                </td>
+                <td align="right">
+                    <?= $rawprice->getPrice();?>
+                </td>
+                <td align="right">
+                    <?= $rawprice->getRest();?>
+                </td>
+            </tr>
+        <?php endforeach;?>        
     <?php endforeach;?>        
     <tr>
         <td colspan="5">
-            <?= $this->paginationControl($rawprices,
+            <?= $this->paginationControl($articles,
                         'Sliding',
                         'application/partial/paginator', 
                         ['route' => array('route' => 'name', 'action' => 'view-bigram', 'id' => $bigram->getId())]); ?>

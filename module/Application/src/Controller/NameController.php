@@ -394,10 +394,10 @@ class NameController extends AbstractActionController
                         ->findAllBigram(['next1' => $bigram->getBilemma()]); 
         
         
-        $rawpriceQuery = $this->entityManager->getRepository(Bigram::class)
-                        ->findBigramRawprice($bigram);
+        $articleQuery = $this->entityManager->getRepository(Bigram::class)
+                        ->findBigramArticles($bigram);
 
-        $adapter = new DoctrineAdapter(new ORMPaginator($rawpriceQuery, false));
+        $adapter = new DoctrineAdapter(new ORMPaginator($articleQuery, false));
         $paginator = new Paginator($adapter);
         $paginator->setDefaultItemCountPerPage(10);        
         $paginator->setCurrentPageNumber($page);
@@ -405,10 +405,10 @@ class NameController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'bigram' => $bigram,
-            'rawprices' => $paginator,
+            'articles' => $paginator,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
-            'nameManager' => $this->nameManager,
+            'articleManager' => $this->articleManager,
         ]);
     }
     

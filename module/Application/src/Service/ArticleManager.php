@@ -283,6 +283,18 @@ class ArticleManager
     }    
     
     /**
+     * Строки прайсов артикула
+     * @param Article $article
+     * 
+     * @return array
+     */
+    public function articleRawprices($article)
+    {
+        return $this->entityManager->getRepository(Rawprice::class)
+                ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED]);
+    }
+    
+    /**
      * Случайная выборка из прайсов по id артикля и id поставщика 
      * @param array $params
      * @return object      

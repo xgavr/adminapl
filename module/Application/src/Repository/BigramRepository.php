@@ -363,24 +363,23 @@ class BigramRepository  extends EntityRepository
     }            
     
     /**
-     * Найти строки прайсов биграма
+     * Найти артикулы биграма
      * 
      * @param Bigram $bigram
      * @return object
      */
-    public function findBigramRawprice($bigram)
+    public function findBigramArticles($bigram)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r')
-            ->from(Rawprice::class, 'r')
-            ->join('r.code', 'a')
+        $queryBuilder->select('a')
+            ->from(Article::class, 'a')
             ->join('a.articleBigrams', 'ab')
             ->where('ab.bigram = ?1')    
-            ->andWhere('r.status = ?2')    
+//            ->andWhere('r.status = ?2')    
             ->setParameter('1', $bigram->getId())
-            ->setParameter('2', Rawprice::STATUS_PARSED)
+//            ->setParameter('2', Rawprice::STATUS_PARSED)
             ;
         
         return $queryBuilder->getQuery();            
