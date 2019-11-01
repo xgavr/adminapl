@@ -83,7 +83,7 @@ $this->pageBreadcrumbs()->setItems([
         </td>
     </tr>
     <?php    foreach ($articles as $article):?>
-        <?php $rawprices = $articleManager->articleRawprices($article);?>
+        <?php $rawprices = $articleManager->articleRawprices($article, 1);?>
         <?php    foreach ($rawprices as $rawprice):?>
             <tr>
                 <td>

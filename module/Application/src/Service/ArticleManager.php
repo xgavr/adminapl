@@ -285,13 +285,14 @@ class ArticleManager
     /**
      * Строки прайсов артикула
      * @param Article $article
+     * @param integer $limit
      * 
      * @return array
      */
-    public function articleRawprices($article)
+    public function articleRawprices($article, $limit = null)
     {
         return $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED]);
+                ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED], null, $limit);
     }
     
     /**
