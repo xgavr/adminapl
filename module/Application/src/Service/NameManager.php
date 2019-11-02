@@ -1369,7 +1369,7 @@ class NameManager
                             ->findBigram($preWord, $word);
                     if ($bigram){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $pmi = log($bigram->getFrequency()/($preToken->getFrequency()*$token->getFrequency()));
+                            $pmi = log(($bigram->getFrequency()/$gc)/(($preToken->getFrequency()/$gc)*($token->getFrequency()/$gc)));
                             if ($pmi < 0){
                                 $pmi = 0;
                             }
