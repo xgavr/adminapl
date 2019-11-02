@@ -1351,7 +1351,7 @@ class NameManager
      */
     public function rawpriceToMlTitle($rawprice)
     {
-        $gc = 1035342;
+        $gc = 1044197;
         $result = [];               
         $lemms = $this->lemmsFromRawprice($rawprice);
         $preWord = $preToken = null;
@@ -1369,7 +1369,11 @@ class NameManager
                             ->findBigram($preWord, $word);
                     if ($bigram){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $result[] = ['idf' => $bigram->getIdf()/$bigram->getStatus()/$bigram->getFlag(),  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+                            $pmi = log($bigram->getFrequency()/($preToken->getFrequency()*$token->getFrequency()));
+                            if ($pmi < 0){
+                                $pmi = 0;
+                            }
+                            $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
                         }    
                     }    
                 }
@@ -1379,10 +1383,10 @@ class NameManager
         }
         
         usort($result, function($a, $b){
-            if ($a['idf'] == $b['idf']) {
+            if ($a['pmi'] == $b['pmi']) {
                 return 0;
             }
-            return ($a['idf'] > $b['idf']) ? -1 : 1;            
+            return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
         }); 
         
         $result = array_slice($result, 0, 10, true);
