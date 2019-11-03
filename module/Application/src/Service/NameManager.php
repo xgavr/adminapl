@@ -639,6 +639,7 @@ class NameManager
         $lemms = $this->lemmsFromRawprice($rawprice);
 //        var_dump($lemms);
         $preWord = $preToken = $token = null;
+        $k = 0;
         foreach ($lemms as $k => $words){
             foreach ($words as $key => $word){
                 if (mb_strlen($word) < 64){
