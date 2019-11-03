@@ -1370,7 +1370,7 @@ class NameManager
                     if ($bigram){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                             $pmi = log(($bigram->getFrequency()/$gc)/(($preToken->getFrequency()/$gc)*($token->getFrequency()/$gc)));
-                            if ($pmi < 0){
+                            if ($pmi < 0 && $bigram->getFlag() != Bigram::WHITE_LIST){
                                 $pmi = 0;
                             }
                             $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
