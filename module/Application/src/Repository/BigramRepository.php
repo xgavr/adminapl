@@ -122,8 +122,14 @@ class BigramRepository  extends EntityRepository
         if ($bigram && $outCorrect){
             if ($bigram->getCorrect()){
                 $correct = $bigram->getCorrectAsArray();
-                $bigram = $this->getEntityManager()->getRepository(Bigram::class)
-                            ->findOneByBilemmaMd5($this->bilemmaMd5($correct[0], $correct[1]));
+                $token2 = null;
+                if (isset($correct[1])){
+                    $token2 = $correct[1];
+                }
+                $bigram = $this->findBigram($correct[0], $token2, $outCorrect);
+                if (!$bigram){
+                    return $this->insertBigram($correct[0], $token2);
+                }
             }    
         }        
         return $bigram;

@@ -525,7 +525,11 @@ class NameManager
     {
         $bigram->setCorrect($correctStr);
         $bilemms = explode(' ', $correctStr); 
-        $bigram->setStatus($this->entityManager->getRepository(Bigram::class)->biStatus($bilemms[0], $bilemms[1]));        
+        $token2 = null;
+        if (isset($bilemms[1])){
+            $token2 = $bilemms[1];
+        }
+        $bigram->setStatus($this->entityManager->getRepository(Bigram::class)->biStatus($bilemms[0], $token2));        
         
         $this->entityManager->persist($bigram);
         $this->entityManager->flush($bigram);

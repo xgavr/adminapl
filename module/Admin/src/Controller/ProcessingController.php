@@ -327,11 +327,12 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getBankTransferSettings();
 
+        $ok = 'ok-reload';
+        $message = null;
         if ($settings['statement_by_api'] == 1){
         
             $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
-
-            $ok = 'ok-reload';
+            
             $message = '';
             if ($result !== true){
                 $message = 'Потерян доступ к банку Точка для обновления выписки'.PHP_EOL;
