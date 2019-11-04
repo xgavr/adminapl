@@ -326,9 +326,10 @@ class BigramRepository  extends EntityRepository
         
         if (is_array($params)){
             if (isset($params['q'])){
-                $queryBuilder->where('b.bilemma like :search')
-                    ->setParameter('search', '%' . $params['q'] . '%')
-                        ;
+                $orX = $queryBuilder->expr()->orX();
+                $orX->add($queryBuilder->expr()->like('b.bilemma', '%' . $params['q'] . '%'));
+                $orX->add($queryBuilder->expr()->like('b.correct', '%' . $params['q'] . '%'));
+                $queryBuilder->andWhere($orX);
             }
             if (isset($params['next1'])){
                 $queryBuilder->where('b.bilemma > ?1')
