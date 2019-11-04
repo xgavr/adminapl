@@ -1388,6 +1388,22 @@ class NameManager
                 $preToken = $token;
             }
         }
+        if ($k == 0 && $token){
+            $bigram = $this->entityManager->getRepository(Bigram::class)
+                            ->findBigram($token->getLemma());
+
+            if ($bigram){
+                if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+                    $pmi = log(($bigram->getFrequency()/$gc)/($token->getFrequency()/$gc));
+                    if ($pmi < 0 
+                            || $bigram->getFlag() != Bigram::WHITE_LIST
+                            || $bigram->getFrequency() < 100){
+                        $pmi = 0;
+                    }
+                    $result[] = ['pmi' => $pmi, 'token1' => $token, 'bigram' => $bigram];
+                }    
+            }    
+        }
         
         usort($result, function($a, $b){
             if ($a['pmi'] == $b['pmi']) {

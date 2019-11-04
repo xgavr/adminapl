@@ -39,8 +39,6 @@ $this->pageBreadcrumbs()->setItems([
                             <?php if (is_array($token)):?>
                                 <?php if ($token['bigram']):?>
                                     <small><?= $token['bigram']->getBilemma()?></small>
-                                <?php else: ?>
-                                    <small><?= $token['token1']->getLemma()?></small>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>
@@ -64,9 +62,9 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php if ($token['bigram']):?>
                                     <small>b:<?= $token['bigram']->getFrequency(); ?></small>
                                     <small>t1:<?= $token['token1']->getFrequency(); ?></small> 
+                                <?php endif; ?>
+                                <?php if ($token['token2']):?>
                                     <small>t2:<?= $token['token2']->getFrequency(); ?></small> 
-                                <?php else: ?>
-                                    <small>t1:<?= $token['token1']->getFrequency(); ?></small> 
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>
@@ -79,9 +77,9 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php if ($token['bigram']):?>
                                     <small>b:<?= $token['bigram']->getIdf(); ?></small>
                                     <small>t1:<?= $token['token1']->getIdf(); ?></small> 
+                                <?php endif; ?>
+                                <?php if ($token['token2']):?>
                                     <small>t2:<?= $token['token2']->getIdf(); ?></small> 
-                                <?php else: ?>
-                                    <small>t1:<?= $token['token1']->getIdf(); ?></small> 
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>
