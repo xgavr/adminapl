@@ -1376,8 +1376,7 @@ class NameManager
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                             $pmi = log(($bigram->getFrequency()/$gc)/(($preToken->getFrequency()/$gc)*($token->getFrequency()/$gc)));
                             if ($pmi < 0 
-                                    || $bigram->getFlag() != Bigram::WHITE_LIST
-                                    || $bigram->getFrequency() < 100){
+                                    || $bigram->getFlag() != Bigram::WHITE_LIST){
                                 $pmi = 0;
                             }
                             $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
@@ -1396,8 +1395,7 @@ class NameManager
                 if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                     $pmi = log(($bigram->getFrequency()*1000)/($token->getFrequency()));
                     if ($pmi < 0 
-                            || $bigram->getFlag() != Bigram::WHITE_LIST
-                            || $bigram->getFrequency() < 100){
+                            || $bigram->getFlag() != Bigram::WHITE_LIST){
                         $pmi = 0;
                     }
                     $result[] = ['pmi' => $pmi, 'token1' => $token, 'bigram' => $bigram];
