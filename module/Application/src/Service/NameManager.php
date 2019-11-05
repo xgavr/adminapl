@@ -1393,7 +1393,7 @@ class NameManager
 
             if ($bigram){
                 if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                    $pmi = log(($bigram->getFrequency()*1000)/($token->getFrequency()));
+                    $pmi = log(($bigram->getFrequency()*$gc)/($token->getFrequency()*2));
                     if ($pmi < 0 
                             || $bigram->getFlag() != Bigram::WHITE_LIST){
                         $pmi = 0;
