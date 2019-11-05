@@ -330,7 +330,7 @@ class BigramRepository  extends EntityRepository
                 $orX->add($queryBuilder->expr()->like('b.bilemma', ':search'));
                 $orX->add($queryBuilder->expr()->like('b.correct', ':search'));
                 $queryBuilder->andWhere($orX)
-                    ->setParameter('search', '%' . $params['q'] . '%')
+                    ->setParameter('search', '%' . trim($params['q']) . '%')
                         ;
             }
             if (isset($params['next1'])){

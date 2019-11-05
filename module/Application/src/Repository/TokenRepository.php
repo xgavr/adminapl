@@ -235,8 +235,7 @@ class TokenRepository  extends EntityRepository
                 $orX->add($queryBuilder->expr()->like('t.lemma', ':search'));
                 $orX->add($queryBuilder->expr()->like('t.correct', ':search'));
                 $queryBuilder->andWhere($orX)
-                    ->setParameter('search', '%' . $params['q'] . '%')
-                        ;
+                    ->setParameter('search', '%' . trim($params['q']) . '%')
                         ;
             }
             if (isset($params['next1'])){
