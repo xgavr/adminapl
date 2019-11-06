@@ -1435,7 +1435,7 @@ class NameManager
                     $result[$signToken['token1']->getId()] = $signToken['token1'];
                 }
                 if (isset($signToken['token2'])){
-                    if ($signToken['token2']->getStatus() == Token::IS_DICT && $signToken['token1']->getFlag() == Token::WHITE_LIST){
+                    if ($signToken['token2']->getStatus() == Token::IS_DICT && $signToken['token2']->getFlag() == Token::WHITE_LIST){
                         $result[$signToken['token2']->getId()] = $signToken['token2'];
                     }
                 }    
