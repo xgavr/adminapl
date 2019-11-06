@@ -1432,11 +1432,11 @@ class NameManager
         foreach ($rawpriceTokens as $signToken){
             if ($signToken['pmi'] > 0){
                 if ($signToken['token1']->getStatus() == Token::IS_DICT && $signToken['token1']->getFlag() == Token::WHITE_LIST){
-                    $result[$signToken['token1']->getId()] = $signToken['token1']->getLemma();
+                    $result[$signToken['token1']->getId()] = $signToken['token1'];
                 }
                 if (isset($signToken['token2'])){
                     if ($signToken['token2']->getStatus() == Token::IS_DICT && $signToken['token1']->getFlag() == Token::WHITE_LIST){
-                        $result[$signToken['token2']->getId()] = $signToken['token2']->getLemma();
+                        $result[$signToken['token2']->getId()] = $signToken['token2'];
                     }
                 }    
             }
