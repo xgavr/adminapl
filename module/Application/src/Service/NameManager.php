@@ -1348,27 +1348,30 @@ class NameManager
         return $result;
     }
     
+    
     /**
-     * Характеристики наименованя из строки прайса
+     * Заголовок товара разбить на значимые токены 
      * 
      * @param Rawprice $rawprice
+     * @param integer $gc
+     * 
      * @return array
      */
-    public function rawpriceToMlTitle($rawprice)
+    public function titleToToken($rawprice, $gc = null)
     {
-        $gc = 1044197;
-        $result = [];               
+        if (!$gc){
+            $gc = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    ->count([]);
+        }
+        
+        $result = [];
         $lemms = $this->lemmsFromRawprice($rawprice);
         $preWord = $preToken = null;
         foreach ($lemms as $k => $words){
             foreach ($words as $key => $word){
                 $token = $this->entityManager->getRepository(Token::class)
                         ->findOneByLemma($word);
-                if ($token){
-                    if ($token->getStatus() === Token::IS_DICT){
-//                        $result[$token->getIdf().'_'.$token->getId()] = $token;
-                    }    
-                } 
+
                 if ($k > 0){
                     $bigram = $this->entityManager->getRepository(Bigram::class)
                             ->findBigram($preWord, $word);
@@ -1412,7 +1415,18 @@ class NameManager
             return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
         }); 
         
-        $result = array_slice($result, 0, 10, true);
+        return array_slice($result, 0, 10, true);
+    }
+    
+    /**
+     * Характеристики наименованя из строки прайса
+     * 
+     * @param Rawprice $rawprice
+     * @return array
+     */
+    public function rawpriceToMlTitle($rawprice)
+    {
+        $result = $this->titleToToken($rawprice, 1040000);
         $empt = array_fill(200, 10 - count($result), false);
 //        var_dump($empt);
         return array_merge($result, $empt);
