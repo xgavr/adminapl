@@ -1463,9 +1463,14 @@ class NameManager
                         ->rawpriceArticles($good);
         foreach ($rawprices as $rawprice){
             $rawpriceTokens = $this->titleToToken($rawprice, $gc);
+            $tokens = $this->signTokens($rawpriceTokens);
+            $tokenStr = [];
+            foreach ($tokens as $token){
+                $tokenStr[] = $token->getLemma();
+            }
             $result[] = [
                 'title' => $rawprice->getTitle(),
-                'tokens' => $this->signTokens($rawpriceTokens),
+                'tokens' => implode(' ', $tokenStr),
             ];
                     
         }
