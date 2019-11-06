@@ -1418,6 +1418,33 @@ class NameManager
         return array_slice($result, 0, 10, true);
     }
     
+    
+    /**
+     * Получить значимые токены наименования
+     * 
+     * @param array $rawpriceTokens
+     * 
+     * @return array
+     */
+    public function signTokens($rawpriceTokens)
+    {
+        $result = [];
+        foreach ($rawpriceTokens as $signToken){
+            if ($signToken['pmi'] > 0){
+                if ($signToken['token1']->getStatus() == Token::IS_DICT && $signToken['token1']->getFlag() == Token::WHITE_LIST){
+                    $result[$signToken['token1']->getId()] = $signToken['token1']->getLemma();
+                }
+                if (isset($signToken['token2'])){
+                    if ($signToken['token2']->getStatus() == Token::IS_DICT && $signToken['token1']->getFlag() == Token::WHITE_LIST){
+                        $result[$signToken['token2']->getId()] = $signToken['token2']->getLemma();
+                    }
+                }    
+            }
+        }
+        ksort($result);
+        return $result;
+    }
+    
     /**
      * Характеристики наименованя из строки прайса
      * 

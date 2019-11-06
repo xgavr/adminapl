@@ -13,6 +13,7 @@ use Application\Controller\RawpriceController;
 use Application\Service\SupplierManager;
 use Application\Service\RawManager;
 use Application\Service\ParseManager;
+use Application\Service\NameManager;
 
 
 /**
@@ -29,8 +30,9 @@ class RawpriceControllerFactory implements FactoryInterface {
         $supplierManager = $container->get(SupplierManager::class);
         $rawManager = $container->get(RawManager::class);
         $parseManager = $container->get(ParseManager::class);
+        $nameManager = $container->get(NameManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new RawpriceController($entityManager, $supplierManager, $rawManager, $parseManager);
+        return new RawpriceController($entityManager, $supplierManager, $rawManager, $parseManager, $nameManager);
     }
 }

@@ -45,13 +45,20 @@ class RawpriceController extends AbstractActionController
      */
     private $parseManager;    
     
+    /**
+     * Менеджер.
+     * @var \Application\Service\NameManager 
+     */
+    private $nameManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $supplierManager, $rawManager, $parseManager) 
+    public function __construct($entityManager, $supplierManager, $rawManager, $parseManager, $nameManager) 
     {
         $this->entityManager = $entityManager;
         $this->supplierManager = $supplierManager;
         $this->rawManager = $rawManager;
         $this->parseManager = $parseManager;
+        $this->nameManager = $nameManager;
     }    
     
     public function indexAction()
@@ -235,8 +242,10 @@ class RawpriceController extends AbstractActionController
         
         $articleTokens = null;
         if ($rawprice->getCode()){
-            $articleTokens = $this->entityManager->getRepository(\Application\Entity\Article::class)
-                    ->findArticleTokens($rawprice->getCode());
+//            $articleTokens = $this->entityManager->getRepository(\Application\Entity\Article::class)
+//                    ->findArticleTokens($rawprice->getCode());
+              $rawpriceTokens = $this->nameManager->titleToToken($rawprice);  
+              $articleTokens = $this->nameManager->signTokens($rawpriceTokens); 
         }
         
         // Render the view template.
