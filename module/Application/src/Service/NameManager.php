@@ -1446,6 +1446,33 @@ class NameManager
     }
     
     /**
+     * Токены наименований товара
+     * 
+     * @param \Application\Entity\Goods $good
+     * @param integer $gc
+     * @return array
+     */
+    public function goodSignTokens($good, $gc = null)
+    {
+        $result = [];
+        if (!$gc){
+            $gc = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    ->count([]);
+        }
+        $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                        ->rawpriceArticles($good);
+        foreach ($rawprices as $rawprice){
+            $rawpriceTokens = $this->titleToToken($rawprice, $gc);
+            $result[] = [
+                'title' => $rawprice->getTitle(),
+                'tokens' => $this->signTokens($rawpriceTokens),
+            ];
+                    
+        }
+        return $result;
+    }
+    
+    /**
      * Характеристики наименованя из строки прайса
      * 
      * @param Rawprice $rawprice
