@@ -921,7 +921,7 @@ class NameController extends AbstractActionController
         
         return new JsonModel([
             'result' => 'ok-reload',
-            'message' => $associator->getRules(),
+            'message' => $associator->apriori(),
         ]);          
     }
     
