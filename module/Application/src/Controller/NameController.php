@@ -909,7 +909,7 @@ class NameController extends AbstractActionController
         }
         
         $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                ->findOneById($goodId);
+                ->findOneById($goodId);        
         
         if ($good == null) {
             $this->getResponse()->setStatusCode(404);
@@ -917,10 +917,11 @@ class NameController extends AbstractActionController
         }        
 
         $data = $this->nameManager->goodSignTokens($good);
+        $associator = $this->nameManager->aprioriTokens($data);
         
         return new JsonModel([
             'result' => 'ok-reload',
-            'message' => $data,
+            'message' => $associator->getRules(),
         ]);          
     }
     

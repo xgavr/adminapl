@@ -19,6 +19,7 @@ use Application\Entity\ArticleBigram;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
+use Phpml\Association\Apriori;
 use Application\Filter\NameTokenizer;
 use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
@@ -1470,11 +1471,24 @@ class NameManager
             }
             $result[] = [
                 'title' => $rawprice->getTitle(),
-                'tokens' => implode(' ', $tokenStr),
+                'tokenStr' => implode(' ', $tokenStr),
             ];
                     
         }
         return $result;
+    }
+    
+    public function aprioriTokens($signTokens)
+    {
+        $associator = new Apriori($support = 0.5, $confidence = 0.5);
+        $labels = [];
+        $samples = [];
+        foreach ($signTokens as $signToken){
+            $samples[] = explode(' ', $signToken['tokenStr']);
+            $associator->train($samples, $labels);
+        }
+        
+        return $associator;
     }
     
     /**
