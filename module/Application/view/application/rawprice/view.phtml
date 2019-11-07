@@ -180,15 +180,24 @@ $this->pageBreadcrumbs()->setItems([
                                     <?php endif;?>    
                                 <?php elseif ($key == 'Наименование товара' && $rawprice->getStatusToken() != $rawprice::TOKEN_NEW):?>
                                     <?= $this->escapeHtml($value)?>
-                                    <?php if(count($articleTokens)):?>  
-                                        <div>    
+                                    <?php if($articleTokens):?>  
+                                    <div>    
                                             <?php foreach($articleTokens as $token):?>
                                                 <span style="font-size: xx-small; font-weight: <?= ($token->getStatus() == $token::IS_DICT) ? 'bold':'normal' ?>">
                                                     <a href="/name/view-token/<?= $token->getId() ?>"><?= $token->getLemma() ?></a>
                                                 </span>
                                             <?php endforeach;?>
                                         </div>        
-                                    <?php endif;?>                                                
+                                    <?php endif;?>
+                                    <?php if($articleBigrams):?>  
+                                        <div>    
+                                            <?php foreach($articleBigrams as $bigram):?>
+                                                <span style="font-size: xx-small; font-weight: <?= ($bigram->getStatus() == $bigram::RU_RU) ? 'bold':'normal' ?>">
+                                                    <a href="/name/view-bigram/<?= $bigram->getId() ?>"><?= $bigram->getBilemma() ?></a>
+                                                </span>
+                                            <?php endforeach;?>
+                                        </div>        
+                                    <?php endif;?>
                                 <?php else:?>
                                     <?= $this->escapeHtml($value)?>
                                 <?php endif;?>

@@ -343,6 +343,23 @@ class ArticleRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();        
     }
     
+    public function findArticleBigrams($article)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('b')
+                ->from(ArticleBigram::class, 'ab')
+                ->join(Bigram::class, 'b', 'WITH', 'b.id = ab.bigram')
+                ->distinct()
+                ->where('ab.article = ?1')
+                ->orderBy('b.status')
+                ->setParameter('1', $article->getId())
+                ;
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
     /**
      * Количество записей в прайсах с этим артикулом
      * в разрезе поставщиков
