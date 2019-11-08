@@ -1054,10 +1054,10 @@ class NameManager
      * Добавить группу наименований по токенам товара
      * 
      * @param Application\Entity\Goods $good
-     * @param bool $flush Description
+     * 
      * @return Application\Entity\TokenGroup Description
      */
-    public function addGroupTokenFromGood($good, $flush = true)
+    public function addGroupTokenFromGood($good)
     {
         
         $dictTokens = $this->entityManager->getRepository(Token::class)
@@ -1106,10 +1106,6 @@ class NameManager
                         ]);
             }                
         }    
-        
-        if ($tokenGroup){
-            $tokenGroup->addGood($good);
-        }
         
         $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->updateGoodId($good->getId(), ['token_group_id' => $tokenGroup->getId()]);
