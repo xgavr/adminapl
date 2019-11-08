@@ -1459,6 +1459,7 @@ class NameManager
                         ->rawpriceArticles($good);
         
         $idsFilter = new IdsFormat();
+        $maxK = 0;
         foreach ($rawprices as $rawprice){
             $rawpriceTokens = $this->titleToToken($rawprice, $gc);
             $tokens = $this->signTokens($rawpriceTokens);
@@ -1471,6 +1472,9 @@ class NameManager
             $ids = $idsFilter->filter($tokenId);
             if (array_key_exists($ids, $result)){
                 $result[$ids]['k'] += 1;
+                if ($maxK < $result[$ids]['k']){
+                    $maxK = $result[$ids]['k'];
+                }
             } else {
                 $result[$ids] = [
                     'k' => 1, 
@@ -1481,6 +1485,30 @@ class NameManager
                 ];
             }    
         }
+        
+        if (count($result) > 1){
+            $maxResult = array_filter($result, function($v) {
+                    return $v['k'] == $maxK;
+                });
+            if (count($maxResult) > 1){
+                foreach ($maxResult as $key => $value){
+                    $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                            ->findOneByIds($key);
+                    $maxResult[$key]['k'] = $maxK = 0;
+                    if ($tokenGroup){
+                        $maxResult[$key]['k'] = $tokenGroup->getGoodCount();
+                        if ($maxK < $maxResult[$ids]['k']){
+                            $maxK = $maxResult[$ids]['k'];
+                        }
+                    }    
+                }
+                return array_filter($maxResult, function($v) {
+                    return $v['k'] == $maxK;
+                });                
+            }    
+            return $maxResult;    
+        }
+        
         return $result;
     }
     
