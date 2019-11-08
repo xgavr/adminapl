@@ -1349,7 +1349,6 @@ class NameManager
         return $result;
     }
     
-    
     /**
      * Заголовок товара разбить на значимые токены 
      * 
@@ -1466,12 +1465,17 @@ class NameManager
             $rawpriceTokens = $this->titleToToken($rawprice, $gc);
             $tokens = $this->signTokens($rawpriceTokens);
             $tokenStr = [];
+            $tokenId = [];
             foreach ($tokens as $token){
                 $tokenStr[] = $token->getLemma();
+                $tokenId[] = $token->getId();
             }
             $result[] = [
                 'title' => $rawprice->getTitle(),
+                'tokenCount' => count($tokenStr),
                 'tokenStr' => implode(' ', $tokenStr),
+                'tokenId' => implode(' ', $tokenId),
+                'tokens' => $tokens,
             ];
                     
         }
@@ -1480,6 +1484,13 @@ class NameManager
     
     public function aprioriTokens($signTokens)
     {
+        usort($signTokens, function($a, $b){
+            if ($a['tokenCount'] == $b['tokenCount']) {
+                return 0;
+            }
+            return ($a['tokenCount'] > $b['tokenCount']) ? -1 : 1;            
+        }); 
+        
         $associator = new Apriori($support = 0.5, $confidence = 0.5);
         $labels = [];
         $samples = [];
