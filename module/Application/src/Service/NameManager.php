@@ -1487,7 +1487,7 @@ class NameManager
         }
         
         if (count($result) > 1){
-            $maxResult = array_filter($result, function($v) {
+            $maxResult = array_filter($result, function($v) use($maxK){
                     return $v['k'] == $maxK;
                 });
             if (count($maxResult) > 1){
@@ -1502,7 +1502,7 @@ class NameManager
                         }
                     }    
                 }
-                return array_filter($maxResult, function($v) {
+                return array_filter($maxResult, function($v)  use($maxK){
                     return $v['k'] == $maxK;
                 });                
             }    
