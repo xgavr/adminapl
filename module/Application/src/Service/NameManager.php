@@ -1461,6 +1461,8 @@ class NameManager
         }
         $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                         ->rawpriceArticles($good);
+        
+        $idsFilter = new IdsFormat();
         foreach ($rawprices as $rawprice){
             $rawpriceTokens = $this->titleToToken($rawprice, $gc);
             $tokens = $this->signTokens($rawpriceTokens);
@@ -1470,14 +1472,18 @@ class NameManager
                 $tokenStr[] = $token->getLemma();
                 $tokenId[] = $token->getId();
             }
-            $result[] = [
-                'title' => $rawprice->getTitle(),
-                'tokenCount' => count($tokenStr),
-                'tokenStr' => implode(' ', $tokenStr),
-                'tokenId' => implode(' ', $tokenId),
-                'tokens' => $tokens,
-            ];
-                    
+            $ids = $idsFilter->filter($tokenId);
+            if (array_key_exists($ids, $result)){
+                $result[$ids]['k'] += 1;
+            } else {
+                $result[$ids] = [
+                    'k' => 1, 
+                    'title' => $rawprice->getTitle(),
+                    'tokenCount' => count($tokenStr),
+                    'tokenStr' => implode(' ', $tokenStr),
+                    'tokens' => $tokens,
+                ];
+            }    
         }
         return $result;
     }
