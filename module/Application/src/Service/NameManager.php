@@ -1488,7 +1488,7 @@ class NameManager
             if ($a['tokenCount'] == $b['tokenCount']) {
                 return 0;
             }
-            return ($a['tokenCount'] < $b['tokenCount']) ? -1 : 1;            
+            return ($a['tokenCount'] > $b['tokenCount']) ? -1 : 1;            
         }); 
         
         $associator = new Apriori($support = 0.5, $confidence = 0.5);
