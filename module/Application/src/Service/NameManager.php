@@ -1345,7 +1345,6 @@ class NameManager
         return $result;
     }
     
-    
     /**
      * Заголовок товара разбить на значимые токены 
      * 
@@ -1458,24 +1457,42 @@ class NameManager
         }
         $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                         ->rawpriceArticles($good);
+        
+        $idsFilter = new IdsFormat();
         foreach ($rawprices as $rawprice){
             $rawpriceTokens = $this->titleToToken($rawprice, $gc);
             $tokens = $this->signTokens($rawpriceTokens);
             $tokenStr = [];
+            $tokenId = [];
             foreach ($tokens as $token){
                 $tokenStr[] = $token->getLemma();
+                $tokenId[] = $token->getId();
             }
-            $result[] = [
-                'title' => $rawprice->getTitle(),
-                'tokenStr' => implode(' ', $tokenStr),
-            ];
-                    
+            $ids = $idsFilter->filter($tokenId);
+            if (array_key_exists($ids, $result)){
+                $result[$ids]['k'] += 1;
+            } else {
+                $result[$ids] = [
+                    'k' => 1, 
+                    'title' => $rawprice->getTitle(),
+                    'tokenCount' => count($tokenStr),
+                    'tokenStr' => implode(' ', $tokenStr),
+                    'tokens' => $tokens,
+                ];
+            }    
         }
         return $result;
     }
     
     public function aprioriTokens($signTokens)
     {
+        usort($signTokens, function($a, $b){
+            if ($a['tokenCount'] == $b['tokenCount']) {
+                return 0;
+            }
+            return ($a['tokenCount'] > $b['tokenCount']) ? -1 : 1;            
+        }); 
+        
         $associator = new Apriori($support = 0.5, $confidence = 0.5);
         $labels = [];
         $samples = [];
