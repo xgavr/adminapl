@@ -917,6 +917,7 @@ class NameController extends AbstractActionController
         }        
 
         $data = $this->nameManager->goodSignTokens($good);
+        unset($data['tokens']);
 //        $associator = $this->nameManager->aprioriTokens($data);
         
         return new JsonModel([
