@@ -1096,7 +1096,7 @@ class NameManager
         $tokenLemmsStr = $lemmsFilter->filter($tokenLemms);
         
         $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-            ->findByIds($tokenIdsStr);
+            ->findOneByIds($tokenIdsStr);
         
         if (!$tokenGroup){
             $this->entityManager->getRepository(TokenGroup::class)
@@ -1119,8 +1119,10 @@ class NameManager
             }                
         }    
         
-        $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                ->updateGoodId($good->getId(), ['token_group_id' => $tokenGroup->getId()]);
+        if ($tokenGroup){
+            $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    ->updateGoodId($good->getId(), ['token_group_id' => $tokenGroup->getId()]);
+        }    
                 
         return $tokenGroup;
     }
