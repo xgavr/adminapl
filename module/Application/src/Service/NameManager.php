@@ -1490,7 +1490,7 @@ class NameManager
             $maxResult = array_filter($result, function($v) use($maxK){
                     return $v['k'] == $maxK;
                 });
-            var_dump($maxResult);    
+            var_dump($maxK);    
             if (count($maxResult) > 1){
                 foreach ($maxResult as $key => $value){
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
