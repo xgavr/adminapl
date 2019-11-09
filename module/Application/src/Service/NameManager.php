@@ -1096,7 +1096,7 @@ class NameManager
         $tokenLemmsStr = $lemmsFilter->filter($tokenLemms);
         
         $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-            ->findTokenGroupByIds($tokenIdsStr);
+            ->findByIds($tokenIdsStr);
         
         if (!$tokenGroup){
             $this->entityManager->getRepository(TokenGroup::class)
