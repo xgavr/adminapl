@@ -1481,16 +1481,16 @@ class NameManager
                     'title' => $rawprice->getTitle(),
                     'tokenCount' => count($tokenStr),
                     'tokenStr' => implode(' ', $tokenStr),
-                    'tokens' => $tokens,
+                    //'tokens' => $tokens,
                 ];
             }    
         }
         
         if (count($result) > 1){
-            var_dump($maxK);    
             $maxResult = array_filter($result, function($v) use($maxK){
                     return $v['k'] == $maxK;
                 });
+            var_dump($result);    
             if (count($maxResult) > 1){
                 foreach ($maxResult as $key => $value){
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
