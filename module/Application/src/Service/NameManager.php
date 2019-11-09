@@ -263,6 +263,14 @@ class NameManager
      */
     public function updateCorrect($token, $correctStr = null)
     {
+        $oldCorrects = $token->getCorrectAsArray();
+        if ($oldCorrects){
+            foreach ($oldCorrects as $oldLemma){
+                $this->entityManager->getRepository(Article::class)
+                        ->updateTokenUpdateFlag($oldLemma);                
+            }
+        }
+
         $token->setCorrect($correctStr);
                 
         $ruValidator = new IsRU();
