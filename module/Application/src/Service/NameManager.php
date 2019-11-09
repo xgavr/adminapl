@@ -1469,21 +1469,23 @@ class NameManager
                 $tokenStr[] = $token->getLemma();
                 $tokenId[] = $token->getId();
             }
-            $ids = md5($idsFilter->filter($tokenId));
-            if (array_key_exists($ids, $result)){
-                $result[$ids]['k'] += 1;
-            } else {
-                $result[$ids] = [
-                    'k' => 1, 
-                    'title' => $rawprice->getTitle(),
-                    'tokenCount' => count($tokenStr),
-                    'tokenStr' => implode(' ', $tokenStr),
-                    //'tokens' => $tokens,
-                ];
+            $ids = $idsFilter->filter($tokenId);
+            if ($ids){
+                if (array_key_exists($ids, $result)){
+                    $result[$ids]['k'] += 1;
+                } else {
+                    $result[$ids] = [
+                        'k' => 1, 
+                        'title' => $rawprice->getTitle(),
+                        'tokenCount' => count($tokenStr),
+                        'tokenStr' => implode(' ', $tokenStr),
+                        //'tokens' => $tokens,
+                    ];
+                }    
+                if ($maxK < $result[$ids]['k']){
+                    $maxK = $result[$ids]['k'];
+                }
             }    
-            if ($maxK < $result[$ids]['k']){
-                $maxK = $result[$ids]['k'];
-            }
         }
         
         if (count($result) > 1){
