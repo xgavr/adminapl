@@ -1062,17 +1062,21 @@ class NameManager
      * Добавить группу наименований по токенам товара
      * 
      * @param Application\Entity\Goods $good
+     * @param integer $gc
      * 
      * @return Application\Entity\TokenGroup Description
      */
-    public function addGroupTokenFromGood($good)
+    public function addGroupTokenFromGood($good, $gc = null)
     {
+        if (!$gc){
+            $gc = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    ->count([]);
+        }
         
-        $dictTokens = $this->entityManager->getRepository(Token::class)
-                ->findTokenGoodsByStatus($good);
+        $dictTokens = $this->goodSignTokens($good, $gc);
         
 //        var_dump(count($dictTokens)); exit;
-        if (count($dictTokens) == 0){
+        if (count($dictTokens['tokens']) == 0){
             $this->entityManager->getRepository(\Application\Entity\Goods::class)
                     ->updateGoodId($good->getId(), ['token_group_id' => null]);
             return;
@@ -1080,9 +1084,9 @@ class NameManager
         
         $tokenIds = [];
         $tokenLemms = [];
-        foreach ($dictTokens as $token){
-            $tokenIds[] = $token['id'];
-            $tokenLemms[] = $token['lemma'];
+        foreach ($dictTokens['tokens'] as $token){
+            $tokenIds[] = $token->getId();
+            $tokenLemms[] = $token->getLemma();
         }
         
         $idsFilter = new IdsFormat();
@@ -1106,11 +1110,11 @@ class NameManager
             $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                 ->findOneByIds($tokenIdsStr);
 
-            foreach($dictTokens as $token){
+            foreach($dictTokens['tokens'] as $token){
                 $this->entityManager->getRepository(TokenGroup::class)
                         ->insertTokenGroupToken([
                             'token_group_id' => $tokenGroup->getId(),
-                            'token_id' => $token['id'],
+                            'token_id' => $token->getId(),
                         ]);
             }                
         }    
@@ -1132,13 +1136,16 @@ class NameManager
         set_time_limit(900);
         $startTime = time();
         
+        $gc = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->count([]);
+        
         $rawpricesQuery = $this->entityManager->getRepository(Token::class)
                 ->findTokenGroupsForAccembly($raw);
         $iterable = $rawpricesQuery->iterate();
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
-                $this->addGroupTokenFromGood($rawprice->getGood());
+                $this->addGroupTokenFromGood($rawprice->getGood(), $gc);
                 $this->entityManager->getRepository(Rawprice::class)
                         ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
                 $this->entityManager->detach($rawprice);
@@ -1487,7 +1494,7 @@ class NameManager
                         'title' => $rawprice->getTitle(),
                         'tokenCount' => count($tokenStr),
                         'tokenStr' => implode(' ', $tokenStr),
-                        //'tokens' => $tokens,
+                        'tokens' => $tokens,
                     ];
                 }    
                 if ($maxK < $result[$ids]['k']){
