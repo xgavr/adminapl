@@ -1472,9 +1472,6 @@ class NameManager
             $ids = $idsFilter->filter($tokenId);
             if (array_key_exists($ids, $result)){
                 $result[$ids]['k'] += 1;
-                if ($maxK < $result[$ids]['k']){
-                    $maxK = $result[$ids]['k'];
-                }
             } else {
                 $result[$ids] = [
                     'k' => 1, 
@@ -1484,6 +1481,9 @@ class NameManager
                     //'tokens' => $tokens,
                 ];
             }    
+            if ($maxK < $result[$ids]['k']){
+                $maxK = $result[$ids]['k'];
+            }
         }
         
         if (count($result) > 1){
