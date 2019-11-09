@@ -1469,8 +1469,8 @@ class NameManager
                 $tokenStr[] = $token->getLemma();
                 $tokenId[] = $token->getId();
             }
-            $ids = $idsFilter->filter($tokenId);
-            if ($ids){
+            if (count($tokenId)){
+                $ids = md5($idsFilter->filter($tokenId));
                 if (array_key_exists($ids, $result)){
                     $result[$ids]['k'] += 1;
                 } else {
@@ -1492,7 +1492,6 @@ class NameManager
             $maxResult = array_filter($result, function($v) use($maxK){
                     return $v['k'] == $maxK;
                 });
-            var_dump($maxResult);    
             if (count($maxResult) > 1){
                 foreach ($maxResult as $key => $value){
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
@@ -1505,9 +1504,12 @@ class NameManager
                         }
                     }    
                 }
-                return array_filter($maxResult, function($v)  use($maxK){
+                $maxMaxResults = array_filter($maxResult, function($v)  use($maxK){
                     return $v['k'] == $maxK;
-                });                
+                });            
+                foreach ($maxMaxResults as $maxMaxResult){
+                    return $maxMaxResult;
+                }
             }    
             return $maxResult;    
         }
