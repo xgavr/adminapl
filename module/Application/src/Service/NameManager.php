@@ -1383,7 +1383,8 @@ class NameManager
         
         $result = [];
         $lemms = $this->lemmsFromRawprice($rawprice);
-        $preWord = $preToken = null;
+        $preWord = $preToken = $token = null;
+        $k = 0;
         foreach ($lemms as $k => $words){
             foreach ($words as $key => $word){
                 $token = $this->entityManager->getRepository(Token::class)
