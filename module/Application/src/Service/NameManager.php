@@ -1501,10 +1501,11 @@ class NameManager
                     return $v['k'] == $maxK;
                 });
             if (count($maxResult) > 1){
+                $maxK = 0;
                 foreach ($maxResult as $key => $value){
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                             ->findOneByIds($key);
-                    $maxResult[$key]['k'] = $maxK = 0;
+                    $maxResult[$key]['k'] = 0;
                     if ($tokenGroup){
                         $maxResult[$key]['k'] = $tokenGroup->getGoodCount();
                         if ($maxK < $maxResult[$key]['k']){
@@ -1514,15 +1515,21 @@ class NameManager
                 }
                 $maxMaxResults = array_filter($maxResult, function($v)  use($maxK){
                     return $v['k'] == $maxK;
-                });            
-                foreach ($maxMaxResults as $maxMaxResult){
-                    return $maxMaxResult;
-                }
+                });  
+                
+                usort($maxMaxResults, function($a, $b){
+                    if ($a['tokenCount'] == $b['tokenCount']) {
+                        return 0;
+                    }
+                    return ($a['tokenCount'] < $b['tokenCount']) ? -1 : 1;            
+                }); 
+                
+                return array_shift($maxMaxResults);
             }    
-            return $maxResult;    
+            return array_shift($maxResult);    
         }
         
-        return $result;
+        return array_shift($result);
     }
     
     public function aprioriTokens($signTokens)
