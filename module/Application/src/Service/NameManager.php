@@ -1393,7 +1393,7 @@ class NameManager
                 if ($k > 0 && $token && $preToken){
                     $bigram = $this->entityManager->getRepository(Bigram::class)
                             ->findBigram($preWord, $word);
-                    if ($bigram){
+                    if ($bigram && $preToken->getFrequency() > 0 && $token->getFrequency() > 0){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                             $pmi = log($bigram->getFrequency()*$gc*$bigram->getStatus()/($preToken->getFrequency()*$token->getFrequency()*$k));
                             if ($pmi < 0 
