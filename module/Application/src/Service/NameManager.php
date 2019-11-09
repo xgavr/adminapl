@@ -1385,7 +1385,7 @@ class NameManager
                 $token = $this->entityManager->getRepository(Token::class)
                         ->findOneByLemma($word);
 
-                if ($k > 0){
+                if ($k > 0 && $token && $preToken){
                     $bigram = $this->entityManager->getRepository(Bigram::class)
                             ->findBigram($preWord, $word);
                     if ($bigram){
