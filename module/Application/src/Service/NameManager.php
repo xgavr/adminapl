@@ -1076,57 +1076,59 @@ class NameManager
         $dictTokens = $this->goodSignTokens($good, $gc);
         
 //        var_dump(count($dictTokens)); exit;
-        if (isset($dictTokens['tokens'])){
-            if (count($dictTokens['tokens']) == 0){
-                $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                        ->updateGoodId($good->getId(), ['token_group_id' => null]);
-                return;
-            }
-
-            $tokenIds = [];
-            $tokenLemms = [];
-            foreach ($dictTokens['tokens'] as $token){
-                $tokenIds[] = $token->getId();
-                $tokenLemms[] = $token->getLemma();
-            }
-
-            $idsFilter = new IdsFormat();
-            $tokenIdsStr = md5($idsFilter->filter($tokenIds));
-
-            $lemmsFilter = new IdsFormat(['separator' => ' ']);
-            $tokenLemmsStr = $lemmsFilter->filter($tokenLemms);
-
-            $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                ->findOneByIds($tokenIdsStr);
-
-            if (!$tokenGroup){
-                $this->entityManager->getRepository(TokenGroup::class)
-                        ->insertTokenGroup([
-                            'name' => '',
-                            'lemms' => $tokenLemmsStr,
-                            'ids' => $tokenIdsStr,
-                            'good_count' => 0,
-                        ]);
-
-                $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                    ->findOneByIds($tokenIdsStr);
-
-                foreach($dictTokens['tokens'] as $token){
-                    $this->entityManager->getRepository(TokenGroup::class)
-                            ->insertTokenGroupToken([
-                                'token_group_id' => $tokenGroup->getId(),
-                                'token_id' => $token->getId(),
-                            ]);
-                }                
-            }    
-        }    
+        if ($dictTokens){
+            if (isset($dictTokens['tokens'])){
+                if (count($dictTokens['tokens']) > 0){
         
-        if ($tokenGroup){
-            $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                    ->updateGoodId($good->getId(), ['token_group_id' => $tokenGroup->getId()]);
+                    $tokenIds = [];
+                    $tokenLemms = [];
+                    foreach ($dictTokens['tokens'] as $token){
+                        $tokenIds[] = $token->getId();
+                        $tokenLemms[] = $token->getLemma();
+                    }
+
+                    $idsFilter = new IdsFormat();
+                    $tokenIdsStr = md5($idsFilter->filter($tokenIds));
+
+                    $lemmsFilter = new IdsFormat(['separator' => ' ']);
+                    $tokenLemmsStr = $lemmsFilter->filter($tokenLemms);
+
+                    $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findOneByIds($tokenIdsStr);
+
+                    if (!$tokenGroup){
+                        $this->entityManager->getRepository(TokenGroup::class)
+                                ->insertTokenGroup([
+                                    'name' => '',
+                                    'lemms' => $tokenLemmsStr,
+                                    'ids' => $tokenIdsStr,
+                                    'good_count' => 0,
+                                ]);
+
+                        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                            ->findOneByIds($tokenIdsStr);
+
+                        foreach($dictTokens['tokens'] as $token){
+                            $this->entityManager->getRepository(TokenGroup::class)
+                                    ->insertTokenGroupToken([
+                                        'token_group_id' => $tokenGroup->getId(),
+                                        'token_id' => $token->getId(),
+                                    ]);
+                        }                
+                    }    
+
+                    if ($tokenGroup){
+                        $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                                ->updateGoodId($good->getId(), ['token_group_id' => $tokenGroup->getId()]);
+                    }    
+
+                    return $tokenGroup;
+                }
+            }
         }    
-                
-        return $tokenGroup;
+        $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->updateGoodId($good->getId(), ['token_group_id' => null]);
+        return;
     }
     
     
