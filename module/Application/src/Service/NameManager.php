@@ -1487,10 +1487,10 @@ class NameManager
         }
         
         if (count($result) > 1){
+            var_dump($maxK);    
             $maxResult = array_filter($result, function($v) use($maxK){
                     return $v['k'] == $maxK;
                 });
-            var_dump($maxK);    
             if (count($maxResult) > 1){
                 foreach ($maxResult as $key => $value){
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
@@ -1498,8 +1498,8 @@ class NameManager
                     $maxResult[$key]['k'] = $maxK = 0;
                     if ($tokenGroup){
                         $maxResult[$key]['k'] = $tokenGroup->getGoodCount();
-                        if ($maxK < $maxResult[$ids]['k']){
-                            $maxK = $maxResult[$ids]['k'];
+                        if ($maxK < $maxResult[$key]['k']){
+                            $maxK = $maxResult[$key]['k'];
                         }
                     }    
                 }
