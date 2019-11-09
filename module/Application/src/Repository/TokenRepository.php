@@ -609,7 +609,7 @@ class TokenRepository  extends EntityRepository
                 ->from(Rawprice::class, 'r')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusGood = ?2')
-                ->andWhere('r.statusToken = ?3')
+//                ->andWhere('r.statusToken = ?3')
                 ->andWhere('r.status = ?4')
                 ->setParameter('1', $raw->getId())
                 ->setParameter('2', Rawprice::GOOD_OK)
