@@ -172,12 +172,12 @@ class GenericGroupRepository extends EntityRepository{
                     ->from(GenericGroup::class, 'gg')
                     ->join('gg.goods', 'g')
                     ->where('g.tokenGroup = ?1')
-                    ->andWhere('g.tdDirect = ?2')
+                    ->andWhere('g.tdDirect = ?3')
                     ->andWhere('gg.tdId != 0')
                     ->groupBy('gg.id')
                     ->orderBy('goodCount', 'DESC')
                     ->setParameter('1', $tokenGroup->getId())
-                    ->setParameter('2', Goods::TD_DIRECT)
+                    ->setParameter('3', Goods::TD_DIRECT)
                     ;
             if (isset($good)){
                 $queryBuilder->andWhere('gg.id != ?2')
