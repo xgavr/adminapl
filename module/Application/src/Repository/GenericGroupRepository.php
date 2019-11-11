@@ -181,6 +181,7 @@ class GenericGroupRepository extends EntityRepository{
                     ;
             if (isset($good)){
                 $queryBuilder->andWhere('gg.id != ?2')
+                        ->andHaving('goodCount > 5')
                         ->setParameter('2', $good->getId())
                         ;
             }
