@@ -10,6 +10,10 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\GenericGroup;
+use Application\Entity\Goods;
+use Application\Entity\TokenGroup;
+use Application\Entity\Token;
+
 /**
  * Description of GenericGroupRepository
  *
@@ -93,7 +97,7 @@ class GenericGroupRepository extends EntityRepository{
     
     /**
      * Установить пустую группу в товаре
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @return type
      */
     public function updateZeroGroupInGood($good)
@@ -154,8 +158,8 @@ class GenericGroupRepository extends EntityRepository{
     /**
      * Поиск группы по группе наименований
      * 
-     * @param \Application\Entity\TokenGroup $tokenGroup
-     * @param \Application\Entity\Goods $good
+     * @param TokenGroup $tokenGroup
+     * @param Goods $good
      */
     public function genericTokenGroup($tokenGroup, $good = null)
     {
@@ -168,10 +172,12 @@ class GenericGroupRepository extends EntityRepository{
                     ->from(GenericGroup::class, 'gg')
                     ->join('gg.goods', 'g')
                     ->where('g.tokenGroup = ?1')
+                    ->andWhere('g.tdDirect = !2')
                     ->andWhere('gg.tdId != 0')
                     ->groupBy('gg.id')
                     ->orderBy('goodCount', 'DESC')
                     ->setParameter('1', $tokenGroup->getId())
+                    ->setParameter('2', Goods::TD_DIRECT)
                     ;
             if (isset($good)){
                 $queryBuilder->andWhere('gg.id != ?2')
@@ -187,7 +193,7 @@ class GenericGroupRepository extends EntityRepository{
     /**
      * Выбор группы по группе наименований
      * 
-     * @param \Application\Entity\TokenGroup $tokenGroup
+     * @param TokenGroup $tokenGroup
      */
     public function findGenericTokenGroup($tokenGroup)
     {
@@ -219,7 +225,7 @@ class GenericGroupRepository extends EntityRepository{
 
             $queryBuilder->select('tg')
                     ->distinct()
-                    ->from(\Application\Entity\TokenGroup::class, 'tg')
+                    ->from(TokenGroup::class, 'tg')
                     ->join('tg.goods', 'g')
                     ->where('g.genericGroup = ?1')
                     ->setParameter('1', $genericGroup->getId())
@@ -251,7 +257,7 @@ class GenericGroupRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('t')
-                ->from(\Application\Entity\Token::class, 't')
+                ->from(Token::class, 't')
                 ->join('t.genericGroups', 'gg')
                 ->where('gg.id = ?1')
                 ->setParameter('1', $genericGroup->getId())
@@ -283,7 +289,7 @@ class GenericGroupRepository extends EntityRepository{
 
         $queryBuilder->select('t')
                 ->distinct()
-                ->from(\Application\Entity\Token::class, 't')
+                ->from(Token::class, 't')
                 ->join('t.tokenGroups', 'tg')
                 ->join('tg.goods', 'g')
                 ->where('g.genericGroup = ?1')
@@ -322,12 +328,12 @@ class GenericGroupRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('g.groupApl, count(g.id) as goodCount')
-                ->from(\Application\Entity\Goods::class, 'g')
+                ->from(Goods::class, 'g')
                 ->where('g.genericGroup = ?1')
                 ->andWhere('g.groupApl != ?2')
                 ->andWhere('g.groupApl != 0')
                 ->setParameter('1', $genericGroup->getId())
-                ->setParameter('2', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
+                ->setParameter('2', Goods::DEFAULT_GROUP_APL_ID)
                 ->groupBy('g.groupApl')
                 ->orderBy('goodCount', 'DESC')
                 ;
@@ -348,11 +354,11 @@ class GenericGroupRepository extends EntityRepository{
             $entityManager = $this->getEntityManager();
 
             $queryBuilder = $entityManager->createQueryBuilder();
-            $queryBuilder->update(\Application\Entity\Goods::class, 'g')
+            $queryBuilder->update(Goods::class, 'g')
                     ->where('g.genericGroup = ?1')
                     ->andWhere($queryBuilder->expr()->orX(
                             $queryBuilder->expr()->eq('g.groupApl', 0),
-                            $queryBuilder->expr()->eq('g.groupApl', \Application\Entity\Goods::DEFAULT_GROUP_APL_ID)
+                            $queryBuilder->expr()->eq('g.groupApl', Goods::DEFAULT_GROUP_APL_ID)
                         )
                     )
                     ->andWhere('g.groupApl != ?2')

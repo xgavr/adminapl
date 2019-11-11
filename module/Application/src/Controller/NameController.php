@@ -13,6 +13,7 @@ use Application\Entity\Rawprice;
 use Application\Entity\Token;
 use Application\Entity\Bigram;
 use Application\Entity\TokenGroup;
+use Application\Entity\GenericGroup;
 use Zend\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -832,7 +833,7 @@ class NameController extends AbstractActionController
 
         $totalGoodsCount = $paginator->getTotalItemCount();
         
-        $tdGroups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
+        $tdGroups = $this->entityManager->getRepository(GenericGroup::class)
                 ->genericTokenGroup($tokenGroup);
         
         $meanFrequency = $this->entityManager->getRepository(TokenGroup::class)
