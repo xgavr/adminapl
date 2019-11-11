@@ -960,6 +960,7 @@ class ExternalManager
                     ->updateGoodId($good->getId(), $data);            
         }
         
+        var_dump($statusData);
         $this->entityManager->getConnection()->update('goods', $statusData, ['id' => $good->getId()]);
         return;
     }
