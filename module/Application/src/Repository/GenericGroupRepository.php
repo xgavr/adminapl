@@ -172,7 +172,7 @@ class GenericGroupRepository extends EntityRepository{
                     ->from(GenericGroup::class, 'gg')
                     ->join('gg.goods', 'g')
                     ->where('g.tokenGroup = ?1')
-                    ->andWhere('g.tdDirect = !2')
+                    ->andWhere('g.tdDirect = ?2')
                     ->andWhere('gg.tdId != 0')
                     ->groupBy('gg.id')
                     ->orderBy('goodCount', 'DESC')
