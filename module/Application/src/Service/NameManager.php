@@ -16,6 +16,8 @@ use Application\Entity\TokenGroup;
 use Application\Entity\GoodToken;
 use Application\Entity\Bigram;
 use Application\Entity\ArticleBigram;
+use Application\Entity\Goods;
+use Application\Entity\GoodTitle;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -490,7 +492,7 @@ class NameManager
 //            var_dump($articleCount);
         }    
         if ($goods == null){
-            $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+            $goods = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
         
@@ -509,7 +511,7 @@ class NameManager
         set_time_limit(1800);        
         ini_set('memory_limit', '2048M');
         
-        $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $goods = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
         
         $tokensQuery = $this->entityManager->getRepository(Token::class)
@@ -563,7 +565,7 @@ class NameManager
                     ->bigramGoodCount($bigram);
         }    
         if ($goods == null){
-            $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+            $goods = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
         
@@ -582,7 +584,7 @@ class NameManager
         set_time_limit(3600);        
         ini_set('memory_limit', '2048M');
         
-        $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $goods = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
         
         $bigramsQuery = $this->entityManager->getRepository(Bigram::class)
@@ -867,7 +869,7 @@ class NameManager
     /**
      * Поиск лучшего наименования для товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param \Phpml\Classification\KNearestNeighbors $$classifier
      * @return string
      */
@@ -884,7 +886,7 @@ class NameManager
         
         $normalizer = new \Phpml\Preprocessing\Normalizer();
         
-        $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->rawpriceArticles($good);
         $predicted = [];
         $titles = [];
@@ -911,7 +913,7 @@ class NameManager
      */
     private function avgD()
     {
-        $goodsCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $goodsCount = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
         $goodsTokenCount = $this->entityManager->getRepository(GoodToken::class)
                 ->count([]);
@@ -924,7 +926,7 @@ class NameManager
     /**
      * Добавить токены товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param float avgD
      */
     public function addGoodTokenFromGood($good, $avgD = null, $update = true)
@@ -982,11 +984,11 @@ class NameManager
     /**
      * Получить строку наименований товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function goodTitlesIds($good)
     {
-        $articleTitles = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $articleTitles = $this->entityManager->getRepository(Goods::class)
                 ->findArticleTitles($good);
         
         if (count($articleTitles)){
@@ -1025,17 +1027,17 @@ class NameManager
 //                    $goodTitleStrMd5 = md5($goodTitleStr);
 //
 //                    if ($goodTitleStr){ 
-//                        $goodTitle = $this->entityManager->getRepository(\Application\Entity\GoodTitle::class)
+//                        $goodTitle = $this->entityManager->getRepository(GoodTitle::class)
 //                                ->findOneBy(['good' => $good->getId(), 'titleMd5' => $goodTitleStrMd5]);
 //
 //                        if ($goodTitle == null){
 //                            
-//                            $this->entityManager->getRepository(\Application\Entity\Goods::class)
+//                            $this->entityManager->getRepository(Goods::class)
 //                                    ->removeGoodTitles($good);
 //                            
 //                            $this->addGoodTokenFromGood($good, $avgD);
 //
-//                            $this->entityManager->getRepository(\Application\Entity\Goods::class)
+//                            $this->entityManager->getRepository(Goods::class)
 //                                    ->insertGoodTitle(['good_id' => $good->getId(), 'title' => $goodTitleStr, 'title_md5' => $goodTitleStrMd5]);
 //                        }    
 //                    }    
@@ -1069,7 +1071,7 @@ class NameManager
     public function addGroupTokenFromGood($good, $gc = null)
     {
         if (!$gc){
-            $gc = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+            $gc = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
         
@@ -1118,7 +1120,7 @@ class NameManager
                     }    
 
                     if ($tokenGroup){
-                        $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                        $this->entityManager->getRepository(Goods::class)
                                 ->updateGoodId($good->getId(), ['token_group_id' => $tokenGroup->getId()]);
                     }    
 
@@ -1126,7 +1128,7 @@ class NameManager
                 }
             }
         }    
-        $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $this->entityManager->getRepository(Goods::class)
                 ->updateGoodId($good->getId(), ['token_group_id' => null]);
         return;
     }
@@ -1142,7 +1144,7 @@ class NameManager
         set_time_limit(900);
         $startTime = time();
         
-        $gc = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $gc = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
         
         $rawpricesQuery = $this->entityManager->getRepository(Token::class)
@@ -1151,9 +1153,24 @@ class NameManager
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
-                $this->addGroupTokenFromGood($rawprice->getGood(), $gc);
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
+                
+                $goodTitleStr = $this->goodTitlesIds($good);
+                $goodTitleStrMd5 = md5($goodTitleStr);
+                
+                if ($goodTitleStr){ 
+                    $goodTitle = $this->entityManager->getRepository(GoodTitle::class)
+                            ->findOneBy(['good' => $good->getId(), 'titleMd5' => $goodTitleStrMd5]);
+
+                    if ($goodTitle == null){
+
+                        $this->entityManager->getRepository(Goods::class)
+                                ->removeGoodTitles($good);
+                        
+                        $this->addGroupTokenFromGood($rawprice->getGood(), $gc);
+                        $this->entityManager->getRepository(Rawprice::class)
+                                ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
+                    }
+                }    
                 $this->entityManager->detach($rawprice);
             }
             if (time() > $startTime + 840){
@@ -1193,7 +1210,7 @@ class NameManager
     public function updateTokenGroupGoodCount($tokenGroupId, $goodCount = null)
     {
         if ($goodCount === null){
-            $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+            $goodCount = $this->entityManager->getRepository(Goods::class)
                     ->count(['tokenGroup' => $tokenGroupId]);
         }    
         
@@ -1225,7 +1242,7 @@ class NameManager
      */
     public function removeTokenGroup($tokenGroup)
     {
-        $goods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $goods = $this->entityManager->getRepository(Goods::class)
                 ->findByTokenGroup($tokenGroup->getId());
         foreach ($goods as $good){
             $this->entityManager->getConnection()->update('goods', ['token_group_id' => null], ['id' => $good->getId()]);
@@ -1262,12 +1279,12 @@ class NameManager
     /**
      * Подготовка наименований товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function goodNames($good)
     {
         $result = [];
-        $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->rawpriceArticles($good);
 
         foreach($rawprices as $rawprice){
@@ -1284,7 +1301,7 @@ class NameManager
     /**
      * Векторизация наименований товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @return array
      */
     public function goodNamesVectorizer($good)
@@ -1377,7 +1394,7 @@ class NameManager
     public function titleToToken($rawprice, $gc = null)
     {
         if (!$gc){
-            $gc = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+            $gc = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
         
@@ -1466,7 +1483,7 @@ class NameManager
     /**
      * Токены наименований товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param integer $gc
      * @return array
      */
@@ -1474,10 +1491,10 @@ class NameManager
     {
         $result = [];
         if (!$gc){
-            $gc = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+            $gc = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
-        $rawprices = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $rawprices = $this->entityManager->getRepository(Goods::class)
                         ->rawpriceArticles($good);
         
         $idsFilter = new IdsFormat();
