@@ -1059,6 +1059,27 @@ class NameManager
         
         return;
     }
+
+    /**
+     * Проверить флаг обновления групп токенов
+     * 
+     * @param integer $goodId
+     * @param integer $groupTokenUpdateFlag
+     * @return type
+     */
+    public function checkUpdateGroupTokenFlag($goodId, $groupTokenUpdateFlag)
+    {
+        if ($groupTokenUpdateFlag != Goods::TOKEN_UPDATE_FLAG){
+            
+            $this->entityManager->getRepository(Goods::class)
+                    ->deleteGoodTitle($articleId);
+
+            $this->entityManager->getRepository(Article::class)
+                    ->updateArticle($goodId, ['group_token_update_flag' => Goods::GROUP_TOKEN_UPDATE_FLAG]);
+        }
+        
+        return;
+    }
     
     /**
      * Добавить группу наименований по токенам товара

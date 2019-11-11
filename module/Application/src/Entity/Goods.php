@@ -63,6 +63,11 @@ class Goods {
     
     const DEFAULT_GROUP_APL_ID    = -1; //группа апл по умолчнию 
     
+    const TD_DIRECT = 1; //точно совпадает с товаровм в ТД
+    const TD_NO_DIRECT = 2; //не совпадает с товаровм в ТД
+    
+    const GROUP_TOKEN_UPDATE_FLAG = 10; // установить любое число (1-9), для запуска обновления групп токенов
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -150,6 +155,11 @@ class Goods {
     protected $statusGroupEx = self::GROUP_EX_NEW;
 
     /**
+     * @ORM\Column(name="td_direct")   
+     */
+    protected $tdDirect = self::TD_NO_DIRECT;
+
+    /**
      * @ORM\Column(name="car_count")   
      */
     protected $carCount;
@@ -178,6 +188,11 @@ class Goods {
      * @ORM\Column(name="group_apl")   
      */
     protected $groupApl = self::DEFAULT_GROUP_APL_ID;
+
+    /**
+     * @ORM\Column(name="group_token_update_flag")  
+     */
+    protected $groupTokenUpdateFlag = self::GROUP_TOKEN_UPDATE_FLAG;     
 
     /**
      * @ORM\Column(name="available")   
@@ -823,6 +838,26 @@ class Goods {
     public function setStatusGroupEx($statusGroupEx)
     {
         $this->statusGroupEx = $statusGroupEx;
+    }    
+    
+    public function getTdDirect()
+    {
+        $this->tdDirect;
+    }
+    
+    public function setTdDirect($tdDirect)
+    {
+        $this->tdDirect = $tdDirect;
+    }    
+    
+    public function getGroupTokenUpdateFlag()
+    {
+        $this->groupTokenUpdateFlag;
+    }
+    
+    public function setGroupTokenUpdateFlag($groupTokenUpdateFlag)
+    {
+        $this->groupTokenUpdateFlag = $groupTokenUpdateFlag;
     }    
     
     /**

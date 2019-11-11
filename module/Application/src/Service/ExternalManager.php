@@ -902,8 +902,20 @@ class ExternalManager
      */
     public function updateGoodGenericGroup($good)
     {
-                        
-        $genericArticleId = $this->autoDbManager->getGenericArticleId($good, true);
+        $statusData = ['td_direct' => Goods::TD_NO_DIRECT];
+        
+        $tdData = $this->autoDbManager->getBestArticle($good);
+        if (is_numeric($tdData['genericArticleId'])){
+            $genericArticleId = $tdData['genericArticleId'];
+            $statusData = ['td_direct' => Goods::TD_DIRECT];
+        }
+        
+        if (!$genericArticleId){
+            $tdData = $this->autoDbManager->getSimilarArticle($good, true);
+            if (is_numeric($tdData['genericArticleId'])){
+                $genericArticleId = $tdData['genericArticleId'];
+            }            
+        }
 
         $genericGroup = null;
         if (is_numeric($genericArticleId)){
