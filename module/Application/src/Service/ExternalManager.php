@@ -903,6 +903,7 @@ class ExternalManager
     public function updateGoodGenericGroup($good)
     {
         $statusData = ['td_direct' => Goods::TD_NO_DIRECT];
+        $genericArticleId = null;
         
         $tdData = $this->autoDbManager->getBestArticle($good);
         if (is_numeric($tdData['genericArticleId'])){
