@@ -1063,19 +1063,19 @@ class NameManager
     /**
      * Проверить флаг обновления групп токенов
      * 
-     * @param integer $goodId
+     * @param Goods $good
      * @param integer $groupTokenUpdateFlag
      * @return type
      */
-    public function checkUpdateGroupTokenFlag($goodId, $groupTokenUpdateFlag)
+    public function checkUpdateGroupTokenFlag($good, $groupTokenUpdateFlag)
     {
         if ($groupTokenUpdateFlag != Goods::TOKEN_UPDATE_FLAG){
             
             $this->entityManager->getRepository(Goods::class)
-                    ->deleteGoodTitle($articleId);
+                    ->removeGoodTitles($good);
 
-            $this->entityManager->getRepository(Article::class)
-                    ->updateArticle($goodId, ['group_token_update_flag' => Goods::GROUP_TOKEN_UPDATE_FLAG]);
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGood($good, ['group_token_update_flag' => Goods::GROUP_TOKEN_UPDATE_FLAG]);
         }
         
         return;
@@ -1176,27 +1176,32 @@ class NameManager
             foreach ($row as $rawprice){
                 $good = $rawprice->getGood();
                 
-                $goodTitleStr = $this->goodTitlesIds($good);
-                $goodTitleStrMd5 = md5($goodTitleStr);
-                
-                if ($goodTitleStr){ 
-                    $goodTitle = $this->entityManager->getRepository(GoodTitle::class)
-                            ->findOneBy(['good' => $good->getId(), 'titleMd5' => $goodTitleStrMd5]);
+                if ($good){
+                    $this->checkUpdateGroupTokenFlag($good, $good->getGroupTokenUpdateFlag());
 
-                    if ($goodTitle == null){
+                    $goodTitleStr = $this->goodTitlesIds($good);
+                    $goodTitleStrMd5 = md5($goodTitleStr);
 
-                        $this->entityManager->getRepository(Goods::class)
-                                ->removeGoodTitles($good);
-                        
-                        $this->addGroupTokenFromGood($good, $gc);
+                    if ($goodTitleStr){ 
+                        $goodTitle = $this->entityManager->getRepository(GoodTitle::class)
+                                ->findOneBy(['good' => $good->getId(), 'titleMd5' => $goodTitleStrMd5]);
 
-                        $this->entityManager->getRepository(Goods::class)
-                                ->insertGoodTitle(['good_id' => $good->getId(), 'title' => $goodTitleStr, 'title_md5' => $goodTitleStrMd5]);
+                        if ($goodTitle == null){
 
-                        $this->entityManager->getRepository(Rawprice::class)
-                                ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
+                            $this->entityManager->getRepository(Goods::class)
+                                    ->removeGoodTitles($good);
+
+                            $this->addGroupTokenFromGood($good, $gc);
+
+                            $this->entityManager->getRepository(Goods::class)
+                                    ->insertGoodTitle(['good_id' => $good->getId(), 'title' => $goodTitleStr, 'title_md5' => $goodTitleStrMd5]);
+                        }
                     }
                 }    
+                
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
+                
                 $this->entityManager->detach($rawprice);
             }
             if (time() > $startTime + 840){

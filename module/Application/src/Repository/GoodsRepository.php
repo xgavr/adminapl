@@ -44,7 +44,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Быстрое обновление полей товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param array $data
      * @return integer
      */
@@ -71,7 +71,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Выборка строк прайса для создания товаров
      * 
-     * @param Application\Entity\Rawprice $raw
+     * @param Rawprice $raw
      * @return array
      */
     public function findGoodsForAccembly($raw)
@@ -98,7 +98,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Выборка строк прайса для создания товаров
      * 
-     * @param Application\Entity\Rawprice $raw
+     * @param Rawprice $raw
      * @return array
      */
     public function findRawpriceForUpdatePrice($raw)
@@ -280,7 +280,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Количество записей в прайсах с этим товара
      * 
-     * @param \Application\Entity\Goods $goods
+     * @param Goods $goods
      * 
      * @return object
      */
@@ -305,7 +305,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Строки прайсов этого товара
      * 
-     * @param \Application\Entity\Goods|int $good
+     * @param Goods|int $good
      * @param array $params
      * 
      * @return object
@@ -398,7 +398,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Строки прайсов этого товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * 
      * @return object
      */
@@ -468,7 +468,7 @@ class GoodsRepository extends EntityRepository
     }  
     
     /**
-     * @param Apllication\Entity\Goods $good
+     * @param Goods $good
      */
     public function findGoodRawprice($good)
     {
@@ -507,7 +507,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Выбока картинок товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @return query
      */
     public function findImages($good)
@@ -790,7 +790,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти машины товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      * @param array $params
      * @return object
      */
@@ -1008,7 +1008,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти атрибуты товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param array $params
      * @return object
      */
@@ -1039,7 +1039,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти атрибуты товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @return object
      */
     public function findGoodAttributeValuesEx($good)
@@ -1065,7 +1065,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Добавление значения атрибута к товару
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param \Application\Entity\Attribute $attribute
      * @param \Application\Entity\AttributeValue $attributeValue
      * 
@@ -1087,7 +1087,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Удаления атрибутов товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @return integer
      */
     public function removeGoodAttributeValues($good)
@@ -1100,7 +1100,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти номера для добавления
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @return array
      */
     public function findOemRaw($good)
@@ -1124,7 +1124,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти номера товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param array $params
      * @return Query
      */
@@ -1174,7 +1174,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти прайсы товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param array $params
      * @return object
      */
@@ -1207,7 +1207,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Добавление машины к товару
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      * @return integer
      */
     public function addGoodCar($good, $car)
@@ -1219,7 +1219,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Удаления машин товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @return integer
      */
     public function removeGoodCars($good)
@@ -1247,7 +1247,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Удаления oem товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      * @return integer
      */
     public function removeGoodOem($good)
@@ -1261,7 +1261,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Удаления oem товара по источнику
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      * @param integer $source
      * @return integer
      */
@@ -1274,7 +1274,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Удаление картинок товара
      * 
-     * @param Applcation\Entity\Goods $good
+     * @param Goods $good
      * @param integer $status
      * @return integer
      */
@@ -1357,7 +1357,7 @@ class GoodsRepository extends EntityRepository
     /**
      * Удаление наименований товара
      * 
-     * @param \Applcation\Entity\Goods $good
+     * @param Goods $good
      * @return integer
      */
     public function removeGoodTitles($good)
