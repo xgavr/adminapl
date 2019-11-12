@@ -1116,7 +1116,7 @@ class NameManager
      */
     public function checkUpdateGroupTokenFlag($good, $groupTokenUpdateFlag)
     {
-        if ($groupTokenUpdateFlag != Goods::TOKEN_UPDATE_FLAG){
+        if ($groupTokenUpdateFlag != Goods::GROUP_TOKEN_UPDATE_FLAG){
             
             $this->entityManager->getRepository(Goods::class)
                     ->removeGoodTitles($good);
