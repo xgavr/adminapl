@@ -62,7 +62,7 @@ class GoodsRepository extends EntityRepository
                 ->setParameter('1', $good->getId())
                 ;
         foreach ($data as $key => $value){
-            $queryBuilder->set($key, $value);
+            $queryBuilder->set("g.$key", $value);
         }
         
         return $queryBuilder->getQuery()->getResult();        
