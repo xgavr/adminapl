@@ -135,7 +135,7 @@ class NameController extends AbstractActionController
         
         
         $articleQuery = $this->entityManager->getRepository(Token::class)
-                        ->findTokenRawprice($token);
+                        ->findTokenArticles($token);
 
         $adapter = new DoctrineAdapter(new ORMPaginator($articleQuery, false));
         $paginator = new Paginator($adapter);
