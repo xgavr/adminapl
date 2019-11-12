@@ -24,6 +24,16 @@ $this->pageBreadcrumbs()->setItems([
     </small>
 </p>
 <p>
+    <?php if (mb_strlen($token->getLemma()) == 1 && in_array($token->getStatus(), [$token::IS_DICT, $token::IS_EN_DICT])):?>
+        <span>
+            <small>
+                <button value="/name/reset-token-status/<?= $token->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                        title="Установить пометку _1">
+                    <span class="">_1</span>
+                </button> 
+            </small>
+        </span>
+    <?php endif; ?>    
     <?php if ($token->getStatus() != $token::IS_RU_ABBR && $token->getStatus() != $token::IS_EN_ABBR):?>
         <span>
             <small>

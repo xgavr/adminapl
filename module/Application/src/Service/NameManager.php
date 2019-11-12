@@ -27,6 +27,8 @@ use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
 use Application\Filter\IdsFormat;
 use Application\Validator\IsRU;
+use Application\Validator\IsEN;
+use Application\Validator\IsNUM;
 use Application\Filter\ArticleCode;
 use Application\Filter\ProducerName;
 
@@ -52,6 +54,51 @@ class NameManager
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+    
+    /**
+     * Восстановить статус токена
+     * 
+     * @param Token $token
+     * @return null
+     */
+    public function resetTokenStatus($token)
+    {
+        $isRu = new IsRU();
+        $isEn = new IsEN();
+        $isNum = new IsNUM();
+        
+        $status = $token->getStatus();
+        if ($isNum->isValid($token->getLemma())){
+            $status = Token::IS_NUMERIC;
+        } else {
+            if ($isRu->isValid($token->getLemma())){
+                if (mb_strlen($token->getLemma()) == 1){
+                    $status = Token::IS_RU_1;
+                } else {
+                    $status = Token::IS_RU;                    
+                }    
+            }
+            if ($isEn->isValid($token->getLemma())){
+                if (mb_strlen($token->getLemma()) == 1){
+                    $status = Token::IS_EN_1;
+                } else {
+                    $status = Token::IS_EN;                    
+                }            
+            }
+        }                          
+        
+        if ($status != $token->getStatus()){
+            $token->setStatus($status);
+            $token->setCorrect(null);
+            $this->entityManager->persist($token);
+            $this->entityManager->flush($token);
+        }
+        
+        $this->entityManager->getRepository(Article::class)
+                ->updateTokenUpdateFlag($token->getLemma());
+        
+        return;
     }
     
     /**
