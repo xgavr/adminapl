@@ -196,10 +196,11 @@ class GenericGroupRepository extends EntityRepository{
      * Выбор группы по группе наименований
      * 
      * @param TokenGroup $tokenGroup
+     * @param Goods $good
      */
-    public function findGenericTokenGroup($tokenGroup)
+    public function findGenericTokenGroup($tokenGroup, $good = null)
     {
-        $data = $this->genericTokenGroup($tokenGroup);
+        $data = $this->genericTokenGroup($tokenGroup, $good);
 
         if ($data){
             if (count($data) == 1){
