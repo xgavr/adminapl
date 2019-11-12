@@ -134,25 +134,21 @@ class NameController extends AbstractActionController
                         ->findAllToken(['next1' => $token->getLemma()]); 
         
         
-        $rawpriceQuery = $this->entityManager->getRepository(Token::class)
+        $articleQuery = $this->entityManager->getRepository(Token::class)
                         ->findTokenRawprice($token);
 
-        $adapter = new DoctrineAdapter(new ORMPaginator($rawpriceQuery, false));
+        $adapter = new DoctrineAdapter(new ORMPaginator($articleQuery, false));
         $paginator = new Paginator($adapter);
         $paginator->setDefaultItemCountPerPage(10);        
         $paginator->setCurrentPageNumber($page);
 
-        $totalRawpriceCount = $paginator->getTotalItemCount();
-        
-
         // Render the view template.
         return new ViewModel([
             'token' => $token,
-            'rawprices' => $paginator,
+            'articles' => $paginator,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
-            'nameManager' => $this->nameManager,
-            'totalRawpriceCount' => $totalRawpriceCount,
+            'articleManager' => $this->articleManager,
         ]);
     }
     

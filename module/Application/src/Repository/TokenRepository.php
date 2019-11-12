@@ -9,6 +9,7 @@
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Token;
+use Application\Entity\Article;
 use Application\Entity\ArticleToken;
 use Application\Entity\GoodToken;
 use Application\Entity\Rawprice;
@@ -365,9 +366,30 @@ class TokenRepository  extends EntityRepository
     }
     
     /**
+     * Найти артикулы токена
+     * 
+     * @param Token $token
+     * @return object
+     */
+    public function findTokenArticles($token)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('a')
+            ->from(Article::class, 'a')
+            ->join('a.articleTokens', 'at')
+            ->where('at.lemma = ?1')    
+            ->setParameter('1', $token->getLemma())
+            ;
+        
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
      * Поиск токенов артикула
      * 
-     * @param \Application\Entity\Article|integer $article
+     * @param Article|integer $article
      * @param integer $status
      */
     public function findArticleTokenByStatus($article, $status = Token::IS_DICT)
@@ -398,8 +420,8 @@ class TokenRepository  extends EntityRepository
     /**
      * Пересечение токенов артикулов
      * 
-     * @param \Application\Entity\Article|integer $article
-     * @param \Application\Entity\Article|integer $articleForMatching
+     * @param Article|integer $article
+     * @param Article|integer $articleForMatching
      * @param integer $status
      * @return array
      */
@@ -422,8 +444,8 @@ class TokenRepository  extends EntityRepository
     /**
      * Совпадение токенов артикулов по статусу
      * 
-     * @param \Application\Entity\Article|integer $article
-     * @param \Application\Entity\Article|integer $articleForMatching
+     * @param Article|integer $article
+     * @param Article|integer $articleForMatching
      * @param integer $status
      * @return bool
      */
@@ -449,7 +471,7 @@ class TokenRepository  extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('t')
             ->distinct()
-            ->from(\Application\Entity\Article::class, 'a')    
+            ->from(Article::class, 'a')    
             ->join('a.articleTokens', 'at')
             ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')    
             ->where('a.good = ?1')   

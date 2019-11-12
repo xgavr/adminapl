@@ -119,49 +119,51 @@ $this->pageBreadcrumbs()->setItems([
             
         </td>
         <td align="right" valign="center" colspan="2">
-            <?= $totalRawpriceCount?>
-            (<b><?= $token->getFrequency()?></b>
+            <b><?= $token->getFrequency()?></b>
              <?= round($token->getIdf(), 2)?>
             <button value="/name/update-article-count-token/<?= $token->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
                     title="Обновить количество товара">
                 <span class="glyphicon glyphicon-refresh" ></span>
-            </button>) 
+            </button>
         </td>
     </tr>
-    <?php    foreach ($rawprices as $rawprice):?>
-        <tr>
-            <td>
-                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $rawprice->getCode()->getId()]);?>">
-                    <?= $rawprice->getArticle();?>
-                </a>   
-            </td>
-            <td>
-                <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
-                    <?= $rawprice->getUnknownProducer()->getName();?>
-                </a>   
-            </td>
-            <td>
-                <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
-                    <?= $rawprice->getGoodname();?>
-                </a>    
-                <?php $tokens = $rawprice->getTokens(); ?>
-                <?php if(count($tokens)):?>  
-                    <div>    
-                        <?php foreach($tokens as $tokenraw):?>
-                            <span style="font-size: xx-small; font-weight: <?= ($tokenraw->getStatus() == $tokenraw::IS_DICT) ? 'bold':'normal' ?>">
-                                <a href="/name/view-token/<?= $tokenraw->getId() ?>"><?= $tokenraw->getLemma() ?></a>
-                            </span>
-                        <?php endforeach;?>
-                    </div>        
-                <?php endif;?>                                                
-            </td>
-            <td align="right">
-                <?= $rawprice->getPrice();?>
-            </td>
-            <td align="right">
-                <?= $rawprice->getRest();?>
-            </td>
-        </tr>
+    <?php    foreach ($articles as $article):?>
+        <?php $rawprices = $articleManager->articleRawprices($article, 1);?>
+        <?php    foreach ($rawprices as $rawprice):?>
+            <tr>
+                <td>
+                    <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $article->getId()]);?>">
+                        <?= $article->getCode();?>
+                    </a>   
+                </td>
+                <td>
+                    <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>">
+                        <?= $rawprice->getUnknownProducer()->getName();?>
+                    </a>   
+                </td>
+                <td>
+                    <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()]);?>">
+                        <?= $rawprice->getGoodname();?>
+                    </a>    
+                    <?php $tokens = $rawprice->getTokens(); ?>
+                    <?php if(count($tokens)):?>  
+                        <div>    
+                            <?php foreach($tokens as $tokenraw):?>
+                                <span style="font-size: xx-small; font-weight: <?= ($tokenraw->getStatus() == $tokenraw::IS_DICT) ? 'bold':'normal' ?>">
+                                    <a href="/name/view-token/<?= $tokenraw->getId() ?>"><?= $tokenraw->getLemma() ?></a>
+                                </span>
+                            <?php endforeach;?>
+                        </div>        
+                    <?php endif;?>                                                
+                </td>
+                <td align="right">
+                    <?= $rawprice->getPrice();?>
+                </td>
+                <td align="right">
+                    <?= $rawprice->getRest();?>
+                </td>
+            </tr>
+        <?php endforeach;?>        
     <?php endforeach;?>        
     <tr>
         <td colspan="5">
