@@ -1174,6 +1174,7 @@ class NameManager
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
+                $good = $rawprice->getGood();
                 
                 $goodTitleStr = $this->goodTitlesIds($good);
                 $goodTitleStrMd5 = md5($goodTitleStr);
@@ -1187,7 +1188,7 @@ class NameManager
                         $this->entityManager->getRepository(Goods::class)
                                 ->removeGoodTitles($good);
                         
-                        $this->addGroupTokenFromGood($rawprice->getGood(), $gc);
+                        $this->addGroupTokenFromGood($good, $gc);
                         $this->entityManager->getRepository(Rawprice::class)
                                 ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
                     }
