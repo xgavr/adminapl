@@ -23,6 +23,8 @@ class GenericGroup {
      // Make status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    
+    const MIN_GOOD_COUNT      = 5; //минимально товаров в группе для подбора
         
     /**
      * @ORM\Id
