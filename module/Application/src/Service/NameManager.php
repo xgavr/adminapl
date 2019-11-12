@@ -810,7 +810,11 @@ class NameManager
                             ->findOneBy(['article' => $article->getId(), 'titleMd5' => $titleMd5]);
 
                     if ($articleTitle == null){
+                        $this->entityManager->getRepository(Article::class)
+                                ->deleteArticleTitle($article->getId());
+                        
                         $this->addNewTokenFromRawprice($rawprice);
+                        
                         $this->entityManager->getRepository(Article::class)
                                 ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $title, 'title_md5' => $titleMd5]);
                     } else {
