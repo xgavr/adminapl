@@ -1189,6 +1189,10 @@ class NameManager
                                 ->removeGoodTitles($good);
                         
                         $this->addGroupTokenFromGood($good, $gc);
+
+                        $this->entityManager->getRepository(Goods::class)
+                                ->insertGoodTitle(['good_id' => $good->getId(), 'title' => $goodTitleStr, 'title_md5' => $goodTitleStrMd5]);
+
                         $this->entityManager->getRepository(Rawprice::class)
                                 ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
                     }
