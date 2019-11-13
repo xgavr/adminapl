@@ -1245,7 +1245,7 @@ class AplService {
 
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
+                        ->updateGood($good, ['statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
             }
 
             unset($post);
@@ -1339,7 +1339,7 @@ class AplService {
             
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusImgEx' => Goods::IMG_EX_TRANSFERRED]);                
+                        ->updateGood($good, ['statusImgEx' => Goods::IMG_EX_TRANSFERRED]);                
             }
 
             unset($post);
@@ -1414,7 +1414,7 @@ class AplService {
             
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);                
+                        ->updateGood($good, ['statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);                
             }
 
             unset($post);
@@ -1501,7 +1501,7 @@ class AplService {
             
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusCarEx' => Goods::CAR_EX_TRANSFERRED]);
+                        ->updateGood($good, ['statusCarEx' => Goods::CAR_EX_TRANSFERRED]);
             }
             
 
@@ -1727,7 +1727,7 @@ class AplService {
             
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['g.statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);                
+                        ->updateGood($good, ['statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);                
             }
 
             unset($post);
