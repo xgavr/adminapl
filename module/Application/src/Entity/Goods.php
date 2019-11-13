@@ -402,7 +402,7 @@ class Goods {
     
     public function getTransferGroupApl()
     {
-        if ($this->groupApl > 0){
+        if ($this->groupApl >= 0){
             return $this->groupApl;
         }
         return;
