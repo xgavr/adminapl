@@ -213,6 +213,31 @@ class NameController extends AbstractActionController
         ]);          
     }    
 
+    public function changeTokenStatusAction()
+    {
+        $tokenId = (int)$this->params()->fromRoute('id', -1);
+        $newStatus = (int) $this->params()->fromQuery('status', -1);
+
+        if ($tokenId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $token = $this->entityManager->getRepository(Token::class)
+                ->findOneById($tokenId);
+        
+        if ($token == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }   
+        
+        $this->nameManager->changeTokenStatus($token, $newStatus);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }    
+
     public function addTokenToMyDictAction()
     {
         $tokenId = (int)$this->params()->fromRoute('id', -1);

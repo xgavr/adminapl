@@ -34,6 +34,16 @@ $this->pageBreadcrumbs()->setItems([
             </small>
         </span>
     <?php endif; ?>    
+    <?php if (mb_strlen($token->getLemma()) == 1 && in_array($token->getStatus(), [$token::IS_RU_1, $token::IS_RU])):?>
+        <span>
+            <small>
+                <button value="/name/change-token-status/<?= $token->getId()?>?status=<?= $token::IS_DICT?>" class="btn btn-info btn-xs refresh-table-button"
+                        title="Установить пометку DICT">
+                    <span class="">DICT</span>
+                </button> 
+            </small>
+        </span>
+    <?php endif; ?>    
     <?php if ($token->getStatus() != $token::IS_RU_ABBR && $token->getStatus() != $token::IS_EN_ABBR):?>
         <span>
             <small>

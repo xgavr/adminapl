@@ -391,6 +391,31 @@ class NameManager
     }
 
     /**
+     * Поставить слову метку аббревиатуры
+     * 
+     * @param Token $token
+     * @param integer $newStatus
+     */
+    public function changeTokenStatus($token, $newStatus)
+    {
+        ini_set('memory_limit', '2048M');
+        
+        if ($newStatus > 0){
+            if ($token->getStatus() != $newStatus){
+                $word = $token->getLemma();
+
+                $this->entityManager->getRepository(Token::class)
+                        ->updateToken($word, ['status' => $newStatus]);
+
+                $this->entityManager->getRepository(Article::class)
+                        ->updateTokenUpdateFlag($word);
+            }    
+        }    
+        
+        return;
+    }
+
+    /**
      * Разбивает наименование товара на токены
      * 
      * @param Application\Entity\Article $article
