@@ -946,7 +946,7 @@ class NameManager
      * Поиск лучшего наименования для товара
      * 
      * @param Goods $good
-     * @param \Phpml\Classification\KNearestNeighbors $$classifier
+     * @param \Phpml\Classification\KNearestNeighbors $classifier
      * @return string
      */
     public function findBestName($good, $classifier = null)
@@ -1703,4 +1703,39 @@ class NameManager
 //        var_dump($empt);
         return array_merge($result, $empt);
     }    
+    
+    /**
+     * Аттрибуты машины
+     * 
+     * @param \Application\Entity\Car $car
+     * @return array
+     */
+    protected function extraCarAttr($car)
+    {
+        $result = [];
+        foreach($car->getVehicleDetailsCar() as $vehicleDetailCar){
+            
+        }
+            
+        return $result;
+    }
+    /**
+     * Часть наименования - машины
+     * @param Goods $good
+     * @return string
+     */
+    public function carPart($good)
+    {
+        $result = '';
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->findCars($good, ['sort' => 'goodCount', 'order' => 'DESC', 'limit' => 100]);
+        $cars = $query->getResult();
+        $data = [];
+        foreach ($cars as $car){
+            $data[$car]
+        }
+                        
+        return $result;
+    }
 }
