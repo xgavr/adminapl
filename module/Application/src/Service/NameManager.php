@@ -18,6 +18,7 @@ use Application\Entity\Bigram;
 use Application\Entity\ArticleBigram;
 use Application\Entity\Goods;
 use Application\Entity\GoodTitle;
+use Application\Entity\Car;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -1707,16 +1708,42 @@ class NameManager
     /**
      * Аттрибуты машины
      * 
-     * @param \Application\Entity\Car $car
+     * @param Car $car
+     * @param array $params
      * @return array
      */
-    protected function extraCarAttr($car)
+    protected function extraCarAttr($car, $params)
     {
-        $result = [];
-        foreach($car->getVehicleDetailsCar() as $vehicleDetailCar){
-            
-        }
-            
+        $manu = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'manuName');
+        $model = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'modelName');
+        $litres = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'cylinderCapacityLiter');
+        $cfrom = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'yearOfConstrFrom');
+        $cto = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'yearOfConstrTo');
+        $fuel = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'motorType');
+        $type = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'typeName');
+                
+        $result = [
+            $manu => [
+                'k' => 0,
+                $model => [
+                    'k' => 0,
+                    $type => [
+                        'litres' => $litres,
+                        'from' => $cfrom,
+                        'cto' => $cto,
+                        'fuel' => $fuel,                        
+                    ]
+                ],
+            ],
+        ];
+        
         return $result;
     }
     /**
@@ -1731,10 +1758,6 @@ class NameManager
         $query = $this->entityManager->getRepository(Goods::class)
                         ->findCars($good, ['sort' => 'goodCount', 'order' => 'DESC', 'limit' => 100]);
         $cars = $query->getResult();
-        $data = [];
-        foreach ($cars as $car){
-            $data[$car]
-        }
                         
         return $result;
     }

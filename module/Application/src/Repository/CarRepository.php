@@ -12,6 +12,9 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Make;
 use Application\Entity\Model;
 use Application\Entity\Car;
+use Application\Entity\VehicleDetail;
+use Application\Entity\VehicleDetailValue;
+use Application\Entity\VehicleDetailCar;
 
 /**
  * Description of CarRepository
@@ -352,9 +355,37 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('vd')
-            ->from(\Application\Entity\VehicleDetail::class, 'vd')
+            ->from(VehicleDetail::class, 'vd')
             ;
         
         return $queryBuilder->getQuery();
     } 
+    
+    /**
+     * Получить значение атрибута машины
+     * 
+     * @param Car $car
+     * @param string $detailName
+     * 
+     * @return string 
+     */
+    public function carDetailValue($car, $detailName)
+    {
+
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('vdv.name')
+                ->from(VehicleDetailCar::class, 'vdc')
+                ->join('vdc.vehicleDetailValue', 'vdv')
+                ->join('vdv.vehicleDetail', 'vd')
+                ->where('vdc.id = ?1')
+                ->andWhere('vd.name = ?2')
+                ->setParameter('1', $car->getId())
+                ->setParameter('2', trim($detailName))
+            ;
+        
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        return $row['name'];
+    }
 }
