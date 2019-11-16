@@ -591,7 +591,31 @@ class GoodsController extends AbstractActionController
         ]);                  
     }
 
-    public function updateBestnameAction()
+    public function bestNameAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findOneById($goodId);        
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $bestname = $this->nameManager->findBestName($good);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $bestname,
+        ]);          
+    }
+    
+    public function updateBestNameAction()
     {
         $goodsId = $this->params()->fromRoute('id', -1);
         
@@ -601,11 +625,8 @@ class GoodsController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
-        $bestname = $this->nameManager->findBestName($goods);
-        
-//        if ($bestname){
-//            $this->goodsManager->updateGoodName($goods, $bestname);
-//        }    
+
+//        $bestname = $this->nameManager->findBestName($goods);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

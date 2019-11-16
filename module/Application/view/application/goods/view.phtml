@@ -50,7 +50,11 @@ $this->headScript()
                 </h1>
 
                 <h3>
-                    <button value="/goods/update-bestname/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                    <button value="/goods/best-name/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
+                            title="Показать наименование">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                    <button value="/goods/update-best-name/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                             title="Обновить наименование">
                         <span class="glyphicon glyphicon-refresh" ></span>
                     </button> 
@@ -72,7 +76,7 @@ $this->headScript()
                 </h5>    
                 <h6>
                     <button value="/name/good-sign-token/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
-                            title="Посик в TecDocId">
+                            title="Показать группу наименований">
                         <span class="glyphicon glyphicon-refresh" ></span>
                     </button>                             
                     <button value="/name/goods-token-group/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"

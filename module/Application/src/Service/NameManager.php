@@ -947,42 +947,15 @@ class NameManager
      * Поиск лучшего наименования для товара
      * 
      * @param Goods $good
-     * @param \Phpml\Classification\KNearestNeighbors $classifier
-     * @return string
+     * @return array
      */
-    public function findBestName($good, $classifier = null)
+    public function findBestName($good)
     {
-        if (!file_exists(Token::ML_TITLE_MODEL_FILE)){
-            return;
-        }
+        $result['genericGroup'] = $good->getGenericGroup()->getName();
+        $result['tokenGroup'] = $good->getTokenGroup()->getName();
+        $result['carPart'] = $this->carPart($good);
         
-        if ($classifier == null){
-            $modelManager = new \Phpml\ModelManager();
-            $classifier = $modelManager->restoreFromFile(Token::ML_TITLE_MODEL_FILE);
-        }    
-        
-        $normalizer = new \Phpml\Preprocessing\Normalizer();
-        
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticles($good);
-        $predicted = [];
-        $titles = [];
-        $mlTitleSamples = [];
-        foreach ($rawprices as $rawprice){
-            $mlTitleSample = $this->rawpriceToMlTitle($rawprice);
-            $titles[] = $rawprice->getTitle();
-            if (count($mlTitleSample)){
-                $mlTitleSamples[] = $mlTitleSample;
-            }    
-        }
-        if (count($mlTitleSamples)){
-            $normalizer->fit($mlTitleSamples);
-            $normalizer->transform($mlTitleSamples);
-            $predicted = $classifier->predict($mlTitleSamples);
-            var_dump($predicted);
-            var_dump($titles);
-        }    
-        return;
+        return $result;
     }
     
     /**
@@ -1732,7 +1705,7 @@ class NameManager
         $result = [
             $manu => [
                 'k' => 0,
-                $model => [
+                preg_replace('/\(.*?\)/', '', $model) => [
                     'k' => 0,
                     $type => [
                         'litres' => $litres,
@@ -1753,11 +1726,14 @@ class NameManager
      */
     public function carPart($good)
     {
-        $result = '';
+        $result = [];
         
         $query = $this->entityManager->getRepository(Goods::class)
                         ->findCars($good, ['sort' => 'goodCount', 'order' => 'DESC', 'limit' => 100]);
         $cars = $query->getResult();
+        foreach ($cars as $car){
+            $result[] = $this->extraCarAttr($car);
+        }
                         
         return $result;
     }
