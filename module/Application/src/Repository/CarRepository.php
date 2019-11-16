@@ -382,6 +382,7 @@ class CarRepository extends EntityRepository
                 ->andWhere('vd.name = ?2')
                 ->setParameter('1', $car->getId())
                 ->setParameter('2', trim($detailName))
+                ->setMaxResults(1)
             ;
         
         $row = $queryBuilder->getQuery()->getOneOrNullResult();

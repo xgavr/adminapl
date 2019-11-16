@@ -1706,7 +1706,7 @@ class NameManager
             $manu => [
                 'k' => 1,
                 trim(preg_replace('/\(.*?\)/', '', $model)) => [
-                    'k' => 1,
+                    'k' => 0,
                     $type => [
                         'litres' => (string) round($litres/100, 1),
                         'from' => substr($cfrom, 2, 2),
