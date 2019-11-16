@@ -1705,12 +1705,12 @@ class NameManager
         $result = [
             $manu => [
                 'k' => 0,
-                preg_replace('/\(.*?\)/', '', $model) => [
+                trim(preg_replace('/\(.*?\)/', '', $model)) => [
                     'k' => 0,
                     $type => [
-                        'litres' => $litres,
-                        'from' => $cfrom,
-                        'cto' => $cto,
+                        'litres' => (string) round($litres/100, 1),
+                        'from' => substr($cfrom, 2, 2),
+                        'cto' => substr($cto, 2, 2),
                         'fuel' => $fuel,                        
                     ]
                 ],
@@ -1732,7 +1732,14 @@ class NameManager
                         ->findCars($good, ['sort' => 'goodCount', 'order' => 'DESC', 'limit' => 100]);
         $cars = $query->getResult();
         foreach ($cars as $car){
-            $result[] = $this->extraCarAttr($car, []);
+            $data = $this->extraCarAttr($car, []);
+            foreach ($data as $manu => $row){
+                if (key_exists($manu, $result)){
+                    $result[$manu]['k'] += 1;
+                } else {
+                    $result[$manu] = $row;                    
+                }
+            }
         }
                         
         return $result;
