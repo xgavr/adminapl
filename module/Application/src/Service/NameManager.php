@@ -1732,7 +1732,7 @@ class NameManager
                         ->findCars($good, ['sort' => 'goodCount', 'order' => 'DESC', 'limit' => 100]);
         $cars = $query->getResult();
         foreach ($cars as $car){
-            $result[] = $this->extraCarAttr($car);
+            $result[] = $this->extraCarAttr($car, []);
         }
                         
         return $result;
