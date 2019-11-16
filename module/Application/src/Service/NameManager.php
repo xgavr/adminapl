@@ -1702,6 +1702,7 @@ class NameManager
         $type = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'typeName');
                 
+        var_dump($manu); exit;
         $result = [
             $manu => [
                 'k' => 0,
