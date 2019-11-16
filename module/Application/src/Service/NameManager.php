@@ -951,8 +951,12 @@ class NameManager
      */
     public function findBestName($good)
     {
-        $result['genericGroup'] = $good->getGenericGroup()->getName();
-        $result['tokenGroup'] = $good->getTokenGroup()->getName();
+        if ($good->getGenericGroup()){
+            $result['genericGroup'] = $good->getGenericGroup()->getName();
+        }    
+        if ($good->getTokenGroup()){
+            $result['tokenGroup'] = $good->getTokenGroup()->getName();
+        }    
         $result['carPart'] = $this->carPart($good);
         
         return $result;
