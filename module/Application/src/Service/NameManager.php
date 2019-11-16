@@ -1704,9 +1704,9 @@ class NameManager
                 
         $result = [
             $manu => [
-                'k' => 0,
+                'k' => 1,
                 trim(preg_replace('/\(.*?\)/', '', $model)) => [
-                    'k' => 0,
+                    'k' => 1,
                     $type => [
                         'litres' => (string) round($litres/100, 1),
                         'from' => substr($cfrom, 2, 2),
@@ -1733,11 +1733,18 @@ class NameManager
         $cars = $query->getResult();
         foreach ($cars as $car){
             $data = $this->extraCarAttr($car, []);
-            foreach ($data as $manu => $row){
+            foreach ($data as $manu => $manuRow){
                 if (key_exists($manu, $result)){
                     $result[$manu]['k'] += 1;
                 } else {
-                    $result[$manu] = $row;                    
+                    $result[$manu] = $manuRow;                    
+                }
+                foreach ($data[$manu] as $type => $typeRow ){
+                    if (key_exists($type, $result[$manu])){
+                        $result[$manu][$type]['k'] += 1;
+                    } else {
+                        $result[$manu][$type] = $typeRow;                    
+                    }                    
                 }
             }
         }
