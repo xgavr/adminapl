@@ -378,14 +378,13 @@ class CarRepository extends EntityRepository
                 ->from(VehicleDetailCar::class, 'vdc')
                 ->join('vdc.vehicleDetailValue', 'vdv')
                 ->join('vdv.vehicleDetail', 'vd')
-                ->where('vdc.id = ?1')
+                ->where('vdc.car = ?1')
                 ->andWhere('vd.name = ?2')
                 ->setParameter('1', $car->getId())
                 ->setParameter('2', trim($detailName))
             ;
         
         $row = $queryBuilder->getQuery()->getOneOrNullResult();
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $row['name'];
     }
 }
