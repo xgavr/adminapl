@@ -1747,7 +1747,7 @@ class NameManager
                 if (key_exists($manu, $result)){
                     $result[$manu]['k'] += 1;
                 } else {
-                    $result[$manu][] = [
+                    $result[$manu] = [
                         'k' => 1,
                         'models' => $manuRow['models'],
                     ];                            
@@ -1756,7 +1756,7 @@ class NameManager
                     if (key_exists($model, $result[$manu]['models'])){
                         $result[$manu]['models'][$model]['k'] += 1;
                     } else {
-                        $result[$manu]['models'][] = [
+                        $result[$manu]['models'] = [
                             $model =>[
                                 'k' => 1,
                                 'types' => $modelRow['types'],
