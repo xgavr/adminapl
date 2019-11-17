@@ -1747,15 +1747,21 @@ class NameManager
                 if (key_exists($manu, $result)){
                     $result[$manu]['k'] += 1;
                 } else {
-                    $result[$manu]['k'] = 1;                    
-                    $result[$manu]['models'] = $manuRow['models'];                    
+                    $result[$manu][] = [
+                        'k' => 1,
+                        'models' => $manuRow['models'],
+                    ];                            
                 }
                 foreach ($data[$manu]['models'] as $model => $modelRow ){
                     if (key_exists($model, $result[$manu]['models'])){
                         $result[$manu]['models'][$model]['k'] += 1;
                     } else {
-                        $result[$manu]['models'][$model]['k'] += 1;                    
-                        $result[$manu]['models'][$model]['types'] = $modelRow['types'];                    
+                        $result[$manu]['models'][] = [
+                            $model =>[
+                                'k' => 1,
+                                'types' => $modelRow['types'],
+                            ],
+                        ];    
                     }                    
                 }
             }
