@@ -1714,7 +1714,7 @@ class NameManager
             $manu => [
                 'k' => 1,
                 $modelNameFilter->filter($model) => [
-                    'k' => 0,
+                    'k' => 1,
                     $type => [
                         'litres' => (string) round($litres/100, 1),
                         'from' => substr($cfrom, 2, 2),
