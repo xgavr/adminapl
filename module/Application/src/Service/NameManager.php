@@ -1751,7 +1751,7 @@ class NameManager
                     $result[$manu]['models'] = $manuRow['models'];                    
                 }
                 foreach ($data[$manu]['models'] as $model => $modelRow ){
-                    if (key_exists($model, $result[$manu])){
+                    if (key_exists($model, $result[$manu]['models'])){
                         $result[$manu]['models'][$model]['k'] += 1;
                     } else {
                         $result[$manu]['models'][$model]['k'] += 1;                    
