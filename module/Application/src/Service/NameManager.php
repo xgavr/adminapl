@@ -1745,11 +1745,11 @@ class NameManager
                 } else {
                     $result[$manu] = $manuRow;                    
                 }
-                foreach ($data[$manu] as $type => $typeRow ){
-                    if (key_exists($type, $result[$manu])){
-                        $result[$manu][$type]['k'] += 1;
+                foreach ($data[$manu] as $model => $modelRow ){
+                    if (key_exists($model, $result[$manu])){
+                        $result[$manu][$model]['k'] += 1;
                     } else {
-                        $result[$manu][$type] = $typeRow;                    
+                        $result[$manu][$model] = $modelRow;                    
                     }                    
                 }
             }
