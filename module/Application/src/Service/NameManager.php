@@ -1743,13 +1743,13 @@ class NameManager
             $data = $this->extraCarAttr($car, []);
             foreach ($data as $manu => $manuRow){
                 if (key_exists($manu, $result)){
-                    $result[$manu]['k'] += 1;
+                    $result[$manu]['k']++;
                 } else {
                     $result[$manu] = $manuRow;                    
                 }
                 foreach ($data[$manu] as $model => $modelRow ){
                     if (key_exists($model, $result[$manu])){
-                        $result[$manu][$model]['k'] += 1;
+                        $result[$manu][$model]['k']++;
                     } else {
                         $result[$manu][$model] = $modelRow;                    
                     }                    
