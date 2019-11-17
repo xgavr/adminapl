@@ -1748,14 +1748,14 @@ class NameManager
                     $result[$manu]['k'] += 1;
                 } else {
                     $result[$manu]['k'] = 1;                    
-                    $result[$manu]['models'] = $manuRow;                    
+                    $result[$manu]['models'] = $manuRow['models'];                    
                 }
                 foreach ($data[$manu]['models'] as $model => $modelRow ){
                     if (key_exists($model, $result[$manu])){
-                        $result[$manu][$model]['k'] += 1;
+                        $result[$manu]['models'][$model]['k'] += 1;
                     } else {
                         $result[$manu][$model]['k'] += 1;                    
-                        $result[$manu][$model]['types'] = $modelRow;                    
+                        $result[$manu][$model]['types'] = $modelRow['types'];                    
                     }                    
                 }
             }
