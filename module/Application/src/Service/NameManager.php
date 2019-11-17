@@ -1696,6 +1696,8 @@ class NameManager
                 ->carDetailValue($car, 'manuName');
         $model = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'modelName');
+        $body = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'constructionType');
         $litres = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'cylinderCapacityLiter');
         $cfrom = $this->entityManager->getRepository(Car::class)
@@ -1707,7 +1709,7 @@ class NameManager
         $type = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'typeName');
                 
-        $modelNameFilter = new ModelName();
+        $modelNameFilter = new ModelName(['body' => $body]);
         $result = [
             $manu => [
                 'k' => 1,

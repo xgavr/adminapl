@@ -34,7 +34,12 @@ class ModelName extends AbstractFilter
     
     public function filter($value)
     {
-        $result = preg_replace("/[^ a-zA-Z0-9]/u","", preg_replace('/\(.*?$/', '', $value));
+        if (isset($this->options['body'])){
+            $result = mb_str_replace($this->options['body'], '', $value);
+        } else {
+            $result = $value;
+        }
+        $result = preg_replace('/[^ a-zA-Z0-9]/u', '', preg_replace('/\(.*?$/', '', $result));
         
         return trim($result);
     }
