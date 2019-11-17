@@ -1712,18 +1712,14 @@ class NameManager
         $modelNameFilter = new ModelName(['body' => $body]);
         $result = [
             $manu => [
-                'models' => [
-                    $modelNameFilter->filter($model) => [
-                        'types' => [
-                            $type => [
-                                'litres' => (string) round($litres/100, 1),
-                                'from' => substr($cfrom, 2, 2),
-                                'cto' => substr($cto, 2, 2),
-                                'fuel' => $fuel,                        
-                            ],                            
-                        ],
-                    ],                    
-                ]
+                $modelNameFilter->filter($model) => [
+                    $type => [
+                        'litres' => (string) round($litres/100, 1),
+                        'from' => substr($cfrom, 2, 2),
+                        'cto' => substr($cto, 2, 2),
+                        'fuel' => $fuel,                        
+                    ],                            
+                ],                    
             ],
         ];
         
@@ -1743,26 +1739,7 @@ class NameManager
         $cars = $query->getResult();
         foreach ($cars as $car){
             $data = $this->extraCarAttr($car, []);
-            foreach ($data as $manu => $manuRow){
-                if (key_exists($manu, $result)){
-                    $result[$manu]['k'] += 1;
-                } else {
-                    $result[$manu] = [
-                        'k' => 1,
-                        'models' => $manuRow['models'],
-                    ];                            
-                }
-                foreach ($data[$manu]['models'] as $model => $modelRow ){
-                    if (key_exists($model, $result[$manu]['models'])){
-                        $result[$manu]['models'][$model]['k'] += 1;
-                    } else {
-                        $result[$manu]['models'][$model] = [
-                            'k' => 1,
-                            'types' => $modelRow['types'],
-                        ];    
-                    }                    
-                }
-            }
+            $result = array_merge_recursive($result, $data);
         }
                         
         return $result;
