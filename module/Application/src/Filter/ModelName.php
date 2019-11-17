@@ -34,7 +34,7 @@ class ModelName extends AbstractFilter
     
     public function filter($value)
     {
-        $result = preg_replace("/[^ a-zA-Z0-9]/u","", preg_replace('/\(.*?\)|$/', '', $value));
+        $result = preg_replace("/[^ a-zA-Z0-9]/u","", preg_replace('/\(.*?$/', '', $value));
         
         return trim($result);
     }
