@@ -1712,16 +1712,18 @@ class NameManager
         $modelNameFilter = new ModelName(['body' => $body]);
         $result = [
             $manu => [
-                'k' => 1,
-                $modelNameFilter->filter($model) => [
-                    'k' => 1,
-                    $type => [
-                        'litres' => (string) round($litres/100, 1),
-                        'from' => substr($cfrom, 2, 2),
-                        'cto' => substr($cto, 2, 2),
-                        'fuel' => $fuel,                        
-                    ]
-                ],
+                'models' => [
+                    $modelNameFilter->filter($model) => [
+                        'types' => [
+                            $type => [
+                                'litres' => (string) round($litres/100, 1),
+                                'from' => substr($cfrom, 2, 2),
+                                'cto' => substr($cto, 2, 2),
+                                'fuel' => $fuel,                        
+                            ],                            
+                        ],
+                    ],                    
+                ]
             ],
         ];
         
@@ -1743,15 +1745,17 @@ class NameManager
             $data = $this->extraCarAttr($car, []);
             foreach ($data as $manu => $manuRow){
                 if (key_exists($manu, $result)){
-                    $result[$manu]['k']++;
+                    $result[$manu]['k'] += 1;
                 } else {
-                    $result[$manu] = $manuRow;                    
+                    $result[$manu]['k'] = 1;                    
+                    $result[$manu]['models'] = $manuRow;                    
                 }
-                foreach ($data[$manu] as $model => $modelRow ){
+                foreach ($data[$manu]['models'] as $model => $modelRow ){
                     if (key_exists($model, $result[$manu])){
-                        $result[$manu][$model]['k']++;
+                        $result[$manu][$model]['k'] += 1;
                     } else {
-                        $result[$manu][$model] = $modelRow;                    
+                        $result[$manu][$model]['k'] += 1;                    
+                        $result[$manu][$model]['types'] = $modelRow;                    
                     }                    
                 }
             }
