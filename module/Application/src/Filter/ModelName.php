@@ -39,7 +39,7 @@ class ModelName extends AbstractFilter
         } else {
             $result = $value;
         }
-        $result = preg_replace('/[^a-zA-Z0-9 \-]/u', '', preg_replace('/\(.*?$/', '', $result));
+        $result = preg_replace('/[^a-zA-Z0-9 \-\+]/u', '', preg_replace('/\(.*?$/', '', $result));
         
         return trim($result);
     }
