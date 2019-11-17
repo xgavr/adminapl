@@ -35,7 +35,7 @@ class ModelName extends AbstractFilter
     public function filter($value)
     {
         if (isset($this->options['body'])){
-            $result = mb_str_replace($this->options['body'], '', $value);
+            $result = str_replace($this->options['body'], '', $value);
         } else {
             $result = $value;
         }
