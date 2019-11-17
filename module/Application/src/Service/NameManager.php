@@ -32,6 +32,7 @@ use Application\Validator\IsEN;
 use Application\Validator\IsNUM;
 use Application\Filter\ArticleCode;
 use Application\Filter\ProducerName;
+use Application\Filter\ModelName;
 
 use Zend\Config\Config;
 use Zend\Config\Writer\PhpArray;
@@ -1706,10 +1707,11 @@ class NameManager
         $type = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'typeName');
                 
+        $modelNameFilter = new ModelName();
         $result = [
             $manu => [
                 'k' => 1,
-                trim(preg_replace('/\(.*?\)/', '', $model)) => [
+                $modelNameFilter->filter($model) => [
                     'k' => 0,
                     $type => [
                         'litres' => (string) round($litres/100, 1),
