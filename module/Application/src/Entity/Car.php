@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Description of Make
+ * Description of Car
  * @ORM\Entity(repositoryClass="\Application\Repository\CarRepository")
  * @ORM\Table(name="car")
  * @author Daddy

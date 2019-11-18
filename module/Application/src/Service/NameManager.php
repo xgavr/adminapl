@@ -1054,7 +1054,8 @@ class NameManager
 
             $idsFilter = new IdsFormat();
             return $idsFilter->filter($articleTitleIds);
-        }    
+        } 
+        return;
     }
     
     /**
