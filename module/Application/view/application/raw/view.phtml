@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\Rawprice;
+
 $this->headTitle('Прайс '.$raw->getSupplier()->getName());
 
 $this->mainMenu()->setActiveItemId('raw');
@@ -285,7 +287,7 @@ $this->pageBreadcrumbs()->setItems([
                                     <div>
                                         <small>
                                             <i>
-                                                <?= round($parseManager->stageCount($raw, 'statusToken', Application\Entity\Rawprice::TOKEN_GROUP_PARSED)*100/$totalRawpriceCount)?>
+                                                <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::TOKEN_GROUP_PARSED)*100/$totalRawpriceCount).'%'?>
                                             </i>
                                         </small>
                                     </div>
