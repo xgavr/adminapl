@@ -1233,10 +1233,15 @@ class NameManager
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
-                $good = $rawprice->getGood();
+                try {
+                    $good = $rawprice->getGood();           
+                    $groupTokenUpdateFlag = $good->getGroupTokenUpdateFlag();
+                } catch (\Doctrine\ORM\EntityNotFoundException $e){
+                    $good = null;
+                }
                 
                 if ($good){
-                    $this->checkUpdateGroupTokenFlag($good, $good->getGroupTokenUpdateFlag());
+                    $this->checkUpdateGroupTokenFlag($good, $groupTokenUpdateFlag);
 
                     $goodTitleStr = $this->goodTitlesIds($good);
                     $goodTitleStrMd5 = md5($goodTitleStr);
