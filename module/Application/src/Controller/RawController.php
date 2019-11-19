@@ -24,25 +24,25 @@ class RawController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Менеджер.
-     * @var Application\Service\SupplierManager 
+     * @var \Application\Service\SupplierManager 
      */
     private $supplierManager;    
     
     /**
      * Менеджер.
-     * @var Application\Service\RawManager 
+     * @var \Application\Service\RawManager 
      */
     private $rawManager;    
     
     /**
      * Менеджер.
-     * @var Application\Service\ParseManager 
+     * @var \Application\Service\ParseManager 
      */
     private $parseManager;  
     

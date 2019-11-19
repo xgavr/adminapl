@@ -569,5 +569,20 @@ class ParseManager {
         
         $this->entityManager->flush();
     }
+
+    /**
+     * Количество обработанных записей на стадии
+     * 
+     * @param Raw $raw
+     * @param string $stageField
+     * @param integer $stage
+     * 
+     * @return integer
+     */
+    public function stageCount($raw, $stageField, $stage)
+    {
+        return $this->entityManager->getRepository(Rawprice::class)
+                ->count(['raw' => $raw->getId(), $stageField => $stage]);
+    }
                
 }

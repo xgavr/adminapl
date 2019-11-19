@@ -282,6 +282,13 @@ $this->pageBreadcrumbs()->setItems([
                                             title="Разобрать группы наименований">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
+                                    <div>
+                                        <small>
+                                            <i>
+                                                <?= round($parseManager->stageCount($raw, 'statusToken', Application\Entity\Rawprice::TOKEN_GROUP_PARSED)*100/$totalRawpriceCount)?>
+                                            </i>
+                                        </small>
+                                    </div>
                                 <?php endif;?>
                             </div>    
                         </div>    
