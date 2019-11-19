@@ -19,6 +19,7 @@ use Application\Entity\ArticleBigram;
 use Application\Entity\Goods;
 use Application\Entity\GoodTitle;
 use Application\Entity\Car;
+use Application\Entity\Oem;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -33,6 +34,7 @@ use Application\Validator\IsNUM;
 use Application\Filter\ArticleCode;
 use Application\Filter\ProducerName;
 use Application\Filter\ModelName;
+use Admin\Filter\TransferName;
 
 use Zend\Config\Config;
 use Zend\Config\Writer\PhpArray;
@@ -958,6 +960,7 @@ class NameManager
         if ($good->getTokenGroup()){
             $result['tokenGroup'] = $good->getTokenGroup()->getName();
         }    
+        $result['oeCarPart'] = $this->oeCar($good);
         $result['carPart'] = $this->carPart($good);
         
         return $result;
@@ -1684,6 +1687,19 @@ class NameManager
         return array_merge($result, $empt);
     }    
     
+    
+    /**
+     * Марка из ОЕ
+     * 
+     * @param Goods $good
+     * 
+     */
+    protected function oeCar($good)
+    {
+        return $this->entityManager->getRepository(Oem::class)
+                ->cars($good);
+    }
+    
     /**
      * Аттрибуты машины
      * 
@@ -1711,8 +1727,9 @@ class NameManager
                 ->carDetailValue($car, 'typeName');
                 
         $modelNameFilter = new ModelName(['body' => $body]);
+        $transferFilter = new TransferName();
         $result = [
-            $manu => [
+            $transferFilter->filter($manu) => [
                 $modelNameFilter->filter($model) => [
                     $type => [
                         'litres' => (string) round($litres/100, 1),

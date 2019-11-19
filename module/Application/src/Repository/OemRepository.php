@@ -15,6 +15,7 @@ use Application\Entity\Oem;
 use Application\Entity\CrossList;
 use Application\Entity\Rawprice;
 use Application\Filter\ArticleCode;
+use Admin\Filter\TransferName;
 
 
 /**
@@ -602,5 +603,39 @@ class OemRepository  extends EntityRepository{
             unset($item);
         }        
         return;
+    }
+    
+    /**
+     * Выбрать наименования брендов товара
+     * 
+     * @param Goods $good
+     * @return string
+     */
+    public function cars($good)
+    {
+        $result = [];
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('o.brandName')
+                ->distinct()
+                ->from(Oem::class, 'o')
+                ->where('o.good = ?1')    
+                ->andWhere('o.status = ?2')
+                ->andWhere('o.source = ?3')
+                ->setParameter('1', $good->getId())
+                ->setParameter('2', Oem::STATUS_ACTIVE)
+                ->setParameter('2', Oem::SOURCE_TD)
+            ;
+                
+        $data = $queryBuilder->getQuery()->getResult();            
+        
+        $transferFilter = new TransferName();
+        foreach($data as $row){            
+            $result[] = $transferFilter->filter($row['brandName']);
+        }        
+        
+        return implode(' ', array_filter($result));        
     }
 }
