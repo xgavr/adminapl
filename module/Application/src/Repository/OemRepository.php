@@ -626,7 +626,7 @@ class OemRepository  extends EntityRepository{
                 ->andWhere('o.source = ?3')
                 ->setParameter('1', $good->getId())
                 ->setParameter('2', Oem::STATUS_ACTIVE)
-                ->setParameter('2', Oem::SOURCE_TD)
+                ->setParameter('3', Oem::SOURCE_TD)
             ;
                 
         $data = $queryBuilder->getQuery()->getResult();            
