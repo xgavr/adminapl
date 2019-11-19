@@ -112,7 +112,7 @@ class Model {
 
         
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Make", inversedBy="models") 
+     * @ORM\ManyToOne(targetEntity="\Application\Entity\Make", inversedBy="models") 
      * @ORM\JoinColumn(name="make_id", referencedColumnName="id")
      * 
      */
@@ -159,6 +159,14 @@ class Model {
         return $this->fullName;
     }
 
+    public function getDisplayName() 
+    {
+        if ($this->fullName){
+            return $this->fullName;
+        }
+        return $this->name;
+    }
+    
     public function setFullName($fullName) 
     {
         $this->fullName = $fullName;

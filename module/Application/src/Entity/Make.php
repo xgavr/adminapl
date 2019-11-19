@@ -126,6 +126,14 @@ class Make {
         return $this->fullName;
     }
 
+    public function getDisplayName() 
+    {
+        if ($this->fullName){
+            return $this->fullName;
+        }
+        return $this->name;
+    }
+
     public function setFullName($fullName) 
     {
         $this->fullName = $fullName;
