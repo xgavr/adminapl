@@ -29,7 +29,7 @@ class MakeController extends AbstractActionController
     
     /**
      * Менеджер товаров.
-     * @var Application\Service\MakeManager 
+     * @var \Application\Service\MakeManager 
      */
     private $makeManager;    
     
@@ -382,5 +382,21 @@ class MakeController extends AbstractActionController
         ]);                  
     }
 
+    public function editFullNameAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $makeId = $data['pk'];
+            $make = $this->entityManager->getRepository(Make::class)
+                    ->findOneById($makeId);
+                    
+            if ($make){
+                $this->makeManager->updateFullName($make, $data['value']);
+            }    
+        }
+        
+        exit;
+    }
     
 }

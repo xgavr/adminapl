@@ -21,13 +21,13 @@ class MakeManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
     /**
      * External manager.
-     * @var Application\Entity\ExternalManager
+     * @var \Application\Entity\ExternalManager
      */
     private $externalManager;
   
@@ -74,6 +74,21 @@ class MakeManager
         foreach ($makes as $make){
             $this->fillModels($make);
         }
+        
+        return;
+    }
+    
+    /**
+     * Обновить полное наименование
+     * 
+     * @param Make $make
+     * @param string $fullName
+     */
+    public function updateFullName($make, $fullName)
+    {
+        $make->setFullName($fullName);
+        $this->entityManager->persist($make);
+        $this->entityManager->flush($make);
         
         return;
     }
