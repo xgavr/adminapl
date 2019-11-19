@@ -636,6 +636,6 @@ class OemRepository  extends EntityRepository{
             $result[] = $transferFilter->filter($row['brandName']);
         }        
         
-        return implode(' ', array_filter($result));        
+        return implode(' ', array_splice(array_filter($result), 0, 5));        
     }
 }
