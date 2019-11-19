@@ -1710,7 +1710,7 @@ class NameManager
     protected function extraCarAttr($car, $params)
     {
         $manu = $car->getModel()->getMake()->getDisplayName();
-        $model = $this->getModel()->getName();
+        $model = $car->getModel()->getDisplayName();
         
         $body = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'constructionType');
