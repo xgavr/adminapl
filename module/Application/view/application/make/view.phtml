@@ -34,7 +34,7 @@ $this->headScript()
 <p>
     <?= $make->getStatusAsString();?>.
     <?php if ($make->getStatus() == Make::STATUS_ACTIVE): ?>
-        Наименование коротко: 
+        Наименование выводимое: 
          <a href="#" 
             class="bootstrapEdit" data-type="text" 
             data-pk="<?= $make->getId()?>" 
