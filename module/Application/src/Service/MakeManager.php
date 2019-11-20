@@ -92,4 +92,20 @@ class MakeManager
         
         return;
     }
+    
+    /**
+     * Обновить полное наименование модели
+     * 
+     * @param Model $model
+     * @param string $fullName
+     */
+    public function updateModelFullName($model, $fullName)
+    {
+        $model->setFullName($fullName);
+        $this->entityManager->persist($model);
+        $this->entityManager->flush($model);
+        
+        return;
+    }
+    
 }

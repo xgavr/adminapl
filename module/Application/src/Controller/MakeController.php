@@ -399,4 +399,21 @@ class MakeController extends AbstractActionController
         exit;
     }
     
+    public function editModelFullNameAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $modelId = $data['pk'];
+            $model = $this->entityManager->getRepository(Model::class)
+                    ->findOneById($modelId);
+                    
+            if ($model){
+                $this->makeManager->updateModelFullName($model, $data['value']);
+            }    
+        }
+        
+        exit;
+    }
+    
 }

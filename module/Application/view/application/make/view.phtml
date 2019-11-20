@@ -38,6 +38,7 @@ $this->headScript()
          <a href="#" 
             class="bootstrapEdit" data-type="text" 
             data-pk="<?= $make->getId()?>" 
+            data-mode="inline"
             data-name="fullName" data-emptytext="<?= $make->getName() ?>"
             data-url="/make/edit-full-name">
             <?= $make->getFullName() ?>    
@@ -74,6 +75,7 @@ $this->headScript()
                      <th data-field="tdId" data-sortable="true">TD</th>
                      <th data-field="aplId" data-sortable="true">АПЛ</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>             
+                     <th data-field="fullName" data-formatter="fullNameFormatter" data-sortable="true">Выводимое</th>
                      <th data-field="interval" data-sortable="true">Период</th>             
                      <th data-field="goodCount" data-sortable="true">Товаров</th>             
                  </tr>                
@@ -139,10 +141,16 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
-    $.fn.editable.defaults.mode = 'inline';
+    //$.fn.editable.defaults.mode = 'inline';
     
     $(window).on('load', function() {
         $('.bootstrapEdit').editable();
+    });
+
+    var table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('.bootstrapTableEdit').editable();
+        }
     });
 
     $('.show-button').on('click', function(e) {
@@ -208,6 +216,18 @@ function refreshTable(){
             '<div class="pull-left">',
             '<a href="/make/view-model/' + row.id + '" target="_blank">' + value + '</a>',
             '</div>'
+        ].join(''); 
+    }    
+    
+    function fullNameFormatter(value, row){
+        return [
+            '<a href="#"',
+            ' class="bootstrapTableEdit" data-type="text"',
+            ' data-pk="'+row.id+'"',
+            ' data-name="fullName"',
+            ' data-emptyText="'+row.name+'"',
+            ' data-url="/make/edit-model-full-name">'+value,
+            '</a>',
         ].join(''); 
     }    
     
