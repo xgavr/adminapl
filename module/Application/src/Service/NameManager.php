@@ -947,26 +947,6 @@ class NameManager
     }
 
     /**
-     * Поиск лучшего наименования для товара
-     * 
-     * @param Goods $good
-     * @return array
-     */
-    public function findBestName($good)
-    {
-        if ($good->getGenericGroup()){
-            $result['genericGroup'] = $good->getGenericGroup()->getName();
-        }    
-        if ($good->getTokenGroup()){
-            $result['tokenGroup'] = $good->getTokenGroup()->getName();
-        }    
-        $result['oeCarPart'] = $this->oeCar($good);
-        $result['carPart'] = $this->carPart($good);
-        
-        return $result;
-    }
-    
-    /**
      * Средняя длина наименования товара
      */
     private function avgD()
@@ -1766,4 +1746,47 @@ class NameManager
                         
         return $result;
     }
+    
+    /**
+     * Часть описания нименования
+     * 
+     * @param Goods $good
+     * @return string
+     */
+    public function textPart($good)
+    {
+        $result = '';
+        if ($good->getTokenGroup()){
+            if ($good->getTokenGroup()->getName()){
+                return $good->getTokenGroup()->getName();
+            }
+        }
+        if ($good->getGenericGroup()){
+            return $good->getGenericGroup()->getName();
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Поиск лучшего наименования для товара
+     * 
+     * @param Goods $good
+     * @return array
+     */
+    public function findBestName($good)
+    {
+        if ($good->getGenericGroup()){
+            $result['genericGroup'] = $good->getGenericGroup()->getName();
+        }    
+        if ($good->getTokenGroup()){
+            $result['tokenGroup'] = $good->getTokenGroup()->getName();
+        }    
+        $result['textPart'] = $this->textPart($good);
+        $result['oeCarPart'] = $this->oeCar($good);
+        $result['carPart'] = $this->carPart($good);
+        
+        return $result;
+    }
+        
 }
