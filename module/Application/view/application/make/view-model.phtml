@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\Model;
+
 $this->headTitle($model->getMake()->getName().' '.$model->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -22,6 +24,17 @@ $this->pageBreadcrumbs()->setItems([
     <small>
         <span><?= $model->getInterval()?></span>
         <span><?= $model->getStatusAsString();?></span>
+        <?php if ($model->getStatus() == Model::STATUS_ACTIVE): ?>
+            Наименование выводимое: 
+             <a href="#" 
+                class="bootstrapEdit" data-type="text" 
+                data-pk="<?= $model->getId()?>" 
+                data-mode="inline"
+                data-name="fullName" data-emptytext="<?= $model->getName() ?>"
+                data-url="/make/edit-model-full-name">
+                <?= $model->getFullName() ?>    
+            </a>
+        <?php endif; ?>    
     </small>
 </p>
 <div class="row">
@@ -132,6 +145,10 @@ $this->pageBreadcrumbs()->setItems([
 </div>
 
 <script type="text/javascript">
+    $(window).on('load', function() {
+        $('.bootstrapEdit').editable();
+    });
+
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;
 
