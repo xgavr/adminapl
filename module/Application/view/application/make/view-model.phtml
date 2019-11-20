@@ -12,6 +12,14 @@ $this->pageBreadcrumbs()->setItems([
             $model->getMake()->getName().' '.$model->getName()=>$this->url('make', ['action'=>'view-model', 'id'=>$model->getId()])
             ]);
 
+$this->headLink()
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
+        ;
+
+$this->headScript()
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
+            ;    
+
 ?>
 
 <h1>
