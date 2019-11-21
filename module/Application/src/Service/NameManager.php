@@ -1717,8 +1717,8 @@ class NameManager
                 ' '.$modelNameFilter->filter($model) => [
                     ' '.$type => [
                         'litres' => (string) round($litres/100, 1),
-                        'from' => substr($cfrom, 2, 2),
-                        'cto' => substr($cto, 2, 2),
+                        'from' => substr($cfrom, 0, 4),
+                        'cto' => substr($cto, 0, 4),
                         'fuel' => $fuel,                        
                     ],                            
                 ],                    
@@ -1741,7 +1741,35 @@ class NameManager
         $cars = $query->getResult();
         foreach ($cars as $car){
             $data = $this->extraCarAttr($car, []);
-            $result = array_merge_recursive($result, $data);
+//            $result = array_merge_recursive($result, $data);
+            foreach ($car as $make => $makeValue){
+                if (!array_key_exists($make, $result)){
+                    $result[$make] = $makeValue;
+                }
+                foreach ($makeValue as $model => $modelValue){
+                    if (!array_key_exists($model, $result[$make])){
+                        $result[$make][$model] = $modelValue;
+                    }       
+                    $result[$make][$model]['B']['litresMin'] = 9999;
+                    $result[$make][$model]['B']['litresMax'] = 0;
+                    $result[$make][$model]['D']['litresMin'] = 9999;
+                    $result[$make][$model]['D']['litresMax'] = 0;
+                    $result[$make][$model]['from'] = 0;
+                    $result[$make][$model]['cto'] = 0;
+                    foreach ($modelValue as $typeValue){
+                        if ($typeValue['fuel'] == 'Дизель'){
+                            $result[$make][$model]['D']['litresMin'] = min($result[$make][$model]['litresMin'], $typeValue['litres']);
+                            $result[$make][$model]['D']['litresMax'] = max($result[$make][$model]['litresMin'], $typeValue['litres']);
+                        } else {
+                        if ($typeValue['fuel'] == 'Дизель'){
+                            $result[$make][$model]['B']['litresMin'] = min($result[$make][$model]['litresMin'], $typeValue['litres']);
+                            $result[$make][$model]['B']['litresMax'] = max($result[$make][$model]['litresMin'], $typeValue['litres']);                            
+                        }    
+                        $result[$make][$model]['from'] = min($result[$make][$model]['from'], $typeValue['from']);
+                        $result[$make][$model]['cto'] = max($result[$make][$model]['cto'], $typeValue['cto']);
+                    }
+                }
+            }
         }
                         
         return $result;
