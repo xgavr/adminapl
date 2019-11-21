@@ -1744,27 +1744,27 @@ class NameManager
 //            $result = array_merge_recursive($result, $data);
             foreach ($data as $make => $makeValue){
                 if (!array_key_exists($make, $result)){
-                    $result[$make] = [];
+                    $result[$make]['B']['litresMin'] = 9999;
+                    $result[$make]['B']['litresMax'] = 0;
+                    $result[$make]['D']['litresMin'] = 9999;
+                    $result[$make]['D']['litresMax'] = 0;
+                    $result[$make]['from'] = 9999;
+                    $result[$make]['cto'] = 0;
+                    $result[$make]['models'] = [];
+                    $result[$make]['str'] = '';
                 }
                 foreach ($makeValue as $model => $modelValue){
-                    if (!array_key_exists($model, $result[$make])){
-                        $result[$make][$model]['B']['litresMin'] = 9999;
-                        $result[$make][$model]['B']['litresMax'] = 0;
-                        $result[$make][$model]['D']['litresMin'] = 9999;
-                        $result[$make][$model]['D']['litresMax'] = 0;
-                        $result[$make][$model]['from'] = 9999;
-                        $result[$make][$model]['cto'] = 0;
-                    }       
+                    $result[$make]['models'][$model] = $model;
                     foreach ($modelValue as $typeValue){
                         if ($typeValue['fuel'] == 'Дизель'){
-                            $result[$make][$model]['D']['litresMin'] = min($result[$make][$model]['D']['litresMin'], $typeValue['litres']);
-                            $result[$make][$model]['D']['litresMax'] = max($result[$make][$model]['D']['litresMax'], $typeValue['litres']);
+                            $result[$make]['D']['litresMin'] = min($result[$make]['D']['litresMin'], $typeValue['litres']);
+                            $result[$make]['D']['litresMax'] = max($result[$make]['D']['litresMax'], $typeValue['litres']);
                         } else {
-                            $result[$make][$model]['B']['litresMin'] = min($result[$make][$model]['B']['litresMin'], $typeValue['litres']);
-                            $result[$make][$model]['B']['litresMax'] = max($result[$make][$model]['B']['litresMax'], $typeValue['litres']);                            
+                            $result[$make]['B']['litresMin'] = min($result[$make]['B']['litresMin'], $typeValue['litres']);
+                            $result[$make]['B']['litresMax'] = max($result[$make]['B']['litresMax'], $typeValue['litres']);                            
                         }    
-                        $result[$make][$model]['from'] = min($result[$make][$model]['from'], $typeValue['from']);
-                        $result[$make][$model]['cto'] = max($result[$make][$model]['cto'], $typeValue['cto']);
+                        $result[$make]['from'] = min($result[$make]['from'], $typeValue['from']);
+                        $result[$make]['cto'] = max($result[$make]['cto'], $typeValue['cto']);
                     }
                 }
             }
@@ -1772,6 +1772,7 @@ class NameManager
                         
         return $result;
     }
+    
     
     /**
      * Часть описания нименования
