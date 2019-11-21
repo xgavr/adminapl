@@ -1767,24 +1767,32 @@ class NameManager
                     }
                 }
                 
-                if ($result[$make]['B']['litresMin'] == 9999){
-                    unset($result[$make]['B']['litresMin']);
-                }
-                if ($result[$make]['B']['litresMax'] == 0){
-                    unset($result[$make]['B']['litresMax']);
-                }
-                if ($result[$make]['D']['litresMin'] == 9999){
-                    unset($result[$make]['D']['litresMin']);
-                }
-                if ($result[$make]['D']['litresMax'] == 0){
-                    unset($result[$make]['D']['litresMax']);
-                }
-                if ($result[$make]['cto'] == 0){
-                    unset($result[$make]['cto']);
-                }
-                if ($result[$make]['from'] == date('Y')){
-                    unset($result[$make]['from']);
-                }
+                if (isset($result[$make]['B'])){
+                    if ($result[$make]['B']['litresMin'] == 9999){
+                        unset($result[$make]['B']['litresMin']);
+                    }
+                    if ($result[$make]['B']['litresMax'] == 0){
+                        unset($result[$make]['B']['litresMax']);
+                    }
+                }    
+                if (isset($result[$make]['D'])){
+                    if ($result[$make]['D']['litresMin'] == 9999){
+                        unset($result[$make]['D']['litresMin']);
+                    }
+                    if ($result[$make]['D']['litresMax'] == 0){
+                        unset($result[$make]['D']['litresMax']);
+                    }
+                }    
+                if (isset($result[$make]['cto'])){
+                    if ($result[$make]['cto'] == 0){
+                        unset($result[$make]['cto']);
+                    }
+                }    
+                if (isset($result[$make]['from'])){
+                    if ($result[$make]['from'] == date('Y')){
+                        unset($result[$make]['from']);
+                    }
+                }    
             }
         }
                         
