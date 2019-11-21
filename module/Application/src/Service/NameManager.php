@@ -1889,7 +1889,7 @@ class NameManager
                 }
             }   
             
-            $makeNames[] = implode($partSeparator, $result[$make]);
+            $makeNames[] = implode($partSeparator, $result);
             unset($result);
         }
         
