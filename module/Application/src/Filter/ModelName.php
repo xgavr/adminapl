@@ -39,6 +39,8 @@ class ModelName extends AbstractFilter
         foreach ($words as $word){
             if (strpos($word, '-')){
                 $result[] = $this->_explodeWord($word, '-');
+            } elseif (strpos($word, '/')){
+                $result[] = $this->_explodeWord($word, '/');
             } else {
                 if (strlen($word) > 3){
                     $result[] = ucfirst(strtolower($word));
