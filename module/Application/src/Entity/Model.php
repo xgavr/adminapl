@@ -164,7 +164,7 @@ class Model {
         if ($this->fullName){
             return $this->fullName;
         }
-        return $this->name;
+        return ucwords($this->name, '+- \t\r\n\f\v');
     }
     
     public function setFullName($fullName) 
