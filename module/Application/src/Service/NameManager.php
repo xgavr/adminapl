@@ -1908,7 +1908,7 @@ class NameManager
         $result['textPart'] = $this->textPart($good);
         $result['oeCarPart'] = $this->oeCar($good);
         $result['carPartStr'] = $this->carPartStr($carPart);
-        $result['carPart'] = $carPart
+        $result['carPart'] = $carPart;
         
         return $result;
     }
