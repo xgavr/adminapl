@@ -487,7 +487,7 @@ class GoodsController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->findCars($goods, ['sort' => $sort, 'order' => $order]);
+                        ->findCars($goods, ['sort' => $sort, 'order' => $order, 'constructionFrom' => date('Y') - 30]);
 
         $total = count($query->getResult(2));
         
