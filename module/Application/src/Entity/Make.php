@@ -131,7 +131,7 @@ class Make {
         if ($this->fullName){
             return $this->fullName;
         }
-        return ucwords(strtolower($this->name), '-+ \t\r\n\f\v');
+        return ucwords(strtolower($this->name), '-+ ');
     }
 
     public function setFullName($fullName) 
