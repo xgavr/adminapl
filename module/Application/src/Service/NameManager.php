@@ -1903,10 +1903,12 @@ class NameManager
         if ($good->getTokenGroup()){
             $result['tokenGroup'] = $good->getTokenGroup()->getName();
         }    
+        
+        $carPart = $this->carPart($good);
         $result['textPart'] = $this->textPart($good);
         $result['oeCarPart'] = $this->oeCar($good);
-        $result['carPart'] = $this->carPart($good);
-        $result['carPartStr'] = $this->carPartStr($result['carPart']);
+        $result['carPartStr'] = $this->carPartStr($carPart);
+        $result['carPart'] = $carPart
         
         return $result;
     }
