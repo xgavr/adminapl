@@ -1761,7 +1761,6 @@ class NameManager
                             $result[$make][$model]['D']['litresMin'] = min($result[$make][$model]['litresMin'], $typeValue['litres']);
                             $result[$make][$model]['D']['litresMax'] = max($result[$make][$model]['litresMin'], $typeValue['litres']);
                         } else {
-                        if ($typeValue['fuel'] == 'Дизель'){
                             $result[$make][$model]['B']['litresMin'] = min($result[$make][$model]['litresMin'], $typeValue['litres']);
                             $result[$make][$model]['B']['litresMax'] = max($result[$make][$model]['litresMin'], $typeValue['litres']);                            
                         }    
