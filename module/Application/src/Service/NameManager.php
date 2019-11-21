@@ -1832,7 +1832,7 @@ class NameManager
         $modelSeparator = '/';
         $litresSeparator = '-';
         $yearSeparator = '-';
-        $partSeparator = ' ';
+        $partSeparator = ',';
         $partMaxLength = 150;
         
         if (is_array($options)){
@@ -1874,10 +1874,10 @@ class NameManager
             }    
             if (isset($makeValue['D'])){
                 if (isset($makeValue['D']['litresMin'])){
-                    $result['D'] = $makeValue['D']['litresMin'];
+                    $result['D'] = $makeValue['D']['litresMin'].'D';
                     if (isset($makeValue['D']['litresMax'])){
                         if ($makeValue['D']['litresMin'] != $makeValue['D']['litresMax']){
-                            $result['D'] .= $litresSeparator.$makeValue['D']['litresMax'];
+                            $result['D'] = $makeValue['D']['litresMin'].$litresSeparator.$makeValue['D']['litresMax'].'D';
                         }
                     }    
                 }    
