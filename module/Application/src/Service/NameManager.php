@@ -1756,11 +1756,27 @@ class NameManager
                     $result[$make]['models'][$model] = $model;
                     foreach ($modelValue as $typeValue){
                         if ($typeValue['fuel'] == 'Дизель'){
-                            $result[$make]['D']['litresMin'] = min($result[$make]['D']['litresMin'], $typeValue['litres']);
-                            $result[$make]['D']['litresMax'] = max($result[$make]['D']['litresMax'], $typeValue['litres']);
+                            if (isset($result[$make]['D']['litresMin'])){
+                                $result[$make]['D']['litresMin'] = min($result[$make]['D']['litresMin'], $typeValue['litres']);
+                            } else {
+                                $result[$make]['D']['litresMin'] = $typeValue['litres'];                                
+                            }
+                            if (isset($result[$make]['D']['litresMax'])){
+                                $result[$make]['D']['litresMax'] = max($result[$make]['D']['litresMax'], $typeValue['litres']);
+                            } else {
+                                $result[$make]['D']['litresMax'] = $typeValue['litres'];                                                                
+                            }    
                         } else {
-                            $result[$make]['B']['litresMin'] = min($result[$make]['B']['litresMin'], $typeValue['litres']);
-                            $result[$make]['B']['litresMax'] = max($result[$make]['B']['litresMax'], $typeValue['litres']);                            
+                            if (isset($result[$make]['B']['litresMin'])){
+                                $result[$make]['B']['litresMin'] = min($result[$make]['B']['litresMin'], $typeValue['litres']);
+                            } else {
+                                $result[$make]['B']['litresMin'] = $typeValue['litres'];                                
+                            }
+                            if (isset($result[$make]['B']['litresMax'])){
+                                $result[$make]['B']['litresMax'] = max($result[$make]['B']['litresMax'], $typeValue['litres']);
+                            } else {
+                                $result[$make]['B']['litresMax'] = $typeValue['litres'];                                                                
+                            }    
                         }    
                         $result[$make]['from'] = min($result[$make]['from'], $typeValue['from']);
                         $result[$make]['cto'] = max($result[$make]['cto'], $typeValue['cto']);
