@@ -1744,18 +1744,17 @@ class NameManager
 //            $result = array_merge_recursive($result, $data);
             foreach ($data as $make => $makeValue){
                 if (!array_key_exists($make, $result)){
-                    $result[$make] = $makeValue;
+                    $result[$make] = [];
                 }
                 foreach ($makeValue as $model => $modelValue){
                     if (!array_key_exists($model, $result[$make])){
-                        $result[$make][$model] = $modelValue;
+                        $result[$make][$model]['B']['litresMin'] = 9999;
+                        $result[$make][$model]['B']['litresMax'] = 0;
+                        $result[$make][$model]['D']['litresMin'] = 9999;
+                        $result[$make][$model]['D']['litresMax'] = 0;
+                        $result[$make][$model]['from'] = 0;
+                        $result[$make][$model]['cto'] = 0;
                     }       
-                    $result[$make][$model]['B']['litresMin'] = 9999;
-                    $result[$make][$model]['B']['litresMax'] = 0;
-                    $result[$make][$model]['D']['litresMin'] = 9999;
-                    $result[$make][$model]['D']['litresMax'] = 0;
-                    $result[$make][$model]['from'] = 0;
-                    $result[$make][$model]['cto'] = 0;
                     foreach ($modelValue as $typeValue){
                         if ($typeValue['fuel'] == 'Дизель'){
                             $result[$make][$model]['D']['litresMin'] = min($result[$make][$model]['litresMin'], $typeValue['litres']);
