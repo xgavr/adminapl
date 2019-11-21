@@ -1752,16 +1752,16 @@ class NameManager
                         $result[$make][$model]['B']['litresMax'] = 0;
                         $result[$make][$model]['D']['litresMin'] = 9999;
                         $result[$make][$model]['D']['litresMax'] = 0;
-                        $result[$make][$model]['from'] = 0;
+                        $result[$make][$model]['from'] = 9999;
                         $result[$make][$model]['cto'] = 0;
                     }       
                     foreach ($modelValue as $typeValue){
                         if ($typeValue['fuel'] == 'Дизель'){
                             $result[$make][$model]['D']['litresMin'] = min($result[$make][$model]['litresMin'], $typeValue['litres']);
-                            $result[$make][$model]['D']['litresMax'] = max($result[$make][$model]['litresMin'], $typeValue['litres']);
+                            $result[$make][$model]['D']['litresMax'] = max($result[$make][$model]['litresMax'], $typeValue['litres']);
                         } else {
                             $result[$make][$model]['B']['litresMin'] = min($result[$make][$model]['litresMin'], $typeValue['litres']);
-                            $result[$make][$model]['B']['litresMax'] = max($result[$make][$model]['litresMin'], $typeValue['litres']);                            
+                            $result[$make][$model]['B']['litresMax'] = max($result[$make][$model]['litresMax'], $typeValue['litres']);                            
                         }    
                         $result[$make][$model]['from'] = min($result[$make][$model]['from'], $typeValue['from']);
                         $result[$make][$model]['cto'] = max($result[$make][$model]['cto'], $typeValue['cto']);
