@@ -42,7 +42,16 @@ class ModelName extends AbstractFilter
         $result = str_replace(' c ', ' с ', $result);
         $result = preg_replace('/[^a-zA-Z0-9 \-\+\/]/u', '', preg_replace('/\(.*?$/', '', $result));
         
-        return trim($result);
+        $words = explode(' ', $result);
+        foreach ($words as $word){
+            if (strlen($word) > 3){
+                $newResult[] = ucfirst(strtolower($word));
+            } else {
+                $newResult[] = $word; 
+            }
+        }
+        
+        return trim(implode(' ', $newResult));
     }
     
 }
