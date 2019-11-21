@@ -32,6 +32,20 @@ class ModelName extends AbstractFilter
         }    
     }
     
+    public function _explodeWord($word, $separator)
+    {
+        $words = explode($separator, $result);
+        $result = [];
+        foreach ($words as $word){
+            if (strlen($word) > 3){
+                $result[] = ucfirst(strtolower($word));
+            } else {
+                $result[] = $word; 
+            }
+        }    
+        return trim(implode($separator, $result));
+    }
+    
     public function filter($value)
     {
         if (isset($this->options['body'])){
@@ -42,16 +56,7 @@ class ModelName extends AbstractFilter
         $result = str_replace(' c ', ' с ', $result);
         $result = preg_replace('/[^a-zA-Z0-9 \-\+\/]/u', '', preg_replace('/\(.*?$/', '', $result));
         
-        $words = explode(' ', $result);
-        foreach ($words as $word){
-            if (strlen($word) > 3){
-                $newResult[] = ucfirst(strtolower($word));
-            } else {
-                $newResult[] = $word; 
-            }
-        }
-        
-        return trim(implode(' ', $newResult));
+        return $this->_explodeWord($result, ' ');
     }
     
 }
