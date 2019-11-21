@@ -32,9 +32,9 @@ class ModelName extends AbstractFilter
         }    
     }
     
-    public function _explodeWord($word, $separator)
+    public function _explodeWord($str, $separator)
     {
-        $words = explode($separator, $result);
+        $words = explode($separator, $str);
         $result = [];
         foreach ($words as $word){
             if (strlen($word) > 3){
