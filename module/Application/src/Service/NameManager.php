@@ -1714,8 +1714,8 @@ class NameManager
         $transferFilter = new TransferName();
         $result = [
             $transferFilter->filter($manu) => [
-                (string) $modelNameFilter->filter($model) => [
-                    $type => [
+                ' '.$modelNameFilter->filter($model) => [
+                    ' '.$type => [
                         'litres' => (string) round($litres/100, 1),
                         'from' => substr($cfrom, 2, 2),
                         'cto' => substr($cto, 2, 2),
