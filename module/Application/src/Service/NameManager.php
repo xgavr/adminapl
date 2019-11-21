@@ -1767,18 +1767,22 @@ class NameManager
                     }
                 }
                 
-                if (isset($result[$make]['B'])){
+                if (isset($result[$make]['B']['litresMin'])){
                     if ($result[$make]['B']['litresMin'] == 9999){
                         unset($result[$make]['B']['litresMin']);
                     }
+                }    
+                if (isset($result[$make]['B']['litresMax'])){
                     if ($result[$make]['B']['litresMax'] == 0){
                         unset($result[$make]['B']['litresMax']);
                     }
                 }    
-                if (isset($result[$make]['D'])){
+                if (isset($result[$make]['D']['litresMin'])){
                     if ($result[$make]['D']['litresMin'] == 9999){
                         unset($result[$make]['D']['litresMin']);
                     }
+                }    
+                if (isset($result[$make]['D']['litresMax'])){
                     if ($result[$make]['D']['litresMax'] == 0){
                         unset($result[$make]['D']['litresMax']);
                     }
