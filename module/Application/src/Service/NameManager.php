@@ -1751,7 +1751,6 @@ class NameManager
                     $result[$make]['from'] = 9999;
                     $result[$make]['cto'] = 0;
                     $result[$make]['models'] = [];
-                    $result[$make]['str'] = '';
                 }
                 foreach ($makeValue as $model => $modelValue){
                     $result[$make]['models'][$model] = $model;
@@ -1767,12 +1766,107 @@ class NameManager
                         $result[$make]['cto'] = max($result[$make]['cto'], $typeValue['cto']);
                     }
                 }
+                
+                if ($result[$make]['B']['litresMin'] == 9999){
+                    unset($result[$make]['B']['litresMin']);
+                }
+                if ($result[$make]['B']['litresMax'] == 0){
+                    unset($result[$make]['B']['litresMax']);
+                }
+                if ($result[$make]['D']['litresMin'] == 9999){
+                    unset($result[$make]['D']['litresMin']);
+                }
+                if ($result[$make]['D']['litresMax'] == 0){
+                    unset($result[$make]['D']['litresMax']);
+                }
+                if ($result[$make]['cto'] == 0){
+                    unset($result[$make]['cto']);
+                }
+                if ($result[$make]['from'] == date('Y')){
+                    unset($result[$make]['from']);
+                }
             }
         }
                         
         return $result;
     }
     
+    /**
+     * Часть наименования машины как строка
+     * 
+     * @param array $carPart
+     * @param array $options
+     * @return string
+     */
+    public function carPartStr($carPart, $options = null)
+    {
+        $makeSeparator = ',';
+        $modelSeparator = '/';
+        $litresSeparator = '-';
+        $yearSeparator = '-';
+        $partSeparator = ' ';
+        $partMaxLength = 150;
+        
+        if (is_array($options)){
+            if (isset($options['makeSeparator'])){
+                $makeSeparator = $options['makeSeparator'];
+            }
+            if (isset($options['modelSeparator'])){
+                $modelSeparator = $options['modelSeparator'];
+            }
+            if (isset($options['litresSeparator'])){
+                $litresSeparator = $options['litresSeparator'];
+            }
+            if (isset($options['yearSeparator'])){
+                $yearSeparator = $options['yearSeparator'];
+            }
+            if (isset($options['partSeparator'])){
+                $partSeparator = $options['partSeparator'];
+            }
+            if (isset($options['partMaxLength'])){
+                $partMaxLength = $options['partMaxLength'];
+            }
+        }
+                
+        $makeNames = [];
+        foreach ($carPart as $make => $makeValue){
+            $result['make'] = $make; 
+            if (isset($makeValue['models'])){
+                $result['models'] = implode($modelSeparator, $makeValue['models']);
+            }
+            if (isset($makeValue['B'])){
+                if (isset($makeValue['B']['litresMin'])){
+                    $result['B'] = $makeValue['B']['litresMin'];
+                    if (isset($makeValue['B']['litresMax'])){
+                        if ($makeValue['B']['litresMin'] != $makeValue['B']['litresMax']){
+                            $result['B'] .= $litresSeparator.$makeValue['B']['litresMax'];
+                        }
+                    }    
+                }    
+            }    
+            if (isset($makeValue['D'])){
+                if (isset($makeValue['D']['litresMin'])){
+                    $result['D'] = $makeValue['D']['litresMin'];
+                    if (isset($makeValue['D']['litresMax'])){
+                        if ($makeValue['D']['litresMin'] != $makeValue['D']['litresMax']){
+                            $result['D'] .= $litresSeparator.$makeValue['D']['litresMax'];
+                        }
+                    }    
+                }    
+            }    
+            if (isset($makeValue['from'])){
+                $result['Y'] = substr($makeValue['from'], 2, 2).$yearSeparator;
+                if ($makeValue['from'] != $makeValue['cto']){
+                    $result['Y'] .= substr($makeValue['cto'], 2, 2);
+                }
+            }   
+            
+            $makeNames[] = implode($partSeparator, $result[$make]);
+            unset($result);
+        }
+        
+        return implode($makeSeparator, $makeNames);
+    }
     
     /**
      * Часть описания нименования
@@ -1812,6 +1906,7 @@ class NameManager
         $result['textPart'] = $this->textPart($good);
         $result['oeCarPart'] = $this->oeCar($good);
         $result['carPart'] = $this->carPart($good);
+        $result['carPartStr'] = $this->carPartStr($result['carPart']);
         
         return $result;
     }
