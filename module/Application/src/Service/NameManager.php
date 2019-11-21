@@ -1716,7 +1716,7 @@ class NameManager
             $transferFilter->filter($manu) => [
                 ' '.$modelNameFilter->filter($model) => [
                     ' '.$type => [
-                        'litres' => (string) round($litres/100, 1),
+                        'litres' => number_format(round($litres/100, 1), 1, '.', ''),
                         'from' => substr($cfrom, 0, 4),
                         'cto' => substr($cto, 0, 4),
                         'fuel' => $fuel,                        
@@ -1936,6 +1936,7 @@ class NameManager
         $result['textPart'] = $this->textPart($good);
         $result['oeCarPart'] = $this->oeCar($good);
         $result['carPartStr'] = $this->carPartStr($carPart);
+        $result['carPartStrLen'] = mb_strlen($result['carPartStr']);
         $result['carPart'] = $carPart;
         
         return $result;
