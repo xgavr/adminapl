@@ -1742,7 +1742,7 @@ class NameManager
         foreach ($cars as $car){
             $data = $this->extraCarAttr($car, []);
 //            $result = array_merge_recursive($result, $data);
-            foreach ($car as $make => $makeValue){
+            foreach ($data as $make => $makeValue){
                 if (!array_key_exists($make, $result)){
                     $result[$make] = $makeValue;
                 }
