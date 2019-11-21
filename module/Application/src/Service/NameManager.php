@@ -1828,11 +1828,11 @@ class NameManager
      */
     public function carPartStr($carPart, $options = null)
     {
-        $makeSeparator = ',';
+        $makeSeparator = ', ';
         $modelSeparator = '/';
         $litresSeparator = '-';
         $yearSeparator = '-';
-        $partSeparator = ',';
+        $partSeparator = ', ';
         $partMaxLength = 150;
         
         if (is_array($options)){
