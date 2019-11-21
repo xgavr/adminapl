@@ -1868,7 +1868,9 @@ class NameManager
         foreach ($carPart as $make => $makeValue){
             $result['make'] = $make; 
             if (isset($makeValue['models'])){
-                $result['make'] = $make.' '.implode($modelSeparator, asort($makeValue['models']));
+                $models = $makeValue['models'];
+                asort($models);
+                $result['make'] = $make.' '.implode($modelSeparator, $models);
             }
             if (isset($makeValue['B'])){
                 if (isset($makeValue['B']['litresMin'])){
