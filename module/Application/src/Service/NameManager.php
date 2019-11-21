@@ -1778,8 +1778,16 @@ class NameManager
                                 $result[$make]['B']['litresMax'] = $typeValue['litres'];                                                                
                             }    
                         }    
-                        $result[$make]['from'] = min($result[$make]['from'], $typeValue['from']);
-                        $result[$make]['cto'] = max($result[$make]['cto'], $typeValue['cto']);
+                        if (isset($result[$make]['from'])){
+                            $result[$make]['from'] = min($result[$make]['from'], $typeValue['from']);
+                        } else {
+                            $result[$make]['from'] = $typeValue['from'];                            
+                        }    
+                        if (isset($result[$make]['cto'])){
+                            $result[$make]['cto'] = max($result[$make]['cto'], $typeValue['cto']);
+                        } else {
+                            $result[$make]['cto'] = $typeValue['cto'];                            
+                        }    
                     }
                 }
                 
