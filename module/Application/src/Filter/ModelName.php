@@ -37,11 +37,15 @@ class ModelName extends AbstractFilter
         $words = explode($separator, $str);
         $result = [];
         foreach ($words as $word){
-            if (strlen($word) > 3){
-                $result[] = ucfirst(strtolower($word));
+            if (strpos($word, '-')){
+                $result[] = $this->_explodeWord($word, '-');
             } else {
-                $result[] = $word; 
-            }
+                if (strlen($word) > 3){
+                    $result[] = ucfirst(strtolower($word));
+                } else {
+                    $result[] = $word; 
+                }
+            }    
         }    
         return trim(implode($separator, $result));
     }
