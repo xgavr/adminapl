@@ -130,7 +130,7 @@ class AutodbManager
                 $uri .= "&$key=$value";
             }    
         }        
-        var_dump($uri); exit;
+//        var_dump($uri); exit;
         $client = new Client();
         $client->setUri($uri);
         $client->setAdapter($this::HTTPS_ADAPTER);
