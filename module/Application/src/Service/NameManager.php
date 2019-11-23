@@ -1765,7 +1765,9 @@ class NameManager
                                 $result[$make]['D']['litresMax'] = max($result[$make]['D']['litresMax'], $typeValue['litres']);
                             } else {
                                 $result[$make]['D']['litresMax'] = $typeValue['litres'];                                                                
-                            }    
+                            } 
+                        } elseif ($typeValue['fuel'] == 'электричество'){
+                            $result[$make]['E'] = 0;
                         } else {
                             if (isset($result[$make]['B']['litresMin'])){
                                 $result[$make]['B']['litresMin'] = min($result[$make]['B']['litresMin'], $typeValue['litres']);
@@ -1892,6 +1894,9 @@ class NameManager
                     }    
                 }    
             }    
+            if (isset($makeValue['E'])){
+                $result['E'] = 'Electric';
+            }
             if (isset($makeValue['from'])){
                 $result['Y'] = substr($makeValue['from'], 2, 2).$yearSeparator;
                 if (isset($makeValue['cto'])){
