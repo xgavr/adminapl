@@ -42,7 +42,7 @@ class ModelName extends AbstractFilter
             } elseif (strpos($word, '/')){
                 $result[] = $this->_explodeWord($word, '/');
             } else {
-                if (strlen($word) > 3){
+                if (strlen($word) > 3 && !in_array($word, ['VIII'])){
                     $result[] = ucfirst(strtolower($word));
                 } else {
                     $result[] = $word; 
