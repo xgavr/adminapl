@@ -413,4 +413,14 @@ class CarController extends AbstractActionController
         ]);                  
     }
 
+    public function fixCarsAction()
+    {
+        
+        $this->carManager->fixCars();
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+
 }

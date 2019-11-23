@@ -139,4 +139,19 @@ class CarManager
         
         return;
     }
+    
+    /**
+     * Исправить модели всех машин
+     */
+    public function fixCars()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+        
+        $cars = $this->entityManager->getRepository(Car::class)
+                ->findBy([]);
+        foreach ($cars as $car){
+            $this->fixModel($car);
+        }
+    }
 }
