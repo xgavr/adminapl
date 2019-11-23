@@ -1706,7 +1706,7 @@ class NameManager
         $cto = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'yearOfConstrTo');
         $fuel = $this->entityManager->getRepository(Car::class)
-                ->carDetailValue($car, 'motorType');
+                ->carDetailValue($car, 'fuelType');
         $type = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'typeName');
                 
