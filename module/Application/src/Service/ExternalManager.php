@@ -540,7 +540,7 @@ class ExternalManager
      * НЕИСПОЛЬЗУЕТСЯ
      * Добавление машины к товару 
      * 
-     * @param Application\Entity\Good $good
+     * @param Application\Entity\Goods $good
      * @param array $carData
      * @param bool $addCar
      */

@@ -11,6 +11,7 @@ use Application\Entity\CarAttributeGroup;
 use Application\Entity\CarAttributeType;
 use Application\Entity\CarAttributeValue;
 use Application\Entity\Car;
+use Application\Entity\Model;
 
 /**
  * Description of CarService
@@ -42,7 +43,7 @@ class CarManager
     /**
      * Заполнить машины
      * 
-     * @param Application\Entity\Model $model 
+     * @param Model $model 
      * @return null
      */
     public function fillCars($model)
@@ -115,4 +116,27 @@ class CarManager
         return;
     }
 
+    /**
+     * Исправить модель машины
+     * 
+     * @param Car $car
+     */
+    public function fixModel($car)
+    {
+        $modelTdId = $this->entityManager->getRepository(Car::class)
+                ->carDetailValue($car, 'modId');
+        if ($modelTdId){
+            $model = $this->entityManager->getRepository(Model::class)
+                    ->findOneBy($modelTdId);
+            if ($model){
+                if ($model->getTdId() != $car->getModel()->getTdId()){
+                    $car->setModel($model);
+                    $this->entityManager->persist($car);
+                    $this->entityManager->flush($car);
+                }
+            }
+        }    
+        
+        return;
+    }
 }
