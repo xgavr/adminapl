@@ -1894,9 +1894,11 @@ class NameManager
             }    
             if (isset($makeValue['from'])){
                 $result['Y'] = substr($makeValue['from'], 2, 2).$yearSeparator;
-                if ($makeValue['from'] != $makeValue['cto']){
-                    $result['Y'] .= substr($makeValue['cto'], 2, 2);
-                }
+                if (isset($makeValue['cto'])){
+                    if ($makeValue['from'] != $makeValue['cto']){
+                        $result['Y'] .= substr($makeValue['cto'], 2, 2);
+                    }
+                }    
             }   
             
             $makeNames[] = implode($partSeparator, $result);

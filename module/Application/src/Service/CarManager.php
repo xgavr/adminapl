@@ -127,7 +127,7 @@ class CarManager
                 ->carDetailValue($car, 'modId');
         if ($modelTdId){
             $model = $this->entityManager->getRepository(Model::class)
-                    ->findOneBy($modelTdId);
+                    ->findOneByTdId($modelTdId);
             if ($model){
                 if ($model->getTdId() != $car->getModel()->getTdId()){
                     $car->setModel($model);
