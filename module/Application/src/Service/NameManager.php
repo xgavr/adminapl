@@ -1875,7 +1875,7 @@ class NameManager
             $result['make'] = $make; 
             if (isset($makeValue['models'])){
                 $models = $makeValue['models'];   
-                array_splice($models, $splice - 1);
+                array_splice($models, $splice);
                 asort($models);
                 $result['make'] = $make.' '.implode($modelSeparator, $models);
             }
