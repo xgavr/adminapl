@@ -1768,7 +1768,7 @@ class NameManager
                             } 
                         } elseif ($typeValue['fuel'] == 'электричество'){
                             $result[$make]['E'] = 0;
-                        } elseif (isset($typeValue['litres'])) {
+                        } elseif ($typeValue['litres'] > 0) {
                             if (isset($result[$make]['B']['litresMin'])){
                                 $result[$make]['B']['litresMin'] = min($result[$make]['B']['litresMin'], $typeValue['litres']);
                             } else {
