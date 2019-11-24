@@ -1866,7 +1866,7 @@ class NameManager
                 $partMaxLength = $options['partMaxLength'];
             }
             if (isset($options['splice'])){
-                $partMaxLength = $options['splice'];
+                $splice = $options['splice'];
             }
         }
                 
@@ -1874,8 +1874,9 @@ class NameManager
         foreach ($carPart as $make => $makeValue){
             $result['make'] = $make; 
             if (isset($makeValue['models'])){
-                $models = $makeValue['models'];                
-                asort(array_splice($models, 0, $splice));
+                $models = $makeValue['models'];   
+                array_splice($models, 0, $splice);
+                asort($models);
                 $result['make'] = $make.' '.implode($modelSeparator, $models);
             }
             if (isset($makeValue['B'])){
