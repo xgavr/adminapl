@@ -639,7 +639,8 @@ class OemRepository  extends EntityRepository{
         
         $result = array_filter($result);
         if (count($result)){
-            return implode(' ', array_splice($result, $splice));
+            array_splice($result, $splice);
+            return implode(' ', $result);
         }
         
         return;
