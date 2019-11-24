@@ -609,9 +609,10 @@ class OemRepository  extends EntityRepository{
      * Выбрать наименования брендов товара
      * 
      * @param Goods $good
+     * @param integer @splice
      * @return string
      */
-    public function cars($good)
+    public function cars($good, $splice = 5)
     {
         $result = [];
         
@@ -638,7 +639,7 @@ class OemRepository  extends EntityRepository{
         
         $result = array_filter($result);
         if (count($result)){
-            return implode(' ', array_splice($result, 0, 5));
+            return implode(' ', array_splice($result, 0, $splice));
         }
         
         return;

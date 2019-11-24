@@ -1682,7 +1682,7 @@ class NameManager
     protected function oeCar($good)
     {
         return $this->entityManager->getRepository(Oem::class)
-                ->cars($good);
+                ->cars($good, 5);
     }
     
     /**
@@ -1844,6 +1844,7 @@ class NameManager
         $yearSeparator = '>';
         $partSeparator = ' ';
         $partMaxLength = 150;
+        $splice = 5;
         
         if (is_array($options)){
             if (isset($options['makeSeparator'])){
@@ -1864,14 +1865,17 @@ class NameManager
             if (isset($options['partMaxLength'])){
                 $partMaxLength = $options['partMaxLength'];
             }
+            if (isset($options['splice'])){
+                $partMaxLength = $options['splice'];
+            }
         }
                 
         $makeNames = [];
         foreach ($carPart as $make => $makeValue){
             $result['make'] = $make; 
             if (isset($makeValue['models'])){
-                $models = $makeValue['models'];
-                asort($models);
+                $models = $makeValue['models'];                
+                asort(array_splice($models, 0, $splice));
                 $result['make'] = $make.' '.implode($modelSeparator, $models);
             }
             if (isset($makeValue['B'])){
