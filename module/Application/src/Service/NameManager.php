@@ -2027,7 +2027,7 @@ class NameManager
             }            
         }
 
-        $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
+        $raw->setParseStage(Raw::STAGE_BEST_NAME);
         $this->entityManager->persist($raw);
         $this->entityManager->flush();
         
