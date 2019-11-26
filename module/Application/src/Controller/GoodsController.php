@@ -626,7 +626,7 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-//        $bestname = $this->nameManager->findBestName($goods);
+        $bestname = $this->nameManager->findBestName($goods, true);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

@@ -1952,9 +1952,10 @@ class NameManager
      * Поиск лучшего наименования для товара
      * 
      * @param Goods $good
+     * @params bool $flag
      * @return array
      */
-    public function findBestName($good)
+    public function findBestName($good, $flag = false)
     {
         $textPart = $this->textPart($good);
         $carPart = $this->carPart($good);
@@ -1969,6 +1970,12 @@ class NameManager
             } else {
                 $result['bestName'] .= ' '.$oePart;                
             }
+        }
+        
+        if ($flag){
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGood($good, ['name' => $result['bestname']]);
+            return;
         }
 
         if ($good->getGenericGroup()){
