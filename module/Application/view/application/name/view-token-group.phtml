@@ -119,15 +119,15 @@ $this->pageBreadcrumbs()->setItems([
                 title: 'Наименование группы', 
                 callback: function(result){
                     /* result = String containing user input if OK clicked or null if Cancel clicked */
-                    console.log(result);
                     if (result != null){
+                        console.log(result);
                         $.ajax({
                             type: 'GET',
                             url: url+'?prompt='+result,
                         })
                             .done(function (data) {
                                 if (data == 'ok'){
-                                    window.location.reload();
+                                    //window.location.reload();
                                 }    
                             })
                             .fail(function (e) {
