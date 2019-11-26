@@ -164,7 +164,7 @@ class Model {
         if ($this->fullName){
             return $this->fullName;
         }
-        return $this->name;
+        return $this->getTransferName();
     }
     
     public function setFullName($fullName) 
