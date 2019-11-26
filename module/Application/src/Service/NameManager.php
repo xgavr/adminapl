@@ -1847,7 +1847,7 @@ class NameManager
         $yearSeparator = '>';
         $partSeparator = ' ';
         $partMaxLength = 150;
-        $splice = 5;
+        $splice = 3;
         
         if (is_array($options)){
             if (isset($options['makeSeparator'])){
