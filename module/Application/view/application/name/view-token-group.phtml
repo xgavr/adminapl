@@ -120,7 +120,6 @@ $this->pageBreadcrumbs()->setItems([
                 callback: function(result){
                     /* result = String containing user input if OK clicked or null if Cancel clicked */
                     if (result != null){
-                        console.log(result);
                         $.ajax({
                             type: 'GET',
                             url: url+'?prompt='+result,
