@@ -35,20 +35,6 @@ $this->headScript()
     <div class="col-md-9">
         <div class="row">
             <div class="col-md-12">
-                <h1>
-                    <?php if ($goods->getName()): ?>
-                        <?= $this->escapeHtml($goods->getName()); ?>
-                        <? if ($goods->getAplId()):?>
-                            <sup>
-                                <button value="/apl/update-good-name/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                                        title="Обновить наименование в АПЛ">
-                                    <span class="glyphicon glyphicon-refresh" ></span>
-                                </button>         
-                            </sup>
-                        <? endif;?>
-                    <? endif;?>
-                </h1>
-
                 <h3>
                     <button value="/goods/best-name/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
                             title="Показать наименование">
@@ -58,6 +44,11 @@ $this->headScript()
                             title="Обновить наименование">
                         <span class="glyphicon glyphicon-refresh" ></span>
                     </button> 
+                    <?php if ($goods->getName()): ?>
+                        <?= $this->escapeHtml($goods->getName()); ?>
+                        <? if ($goods->getAplId()):?>
+                        <? endif;?>
+                    <? endif;?>
                 </h3>
                 <h4>
                     <a href="<?= $this->url('group', ['action' => 'view', 'id' => $goods->getGenericGroup()->getId()])?>" target="_blank">
@@ -539,6 +530,17 @@ $this->headScript()
                                     </button>                             
                                 </div>
                             </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Наименование 
+                                </div>
+                                <div class="pull-right">                                                
+                                    <button value="/apl/update-good-name/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
+                                            title="Обновить наименование">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>                             
+                                </div>
+                            </div>                        
                         <?php endif;?>
                     </div>    
                 </div>                
