@@ -1264,7 +1264,7 @@ class NameManager
     /**
      * Обновить наименование группы наименований
      * 
-     * @param Application\Entity\TokenGroup $tokenGroup
+     * @param TokenGroup $tokenGroup
      * @param string $name
      */
     public function updateTokenGroupName($tokenGroup, $name)

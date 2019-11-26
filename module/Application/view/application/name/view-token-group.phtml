@@ -119,6 +119,7 @@ $this->pageBreadcrumbs()->setItems([
                 title: 'Наименование группы', 
                 callback: function(result){
                     /* result = String containing user input if OK clicked or null if Cancel clicked */
+                    console.log(result);
                     if (result){
                         $.ajax({
                             type: 'GET',
