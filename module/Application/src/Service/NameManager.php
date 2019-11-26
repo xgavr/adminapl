@@ -1973,8 +1973,10 @@ class NameManager
         }
         
         if ($flag){
-            $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), ['name' => $result['bestName']]);
+            if ($good->getName() != $result['bestName']){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), ['name' => $result['bestName']]);
+            }    
             return;
         }
 
