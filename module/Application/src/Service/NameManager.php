@@ -1696,6 +1696,7 @@ class NameManager
     {
         $manu = $car->getModel()->getMake()->getDisplayName();
         $model = $car->getModel()->getDisplayName();
+        $type = $car->getName();
         
         $body = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'constructionType');
@@ -1716,10 +1717,10 @@ class NameManager
             $transferFilter->filter($manu) => [
                 $modelNameFilter->filter($model) => [
                     $type => [
-                        'litres' => number_format(round($litres/100, 1), 1, '.', ''),
+//                        'litres' => number_format(round($litres/100, 1), 1, '.', ''),
                         'from' => substr($cfrom, 0, 4),
                         'cto' => substr($cto, 0, 4),
-                        'fuel' => $fuel,                        
+//                        'fuel' => $fuel,                        
                     ],                            
                 ],                    
             ],
