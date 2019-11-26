@@ -1699,16 +1699,16 @@ class NameManager
         
         $body = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'constructionType');
-        $litres = $this->entityManager->getRepository(Car::class)
-                ->carDetailValue($car, 'cylinderCapacityLiter');
+//        $litres = $this->entityManager->getRepository(Car::class)
+//                ->carDetailValue($car, 'cylinderCapacityLiter');
         $cfrom = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'yearOfConstrFrom');
         $cto = $this->entityManager->getRepository(Car::class)
                 ->carDetailValue($car, 'yearOfConstrTo');
-        $fuel = $this->entityManager->getRepository(Car::class)
-                ->carDetailValue($car, 'fuelType');
-        $type = $this->entityManager->getRepository(Car::class)
-                ->carDetailValue($car, 'typeName');
+//        $fuel = $this->entityManager->getRepository(Car::class)
+//                ->carDetailValue($car, 'fuelType');
+//        $type = $this->entityManager->getRepository(Car::class)
+//                ->carDetailValue($car, 'typeName');
                 
         $modelNameFilter = new ModelName(['body' => $body]);
         $transferFilter = new TransferName();
