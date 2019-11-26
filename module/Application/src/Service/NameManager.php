@@ -1737,7 +1737,7 @@ class NameManager
         $result = [];
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->findCars($good, ['sort' => 'goodCount', 'order' => 'DESC', 'limit' => 100, 'constructionFrom' => date('Y') - 30]);
+                        ->findCars($good, ['sort' => 'goodCount', 'order' => 'DESC', 'limit' => 100, 'constructionTo' => date('Y') - 30]);
         $cars = $query->getResult();
         foreach ($cars as $car){
             $data = $this->extraCarAttr($car, []);

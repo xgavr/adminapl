@@ -806,10 +806,17 @@ class GoodsRepository extends EntityRepository
             ->setParameter('1', $good->getId())
             ;
         if (is_array($params)){
+            if (isset($params['constructionFrom']) || isset($params['constructionTo'])){
+                $queryBuilder->join('c.model', 'm');                
+            }
             if (isset($params['constructionFrom'])){
-                $queryBuilder->join('c.model', 'm')
-                        ->andWhere('m.constructionFrom > ?2')
+                $queryBuilder->andWhere('m.constructionFrom > ?2')
                         ->setParameter('2', $params['constructionFrom'])
+                        ;
+            }
+            if (isset($params['constructionTo'])){
+                $queryBuilder->andWhere('m.constructionTo > ?3')
+                        ->setParameter('3', $params['constructionTo'])
                         ;
             }
             if (isset($params['limit'])){
