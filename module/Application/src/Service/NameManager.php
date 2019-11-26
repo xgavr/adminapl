@@ -1941,7 +1941,7 @@ class NameManager
                 return $good->getTokenGroup()->getName();
             }
         }
-        if ($good->getGenericGroup()){
+        if ($good->getGenericGroup() && $good->getGenericGroup()->getTdId() > 0){
             return $good->getGenericGroup()->getName();
         }
         
