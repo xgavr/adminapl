@@ -1996,4 +1996,42 @@ class NameManager
         return $result;
     }
         
+    /**
+     * Обновление наименований товаров
+     * @param Raw $raw
+     */
+    public function bestNameFromRaw($raw)
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $rawpricesQuery = $this->entityManager->getRepository(Goods::class)
+                ->findRawpriceForBestName($raw);
+        $iterable = $rawpricesQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $rawprice){
+                $good = $rawprice->getGood();
+                if ($good){
+                    $this->findBestName($good, true);
+                }    
+                
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::BEST_NAME_UPDATE]);                        
+                $this->entityManager->detach($rawprice);
+            }    
+            
+            if (time() > $startTime + 840){
+                return;
+            }            
+        }
+
+        $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
 }

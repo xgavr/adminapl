@@ -716,7 +716,6 @@ class NameController extends AbstractActionController
     
     public function updateTokenGroupFromRawAction()
     {
-        set_time_limit(0);
         $rawId = $this->params()->fromRoute('id', -1);
 
         if ($rawId<0) {
@@ -733,6 +732,30 @@ class NameController extends AbstractActionController
         }        
 
         $this->nameManager->grabTokenGroupFromRaw($raw);
+                
+        return new JsonModel([
+            'ok',
+        ]);          
+    }
+    
+    public function updateBestNameFromRawAction()
+    {
+        $rawId = $this->params()->fromRoute('id', -1);
+
+        if ($rawId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findOneById($rawId);
+
+        if ($raw == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->bestNameFromRaw($raw);
                 
         return new JsonModel([
             'ok',

@@ -1,5 +1,6 @@
 <?php
 use Application\Entity\Rawprice;
+use Application\Entity\Raw;
 
 $this->headTitle('Прайс '.$raw->getSupplier()->getName());
 
@@ -333,6 +334,12 @@ $this->pageBreadcrumbs()->setItems([
                                             </i>
                                         </small>
                                     </div>
+                                <?php endif;?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_TOKEN_GROUP_PARSED):?>
+                                    <button value="/name/update-best-name-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Обновить наименования товаров">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
                                 <?php endif;?>
                             </div>    
                         </div>    

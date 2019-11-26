@@ -1379,4 +1379,33 @@ class GoodsRepository extends EntityRepository
         
     }
     
+    /**
+     * Выборка строк прайса для создания групп наименований
+     * 
+     * @param \Application\Entity\Raw $raw
+     * @return array
+     */
+    public function findRawpriceForBestName($raw)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r')
+                ->from(Rawprice::class, 'r')
+                ->where('r.raw = ?1')
+                ->andWhere('r.statusGood = ?2')
+                ->andWhere('r.statusToken != ?3')
+                ->andWhere('r.status = ?4')
+                ->setParameter('1', $raw->getId())
+                ->setParameter('2', Rawprice::GOOD_OK)
+                ->setParameter('3', Rawprice::BEST_NAME_UPDATE)
+                ->setParameter('4', Rawprice::STATUS_PARSED)
+                //->setMaxResults(100000)
+                ;
+
+//var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();        
+        
+    }    
+    
 }

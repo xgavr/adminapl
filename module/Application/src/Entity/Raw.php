@@ -39,6 +39,7 @@ class Raw {
     const STAGE_PRICE_UPDATET       = 8; //цены рассчитаны
     const STAGE_GOOD_TOKEN          = 9; //токены товаров
     const STAGE_TOKEN_GROUP_PARSED  = 10; //группы наименований разобраны
+    const STAGE_BEST_NAME           = 11; //наименования обновлены
     
     const EX_NEW = 1;   // прайс готов для передачи
     const EX_TO_TRANSFER = 2; //прайс готов к передаче
@@ -306,6 +307,7 @@ class Raw {
             self::STAGE_PRICE_UPDATET => 'Цены рассчитаны',
             self::STAGE_GOOD_TOKEN => 'Токены товаров разобраны',
             self::STAGE_TOKEN_GROUP_PARSED => 'Группы наименований разобраны',
+            self::STAGE_BEST_NAME => 'Наименования обновлены',
         ];
     }    
     
