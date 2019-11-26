@@ -1956,6 +1956,21 @@ class NameManager
      */
     public function findBestName($good)
     {
+        $textPart = $this->textPart($good);
+        $carPart = $this->carPart($good);
+        $oePart = $this->oeCar($good);
+        $carPartStr = $this->carPartStr($carPart);
+        $result['bestName'] = '';
+        
+        if ($textPart && $carPartStr || $oePart){
+            $result['bestName'] = $textPart;
+            if ($carPartStr){
+                $result['bestName'] .= ' '.$carPartStr;
+            } else {
+                $result['bestName'] .= ' '.$oePart;                
+            }
+        }
+
         if ($good->getGenericGroup()){
             $result['genericGroup'] = $good->getGenericGroup()->getName();
         }    
@@ -1963,11 +1978,10 @@ class NameManager
             $result['tokenGroup'] = $good->getTokenGroup()->getName();
         }    
         
-        $carPart = $this->carPart($good);
-        $result['textPart'] = $this->textPart($good);
-        $result['oeCarPart'] = $this->oeCar($good);
-        $result['carPartStr'] = $this->carPartStr($carPart);
-        $result['carPartStrLen'] = mb_strlen($result['carPartStr']);
+        $result['textPart'] = $textPart;
+        $result['oeCarPart'] = $oePart;
+        $result['carPartStr'] = $carPartStr;
+        $result['carPartStrLen'] = mb_strlen($carPartStr);
         $result['carPart'] = $carPart;
         
         return $result;
