@@ -1974,7 +1974,7 @@ class NameManager
         
         if ($flag){
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGood($good, ['name' => $result['bestname']]);
+                    ->updateGood($good, ['name' => $result['bestName']]);
             return;
         }
 
