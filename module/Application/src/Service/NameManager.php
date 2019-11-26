@@ -1874,6 +1874,7 @@ class NameManager
         }
                 
         $makeNames = [];
+        $totalLenght = 0;
         foreach ($carPart as $make => $makeValue){
             $result['make'] = $make; 
             if (isset($makeValue['models'])){
@@ -1914,8 +1915,13 @@ class NameManager
                 }    
             }   
             
-            $makeNames[] = implode($partSeparator, $result);
+            $strResult = implode($partSeparator, $result);
+            $totalLenght += mb_strlen($strResult);
+            $makeNames[] = $strResult;
             unset($result);
+            if ($totalLenght > $partMaxLength){
+                break;
+            }
         }
         
         return implode($makeSeparator, $makeNames);
