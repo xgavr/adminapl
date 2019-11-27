@@ -150,6 +150,7 @@ class AdminManager {
         $config->price->update_good_price = $data['update_good_price']; //рассчитать цены в товарах
         $config->price->good_token = $data['good_token']; //токены товаров
         $config->price->assembly_group_name = $data['assembly_group_name']; //собирать группы наименований
+        $config->price->update_good_name = $data['update_good_name']; // наименований
         $config->price->image_mail_box = $data['image_mail_box']; //ящик для сбора картинок
         $config->price->image_mail_box_password = $data['image_mail_box_password']; //ящик для сбора картинок пароль
         $config->price->image_mail_box_check = $data['image_mail_box_check']; //ящик для сбора картинок проверять

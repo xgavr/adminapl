@@ -72,6 +72,10 @@ $form->get('good_token')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('update_good_name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('image_mail_box')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -189,6 +193,11 @@ $form->prepare();
         </div>                
     </div>   
     <div class="col-md-3">
+        <div class="form-group">
+            <?= $this->formLabel($form->get('update_good_name')); ?>
+            <?= $this->formElement($form->get('update_good_name')); ?>
+            <?= $this->formElementErrors($form->get('update_good_name')); ?>                  
+        </div>                
         <div class="form-group">
             <?= $this->formLabel($form->get('image_mail_box')); ?>
             <?= $this->formElement($form->get('image_mail_box')); ?>

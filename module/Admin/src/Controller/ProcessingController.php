@@ -1154,7 +1154,7 @@ class ProcessingController extends AbstractActionController
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['good_name'] == 1){
+        if ($settings['update_good_name'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
                     ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_GROUP_PARSED]);
