@@ -1148,6 +1148,29 @@ class ProcessingController extends AbstractActionController
     }
 
     /**
+     * Обновление наименований товаров из прайса
+     */
+    public function updateBestNameAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['good_name'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_GROUP_PARSED]);
+            
+            if ($raw){
+                $this->nameManager->bestNameFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
      * Удаление пустых групп наименований производителей
      */
     public function deleteTokenGroupAction()
