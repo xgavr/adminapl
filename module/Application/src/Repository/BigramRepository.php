@@ -416,4 +416,24 @@ class BigramRepository  extends EntityRepository
         return count($queryBuilder->getQuery()->getResult());
     }
     
+    /**
+     * Количество групп токенов с этим биграмом
+     * @param Bigram $bigram
+     */
+    public function bigramTokenGroupCount($bigram)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('identity(g.tokenGroup)')
+                ->distinct()
+                ->from(ArticleBigram::class, 'ab')
+                ->join('ab.article', 'a')
+                ->join('a.good', 'g')
+                ->where('ab.bigram = ?1')
+                ->setParameter('1', $bigram->getId())
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());
+    }
+    
 }

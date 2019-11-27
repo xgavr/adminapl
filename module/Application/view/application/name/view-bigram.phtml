@@ -74,7 +74,8 @@ $this->pageBreadcrumbs()->setItems([
             
         </td>
         <td align="right" valign="center" colspan="2">
-            <b><?= $bigram->getFrequency()?></b>
+            <b><?= $bigram->getFrequency()?></b> 
+            <b><?= $bigram->getGf()?></b> 
              <?= round($bigram->getIdf(), 2)?>
             <button value="/name/update-article-count-bigram/<?= $bigram->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
                     title="Обновить количество товара">

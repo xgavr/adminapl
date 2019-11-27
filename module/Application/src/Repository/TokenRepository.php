@@ -1008,6 +1008,26 @@ class TokenRepository  extends EntityRepository
     }
     
     /**
+     * Количество групп наименований с этим токеном
+     * @param string $lemma
+     */
+    public function tokenGroupCount($lemma)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('identity(g.tokenGroup)')
+                ->distinct()
+                ->from(ArticleToken::class, 'at')
+                ->join('at.article', 'a')
+                ->join('a.good', 'g')
+                ->where('at.lemma = ?1')
+                ->setParameter('1', $lemma)
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());
+    }
+    
+    /**
      * Наименования товара
      * 
      * @param Goods $good

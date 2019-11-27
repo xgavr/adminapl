@@ -81,6 +81,11 @@ class Token {
     protected $idf;
 
     /**
+     * @ORM\Column(name="gf")   
+     */
+    protected $gf;
+
+    /**
      * @ORM\Column(name="correct")   
      */
     protected $correct;
@@ -196,6 +201,15 @@ class Token {
         return $this->idf;
     }
 
+    public function setGf($gf)
+    {
+        $this->gf = $gf;
+    }
+    
+    public function getGf()
+    {
+        return $this->gf;
+    }
     
     public function setFrequency($frequency)
     {

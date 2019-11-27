@@ -560,12 +560,15 @@ class NameManager
      * @param integer $goodCount
      * @param integer $goods
      */
-    public function updateTokenArticleCount($token, $goodCount = null, $goods = null, $avgD = null)
+    public function updateTokenArticleCount($token, $goodCount = null, $goods = null, $groupTokenCount = null)
     {
         if ($goodCount == null){
             $goodCount = $this->entityManager->getRepository(ArticleToken::class)
                     ->tokenGoodCount($token->getLemma());
-//            var_dump($articleCount);
+        }    
+        if ($groupTokenCount == null){
+            $groupTokenCount = $this->entityManager->getRepository(ArticleToken::class)
+                    ->tokenGroupCount($token->getLemma());
         }    
         if ($goods == null){
             $goods = $this->entityManager->getRepository(Goods::class)
@@ -575,7 +578,11 @@ class NameManager
         $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
         
         $this->entityManager->getRepository(Token::class)
-                ->updateToken($token->getLemma(), ['frequency' => $goodCount, 'idf' => $idf]);
+                ->updateToken($token->getLemma(), [
+                    'frequency' => $goodCount, 
+                    'idf' => $idf,
+                    'gf' => $groupTokenCount,
+                    ]);
 
     }
     
@@ -634,7 +641,7 @@ class NameManager
      * @param integer $goodCount
      * @param integer $goods
      */
-    public function updateBigramArticleCount($bigram, $goodCount = null, $goods = null)
+    public function updateBigramArticleCount($bigram, $goodCount = null, $goods = null, $tokenGroupCount = null)
     {
         if ($goodCount == null){
             $goodCount = $this->entityManager->getRepository(ArticleBigram::class)
@@ -644,11 +651,19 @@ class NameManager
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
+        if ($tokenGroupCount == null){
+            $tokenGroupCount = $this->entityManager->getRepository(ArticleBigram::class)
+                    ->bigramTokenGroupCount($bigram);
+        }    
         
         $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
         
         $this->entityManager->getRepository(Bigram::class)
-                ->updateBigram($bigram, ['frequency' => $goodCount, 'idf' => $idf]);
+                ->updateBigram($bigram, [
+                    'frequency' => $goodCount, 
+                    'idf' => $idf,
+                    'gf' => $tokenGroupCount,
+                    ]);
 
     }
     

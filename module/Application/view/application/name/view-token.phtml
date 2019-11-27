@@ -139,7 +139,8 @@ $this->pageBreadcrumbs()->setItems([
             
         </td>
         <td align="right" valign="center" colspan="2">
-            <b><?= $token->getFrequency()?></b>
+            <b><?= $token->getFrequency()?></b> 
+            <b><?= $token->getGf()?></b> 
              <?= round($token->getIdf(), 2)?>
             <button value="/name/update-article-count-token/<?= $token->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
                     title="Обновить количество товара">

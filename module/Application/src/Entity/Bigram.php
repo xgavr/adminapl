@@ -72,6 +72,11 @@ class Bigram {
     protected $idf;
 
     /**
+     * @ORM\Column(name="gf")   
+     */
+    protected $gf;
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\ArticleBigram", mappedBy="bigram")
     * @ORM\JoinColumn(name="id", referencedColumnName="bigram_id")
      */
@@ -138,6 +143,15 @@ class Bigram {
         return $this->idf;
     }
 
+    public function setGf($gf)
+    {
+        $this->gf = $gf;
+    }
+    
+    public function getGf()
+    {
+        return $this->gf;
+    }
     
     public function setFrequency($frequency)
     {
