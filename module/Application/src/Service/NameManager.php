@@ -1963,17 +1963,19 @@ class NameManager
         $oePart = $carPartStr = '';
         $carPart = [];
         
-        if ($textPart){
-            $result['bestName'] = $textPart;
+        if ($textPart){            
             $carPart = $this->carPart($good);
             $carPartStr = $this->carPartStr($carPart);
             if ($carPartStr){
-                $result['bestName'] .= ' '.$carPartStr;
+                $carStr = $carPartStr;
             } else {
                 $oePart = $this->oeCar($good);
                 if ($oePart){
-                    $result['bestName'] .= ' '.$oePart;
+                    $carStr = $oePart;
                 }    
+            }
+            if ($textPart && $carStr){
+                $result['bestName'] = $textPart.' '.$carStr;
             }
         }
         
