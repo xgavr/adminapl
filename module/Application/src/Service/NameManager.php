@@ -2030,7 +2030,7 @@ class NameManager
 
         $raw->setParseStage(Raw::STAGE_BEST_NAME);
         $this->entityManager->persist($raw);
-        $this->entityManager->flush();
+        $this->entityManager->flush($raw);
         
         return;
     }
