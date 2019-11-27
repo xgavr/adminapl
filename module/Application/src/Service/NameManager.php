@@ -1958,18 +1958,22 @@ class NameManager
     public function findBestName($good, $flag = false)
     {
         $textPart = $this->textPart($good);
-        $carPart = $this->carPart($good);
-        $carPartStr = $this->carPartStr($carPart);
         $result['bestName'] = '';
         $result['oeCarPart'] = '';
+        $oePart = $carPartStr = '';
+        $carPart = [];
         
-        if ($textPart && $carPartStr || $oePart){
+        if ($textPart){
             $result['bestName'] = $textPart;
+            $carPart = $this->carPart($good);
+            $carPartStr = $this->carPartStr($carPart);
             if ($carPartStr){
                 $result['bestName'] .= ' '.$carPartStr;
             } else {
                 $oePart = $this->oeCar($good);
-                $result['bestName'] .= ' '.$oePart;                
+                if ($oePart){
+                    $result['bestName'] .= ' '.$oePart;
+                }    
             }
         }
         
