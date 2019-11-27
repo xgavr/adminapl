@@ -1960,7 +1960,7 @@ class NameManager
         $textPart = $this->textPart($good);
         $result['bestName'] = '';
         $result['oeCarPart'] = '';
-        $oePart = $carPartStr = '';
+        $oePart = $carPartStr = $carStr = '';
         $carPart = [];
         
         if ($textPart){            
