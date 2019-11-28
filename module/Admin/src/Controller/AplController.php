@@ -571,4 +571,14 @@ class AplController extends AbstractActionController
             'result' => 'ok-reload',
         ]);
     }    
+
+    public function updateGoodNamesAction()
+    {
+        
+        $this->aplService->updateGoodNames();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }    
 }

@@ -237,6 +237,8 @@ class GoodsController extends AbstractActionController
                 ->count(['statusRawpriceEx' => Goods::RAWPRICE_EX_TRANSFERRED]); break;        
             case 'totalPriceEx': $result = $this->entityManager->getRepository(Goods::class)
                 ->count(['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]); break;        
+            case 'totalNameEx': $result = $this->entityManager->getRepository(Goods::class)
+                ->count(['statusNameEx' => Goods::NAME_EX_TRANSFERRED]); break;        
             case 'total': $result = $this->entityManager->getRepository(Goods::class)
                 ->count([]); break;        
             default: $result = 0;
