@@ -736,38 +736,80 @@ class AplService {
     /**
      * Обновить наименование товара в АПЛ
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      */ 
     public function updateGoodName($good)
     {
         
+        $result = true;
         if ($good->getName() && $good->getAplId()){
-
+        
             $url = $this->aplApi().'update-bestname?api='.$this->aplApiKey();
+            
+            $post = [
+                'goodId' => $good->getAplId(),
+                'newname' => $good->getName(),
+                'nameok' => 1,
+            ];
             
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
-            $client->setParameterPost([
-                'goodId' => $good->getAplId(),
-                'newname' => $good->getName(),
-                'nameok' => 1,
-            ]);
+            $client->setOptions(['timeout' => 30]);
+            $client->setParameterPost($post);
 
-            $response = $client->send();
-            if ($response->isOk()) {
-//                $body = $response->getBody();
-//                return (array) Json::decode($body);
-                  return 'ok';
-//            } else {
-//                return $response->getContent();
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+    //            var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $ok = $result = true;
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['statusNameEx' => Goods::NAME_EX_TRANSFERRED]);
             }
-
-            return;
-        }    
+        }
         
-        return;
+        return $result;
     }
+    
+    /**
+     * Обновление наименований в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodNames()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateName();
+        
+        $iterable = $goodsQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $result = $this->updateGoodName($good);
+                $this->entityManager->detach($good);
+                
+                if (!$result){
+                    return;
+                }
+            }    
+            usleep(100);
+            if (time() > $startTime + 1740){
+                return;
+            }
+        }
+        return;
+    }    
     
     /**
      * Обновить aplId машин

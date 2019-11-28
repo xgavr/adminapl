@@ -632,6 +632,27 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления наименований
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateName()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->andWhere('g.aplId > 0')    
+            ->andWhere('g.statusNameEx = ?1')
+            ->setParameter('1', Goods::NAME_EX_NEW)    
+            //->setMaxResults(10000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
      * Найти товары для обновления картинок
      * 
      * @return object

@@ -797,6 +797,27 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Обновление группы Apl товаров
+     * 
+     * @return JsonModel
+     */
+    public function updateGoodNamesAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['good_name'] == 1){
+            
+            $this->aplService->updateGoodNames();
+
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Обновление группы Apl общих групп
      * 
      * @return JsonModel
