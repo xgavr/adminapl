@@ -1835,15 +1835,12 @@ class NameManager
                     if ($result[$make]['cto'] == 0){
                         unset($result[$make]['cto']);
                     }
-                    if ($result[$make]['cto'] == date('Y')){
-                        unset($result[$make]['cto']);
-                    }
                 }    
-                if (isset($result[$make]['from'])){
-                    if ($result[$make]['from'] == date('Y')){
-                        unset($result[$make]['from']);
-                    }
-                }    
+//                if (isset($result[$make]['from'])){
+//                    if ($result[$make]['from'] == date('Y')){
+//                        unset($result[$make]['from']);
+//                    }
+//                }    
             }
         }
                         
@@ -1927,7 +1924,7 @@ class NameManager
             if (isset($makeValue['from'])){
                 $result['Y'] = substr($makeValue['from'], 2, 2).$yearSeparator;
                 if (isset($makeValue['cto'])){
-                    if ($makeValue['from'] != $makeValue['cto']){
+                    if ($makeValue['cto'] < date('Y') && $makeValue['from'] != $makeValue['cto']){
                         $result['Y'] .= substr($makeValue['cto'], 2, 2);
                     }
                 }    
