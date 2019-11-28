@@ -61,6 +61,9 @@ class Goods {
     const GROUP_EX_NEW            = 1; // не передано
     const GROUP_EX_TRANSFERRED    = 2; // передано.
     
+    const NAME_EX_NEW            = 1; // не передано
+    const NAME_EX_TRANSFERRED    = 2; // передано.
+    
     const DEFAULT_GROUP_APL_ID    = -1; //группа апл по умолчнию 
     
     const TD_DIRECT = 1; //точно совпадает с товаровм в ТД
@@ -153,6 +156,11 @@ class Goods {
      * @ORM\Column(name="status_group_ex")   
      */
     protected $statusGroupEx = self::GROUP_EX_NEW;
+
+    /**
+     * @ORM\Column(name="status_name_ex")   
+     */
+    protected $statusNameEx = self::NAME_EX_NEW;
 
     /**
      * @ORM\Column(name="td_direct")   
@@ -838,6 +846,16 @@ class Goods {
     public function setStatusGroupEx($statusGroupEx)
     {
         $this->statusGroupEx = $statusGroupEx;
+    }    
+    
+    public function getStatusNameEx()
+    {
+        $this->statusNameEx;
+    }
+    
+    public function setStatusNameEx($statusNameEx)
+    {
+        $this->statusNameEx = $statusNameEx;
     }    
     
     public function getTdDirect()
