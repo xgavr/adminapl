@@ -1835,6 +1835,9 @@ class NameManager
                     if ($result[$make]['cto'] == 0){
                         unset($result[$make]['cto']);
                     }
+                    if ($result[$make]['cto'] == date('Y')){
+                        unset($result[$make]['cto']);
+                    }
                 }    
                 if (isset($result[$make]['from'])){
                     if ($result[$make]['from'] == date('Y')){
