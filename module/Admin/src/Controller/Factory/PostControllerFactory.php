@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Admin\Controller\PostController;
 use Admin\Service\PostManager;
+use Admin\Service\AutoruManager;
 
 
 /**
@@ -24,8 +25,9 @@ class PostControllerFactory implements FactoryInterface {
                      $requestedName, array $options = null)
     {
         $postManager = $container->get(PostManager::class);
+        $autoruManager = $container->get(AutoruManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new PostController($postManager);
+        return new PostController($postManager, $autoruManager);
     }
 }

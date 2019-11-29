@@ -59,6 +59,7 @@ class TurboOrderFilter extends AbstractFilter
         }
         
         $strgs = explode(PHP_EOL, $result['text']);
+        var_dump($strgs);
         foreach ($strgs as $strg){
             $dqs = explode(':', $strg);
             if (trim($dqs[0]) == 'Телефон'){

@@ -10,6 +10,8 @@ namespace Admin\Service;
 
 use Admin\Filter\AutoruOrderFilter;
 use Admin\Filter\HtmlFilter;
+use Admin\Filter\TurboOrderFilter;
+
 /**
  * Description of AutoruManager
  *
@@ -119,10 +121,10 @@ class AutoruManager {
      */
     protected function turboMsg($msg)
     {
-        $filter = new AutoruOrderFilter();
-        $htmlFilter = new HtmlFilter();
+        $filter = new TurboOrderFilter();
+        //$htmlFilter = new HtmlFilter();
 
-        $filtered = $filter->filter($htmlFilter->filter($msg['content']['HTML'])); 
+        $filtered = $filter->filter($msg['content']['PLAIN']); 
         $text = $msg['subject'].PHP_EOL.$filtered['text'];
         
         return;
@@ -142,18 +144,15 @@ class AutoruManager {
             'password' => $settings['autoru_email_password'],
             'leave_message' => false,
         ];
-                
-        $mail = $this->postManager->readImap($box);
+        $mail = $this->postManager->readImap($box);                
         if (is_array($mail)){
             foreach($mail as $msg){
-                
                 if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру' && $msg['content']['HTML']){
                     $this->autoruMsg($msg);
                 }
-                if (mb_strpos($msg['content']['HTML'], 'Турбо-страницы') !== false 
+                if (mb_strpos($msg['content']['PLAIN'], 'Турбо-страницы') !== false 
                         && mb_strpos($msg['subject'], 'Новый заказ') !== false){
                     $this->turboMsg($msg);
-                    exit;
                 }
                 
                 if (time() > $startTime + 240){

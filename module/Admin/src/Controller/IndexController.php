@@ -51,15 +51,22 @@ class IndexController extends AbstractActionController
      */
     private $annManager;    
     
+    /**
+     * AutoruManager manager.
+     * @var \Admin\Service\AutoruManager
+     */
+    private $autoruManager;    
+    
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($telegramManager, $adminManager, $smsManager, $tamtamManager, $annManager) 
+    public function __construct($telegramManager, $adminManager, $smsManager, $tamtamManager, $annManager, $autoruManager) 
     {
         $this->telegramManager = $telegramManager;        
         $this->adminManager = $adminManager;        
         $this->smsManager = $smsManager;        
         $this->tamtamManager = $tamtamManager;        
         $this->annManager = $annManager;        
+        $this->autoruManager = $autoruManager;
     }   
     
     public function indexAction()

@@ -17,20 +17,29 @@ class PostController extends AbstractActionController
     
     /**
      * AplService manager.
-     * @var Admin\Service\PostManager
+     * @var \Admin\Service\PostManager
      */
     private $postManager;    
     
+    /**
+     * AplService manager.
+     * @var \Admin\Service\AutoruManager
+     */
+    private $autoruManager;    
+    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($postManager) 
+    public function __construct($postManager, $autoruManager) 
     {
         $this->postManager = $postManager;        
+        $this->autoruManager = $autoruManager;
     }   
 
     
     public function indexAction()
     {
         
+        $this->autoruManager->postOrder();
         return [];
     }
     
