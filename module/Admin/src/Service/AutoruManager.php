@@ -58,13 +58,82 @@ class AutoruManager {
         $this->adminManager = $adminManager;
     }
     
+    /**
+     * Заказ из автору
+     * 
+     * @param array $msg
+     * @return type
+     */
+    protected function autoruMsg($msg)
+    {
+        $filter = new AutoruOrderFilter();
+        $htmlFilter = new HtmlFilter();
+
+        $filtered = $filter->filter($htmlFilter->filter($msg['content']['HTML'])); 
+        $text = $msg['subject'].PHP_EOL.$filtered['text'];
+
+        $address = '';
+        if (isset($filtered['address'])){
+            $address = $filtered['address'];
+        }
+
+        $email = '';
+        if (isset($filtered['email'])){
+            $email = $filtered['email'];
+        }
+
+        if ($phone = $filtered['phone']){
+            $data = [
+                'bo' => 1,
+                //'comment' => 'autoru',
+                'info2' => $text,
+                'phone' => $phone,
+                'email' => $email,
+                'address' => $address,
+            ];
+
+
+            $aplResponce = $this->aplService->checkout($data);
+            if (is_array($aplResponce)){
+                $orderData = (array) $aplResponce['order'];
+                if ($order = $orderData['id']){
+                    $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
+                }
+            }    
+            
+            $telegramSettings = $this->adminManager->getTelegramSettings();
+            $this->telegramManager->addPostponeMesage([
+                'chat_id' => $telegramSettings['telegram_group_chat_id'],
+                'text' => $text,
+            ]);
+        }
+
+        
+        return;
+    }
+    
+    /**
+     * 
+     * @param type $msg
+     * @return type
+     */
+    protected function turboMsg($msg)
+    {
+        $filter = new AutoruOrderFilter();
+        $htmlFilter = new HtmlFilter();
+
+        $filtered = $filter->filter($htmlFilter->filter($msg['content']['HTML'])); 
+        $text = $msg['subject'].PHP_EOL.$filtered['text'];
+        
+        return;
+    }
+    
     public function postOrder()
     {
         set_time_limit(300);
         $startTime = time();
         
         $settings = $this->adminManager->getSettings();
-        $telegramSettings = $this->adminManager->getTelegramSettings();
         
         $box = [
             'host' => 'imap.yandex.ru',
@@ -73,54 +142,20 @@ class AutoruManager {
             'password' => $settings['autoru_email_password'],
             'leave_message' => false,
         ];
-        
-        $filter = new AutoruOrderFilter();
-        $htmlFilter = new HtmlFilter();
-        
+                
         $mail = $this->postManager->readImap($box);
         if (is_array($mail)){
             foreach($mail as $msg){
                 
                 if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру' && $msg['content']['HTML']){
-                    $filtered = $filter->filter($htmlFilter->filter($msg['content']['HTML'])); 
-                    $text = $msg['subject'].PHP_EOL.$filtered['text'];
-                    
-                    $address = '';
-                    if (isset($filtered['address'])){
-                        $address = $filtered['address'];
-                    }
-                    
-                    $email = '';
-                    if (isset($filtered['email'])){
-                        $email = $filtered['email'];
-                    }
-                    
-                    if ($phone = $filtered['phone']){
-                        $data = [
-                            'bo' => 1,
-                            //'comment' => 'autoru',
-                            'info2' => $text,
-                            'phone' => $phone,
-                            'email' => $email,
-                            'address' => $address,
-                        ];
-                        
-                
-                        $aplResponce = $this->aplService->checkout($data);
-                        if (is_array($aplResponce)){
-                            $orderData = (array) $aplResponce['order'];
-                            if ($order = $orderData['id']){
-                                $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
-                            }
-                        }    
-                    }
-                    
-                    $this->telegramManager->addPostponeMesage([
-                        'chat_id' => $telegramSettings['telegram_group_chat_id'],
-                        'text' => $text,
-                    ]);
-
+                    $this->autoruMsg($msg);
                 }
+                if (mb_strpos($msg['content']['HTML'], 'Турбо-страницы') !== false 
+                        && mb_strpos($msg['subject'], 'Новый заказ') !== false){
+                    $this->turboMsg($msg);
+                    exit;
+                }
+                
                 if (time() > $startTime + 240){
                     return;
                 }                
