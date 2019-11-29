@@ -24,21 +24,6 @@ class TurboOrderFilter extends AbstractFilter
     protected $options = [
     ];    
     
-    protected $removes = [
-        'mail Размещение на Авто.ру. Здравствуйте! Вам поступила заявка на товар',
-        '[Объявление на Авто.ру]',
-        'Счастливого пути. Команда Запчасти на Авто.ру Письмо отправлено автоматически. Если вы считаете, что получили его по ошибке свяжитесь с нами.',        
-    ];
-    
-    protected $newlines = [
-        'Автомобиль:',
-        'Номер запчасти:',
-        'Информация о покупателе:',
-        'Телефон:',
-        'Email:',
-        'Адрес доставки:',
-    ];
-
     // Конструктор.
     public function __construct($options = null) 
     {     
@@ -53,32 +38,55 @@ class TurboOrderFilter extends AbstractFilter
     {
         $result = [];
         
-        $result['text'] = str_replace($this->removes, PHP_EOL, $value); //удаляем ненужные фразы
-        foreach ($this->newlines as $line){
-            $result['text'] = str_replace($line, PHP_EOL.$line, $result['text']); //Добавить перенос строки
-        }
-        
-        $strgs = explode(PHP_EOL, $result['text']);
-        var_dump($strgs);
+        $strgs = explode(PHP_EOL, $value);
+        $goodStr = false;
+        $bags = [];
+        $info = [];
         foreach ($strgs as $strg){
-            $dqs = explode(':', $strg);
-            if (trim($dqs[0]) == 'Телефон'){
+            if (mb_strpos($strg, 'product') !== false) {
+                $goodStr = true;
+                continue;
+            }
+            if (mb_strpos($strg, 'Номер заказа') !== false) {
+                $goodStr = false;
+                continue;
+            }
+            if ($goodStr){
+                $info[] = trim($strg);                
+                $products = explode(' ', trim($strg));
+                $bags[] = $products[0];
+            }
+            if (mb_strpos($strg, 'Контакты') !== false) {
+                $contacts = str_replace('Контакты', '', $strg);
+                $dqs = explode(';', trim($contacts));
                 $phoneFilter = new PhoneFilter();
-                $result['phone'] = $phoneFilter->filter(trim($dqs[1]));
+                $emailValidator = new EmailAddress(['allow' => \Zend\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
+                $emails = []; $phones = [];
+                foreach ($dqs as $dbStr){
+                    if ($emailValidator->isValid(trim($dbStr))){
+                        $emails[] = trim($dbStr);                        
+                    } else {
+                        $phones[] = $phoneFilter->filter(trim($dbStr));                                                
+                    }
+                }
+                $result['email'] = implode(';', $emails);
+                $result['phone'] = implode(';', $phones);
             }
-            if (trim($dqs[0]) == 'Email'){                
-                if ($dqs[1]){
-                    $emailValidator = new EmailAddress(['allow' => \Zend\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
-                    if ($emailValidator->isValid(trim($dqs[1]))){
-                        $result['email'] = trim($dqs[1]);
-                    }    
-                }    
+            if (mb_strpos($strg, 'Комментарий') !== false) {
+                $info[] = trim(str_replace('Комментарий', '', $strg));
             }
-            if (trim($dqs[0]) == 'Адрес доставки'){
-                $result['address'] = trim($dqs[1]);
+            if (mb_strpos($strg, 'Адрес доставки') !== false) {
+                $result['address'] = trim(str_replace('Адрес доставки', '', $strg));
+            }
+            if (mb_strpos($strg, 'Имя') !== false) {
+                $result['name'] = trim(str_replace('Имя', '', $strg));
             }
         }
-
+        array_filter($bags);
+        array_filter($info);
+        $result['info'] = implode(';', $info);
+        $result['items'] = implode(';', $bags);
+        var_dump($result);
         return $result;
     }
     
