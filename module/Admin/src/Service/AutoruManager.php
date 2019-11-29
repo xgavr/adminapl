@@ -125,7 +125,7 @@ class AutoruManager {
         //$htmlFilter = new HtmlFilter();
 
         $filtered = $filter->filter($msg['content']['PLAIN']); 
-        $text = $msg['subject'].PHP_EOL.$filtered['text'];
+//        $text = $msg['subject'].PHP_EOL.$filtered['text'];
         
         return;
     }
