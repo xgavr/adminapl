@@ -142,7 +142,7 @@ class AutoruManager {
             'server' => '{imap.yandex.ru:993/imap/ssl}',
             'user' => $settings['autoru_email'],
             'password' => $settings['autoru_email_password'],
-            'leave_message' => false,
+            'leave_message' => true,
         ];
         $mail = $this->postManager->readImap($box);                
         if (is_array($mail)){
