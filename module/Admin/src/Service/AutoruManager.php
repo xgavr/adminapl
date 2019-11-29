@@ -153,7 +153,7 @@ class AutoruManager {
                 if (mb_strpos($msg['content']['PLAIN'], 'Турбо-страницы') !== false 
                         && mb_strpos($msg['subject'], 'Новый заказ') !== false){
                     $this->turboMsg($msg);
-                    exit;
+//                    exit;
                 }
                 
                 if (time() > $startTime + 240){
