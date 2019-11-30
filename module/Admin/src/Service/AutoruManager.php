@@ -125,7 +125,54 @@ class AutoruManager {
         //$htmlFilter = new HtmlFilter();
 
         $filtered = $filter->filter($msg['content']['PLAIN']); 
-//        $text = $msg['subject'].PHP_EOL.$filtered['text'];
+        $text = 'Заказ с Яндекс.Турбо'.PHP_EOL.$filtered['text'];
+
+        $name = null;
+        if (isset($filtered['name'])){
+            $name = $filtered['name'];
+        }
+
+        $address = '';
+        if (isset($filtered['address'])){
+            $address = $filtered['address'];
+        }
+
+        $email = '';
+        if (isset($filtered['email'])){
+            $email = $filtered['email'];
+        }
+
+        $items = [];
+        if (isset($filtered['items'])){
+            $items = $filtered['items'];
+        }
+
+        if ($phone = $filtered['phone']){
+            $data = [
+                'bo' => 1,
+                'name' => $name,
+                'info2' => $text,
+                'phone' => $phone,
+                'email' => $email,
+                'address' => $address,
+                'items' => $items,
+            ];
+
+
+            $aplResponce = $this->aplService->checkout($data);
+            if (is_array($aplResponce)){
+                $orderData = (array) $aplResponce['order'];
+                if ($order = $orderData['id']){
+                    $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
+                }
+            }    
+            
+            $telegramSettings = $this->adminManager->getTelegramSettings();
+            $this->telegramManager->addPostponeMesage([
+                'chat_id' => $telegramSettings['telegram_group_chat_id'],
+                'text' => $text,
+            ]);
+        }    
         
         return;
     }

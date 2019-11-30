@@ -54,7 +54,20 @@ class TurboOrderFilter extends AbstractFilter
             if ($goodStr){
                 $info[] = trim($strg);                
                 $products = explode(' ', trim($strg));
-                $bags[] = $products[0];
+                $count = $price = 0;
+                foreach ($products as $key => $value){
+                    if (trim($value) == 'шт.'){
+                        $count = trim($products[$key-1]);
+                    }
+                    if (trim($value) == 'RUB'){
+                        $price = trim($products[$key-1]);
+                    }
+                }
+                $bags[] = [
+                    'offerId' => $products[0],
+                    'count' => ($count) ? $count:1,
+                    'price' => $price,
+                ];
             }
             if (mb_strpos($strg, 'Контакты') !== false) {
                 $contacts = str_replace('Контакты', '', $strg);
@@ -84,9 +97,9 @@ class TurboOrderFilter extends AbstractFilter
         }
         array_filter($bags);
         array_filter($info);
-        $result['info'] = implode(';', $info);
-        $result['items'] = implode(';', $bags);
-        var_dump($result);
+        $result['text'] = implode(PHP_EOL, $info);
+        $result['items'] = $bags;
+//        var_dump($result);
         return $result;
     }
     
