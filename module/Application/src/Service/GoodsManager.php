@@ -401,7 +401,7 @@ class GoodsManager
     public function updateAttributeToBestName($attribute, $data)
     {
         if (isset($data['toBestName'])){
-            $attribute->setSimilarGood($data['toBestName']);
+            $attribute->setToBestName($data['toBestName']);
             $this->entityManager->persist($attribute);
             $this->entityManager->flush($attribute);        
         }
