@@ -1142,6 +1142,25 @@ class GoodsController extends AbstractActionController
         exit;
     }
     
+    public function attributeToBestNameAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $attributeId = $data['pk'];
+            $attribute = $this->entityManager->getRepository(\Application\Entity\Attribute::class)
+                    ->findOneById($attributeId);
+//            var_dump($data); exit;
+            $toBestName = ($data['value'] == 'true') ? \Application\Entity\Attribute::TO_BEST_NAME:\Application\Entity\Attribute::NO_BEST_NAME;
+                    
+            if ($attribute){
+                $this->goodsManager->updateAttributeSimilarGood($attribute, ['toBestName' => $toBestName]);                    
+            }    
+        }
+        
+        exit;
+    }
+    
     public function updateAttributeFormAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);

@@ -31,6 +31,8 @@ class Attribute {
     const FOR_SIMILAR_GOOD = 1;// подходит для похожых товаров
     const FOR_SIMILAR_NO_GOOD = 2;// не подходит для похожых товаров
     
+    const TO_BEST_NAME = 1;// использовать в наименовании
+    const NO_BEST_NAME = 2;// не использовать в наименовании
 
     /**
      * @ORM\Id
@@ -104,6 +106,11 @@ class Attribute {
      * @ORM\Column(name="similar_good")   
      */
     protected $similarGood = self::FOR_SIMILAR_NO_GOOD;    
+
+    /**
+     * @ORM\Column(name="to_name")   
+     */
+    protected $toBestName = self::NO_BEST_NAME;    
 
     /**
      * @ORM\OneToMany(targetEntity="Application\Entity\GoodAttributeValue", mappedBy="attribute")
@@ -415,6 +422,50 @@ class Attribute {
     public function setSimilarGood($similarGood) 
     {
         $this->similarGood = $similarGood;
+    }       
+
+    /**
+     * Returns toBestName.
+     * @return int     
+     */
+    public function getToBestName() 
+    {
+        return $this->toBestName;
+    }
+        
+    /**
+     * Returns possible toBestName as array.
+     * @return array
+     */
+    public static function getToBestNameHtmlList() 
+    {
+        return [
+            self::TO_BEST_NAME => 'checked',
+            self::NO_BEST_NAME => '',
+        ];
+    }    
+
+    /**
+     * Returns user toBestName as html.
+     * @return string
+     */
+    public function getToBestNameAsHtml()
+    {
+        $list = self::getToBestNameHtmlList();
+        if (isset($list[$this->toBestName])) {
+            return $list[$this->toBestName];
+        }
+
+        return 'Unknown';
+    }  
+    
+    /**
+     * Sets toBestName.
+     * @param int $toBestName     
+     */
+    public function setToBestName($toBestName) 
+    {
+        $this->toBestName = $toBestName;
     }       
 
     // Возвращает значения аттрибутов для данного атрибута.

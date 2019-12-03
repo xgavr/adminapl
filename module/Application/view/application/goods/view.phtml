@@ -175,6 +175,11 @@ $this->headScript()
                                                    data-toggle='tooltip' data-original-title="Использовать в аналогичных товарах"
                                                    value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
                                         </td>
+                                        <td width="5">
+                                            <input type="checkbox" class="toBestNameCheckbox checkbox" 
+                                                   data-toggle='tooltip' data-original-title="Использовать в наименовании"
+                                                   value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getToBestNameAsHtml()?>/>
+                                        </td>
                                         <td>
                                             <?= $attributeValue->getAttributeValue()->getValue();?>
                                         </td>
@@ -794,4 +799,22 @@ $this->headScript()
                 });        
         }        
     })        
+    
+    $('.toBestNameCheckbox').on('change', function(e, node) {
+        var url = "/goods/attribute-to-best-name";
+
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: e.target.value, value: e.target.checked}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })        
+    
 </script>
