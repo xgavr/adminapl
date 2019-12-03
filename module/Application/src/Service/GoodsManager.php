@@ -13,6 +13,7 @@ use Application\Entity\Producer;
 use Application\Entity\Tax;
 use Application\Entity\Images;
 use Application\Entity\Rawprice;
+use Application\Entity\Attribute;
 use Phpml\Math\Statistic\Mean;
 use Phpml\Math\Statistic\StandardDeviation;
 use Application\Validator\Sigma3;
@@ -355,7 +356,7 @@ class GoodsManager
     /**
      * Обновить атрибут
      * 
-     * @param \Application\Entity\Attribute $attribute
+     * @param Attribute $attribute
      * @param array $data
      */
     public function updateAttribute($attribute, $data)
@@ -367,7 +368,7 @@ class GoodsManager
             $attribute->setName($data['name']);
         }
         
-        $attribute->setStatusEx(\Application\Entity\Attribute::EX_TO_TRANSFER);
+        $attribute->setStatusEx(Attribute::EX_TO_TRANSFER);
         $this->entityManager->persist($attribute);
         $this->entityManager->flush();
         
@@ -377,17 +378,33 @@ class GoodsManager
     /**
      * Обновить атрибут
      * 
-     * @param \Application\Entity\Attribute $attribute
+     * @param Attribute $attribute
      * @param array $data
      */
     public function updateAttributeSimilarGood($attribute, $data)
     {
         if (isset($data['similarGood'])){
             $attribute->setSimilarGood($data['similarGood']);
+            $this->entityManager->persist($attribute);
+            $this->entityManager->flush($attribute);        
         }
         
-        $this->entityManager->persist($attribute);
-        $this->entityManager->flush();
+        return;
+    }
+
+    /**
+     * Обновить атрибут
+     * 
+     * @param Attribute $attribute
+     * @param array $data
+     */
+    public function updateAttributeToBestName($attribute, $data)
+    {
+        if (isset($data['toBestName'])){
+            $attribute->setSimilarGood($data['toBestName']);
+            $this->entityManager->persist($attribute);
+            $this->entityManager->flush($attribute);        
+        }
         
         return;
     }

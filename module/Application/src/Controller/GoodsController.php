@@ -1154,7 +1154,7 @@ class GoodsController extends AbstractActionController
             $toBestName = ($data['value'] == 'true') ? \Application\Entity\Attribute::TO_BEST_NAME:\Application\Entity\Attribute::NO_BEST_NAME;
                     
             if ($attribute){
-                $this->goodsManager->updateAttributeSimilarGood($attribute, ['toBestName' => $toBestName]);                    
+                $this->goodsManager->updateAttributeToBestName($attribute, ['toBestName' => $toBestName]);                    
             }    
         }
         
