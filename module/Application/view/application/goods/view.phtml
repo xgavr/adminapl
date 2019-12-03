@@ -171,7 +171,9 @@ $this->headScript()
                                             </a>
                                         </td>
                                         <td width="5">
-                                            <input type="checkbox" class="similarGoodCheckbox" value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
+                                            <input type="checkbox" class="similarGoodCheckbox checkbox" 
+                                                   data-toggle='tooltip' data-original-title="Использовать в аналогичных товарах"
+                                                   value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
                                         </td>
                                         <td>
                                             <?= $attributeValue->getAttributeValue()->getValue();?>
