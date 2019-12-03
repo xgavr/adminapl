@@ -1990,7 +1990,11 @@ class NameManager
                 }    
             }
             if ($textPart && $carStr){
-                $result['bestName'] = $textPart.' '.$carStr;
+                if (mb_strpos($textPart, '[машины]') !== false){
+                    $result['bestName'] = str_replace('[машины]', $carPart, $textPart);
+                } else {                        
+                    $result['bestName'] = $textPart.' '.$carStr;
+                }    
             }
         }
         
