@@ -552,7 +552,11 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
-    
+
+    $(function () {
+        $("[data-toggle='tooltip']").tooltip();
+    });
+
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
         $('.nameAplEdit').editable();
