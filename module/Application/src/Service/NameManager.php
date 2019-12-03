@@ -1991,7 +1991,7 @@ class NameManager
             }
             if ($textPart && $carStr){
                 if (mb_strpos($textPart, '[машины]') !== false){
-                    $result['bestName'] = str_replace('[машины]', $carPart, $textPart);
+                    $result['bestName'] = str_replace('[машины]', $carStr, $textPart);
                 } else {                        
                     $result['bestName'] = $textPart.' '.$carStr;
                 }    
