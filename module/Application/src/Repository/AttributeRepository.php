@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Goods;
 use Application\Entity\Attribute;
 use Application\Entity\AttributeValue;
+use Application\Entity\GoodAttributeValue;
 
 
 /**
@@ -24,7 +25,7 @@ class AttributeRepository  extends EntityRepository{
      * Добавить атрибут
      * 
      * @param array $attr
-     * @return \Application\Entity\Attribute;
+     * @return Attribute;
      */
     public function addAtribute($attr)
     {
@@ -58,7 +59,7 @@ class AttributeRepository  extends EntityRepository{
     /**
      * Обновить атрибут
      * 
-     * @param \Application\Entity\Attribute $attribute
+     * @param Attribute $attribute
      * @param array $data
      */
     public function updateAttribute($attribute, $data)
@@ -83,7 +84,7 @@ class AttributeRepository  extends EntityRepository{
      * Добавить значение атрибута
      * 
      * @param array $attr
-     * @return \Application\Entity\AttributeValue;
+     * @return AttributeValue;
      */
     public function addAtributeValue($attr)
     {
@@ -129,7 +130,7 @@ class AttributeRepository  extends EntityRepository{
     /**
      * Добавление значения атрибута к товару
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param array $attr
      * @param bool $similarGood
      */
@@ -158,5 +159,36 @@ class AttributeRepository  extends EntityRepository{
 
     }
         
-    
+    /**
+     * Атрибуты для наименования товара
+     * 
+     * @param Goods $good
+     */
+    public function nameAttribute($good)
+    {
+        $result = [];
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('av.value')
+                ->distinct()
+                ->from(GoodAttributeValue::class, 'gav')
+                ->join('gav.attribute', 'a')
+                ->join('gav.attributeValue', 'av')
+                ->where('gav.good = ?1')
+                ->andWhere('a.toBestName = ?2')
+                ->andWhere('a.status = ?3')
+                ->setParameter('1', $good->getId())
+                ->setParameter('2', Attribute::TO_BEST_NAME)
+                ->setParameter('3', Attribute::STATUS_ACTIVE)                
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();        
+        
+        foreach ($data as $row){
+            $result[] = $row['value'];
+        }
+        
+        return implode(' ', $result);
+    }
 }

@@ -20,6 +20,7 @@ use Application\Entity\Goods;
 use Application\Entity\GoodTitle;
 use Application\Entity\Car;
 use Application\Entity\Oem;
+use Application\Entity\GoodAttributeValue;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -1748,7 +1749,7 @@ class NameManager
      * @param Goods $good
      * @return string
      */
-    public function carPart($good)
+    private function carPart($good)
     {
         $result = [];
         
@@ -1854,7 +1855,7 @@ class NameManager
      * @param array $options
      * @return string
      */
-    public function carPartStr($carPart, $options = null)
+    private function carPartStr($carPart, $options = null)
     {
         $makeSeparator = ' ';
         $modelSeparator = '/';
@@ -1942,6 +1943,12 @@ class NameManager
         return implode($makeSeparator, $makeNames);
     }
     
+    private function attrPart($good)
+    {
+        return $this->entityManager->getRepository(GoodAttributeValue::class)
+                ->nameAttribute($good);
+    }
+    
     /**
      * Часть описания нименования
      * 
@@ -1994,7 +2001,12 @@ class NameManager
                     $result['bestName'] = str_replace('[машины]', $carStr, $textPart);
                 } else {                        
                     $result['bestName'] = $textPart.' '.$carStr;
-                }    
+                }   
+                
+                $attrPart = $this->attrPart($good);
+                if ($attrPart && mb_strpos($textPart, '[свойства]') !== false){
+                    $result['bestName'] .= ' '.$attrPart;
+                }
             }
         }
         
