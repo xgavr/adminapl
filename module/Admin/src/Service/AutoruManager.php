@@ -124,7 +124,7 @@ class AutoruManager {
         $filter = new TurboOrderFilter();
         //$htmlFilter = new HtmlFilter();
 
-        $filtered = $filter->filter($msg['content']['PLAIN']); 
+        $filtered = $filter->filter($msg['content']['HTML']); 
         $text = 'Заказ с Яндекс.Турбо'.PHP_EOL.$filtered['text'];
 
         $name = null;
@@ -157,7 +157,7 @@ class AutoruManager {
                 'address' => $address,
                 'items' => $items,
             ];
-
+//exit;
 
             $aplResponce = $this->aplService->checkout($data);
             if (is_array($aplResponce)){

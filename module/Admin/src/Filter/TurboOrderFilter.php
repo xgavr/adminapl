@@ -34,43 +34,49 @@ class TurboOrderFilter extends AbstractFilter
         }    
     }
     
+    protected function _domTable($html)
+    {
+        $dom = new \DOMDocument();
+        $dom->loadHTML($html);
+        $xpath = new \DOMXPath($dom);
+        
+        $result = [];
+        $row = 0;
+        foreach ($xpath->query('//table') as $table){
+            foreach ($xpath->query('tr', $table) as $tr){
+                foreach ($xpath->query('td', $tr) as $td){
+                    $result[$row][] = trim($td->textContent);
+                }
+                $row++;
+            }    
+        }
+        
+        return $result;
+    }
+    
     public function filter($value)
     {
+        $lines = $this->_domTable($value);
         $result = [];
-        
-        $strgs = explode(PHP_EOL, $value);
-        $goodStr = false;
-        $bags = [];
-        $info = [];
-        foreach ($strgs as $strg){
-            if (mb_strpos($strg, 'product') !== false) {
+        $$goodStr = false;
+        foreach ($lines as $key => $line){
+            if ($line[0] == 'product id'){
                 $goodStr = true;
                 continue;
             }
-            if (mb_strpos($strg, 'Номер заказа') !== false) {
+            if ($line[0] == 'Номер заказа'){
                 $goodStr = false;
                 continue;
             }
             if ($goodStr){
-                $info[] = trim($strg);                
-                $products = explode(' ', trim($strg));
-                $count = $price = 0;
-                foreach ($products as $key => $value){
-                    if (trim($value) == 'шт.'){
-                        $count = trim($products[$key-1]);
-                    }
-                    if (trim($value) == 'RUB'){
-                        $price = trim($products[$key-1]);
-                    }
-                }
                 $bags[] = [
-                    'offerId' => $products[0],
-                    'count' => ($count) ? $count:1,
-                    'price' => $price,
+                    'offerId' => $line[0],
+                    'count' => (float) $line[2],
+                    'price' => (float) $line[3],
                 ];
             }
-            if (mb_strpos($strg, 'Контакты') !== false) {
-                $contacts = str_replace('Контакты', '', $strg);
+            if ($line[0] == 'Контакты'){
+                $contacts = trim($line[1]);
                 $dqs = explode(';', trim($contacts));
                 $phoneFilter = new PhoneFilter();
                 $emailValidator = new EmailAddress(['allow' => \Zend\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
@@ -85,14 +91,14 @@ class TurboOrderFilter extends AbstractFilter
                 $result['email'] = implode(';', $emails);
                 $result['phone'] = implode(';', $phones);
             }
-            if (mb_strpos($strg, 'Комментарий') !== false) {
-                $info[] = trim(str_replace('Комментарий', '', $strg));
+            if ($line[0] == 'Комментарий'){
+                $info[] = trim($line[1]);
             }
-            if (mb_strpos($strg, 'Адрес доставки') !== false) {
-                $result['address'] = trim(str_replace('Адрес доставки', '', $strg));
+            if ($line[0] == 'Адрес доставки'){
+                $result['address'] = trim($line[1]);
             }
-            if (mb_strpos($strg, 'Имя') !== false) {
-                $result['name'] = trim(str_replace('Имя', '', $strg));
+            if ($line[0] == 'Имя'){
+                $result['name'] = trim($line[1]);
             }
         }
         array_filter($bags);
