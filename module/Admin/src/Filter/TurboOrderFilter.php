@@ -54,11 +54,13 @@ class TurboOrderFilter extends AbstractFilter
         return $result;
     }
     
-    public function filter($value)
+    protected function _fromHtml($value)
     {
         $lines = $this->_domTable($value);
         $result = [];
-        $$goodStr = false;
+        $bags = [];
+        $info = [];
+        $goodStr = false;
         foreach ($lines as $key => $line){
             if ($line[0] == 'product id'){
                 $goodStr = true;
@@ -107,6 +109,72 @@ class TurboOrderFilter extends AbstractFilter
         $result['items'] = $bags;
 //        var_dump($result);
         return $result;
+        
+    }
+
+    protected function _fromPlain($value)
+    {
+        $lines = explode("\n", $value);
+        $result = [];
+        $bags = [];
+        $info = [];
+        $offerId = $price = null;
+        foreach ($lines as $key => $line){
+            if ($line == 'ID предложения'){
+                $offerId = trim($lines[$key+1]);
+            }
+            if ($line == 'Цена'){
+                $price = (float) trim($lines[$key+1]);
+            }
+            if ($line == 'Контакты'){
+                $contacts = trim($lines[$key+1]);
+                $contacts = str_replace(['email:', ['phone:']], '', $contacts);
+                $dqs = explode(';', trim($contacts));
+                $phoneFilter = new PhoneFilter();
+                $emailValidator = new EmailAddress(['allow' => \Zend\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
+                $emails = []; $phones = [];
+                foreach ($dqs as $dbStr){
+                    if ($emailValidator->isValid(trim($dbStr))){
+                        $emails[] = trim($dbStr);                        
+                    } else {
+                        $phones[] = $phoneFilter->filter(trim($dbStr));                                                
+                    }
+                }
+                $result['email'] = implode(';', $emails);
+                $result['phone'] = implode(';', $phones);
+            }
+            if ($line[0] == 'Комментарий'){
+                $info[] = trim($lines[$key+1]);
+            }
+            if ($line == 'Адрес доставки'){
+                $result['address'] = trim($lines[$key+1]);
+            }
+            if ($line == 'Имя'){
+                $result['name'] = trim($lines[$key+1]);
+            }
+        }
+        $bags[] = [
+            'offerId' => $offerId,
+            'count' => 1,
+            'price' => $price,
+        ];
+        array_filter($bags);
+        array_filter($info);
+        $result['text'] = implode(PHP_EOL, $info);
+        $result['items'] = $bags;
+//        var_dump($result); exit;
+        return $result;
+        
+    }
+    
+    public function filter($value, $html = true)
+    {        
+//        var_dump($value); exit;
+        if ($html){
+            return $this->_fromHtml($value);
+        } else {
+            return $this->_fromPlain($value);
+        }
     }
     
 }

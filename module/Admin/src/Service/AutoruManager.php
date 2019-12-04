@@ -103,11 +103,11 @@ class AutoruManager {
                 }
             }    
             
-            $telegramSettings = $this->adminManager->getTelegramSettings();
-            $this->telegramManager->addPostponeMesage([
-                'chat_id' => $telegramSettings['telegram_group_chat_id'],
-                'text' => $text,
-            ]);
+//            $telegramSettings = $this->adminManager->getTelegramSettings();
+//            $this->telegramManager->addPostponeMesage([
+//                'chat_id' => $telegramSettings['telegram_group_chat_id'],
+//                'text' => $text,
+//            ]);
         }
 
         
@@ -115,6 +115,7 @@ class AutoruManager {
     }
     
     /**
+     * Заказ с яндекс турбо
      * 
      * @param type $msg
      * @return type
@@ -122,9 +123,12 @@ class AutoruManager {
     protected function turboMsg($msg)
     {
         $filter = new TurboOrderFilter();
-        //$htmlFilter = new HtmlFilter();
 
-        $filtered = $filter->filter($msg['content']['HTML']); 
+        if (isset($msg['content']['HTML'])){
+            $filtered = $filter->filter($msg['content']['HTML']); 
+        } else {
+            $filtered = $filter->filter($msg['content']['PLAIN'], false);             
+        }    
         $text = 'Заказ с Яндекс.Турбо'.PHP_EOL.$filtered['text'];
 
         $name = null;
@@ -157,7 +161,7 @@ class AutoruManager {
                 'address' => $address,
                 'items' => $items,
             ];
-//exit;
+//            var_dump($data); exit;
 
             $aplResponce = $this->aplService->checkout($data);
             if (is_array($aplResponce)){
@@ -167,11 +171,11 @@ class AutoruManager {
                 }
             }    
             
-            $telegramSettings = $this->adminManager->getTelegramSettings();
-            $this->telegramManager->addPostponeMesage([
-                'chat_id' => $telegramSettings['telegram_group_chat_id'],
-                'text' => $text,
-            ]);
+//            $telegramSettings = $this->adminManager->getTelegramSettings();
+//            $this->telegramManager->addPostponeMesage([
+//                'chat_id' => $telegramSettings['telegram_group_chat_id'],
+//                'text' => $text,
+//            ]);
         }    
         
         return;
