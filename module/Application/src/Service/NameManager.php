@@ -2002,10 +2002,10 @@ class NameManager
                 } else {                        
                     $result['bestName'] = $textPart.' '.$carStr;
                 }   
-                
-                $attrPart = $this->attrPart($good);
-                if ($attrPart && mb_strpos($textPart, '[свойства]') !== false){
-                    $result['bestName'] .= ' '.$attrPart;
+                                
+                if (mb_strpos($textPart, '[свойства]') !== false){
+                    $attrPart = $this->attrPart($good);
+                    $result['bestName'] = str_replace('[свойства]', $attrPart, $result['bestName']);
                 }
             }
         }
