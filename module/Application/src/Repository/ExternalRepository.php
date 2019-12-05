@@ -58,5 +58,41 @@ class ExternalRepository extends EntityRepository
         $this->getEntityManager()->getConnection()->update('auto_db_response', $data, ['uri_md5' => md5($url)]); 
         
         return;
-    }        
+    }     
+    
+    /**
+     * Колиество запросов за сегодня
+     * @return integer
+     */
+    public function getAutoDbResponseTodayCount()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('adr.id')
+            ->from(AutoDbResponse::class, 'adr')
+            ->where('adr.dateCreated >= ?1')
+            ->setParameter('1', date('Y-m-d'))
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());                    
+    }
+    
+    /**
+     * Удаление старых записей
+     */
+    public function deleteOld()
+    {
+        $dateAgo = new \DateTime('1 month ago');
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->delete(AutoDbResponse::class, 'adr')
+            ->where('adr.dateCreated < ?1')
+            ->setParameter('1', date("Y-m-d", $dateAgo->getTimestamp()))
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();                    
+    }
 }

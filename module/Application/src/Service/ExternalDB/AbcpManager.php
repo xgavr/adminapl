@@ -74,9 +74,13 @@ class AbcpManager
      * Получить сохраненный ответ запроса
      * 
      * @param string $uri
+     * @return array
      */
-    private function getAutoDbResponse($uri)
+    private function getAutoDbResponseData($uri)
     {
+        $this->entityManager->getRepository(AutoDbResponse::class)
+                ->deleteOld();
+        
         $autoDbResponse = $this->entityManager->getRepository(AutoDbResponse::class)
                 ->findOneByUriMd5(md5(mb_strtoupper(trim($uri), 'UTF-8')));
         
@@ -85,6 +89,16 @@ class AbcpManager
         }
         
         return $autoDbResponse->getResponseAsArray();
+    }
+    
+    /**
+     * Количество запросов за сегодня
+     * @return integer
+     */
+    private function getAutoDbResponseTodayCount()
+    {
+        return $this->entityManager->getRepository(AutoDbResponse::class)
+                ->getAutoDbResponseTodayCount();
     }
     
     /**
@@ -138,6 +152,15 @@ class AbcpManager
             foreach ($params as $key => $value){
                 $uri .= "&$key=$value";
             }    
+            
+            $result = $this->getAutoDbResponseData($uri);
+            if (is_array($result)){
+                return $result;
+            }
+            
+            if ($settings['max_query'] <= $this->getAutoDbResponseTodayCount()){
+                throw new \Exception("Достигнут лимит запросов {$settings['max_query']}");
+            }
     //        var_dump($uri); exit;
             $client = new Client();
             $client->setUri($uri);

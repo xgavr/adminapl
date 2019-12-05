@@ -96,7 +96,11 @@ class AutoDbResponse {
     public function getResponseAsArray()
     {
         if ($this->response){
-            return Decoder::decode($this->response, \Zend\Json\Json::TYPE_ARRAY);
+            try {
+                return Decoder::decode($this->response, \Zend\Json\Json::TYPE_ARRAY);
+            } catch (\Exception $e){
+                
+            }    
         }
         
         return;
