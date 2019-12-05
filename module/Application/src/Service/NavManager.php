@@ -329,6 +329,11 @@ class NavManager
                 ];
 
                 $settingsDropDownItems[] = [
+                    'id' => 'abcp',
+                    'label' => 'Настройи ABCP',
+                    'link'  => $url('admin', ['action' => 'abcp-settings'])                    
+                ];
+                $settingsDropDownItems[] = [
                     'id' => 'tdExchange',
                     'label' => 'Настройи обмена по апи текдока',
                     'link'  => $url('admin', ['action' => 'td-exchange-settings'])                    

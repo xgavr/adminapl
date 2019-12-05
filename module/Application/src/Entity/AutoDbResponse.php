@@ -9,6 +9,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Json\Decoder;
 
 /**
  * Description of Producer
@@ -92,6 +93,15 @@ class AutoDbResponse {
         return $this->responseMd5;
     }
     
+    public function getResponseAsArray()
+    {
+        if ($this->response){
+            return Decoder::decode($this->response, \Zend\Json\Json::TYPE_ARRAY);
+        }
+        
+        return;
+    }
+
     /**
      * Returns the date of user creation.
      * @return string     

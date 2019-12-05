@@ -1,0 +1,101 @@
+<?php
+$this->headTitle('Настройки ABCP');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Настройки'=>$this->url('settings'),
+            'Настройки ABCP'=>$this->url('admin', ['action' => 'abcp-settings']),
+            ]);
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<?php
+$form = $this->form;
+
+
+$form->get('host')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('api_key')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('md5_key')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('max_query')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Настройки ABCP</h1>
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<?= $this->form()->openTag($form); ?>
+<div class="row">
+    <div class="col-md-4">
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('host')); ?>
+            <?= $this->formElement($form->get('host')); ?>
+            <?= $this->formElementErrors($form->get('host')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('login')); ?>
+            <?= $this->formElement($form->get('login')); ?>
+            <?= $this->formElementErrors($form->get('login')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('api_key')); ?>
+            <?= $this->formElement($form->get('api_key')); ?>
+            <?= $this->formElementErrors($form->get('api_key')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('md5_key')); ?>
+            <?= $this->formElement($form->get('md5_key')); ?>
+            <?= $this->formElementErrors($form->get('md5_key')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('max_query')); ?>
+            <?= $this->formElement($form->get('max_query')); ?>
+            <?= $this->formElementErrors($form->get('max_query')); ?>                  
+        </div>
+        
+        <div  class="form-group">
+            <?= $this->formElement($form->get('submit')); ?>            
+        </div>
+    </div>
+    <div class="col-sm-3" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active">
+            </li>
+        </ul>
+    </div>    
+    
+</div>   
+
+<?= $this->form()->closeTag(); ?>
+
+<script async="false">
+</script>

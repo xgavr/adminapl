@@ -13,6 +13,7 @@ use Admin\Form\BankSettingsForm;
 use Admin\Form\AplExchangeForm;
 use Admin\Form\TdExchangeForm;
 use Admin\Form\TelegramSettingsForm;
+use Admin\Form\AbcpSettings;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -589,6 +590,52 @@ class IndexController extends AbstractActionController
         
         $this->layout()->setTemplate('layout/terminal');
         // Визуализируем шаблон представления.
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
+    /**
+     * Управление настройками abcp
+     * 
+     * @return ViewModel
+     */
+    public function abcpSettingsAction()
+    {
+        $form = new AbcpSettings();
+    
+        $settings = $this->adminManager->getAbcpSettings();
+        
+        if ($settings){
+            $form->setData($settings);
+        }    
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setAbcpSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+
+                $this->redirect()->toRoute('admin', ['action' => 'abcp-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        }
+        
         return new ViewModel([
             'form' => $form,
         ]);  

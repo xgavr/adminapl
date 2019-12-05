@@ -24,6 +24,7 @@ class AdminManager {
     const APL_EXCHANGE_SETTINGS_FILE       = './data/settings/apl_exchange_config.php'; // файл с настройками обмена с банком
     const TD_EXCHANGE_SETTINGS_FILE       = './data/settings/td_exchange_config.php'; // файл с настройками обмена по апи текдока
     const TELEGRAM_SETTINGS_FILE       = './data/settings/telegram_config.php'; // файл с настройками telegram
+    const ABCP_SETTINGS_FILE                    = './data/settings/abcp_config.php'; //файл с настройками abcp
     
     /**
      * Doctrine entity manager.
@@ -365,4 +366,50 @@ class AdminManager {
         $writer->toFile(self::TELEGRAM_SETTINGS_FILE, $config);
     }
     
+    /**
+     * Получить настройки abcp
+     * @return array 
+     */
+    public function getAbcpSettings()
+    {
+        if (file_exists(self::ABCP_SETTINGS_FILE)){
+            $config = new Config(include self::ABCP_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->abcp_settings = [];
+        }   
+        
+        return $config->abcp_settings;
+    }
+
+    /**
+     * Настройки abcp
+     * @param array $data
+     */
+    public function setAbcpSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::ABCP_SETTINGS_FILE)){
+            $config = new Config(include self::ABCP_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->abcp_settings = [];
+        }
+        
+        if (!isset($config->abcp_settings)){
+            $config->abcp_settings = [];
+        }
+        
+        $config->abcp_settings->host = $data['host'];
+        $config->abcp_settings->login = $data['login'];
+        $config->abcp_settings->api_key = $data['api_key'];
+        $config->abcp_settings->md5_key = $data['md5_key'];
+        $config->abcp_settings->max_query = $data['max_query'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::ABCP_SETTINGS_FILE, $config);
+    }
 }
