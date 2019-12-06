@@ -63,6 +63,24 @@ class ExternalController extends AbstractActionController
         
     }
     
+    public function abcpAction()
+    {
+        $action = $this->params()->fromQuery('action');
+        
+        if ($action == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $result = $this->externalManager->abcp($action);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'message' => $result,
+        ]);           
+        
+    }
+    
     public function updateGenericGroupAction()
     {
 

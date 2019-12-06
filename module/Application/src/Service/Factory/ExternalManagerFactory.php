@@ -13,6 +13,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ExternalDB\AutodbManager;
 use Application\Service\ExternalDB\PartsApiManager;
 use Application\Service\ExternalManager;
+use Application\Service\ExternalDB\AbcpManager;
 
 /**
  * Description of AssemblyManagerFactory
@@ -28,8 +29,9 @@ class ExternalManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $autoDbManager = $container->get(AutodbManager::class);
         $partsApiManager = $container->get(PartsApiManager::class);
+        $abcpManager = $container->get(AbcpManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ExternalManager($entityManager, $autoDbManager, $partsApiManager);
+        return new ExternalManager($entityManager, $autoDbManager, $partsApiManager, $abcpManager);
     }
 }

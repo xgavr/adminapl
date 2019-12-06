@@ -30,11 +30,17 @@ class AbcpManager
      */
     private $entityManager;
     
+    /**
+     * AdminManager.
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
+        $this->adminManager = $adminManager;
     }
     
     /**
@@ -133,15 +139,19 @@ class AbcpManager
      * 
      * @param string $action
      * @param array $params
-     * @param integer $goodId
-     * @param string $oper
      * @return array|Exception
      */    
-    public function getAction($action, $params = null, $goodId = null, $oper = null)
+    public function getAction($action, $params = null)
     {
         ini_set('memory_limit', '512M');       
         
         if ($action){
+            if (is_array($params)){
+                $params = array_filter($params);
+            } else {
+                $params = [];
+            }
+            
             $settings = $this->adminManager->getAbcpSettings();
             
             $uri = $settings['host'].'/'.$action.'?';
@@ -193,60 +203,56 @@ class AbcpManager
     }
     
     /**
-     * Получить версию апи
+     * Получить производителей из abcp
+     * 
+     * @param array $params
      * @return array|Esception
      */
-    public function getPegasusVersionInfo()
+    public function getManufacturers($params = null)
     {
-        return $this->getAction('getPegasusVersionInfo');
+        return $this->getAction('manufacturers', ['carType' => null, 'motorcyclesFilter' => null]);
+    }
+
+    /**
+     * Получить моделей производителя
+     * @param array $params
+     * @return array|Esception
+     */
+    public function getModels($params)
+    {
+        return $this->getAction('models', ['manufacturerId' => $params['manufacturerId'], 'carType' => null]);
+    }
+
+    /**
+     * Получение списка модификаций
+     * @param array $params
+     * @return array|Esception
+     */
+    public function getModifications($params)
+    {
+        return $this->getAction('modifications', ['manufacturerId' => $params['manufacturerId'], 'modelId' => $params['modelId'], 'carType' => null]);
     }
     
     /**
-     * Получить версию апи
+     * Получение модификации по идентификатору
+     * @param array $params
      * @return array|Esception
      */
-    public function getPegasusVersionInfo2()
+    public function getModification($params)
     {
-        return $this->getAction('getPegasusVersionInfo2');
+        return $this->getAction('modification', ['modelVariant' => $params['modificationId']]);
     }
 
     /**
-     * Получить критерии
+     * Получение списка брендов
+     * @param array $params
      * @return array|Esception
      */
-    public function getCriteria2()
+    public function getBrands($params = null)
     {
-        return $this->getAction('getCriteria2');
+        return $this->getAction('brands', $params);
     }
 
-    /**
-     * Получить производителей
-     * @return array|Esception
-     */
-    public function getManufacturers()
-    {
-        return $this->getAction('getManufacturers', ['linkingTargetType' => 'P']);
-    }
-
-    /**
-     * Получить модели серии
-     * @return array|Esception
-     */
-    public function getModelSeries()
-    {
-        return $this->getAction('getModelSeries', ['linkingTargetType' => 'P']);
-    }
-
-    /**
-     * Получить страны
-     * @return array|Esception
-     */
-    public function getCountries()
-    {
-        return $this->getAction('getCountries');
-    }
-
-    
     /**
      * Получить группы запчастей
      * 

@@ -11,6 +11,7 @@ namespace Application\Service\Factory\ExternalDB;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ExternalDB\AbcpManager;
+use Admin\Service\AdminManager;
 
 /**
  * Description of AbcpManagerFactory
@@ -24,8 +25,9 @@ class AbcpManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new AbcpManager($entityManager);
+        return new AbcpManager($entityManager, $adminManager);
     }
 }

@@ -37,6 +37,13 @@ class ExternalManager
     private $entityManager;
   
     /**
+     * Менеджер abcp
+     * 
+     * @var \Application\Service\ExternalDB\AbcpManager 
+     */
+
+    private $abcpManager;
+    /**
      * Менеджер auto-db
      * 
      * @var \Application\Service\ExternalDB\AutodbManager 
@@ -51,13 +58,36 @@ class ExternalManager
     private $partsApiManager;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $autoDbManager, $partsApiManager)
+    public function __construct($entityManager, $autoDbManager, $partsApiManager, $abcpManager)
     {
         $this->entityManager = $entityManager;
         $this->autoDbManager = $autoDbManager;
         $this->partsApiManager = $partsApiManager;
+        $this->abcpManager = $abcpManager;
     }
     
+    /**
+     * Подключение к abcp api
+     * 
+     * @param string $action
+     * @param array $params
+     * @return array|null;
+     */
+    public function abcp($action, $params = null)
+    {
+        switch($action){
+            case 'manufacturers': $result = $this->abcpManager->getManufacturers($params); break;
+            case 'models': $result = $this->abcpManager->getModels($params); break;
+            case 'modifications': $result = $this->abcpManager->getModifications($params); break;
+            case 'modification': $result = $this->abcpManager->getModification($params); break;
+            case 'brands': $result = $this->abcpManager->getBrands($params); break;
+            default: break;
+        }
+        
+//        var_dump($result);
+        return $result;
+    }
+
     /**
      * Подключение к auto-db api
      * 
@@ -227,12 +257,12 @@ class ExternalManager
      */
     public function fillMakes()
     {
-        $data1 = $this->partsApi('makes', ['group' => 'passenger']);
-        $this->fillMakesFromArray($data1,['passenger' => Make::PASSENGER_YES]);
-        $data2 = $this->partsApi('makes', ['group' => 'commercial']);
-        $this->fillMakesFromArray($data2,['commerc' => Make::COMMERC_YES]);
-        $data3 = $this->partsApi('makes', ['group' => 'moto']);
-        $this->fillMakesFromArray($data3,['moto' => Make::MOTO_YES]);
+//        $data1 = $this->partsApi('makes', ['group' => 'passenger']);
+//        $this->fillMakesFromArray($data1,['passenger' => Make::PASSENGER_YES]);
+//        $data2 = $this->partsApi('makes', ['group' => 'commercial']);
+//        $this->fillMakesFromArray($data2,['commerc' => Make::COMMERC_YES]);
+//        $data3 = $this->partsApi('makes', ['group' => 'moto']);
+//        $this->fillMakesFromArray($data3,['moto' => Make::MOTO_YES]);
         return;
     }
     
@@ -329,12 +359,12 @@ class ExternalManager
      */
     public function fillModels($make)
     {
-        $data1 = $this->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'passenger']);
-        $this->fillModelFromArray($make, $data1,['passenger' => Model::PASSENGER_YES]);
-        $data2 = $this->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'commercial']);
-        $this->fillModelFromArray($make, $data2,['commerc' => Model::COMMERC_YES]);
-        $data3 = $this->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'moto']);
-        $this->fillModelFromArray($make, $data3,['moto' => Model::MOTO_YES]);
+//        $data1 = $this->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'passenger']);
+//        $this->fillModelFromArray($make, $data1,['passenger' => Model::PASSENGER_YES]);
+//        $data2 = $this->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'commercial']);
+//        $this->fillModelFromArray($make, $data2,['commerc' => Model::COMMERC_YES]);
+//        $data3 = $this->partsApi('models', ['makeId' => $make->getTdId(), 'group' => 'moto']);
+//        $this->fillModelFromArray($make, $data3,['moto' => Model::MOTO_YES]);
         return;
     }
     
@@ -521,18 +551,18 @@ class ExternalManager
      */
     public function fillCars($model)
     {
-        $data1 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'passenger']);
-        if (is_array($data1)){
-            $this->fillCarFromArray($model, $data1,['passenger' => Car::PASSENGER_YES]);
-        }    
-        $data2 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'commercial']);
-        if (is_array($data2)){
-            $this->fillCarFromArray($model, $data2,['commerc' => Car::COMMERC_YES]);
-        }    
-        $data3 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'moto']);
-        if (is_array($data3)){
-            $this->fillCarFromArray($model, $data3,['moto' => Car::MOTO_YES]);
-        }    
+//        $data1 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'passenger']);
+//        if (is_array($data1)){
+//            $this->fillCarFromArray($model, $data1,['passenger' => Car::PASSENGER_YES]);
+//        }    
+//        $data2 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'commercial']);
+//        if (is_array($data2)){
+//            $this->fillCarFromArray($model, $data2,['commerc' => Car::COMMERC_YES]);
+//        }    
+//        $data3 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'moto']);
+//        if (is_array($data3)){
+//            $this->fillCarFromArray($model, $data3,['moto' => Car::MOTO_YES]);
+//        }    
         return;
     }
         
