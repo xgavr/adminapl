@@ -316,32 +316,35 @@ class TokenRepository  extends EntityRepository
         
         if (is_array($params)){
             if (isset($params['q'])){
-                $queryBuilder->where('tg.lemms like :search')
+                $queryBuilder->andWhere('tg.lemms like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('tg.ids > ?1')
+                $queryBuilder->andWhere('tg.ids > ?1')
                     ->setParameter('1', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('tg.ids < ?2')
+                $queryBuilder->andWhere('tg.ids < ?2')
                     ->setParameter('2', $params['prev1'])
                     ->orderBy('tg.ids', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }
-            if (isset($params['minGoodCount'])){
-                $queryBuilder->where('tg.goodCount >= ?3')
-                    ->setParameter('3', $params['minGoodCount'])
-                 ;
-            }
-            if (isset($params['maxGoodCount'])){
-                $queryBuilder->where('tg.goodCount <= ?4')
-                    ->setParameter('4', $params['maxGoodCount'])
-                 ;
+            if (isset($params['goodCountLevel'])){
+                $levels = explode('_', $params['goodCountLevel']);
+                if (count($levels)){
+                    $queryBuilder->andWhere('tg.goodCount >= ?3')
+                        ->setParameter('3', $levels[0]);
+                    if (isset($levels[1])){
+                        if ($level[1] > $levels[0]){
+                            $queryBuilder->andWhere('tg.goodCount <= ?4')
+                                ->setParameter('4', $levels[1]);
+                        }
+                    }
+                }                                
             }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('tg.'.$params['sort'], $params['order']);                

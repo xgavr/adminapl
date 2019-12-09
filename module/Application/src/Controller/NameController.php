@@ -849,9 +849,15 @@ class NameController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
+        $goodCountLevel = $this->params()->fromQuery('goodCountLevel');
         
         $query = $this->entityManager->getRepository(TokenGroup::class)
-                        ->findAllTokenGroup(['q' => $q, 'sort' => $sort, 'order' => $order]);
+                        ->findAllTokenGroup([
+                            'q' => $q, 
+                            'sort' => $sort, 
+                            'order' => $order,
+                            'goodCountLevel' => $goodCountLevel,
+                                ]);
 
         $total = count($query->getResult(2));
         
