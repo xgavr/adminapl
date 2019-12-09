@@ -16,6 +16,10 @@ use Phpml\Metric\Accuracy;
 use Phpml\Classification\MLPClassifier;
 use Phpml\Preprocessing\Normalizer;
 use Application\Entity\MlTitle;
+use Application\Entity\Goods;
+use Application\Entity\Rawprice;
+use Application\Entity\Token;
+use Application\Entity\Bigram;
 
 use Application\Filter\TokenizerQualifier;
 
@@ -195,6 +199,76 @@ class MlManager
     }
     
     /**
+     * Заголовок товара разбить на значимые токены 
+     * 
+     * @param Rawprice $rawprice
+     * @param integer $gc
+     * 
+     * @return array
+     */
+    public function titleToToken($rawprice, $gc = null)
+    {
+        if (!$gc){
+            $gc = $this->entityManager->getRepository(Goods::class)
+                    ->count([]);
+        }
+        
+        $result = [];
+        $lemms = $this->nameManager->lemmsFromRawprice($rawprice);
+        $preWord = $preToken = $token = null;
+        $k = 0;
+        foreach ($lemms as $k => $words){
+            foreach ($words as $key => $word){
+                $token = $this->entityManager->getRepository(Token::class)
+                        ->findOneByLemma($word);
+
+                if ($k > 0 && $token && $preToken){
+                    $bigram = $this->entityManager->getRepository(Bigram::class)
+                            ->findBigram($preWord, $word);
+                    if ($bigram && $preToken->getFrequency() > 0 && $token->getFrequency() > 0){
+                        if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+                            $pmi = log($bigram->getFrequency()*$gc*$bigram->getStatus()/($preToken->getFrequency()*$token->getFrequency()*$k));
+                            if ($pmi < 0 
+                                    || $bigram->getFlag() != Bigram::WHITE_LIST
+                                    || $bigram->getFrequency() < 10){
+                                $pmi = 0;
+                            }
+                            $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+                        }    
+                    }    
+                }
+                $preWord = $word;
+                $preToken = $token;
+            }
+        }
+        if ($k == 0 && $token){
+            $bigram = $this->entityManager->getRepository(Bigram::class)
+                            ->findBigram($token->getLemma());
+
+            if ($bigram){
+                if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+                    $pmi = log(($bigram->getFrequency()*$gc*$bigram->getStatus())/($token->getFrequency()*2));
+                    if ($pmi < 0 
+                            || $bigram->getFlag() != Bigram::WHITE_LIST
+                            || $bigram->getFrequency() < 10){
+                        $pmi = 0;
+                    }
+                    $result[] = ['pmi' => $pmi, 'token1' => $token, 'bigram' => $bigram];
+                }    
+            }    
+        }
+        
+        usort($result, function($a, $b){
+            if ($a['pmi'] == $b['pmi']) {
+                return 0;
+            }
+            return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
+        }); 
+        
+        return array_slice($result, 0, 10, true);
+    }
+           
+    /**
      * Разложить наименование из строки прайса
      * 
      * @param \Application\Entity\Rawprice $rawprice
@@ -202,7 +276,10 @@ class MlManager
      */
     public function rawpriceToMlTitle($rawprice)
     {
-        return $this->nameManager->rawpriceToMlTitle($rawprice);
+        $result = $this->titleToToken($rawprice, 1040000);
+        $empt = array_fill(200, 10 - count($result), false);
+//        var_dump($empt);
+        return array_merge($result, $empt);
     }
     
     /**

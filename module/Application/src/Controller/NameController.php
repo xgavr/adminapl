@@ -15,6 +15,7 @@ use Application\Entity\Bigram;
 use Application\Entity\TokenGroup;
 use Application\Entity\GenericGroup;
 use Zend\View\Model\JsonModel;
+use Application\Entity\Goods;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -826,7 +827,7 @@ class NameController extends AbstractActionController
     {
         $total = $this->entityManager->getRepository(TokenGroup::class)
                 ->count([]);
-        $totalGoods = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $totalGoods = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
         $nameCoverage = $this->entityManager->getRepository(TokenGroup::class)->nameCoverage();
         $goodCoverage = $this->entityManager->getRepository(TokenGroup::class)->goodCoverage();
@@ -932,7 +933,7 @@ class NameController extends AbstractActionController
             return;
         }
         
-        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $good = $this->entityManager->getRepository(Goods::class)
                 ->findOneById($goodId);
         
         if ($good == null) {
@@ -955,7 +956,7 @@ class NameController extends AbstractActionController
             return;
         }
         
-        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $good = $this->entityManager->getRepository(Goods::class)
                 ->findOneById($goodId);
         
         if ($good == null) {
@@ -978,7 +979,7 @@ class NameController extends AbstractActionController
             return;
         }
         
-        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $good = $this->entityManager->getRepository(Goods::class)
                 ->findOneById($goodId);        
         
         if ($good == null) {
@@ -1051,4 +1052,26 @@ class NameController extends AbstractActionController
         ]);          
     }    
     
+    public function tokenGroupTotalFeatureAction()
+    {
+        $feature = $this->params()->fromQuery('feature');
+        
+        switch ($feature){
+            case 'goodsWithoutTokenGroup' : 
+                $query = $this->entityManager->getRepository(Goods::class)
+                    ->findAllGoods(['withTokenGroup' => false]);
+                $result = count($query->getResult());
+                break; 
+            case 'goodsWithTokenGroup' : 
+                $query = $this->entityManager->getRepository(Goods::class)
+                    ->findAllGoods(['withTokenGroup' => true]);
+                $result = count($query->getResult());
+                break; 
+            default: $result = 0;
+        }
+        
+        return new JsonModel([
+            'total' => $result,
+        ]);                  
+    }
 }

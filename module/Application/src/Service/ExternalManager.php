@@ -81,6 +81,7 @@ class ExternalManager
             case 'modifications': $result = $this->abcpManager->getModifications($params); break;
             case 'modification': $result = $this->abcpManager->getModification($params); break;
             case 'brands': $result = $this->abcpManager->getBrands($params); break;
+            case 'getLinked': $result = $this->abcpManager->adaptabilityManufacturers($params['good']); break;
             default: break;
         }
         
@@ -814,54 +815,36 @@ class ExternalManager
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
         $updateStatuses = ['status_car' => Goods::CAR_UPDATED];
     
-        $tdId = $this->autoDbManager->getBestArticleId($good);
-        if (!$tdId){
-            $tdId = $this->autoDbManager->getSimilarArticleId($good);
-            if (!$tdId){
-                $this->entityManager->getRepository(Goods::class)
-                        ->removeGoodCars($good);                
-            }
-        }
-        if (is_numeric($tdId)){
-            $carsDataI = $this->autoDbManager->getLinked($tdId, $good->getId(), 'cars');
-            if (is_array($carsDataI)){
-                if ($carsDataI['change']){
-                    $this->entityManager->getRepository(Goods::class)
-                            ->removeGoodCars($good);                
-                    $updateStatuses['status_car_ex'] = Goods::CAR_EX_NEW;
+        $cars = $this->abcpManager->adaptabilityManufacturers($good);
+        if (is_array($cars)){
+            var_dump($cars); exit;
+            $this->entityManager->getRepository(Goods::class)
+                    ->removeGoodCars($good);                
+            $updateStatuses['status_car_ex'] = Goods::CAR_EX_NEW;
                     
-                    $addFlag = count($carsDataI)<=10;
-                    $makes = [];
-                    $models = [];
-                    foreach ($carsDataI as $carsData){
-                        if (isset($carsData['data'])){
-                            if (isset($carsData['data']['array'])){
-                                foreach ($carsData['data']['array'] as $carData){
-                                    if (isset($carData['vehicleDetails'])){
-                                        $vehicleDetails = $carData['vehicleDetails'];
-                                        if (!isset($makes[$vehicleDetails['manuId']])){
-                                            $makes[$vehicleDetails['manuId']] = $this->addMake([
-                                                'tdId' => $vehicleDetails['manuId'], 
-                                                'aplId' => 0, 
-                                                'name' => $vehicleDetails['manuName']
-                                            ]);
-                                        }
-                                        if (!isset($models[$vehicleDetails['modId']])){
-                                            $models[$vehicleDetails['modId']] = $this->addModel(
-                                                    $makes[$vehicleDetails['manuId']],[
-                                                        'tdId' => $vehicleDetails['modId'], 
-                                                        'aplId' => 0, 
-                                                        'name' => $vehicleDetails['modelName'],
-                                                        'constructioninterval' => '',
-                                                    ]);
-                                        }
-
-                                        $this->updateGoodCar($good, $models[$vehicleDetails['modId']], $vehicleDetails, $addFlag);
-                                    }    
-                                }
-                            }
-                        }    
+            $makes = [];
+            $models = [];
+            foreach ($cars as $carData){
+                if (isset($carData['vehicleDetails'])){
+                    $vehicleDetails = $carData['vehicleDetails'];
+                    if (!isset($makes[$vehicleDetails['manuId']])){
+                        $makes[$vehicleDetails['manuId']] = $this->addMake([
+                            'tdId' => $vehicleDetails['manuId'], 
+                            'aplId' => 0, 
+                            'name' => $vehicleDetails['manuName']
+                        ]);
                     }
+                    if (!isset($models[$vehicleDetails['modId']])){
+                        $models[$vehicleDetails['modId']] = $this->addModel(
+                                $makes[$vehicleDetails['manuId']],[
+                                    'tdId' => $vehicleDetails['modId'], 
+                                    'aplId' => 0, 
+                                    'name' => $vehicleDetails['modelName'],
+                                    'constructioninterval' => '',
+                                ]);
+                    }
+
+                    $this->updateGoodCar($good, $models[$vehicleDetails['modId']], $vehicleDetails, $addFlag);
                 }    
             }
         }  

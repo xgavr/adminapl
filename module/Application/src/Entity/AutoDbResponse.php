@@ -79,8 +79,8 @@ class AutoDbResponse {
         
     public function setResponse($response)
     {
-        $this->response = mb_strtoupper(trim($response), 'UTF-8');
-        $this->responseMd5 = md5($this->response);
+        $this->response = $response;
+        $this->responseMd5 = md5(mb_strtoupper(trim($response), 'UTF-8'));
     }
     
     public function getResponse()

@@ -44,15 +44,8 @@
         "villfa/invert-color": "^0.4.2",
         "nxp/russian-porter-stemmer": "^1.0",
         "cijic/phpmorphy": "^0.3.0",
-        "aza/thread": "~1.0",
-        "nodasoft/tecdoc.site":">=1.0"
+        "aza/thread": "~1.0"
    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/NodaSoft/TecdocSite.git"
-        }
-    ],   
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",

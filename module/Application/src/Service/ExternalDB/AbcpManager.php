@@ -13,6 +13,10 @@ use Zend\Json\Encoder;
 use Application\Filter\ProducerName;
 use Application\Entity\Images;
 use Application\Entity\AutoDbResponse;
+use Application\Entity\UnknownProducer;
+use Application\Entity\Producer;
+use Application\Entity\Goods;
+use Application\Entity\Make;
 
 /**
  * Description of AutodbManager
@@ -84,11 +88,12 @@ class AbcpManager
      */
     private function getAutoDbResponseData($uri)
     {
+        $uriMd5 = md5(mb_strtoupper(trim($uri), 'UTF-8'));
         $this->entityManager->getRepository(AutoDbResponse::class)
-                ->deleteOld();
+                ->deleteOld($uriMd5);
         
         $autoDbResponse = $this->entityManager->getRepository(AutoDbResponse::class)
-                ->findOneByUriMd5(md5(mb_strtoupper(trim($uri), 'UTF-8')));
+                ->findOneByUriMd5($uriMd5);
         
         if ($autoDbResponse == null){
             return false;
@@ -125,11 +130,11 @@ class AbcpManager
             return true;
         }
         
-        if ($autoDbResponse->getResponseMd5() != md5(mb_strtoupper(trim($response), 'UTF-8'))){
-            $this->entityManager->getRepository(AutoDbResponse::class)
-                    ->updateAutoDbResponse($uri, $response);
-            return true;            
-        }
+//        if ($autoDbResponse->getResponseMd5() != md5(mb_strtoupper(trim($response), 'UTF-8'))){
+//            $this->entityManager->getRepository(AutoDbResponse::class)
+//                    ->updateAutoDbResponse($uri, $response);
+//            return true;            
+//        }
         
         return false;
     }
@@ -189,8 +194,8 @@ class AbcpManager
             if ($response->isOk()){
                 try {
                     $body = $response->getBody();
-                    $result = Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);
-                    $result['change'] = $this->updateAutoDbResponse($uri, $body);
+                    $result = Decoder::decode($body, \Zend\Json\Json::TYPE_ARRAY);
+                    //$result['change'] = $this->updateAutoDbResponse($uri, $body);
                     return $result;            
                 } catch (\Zend\Json\Exception\RuntimeException $e){
                    // var_dump($response->getBody()); exit;
@@ -252,6 +257,131 @@ class AbcpManager
     {
         return $this->getAction('brands', $params);
     }
+    
+    /**
+     * Поулчить бренд из неизвестного производителя
+     * 
+     * @param UnknownProducer $unknownProducer
+     * @param array $brands
+     * 
+     * @return string
+     */
+    public function brandFromUnknownProducer($unknownProducer, $brands = null)
+    {
+        if ($brands == null){
+            $brands = $this->getBrands();
+        }
+        
+        $filter = new ProducerName();
+        foreach ($brands as $row){
+            if ($filter->filter($row['name']) == $filter->filter($unknownProducer->getName())){
+                return $row['name'];
+            }            
+            if ($unknownProducer->getNameTd()){
+                if ($filter->filter($row['name']) == $filter->filter($unknownProducer->getNameTd())){
+                    return $row['name'];
+                }                        
+            }
+        }
+        
+        return;
+    }
+    
+    /**
+     * Получить бренд из производителя
+     * 
+     * @param Producer $producer
+     * @return string 
+     */
+    public function brandFromProducer($producer)
+    {
+        
+        $brands = $this->getBrands();
+        $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findByProducer($producer->getId());
+        
+        foreach($unknownProducers as $unknownProducer){
+            $brandName = $this->brandFromUnknownProducer($unknownProducer, $brands);
+            if ($brandName){
+                return $brandName;
+            }
+        }        
+        
+        return;
+    }    
+    
+    /**
+     * Возвращает список модификаций, применимых для выбранной детали производителя и модели
+     * 
+     * @param Goods $good
+     * @param string $brandName
+     * @param string $manufacturerName
+     * @param string $modelName
+     */
+    protected function adaptabilityModifications($good, $brandName, $manufacturerName, $modelName)
+    {
+        return $this->getAction('adaptabilityModifications', [
+            'brandName' => $brandName, 
+            'number' => $good->getCode(),
+            'manufacturerName' => $manufacturerName,
+            'modelName' => $modelName,
+            ]);                
+    }
+    
+    /**
+     * Возвращает список моделей, применимых для выбранной детали и производителю.
+     * 
+     * @param Goods $good
+     * @param string $brandName
+     * @param string $manufacturerName
+     * 
+     * @return array
+     */
+    protected function adaptabilityModels($good, $brandName, $manufacturerName)
+    {
+        $models = $this->getAction('adaptabilityModels', [
+            'brandName' => $brandName, 
+            'number' => $good->getCode(),
+            'manufacturerName' => $manufacturerName,
+            ]);
+        
+        $result = [];
+        if (is_array($models)){
+            foreach ($models as $modelName) {
+                $cars = $this->adaptabilityModifications($good, $brandName, $manufacturerName, $modelName);
+                if (is_array($cars)){
+                    $result = array_merge($result, $cars);
+                }    
+            }
+        }    
+        return $result;
+    }
+
+    /**
+     * Получение списка применимости
+     * 
+     * @param Goods $good
+     * @return array
+     */
+    public function adaptabilityManufacturers($good)
+    {
+        $brandName = $this->brandFromProducer($good->getProducer());
+        if ($brandName){
+            $manufacturers = $this->getAction('adaptabilityManufacturers', ['brandName' => $brandName, 'number' => $good->getCode()]);
+            $result = [];
+            if (is_array($manufacturers)){
+                foreach ($manufacturers as $manufacturer){
+                    $modelsCar = $this->adaptabilityModels($good, $brandName, $manufacturer['name']);
+                    if (is_array($modelsCar)){
+                        $result = array_merge($result, $modelsCar);
+                    }    
+                }
+            }    
+            return $result;
+        }
+        
+        return;
+    }
 
     /**
      * Получить группы запчастей
@@ -272,7 +402,7 @@ class AbcpManager
     /**
      * Получить articleId
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param string $oper
      * @return array|Esception
      */

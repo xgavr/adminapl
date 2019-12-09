@@ -26,12 +26,13 @@ class ExternalRepository extends EntityRepository
     public function insertAutoDbResponse($uri, $response)
     {
         $url = mb_strtoupper(trim($uri), 'UTF-8');
-        $resp = mb_strtoupper(trim($response), 'UTF-8');
+        $resp = $response;
+        $respMd5 = mb_strtoupper(trim($response), 'UTF-8');
         $data = [
             'uri' => $url,
             'uri_md5' => md5($url),
             'response' => $resp,
-            'response_md5' => md5($resp),
+            'response_md5' => md5($respMd5),
             'date_created' => date('Y-m-d H:i:s'),
         ];
                 
@@ -48,10 +49,11 @@ class ExternalRepository extends EntityRepository
     public function updateAutoDbResponse($uri, $response)
     {
         $url = mb_strtoupper(trim($uri), 'UTF-8');
-        $resp = mb_strtoupper(trim($response), 'UTF-8');
+        $resp = $response;
+        $respMd5 = mb_strtoupper(trim($response), 'UTF-8');
         $data = [
             'response' => $resp,
-            'response_md5' => md5($resp),
+            'response_md5' => md5($respMd5),
             'date_created' => date('Y-m-d H:i:s'),
         ];
                 
@@ -80,10 +82,11 @@ class ExternalRepository extends EntityRepository
     
     /**
      * Удаление старых записей
+     * @param string $uriMd5 Description
      */
-    public function deleteOld()
+    public function deleteOld($uriMd5 = null)
     {
-        $dateAgo = new \DateTime('1 month ago');
+        $dateAgo = new \DateTime('3 month ago');
         
         $entityManager = $this->getEntityManager();
 
@@ -92,6 +95,11 @@ class ExternalRepository extends EntityRepository
             ->where('adr.dateCreated < ?1')
             ->setParameter('1', date("Y-m-d", $dateAgo->getTimestamp()))
                 ;
+        if ($uriMd5){
+            $queryBuilder->andWhere('adr.uriMd5 = ?2')
+                    ->setParameter('2', $uriMd5)
+                    ;
+        }
         
         return $queryBuilder->getQuery()->getResult();                    
     }

@@ -309,32 +309,42 @@ class TokenRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('t')
-            ->from(TokenGroup::class, 't')
-            ->addOrderBy('t.name')                
+        $queryBuilder->select('tg')
+            ->from(TokenGroup::class, 'tg')
+            ->addOrderBy('tg.name')                
                 ;
         
         if (is_array($params)){
             if (isset($params['q'])){
-                $queryBuilder->where('t.lemms like :search')
+                $queryBuilder->where('tg.lemms like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('t.ids > ?1')
+                $queryBuilder->where('tg.ids > ?1')
                     ->setParameter('1', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('t.ids < ?2')
+                $queryBuilder->where('tg.ids < ?2')
                     ->setParameter('2', $params['prev1'])
-                    ->orderBy('t.ids', 'DESC')
+                    ->orderBy('tg.ids', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }
+            if (isset($params['minGoodCount'])){
+                $queryBuilder->where('tg.goodCount >= ?3')
+                    ->setParameter('3', $params['minGoodCount'])
+                 ;
+            }
+            if (isset($params['maxGoodCount'])){
+                $queryBuilder->where('tg.goodCount <= ?4')
+                    ->setParameter('4', $params['maxGoodCount'])
+                 ;
+            }
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('t.'.$params['sort'], $params['order']);                
+                $queryBuilder->orderBy('tg.'.$params['sort'], $params['order']);                
             }            
         }
 

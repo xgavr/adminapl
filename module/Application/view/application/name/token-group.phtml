@@ -24,9 +24,17 @@ $this->headScript()
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                    <input name="search" style="width: 300px" class="form-control" type="text" placeholder="Поиск">
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
+                <div class="form-group">
+                    Количество товаров
+                    <select class="form-control" id='goodCountLevel' name="goodCountLevel">
+                        <option value="2_0" selected>больше 1</option>
+                        <option value="1_1" selected>1</option>
+                        <option value="0_0" selected>>0</option>
+                    </select>
+                </div>    
             </div>
         </div>
         <table id="table" 
@@ -40,6 +48,8 @@ $this->headScript()
             data-show-toggle="true"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
+            data-sort-name="goodCount"
+            data-sort-order="desc"
             >
             <thead>
                 <tr>
@@ -90,6 +100,16 @@ $this->headScript()
                             </button> 
                         </div>
                     </div>
+                    <div class="panel-body">                    
+                        <div class="pull-left">
+                            Товаров с группами <span id="goodsWithTokenGroup" class="badge">0</span>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Товаров без групп <span id="goodsWithoutTokenGroup" class="badge">0</span>
+                        </div>
+                    </div>
                 </div>    
                 <div class="panel panel-info">
                     <div class="panel-heading">
@@ -114,17 +134,32 @@ $this->headScript()
 </div>    
 
 <script type="text/javascript">
+    function totalFeatures(){
+        $(".badge").each(function( index ) {
+            var node = $(this).attr('id');
+            $.getJSON('/name/token-group-total-feature/?feature=' + node, function(data){
+                $('#'+node).text(data['total']);
+            });
+        });        
+    }
+
+    $(window).on('load', function() {
+        totalFeatures();
+    });
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
 
-    var $table = $('#table'),
-        $ok = $('#ok');
+    var table = $('#table'),
+        ok = $('#ok');
 
     $(function () {
-        $ok.click(function () {
-            $table.bootstrapTable('refresh');
+        ok.click(function () {
+            table.bootstrapTable('refresh');
         });
+        $('#goodCountLevel').change(function (){
+            $('#table').bootstrapTable('refresh');
+        })
     });
     
     function queryParams(params) {

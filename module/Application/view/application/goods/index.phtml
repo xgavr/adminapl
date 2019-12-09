@@ -24,6 +24,9 @@ $this->headScript()
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
+                    <input type="checkbox" class="checkbox" name="accurate" value=""
+                           data-toggle='tooltip' data-original-title="Точный поиск"
+                           onchange="value = this.checked"/>
                     <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
@@ -294,6 +297,10 @@ $this->headScript()
 </div>    
 
 <script type="text/javascript">
+    $(function () {
+        $("[data-toggle='tooltip']").tooltip();
+    });
+
     function totalFeatures(){
         $(".badge").each(function( index ) {
             var node = $(this).attr('id');

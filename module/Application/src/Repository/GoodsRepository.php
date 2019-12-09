@@ -164,28 +164,28 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c', 'p')
+        $queryBuilder->select('g', 'p')
 //            ->distinct()    
-            ->from(Goods::class, 'c')
-            ->join('c.producer', 'p', 'WITH')    
+            ->from(Goods::class, 'g')
+            ->join('g.producer', 'p', 'WITH')    
                 ;
 
         if (is_array($params)){
             if (isset($params['producer'])){
-                $queryBuilder->where('c.producer = ?1')
+                $queryBuilder->where('g.producer = ?1')
                     ->setParameter('1', $params['producer']->getId())
                         ;
             }
             if (isset($params['producerId'])){
                 if ($params['producerId']){
-                    $queryBuilder->andWhere('c.producer = ?2')
+                    $queryBuilder->andWhere('g.producer = ?2')
                         ->setParameter('2', $params['producerId'])
                      ;
                 }    
             }
             if (isset($params['unknownProducer'])){
                 $queryBuilder
-                    ->join('c.articles', 'r', 'WITH')
+                    ->join('g.articles', 'r', 'WITH')
                     ->andWhere('r.unknownProducer = ?3')
                     ->setParameter('3', $params['unknownProducer']->getId())
                         ;
@@ -194,51 +194,71 @@ class GoodsRepository extends EntityRepository
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
                 if ($q){
-                    $orX = $queryBuilder->expr()->orX(
-//                            $queryBuilder->expr()->eq('c.code', '?4'),
-                            $queryBuilder->expr()->eq('o.oe', '?4')    
-                        );
-                    $queryBuilder->join('c.oems', 'o')
-                        ->andWhere($orX) 
-                        ->setParameter('4', $q)    
-                        ;
+                    if (isset($params['accurate'])){
+                        $accurate = (bool) $params['accurate'];                        
+                    }
+                    if ($accurate){
+                        $queryBuilder
+                            ->andWhere('g.code = :code')                           
+                            ->setParameter('code', $q)    
+                            ;
+                    } else {
+                        $orX = $queryBuilder->expr()->orX(
+    //                            $queryBuilder->expr()->eq('c.code', '?4'),
+                                $queryBuilder->expr()->eq('o.oe', '?4')    
+                            );
+                        $queryBuilder->join('g.oems', 'o')
+                            ->andWhere($orX) 
+                            ->setParameter('4', $q)    
+                            ;
+                    }    
                 } else {
                     $lastGood = $this->findLastGoodId($params);   
                     $queryBuilder
-                        ->andWhere('c.id > :lastId')   
-                        ->orderBy('c.id', 'DESC')    
+                        ->andWhere('g.id > :lastId')   
+                        ->orderBy('g.id', 'DESC')    
                         ->setMaxResults(100)    
                         ->setParameter('lastId', $lastGood['maxId'] - 1000)    
                      ;                    
                 }    
             }
             if (isset($params['next1'])){
-                $queryBuilder->andWhere('c.code > ?5')
-                    ->select('c')
+                $queryBuilder->andWhere('g.code > ?5')
+                    ->select('g')
                     ->resetDQLPart('join')    
                     ->setParameter('5', $params['next1'])
-                    ->orderBy('c.code', 'ASC')
+                    ->orderBy('g.code', 'ASC')
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->andWhere('c.code < ?6')
-                    ->select('c')
+                $queryBuilder->andWhere('g.code < ?6')
+                    ->select('g')
                     ->resetDQLPart('join')    
                     ->setParameter('6', $params['prev1'])
-                    ->orderBy('c.code', 'DESC')
+                    ->orderBy('g.code', 'DESC')
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['groupId'])){
                 if ($params['groupId']){
-                    $queryBuilder->andWhere('c.genericGroup = ?7')
+                    $queryBuilder->andWhere('g.genericGroup = ?7')
                         ->setParameter('7', $params['groupId'])
                      ;
                 }    
             }
+            if (isset($params['withTokenGroup'])){
+                $queryBuilder->select('g')
+                    ->resetDQLPart('join')
+                        ;
+                if ($params['withTokenGroup']){
+                    $queryBuilder->andWhere('g.tokenGroup is not null');
+                } else {    
+                    $queryBuilder->andWhere('g.tokenGroup is null');
+                }    
+            }
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
+                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
             }            
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
