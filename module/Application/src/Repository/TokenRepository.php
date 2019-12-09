@@ -336,11 +336,11 @@ class TokenRepository  extends EntityRepository
             if (isset($params['goodCountLevel'])){
                 $levels = explode('_', $params['goodCountLevel']);
                 if (count($levels)){
-                    $queryBuilder->andWhere('tg.goodCount >= ?3')
+                    $queryBuilder->andWhere('tg.goodCount > ?3')
                         ->setParameter('3', $levels[0]);
                     if (isset($levels[1])){
                         if ($level[1] >= $levels[0]){
-                            $queryBuilder->andWhere('tg.goodCount <= ?5')
+                            $queryBuilder->andWhere('tg.goodCount < ?5')
                                 ->setParameter('5', $levels[1]);
                         }
                     }
