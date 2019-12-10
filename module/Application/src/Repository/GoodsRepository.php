@@ -194,9 +194,12 @@ class GoodsRepository extends EntityRepository
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
                 if ($q){
+                    $accurate = false;
                     if (isset($params['accurate'])){
-                        $accurate = (bool) $params['accurate'];                        
+                        $accurate = boolval($params['accurate']);                        
                     }
+//                    var_dump($accurate);
+//                    var_dump($params['accurate']);
                     if ($accurate){
                         $queryBuilder
                             ->andWhere('g.code = :code')                           
