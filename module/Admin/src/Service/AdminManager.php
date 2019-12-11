@@ -25,6 +25,7 @@ class AdminManager {
     const TD_EXCHANGE_SETTINGS_FILE       = './data/settings/td_exchange_config.php'; // файл с настройками обмена по апи текдока
     const TELEGRAM_SETTINGS_FILE       = './data/settings/telegram_config.php'; // файл с настройками telegram
     const ABCP_SETTINGS_FILE                    = './data/settings/abcp_config.php'; //файл с настройками abcp
+    const PARTS_API_SETTINGS_FILE      = './data/settings/parts_api_config.php'; //файл с настройками abcp
     
     /**
      * Doctrine entity manager.
@@ -411,5 +412,48 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::ABCP_SETTINGS_FILE, $config);
+    }
+
+    public function getPartsApiSettings()
+    {
+        if (file_exists(self::PARTS_API_SETTINGS_FILE)){
+            $config = new Config(include self::PARTS_API_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->parts_api_settings = [];
+        }   
+        
+        return $config->parts_api_settings;
+    }
+
+    /**
+     * Настройки abcp
+     * @param array $data
+     */
+    public function setPartsApiSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::PARTS_API_SETTINGS_FILE)){
+            $config = new Config(include self::PARTS_API_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->parts_api_settings = [];
+        }
+        
+        if (!isset($config->parts_api_settings)){
+            $config->parts_api_settings = [];
+        }
+        
+        $config->parts_api_settings->host = $data['host'];
+        $config->parts_api_settings->login = $data['login'];
+        $config->parts_api_settings->api_key = $data['api_key'];
+        $config->parts_api_settings->md5_key = $data['md5_key'];
+        $config->parts_api_settings->max_query = $data['max_query'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::PARTS_API_SETTINGS_FILE, $config);
     }
 }

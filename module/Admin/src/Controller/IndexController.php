@@ -642,6 +642,52 @@ class IndexController extends AbstractActionController
         
     }
 
+    /**
+     * Управление настройками parts-api
+     * 
+     * @return ViewModel
+     */
+    public function partsApiSettingsAction()
+    {
+        $form = new AbcpSettings();
+    
+        $settings = $this->adminManager->getPartsApiSettings();
+        
+        if ($settings){
+            $form->setData($settings);
+        }    
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setPartsApiSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+
+                $this->redirect()->toRoute('admin', ['action' => 'parts-api-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        }
+        
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
     public function testSmsAction()
     {
         $this->smsManager->send(['phone' => '89096319425', 'text' => 'тест']);
