@@ -25,6 +25,7 @@ class AdminManager {
     const TD_EXCHANGE_SETTINGS_FILE       = './data/settings/td_exchange_config.php'; // файл с настройками обмена по апи текдока
     const TELEGRAM_SETTINGS_FILE       = './data/settings/telegram_config.php'; // файл с настройками telegram
     const ABCP_SETTINGS_FILE                    = './data/settings/abcp_config.php'; //файл с настройками abcp
+    const AVTOIT_SETTINGS_FILE                    = './data/settings/avtoit_config.php'; //файл с настройками abcp
     const PARTS_API_SETTINGS_FILE      = './data/settings/parts_api_config.php'; //файл с настройками abcp
     
     /**
@@ -455,5 +456,49 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::PARTS_API_SETTINGS_FILE, $config);
+    }
+
+    public function getAvtoitSettings()
+    {
+        if (file_exists(self::AVTOIT_SETTINGS_FILE)){
+            $config = new Config(include self::AVTOIT_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->avtoit_settings = [];
+        }   
+        
+        return $config->avtoit_settings;
+    }
+
+    
+    /**
+     * Настройки avtoit
+     * @param array $data
+     */
+    public function setAvtoitSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::AVTOIT_SETTINGS_FILE)){
+            $config = new Config(include self::AVTOIT_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->avtoit_settings = [];
+        }
+        
+        if (!isset($config->avtoit_settings)){
+            $config->avtoit_settings = [];
+        }
+        
+        $config->avtoit_settings->host = $data['host'];
+        $config->avtoit_settings->login = $data['login'];
+        $config->avtoit_settings->api_key = $data['api_key'];
+        $config->avtoit_settings->md5_key = $data['md5_key'];
+        $config->avtoit_settings->max_query = $data['max_query'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::AVTOIT_SETTINGS_FILE, $config);
     }
 }

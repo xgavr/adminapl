@@ -10,6 +10,13 @@ namespace Application\Service\ExternalDB;
 use Zend\Http\Client;
 use Zend\Json\Decoder;
 use Zend\Json\Encoder;
+use Application\Filter\ProducerName;
+use Application\Entity\Images;
+use Application\Entity\AutoDbResponse;
+use Application\Entity\UnknownProducer;
+use Application\Entity\Producer;
+use Application\Entity\Goods;
+use Application\Entity\Make;
 
 /**
  * Description of AutodbManager
@@ -18,12 +25,7 @@ use Zend\Json\Encoder;
  */
 class PartsApiManager
 {
-    
-    const URI_PRODUCTION = 'https://partsapi.ru/api.php';
-    
-    const IMAGE_DIR = './public/img'; //папка для хранения картинок
-    const GOOD_IMAGE_DIR = './public/img/goods'; //папка для хранения картинок товаров
-    
+        
     const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
     
     /**
@@ -32,24 +34,18 @@ class PartsApiManager
      */
     private $entityManager;
     
-    private $api_key;
-    
+    /**
+     * AdminManager.
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $authParams)
+    public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
-        $this->api_key = $authParams['key'];
+        $this->adminManager = $adminManager;
     }
-    
-    /**
-     * Получить uri api
-     * 
-     * @return string 
-     */
-    public function getUri()
-    {
-        return $this::URI_PRODUCTION;
-    }    
     
     /**
      * Обработка ошибок
@@ -84,6 +80,54 @@ class PartsApiManager
         throw new \Exception('Неопознаная ошибка');
     }    
     
+    /**
+     * Получить сохраненный ответ запроса
+     * 
+     * @param string $uri
+     * @return array
+     */
+    private function getAutoDbResponseData($uri)
+    {
+        $uriMd5 = md5(mb_strtoupper(trim($uri), 'UTF-8'));
+        $this->entityManager->getRepository(AutoDbResponse::class)
+                ->deleteOld($uriMd5);
+        
+        $autoDbResponse = $this->entityManager->getRepository(AutoDbResponse::class)
+                ->findOneByUriMd5($uriMd5);
+        
+        if ($autoDbResponse == null){
+            return false;
+        }
+        
+        return $autoDbResponse->getResponseAsArray();
+    }
+    
+    /**
+     * Добавить обновить запись в auto_db_response
+     * 
+     * @param string $uri
+     * @param string $response
+     * @return boolean
+     */
+    private function updateAutoDbResponse($uri, $response)
+    {
+        $autoDbResponse = $this->entityManager->getRepository(AutoDbResponse::class)
+                ->findOneByUriMd5(md5(mb_strtoupper(trim($uri), 'UTF-8')));
+        
+        if ($autoDbResponse == null){
+            $this->entityManager->getRepository(AutoDbResponse::class)
+                    ->insertAutoDbResponse($uri, $response);
+            return true;
+        }
+        
+//        if ($autoDbResponse->getResponseMd5() != md5(mb_strtoupper(trim($response), 'UTF-8'))){
+//            $this->entityManager->getRepository(AutoDbResponse::class)
+//                    ->updateAutoDbResponse($uri, $response);
+//            return true;            
+//        }
+        
+        return false;
+    }
     
     /**
      * Базовый метод доступа к апи
@@ -94,35 +138,62 @@ class PartsApiManager
      */    
     public function getAction($action, $params = null)
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '512M');       
         
-        $uri = $this->getUri().'?act='.$action;
-        if (is_array($params)){
-            $params['key'] = $this->api_key;
+        if ($action){
+            if (is_array($params)){
+                $params = array_filter($params);
+            } else {
+                $params = [];
+            }
+            
+            $settings = $this->adminManager->getPartsApiSettings();
+            
+            $uri = $settings['host'].'/'.$action.'?';
+
+//            $params['userlogin'] = $settings['login'];
+//            $params['userpsw'] = $settings['md5_key'];
+            $params['key'] = $settings['api_key'];
             foreach ($params as $key => $value){
                 $uri .= "&$key=$value";
             }    
+            
+            $result = $this->getAutoDbResponseData($uri);
+            if (is_array($result)){
+                return $result;
+            }
+            
+    //        var_dump($uri); exit;
+            $client = new Client();
+            $client->setUri($uri);
+            $client->setAdapter($this::HTTPS_ADAPTER);
+            $client->setMethod('GET');
+            $client->setOptions(['timeout' => 30]);
+
+            $headers = $client->getRequest()->getHeaders();
+    //        $headers->addHeaders([
+    //            'Content-Type: application/json',
+    //        ]);
+
+            $client->setHeaders($headers);
+
+            $response = $client->send();
+
+            if ($response->isOk()){
+                try {
+                    $body = $response->getBody();
+                    $result = Decoder::decode($body, \Zend\Json\Json::TYPE_ARRAY);
+                    //$result['change'] = $this->updateAutoDbResponse($uri, $body);
+                    return $result;            
+                } catch (\Zend\Json\Exception\RuntimeException $ex){
+                   // var_dump($response->getBody()); exit;
+                } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $ex){
+                    
+                }    
+            }
         }        
-//        var_dump($uri); exit;
-        $client = new Client();
-        $client->setUri($uri);
-        $client->setAdapter($this::HTTPS_ADAPTER);
-        $client->setMethod('GET');
-        
-        $headers = $client->getRequest()->getHeaders();
-//        $headers->addHeaders([
-//            'Content-Type: application/json',
-//        ]);
 
-        $client->setHeaders($headers);
-        
-        $response = $client->send();
-        
-        if ($response->isOk()){
-            return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
-        }
-
-        return $this->exception($response);
+        return; // $this->exception($response);
         
     }
     

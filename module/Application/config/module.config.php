@@ -411,6 +411,7 @@ return [
             Service\ExternalManager::class => Service\Factory\ExternalManagerFactory::class,
             Service\ExternalDB\AbcpManager::class => Service\Factory\ExternalDB\AbcpManagerFactory::class,
             Service\ExternalDB\AutodbManager::class => Service\Factory\ExternalDB\AutodbManagerFactory::class,
+            Service\ExternalDB\AvtoitManager::class => Service\Factory\ExternalDB\AvtoitManagerFactory::class,
             Service\ExternalDB\PartsApiManager::class => Service\Factory\ExternalDB\PartsApiManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
             Service\ImageManager::class => Service\Factory\ImageManagerFactory::class,

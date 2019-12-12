@@ -329,9 +329,9 @@ class NavManager
                 ];
 
                 $settingsDropDownItems[] = [
-                    'id' => 'partsApi',
-                    'label' => 'Настройи PartsApi',
-                    'link'  => $url('admin', ['action' => 'parts-api-settings'])                    
+                    'id' => 'avtoit',
+                    'label' => 'Настройи Avtoit',
+                    'link'  => $url('admin', ['action' => 'avtoit-settings'])                    
                 ];
                 $settingsDropDownItems[] = [
                     'id' => 'tdExchange',
