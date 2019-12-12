@@ -1,12 +1,22 @@
 <?php
-$this->headTitle('Поставщики');
+    $this->headTitle('Поставщики');
 
-$this->mainMenu()->setActiveItemId('supplier');
+    $this->mainMenu()->setActiveItemId('supplier');
 
-$this->pageBreadcrumbs()->setItems([
-            'Главная'=>$this->url('home'),
-            'Поставщики'=>$this->url('supplier'),
-            ]);
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Поставщики'=>$this->url('supplier'),
+                ]);
+
+    $this->headLink()
+    //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+        ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+            ;
+
+    $this->headScript()
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+                ;    
 ?>
 <style>
     .panel-height {
@@ -23,49 +33,37 @@ $this->pageBreadcrumbs()->setItems([
 
 <div class="row">
     <div class="col-md-9">
-
-        <table class="table table-striped">
-
-           <tr>
-                <th>ID</th>
-                <th>AplID</th>
-                <th>Наименование</th>
-                <th>Действие</th>
-            </tr>
-
-            <?php foreach ($supplier as $row): ?>
-
-            <tr>
-                <td><?= $this->escapeHtml($row->getId()); ?></td>
-                <td><?= $this->escapeHtml($row->getAplId()); ?></td>
-                <td>
-                    <a href="<?= $this->url('supplier', ['action'=>'view', 'id'=>$row->getId()]); ?>">
-                        <?= $this->escapeHtml($row->getName()); ?>
-                    </a> 
-                </td>
-                <td align="right">
-<!--                    <a class="btn btn-info" href="<?= $this->url('supplier', 
-                            ['action'=>'edit', 'id'=>$row->getId()]); ?>">
-                        <span class="glyphicon glyphicon-pencil" ></span> Изменить
-                    </a>
-                    <a class="btn btn-danger" href="<?= $this->url('supplier',
-                            ['action'=>'delete', 'id'=>$row->getId()]); ?>">
-                        <span class="glyphicon glyphicon-remove"></span> Удалить
-                    </a>-->
-                    <button value="/supplier/edit-form/<?= $row->getId() ?>" class="btn btn-default btn-xs"
-                            data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                        <span class="glyphicon glyphicon-edit" ></span>
-                    </button>                                                                               
-                </td>    
-            </tr>
-
-            <?php endforeach; ?>   
-
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                </div>
+                <button id="ok" type="submit" class="btn btn-default">OK</button>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/supplier/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-sort-name="name"
+            data-sort-order="asc"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                     <th data-field="aplId" data-type="numeric" data-sortable="true">AplId</th>
+                     <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
+                     <!--<th data-field="" data-formatter="activeFormatter"></th>-->
+                 </tr>                
+            </thead>
         </table>
-        <?= $this->paginationControl($supplier,
-                    'Sliding',
-                    'application/partial/paginator', 
-                    ['route' => array('route' => 'supplier')]); ?>
     </div>
     
     <div class="col-md-3" id="side-nav" >
@@ -123,4 +121,59 @@ $this->pageBreadcrumbs()->setItems([
         </div>
     </div>    
 </div>
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table'),
+        ok = $('#ok');
+
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function linkFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/supplier/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/supplier/edit/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
 

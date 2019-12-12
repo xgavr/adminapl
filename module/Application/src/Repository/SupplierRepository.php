@@ -17,20 +17,49 @@ use Application\Entity\Supplier;
  */
 class SupplierRepository extends EntityRepository{
 
-    public function findAllSupplier($status = null)
+    /**
+     * Запрос на поставщиков
+     * 
+     * @param array $params
+     * @return type
+     */
+    public function findAllSupplier($params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(Supplier::class, 'c')
-            ->orderBy('c.status')
-            ->addOrderBy('c.name')
+        $queryBuilder->select('s')
+            ->from(Supplier::class, 's')
+            ->orderBy('s.status')
+//            ->addOrderBy('s.name')
                 ;
-        if ($status){
-            $queryBuilder->andWhere('c.status = ?1')
-                    ->setParameter('1', $status);
+        if (is_array($params)){
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('s.status = ?1')
+                        ->setParameter('1', $params['status']);
+            }
+            if (isset($params['q'])){
+                $queryBuilder->where('s.name like :search')
+                    ->setParameter('search', '%' . $params['q'] . '%')
+                        ;
+            }
+            if (isset($params['next1'])){
+                $queryBuilder->where('s.name > ?1')
+                    ->setParameter('1', $params['next1'])
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['prev1'])){
+                $queryBuilder->where('s.name < ?1')
+                    ->setParameter('1', $params['prev1'])
+                    ->addOrderBy('s.name', 'DESC')
+                    ->setMaxResults(1)    
+                 ;
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->addOrderBy('s.'.$params['sort'], $params['order']);                
+            }            
         }
 
         return $queryBuilder->getQuery();

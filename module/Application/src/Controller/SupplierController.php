@@ -61,16 +61,6 @@ class SupplierController extends AbstractActionController
     
     public function indexAction()
     {
-        $page = $this->params()->fromQuery('page', 1);
-        $status = $this->params()->fromQuery('status');
-        
-        $query = $this->entityManager->getRepository(Supplier::class)
-                    ->findAllSupplier($status);
-                
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);    
         
         $statuses = $this->entityManager->getRepository(Supplier::class)
                 ->statuses();
@@ -86,13 +76,41 @@ class SupplierController extends AbstractActionController
         
         // Визуализируем шаблон представления.
         return new ViewModel([
-            'supplier' => $paginator,
             'supplierManager' => $this->supplierManager,
             'statuses' => $statuses,
             'absentPriceDescriptions' => $absentPriceDescriptions,
             'absentRaws' => $absentRaws,
         ]);  
     }
+    
+    public function contentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(Supplier::class)
+                        ->findAllSupplier(['q' => $q, 'sort' => $sort, 'order' => $order]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
     
     public function addAction() 
     {     
