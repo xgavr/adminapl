@@ -1127,7 +1127,7 @@ class SupplierController extends AbstractActionController
         
         $text = '';
         foreach ($supplier->getContacts() as $contact){
-            if ($contact->getStatus() == Contact::STATUS_ACTIVE){
+            if ($contact->getStatus() == Contact::STATUS_ACTIVE && $contact->getAsText()){
                 $text .= '<pre>'.$contact->getAsText().'</pre>';
             }
         }
