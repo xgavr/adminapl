@@ -14,25 +14,25 @@ class RbacManager
 {
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager; 
     
     /**
      * RBAC service.
-     * @var Zend\Permissions\Rbac\Rbac
+     * @var \Zend\Permissions\Rbac\Rbac
      */
     private $rbac;
     
     /**
      * Auth service.
-     * @var Zend\Authentication\AuthenticationService 
+     * @var \Zend\Authentication\AuthenticationService 
      */
     private $authService;
     
     /**
      * Filesystem cache.
-     * @var Zend\Cache\Storage\StorageInterface
+     * @var \Zend\Cache\Storage\StorageInterface
      */
     private $cache;
     
@@ -133,16 +133,17 @@ class RbacManager
         }
         
         $roles = $user->getRoles();
-        
         foreach ($roles as $role) {
             if ($this->rbac->isGranted($role->getName(), $permission)) {
                 
-                if ($params==null)
+                if ($params==null){
                     return true;
+                }    
                 
                 foreach ($this->assertionManagers as $assertionManager) {
-                    if ($assertionManager->assert($this->rbac, $permission, $params))
+                    if ($assertionManager->assert($this->rbac, $permission, $params)){
                         return true;
+                    }    
                 }
                 
                 return false;

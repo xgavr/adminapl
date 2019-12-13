@@ -1108,8 +1108,10 @@ class SupplierController extends AbstractActionController
             }
         }
 
-        return new JsonModel(
-           ['text' => $text]
+        return new JsonModel([
+            'text' => $text,
+            'title' => "Как заказать в {$supplier->getName()}",
+                ]
         );           
     }
     
@@ -1136,8 +1138,10 @@ class SupplierController extends AbstractActionController
             $text = 'Нет контактов';
         }
 
-        return new JsonModel(
-           ['text' => $text]
+        return new JsonModel([
+            'text' => $text,
+            'title' => "Контакты {$supplier->getName()}",
+                ]
         );           
     }
     

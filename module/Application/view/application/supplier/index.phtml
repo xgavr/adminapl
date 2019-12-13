@@ -16,7 +16,6 @@
     $this->headScript()
         ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
         ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootbox.js/2.2.2/bootbox.min.js')
                 ;    
 ?>
 <style>
@@ -186,6 +185,7 @@
         })
             .done(function (data) {
                 bootbox.alert({
+                    title: data.title,
                     message: data.text,
                     size: 'large'
                 });

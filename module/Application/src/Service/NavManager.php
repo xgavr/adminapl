@@ -9,19 +9,19 @@ class NavManager
 {
     /**
      * Auth service.
-     * @var Zend\Authentication\Authentication
+     * @var \Zend\Authentication\Authentication
      */
     private $authService;
     
     /**
      * Url view helper.
-     * @var Zend\View\Helper\Url
+     * @var \Zend\View\Helper\Url
      */
     private $urlHelper;
     
     /**
      * RBAC manager.
-     * @var User\Service\RbacManager
+     * @var \User\Service\RbacManager
      */
     private $rbacManager;
     
@@ -88,9 +88,7 @@ class NavManager
                     'label' => 'Поставщики',
                     'link'  => $url('supplier')
                 ];
-            }
-            
-            if ($this->rbacManager->isGranted(null, 'supplier.manage')) {
+
                 $priceDropdownItems = [];
 
                 $priceDropdownItems[] = [
