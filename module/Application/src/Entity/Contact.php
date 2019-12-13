@@ -483,4 +483,35 @@ class Contact {
     {
         $this->legals->removeElement($legal);
     }    
+    
+    /**
+     * Контакт представление
+     * @return string
+     */
+    public function getAsText()
+    {
+        $phones = [];
+        foreach ($this->getPhones() as $phone){
+            $phones[] = $phone->getName().' '.$phone->getComment();
+        }
+        $emails = [];
+        foreach ($this->getEmails() as $email){
+            $emails[] = $email->getName();
+        }
+        
+        
+        $result = $this->name
+                . "<br/>"
+                . nl2br($this->description)
+                . "<br/>"
+                . "Телефон: <span>"
+                . implode(';', $phones)
+                . "</span><br/>"
+                . "Почта: <span>"
+                . implode(';', $emails)
+                . "</span><br/>"
+                ;
+        
+        return $result;        
+    }
 }

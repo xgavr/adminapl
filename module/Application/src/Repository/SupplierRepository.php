@@ -40,19 +40,21 @@ class SupplierRepository extends EntityRepository{
                         ->setParameter('1', $params['status']);
             }
             if (isset($params['q'])){
-                $queryBuilder->where('s.name like :search')
-                    ->setParameter('search', '%' . $params['q'] . '%')
-                        ;
+                if ($params['q']){
+                    $queryBuilder->andWhere('s.name like :search')
+                        ->setParameter('search', '%' . $params['q'] . '%')
+                            ;
+                }    
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('s.name > ?1')
-                    ->setParameter('1', $params['next1'])
+                $queryBuilder->where('s.name > ?2')
+                    ->setParameter('2', $params['next1'])
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('s.name < ?1')
-                    ->setParameter('1', $params['prev1'])
+                $queryBuilder->where('s.name < ?3')
+                    ->setParameter('3', $params['prev1'])
                     ->addOrderBy('s.name', 'DESC')
                     ->setMaxResults(1)    
                  ;
@@ -61,7 +63,7 @@ class SupplierRepository extends EntityRepository{
                 $queryBuilder->addOrderBy('s.'.$params['sort'], $params['order']);                
             }            
         }
-
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }     
     

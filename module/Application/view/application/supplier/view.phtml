@@ -54,15 +54,7 @@ $this->headScript()
                             <div class="panel panel-info">
                                 <div class="panel-body">
                                     <div class="pull-left">
-                                        <?= $requestSetting->getName() ?><br/>
-                                        Способ заказа: <span><?= $requestSetting->getModeAsString() ?></span><br/>
-                                        <!--<span><?= $requestSetting->getStatusAsString() ?></span>-->
-                                        <!--<br/>-->
-                                        Сайт: <a href="<?= $requestSetting->getSiteNormalize()?>" target="block"><?= $requestSetting->getSite() ?></a>
-                                        <br/>
-                                        Логин: <?= $requestSetting->getLogin() ?><br/>
-                                        Пароль: <?= $requestSetting->getPassword() ?><br/>
-                                        <?= nl2br($requestSetting->getDescription()) ?>
+                                        <?= $requestSetting->getAsText() ?>
                                     </div>        
                                     <div class="pull-right">                                
                                         <button value="/supplier/request-setting-form/<?= $supplier->getId() ?>?requestSetting=<?= $requestSetting->getId() ?>" class="btn btn-default btn-xs"

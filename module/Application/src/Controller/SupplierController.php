@@ -91,9 +91,15 @@ class SupplierController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
+        $status = $this->params()->fromQuery('status', Supplier::STATUS_ACTIVE);
         
         $query = $this->entityManager->getRepository(Supplier::class)
-                        ->findAllSupplier(['q' => $q, 'sort' => $sort, 'order' => $order]);
+                        ->findAllSupplier([
+                            'q' => $q, 
+                            'sort' => $sort, 
+                            'order' => $order,
+                            'status' => $status,
+                        ]);
         
         $total = count($query->getResult(2));
         
@@ -1080,8 +1086,59 @@ class SupplierController extends AbstractActionController
         return new JsonModel(
            ['text' => $text]
         );           
+    }
+    
+    public function requestAsTextAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
         
-        exit;        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $text = '';
+        foreach ($supplier->getRequestSettings() as $requedtSetting){
+            if ($requedtSetting->getStatus() == RequestSetting::STATUS_ACTIVE && 
+                    $requedtSetting->getMode() == RequestSetting::MODE_MANUALLY){
+                $text .= '<pre>'.$requedtSetting->getAsText().'</pre>';
+            }
+        }
+
+        return new JsonModel(
+           ['text' => $text]
+        );           
+    }
+    
+    public function contactsAsTextAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $text = '';
+        foreach ($supplier->getContacts() as $contact){
+            if ($contact->getStatus() == Contact::STATUS_ACTIVE){
+                $text .= '<pre>'.$contact->getAsText().'</pre>';
+            }
+        }
+        
+        if (!$text){
+            $text = 'Нет контактов';
+        }
+
+        return new JsonModel(
+           ['text' => $text]
+        );           
     }
     
     public function uploadPriceFormAction()

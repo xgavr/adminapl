@@ -187,7 +187,8 @@ $this->pageBreadcrumbs()->setItems([
                     <?php foreach($raw->getSupplier()->getPriceDescriptions() as $priceDescription): ?>
                         <div class="panel-body">
                             <div class="pull-right">
-                                <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
+                                <button value="/supplier/price-description-form/<?= $priceDescription->getSupplier()->getId() ?>
+                                        ?priceDescription=<?= $priceDescription->getId() ?>" class="btn btn-default btn-xs"
                                         data-toggle="modal" data-target="#modal-dialog" title="Изменить">
                                     <span class="glyphicon glyphicon-edit" ></span>
                                 </button>                                                    

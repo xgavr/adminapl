@@ -231,7 +231,34 @@ class RequestSetting {
             return $list[$this->mode];
         
         return 'Unknown';
-    }    
+    }   
+    
+    /**
+     * Вывести описание
+     */
+    public function getAsText()
+    {
+        $result = $this->name
+                . "<br/>"
+                . "Способ заказа: <span>"
+                . $this->getModeAsString()
+                . "</span><br/>"
+                . "Сайт: <a href='"
+                . $this->getSiteNormalize()
+                . "' target='block'>"
+                . $this->site
+                . "</a>"
+                . "<br/>"
+                . "Логин: "
+                . $this->login
+                . "<br/>"
+                . "Пароль: "
+                . $this->password
+                . "<br/>"
+                . nl2br($this->description);
+        
+        return $result;
+}
     
     /**
      * Sets mode.

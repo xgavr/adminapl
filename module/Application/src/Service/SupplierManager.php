@@ -207,7 +207,7 @@ class SupplierManager
 
         $this->entityManager->persist($supplier);
         // Применяем изменения к базе данных.
-        $this->entityManager->flush();
+        $this->entityManager->flush($supplier);
         
         $this->addPriceFolder($supplier);
     }    

@@ -16,6 +16,7 @@
     $this->headScript()
         ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
         ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootbox.js/2.2.2/bootbox.min.js')
                 ;    
 ?>
 <style>
@@ -36,9 +37,14 @@
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                    <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
+                <select id="statusSelect" style="width: 200px" class="form-control">
+                    <?php foreach ($statuses as $status):?>
+                        <option value="<?= $status['status']?>"><?= $status['name'],' ',$status['status_count']?></option>
+                    <?php endforeach;?>
+                </select>
             </div>
         </div>
         <table id="table" 
@@ -60,7 +66,7 @@
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
                      <th data-field="aplId" data-type="numeric" data-sortable="true">AplId</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
-                     <!--<th data-field="" data-formatter="activeFormatter"></th>-->
+                     <th data-field="id" data-formatter="activeFormatter"></th>
                  </tr>                
             </thead>
         </table>
@@ -69,24 +75,6 @@
     <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Поставщики
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            <?php $totalStatusCount = 0?>
-                            <?php foreach($statuses as $status):?>
-                                <?= $status['status_count']?>: <a href="<?= $this->url('supplier', ['action' => 'index'], ['query' => ['status' => $status['status']]])?>"><?= $status['name']?></a><br/>                                
-                                <?php $totalStatusCount += $status['status_count']?>
-                            <?php endforeach;?>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        Всего: <?= $totalStatusCount; ?><br/>                        
-                    </div>
-                </div>
                 <?php if(count($absentRaws)):?>
                     <div class="panel panel-warning">
                         <div class="panel-heading">
@@ -127,10 +115,14 @@
     }
 
     var table = $('#table'),
+        statusSelect = $('#statusSelect'),
         ok = $('#ok');
 
     $(function () {
         ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+        statusSelect.change(function () {
             table.bootstrapTable('refresh');
         });
     });
@@ -147,7 +139,8 @@
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        
+
+        params.status = statusSelect.val();        
         return params;
     }
     
@@ -160,14 +153,24 @@
     }    
     
     function activeFormatter(value, row){
-        var url = '/supplier/edit/'+row.id;
+        var url = '/supplier/request-as-text/'+value;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' class="btn btn-default btn-xs"';
         btn += ' aria-label="Left Align"'; 
-        btn += ' title="Удалить"'; 
-        btn += ' onclick="tableRowDelete(\''+url+'\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += ' title="Как заказать?"'; 
+        btn += ' onclick="requestAsText(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        var url = '/supplier/contacts-as-text/'+value;
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Контакты"'; 
+        btn += ' onclick="requestAsText(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-user" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }    
@@ -175,5 +178,22 @@
     function responseHandler(res) {
         return res;
     }    
+    
+    function requestAsText(url) {        
+        $.ajax({
+            type: 'POST',
+            url: url
+        })
+            .done(function (data) {
+                bootbox.alert({
+                    message: data.text,
+                    size: 'large'
+                });
+            })
+            .fail(function () {
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });
+    }    
+    
 </script>
 
