@@ -499,18 +499,20 @@ class Contact {
             $emails[] = $email->getName();
         }
         
-        
-        $result = $this->name
-                . "<br/>"
-                . nl2br($this->description)
-                . "<br/>"
-                . "Телефон: <span>"
-                . implode(';', $phones)
-                . "</span><br/>"
-                . "Почта: <span>"
-                . implode(';', $emails)
-                . "</span><br/>"
-                ;
+        $result = '';
+        if (count($phones) || count($emails)){
+            $result = $this->name
+                    . "<br/>"
+                    . nl2br($this->description)
+                    . "<br/>"
+                    . "Телефон: <span>"
+                    . implode(';', $phones)
+                    . "</span><br/>"
+                    . "Почта: <span>"
+                    . implode(';', $emails)
+                    . "</span><br/>"
+                    ;
+        }    
         
         return $result;        
     }
