@@ -255,7 +255,7 @@ class RequestSetting {
                 . "Пароль: "
                 . $this->password
                 . "<br/>"
-                . $this->description;
+                . nl2br($this->description);
         
         return $result;
 }
