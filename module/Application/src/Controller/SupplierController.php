@@ -1104,7 +1104,7 @@ class SupplierController extends AbstractActionController
         foreach ($supplier->getRequestSettings() as $requedtSetting){
             if ($requedtSetting->getStatus() == RequestSetting::STATUS_ACTIVE && 
                     $requedtSetting->getMode() == RequestSetting::MODE_MANUALLY){
-                $text .= '<pre>'.$requedtSetting->getAsText().'</pre>';
+                $text .= $requedtSetting->getAsText();
             }
         }
 
