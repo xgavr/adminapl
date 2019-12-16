@@ -208,6 +208,7 @@ class PriceManager {
             
             $client = new Client($priceGetting->getLink());
             $client->setMethod('GET');
+            $client->setOptions(['timeout' => 60]);
             
             $response = $client->send();
             
