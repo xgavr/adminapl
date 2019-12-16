@@ -24,7 +24,13 @@ class Supplier {
         
      // Supplier status constants.
     const STATUS_ACTIVE       = 1; // Active user.
-    const STATUS_RETIRED      = 2; // Retired user.    
+    const STATUS_RETIRED      = 2; // Retired user.   
+    
+    const PREPAY_ON           = 1;//Брать предоплату
+    const PREPAY_OFF          = 2;//Не брать предоплату
+   
+    const PRICE_LIST_ON       = 1;//Выгружать в прайсы
+    const PRICE_LIST_OFF      = 2;//Не выгружать в прайсы
    
     const PRICE_FOLDER       = './data/prices'; // папка с прайсами
     const PRICE_FOLDER_ARX   = './data/prices/arx'; // папка с архивами прайсов
@@ -55,6 +61,16 @@ class Supplier {
      * @ORM\Column(name="status")  
      */
     protected $status;
+
+    /** 
+     * @ORM\Column(name="prepay")  
+     */
+    protected $prepayStatus;
+
+    /** 
+     * @ORM\Column(name="price_list")  
+     */
+    protected $priceListStatus;
 
     /**
      * @ORM\Column(name="address")   
@@ -252,6 +268,110 @@ class Supplier {
         $this->status = $status;
     }   
     
+    /**
+     * Returns prepay status.
+     * @return int     
+     */
+    public function getPrepayStatus() 
+    {
+        return $this->prepayStatus;
+    }
+
+    /**
+     * Returns possible prepay status as array.
+     * @return array
+     */
+    public static function getPrepayStatusList() 
+    {
+        return [
+            self::PREPAY_ON => 'Брать предоплату',
+            self::PREPAY_OFF => 'Не брать предоплату'
+        ];
+    }    
+    
+    /**
+     * Returns user prepay as string.
+     * @return string
+     */
+    public function getPrepayStatusAsString()
+    {
+        $list = self::getPrepayStatusList();
+        if (isset($list[$this->prepayStatus]))
+            return $list[$this->prepayStatus];
+        
+        return 'Unknown';
+    }    
+    
+    public function getPrepayStatusName($prepayStatus)
+    {
+        $list = self::getPrepayStatusList();
+        if (isset($list[$prepayStatus]))
+            return $list[$prepayStatus];
+        
+        return 'Unknown';        
+    }
+
+    /**
+     * Sets prepay.
+     * @param int $prepayStatus     
+     */
+    public function setPrepayStatus($prepayStatus) 
+    {
+        $this->prepayStatus = $prepayStatus;
+    }   
+
+    /**
+     * Returns priceListStatus.
+     * @return int     
+     */
+    public function getPriceListStatus() 
+    {
+        return $this->priceListStatus;
+    }
+
+    /**
+     * Returns possible price list status as array.
+     * @return array
+     */
+    public static function getPriceListStatusList() 
+    {
+        return [
+            self::PRICE_LIST_ON => 'Выгружать в прайс листы',
+            self::PRICE_LIST_OFF => 'Не выгружать в прайс листы'
+        ];
+    }    
+    
+    /**
+     * Returns user price list status as string.
+     * @return string
+     */
+    public function getPriceListStatusAsString()
+    {
+        $list = self::getPriceListStatusList();
+        if (isset($list[$this->priceListStatus]))
+            return $list[$this->priceListStatus];
+        
+        return 'Unknown';
+    }    
+    
+    public function getPriceListStatusName($priceListStatus)
+    {
+        $list = self::getPriceListStatusList();
+        if (isset($list[$priceListStatus]))
+            return $list[$priceListStatus];
+        
+        return 'Unknown';        
+    }
+
+    /**
+     * Sets priceListStatus.
+     * @param int $priceListStatus     
+     */
+    public function setPriceListStatus($priceListStatus) 
+    {
+        $this->priceListStatus = $priceListStatus;
+    }   
+
     /**
      * Returns the date of user creation.
      * @return string     

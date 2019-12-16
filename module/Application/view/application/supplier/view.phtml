@@ -25,7 +25,9 @@ $this->headScript()
                 <div class="pull-left">
                     ID: <?= $this->escapeHtml($supplier->getId()) ?>
                     AplId: <?= $this->escapeHtml($supplier->getAplId()) ?><br/>
-                    Статус: <?= $this->escapeHtml($supplier->getStatusAsString()) ?>
+                    Статус: <?= $this->escapeHtml($supplier->getStatusAsString()) ?>,
+                     <?= $this->escapeHtml($supplier->getPrepayStatusAsString()) ?>,
+                     <?= $this->escapeHtml($supplier->getPriceListStatusAsString()) ?>
                 </div>
                 <div class="pull-right">
                     <button value="/supplier/edit-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"

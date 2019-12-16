@@ -16,6 +16,14 @@ $form->get('status')->setAttributes([
     'class'=>'form-control'
     ]);
 
+$form->get('prepayStatus')->setAttributes([
+    'class'=>'form-control'
+    ]);
+
+$form->get('priceListStatus')->setAttributes([
+    'class'=>'form-control'
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -48,11 +56,22 @@ $form->prepare();
                         </div>
 
                         <div class="form-group">
+                            <?= $this->formLabel($form->get('prepayStatus')); ?>
+                            <?= $this->formElement($form->get('prepayStatus')); ?>
+                            <?= $this->formElementErrors($form->get('prepayStatus')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('priceListStatus')); ?>
+                            <?= $this->formElement($form->get('priceListStatus')); ?>
+                            <?= $this->formElementErrors($form->get('priceListStatus')); ?>                  
+                        </div>
+
+                        <div class="form-group">
                             <?= $this->formLabel($form->get('status')); ?>
                             <?= $this->formElement($form->get('status')); ?>
                             <?= $this->formElementErrors($form->get('status')); ?>                  
                         </div>
-
                     </div>        
                 </div>
             </div>    

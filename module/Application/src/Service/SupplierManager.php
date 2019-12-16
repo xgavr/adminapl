@@ -90,6 +90,8 @@ class SupplierManager
         $supplier->setName($data['name']);
         $supplier->setAplId($data['aplId']);
         $supplier->setStatus($data['status']);
+        $supplier->setPrepayStatus($data['prepayStatus']);
+        $supplier->setPriceListStatus($data['priceListStatus']);
         
         $currentDate = date('Y-m-d H:i:s');
         $supplier->setDateCreated($currentDate);        
@@ -198,12 +200,19 @@ class SupplierManager
         return $result;
     }
     
-    
+    /**
+     * Обновить поставщика
+     * 
+     * @param Supplier $supplier
+     * @param array $data
+     */
     public function updateSupplier($supplier, $data) 
     {
         $supplier->setName($data['name']);
         $supplier->setAplId($data['aplId']);
         $supplier->setStatus($data['status']);
+        $supplier->setPrepayStatus($data['prepayStatus']);
+        $supplier->setPriceListStatus($data['priceListStatus']);
 
         $this->entityManager->persist($supplier);
         // Применяем изменения к базе данных.

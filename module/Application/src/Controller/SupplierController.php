@@ -191,6 +191,8 @@ class SupplierController extends AbstractActionController
                'name' => $supplier->getName(),
                'aplId' => $supplier->getAplId(),
                'status' => $supplier->getStatus(),
+               'prepayStatus' => $supplier->getPrepayStatus(),
+               'priceListStatus' => $supplier->getPriceListStatus(),
             ];
             
             $form->setData($data);
@@ -248,6 +250,8 @@ class SupplierController extends AbstractActionController
                     'name'=>$supplier->getName(),
                     'aplId'=>$supplier->getAplId(),     
                     'status'=>$supplier->getStatus(),     
+                    'prepayStatus' => $supplier->getPrepayStatus(),
+                    'priceListStatus' => $supplier->getPriceListStatus(),
                 ));
         }
         

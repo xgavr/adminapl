@@ -64,7 +64,7 @@ class SupplierForm extends Form
                 'id' => 'aplId'
             ],
             'options' => [
-                'label' => 'AplId',
+                'label' => 'AplId (если есть)',
             ],
         ]);
         
@@ -98,10 +98,36 @@ class SupplierForm extends Form
             'type'  => 'select',
             'name' => 'status',
             'options' => [
-                'label' => 'Status',
+                'label' => 'Статус',
                 'value_options' => [
                     1 => 'Действующий',
                     2 => 'В отключке',                    
+                ]
+            ],
+        ]);
+        
+        // Add "prepayStatus" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'prepayStatus',
+            'options' => [
+                'label' => 'Предоплата',
+                'value_options' => [
+                    2 => 'Не брать предоплату',                    
+                    1 => 'Брать предоплату',
+                ]
+            ],
+        ]);
+        
+        // Add "priceListStatus" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'priceListStatus',
+            'options' => [
+                'label' => 'Выгружать в прайс-листы (Маркет)',
+                'value_options' => [
+                    2 => 'Не выгружать в прайс листы',                    
+                    1 => 'Выгружать в прайс листы',
                 ]
             ],
         ]);
@@ -205,6 +231,28 @@ class SupplierForm extends Form
         // Add input for "status" field
         $inputFilter->add([
                 'name'     => 'status',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'prepayStatus',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'priceListStatus',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
