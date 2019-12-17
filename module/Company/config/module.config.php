@@ -80,7 +80,7 @@ return [
             ],
             Controller\LegalController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+company.manage']
+                ['actions' => '*', 'allow' => '+legal.manage']
             ],
             Controller\OfficeController::class => [
                 // Allow access to authenticated users.

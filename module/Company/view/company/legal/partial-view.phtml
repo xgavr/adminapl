@@ -101,6 +101,7 @@
                         <div class="panel-body">
                             <div class="pull-left">
                                 Наименование: <?= $contract->getName() ?><br/>  
+                                Офис: <?= $contract->getOffice()->getName() ?><br/>  
                                 № <?= $contract->getAct() ?> от <?= date('d.m.Y', strtotime($contract->getDateStart())) ?>
                             </div>
                              <div class="pull-right">

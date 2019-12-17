@@ -561,7 +561,7 @@ class LegalController extends AbstractActionController
         }
         
         
-        $form = new ContractForm();
+        $form = new ContractForm($this->entityManager);
 
         if ($this->getRequest()->isPost()) {
             
@@ -586,7 +586,8 @@ class LegalController extends AbstractActionController
                     'name' => $contract->getName(),  
                     'act' => $contract->getAct(),  
                     'dateStart' => $contract->getDateStart(),  
-                    'status' => $contract->getStatus(),  
+                    'status' => $contract->getStatus(),
+                    'office' => $contract->getOffice(),
                 ];
                 $form->setData($data);
             }    
