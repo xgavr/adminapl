@@ -72,11 +72,18 @@ class Office {
     private $region;
     
     /**
+    * @ORM\OneToMany(targetEntity="Company\Entity\Contract", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+     */
+    private $contracts;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->contacts = new ArrayCollection();
+        $this->contracts = new ArrayCollection();
     }
     
     public function getId() 
@@ -248,4 +255,21 @@ class Office {
         $region->addOffice($this);
     }     
         
+    /**
+     * Returns the array of contracts assigned to this.
+     * @return array
+     */
+    public function getContracts()
+    {
+        return $this->contracts;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addContract($contract)
+    {
+        $this->contracts[] = $contract;
+    }
+            
 }

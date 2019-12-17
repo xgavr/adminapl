@@ -3,20 +3,29 @@ namespace Company\Form;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
+use DoctrineModule\Persistence\ObjectManagerAwareInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * The form for collecting information about Role.
  */
 class ContractForm extends Form
 {
+    
+    protected $objectManager;
+
+    protected $entityManager;    
+    
     /**
      * Constructor.     
      */
-    public function __construct()
+    public function __construct($entityManager)
     {
         
         // Define form name
         parent::__construct('contract-form');
+
+        $this->entityManager = $entityManager;        
      
         // Set POST method for this form
         $this->setAttribute('method', 'post');
@@ -24,6 +33,17 @@ class ContractForm extends Form
         $this->addElements();
         $this->addInputFilter();          
     }
+
+    public function setObjectManager(ObjectManager $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
+
+    public function getObjectManager()
+    {
+        return $this->objectManager;
+    }      
+    
     
     /**
      * This method adds elements to form (input fields and submit button).
@@ -75,6 +95,25 @@ class ContractForm extends Form
                 ]
             ],
         ]);
+        
+        // Добавляем поле "office"
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'office',
+            'attributes' => [                
+                'id' => 'contract_office',
+                'data-live-search'=> "true",
+                'class' => "selectpicker",
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Company\Entity\Office',
+                'label' => 'Офис',
+                'property'       => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--выберете офис--',                 
+            ],
+       ]);
         
         // Add the Submit button
         $this->add([
@@ -165,6 +204,23 @@ class ContractForm extends Form
                     ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
                 ],
             ]); 
+
+        $inputFilter->add([
+                'name'     => 'office',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);          
         
     }           
 }

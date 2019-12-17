@@ -117,6 +117,7 @@ class AplService {
         $client->setUri($url);
         $client->setMethod('POST');
         $client->setParameterPost($data);
+        $client->setOptions(['timeout' => 30]);
 
         $response = $client->send();
 

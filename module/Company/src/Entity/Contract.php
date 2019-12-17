@@ -54,8 +54,26 @@ class Contract {
      * @ORM\Column(name="status")  
      */
     protected $status;    
-    
-    
+        
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contract") 
+     * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
+     */
+    private $legal;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="contract") 
+     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     */
+    private $office;
+
+    /**
+     * Constructor.
+     */
+    public function __construct() 
+    {
+    }
+
     public function getId() 
     {
         return $this->id;
@@ -164,25 +182,10 @@ class Contract {
     {
         $this->dateStart = $dateStart;
     }    
-        
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contract") 
-     * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
-     */
-    private $legal;
-
-    /**
-     * Constructor.
-     */
-    public function __construct() 
-    {
-    }
-
+            
     /*
      * @return \Company\Entity\Legal
-     */
-    
+     */    
     public function getLegal() 
     {
         return $this->legal;
@@ -197,4 +200,20 @@ class Contract {
         $legal->addContract($this);
     }     
         
+    /*
+     * @return \Company\Entity\Office
+     */    
+    public function getOffice() 
+    {
+        return $this->office;
+    }
+
+    /**
+     * @param \Company\Entity\Office $office
+     */    
+    public function setOffice($office) 
+    {
+        $this->office = $office;
+        $office->addContract($this);
+    }             
 }

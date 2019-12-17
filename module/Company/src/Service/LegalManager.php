@@ -4,6 +4,7 @@ namespace Company\Service;
 use Company\Entity\Legal;
 use Company\Entity\BankAccount;
 use Company\Entity\Contract;
+use Company\Entity\Office;
 use Zend\Json\Json;
 
 /**
@@ -197,14 +198,25 @@ class LegalManager
         return;
     }
    
+    /**
+     * Добавить договор
+     * 
+     * @param \Company\Entity\Legal $legal
+     * @param array $data
+     * @param bool $flushnow
+     */
     public function addContract($legal, $data, $flushnow = false)
     {                
         $contract = new Contract();            
         $contract->setName($data['name']);            
         $contract->setAct($data['act']);            
         $contract->setDateStart($data['dateStart']);            
-        $contract->setStatus($data['status']);            
-
+        $contract->setStatus($data['status']);
+        
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($data['office']);
+        $contract->setOffice($office);
+        
         $currentDate = date('Y-m-d H:i:s');
         $contract->setDateCreated($currentDate);
             
@@ -223,6 +235,10 @@ class LegalManager
         $contract->setAct($data['act']);            
         $contract->setDateStart($data['dateStart']);            
         $contract->setStatus($data['status']);            
+
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($data['office']);
+        $contract->setOffice($office);
 
         $this->entityManager->persist($contract);
 
