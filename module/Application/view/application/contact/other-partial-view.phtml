@@ -1,0 +1,132 @@
+<div class="panel-heading">
+    <div class="pull-left">
+        <div class="panel-title">Контакты</div>
+    </div>
+    <div class="pull-right">
+        <div class="pull-right">
+            <button value="/supplier/manager-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
+                    data-toggle="modal" data-target="#modal-dialog" title="Добавить контакт">
+                <span class="glyphicon glyphicon-plus" ></span>
+            </button>                                                                        
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="panel-body">
+    <?php if ($supplier->getOtherContacts()): ?> 
+        <div class="panel panel-group">
+            <?php foreach ($supplier->getOtherContacts() as $contact): ?>
+            <div class="panel panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <strong><?= $contact->getName() ?></strong><br/>
+                            <?= $contact->getDescription() ?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/supplier/manager-form/<?= $supplier->getId() ?>?manager=<?= $contact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                <span class="glyphicon glyphicon-edit" ></span>
+                            </button>                                                    
+                            <button value="/supplier/delete-manager-form/<?= $contact->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                    title="Удалить">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </button>                                                           
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Телефоны:
+                        </div>                                
+                        <div class="pull-right">
+                            <button value="/contact/phone-form/<?= $contact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>                                        
+                        </div>                                
+                    </div>
+                    <?php foreach ($contact->getPhones() as $phone): ?>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                <?= $phone->getName()?> <span><?= $phone->getComment()?></span><br/>
+                            </div>
+                             <div class="pull-right">
+                                <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                             </div>
+                        </div>    
+                     <?php endforeach; ?>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Электронная почта:
+                        </div>                                
+                        <div class="pull-right">
+                            <button value="/contact/email-form/<?= $contact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>                                        
+                        </div>                                
+                    </div>
+                    <?php foreach ($contact->getEmails() as $email): ?>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                <?= $email->getName()?><br/>
+                            </div>
+                             <div class="pull-right">
+                                <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                             </div>
+                        </div>    
+                     <?php endforeach; ?>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Мессенджеры:
+                        </div>                                
+                        <div class="pull-right">
+                            <button value="/contact/messenger-form/<?= $contact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить мессенджер">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>                                            
+                        </div>                                
+                    </div>
+                    <?php foreach ($contact->getMessengers() as $messenger): ?>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                <?= $this->escapeHtml($messenger->getTypesAsString()); ?>: <?= $this->escapeHtml($messenger->getIdent()); ?><br/>
+                            </div>
+                             <div class="pull-right">
+                                <button value="/contact/messenger-form/<?= $contact->getId() ?>?messenger=<?= $messenger->getId() ?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-messenger-form/<?= $messenger->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                             </div>
+                        </div>    
+                     <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>                    
+    <?php endif; ?>
+</div>
