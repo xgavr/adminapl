@@ -221,6 +221,29 @@ class SupplierManager
         $this->addPriceFolder($supplier);
     }    
     
+    /**
+     * Обновить статусы поставщика
+     * 
+     * @param Supplier $supplier
+     * @param array $data
+     */
+    public function updateSupplierStatus($supplier, $data) 
+    {
+        if (isset($data['status'])){
+            $supplier->setStatus($data['status']);
+        }    
+        if (isset($data['prepayStatus'])){
+            $supplier->setPrepayStatus($data['prepayStatus']);
+        }    
+        if (isset($data['priceListStatus'])){
+            $supplier->setPriceListStatus($data['priceListStatus']);
+        }    
+
+        $this->entityManager->persist($supplier);
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush($supplier);
+    }    
+    
     public function removeSupplier($supplier) 
     {   
         

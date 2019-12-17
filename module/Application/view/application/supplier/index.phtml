@@ -11,11 +11,13 @@
     $this->headLink()
     //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
         ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+        ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
             ;
 
     $this->headScript()
         ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
         ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
                 ;    
 ?>
 <style>
@@ -62,10 +64,13 @@
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                     <th data-field="aplId" data-type="numeric" data-sortable="true">AplId</th>
+                     <th data-field="id" data-type="numeric" data-sortable="true" data-width="80">ID</th>
+                     <th data-field="aplId" data-type="numeric" data-sortable="true" data-width="80">AplId</th>
+                     <th data-field="priceListStatus" data-formatter="priceListStatusFormatter" data-width="40">
+                        <span data-toggle="tooltip" data-original-title="Выгружать в прайс-листы">Ya</span>
+                     </th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
-                     <th data-field="id" data-formatter="activeFormatter"></th>
+                     <th data-field="id" data-formatter="activeFormatter" data-width="80"></th>
                  </tr>                
             </thead>
         </table>
@@ -113,15 +118,29 @@
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table'),
-        statusSelect = $('#statusSelect'),
-        ok = $('#ok');
+    var table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+            $("[data-toggle='tooltip']").tooltip();
+            $('.editableCheckBox').change(function() {
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('data-url'),
+                    data: "pk="+$(this).attr('data-pk'),
+                    success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                    }
+                });
+            })        
+        }
+    });
+
+    var ok = $('#ok');
 
     $(function () {
         ok.click(function () {
             table.bootstrapTable('refresh');
         });
-        statusSelect.change(function () {
+        $('#statusSelect').change(function () {
             table.bootstrapTable('refresh');
         });
     });
@@ -139,7 +158,7 @@
             params.offset = params.limit * (offset - 1);
         }    
 
-        params.status = statusSelect.val();        
+        params.status = $('#statusSelect').val();        
         return params;
     }
     
@@ -150,6 +169,18 @@
             '</div>'
         ].join(''); 
     }    
+
+    function priceListStatusFormatter(value, row){
+        var checked = 'checked';
+        if (value == 2){
+            checked = '';
+        }
+        return [
+            '<input data-toggle="tooltip" class="editableCheckBox" \n\
+                data-pk="'+row.id+'" data-url="/supplier/price-list-status-edit" type="checkbox" '+checked+'/>'
+        ].join(''); 
+    }    
+    
     
     function activeFormatter(value, row){
         var url = '/supplier/request-as-text/'+value;

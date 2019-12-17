@@ -208,20 +208,24 @@ class ContactManager
         $contact->setDescription($data['description']);
         $contact->setStatus($data['status']);
         
-        $this->addPhone($contact, ['phone' => $data['phone']]);
+        if (isset($data['phone'])){
+            $this->addPhone($contact, ['phone' => $data['phone']]);
+        }    
         
-        $this->addEmail($contact, $data['email']);
-        
-       if ($data['email'] && $data['password']){
-            $user = $this->entityManager->getRepository(User::class)
-                    ->findOneByEmail($data['email']);
-            if ($user == null){
-                $data['full_name'] = $data['name'];
-                $data['roles'][] = self::USER_ROLE_ID;
-                $user = $this->userManager->addUser($data);
-            }    
-            $contact->setUser($user);
-       }
+        if (isset($data['email']) && isset($data['password'])){
+            $this->addEmail($contact, $data['email']);
+
+           if ($data['email'] && $data['password']){
+                $user = $this->entityManager->getRepository(User::class)
+                        ->findOneByEmail($data['email']);
+                if ($user == null){
+                    $data['full_name'] = $data['name'];
+                    $data['roles'][] = self::USER_ROLE_ID;
+                    $user = $this->userManager->addUser($data);
+                }    
+                $contact->setUser($user);
+           }
+        }   
         
         $this->entityManager->persist($contact);
         // Применяем изменения к базе данных.

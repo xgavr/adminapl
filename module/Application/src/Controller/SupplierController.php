@@ -35,19 +35,19 @@ class SupplierController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Менеджер.
-     * @var Application\Service\SupplierManager 
+     * @var \Application\Service\SupplierManager 
      */
     private $supplierManager;    
     
     /**
      * Менеджер.
-     * @var Application\Service\ContactManager 
+     * @var \Application\Service\ContactManager 
      */
     private $contactManager;    
     
@@ -261,6 +261,27 @@ class SupplierController extends AbstractActionController
                 'form' => $form,
                 'supplier' => $supplier
             ]);
+    }
+    
+    public function priceListStatusEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $supplierId = $data['pk'];
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->findOneById($supplierId);
+                    
+            if ($supplier){
+                $priceListStatus = Supplier::PRICE_LIST_OFF;
+                if ($supplier->getPriceListStatus() == Supplier::PRICE_LIST_OFF){
+                    $priceListStatus = Supplier::PRICE_LIST_ON;
+                }
+                $this->supplierManager->updateSupplierStatus($supplier, ['priceListStatus' => $priceListStatus]);
+            }    
+        }
+        
+        exit;
     }
     
     
