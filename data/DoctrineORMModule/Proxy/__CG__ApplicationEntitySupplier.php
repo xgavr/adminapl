@@ -12,14 +12,14 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
      *      three parameters, being respectively the proxy object to be initialized, the method that triggered the
      *      initialization process and an array of ordered parameters that were passed to that method.
      *
-     * @see \Doctrine\Common\Proxy\Proxy::__setInitializer
+     * @see \Doctrine\Common\Persistence\Proxy::__setInitializer
      */
     public $__initializer__;
 
     /**
      * @var \Closure the callback responsible of loading properties that need to be copied in the cloned object
      *
-     * @see \Doctrine\Common\Proxy\Proxy::__setCloner
+     * @see \Doctrine\Common\Persistence\Proxy::__setCloner
      */
     public $__cloner__;
 
@@ -34,7 +34,7 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
      * @var array properties to be lazy loaded, with keys being the property
      *            names and values being their default values
      *
-     * @see \Doctrine\Common\Proxy\Proxy::__getLazyProperties
+     * @see \Doctrine\Common\Persistence\Proxy::__getLazyProperties
      */
     public static $lazyPropertiesDefaults = [];
 
@@ -64,10 +64,10 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'prepayStatus', 'priceListStatus', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'crosses', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
+            return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'crosses', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
         }
 
-        return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'prepayStatus', 'priceListStatus', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'crosses', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
+        return ['__isInitialized__', 'id', 'aplId', 'name', 'info', 'status', 'address', 'dateCreated', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'raw', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'crosses', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceDescriptions', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'priceGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'billGettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'requestSettings', '' . "\0" . 'Application\\Entity\\Supplier' . "\0" . 'supplySettings'];
     }
 
     /**
@@ -373,94 +373,6 @@ class Supplier extends \Application\Entity\Supplier implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setStatus', [$status]);
 
         return parent::setStatus($status);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPrepayStatus()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPrepayStatus', []);
-
-        return parent::getPrepayStatus();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPrepayStatusAsString()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPrepayStatusAsString', []);
-
-        return parent::getPrepayStatusAsString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPrepayStatusName($prepayStatus)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPrepayStatusName', [$prepayStatus]);
-
-        return parent::getPrepayStatusName($prepayStatus);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setPrepayStatus($prepayStatus)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPrepayStatus', [$prepayStatus]);
-
-        return parent::setPrepayStatus($prepayStatus);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPriceListStatus()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPriceListStatus', []);
-
-        return parent::getPriceListStatus();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPriceListStatusAsString()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPriceListStatusAsString', []);
-
-        return parent::getPriceListStatusAsString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPriceListStatusName($priceListStatus)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPriceListStatusName', [$priceListStatus]);
-
-        return parent::getPriceListStatusName($priceListStatus);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setPriceListStatus($priceListStatus)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPriceListStatus', [$priceListStatus]);
-
-        return parent::setPriceListStatus($priceListStatus);
     }
 
     /**
