@@ -146,6 +146,7 @@ class AplService {
             $post = $legal->getAplTransfer();
             $post['contract'] = $contract->getAct();
             $post['contractdate'] = $contract->getDateStart();
+            $post['supplierId'] = $supplier->getAplId();
             
             $client = new Client();
             $client->setUri($url);
@@ -156,7 +157,6 @@ class AplService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
