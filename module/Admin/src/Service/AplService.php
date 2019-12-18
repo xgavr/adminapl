@@ -147,8 +147,6 @@ class AplService {
             $post['contract'] = $contract->getAct();
             $post['contractdate'] = $contract->getDateStart();
             
-            var_dump($post); exit;
-            
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
@@ -158,7 +156,7 @@ class AplService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-    //            var_dump($response->getBody()); exit;
+                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
