@@ -120,6 +120,11 @@ class BankAccount {
         return $this->name;
     }
 
+    public function getNameWithCity() 
+    {
+        return trim($this->name.' '.$this->city);
+    }
+
     public function setName($name) 
     {
         $this->name = $name;

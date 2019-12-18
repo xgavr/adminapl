@@ -99,7 +99,7 @@ return [
         'controllers' => [
             Controller\AplController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+admin.manage']
+                ['actions' => '*', 'allow' => '+apl.exchange.manage']
             ],
             Controller\IndexController::class => [
                 // Allow access to authenticated users.

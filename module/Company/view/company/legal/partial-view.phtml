@@ -55,7 +55,7 @@
                  <?php foreach ($legal->getBankAccounts() as $bankAccount): ?>
                     <div class="panel-body">
                         <div class="pull-left">
-                             Банк: <?= $bankAccount->getName().' '.$bankAccount->getCity() ?><br/>
+                             Банк: <?= $bankAccount->getNameWithCity() ?><br/>
                              БИК: <?= $bankAccount->getBik()?><br/>
                              Расчетный счет: <?= $bankAccount->getRs()?>
                              <?php if ($legal->isOfficeLegal() && $bankAccount->getStatement() == $bankAccount::STATEMENT_ACTIVE):?>
@@ -112,7 +112,13 @@
                                 <button value="/legals/delete-contract-form/<?= $contract->getId() ?>" class="btn btn-default btn-xs this-delete"
                                         title="Удалить">
                                     <span class="glyphicon glyphicon-remove" ></span>
-                                </button>                                                           
+                                </button> 
+                                <?php if ($this->supplier):?>
+                                    <button value="/apl/update-supplier-legal/<?= $this->supplier->getId()?>?contract=<?= $contract->getId()?>" class="btn btn-info btn-xs refresh-button"
+                                            title="Обновить юр.лицо в Апл">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>
+                                <?php endif;?> 
                              </div>
                         </div>    
                      <?php endforeach; ?>

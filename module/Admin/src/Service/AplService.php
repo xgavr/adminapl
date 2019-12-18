@@ -19,6 +19,7 @@ use Application\Entity\Contact;
 use Application\Entity\Supplier;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
+use Company\Entity\Contract;
 use Zend\Http\Client;
 
 /**
@@ -129,7 +130,46 @@ class AplService {
         return;
     }
 
+    /**
+     * Обновить юр.лицо поставщика в Апл
+     * 
+     * @param Supplier $supplier
+     * @param Contract $contract
+     */
+    public function updateSupplierLegal($supplier, $contract)
+    {
+        $legal = $contract->getLegal();
+        if ($supplier->getAplId()){
 
+            $url = $this->aplApi().'update-supplier-legal?api='.$this->aplApiKey();
+            
+            $post = $legal->getAplTransfer();
+            $post['contract'] = $contract->getAct();
+            $post['contractdate'] = $contract->getDateStart();
+            
+            var_dump($post); exit;
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 30]);
+            $client->setParameterPost($post);
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+    //            var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $ok = $result = true;
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+        }
+        
+        return;
+    }
+    
     /*
      * Загрузка поставщиков
      */

@@ -11,6 +11,7 @@ namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Zend\Filter\Digits;
 
 /**
@@ -318,6 +319,21 @@ class Legal {
     {
         return $this->bankAccounts;
     }
+    
+    public function getLastActiveBankAccount()
+    {
+        $criteria = Criteria::create()
+                ->andWhere(Criteria::expr()->eq('status', BankAccount::STATUS_ACTIVE))
+                ->orderBy(['id' => Criteria::DESC])
+                ->setMaxResults(1)
+                ;
+        $data = $this->bankAccounts->matching($criteria);
+        foreach ($data as $row){
+            return $row;
+        }
+        
+        return;
+    }
         
     /**
      * Assigns.
@@ -378,4 +394,30 @@ class Legal {
         return false;
     }
     
+    /**
+     * Для обновления в Апл
+     * @return array
+     */
+    public function getAplTransfer()
+    {
+        $result = [
+            'inn' => $this->getInn(),
+            'kpp' => $this->getKpp(),
+            'firmName' => $this->getName(),
+            'ogrn' => $this->getOgrn(),
+            'okpo' => $this->getOkpo(),
+            'firmAddress' => $this->getAddress(),
+        ];
+        
+        $bankAccount = $this->getLastActiveBankAccount();
+        if ($bankAccount){
+            $result['bik'] = $bankAccount->getBik();
+            $result['bank'] = $bankAccount->getNameWithCity();
+            $result['firmAccount'] = $bankAccount->getRs();
+            $result['firmAccount1'] = $bankAccount->getKs();
+        }
+        
+        
+        return $result;
+    }
 }

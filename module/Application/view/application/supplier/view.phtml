@@ -80,7 +80,7 @@ $this->headScript()
             <?php echo $this->partial('/application/contact/other-partial-view', ['supplier' => $supplier]); ?>
         </div>
         <div class="panel panel-default" id="section4">
-            <?php echo $this->partial('/company/legal/partial-view', ['legalContact' => $legalContact]); ?>
+            <?php echo $this->partial('/company/legal/partial-view', ['legalContact' => $legalContact, 'supplier' => $supplier]); ?>
         </div>    
         <div class="panel panel-default" id="section5">
             <div class="panel-heading">

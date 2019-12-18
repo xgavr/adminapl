@@ -581,4 +581,34 @@ class AplController extends AbstractActionController
             'result' => 'ok-reload',
         ]);
     }    
+    
+    public function updateSupplierLegalAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
+        $contractId = $this->params()->fromQuery('contract', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $supplier = $this->entityManager->getRepository(\Application\Entity\Supplier::class)
+                ->findOneById($supplierId);  
+        	
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $contract = $this->entityManager->getRepository(\Company\Entity\Contract::class)
+                ->findOneById($contractId);  
+        	
+        if ($contract == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->updateSupplierLegal($supplier, $contract);
+        
+        return new JsonModel([
+            'oke',
+        ]);
+    }    
+    
 }
