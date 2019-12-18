@@ -173,7 +173,7 @@ class BankAccountForm extends Form
         
         $inputFilter->add([
                 'name'     => 'city',
-                'required' => true,
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    
                 ],                
