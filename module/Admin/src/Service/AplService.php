@@ -20,6 +20,7 @@ use Application\Entity\Supplier;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 use Company\Entity\Contract;
+use Application\Entity\PriceGetting;
 use Zend\Http\Client;
 
 /**
@@ -179,7 +180,7 @@ class AplService {
         if (!$supplier->getAplId()){
             $url = $this->aplApi().'add-supplier?api='.$this->aplApiKey();
 
-            $email = $phone = $password = $manualSite = $manualLogin = $manualPassword = $manualDesc = null;
+            $manualDesc = $manualSite = $manualLogin = $manualPassword = null;            
             $requestSettings = $supplier->getActiveManualRequestSetting();
             foreach ($requestSettings as $requestSetting){
                 $manualDesc .= $requestSetting->getDescription().PHP_EOL;
@@ -188,20 +189,46 @@ class AplService {
                 $manualPassword = $requestSetting->getPassword();
             }
             
+            $manualManager = $manualPhone = $manualEmail = null;
             foreach ($supplier->getOtherContacts() as $contact){
-                
+                if ($contact->getStatus() == Contact::STATUS_ACTIVE){
+                    $manualManager = $contact->getName();
+                    $manualPhone = $contact->getPhonesAsString();
+                    $manualEmail = $contact->getEmail;
+                }    
             }
+
+            $ftp = $ftpuser = $ftppassw = $email = $epassw = $download = null;
+            foreach ($supplier->getPriceGettings() as $priceGetting){
+                if ($priceGetting->getStatus() == PriceGetting::STATUS_ACTIVE){
+                    $ftp = $priceGetting->getFtp();
+                    $ftpuser = $priceGetting->getFtpLogin();
+                    $ftppassw = $priceGetting->getEmail();
+                    $email = $priceGetting->getEmail();
+                    $epassw = $priceGetting->getEmailPassword();
+                    $download = $priceGetting->getLink();
+                }    
+            }
+            
             
             $desc = [
                 'prepay' => $supplier->getAplPrepayStatus(),
                 'yml' => $supplier->getAplPriceListStatus(),
-                'email' => $email,
-                'epassw' => $password,
                 'manualDesc' => $manualDesc,
                 'manualSite' => $manualSite,
                 'manualLogin' => $manualLogin,
                 'manualPassword' => $manualPassword,
+                'manualManager' => $manualManager,
+                'manualPhone' => $manualPhone,
+                'manualEmail' => $manualEmail,
+                'ftp' => $ftp,
+                'ftpuser' => $ftpuser,
+                'ftppassw' => $ftppassw,
+                'email' => $email,
+                'epassw' => $epassw,
+                'download' => $download,
             ]; 
+            
             $post = [
                 'name' => $supplier->getName(),
                 'publish' => $supplier->getAplStatus(),

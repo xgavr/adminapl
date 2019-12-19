@@ -611,4 +611,23 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function addSupplierAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $supplier = $this->entityManager->getRepository(\Application\Entity\Supplier::class)
+                ->findOneById($supplierId);  
+        	
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+                
+        $this->aplService->addSupplier($supplier);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }    
 }

@@ -24,7 +24,14 @@ $this->headScript()
             <div class="panel-body">
                 <div class="pull-left">
                     ID: <?= $this->escapeHtml($supplier->getId()) ?>
-                    AplId: <?= $this->escapeHtml($supplier->getAplId()) ?><br/>
+                    AplId: <?= $this->escapeHtml($supplier->getAplId()) ?>
+                    <?php if (!$supplier->getAplId()):?>
+                        <button value="/apl/add-supplier/<?= $supplier->getId()?>" class="btn btn-info btn-xs refresh-button"
+                                title="Добавить поставщика в Апл и получить Id">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>
+                    <?php endif;?> 
+                    <br/>
                     Статус: <?= $this->escapeHtml($supplier->getStatusAsString()) ?>,
                      <?= $this->escapeHtml($supplier->getPrepayStatusAsString()) ?>,
                      <?= $this->escapeHtml($supplier->getPriceListStatusAsString()) ?>
