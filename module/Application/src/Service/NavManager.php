@@ -104,11 +104,6 @@ class NavManager
                 ];
                 
                 $priceDropdownItems[] = [
-                    'id' => 'raw_settings',
-                    'label' => 'Настройки',
-                    'link'  => $url('admin', ['action' => 'price-settings'])
-                ];
-                $priceDropdownItems[] = [
                     'id' => 'cross',
                     'label' => 'Кроссы',
                     'link'  => $url('cross')
