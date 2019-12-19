@@ -83,23 +83,23 @@ class NavManager
             }
             
             if ($this->rbacManager->isGranted(null, 'supplier.manage')) {
-                $items[] = [
+                $priceDropdownItems = [];
+
+                $priceDropdownItems[] = [
                     'id' => 'supplier',
                     'label' => 'Поставщики',
                     'link'  => $url('supplier')
                 ];
 
-                $priceDropdownItems = [];
-
                 $priceDropdownItems[] = [
                     'id' => 'raw_queue',
-                    'label' => 'Очередь',
+                    'label' => 'Очередь прайсов',
                     'link'  => $url('price', ['action' => 'queue'])
                 ];
                 
                 $priceDropdownItems[] = [
                     'id' => 'raw_uploaded',
-                    'label' => 'Загруженные',
+                    'label' => 'Загруженные прайсы',
                     'link'  => $url('raw')
                 ];
                 
@@ -113,7 +113,7 @@ class NavManager
                 if (count($priceDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'raw',
-                        'label' => 'Прайсы',
+                        'label' => 'Покупки',
                         'dropdown' => $priceDropdownItems
                     ];
                 }                
