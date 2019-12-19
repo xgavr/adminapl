@@ -157,7 +157,7 @@ class AplService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
@@ -166,6 +166,66 @@ class AplService {
             }    
         }
         
+        return;
+    }
+    
+    /**
+     * Создать поставщика в Апл
+     * 
+     * @param Supplier $supplier
+     */
+    public function addSupplier($supplier)
+    {
+        if (!$supplier->getAplId()){
+            $url = $this->aplApi().'add-supplier?api='.$this->aplApiKey();
+
+            $email = $password = $manualSite = $manualLogin = $manualPassword = $manualDesc = null;
+            $requestSettings = $supplier->getActiveManualRequestSetting();
+            foreach ($requestSettings as $requestSetting){
+                $manualDesc .= $requestSetting->getDescription().PHP_EOL;
+                $manualSite = $requestSetting->getSite();
+                $manualLogin = $requestSetting->getLogin();
+                $manualPassword = $requestSetting->getPassword();
+            }
+            
+            $desc = [
+                'prepay' => $supplier->getAplPrepayStatus(),
+                'yml' => $supplier->getAplPriceListStatus(),
+                'email' => $email,
+                'epassw' => $password,
+                'manualDesc' => $manualDesc,
+                'manualSite' => $manualSite,
+                'manualLogin' => $manualLogin,
+                'manualPassword' => $manualPassword,
+            ]; 
+            $post = [
+                'name' => $supplier->getName(),
+                'publish' => $supplier->getAplStatus(),
+                'desc' => Json::encode($desc),
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 30]);
+            $client->setParameterPost($post);
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+    //                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $ok = $result = true;
+                    if (is_numeric($response->getBody())){
+                        $supplier->setAplId($response->getBody());
+                        $this->entityManager->persist($supplier);
+                        $this->entityManager->flush($supplier);
+                    }
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+        }    
         return;
     }
     

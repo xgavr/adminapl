@@ -216,6 +216,18 @@ class Supplier {
     }
 
     /**
+     * Returns apl status.
+     * @return int     
+     */
+    public function getAplStatus() 
+    {
+        switch ($this->status){
+            case self::STATUS_ACTIVE: return 1;
+            default: return 0;    
+        }
+    }
+
+    /**
      * Returns possible statuses as array.
      * @return array
      */
@@ -277,6 +289,14 @@ class Supplier {
         return $this->prepayStatus;
     }
 
+    public function getAplPrepayStatus() 
+    {
+        switch ($this->prepayStatus){
+            case self::PREPAY_ON: return 1;
+            default: return 0;    
+        }
+    }
+
     /**
      * Returns possible prepay status as array.
      * @return array
@@ -327,6 +347,14 @@ class Supplier {
     public function getPriceListStatus() 
     {
         return $this->priceListStatus;
+    }
+
+    public function getAplPriceListStatus() 
+    {
+        switch ($this->priceListStatus){
+            case self::PRICE_LIST_ON: return 1;
+            default: return 0;    
+        }
     }
 
     /**
@@ -530,7 +558,18 @@ class Supplier {
     {
         return $this->requestSettings;
     }
+    
+    public function getActiveManualRequestSetting()
+    {
+        $criteria = Criteria::create()
+                ->andWhere(Criteria::expr()->eq('status', RequestSetting::STATUS_ACTIVE))
+                ->andWhere(Criteria::expr()->eq('mode', RequestSetting::MODE_MANUALLY))
+                ->orderBy(['id' => Criteria::ASC])
+                ;
         
+        return $this->bankAccounts->matching($criteria);                
+    }
+    
     /**
      * Assigns.
      */
