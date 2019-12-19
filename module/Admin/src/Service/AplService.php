@@ -179,13 +179,17 @@ class AplService {
         if (!$supplier->getAplId()){
             $url = $this->aplApi().'add-supplier?api='.$this->aplApiKey();
 
-            $email = $password = $manualSite = $manualLogin = $manualPassword = $manualDesc = null;
+            $email = $phone = $password = $manualSite = $manualLogin = $manualPassword = $manualDesc = null;
             $requestSettings = $supplier->getActiveManualRequestSetting();
             foreach ($requestSettings as $requestSetting){
                 $manualDesc .= $requestSetting->getDescription().PHP_EOL;
                 $manualSite = $requestSetting->getSite();
                 $manualLogin = $requestSetting->getLogin();
                 $manualPassword = $requestSetting->getPassword();
+            }
+            
+            foreach ($supplier->getOtherContacts() as $contact){
+                
             }
             
             $desc = [
