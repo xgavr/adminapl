@@ -56,6 +56,12 @@ class GoodsController extends AbstractActionController
     private $nameManager;
     
     /**
+     * Менеджер расценки.
+     * @var \Application\Service\RateManager 
+     */
+    private $rateManager;
+    
+    /**
      * Менеджер внешних баз.
      * @var \Application\Service\ExternalManager 
      */
@@ -63,7 +69,7 @@ class GoodsController extends AbstractActionController
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $goodsManager, $assemblyManager, 
-            $articleManager, $nameManager, $externalManager) 
+            $articleManager, $nameManager, $externalManager, $rateManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
@@ -71,6 +77,7 @@ class GoodsController extends AbstractActionController
         $this->articleManager = $articleManager;
         $this->nameManager = $nameManager;
         $this->externalManager = $externalManager;
+        $this->rateManager = $rateManager;
     }  
     
     public function assemblyAction()
@@ -1294,6 +1301,23 @@ class GoodsController extends AbstractActionController
     {
         $this->goodsManager->addOeAsMyCode();
         echo 'ok';
+        exit;
+    }
+    
+    public function updateFixPriceAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $goodId = $data['pk'];
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneById($goodId);
+                    
+            if ($good){
+                $this->rateManager->updateFixPrice($good, (float) $data['value']);                    
+            }    
+        }
+        
         exit;
     }
 }

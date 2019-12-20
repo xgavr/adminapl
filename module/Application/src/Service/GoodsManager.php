@@ -586,7 +586,7 @@ class GoodsManager
     /**
      * Обновить расчетные цены товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function updatePrices($good)
     {
@@ -595,8 +595,19 @@ class GoodsManager
         
         $prices = $this->getPricesFromRawprices($rawprices);
         
+        $minPrice = $this->minPrice($prices);
+        $meanPrice = $this->meanPrice($prices);
+        $fixPrice = $good->getFixPrice();
+        if ($fixPrice < $meanPrice){
+            $fixPrice = 0;
+        }
+        
         $this->entityManager->getRepository(Goods::class)
-                ->updateGoodId($good->getId(), ['min_price' => $this->minPrice($prices), 'mean_price' => $this->meanPrice($prices)]);
+                ->updateGoodId($good->getId(), [
+                    'min_price' => $minPrice, 
+                    'mean_price' => $meanPrice,
+                    'fix_price' => $fixPrice,
+                        ]);
         
         foreach ($rawprices as $rawprice){
             $this->entityManager->getRepository(Rawprice::class)

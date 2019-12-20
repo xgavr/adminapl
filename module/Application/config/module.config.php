@@ -424,6 +424,7 @@ return [
             Service\ParseManager::class => Service\Factory\ParseManagerFactory::class,
             Service\PriceManager::class => Service\Factory\PriceManagerFactory::class,
             Service\ProducerManager::class => Service\Factory\ProducerManagerFactory::class,
+            Service\RateManager::class => Service\Factory\RateManagerFactory::class,
             Service\RawManager::class => Service\Factory\RawManagerFactory::class,
             Service\RbacAssertionManager::class => Service\Factory\RbacAssertionManagerFactory::class,  
             Service\RbManager::class => Service\Factory\RbManagerFactory::class,

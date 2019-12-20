@@ -163,7 +163,7 @@ $this->headScript()
                                     <tr style="text-decoration: <?= $attributeValue->getAttribute()->getStatusDecorationAsString()?>">
                                         <td align='right'>
                                             <a href="#" 
-                                               class="nameAplEdit" data-type="text" 
+                                               class="editable" data-type="text" 
                                                data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
                                                data-name="name" 
                                                data-url="/goods/attribute-edit">
@@ -296,7 +296,7 @@ $this->headScript()
                                     <table class="table table-bordered">
                                         <tr>
                                             <td width='30%'>
-                                                Минимальная
+                                                Минимальная закупка
                                             </td>
                                             <td align='right'>
                                                 <?= $goods->getFormatMinPrice()?>
@@ -304,10 +304,67 @@ $this->headScript()
                                         </tr>                                              
                                         <tr>
                                             <td>
-                                                Средняя
+                                                Средняя закупка
                                             </td>
                                             <td align='right'>
                                                 <?= $goods->getFormatMeanPrice()?>
+                                            </td>
+                                        </tr>                                              
+                                        <tr>
+                                            <td>
+                                                Фиксированная продажа
+                                            </td>
+                                            <td align='right'>
+                                                <a href="#" 
+                                                   class="editable" data-type="text" 
+                                                   data-pk="<?= $goods->getId()?>" 
+                                                   data-name="fixPrice" 
+                                                   data-url="/goods/update-fix-price">
+                                                    <?= $goods->getFixPrice()?>
+                                                </a>
+                                            </td>
+                                        </tr>                                              
+                                        <tr>
+                                            <td>
+                                                Розница продажа
+                                            </td>
+                                            <td align='right'>
+                                                <?= $goods->getPrice()?>
+                                            </td>
+                                        </tr>                                              
+                                        <tr>
+                                            <td>
+                                                VIP продажа
+                                            </td>
+                                            <td align='right'>
+                                            </td>
+                                        </tr>                                              
+                                        <tr>
+                                            <td>
+                                                ОПТ2 продажа
+                                            </td>
+                                            <td align='right'>
+                                            </td>
+                                        </tr>                                              
+                                        <tr>
+                                            <td>
+                                                ОПТ3 продажа
+                                            </td>
+                                            <td align='right'>
+                                            </td>
+                                        </tr>                                              
+                                        <tr>
+                                            <td>
+                                                ОПТ4 продажа
+                                            </td>
+                                            <td align='right'>
+                                            </td>
+                                        </tr>                                              
+                                        <tr>
+                                            <td>
+                                                ОПТ5 продажа
+                                            </td>
+                                            <td align='right'>
                                             </td>
                                         </tr>                                              
                                     </table>                                                    
@@ -564,7 +621,7 @@ $this->headScript()
 
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
-        $('.nameAplEdit').editable();
+        $('.editable').editable();
     });
     
     $('#featureTab a').click(function (e) {

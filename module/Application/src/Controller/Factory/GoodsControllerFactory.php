@@ -15,6 +15,7 @@ use Application\Service\AssemblyManager;
 use Application\Service\ArticleManager;
 use Application\Service\NameManager;
 use Application\Service\ExternalManager;
+use Application\Service\RateManager;
 
 /**
  * Description of GoodsControllerFactory
@@ -32,9 +33,10 @@ class GoodsControllerFactory implements FactoryInterface {
         $articleManager = $container->get(ArticleManager::class);
         $nameManager = $container->get(NameManager::class);
         $externalManager = $container->get(ExternalManager::class);
+        $rateManager = $container->get(RateManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new GoodsController($entityManager, $goodsManager, $assemblyManager, 
-                $articleManager, $nameManager, $externalManager);
+                $articleManager, $nameManager, $externalManager, $rateManager);
     }
 }
