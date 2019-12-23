@@ -9,6 +9,9 @@ namespace Application\Service;
 
 use Zend\ServiceManager\ServiceManager;
 use Application\Entity\Goods;
+use Application\Entity\Scale;
+use Application\Entity\ScaleTreshold;
+use Application\Entity\Rate;
 
 /**
  * Description of ShopService
@@ -43,5 +46,65 @@ class RateManager
         $this->entityManager->persist($good);
         $this->entityManager->flush($good);
         return;
+    }
+    
+    /**
+     * Добавить шкалу
+     * 
+     * @param array $data
+     * @return Scale
+     */
+    public function addScale($data)
+    {
+        $scale = new Scale();
+        $scale->setName($data['name']);
+        
+        $this->entityManager->persist($scale);
+        $this->entityManager->flush($scale);
+        
+        return $scale;
+    }
+    
+    /**
+     * Изменить шкалу
+     * 
+     * @param Scale $scale
+     * @param array $data
+     */
+    public function updateScale($scale, $data)
+    {
+        $scale->setName($data['name']);
+
+        $this->entityManager->persist($scale);
+        $this->entityManager->flush($scale);
+        
+        return;
+    }
+    
+    /**
+     * Удалить шаг шкалы
+     * 
+     * @param ScaleTreshold $treshold
+     */
+    public function removeTreshold($treshold)
+    {
+        $this->entityManager->remove($treshold);
+        $this->entityManager->flush($treshold);
+        
+        return;
+    }
+    
+    /**
+     * Удалить шкалу
+     * 
+     * @param Scale $scale
+     */
+    public function removeScale($scale)
+    {
+        foreach ($scale->getTresholds() as $treshold){
+            $this->removeTreshold($treshold);
+        }
+        $this->entityManager->remove($scale);
+        $this->entityManager->flush($scale);
     }
 }
