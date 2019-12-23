@@ -4,6 +4,7 @@ namespace Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Application\Entity\Rate;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -35,8 +36,8 @@ final class Version20191220154029 extends AbstractMigration
         $table = $schema->createTable('rate');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>128]);
-        $table->addColumn('status', 'integer', ['notnull'=>true]);
-        $table->addColumn('mode', 'integer', ['notnull'=>true]);
+        $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => Rate::STATUS_ACTIVE]);
+        $table->addColumn('mode', 'integer', ['notnull'=>true, 'default' => Rate::MODE_MARKUP]);
         $table->addColumn('scale_id', 'integer', ['notnull'=>true]);
         $table->addColumn('office_id', 'integer', ['notnull'=>true]);
         $table->addColumn('supplier_id', 'integer', ['notnull'=>false]);

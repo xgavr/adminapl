@@ -23,6 +23,12 @@ use Application\Entity\GenericGroup;
  */
 class Rate 
 {
+    const STATUS_ACTIVE       = 1; // Active user.
+    const STATUS_RETIRED      = 2; // Retired user.   
+    
+    const MODE_MARKUP       = 1; // наценка.
+    const MODE_DISCOUNT     = 2; // скидка.   
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -97,6 +103,61 @@ class Rate
         $this->name = $name;
     }     
 
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    /**
+     * Returns apl status.
+     * @return int     
+     */
+    public function getAplStatus() 
+    {
+        switch ($this->status){
+            case self::STATUS_ACTIVE: return 1;
+            default: return 0;    
+        }
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 'Действующий',
+            self::STATUS_RETIRED => 'Отключен'
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    public function getStatusName($status)
+    {
+        $list = self::getStatusList();
+        if (isset($list[$status]))
+            return $list[$status];
+        
+        return 'Unknown';        
+    }
+    
     public function getRate() 
     {
         return $this->rate;
