@@ -11,6 +11,7 @@ namespace Company\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Contact;
+use Application\Entity\Rate;
 use Doctrine\Common\Collections\Criteria;
 /**
  * Description of Office
@@ -77,6 +78,12 @@ class Office {
      */
     private $contracts;    
     
+   /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\Rate", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+   */
+   private $rates;    
+    
     /**
      * Constructor.
      */
@@ -84,6 +91,7 @@ class Office {
     {
         $this->contacts = new ArrayCollection();
         $this->contracts = new ArrayCollection();
+        $this->rates = new ArrayCollection();      
     }
     
     public function getId() 
@@ -271,5 +279,19 @@ class Office {
     {
         $this->contracts[] = $contract;
     }
+        
+    /*
+     * Возвращает связанный rates.
+     * @return Rate
+     */    
+    public function getRates() 
+    {
+        return $this->rates;
+    }
+
+    public function addRate($rate) 
+    {
+        $this->rates[] = $rate;
+    }     
             
 }

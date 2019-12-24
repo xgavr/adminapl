@@ -28,25 +28,25 @@ class SupplierManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Contact manager
-     * @var Application\Service\ContactManager
+     * @var \Application\Service\ContactManager
      */
     private $contactManager;
   
     /**
      * Price manager
-     * @var Application\Service\PriceManager
+     * @var \Application\Service\PriceManager
      */
     private $priceManager;
   
     /**
      * Raw manager
-     * @var Application\Service\RawManager
+     * @var \Application\Service\RawManager
      */
     private $rawManager;
   
@@ -244,6 +244,11 @@ class SupplierManager
         $this->entityManager->flush($supplier);
     }    
     
+    /**
+     * Удалить поставщика 
+     * 
+     * @param Supplier $supplier
+     */
     public function removeSupplier($supplier) 
     {   
         
@@ -275,6 +280,10 @@ class SupplierManager
         $raws = $supplier->getRaw();
         foreach ($raws as $raw) {
             $this->rawManager->removeRaw($raw);
+        }
+        
+        foreach ($supplier->getRates() as $rate){
+            $this->entityManager->remove($rate);
         }
         
         $this->entityManager->remove($supplier);

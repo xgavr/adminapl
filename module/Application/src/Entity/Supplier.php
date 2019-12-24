@@ -12,6 +12,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Contact;
+use Application\Entity\Rate;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -130,7 +131,13 @@ class Supplier {
      */
     private $supplySettings;    
     
-    /**
+   /**
+    * @ORM\OneToMany(targetEntity="Rate", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+   */
+   private $rates;
+
+   /**
      * Constructor.
      */
     public function __construct() 
@@ -143,6 +150,7 @@ class Supplier {
         $this->billGettings = new ArrayCollection();
         $this->requestSettings = new ArrayCollection();
         $this->supplySettings = new ArrayCollection();
+        $this->rates = new ArrayCollection();
     }
     
     
@@ -594,5 +602,20 @@ class Supplier {
     {
         $this->supplySettings[] = $supplySetting;
     }
+    
+    /*
+     * Возвращает связанный rates.
+     * @return Rate
+     */    
+    public function getRates() 
+    {
+        return $this->rates;
+    }
+
+    public function addRate($rate) 
+    {
+        $this->rates[] = $rate;
+    }     
+        
     
 }

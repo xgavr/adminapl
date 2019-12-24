@@ -287,6 +287,20 @@ return [
                     ],
                 ],
             ],        
+            'rate' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/rate[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\RateController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'raw' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -392,6 +406,7 @@ return [
             Controller\PriceController::class => Controller\Factory\PriceControllerFactory::class,
             Controller\PricesettingsController::class => Controller\Factory\PricesettingsControllerFactory::class,
             Controller\ProducerController::class => Controller\Factory\ProducerControllerFactory::class,
+            Controller\RateController::class => Controller\Factory\RateControllerFactory::class,
             Controller\RawController::class => Controller\Factory\RawControllerFactory::class,
             Controller\RawpriceController::class => Controller\Factory\RawpriceControllerFactory::class,
             Controller\RbController::class => Controller\Factory\RbControllerFactory::class,
@@ -509,6 +524,10 @@ return [
             Controller\ProducerController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\RateController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+rate.manage']
             ],
             Controller\RawController::class => [
                 // Allow access to authenticated users.

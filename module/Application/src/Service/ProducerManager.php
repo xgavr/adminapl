@@ -96,6 +96,8 @@ class ProducerManager
             return false;
         }
         
+        $this->entityManager->getConnection()->delete('rate', ['producer_id' => $producer->getId()]);
+        
         $this->entityManager->getConnection()->update('unknown_producer', ['producer_id' => null], ['producer_id' => $producer->getId()]);
         
         $this->entityManager->remove($producer);

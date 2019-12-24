@@ -103,6 +103,14 @@ class NavManager
                     'link'  => $url('raw')
                 ];
                 
+                if ($this->rbacManager->isGranted(null, 'rate.manage')) {
+                    $priceDropdownItems[] = [
+                        'id' => 'rate',
+                        'label' => 'Расценка',
+                        'link'  => $url('rate')
+                    ];
+                }    
+
                 $priceDropdownItems[] = [
                     'id' => 'cross',
                     'label' => 'Кроссы',

@@ -58,7 +58,7 @@ class Rate
     protected $scale;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Office", inversedBy="rates") 
+     * @ORM\ManyToOne(targetEntity="\Company\Entity\Office", inversedBy="rates") 
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
      */
     protected $office;
@@ -194,6 +194,7 @@ class Rate
     public function setScale($scale) 
     {
         $this->scale = $scale;
+        $scale->addRate($this);
     }     
         
     /**
@@ -203,6 +204,7 @@ class Rate
     public function setOffice($office) 
     {
         $this->office = $office;
+        $office->addRate($this);
     }     
         
     /*
@@ -221,6 +223,7 @@ class Rate
     public function setSupplier($supplier) 
     {
         $this->supplier = $supplier;
+        $supplier->addRate($this);
     }     
         
     /*
@@ -239,6 +242,7 @@ class Rate
     public function setProducer($producer) 
     {
         $this->producer = $producer;
+        $producer->addRate($this);
     }     
         
     /*
@@ -257,6 +261,7 @@ class Rate
     public function setGenericGroup($genericGroup) 
     {
         $this->genericGroup = $genericGroup;
+        $genericGroup->addRate($this);
     }     
         
     /*

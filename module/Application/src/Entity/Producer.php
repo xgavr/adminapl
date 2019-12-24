@@ -11,6 +11,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Country;
+use Application\Entity\Rate;
 
 /**
  * Description of Producer
@@ -54,10 +55,17 @@ class Producer {
     * @ORM\JoinColumn(name="id", referencedColumnName="producer_id")
    */
    private $unknownProducer;
-    
+       
+   /**
+    * @ORM\OneToMany(targetEntity="Rate", mappedBy="producer")
+    * @ORM\JoinColumn(name="id", referencedColumnName="producer_id")
+   */
+   private $rates;
+   
    public function __construct() {
       $this->goods = new ArrayCollection();
       $this->unknownProducer = new ArrayCollection();
+      $this->rates = new ArrayCollection();
    }
 
     public function getId() 
@@ -143,4 +151,18 @@ class Producer {
         $this->unknownProducer[] = $unknownProducer;
     }   
     
+    /*
+     * Возвращает связанный rates.
+     * @return Rate
+     */    
+    public function getRates() 
+    {
+        return $this->rates;
+    }
+
+    public function addRate($rate) 
+    {
+        $this->rates[] = $rate;
+    }     
+            
 }

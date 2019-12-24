@@ -12,6 +12,7 @@ use Application\Entity\Goods;
 use Application\Entity\Scale;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\Rate;
+use Application\Entity\Goods;
 
 /**
  * Description of ShopService
@@ -45,6 +46,53 @@ class RateManager
         $good->setFixPrice($fixPrice);
         $this->entityManager->persist($good);
         $this->entityManager->flush($good);
+        return;
+    }
+    
+    
+    /**
+     * Добавить шаг шкалы
+     * 
+     * @params Scale $scale
+     * @param ScaleTreshold $data
+     * 
+     * @return ScaleTreshold
+     */
+    public function addTreshold($scale, $data)
+    {
+        $treshold = new ScaleTreshold();
+        $treshold->setRate($data['rate']);
+        $treshold->setRounding($data['rounding']);
+        $treshold->setTreshold($data['treshold']);
+        $treshold->setScale($scale);
+        
+        $this->entityManager->persist($treshold);
+        $this->entityManager->flush($treshold);
+        
+        return $treshold;
+    }
+
+    /**
+     * Изменить шаг шкалы
+     * 
+     * @param ScaleTreshold $treshold
+     * @param array $data
+     */
+    public function updateTreshold($treshold, $data)
+    {
+        if (isset($data['rate'])){
+            $treshold->setRate($data['rate']);
+        }
+        if (isset($data['rounding'])){
+            $treshold->setRounding($data['rounding']);
+        }
+        if (isset($data['treshold'])){
+            $treshold->setTreshold($data['treshold']);
+        }
+
+        $this->entityManager->persist($treshold);
+        $this->entityManager->flush($treshold);
+        
         return;
     }
     
@@ -107,4 +155,6 @@ class RateManager
         $this->entityManager->remove($scale);
         $this->entityManager->flush($scale);
     }
+    
+    
 }

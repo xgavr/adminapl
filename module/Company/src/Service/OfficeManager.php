@@ -11,7 +11,7 @@ class OfficeManager
 {
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;  
         
@@ -94,10 +94,21 @@ class OfficeManager
     }
     
     /**
-     * Deletes the given office.
+     * Удалить офис
+     * 
+     * @param Office $office
      */
     public function deleteOffice($office)
     {
+        foreach ($office->getContacts() as $contact){
+            $this->entityManager->remove($contact);
+        }
+        foreach ($office->getContracts() as $contract){
+            $this->entityManager->remove($contract);
+        }
+        foreach ($office->getRates() as $rate){
+            $this->entityManager->remove($rate);
+        }
         $this->entityManager->remove($office);
         $this->entityManager->flush();
         

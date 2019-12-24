@@ -10,6 +10,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Application\Entity\Rate;
 
 /**
  * Description of Make
@@ -86,9 +87,16 @@ class GenericGroup {
      *      )
      */
     private $tokens;
+    
+   /**
+    * @ORM\OneToMany(targetEntity="Rate", mappedBy="genericGroup")
+    * @ORM\JoinColumn(name="id", referencedColumnName="generic_group_id")
+   */
+   private $rates;    
 
     public function __construct() {
        $this->goods = new ArrayCollection();
+       $this->rates = new ArrayCollection();
     }    
     
     public function getId() 
@@ -273,4 +281,18 @@ class GenericGroup {
         
         return 'NaN';
     }    
+    
+    /*
+     * Возвращает связанный rates.
+     * @return Rate
+     */    
+    public function getRates() 
+    {
+        return $this->rates;
+    }
+
+    public function addRate($rate) 
+    {
+        $this->rates[] = $rate;
+    }         
 }

@@ -11,6 +11,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\ScaleTreshold;
+use Application\Entity\Rate;
 
 /**
  * Description of Phone
@@ -38,8 +39,15 @@ class Scale {
    */
    private $tresholds;
 
+   /**
+    * @ORM\OneToMany(targetEntity="Rate", mappedBy="scale")
+    * @ORM\JoinColumn(name="id", referencedColumnName="scale_id")
+   */
+   private $rates;
+
    public function __construct() {
       $this->tresholds = new ArrayCollection();      
+      $this->rates = new ArrayCollection();      
    }
     
     public function getId() 
@@ -74,6 +82,20 @@ class Scale {
     public function addTreshold($treshold) 
     {
         $this->tresholds[] = $treshold;
+    }     
+        
+    /*
+     * Возвращает связанный rates.
+     * @return Rate
+     */    
+    public function getRates() 
+    {
+        return $this->rates;
+    }
+
+    public function addRate($rate) 
+    {
+        $this->rates[] = $rate;
     }     
         
 }

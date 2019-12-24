@@ -73,12 +73,12 @@ class TelegrammManager
                     'password' => 'Ghjnt3t',
                     'database' => 'telegramm',
                  ];
-                $telegram->enableMySql($mysql_credentials, $this::USERNAME . '_');
+                $telegram->enableMySql($mysql_credentials, $settings['telegram_bot_name'] . '_');
 
     //            Logging (Error, Debug and Raw Updates)
-                \Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$this::USERNAME."_error.log");
-                \Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FOLDER . "/".$this::USERNAME."_debug.log");
-                \Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$this::USERNAME."_update.log");
+                \Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$settings['telegram_bot_name']."_error.log");
+                \Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FOLDER . "/".$settings['telegram_bot_name']."_debug.log");
+                \Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$settings['telegram_bot_name']."_update.log");
 
                 $telegram->enableLimiter();
 
