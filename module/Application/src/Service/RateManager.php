@@ -12,7 +12,7 @@ use Application\Entity\Goods;
 use Application\Entity\Scale;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\Rate;
-use Application\Entity\Goods;
+use Company\Entity\Office;
 
 /**
  * Description of ShopService
@@ -97,6 +97,19 @@ class RateManager
     }
     
     /**
+     * 
+     * @param Scale $scale
+     */
+    public function fillDefaultTreshold($scale)
+    {
+        $minPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMinPrice();
+        $maxPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMaxPrice();
+        
+    }
+    
+    /**
      * Добавить шкалу
      * 
      * @param array $data
@@ -156,5 +169,60 @@ class RateManager
         $this->entityManager->flush($scale);
     }
     
+    /**
+     * Создать шкалу по умолчанию
+     * 
+     * @return Scale
+     */
+    public function createDefaultScale()
+    {
+        $minPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMinPrice();
+        $maxPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMaxPrice();
+        
+        $tresholds = range(round($minPrice, -2), $maxPrice, round($maxPrice/10, -3));
+        var_dump($tresholds); exit;
+        
+        return $result;
+    }
     
+    /**
+     * Получить/создать шкалу по умолчанию
+     * 
+     * @return Scale
+     */
+    public function getDefaultScale()
+    {
+        $scales = $this->entityManager->getRepository(Scale::class)
+                ->findBy([]);
+        foreach ($scales as $scale){
+            return $scale;
+        }        
+        
+        return $this->createDefaultScale();
+    }
+    
+    /**
+     * Добавить расценку
+     * 
+     * @param array $data
+     * @return Rate 
+     */
+    public function addRate($data)
+    {
+        $rate = new Rate();
+        $rate->setName($data['name']);
+        $rate->setStatus(Rate::STATUS_ACTIVE);
+        $rate->setMode(Rate::MODE_MARKUP);
+        
+        $defaultOffice = $this->entityManager->getRepository(Office::class)
+                ->findOneById(1);
+        
+        $rate->setOffice($defaultOffice);
+        $rate->setScale($this->getDefaultScale());
+        
+        $this->entityManager->persist($rate);
+        $this->entityManager->flush($rate);
+    }
 }

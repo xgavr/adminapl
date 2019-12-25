@@ -1,0 +1,19 @@
+<?php
+$this->headTitle($rate->getName());
+$this->mainMenu()->setActiveItemId('raw');
+$this->pageBreadcrumbs()->setItems([
+            'Home' => $this->url('home'),
+            'Расценка' => $this->url('rate'),
+            $rate->getName() => $this->url('rate', ['action' => 'view', 'id' => $rate->getId()]),
+            ]);
+        
+?>
+
+<a href="
+    <?= $this->url('rate'); ?>">
+    &lt;&lt; Назад в список расценок
+</a>
+
+<h1>
+    <?= $this->escapeHtml($rate->getName()); ?>    
+</h1>

@@ -1454,4 +1454,82 @@ class GoodsRepository extends EntityRepository
         
     }    
     
+    /**
+     * Найти минимальную цену товара
+     * 
+     * @param array $params
+     * @return type
+     */
+    public function findMinPrice($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('min(g.minPrice) as minPrice')
+                ->from(Goods::class, 'g')
+                ->where('g.minPrice > 0')
+                ->setMaxResults(1)
+                ;
+
+        if (is_array($params)){
+            if (isset($params['producer'])){
+                $queryBuilder->andWhere('g.producer = ?1')
+                        ->setParameter('1', $params['producer']);
+            }
+            if (isset($params['genericGroup'])){
+                $queryBuilder->andWhere('g.genericGroup = ?2')
+                        ->setParameter('2', $params['genericGroup']);
+            }
+            if (isset($params['supplier'])){
+                $queryBuilder->join('g.articles', 'a')
+                        ->join('a.rawprice', 'r')
+                        ->join('r.raw', 'raw')
+                        ->andWhere('r.status = ?3')
+                        ->andWhere('raw.supplier = ?4')
+                        ->setParameter('3', Rawprice::STATUS_PARSED)
+                        ->setParameter('4', $params['supplier']);
+            }
+        }
+
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        return $result['minPrice'];
+    }
+    
+    /**
+     * Найти максимальную цену товара
+     * 
+     * @param array $params
+     * @return type
+     */
+    public function findMaxPrice($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('max(g.minPrice) as maxPrice')
+                ->from(Goods::class, 'g')
+                ->setMaxResults(1)
+                ;
+        if (is_array($params)){
+            if (isset($params['producer'])){
+                $queryBuilder->andWhere('g.producer = ?1')
+                        ->setParameter('1', $params['producer']);
+            }
+            if (isset($params['genericGroup'])){
+                $queryBuilder->andWhere('g.genericGroup = ?2')
+                        ->setParameter('2', $params['genericGroup']);
+            }
+            if (isset($params['supplier'])){
+                $queryBuilder->join('g.articles', 'a')
+                        ->join('a.rawprice', 'r')
+                        ->join('r.raw', 'raw')
+                        ->andWhere('r.status = ?3')
+                        ->andWhere('raw.supplier = ?4')
+                        ->setParameter('3', Rawprice::STATUS_PARSED)
+                        ->setParameter('4', $params['supplier']);
+            }
+        }
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        return $result['maxPrice'];
+    }
+    
 }

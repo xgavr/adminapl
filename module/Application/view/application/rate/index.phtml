@@ -8,6 +8,49 @@
             ]);
 ?>
 <p>
+    <button onclick="ratePromptDialog('/rate/add')" 
+            class="btn btn-default btn-xs" 
+            title="Новая расценка">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button> 
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Действия</th>        
+    </tr>
+    
+    <?php foreach ($rates as $rate): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($rate->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('rate', ['action'=>'view', 'id'=>$rate->getId()]); ?>">
+                <?= $this->escapeHtml($rate->getName()); ?>
+            </a> 
+        </td>
+        <td>
+            <nobr>
+            <a class="btn btn-info" href="<?= $this->url('rate', 
+                    ['action'=>'edit', 'id'=>$rate->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('rate',
+                    ['action'=>'delete', 'id'=>$rate->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+            </nobr>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+
+<p>
 <a class="btn btn-default" href="
     <?= $this->url('rate', ['action'=>'add-scale']); ?>">
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Новая шкала
@@ -48,3 +91,36 @@
     <?php endforeach; ?>   
     
 </table>
+
+<script type="text/javascript">
+    /**
+    * Промпт диалог
+    *
+    */
+    function ratePromptDialog(url, initValue) {
+        if (url){            
+            var dialog = bootbox.prompt({ 
+                size: "medium",
+                value: initValue,
+                title: 'Наименование расценки', 
+                callback: function(result){
+                    /* result = String containing user input if OK clicked or null if Cancel clicked */
+                    if (result != null){
+                        $.ajax({
+                            type: 'GET',
+                            url: url+'?prompt='+result,
+                        })
+                            .done(function (data) {
+                                if (data == 'ok'){
+                                    window.location.reload();
+                                }    
+                            })
+                            .fail(function (e) {
+                                bootbox.alert("Произошла ошибка при выполнении операции.");
+                            });
+                    }        
+                }
+            });
+        }        
+    }    
+</script>

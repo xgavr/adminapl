@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Scale;
+use Application\Entity\Rate;
 
 
 class RateController extends AbstractActionController
@@ -43,9 +44,29 @@ class RateController extends AbstractActionController
         $scales = $this->entityManager->getRepository(Scale::class)
                 ->findBy([], []);
         
+        $rates = $this->entityManager->getRepository(Rate::class)
+                ->findBy([], []);
+        
         return new ViewModel([
-            'scales' => $scales
+            'scales' => $scales,
+            'rates' => $rates,
         ]);
     }
+    
+    public function addAction()
+    {
+        $name = $this->params()->fromQuery('prompt');
+                
+        $this->rateManager->addRate(['name' => $name]);
+        
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
 
+    public function viewAction()
+    {
+        return new ViewModel([
+        ]);        
+    }
 }

@@ -113,18 +113,6 @@ class Rate
     }
 
     /**
-     * Returns apl status.
-     * @return int     
-     */
-    public function getAplStatus() 
-    {
-        switch ($this->status){
-            case self::STATUS_ACTIVE: return 1;
-            default: return 0;    
-        }
-    }
-
-    /**
      * Returns possible statuses as array.
      * @return array
      */
@@ -158,6 +146,59 @@ class Rate
         return 'Unknown';        
     }
     
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+    
+    /**
+     * Returns mode.
+     * @return int     
+     */
+    public function getMode() 
+    {
+        return $this->mode;
+    }
+
+    /**
+     * Returns possible modes as array.
+     * @return array
+     */
+    public static function getModeList() 
+    {
+        return [
+            self::MODE_MARKUP => 'Наценка',
+            self::MODE_DISCOUNT => 'Скидка'
+        ];
+    }    
+    
+    /**
+     * Returns user mode as string.
+     * @return string
+     */
+    public function getModeAsString()
+    {
+        $list = self::getModeList();
+        if (isset($list[$this->mode]))
+            return $list[$this->mode];
+        
+        return 'Unknown';
+    }    
+    
+    public function getModeName($mode)
+    {
+        $list = self::getModeList();
+        if (isset($list[$mode]))
+            return $list[$mode];
+        
+        return 'Unknown';        
+    }
+    
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
+    }
+
     public function getRate() 
     {
         return $this->rate;
