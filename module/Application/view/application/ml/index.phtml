@@ -51,7 +51,24 @@ $this->pageBreadcrumbs()->setItems([
                         <?= $treshot?>                        
                     </td>
                     <?php foreach($trains['predicts'] as $epsilon=>$predict):?>
-                        <td><?= $predict[$key] ?></td>
+                        <?php 
+                            $accuracy = $mlManager->rateAccuracy(
+                                    $treshot,
+                                    $predict[$key],
+                                    $trains['samples'],
+                                    $trains['targets']
+                                    );
+                            if ($accuracy){
+                                $label = 'success';
+                            } else {
+                                $label = 'danger';                                
+                            }
+                        ?>
+                        <td>
+                            <span class="label label-<?= $label?>">
+                                <?= $predict[$key] ?>                                
+                            </span>
+                        </td>
                     <?php endforeach;?>                    
                 </tr>
                 <?php endforeach;?>

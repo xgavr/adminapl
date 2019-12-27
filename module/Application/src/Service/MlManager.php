@@ -73,13 +73,11 @@ class MlManager
      */
     public function rateAccuracy($testPrice, $testMargin, $samples, $targets)
     {
-        $result = false;
-        
         foreach ($samples as $key => $sample){
             if ($testPrice < $sample){
                 if ($key > 0){
-                    if ($testMargin <= $targets[$key] && 
-                            $testMargin >= $targets[$key-1]){
+                    if ($testMargin >= $targets[$key] && 
+                            $testMargin <= $targets[$key-1]){
                         return true;
                     }                    
                 } else {
@@ -90,7 +88,7 @@ class MlManager
             }
         }
         
-        return $result;
+        return false;
     }
     
     /**
@@ -128,19 +126,22 @@ class MlManager
         $result = [
             'treshots' => $treshots,
             'predicts' => [],
+            'samples' => $samples,
+            'targets' => $targets,
         ];
         
-        $regression = new SVR(Kernel::LINEAR, $degree = 1, $epsilon = 1.1, $cost = 1);
+        $regression = new SVR(Kernel::LINEAR);
+//        $regression = new SVR(Kernel::POLYNOMIAL, $degree=1);
         $regression->train($samples_log, $targets);
 
         $result['predicts'][$degree] = $regression->predict($treshots_log);
         
-//        if (!is_dir(self::ML_RATE_PATH)){
-//            mkdir(self::ML_RATE_PATH);
-//        }
-//
-//        $modelManager = new ModelManager();
-//        $modelManager->saveToFile($regression, self::ML_RATE_PRIMARY_SCALE);
+        if (!is_dir(self::ML_RATE_PATH)){
+            mkdir(self::ML_RATE_PATH);
+        }
+
+        $modelManager = new ModelManager();
+        $modelManager->saveToFile($regression, self::ML_RATE_PRIMARY_SCALE);
         
         return $result;
     }
@@ -148,13 +149,14 @@ class MlManager
     /**
      * Предсказание процента по порогу по первоначальной шкале
      * 
-     * @param array $treshold
+     * @param float $treshots
      */
-    public function predictPrimaryScale($treshold)
+    public function predictPrimaryScale($treshot)
     {
         $modelManager = new ModelManager();
         $regression = $modelManager->restoreFromFile(self::ML_RATE_PRIMARY_SCALE);
-        return $regression->predict($treshold);                
+        $treshot_log = [log($treshot)];
+        return $regression->predict($treshot_log);                
     }
     
     /**

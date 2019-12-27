@@ -45,6 +45,7 @@ class MlController extends AbstractActionController
 //            'testTreshold' => $testTreshold,
 //            'predictRate' => $predictRate,
             'trains' => $trains,
+            'mlManager' => $this->mlManager,
         ]);
     }
     
