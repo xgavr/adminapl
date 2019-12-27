@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Application\Service\RateManager;
+use Application\Service\MlManager;
 
 /**
  * Description of ShopManagerFactory
@@ -24,8 +25,9 @@ class RateManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $mlManager = $container->get(MlManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new RateManager($entityManager);
+        return new RateManager($entityManager, $mlManager);
     }
 }

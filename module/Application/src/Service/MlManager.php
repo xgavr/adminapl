@@ -15,11 +15,15 @@ use Phpml\CrossValidation\StratifiedRandomSplit;
 use Phpml\Metric\Accuracy;
 use Phpml\Classification\MLPClassifier;
 use Phpml\Preprocessing\Normalizer;
+use Phpml\Regression\SVR;
+use Phpml\Regression\LeastSquares;
+use Phpml\SupportVectorMachine\Kernel;
 use Application\Entity\MlTitle;
 use Application\Entity\Goods;
 use Application\Entity\Rawprice;
 use Application\Entity\Token;
 use Application\Entity\Bigram;
+
 
 use Application\Filter\TokenizerQualifier;
 
@@ -35,6 +39,8 @@ class MlManager
     const ML_TITLE_DIR    = './data/ann/ml_title/'; //путь к папке с моделями mlTitle
     const ML_TITLE_FILE   = './data/ann/ml_title/dataset.csv'; //данные mlTitle
     const ML_TOKEN_GROUP_FILE   = './data/ann/ml_title/token_group_dataset.csv'; //данные групп наименований
+    const ML_RATE_PATH = './data/ann/rate/'; //папка расценок
+    const ML_RATE_PRIMARY_SCALE = './data/ann/rate/primary_scale.dat'; //начальная шкала
 
     /**
      * Doctrine entity manager.
@@ -53,6 +59,102 @@ class MlManager
     {
         $this->entityManager = $entityManager;
         $this->nameManager = $nameManager;
+    }
+    
+    /**
+     * Проверка качеста предсказания наценки
+     * 
+     * @param array $testPrice
+     * @param array $testMargin
+     * @param array $samples
+     * @param array $targets
+     * 
+     * @return boolean
+     */
+    public function rateAccuracy($testPrice, $testMargin, $samples, $targets)
+    {
+        $result = false;
+        
+        foreach ($samples as $key => $sample){
+            if ($testPrice < $sample){
+                if ($key > 0){
+                    if ($testMargin <= $targets[$key] && 
+                            $testMargin >= $targets[$key-1]){
+                        return true;
+                    }                    
+                } else {
+                    if ($testMargin >= $targets[$key]){
+                        return true;
+                    }                    
+                }
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Инициализация первоначальной шкалы для расценок
+     */
+    public function trainPrimaryScale()
+    {
+        $samples = [
+             50,  100,  500,  800,  1000,  2000,  3000,  5000,  10000,  20000,  50000,  100000,
+        ];
+        $targets = [
+            150,   70,   50,   45,    40,    35,    32,    29,     26,     24,     15,      10,
+            ];
+        
+        $treshots = [
+            rand(5, 100),
+            rand(100, 1000),
+            rand(1000, 5000),
+            rand(5000, 10000),
+            rand(10000, 20000),
+            rand(20000, 50000),
+            rand(50000, 100000),
+        ];
+        
+        $samples_log = [];
+        foreach ($samples as $sample){
+            $samples_log[] = [log($sample)];
+        }
+        
+        $treshots_log = [];
+        foreach ($treshots as $treshot){
+            $treshots_log[] = [log($treshot)];
+        }
+        
+        $result = [
+            'treshots' => $treshots,
+            'predicts' => [],
+        ];
+        
+        $regression = new SVR(Kernel::LINEAR, $degree = 1, $epsilon = 1.1, $cost = 1);
+        $regression->train($samples_log, $targets);
+
+        $result['predicts'][$degree] = $regression->predict($treshots_log);
+        
+//        if (!is_dir(self::ML_RATE_PATH)){
+//            mkdir(self::ML_RATE_PATH);
+//        }
+//
+//        $modelManager = new ModelManager();
+//        $modelManager->saveToFile($regression, self::ML_RATE_PRIMARY_SCALE);
+        
+        return $result;
+    }
+    
+    /**
+     * Предсказание процента по порогу по первоначальной шкале
+     * 
+     * @param array $treshold
+     */
+    public function predictPrimaryScale($treshold)
+    {
+        $modelManager = new ModelManager();
+        $regression = $modelManager->restoreFromFile(self::ML_RATE_PRIMARY_SCALE);
+        return $regression->predict($treshold);                
     }
     
     /**

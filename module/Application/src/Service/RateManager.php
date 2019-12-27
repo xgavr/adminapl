@@ -28,10 +28,17 @@ class RateManager
      */
     private $entityManager;
     
+    /**
+     * MlManager.
+     * @var \Application\Service\MlManager
+     */
+    private $mlManager;
+
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $mlManager)
     {
         $this->entityManager = $entityManager;
+        $this->mlManager = $mlManager;
     }    
     
     /**
@@ -171,15 +178,15 @@ class RateManager
     
     /**
      * Создать шкалу по умолчанию
-     * 
+     * @param array $params
      * @return Scale
      */
-    public function createDefaultScale()
+    public function createDefaultScale($params = null)
     {
         $minPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMinPrice();
+                ->findMinPrice($params);
         $maxPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMaxPrice();
+                ->findMaxPrice($params);
         
         $tresholds = range(round($minPrice, -2), $maxPrice, round($maxPrice/10, -3));
         var_dump($tresholds); exit;

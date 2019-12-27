@@ -28,4 +28,34 @@ $this->pageBreadcrumbs()->setItems([
             </button>                             
         </div>
     </div>
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Расценка
+            </div>
+        </div>
+        <div class="panel-body">
+            <button value="/ml/train-primary-scale" class="btn btn-info btn-xs refresh-button">
+                Инициализация начальной шкалы
+            </button>  
+            <table width="100%">
+                <tr>
+                    <th>Порог</th>
+                    <?php foreach($trains['predicts'] as $epsilon=>$predict):?>
+                        <th><?= $epsilon ?></th>
+                    <?php endforeach;?>                    
+                </tr>
+                <?php foreach($trains['treshots'] as $key => $treshot):?>
+                <tr>
+                    <td>
+                        <?= $treshot?>                        
+                    </td>
+                    <?php foreach($trains['predicts'] as $epsilon=>$predict):?>
+                        <td><?= $predict[$key] ?></td>
+                    <?php endforeach;?>                    
+                </tr>
+                <?php endforeach;?>
+            </table>
+        </div>
+    </div>
 </div>
