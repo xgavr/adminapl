@@ -104,19 +104,6 @@ class RateManager
     }
     
     /**
-     * 
-     * @param Scale $scale
-     */
-    public function fillDefaultTreshold($scale)
-    {
-        $minPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMinPrice();
-        $maxPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMaxPrice();
-        
-    }
-    
-    /**
      * Добавить шкалу
      * 
      * @param array $data
