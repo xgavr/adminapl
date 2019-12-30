@@ -25,7 +25,7 @@ class RateController extends AbstractActionController
     
     /**
      * Rate manager.
-     * @var \Application\Srvice\RateManager
+     * @var \Application\Service\RateManager
      */
     private $rateManager;
     
@@ -66,7 +66,73 @@ class RateController extends AbstractActionController
 
     public function viewAction()
     {
+        $rateId = $this->params()->fromRoute('id', -1);
+        
+        if ($rateId > 0) {
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findOneById($rateId);
+            if ($rate == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+
         return new ViewModel([
+            'rate' => $rate,
         ]);        
+    }
+
+    public function deleteAction()
+    {
+        $rateId = $this->params()->fromRoute('id', -1);
+        
+        if ($rateId > 0) {
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findOneById($rateId);
+            if ($rate == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+        
+        $this->rateManager->removeRate($rate);
+        
+        $this->redirect()->toRoute('rate');
+    }
+
+    public function viewScaleAction()
+    {
+        $scaleId = $this->params()->fromRoute('id', -1);
+        
+        if ($scaleId > 0) {
+            $scale = $this->entityManager->getRepository(Scale::class)
+                    ->findOneById($scaleId);
+            if ($scale == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+
+        return new ViewModel([
+            'scale' => $scale,
+        ]);        
+    }
+
+    public function deleteScaleAction()
+    {
+        $scaleId = $this->params()->fromRoute('id', -1);
+        
+        if ($scaleId > 0) {
+            $scale = $this->entityManager->getRepository(Scale::class)
+                    ->findOneById($scaleId);
+            if ($scale == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+        
+        $this->rateManager->removeScale($scale);
+        
+        $this->redirect()->toRoute('rate');
     }
 }

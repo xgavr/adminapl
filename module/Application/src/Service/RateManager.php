@@ -71,9 +71,11 @@ class RateManager
         $treshold->setRate($data['rate']);
         $treshold->setRounding($data['rounding']);
         $treshold->setTreshold($data['treshold']);
+
         $treshold->setScale($scale);
         
         $this->entityManager->persist($treshold);
+
         $this->entityManager->flush($treshold);
         
         return $treshold;
@@ -159,8 +161,13 @@ class RateManager
         foreach ($scale->getTresholds() as $treshold){
             $this->removeTreshold($treshold);
         }
+        
+        foreach ($scale->getRates() as $rate){
+            $this->entityManager->remove($rate);
+        }
+        
         $this->entityManager->remove($scale);
-        $this->entityManager->flush($scale);
+        $this->entityManager->flush();
     }
     
     /**
@@ -200,7 +207,7 @@ class RateManager
             'rate' => $this->mlManager->predictPrimaryScale($maxPrice),
         ]);
         
-        return $result;
+        return $scale;
     }
     
     /**
@@ -240,6 +247,17 @@ class RateManager
         $rate->setScale($this->getDefaultScale($data));
         
         $this->entityManager->persist($rate);
+        $this->entityManager->flush($rate);
+    }
+    
+    /**
+     * Удалить расценку
+     * 
+     * @param Rate $rate
+     */
+    public function removeRate($rate)
+    {
+        $this->entityManager->remove($rate);
         $this->entityManager->flush($rate);
     }
 }

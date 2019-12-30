@@ -1,0 +1,41 @@
+<?php
+$this->headTitle($scale->getName());
+$this->mainMenu()->setActiveItemId('raw');
+$this->pageBreadcrumbs()->setItems([
+            'Home' => $this->url('home'),
+            'Расценка' => $this->url('rate'),
+            $scale->getName() => $this->url('rate', ['action' => 'view-scale', 'id' => $scale->getId()]),
+            ]);
+        
+?>
+
+<h1>
+    <?= $this->escapeHtml($scale->getName()); ?>    
+</h1>
+
+<table class="table-striped">
+    <tr>
+        <th>
+            Порог
+        </th>
+        <th>
+            Наценка, %
+        </th>
+        <th>
+            Округление
+        </th>
+    </tr>
+    <?php foreach ($scale->getTresholds() as $treshold):?>
+        <tr>
+            <td>
+                <?php $treshold->getTreshold() ?>
+            </td>
+            <td>
+                <?php $treshold->getRate() ?>
+            </td>
+            <td>
+                <?php $treshold->getRounding() ?>
+            </td>
+        </tr>
+    <?php endforeach;?>
+</table>

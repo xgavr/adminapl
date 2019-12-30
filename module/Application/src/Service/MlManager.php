@@ -161,7 +161,7 @@ class MlManager
         $modelManager = new ModelManager();
         $regression = $modelManager->restoreFromFile(self::ML_RATE_PRIMARY_SCALE);
         $treshold_log = [log($treshold)];
-        return $regression->predict($treshold_log);                
+        return round($regression->predict($treshold_log), 2);                
     }
     
     /**

@@ -34,13 +34,13 @@ class Scale {
     protected $name;
 
    /**
-    * @ORM\OneToMany(targetEntity="ScaleTreshold", mappedBy="scale")
+    * @ORM\OneToMany(targetEntity="Application\Entity\ScaleTreshold", mappedBy="scale")
     * @ORM\JoinColumn(name="id", referencedColumnName="scale_id")
    */
    private $tresholds;
 
    /**
-    * @ORM\OneToMany(targetEntity="Rate", mappedBy="scale")
+    * @ORM\OneToMany(targetEntity="Application\Entity\Rate", mappedBy="scale")
     * @ORM\JoinColumn(name="id", referencedColumnName="scale_id")
    */
    private $rates;

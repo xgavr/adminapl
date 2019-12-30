@@ -52,7 +52,7 @@ class Rate
     protected $mode;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Scale", inversedBy="rates") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Scale", inversedBy="rates") 
      * @ORM\JoinColumn(name="scale_id", referencedColumnName="id")
      */
     protected $scale;

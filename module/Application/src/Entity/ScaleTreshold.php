@@ -44,7 +44,7 @@ class ScaleTreshold
     protected $rounding;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Scale", inversedBy="tresholds") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Scale", inversedBy="tresholds") 
      * @ORM\JoinColumn(name="scale_id", referencedColumnName="id")
      */
     protected $scale;
