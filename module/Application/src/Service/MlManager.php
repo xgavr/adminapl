@@ -41,6 +41,14 @@ class MlManager
     const ML_TOKEN_GROUP_FILE   = './data/ann/ml_title/token_group_dataset.csv'; //данные групп наименований
     const ML_RATE_PATH = './data/ann/rate/'; //папка расценок
     const ML_RATE_PRIMARY_SCALE = './data/ann/rate/primary_scale.dat'; //начальная шкала
+    
+    const RATE_SAMPLES = [ 
+        50,  100,  500,  800,  1000,  2000,  3000,  5000,  10000,  20000,  50000,  100000,
+    ];
+
+    const RATE_TARGETS = [ 
+       150,   70,   50,   45,    40,    35,    32,    29,     26,     24,     15,      10,
+    ];
 
     /**
      * Doctrine entity manager.
@@ -72,19 +80,20 @@ class MlManager
      * @return boolean
      */
     public function rateAccuracy($testPrice, $testMargin, $samples, $targets)
-    {
+    {        
         foreach ($samples as $key => $sample){
-            if ($testPrice < $sample){
+            if ((float) $testPrice < (float) $sample){
                 if ($key > 0){
-                    if ($testMargin >= $targets[$key] && 
-                            $testMargin <= $targets[$key-1]){
+                    if ((float)$testMargin >= (float)$targets[$key] && 
+                            (float)$testMargin <= (float)$targets[$key-1]){
                         return true;
                     }                    
                 } else {
-                    if ($testMargin >= $targets[$key]){
+                    if ((float)$testMargin >= (float)$targets[$key]){
                         return true;
                     }                    
                 }
+                return false;
             }
         }
         
@@ -96,12 +105,8 @@ class MlManager
      */
     public function trainPrimaryScale()
     {
-        $samples = [
-             50,  100,  500,  800,  1000,  2000,  3000,  5000,  10000,  20000,  50000,  100000,
-        ];
-        $targets = [
-            150,   70,   50,   45,    40,    35,    32,    29,     26,     24,     15,      10,
-            ];
+        $samples = self::RATE_SAMPLES;
+        $targets = self::RATE_TARGETS;
         
         $treshots = [
             rand(5, 100),
@@ -149,14 +154,14 @@ class MlManager
     /**
      * Предсказание процента по порогу по первоначальной шкале
      * 
-     * @param float $treshots
+     * @param float $treshold
      */
-    public function predictPrimaryScale($treshot)
+    public function predictPrimaryScale($treshold)
     {
         $modelManager = new ModelManager();
         $regression = $modelManager->restoreFromFile(self::ML_RATE_PRIMARY_SCALE);
-        $treshot_log = [log($treshot)];
-        return $regression->predict($treshot_log);                
+        $treshold_log = [log($treshold)];
+        return $regression->predict($treshold_log);                
     }
     
     /**

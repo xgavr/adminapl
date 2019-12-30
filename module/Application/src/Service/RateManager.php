@@ -175,8 +175,30 @@ class RateManager
         $maxPrice = $this->entityManager->getRepository(Goods::class)
                 ->findMaxPrice($params);
         
-        $tresholds = range(round($minPrice, -2), $maxPrice, round($maxPrice/10, -3));
-        var_dump($tresholds); exit;
+        $samples = $this->mlManager::RATE_SAMPLES;
+        
+        $scale = $this->addScale($params);
+        $this->addTreshold($scale, [
+            'treshold' => $minPrice,
+            'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
+            'rate' => $this->mlManager->predictPrimaryScale($minPrice),
+        ]);
+        
+        $tresholds[] = $minPrice; 
+        foreach ($samples as $sample){
+            if ($minPrice < $sample && $maxPrice > $sample){
+                $this->addTreshold($scale, [
+                    'treshold' => $sample,
+                    'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
+                    'rate' => $this->mlManager->predictPrimaryScale($sample),
+                ]);
+            }
+        }
+        $this->addTreshold($scale, [
+            'treshold' => $maxPrice,
+            'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
+            'rate' => $this->mlManager->predictPrimaryScale($maxPrice),
+        ]);
         
         return $result;
     }
@@ -184,9 +206,10 @@ class RateManager
     /**
      * Получить/создать шкалу по умолчанию
      * 
+     * @param array $params
      * @return Scale
      */
-    public function getDefaultScale()
+    public function getDefaultScale($params)
     {
         $scales = $this->entityManager->getRepository(Scale::class)
                 ->findBy([]);
@@ -194,7 +217,7 @@ class RateManager
             return $scale;
         }        
         
-        return $this->createDefaultScale();
+        return $this->createDefaultScale($params);
     }
     
     /**
@@ -214,7 +237,7 @@ class RateManager
                 ->findOneById(1);
         
         $rate->setOffice($defaultOffice);
-        $rate->setScale($this->getDefaultScale());
+        $rate->setScale($this->getDefaultScale($data));
         
         $this->entityManager->persist($rate);
         $this->entityManager->flush($rate);

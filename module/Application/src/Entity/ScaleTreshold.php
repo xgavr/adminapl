@@ -19,6 +19,8 @@ use Application\Entity\Scale;
  */
 class ScaleTreshold 
 {
+    const DEFAULT_ROUNDING = -1; //окруление по умолчанию
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
