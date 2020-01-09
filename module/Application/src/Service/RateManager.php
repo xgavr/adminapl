@@ -171,16 +171,17 @@ class RateManager
     }
     
     /**
-     * Создать шкалу по умолчанию
-     * @param array $params
-     * @return Scale
+     * Обновить шаги шкалы
+     * 
+     * @param Scale $scale
+     * @param float $minPrice
+     * @param float $maxPrice 
      */
-    public function createDefaultScale($params = null)
+    public function createDefaultTresholds($scale, $minPrice, $maxPrice)
     {
-        $minPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMinPrice($params);
-        $maxPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMaxPrice($params);
+        foreach ($scale->getTresholds() as $treshold){
+            $this->removeTreshold($treshold);
+        }
         
         $samples = $this->mlManager::RATE_SAMPLES;
         
@@ -192,7 +193,6 @@ class RateManager
                 $maxPrice = $samples[count($samples) - 1];
             }
 
-            $scale = $this->addScale($params);
             $this->addTreshold($scale, [
                 'treshold' => $minPrice,
                 'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
@@ -213,12 +213,29 @@ class RateManager
                 'treshold' => $maxPrice,
                 'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
                 'rate' => $this->mlManager->predictPrimaryScale($maxPrice),
-            ]);
-
-            return $scale;
+            ]);        
         }
         
         return;
+    }
+    
+    /**
+     * Создать шкалу по умолчанию
+     * @param array $params
+     * @return Scale
+     */
+    public function createDefaultScale($params = null)
+    {
+        $minPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMinPrice($params);
+        $maxPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMaxPrice($params);
+        
+        $scale = $this->addScale($params);
+
+        $this->createDefaultTresholds($scale, $minPrice, $maxPrice);
+
+        return $scale;
     }
     
     /**
@@ -285,6 +302,37 @@ class RateManager
         
         $this->entityManager->persist($rate);
         $this->entityManager->flush($rate);
+    }
+    
+    /**
+     * Обновить шкалу расценки
+     * 
+     * @param Rate $rate
+     */
+    public function updateRateScale($rate)
+    {
+        
+        $params = [
+            'name' => $rate->getName(),
+        ];
+        if ($rate->getSupplier()){
+            $params['supplier'] = $rate->getSupplier()->getId();
+        }
+        if ($rate->getGenericGroup()){
+            $params['genericGroup'] = $rate->getGenericGroup()->getId();
+        }
+        if ($rate->getProducer()){
+            $params['producer'] = $rate->getProducer()->getId();
+        }
+        
+        $minPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMinPrice($params);
+        $maxPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMaxPrice($params);
+                
+        $scale = $rate->getScale();
+
+        $this->createDefaultTresholds($scale, $minPrice, $maxPrice);
     }
     
     /**

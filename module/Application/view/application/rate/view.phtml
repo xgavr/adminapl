@@ -1,19 +1,92 @@
 <?php
+use Application\Entity\ScaleTreshold;
+
 $this->headTitle($rate->getName());
 $this->mainMenu()->setActiveItemId('raw');
 $this->pageBreadcrumbs()->setItems([
             'Home' => $this->url('home'),
-            'Расценка' => $this->url('rate'),
+            'Расценки' => $this->url('rate'),
             $rate->getName() => $this->url('rate', ['action' => 'view', 'id' => $rate->getId()]),
             ]);
         
+$col = 1;
 ?>
-
-<a href="
-    <?= $this->url('rate'); ?>">
-    &lt;&lt; Назад в список расценок
-</a>
 
 <h1>
     <?= $this->escapeHtml($rate->getName()); ?>    
 </h1>
+<p>
+    <?php if ($rate->getSupplier()):?>
+        <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rate->getSupplier()->getId()])?>">
+            <?= $rate->getSupplier()->getName()?>
+        </a>
+    <?php endif; ?>
+    <?php if ($rate->getGenericGroup()):?>
+        <a href="<?= $this->url('group', ['action' => 'view', 'id' => $rate->getGenericGroup()->getId()])?>">
+            <?= $rate->getGenericGroup()->getName()?>
+        </a>
+    <?php endif; ?>
+    <?php if ($rate->getProducer()):?>
+        <a href="<?= $this->url('producer', ['action' => 'view', 'id' => $rate->getProducer()->getId()])?>">
+            <?= $rate->getProducer()->getName()?>
+        </a>
+    <?php endif; ?> 
+    Закупочные цены от <?= round($minPrice)?> до <?= round($maxPrice)?>.
+    <a class="btn btn-info" href="<?= $this->url('rate',
+            ['action'=>'update-rate-scale', 'id'=>$rate->getId()]); ?>">
+        <span class="glyphicon glyphicon-refresh">Обновить шкалу</span> 
+    </a>    
+    <a class="btn btn-danger" href="<?= $this->url('rate',
+            ['action'=>'delete', 'id'=>$rate->getId()]); ?>">
+        <span class="glyphicon glyphicon-remove"></span> Удалить
+    </a>    
+</p>
+<table class="table table-striped">
+    <tr>
+        <th rowspan="2"  align="center">
+            Порог
+        </th>
+        <th colspan="12"  align="center">
+            Цены и %% 
+        </th>
+        <th rowspan="2"  align="center">
+            Округление
+        </th>
+    </tr>
+    <tr>
+        <th  align="center">
+            Розница
+        </th>
+        <th  align="center">
+            %
+        </th>
+        <?php while ($col <= ScaleTreshold::PRICE_COL_COUNT):?>
+            <th align="center">Опт <?= $col?></th>
+            <th align="center">%</th>
+            <?php $col++ ?>
+        <?php endwhile;?>
+    </tr>
+    <?php foreach ($rate->getScale()->getTresholds() as $treshold):?>
+        <tr>
+            <td align="right">
+                <?= round($treshold->getTreshold()) ?>
+            </td>
+            <td align="right">
+                <?= $treshold->getRetail() ?>
+            </td>
+            <td>
+                <?= round($treshold->getFormatRate()) ?>
+            </td>
+            <?php $priceCols = $treshold->getPriceCols(); $col = 1;?>
+            <?php while ($col <= ScaleTreshold::PRICE_COL_COUNT):?>
+                <td align="right"><?= $priceCols[$col]['price']?></td`>
+                <td align="center"><?= round($priceCols[$col]['percent'])?></td`>
+                <?php $col++ ?>
+            <?php endwhile;?>
+            <td>
+                <?= $treshold->getRounding() ?>
+            </td>
+        </tr>
+    <?php endforeach;?>
+</table>
+

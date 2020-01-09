@@ -16,6 +16,7 @@ use Application\Entity\Rate;
 use Application\Entity\Supplier;
 use Application\Entity\GenericGroup;
 use Application\Entity\Producer;
+use Application\Entity\Goods;
 
 
 class RateController extends AbstractActionController
@@ -45,14 +46,11 @@ class RateController extends AbstractActionController
     
     public function indexAction()
     {
-        $scales = $this->entityManager->getRepository(Scale::class)
-                ->findBy([], []);
         
         $rates = $this->entityManager->getRepository(Rate::class)
                 ->findBy([], []);
         
         return new ViewModel([
-            'scales' => $scales,
             'rates' => $rates,
         ]);
     }
@@ -102,12 +100,48 @@ class RateController extends AbstractActionController
                 return;                        
             }        
         }
+        
+        $params = [];
+        if ($rate->getSupplier()){
+            $params['supplier'] = $rate->getSupplier()->getId();
+        }
+        if ($rate->getGenericGroup()){
+            $params['genericGroup'] = $rate->getGenericGroup()->getId();
+        }
+        if ($rate->getProducer()){
+            $params['producer'] = $rate->getProducer()->getId();
+        }
+        
+        $minPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMinPrice($params);
+        $maxPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMaxPrice($params);
 
         return new ViewModel([
             'rate' => $rate,
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice,
         ]);        
     }
 
+    public function updateRateScaleAction()
+    {
+        $rateId = $this->params()->fromRoute('id', -1);
+        
+        if ($rateId > 0) {
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findOneById($rateId);
+            if ($rate == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+        
+        $this->rateManager->updateRateScale($rate);
+        
+        $this->redirect()->toRoute('rate', ['action' => 'view', 'id' => $rate->getId()]);        
+    }
+    
     public function deleteAction()
     {
         $rateId = $this->params()->fromRoute('id', -1);

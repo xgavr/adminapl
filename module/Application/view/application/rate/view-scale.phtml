@@ -46,8 +46,8 @@ $col = 1;
     </tr>
     <?php foreach ($scale->getTresholds() as $treshold):?>
         <tr>
-            <td>
-                <?= $treshold->getTreshold() ?>
+            <td align="right">
+                <?= round($treshold->getTreshold()) ?>
             </td>
             <td align="right">
                 <?= $treshold->getRetail() ?>
