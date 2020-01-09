@@ -1,4 +1,7 @@
 <?php
+
+use Application\Entity\ScaleTreshold;
+
 $this->headTitle($scale->getName());
 $this->mainMenu()->setActiveItemId('raw');
 $this->pageBreadcrumbs()->setItems([
@@ -6,6 +9,9 @@ $this->pageBreadcrumbs()->setItems([
             'Расценка' => $this->url('rate'),
             $scale->getName() => $this->url('rate', ['action' => 'view-scale', 'id' => $scale->getId()]),
             ]);
+
+
+$col = 1;
         
 ?>
 
@@ -13,28 +19,50 @@ $this->pageBreadcrumbs()->setItems([
     <?= $this->escapeHtml($scale->getName()); ?>    
 </h1>
 
-<table class="table-striped">
+<table class="table table-striped">
     <tr>
-        <th>
+        <th rowspan="2"  align="center">
             Порог
         </th>
-        <th>
-            Наценка, %
+        <th colspan="12"  align="center">
+            Цены и %% 
         </th>
-        <th>
+        <th rowspan="2"  align="center">
             Округление
         </th>
+    </tr>
+    <tr>
+        <th  align="center">
+            Розница
+        </th>
+        <th  align="center">
+            %
+        </th>
+        <?php while ($col <= ScaleTreshold::PRICE_COL_COUNT):?>
+            <th align="center">Опт <?= $col?></th>
+            <th align="center">%</th>
+            <?php $col++ ?>
+        <?php endwhile;?>
     </tr>
     <?php foreach ($scale->getTresholds() as $treshold):?>
         <tr>
             <td>
-                <?php $treshold->getTreshold() ?>
+                <?= $treshold->getTreshold() ?>
+            </td>
+            <td align="right">
+                <?= $treshold->getRetail() ?>
             </td>
             <td>
-                <?php $treshold->getRate() ?>
+                <?= round($treshold->getFormatRate()) ?>
             </td>
+            <?php $priceCols = $treshold->getPriceCols(); $col = 1;?>
+            <?php while ($col <= ScaleTreshold::PRICE_COL_COUNT):?>
+                <td align="right"><?= $priceCols[$col]['price']?></td`>
+                <td align="center"><?= round($priceCols[$col]['percent'])?></td`>
+                <?php $col++ ?>
+            <?php endwhile;?>
             <td>
-                <?php $treshold->getRounding() ?>
+                <?= $treshold->getRounding() ?>
             </td>
         </tr>
     <?php endforeach;?>

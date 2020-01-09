@@ -8,41 +8,101 @@
 
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\Country;
-use Application\Entity\Producer;
+use Application\Entity\Scale;
+use Application\Entity\ScaleTreshold;
+use Application\Entity\Rate;
+
 /**
  * Description of RateRepository
  *
  * @author Daddy
  */
-class RateRepository  extends EntityRepository{
+class RateRepository  extends EntityRepository
+{
 
-    public function findAllCountry()
+    /**
+     * Найти расценку по умолчанию
+     * 
+     * @return Rate
+     */
+    public function findDefaultRate()
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(Country::class, 'c')
-            ->orderBy('c.name')
-                ;
+        $queryBuilder->select('r')
+            ->from(Rate::class, 'r')
+            ->orderBy('r.id', 'ASC')
+            ;
+        
+        $rates = $queryBuilder->getQuery()->getResult();
+        foreach ($rates as $rate){
+            return $rate;
+        }
+        
+        return;
+    }
+    
+    /**
+     * Плучить расценку
+     * 
+     * @param array $params
+     * @return array
+     */
+    public function findRate($params = null)
+    {
+        $entityManager = $this->getEntityManager();
 
-        return $queryBuilder->getQuery();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+            ->from(Rate::class, 'r')
+            ->orderBy('r.id', 'ASC')
+            ;
+        
+        if (is_array($params)){
+            if (isset($params['supplier'])){
+                $queryBuilder->where('r.supplier = ?1')
+                        ->setParameter('1', $params['supplier']);
+            }
+            if (isset($params['producer'])){
+                $queryBuilder->where('r.producer = ?1')
+                        ->setParameter('1', $params['producer']);
+            }
+            if (isset($params['genericGroup'])){
+                $queryBuilder->where('r.genericGroup = ?1')
+                        ->setParameter('1', $params['genericGroup']);
+            }
+        }
+
+        $rates = $queryBuilder->getQuery()->getResult();
+        foreach ($rates as $rate){
+            return $rate;
+        }
+        
+        return $this->findDefaultRate();
     }    
     
-    public function findAllProducer()
+    /**
+     * Получить пороги шкалы
+     * 
+     * @param Scale $scale
+     */
+    public function tresholds($scale)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(Producer::class, 'c')
-            ->orderBy('c.id', 'DESC')
+        $queryBuilder->select('t')
+            ->from(ScaleTreshold::class, 't')
+            ->where('t.scale = ?1')
+            ->setParameter('1', $scale->getId())    
                 ;
 
         return $queryBuilder->getQuery();
-    }    
+        
+    }
     
 }

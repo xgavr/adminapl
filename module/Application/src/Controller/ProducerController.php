@@ -13,6 +13,7 @@ use Application\Entity\Producer;
 use Application\Entity\Goods;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Article;
+use Application\Entity\Rate;
 use Application\Form\ProducerForm;
 use Zend\View\Model\JsonModel;
 
@@ -243,36 +244,29 @@ class ProducerController extends AbstractActionController
             return;                        
         }        
         
-        $unknownProducer = null;
-        if ($unknownProducerId){
-            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneById($unknownProducerId);            
-        }
-        
-        $goodsQuery = $this->entityManager->getRepository(Goods::class)
-                        ->findAllGoods(['producer' => $producer, 'unknownProducer' => $unknownProducer]);
-
-        $adapter = new DoctrineAdapter(new ORMPaginator($goodsQuery, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);
-
-        $totalGoodsCount = $paginator->getTotalItemCount();
 
         $prevQuery = $this->entityManager->getRepository(Producer::class)
                         ->findAllProducer(['prev1' => $producer->getName()]);
         $nextQuery = $this->entityManager->getRepository(Producer::class)
-                        ->findAllProducer(['next1' => $producer->getName()]); 
+                        ->findAllProducer(['next1' => $producer->getName()]);
+        
+        $minPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMinPrice(['producer' => $producer->getId()]);
+        $maxPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMaxPrice(['producer' => $producer->getId()]);
+        
+        $rate = $this->entityManager->getRepository(Rate::class)
+                ->findRate(['producer' => $producer->getId()]);
 
         // Render the view template.
         return new ViewModel([
             'producer' => $producer,
-            'unknownProducerQuery' => $unknownProducer,
-            'goods' => $paginator,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'producerManager' => $this->producerManager,
-            'totalGoodsCount' => $totalGoodsCount,
+            'minPrice' => $minPrice,
+            'maxPrice' =>$maxPrice,
+            'rate' => $rate,
         ]);
     }
     

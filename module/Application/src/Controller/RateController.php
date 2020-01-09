@@ -11,7 +11,11 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Scale;
+use Application\Entity\ScaleTreshold;
 use Application\Entity\Rate;
+use Application\Entity\Supplier;
+use Application\Entity\GenericGroup;
+use Application\Entity\Producer;
 
 
 class RateController extends AbstractActionController
@@ -56,8 +60,30 @@ class RateController extends AbstractActionController
     public function addAction()
     {
         $name = $this->params()->fromQuery('prompt');
+        $supplierId = $this->params()->fromQuery('supplier');
+        $genericGroupId = $this->params()->fromQuery('genericGroup');
+        $producerId = $this->params()->fromQuery('producer');
+        
+        $producer = $supplier = $genericGroup = null;
+        if ($supplierId){
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->findOneById($supplierId);
+        }
+        if ($genericGroupId){
+            $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
+                    ->findOneById($genericGroupId);
+        }
+        if ($producerId){
+            $producer = $this->entityManager->getRepository(Producer::class)
+                    ->findOneById($producerId);
+        }
                 
-        $this->rateManager->addRate(['name' => $name]);
+        $this->rateManager->addRate([
+            'name' => $name,
+            'producer' => $producer,
+            'genericGroup' => $genericGroup,
+            'supplier' => $supplier,
+        ]);
         
         return new JsonModel([
             'ok',
@@ -112,7 +138,7 @@ class RateController extends AbstractActionController
                 return;                        
             }        
         }
-
+        
         return new ViewModel([
             'scale' => $scale,
         ]);        

@@ -184,30 +184,41 @@ class RateManager
         
         $samples = $this->mlManager::RATE_SAMPLES;
         
-        $scale = $this->addScale($params);
-        $this->addTreshold($scale, [
-            'treshold' => $minPrice,
-            'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
-            'rate' => $this->mlManager->predictPrimaryScale($minPrice),
-        ]);
-        
-        $tresholds[] = $minPrice; 
-        foreach ($samples as $sample){
-            if ($minPrice < $sample && $maxPrice > $sample){
-                $this->addTreshold($scale, [
-                    'treshold' => $sample,
-                    'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
-                    'rate' => $this->mlManager->predictPrimaryScale($sample),
-                ]);
+        if (count($samples)){
+            if (!$minPrice){
+                $minPrice = $samples[0];
             }
+            if (!$maxPrice){
+                $maxPrice = $samples[count($samples) - 1];
+            }
+
+            $scale = $this->addScale($params);
+            $this->addTreshold($scale, [
+                'treshold' => $minPrice,
+                'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
+                'rate' => $this->mlManager->predictPrimaryScale($minPrice),
+            ]);
+
+            $tresholds[] = $minPrice; 
+            foreach ($samples as $sample){
+                if ($minPrice < $sample && $maxPrice > $sample){
+                    $this->addTreshold($scale, [
+                        'treshold' => $sample,
+                        'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
+                        'rate' => $this->mlManager->predictPrimaryScale($sample),
+                    ]);
+                }
+            }
+            $this->addTreshold($scale, [
+                'treshold' => $maxPrice,
+                'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
+                'rate' => $this->mlManager->predictPrimaryScale($maxPrice),
+            ]);
+
+            return $scale;
         }
-        $this->addTreshold($scale, [
-            'treshold' => $maxPrice,
-            'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
-            'rate' => $this->mlManager->predictPrimaryScale($maxPrice),
-        ]);
         
-        return $scale;
+        return;
     }
     
     /**
@@ -218,10 +229,22 @@ class RateManager
      */
     public function getDefaultScale($params)
     {
-        $scales = $this->entityManager->getRepository(Scale::class)
-                ->findBy([]);
-        foreach ($scales as $scale){
-            return $scale;
+        $findParams = [];
+        if (isset($params['producer'])){
+            $findParams['producer'] = $params['producer'];
+        }
+        if (isset($params['genericGroup'])){
+            $findParams['genericGroup'] = $params['genericGroup'];
+        }
+        if (isset($params['supplier'])){
+            $findParams['supplier'] = $params['supplier'];
+        }
+        
+        $rates = $this->entityManager->getRepository(Rate::class)
+                ->findBy($findParams);
+        
+        foreach ($rates as $rate){
+            return $rate->getScale();
         }        
         
         return $this->createDefaultScale($params);
@@ -236,14 +259,28 @@ class RateManager
     public function addRate($data)
     {
         $rate = new Rate();
-        $rate->setName($data['name']);
-        $rate->setStatus(Rate::STATUS_ACTIVE);
-        $rate->setMode(Rate::MODE_MARKUP);
         
+        if (isset($data['name'])){
+            $name = $data['name'];
+        }        
+        if (isset($data['supplier'])){
+            $rate->setSupplier($data['supplier']);
+        }
+        if (isset($data['genericGroup'])){
+            $rate->setGenericGroup($data['genericGroup']);
+        }        
+        if (isset($data['producer'])){
+            $rate->setProducer($data['producer']);
+        }        
         $defaultOffice = $this->entityManager->getRepository(Office::class)
                 ->findOneById(1);
         
         $rate->setOffice($defaultOffice);
+        
+        $rate->setName($name);
+        $rate->setStatus(Rate::STATUS_ACTIVE);
+        $rate->setMode(Rate::MODE_MARKUP);
+        
         $rate->setScale($this->getDefaultScale($data));
         
         $this->entityManager->persist($rate);
