@@ -24,6 +24,7 @@ use Application\Entity\Rawprice;
 use Application\Entity\Token;
 use Application\Entity\Bigram;
 use Application\Entity\Rate;
+use Application\Entity\ScaleTreshold;
 
 
 use Application\Filter\TokenizerQualifier;
@@ -215,7 +216,7 @@ class MlManager
         $modelManager = new ModelManager();
         $regression = $modelManager->restoreFromFile($modelFileNameFull);
         $treshold_log = [log($treshold)];
-        return round($regression->predict($treshold_log), 2);                
+        return max(round($regression->predict($treshold_log), 2), ScaleTreshold::MIN_RATE);                
     }
     
     /**

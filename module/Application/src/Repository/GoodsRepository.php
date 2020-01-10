@@ -1466,7 +1466,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('min(g.minPrice) as minPrice')
                 ->from(Goods::class, 'g')
-                ->where('g.minPrice > 0')
+                ->where('g.minPrice > 1')
                 ->setMaxResults(1)
                 ;
 
