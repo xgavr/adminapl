@@ -11,6 +11,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Entity\GenericGroup;
+use Application\Entity\Goods;
+use Application\Entity\Rate;
 
 class GroupController extends AbstractActionController
 {
@@ -89,12 +91,21 @@ class GroupController extends AbstractActionController
         $aplGroups = $this->entityManager->getRepository(GenericGroup::class)
                 ->getGroupApl($group);
 
-        // Render the view template.
+        $minPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMinPrice(['genericGroup' => $group->getId()]);
+        $maxPrice = $this->entityManager->getRepository(Goods::class)
+                ->findMaxPrice(['genericGroup' => $group->getId()]);
+        $rate = $this->entityManager->getRepository(Rate::class)
+                ->findRate(['genericGroup' => $group->getId()]);
+        
         return new ViewModel([
             'group' => $group,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'aplGroups' => $aplGroups,
+            'minPrice' => $minPrice,
+            'maxPrice' =>$maxPrice,
+            'rate' => $rate,
         ]);
     }      
     
@@ -202,7 +213,7 @@ class GroupController extends AbstractActionController
             return;                        
         }        
 
-        $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $goodCount = $this->entityManager->getRepository(Goods::class)
                 ->count(['genericGroup' => $group->getId()]);
         $this->entityManager->getConnection()->update('generic_group', ['good_count' => $goodCount], ['id' => $group->getId()]);            
 

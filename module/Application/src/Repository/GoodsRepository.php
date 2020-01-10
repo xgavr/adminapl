@@ -1480,13 +1480,7 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('2', $params['genericGroup']);
             }
             if (isset($params['supplier'])){
-                $queryBuilder->join('g.articles', 'a')
-                        ->join('a.rawprice', 'r')
-                        ->join('r.raw', 'raw')
-                        ->andWhere('r.status = ?3')
-                        ->andWhere('raw.supplier = ?4')
-                        ->setParameter('3', Rawprice::STATUS_PARSED)
-                        ->setParameter('4', $params['supplier']);
+                return 0;
             }
         }
 
@@ -1518,13 +1512,7 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('2', $params['genericGroup']);
             }
             if (isset($params['supplier'])){
-                $queryBuilder->join('g.articles', 'a')
-                        ->join('a.rawprice', 'r')
-                        ->join('r.raw', 'raw')
-                        ->andWhere('r.status = ?3')
-                        ->andWhere('raw.supplier = ?4')
-                        ->setParameter('3', Rawprice::STATUS_PARSED)
-                        ->setParameter('4', $params['supplier']);
+                return 0;
             }
         }
         

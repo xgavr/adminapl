@@ -88,6 +88,11 @@ class Rate
         return $this->id;
     }
 
+    public function getRateModelFileName() 
+    {
+        return "rate_scale_{$this->id}.dat";
+    }
+
     public function setId($id) 
     {
         $this->id = $id;

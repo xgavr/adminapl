@@ -146,12 +146,15 @@ if ($unknownProducerQuery){
                                     <?= $rate->getName()?>
                                 </a>
                             </div>
-                            <div class="pull-right">
-                                <button value="/rate/add/?producer=<?= $producer->getId()?>&prompt=Расценка для <?= $producer->getName()?>" class="btn btn-info btn-xs refresh-button"
-                                        title="Создать специальную расценку">
-                                    <span class="glyphicon glyphicon-plus" ></span>
-                                </button> 
-                            </div>
+                            <?php if (!$rate->getProducer()):?>
+                                <div class="pull-right">
+                                    <button value="/rate/add/?producer=<?= $producer->getId()?>&prompt=Расценка для <?= $producer->getName()?>" class="btn btn-info btn-xs refresh-button"
+                                            title="Создать специальную расценку">
+                                        <span class="glyphicon glyphicon-plus" ></span>
+                                    </button> 
+                                </div>
+                            <?php else:?>
+                            <?php endif;?>
                         </div>
                     <?php endif; ?>
                 </div>

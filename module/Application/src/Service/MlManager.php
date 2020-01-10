@@ -23,6 +23,7 @@ use Application\Entity\Goods;
 use Application\Entity\Rawprice;
 use Application\Entity\Token;
 use Application\Entity\Bigram;
+use Application\Entity\Rate;
 
 
 use Application\Filter\TokenizerQualifier;
@@ -150,7 +151,7 @@ class MlManager
         
         return $result;
     }
-    
+
     /**
      * Предсказание процента по порогу по первоначальной шкале
      * 
@@ -162,6 +163,74 @@ class MlManager
         $regression = $modelManager->restoreFromFile(self::ML_RATE_PRIMARY_SCALE);
         $treshold_log = [log($treshold)];
         return round($regression->predict($treshold_log), 2);                
+    }
+    
+    /**
+     * Обучение специальной расценки
+     * 
+     * @param Rate $rate
+     * @param array $samples
+     * @param array $targets
+     * @return null
+     */
+    public function trainRateScale($rate, $samples, $targets)
+    {
+        $samples_log = [];
+        foreach ($samples as $sample){
+            $samples_log[] = [log($sample)];
+        }
+
+        $regression = new SVR(Kernel::LINEAR);
+        $regression->train($samples_log, $targets);
+
+        if (!is_dir(self::ML_RATE_PATH)){
+            mkdir(self::ML_RATE_PATH);
+        }
+        
+        $modelFilename = self::ML_RATE_PATH.$rate->getRateModelFileName();
+
+        $modelManager = new ModelManager();
+        $modelManager->saveToFile($regression, $modelFilename);
+        
+        return;
+    }
+    
+    /**
+     * Предсказание процента по порогу по специальной шкале расценки
+     * 
+     * @param float $treshold
+     * @param string $modelFileName
+     * 
+     * @return float
+     */
+    public function predictRateScale($treshold, $modelFileName = null)
+    {
+        $modelFileNameFull = self::ML_RATE_PRIMARY_SCALE;
+        if ($modelFileName){
+            if (file_exists(self::ML_RATE_PATH.$modelFileName)){
+                $modelFileNameFull = self::ML_RATE_PATH.$modelFileName;
+            }
+        }    
+
+        $modelManager = new ModelManager();
+        $regression = $modelManager->restoreFromFile($modelFileNameFull);
+        $treshold_log = [log($treshold)];
+        return round($regression->predict($treshold_log), 2);                
+    }
+    
+    /**
+     * Удалить модель специальной шкалы
+     * @param Rate $rate
+     */
+    public function removeModelRateScale($rate)
+    {
+        
+        $modelFilename = self::ML_RATE_PATH.$rate->getRateModelFileName();
+        if (file_exists($modelFilename)){
+            unlink($modelFilename);
+        }
+        
+        return;
     }
     
     /**

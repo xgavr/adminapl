@@ -142,6 +142,25 @@ class RateController extends AbstractActionController
         $this->redirect()->toRoute('rate', ['action' => 'view', 'id' => $rate->getId()]);        
     }
     
+    public function changeRateScaleAction()
+    {
+        $rateId = $this->params()->fromRoute('id', -1);
+        $change = $this->params()->fromQuery('plus', 0);
+        
+        if ($rateId > 0) {
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findOneById($rateId);
+            if ($rate == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+        
+        $this->rateManager->changeRateScale($rate, $change);
+        
+        $this->redirect()->toRoute('rate', ['action' => 'view', 'id' => $rate->getId()]);        
+    }
+    
     public function deleteAction()
     {
         $rateId = $this->params()->fromRoute('id', -1);

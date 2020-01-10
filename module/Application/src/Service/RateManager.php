@@ -176,8 +176,9 @@ class RateManager
      * @param Scale $scale
      * @param float $minPrice
      * @param float $maxPrice 
+     * @param string $modelFileName
      */
-    public function createDefaultTresholds($scale, $minPrice, $maxPrice)
+    public function createDefaultTresholds($scale, $minPrice, $maxPrice, $modelFileName = null)
     {
         foreach ($scale->getTresholds() as $treshold){
             $this->removeTreshold($treshold);
@@ -196,7 +197,7 @@ class RateManager
             $this->addTreshold($scale, [
                 'treshold' => $minPrice,
                 'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
-                'rate' => $this->mlManager->predictPrimaryScale($minPrice),
+                'rate' => $this->mlManager->predictRateScale($minPrice, $modelFileName),
             ]);
 
             $tresholds[] = $minPrice; 
@@ -205,14 +206,14 @@ class RateManager
                     $this->addTreshold($scale, [
                         'treshold' => $sample,
                         'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
-                        'rate' => $this->mlManager->predictPrimaryScale($sample),
+                        'rate' => $this->mlManager->predictRateScale($sample, $modelFileName),
                     ]);
                 }
             }
             $this->addTreshold($scale, [
                 'treshold' => $maxPrice,
                 'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
-                'rate' => $this->mlManager->predictPrimaryScale($maxPrice),
+                'rate' => $this->mlManager->predictRateScale($maxPrice, $modelFileName),
             ]);        
         }
         
@@ -332,7 +333,29 @@ class RateManager
                 
         $scale = $rate->getScale();
 
-        $this->createDefaultTresholds($scale, $minPrice, $maxPrice);
+        $this->createDefaultTresholds($scale, $minPrice, $maxPrice, $rate->getRateModelFileName());
+    }
+    
+    /**
+     * Изменить наценки шкалы 
+     * 
+     * @param Rate $rate
+     * @param float $change
+     */
+    public function changeRateScale($rate, $change)
+    {
+        if ($change != 0){
+            $samples = [];
+            $targets = [];
+            foreach ($rate->getScale()->getTresholds() as $treshold){
+                $samples[] = $treshold->getTreshold();
+                $targets[] = $treshold->getRate() + $change*$treshold->getRate()/100;
+            }
+            $this->mlManager->trainRateScale($rate, $samples, $targets);
+        } else {
+            $this->mlManager->removeModelRateScale($rate);
+        }   
+        $this->updateRateScale($rate);
     }
     
     /**
@@ -342,6 +365,8 @@ class RateManager
      */
     public function removeRate($rate)
     {
+        $this->mlManager->removeModelRateScale($rate);
+        
         $this->entityManager->remove($rate);
         $this->entityManager->flush($rate);
     }

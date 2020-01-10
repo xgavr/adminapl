@@ -16,6 +16,8 @@ use Application\Entity\PriceDescription;
 use Application\Entity\BillGetting;
 use Application\Entity\RequestSetting;
 use Application\Entity\SupplySetting;
+use Application\Entity\Goods;
+use Application\Entity\Rate;
 use Application\Form\SupplierForm;
 use Application\Form\PriceGettingForm;
 use Application\Form\PriceDescriptionForm;
@@ -353,6 +355,9 @@ class SupplierController extends AbstractActionController
             ->findAllRaw(null, $supplier)
             ->getResult();
 
+        $rate = $this->entityManager->getRepository(Rate::class)
+                ->findRate(['supplier' => $supplier->getId()]);
+        
         
         // Render the view template.
         return new ViewModel([
@@ -362,6 +367,7 @@ class SupplierController extends AbstractActionController
             'lastPrice' => $this->supplierManager->getLastPriceFile($supplier),
             'arxPrice' => $this->supplierManager->getArxPriceFile($supplier),
             'raws' => $raws,
+            'rate' => $rate,
         ]);
     }    
     

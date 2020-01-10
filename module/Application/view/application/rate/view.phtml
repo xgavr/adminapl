@@ -48,6 +48,34 @@ $col = 1;
         </th>
         <th colspan="12"  align="center">
             Цены и %% 
+            <a class="btn btn-warning" href="<?= $this->url('rate',
+                    ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 10]]); ?>">
+                <span class="glyphicon glyphicon-plus">10%</span> 
+            </a>    
+            <a class="btn btn-warning" href="<?= $this->url('rate',
+                    ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 5]]); ?>">
+                <span class="glyphicon glyphicon-plus">5%</span> 
+            </a>    
+            <a class="btn btn-warning" href="<?= $this->url('rate',
+                    ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 1]]); ?>">
+                <span class="glyphicon glyphicon-plus">1%</span> 
+            </a>    
+            <a class="btn btn-info" href="<?= $this->url('rate',
+                    ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 0]]); ?>">
+                <span class="glyphicon glyphicon-refresh">0</span> 
+            </a>    
+            <a class="btn btn-warning" href="<?= $this->url('rate',
+                    ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -1]]); ?>">
+                <span class="glyphicon glyphicon-minus">1%</span> 
+            </a>    
+            <a class="btn btn-warning" href="<?= $this->url('rate',
+                    ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -5]]); ?>">
+                <span class="glyphicon glyphicon-minus">5%</span> 
+            </a>    
+            <a class="btn btn-warning" href="<?= $this->url('rate',
+                    ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -10]]); ?>">
+                <span class="glyphicon glyphicon-minus">10%</span> 
+            </a>    
         </th>
         <th rowspan="2"  align="center">
             Округление
