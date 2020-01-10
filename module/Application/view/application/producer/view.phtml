@@ -119,45 +119,47 @@ if ($unknownProducerQuery){
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Расценка
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Мин. цена
+                <?php if ($this->access('rate.manage')):?>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Расценка
                         </div>
-                        <div class="pull-right">
-                            <?= $minPrice?>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                           Макс. цена
-                        </div>
-                        <div class="pull-right">
-                            <?= $maxPrice?>
-                        </div>
-                    </div>
-                    <?php if ($rate):?>
                         <div class="panel-body">
                             <div class="pull-left">
-                                <a href="<?= $this->url('rate', ['action' => 'view', 'id' => $rate->getId()])?>">
-                                    <?= $rate->getName()?>
-                                </a>
+                                Мин. цена
                             </div>
-                            <?php if (!$rate->getProducer()):?>
-                                <div class="pull-right">
-                                    <button value="/rate/add/?producer=<?= $producer->getId()?>&prompt=Расценка для <?= $producer->getName()?>" class="btn btn-info btn-xs refresh-button"
-                                            title="Создать специальную расценку">
-                                        <span class="glyphicon glyphicon-plus" ></span>
-                                    </button> 
-                                </div>
-                            <?php else:?>
-                            <?php endif;?>
+                            <div class="pull-right">
+                                <?= $minPrice?>
+                            </div>
                         </div>
-                    <?php endif; ?>
-                </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                               Макс. цена
+                            </div>
+                            <div class="pull-right">
+                                <?= $maxPrice?>
+                            </div>
+                        </div>
+                        <?php if ($rate):?>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    <a href="<?= $this->url('rate', ['action' => 'view', 'id' => $rate->getId()])?>">
+                                        <?= $rate->getName()?>
+                                    </a>
+                                </div>
+                                <?php if (!$rate->getProducer()):?>
+                                    <div class="pull-right">
+                                        <button value="/rate/add/?producer=<?= $producer->getId()?>&prompt=Расценка для <?= $producer->getName()?>" class="btn btn-info btn-xs refresh-button"
+                                                title="Создать специальную расценку">
+                                            <span class="glyphicon glyphicon-plus" ></span>
+                                        </button> 
+                                    </div>
+                                <?php else:?>
+                                <?php endif;?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif;?>
             </div>
         </div>
     </div>    

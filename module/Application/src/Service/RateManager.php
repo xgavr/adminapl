@@ -366,8 +366,9 @@ class RateManager
     public function removeRate($rate)
     {
         $this->mlManager->removeModelRateScale($rate);
+        $this->removeScale($rate->getScale());
         
-        $this->entityManager->remove($rate);
-        $this->entityManager->flush($rate);
+//        $this->entityManager->remove($rate);
+//        $this->entityManager->flush($rate);
     }
 }
