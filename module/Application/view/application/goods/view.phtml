@@ -21,6 +21,8 @@ $this->headScript()
     ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
             ; 
 
+$priceCols = $goodsManager->priceCols($goods);
+
 ?>
 
 <style>
@@ -298,6 +300,7 @@ $this->headScript()
                                             <td width='30%'>
                                                 Минимальная закупка
                                             </td>
+                                            <td width="5"></td>
                                             <td align='right'>
                                                 <?= $goods->getFormatMinPrice()?>
                                             </td>
@@ -306,6 +309,7 @@ $this->headScript()
                                             <td>
                                                 Средняя закупка
                                             </td>
+                                            <td></td>
                                             <td align='right'>
                                                 <?= $goods->getFormatMeanPrice()?>
                                             </td>
@@ -314,6 +318,7 @@ $this->headScript()
                                             <td>
                                                 Фиксированная продажа
                                             </td>
+                                            <td></td>
                                             <td align='right'>
                                                 <a href="#" 
                                                    class="editable" data-type="text" 
@@ -328,6 +333,7 @@ $this->headScript()
                                             <td>
                                                 Розница продажа
                                             </td>
+                                            <td><?= round($priceCols[0]['percent'])?>%</td>
                                             <td align='right'>
                                                 <?= $goods->getPrice()?>
                                             </td>
@@ -336,35 +342,45 @@ $this->headScript()
                                             <td>
                                                 VIP продажа
                                             </td>
+                                            <td><?= round($priceCols[1]['percent'])?>%</td>
                                             <td align='right'>
+                                                <?= $priceCols[1]['price']?>
                                             </td>
                                         </tr>                                              
                                         <tr>
                                             <td>
                                                 ОПТ2 продажа
                                             </td>
+                                            <td><?= round($priceCols[2]['percent'])?>%</td>
                                             <td align='right'>
+                                                <?= $priceCols[2]['price']?>
                                             </td>
                                         </tr>                                              
                                         <tr>
                                             <td>
                                                 ОПТ3 продажа
                                             </td>
+                                            <td><?= round($priceCols[3]['percent'])?>%</td>
                                             <td align='right'>
+                                                <?= $priceCols[3]['price']?>
                                             </td>
                                         </tr>                                              
                                         <tr>
                                             <td>
                                                 ОПТ4 продажа
                                             </td>
+                                            <td><?= round($priceCols[4]['percent'])?>%</td>
                                             <td align='right'>
+                                                <?= $priceCols[4]['price']?>
                                             </td>
                                         </tr>                                              
                                         <tr>
                                             <td>
                                                 ОПТ5 продажа
                                             </td>
+                                            <td><?= round($priceCols[5]['percent'])?>%</td>
                                             <td align='right'>
+                                                <?= $priceCols[5]['price']?>
                                             </td>
                                         </tr>                                              
                                     </table>                                                    

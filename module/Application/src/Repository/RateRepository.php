@@ -161,16 +161,19 @@ class RateRepository  extends EntityRepository
             ->setMaxResults(1)    
             ;       
         
-        $supplier = $this->findGoodSupplier($good);
-        
         $orX = $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->eq('r.supplier', $supplier),
                 $queryBuilder->expr()->isNull('r.supplier'),
                 $queryBuilder->expr()->eq('r.genericGroup', $good->getGenericGroup()->getId()),
                 $queryBuilder->expr()->isNull('r.genericGroup'),
                 $queryBuilder->expr()->eq('r.producer', $good->getProducer()->getId()),
                 $queryBuilder->expr()->isNull('r.producer')
             );
+        
+        $supplier = $this->findGoodSupplier($good);
+        if ($supplier){
+            $orX->add($queryBuilder->expr()->eq('r.supplier', $supplier));
+        }
+        
         $queryBuilder->andWhere($orX)
                     ->addOrderBy('r.producer', 'DESC')
                     ->addOrderBy('r.genericGroup', 'DESC')

@@ -610,16 +610,16 @@ class GoodsManager
         if ($fixPrice < $meanPrice){
             $fixPrice = 0;
         }
+        $price = $fixPrice;
 
         if ($fixPrice == 0){
             $rate = $this->entityManager->getRepository(Rate::class)
                     ->findGoodRate($good);
-            $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
-            $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
-        } else {
-            $price = $fixPrice;
+            if ($meanPrice){
+                $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
+                $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
+            }    
         }    
-//        var_dump($price);
         
         $this->entityManager->getRepository(Goods::class)
                 ->updateGoodId($good->getId(), [
@@ -649,7 +649,7 @@ class GoodsManager
      */
     public function priceCols($good)
     {
-        return [];
+        return ScaleTreshold::retailPriceCols($good->getPrice(), $good->getMeanPrice());
     }
     
     /**

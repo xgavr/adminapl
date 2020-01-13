@@ -129,17 +129,20 @@ class ScaleTreshold
         return $this->retail($this->treshold, $this->rate, $this->rounding);
     }
     
+    
     /**
      * Получить колонки цен
      * 
-     * @param float $price Закупка
-     * @param float $rate
-     * @param integer $rounding
+     * @param float $retailPrice
+     * @param float $price
+     * 
      * @return array
      */
-    public function priceCols($price, $rate, $rounding)            
+    public static function retailPriceCols($retailPrice, $price)
     {
-        $retailPrice = $this->retail($price, $rate, $rounding);
+        if (!$retailPrice){
+            $price = 0;
+        }
         
         $result = [];
         $col = 0;
@@ -150,11 +153,29 @@ class ScaleTreshold
             if ($result[$col]['price'] < $minRetailPrice){
                 $result[$col]['price'] = $minRetailPrice;
             }
-            $result[$col]['percent'] = ($result[$col]['price'] - $price)*100/$price;
+            if ($price){
+                $result[$col]['percent'] = ($result[$col]['price'] - $price)*100/$price;
+            } else {
+                $result[$col]['percent'] = 0;
+            }    
             $col++;
         }
         
         return $result;
+        
+    }
+    
+    /**
+     * Получить колонки цен
+     * 
+     * @param float $price Закупка
+     * @param float $rate
+     * @param integer $rounding
+     * @return array
+     */
+    public function priceCols($price, $rate, $rounding)            
+    {
+        return $this->retailPriceCols($this->retail($price, $rate, $rounding), $price);
     }
     
     public function getPriceCols()
