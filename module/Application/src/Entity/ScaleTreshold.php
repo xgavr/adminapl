@@ -111,8 +111,9 @@ class ScaleTreshold
      */
     public function retail($price)
     {
-        var_dump(round($price + $price*$this->getRate()/100, $this->rounding));
-        return round($price + $price*$this->getRate()/100, $this->rounding);
+        $minRetailPrice = ceil($price + $price*self::MIN_RATE/100);
+        $result = round($price + $price*$this->getRate()/100, $this->rounding);
+        return max($result, $minRetailPrice);
     }
     
     
