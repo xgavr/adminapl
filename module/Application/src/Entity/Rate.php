@@ -117,6 +117,14 @@ class Rate
         return $this->status;
     }
 
+    public function getStatusCheckbox() 
+    {
+        if ($this->status == self::STATUS_ACTIVE){
+            return 'checked';
+        }
+        return '';
+    }
+
     /**
      * Returns possible statuses as array.
      * @return array

@@ -247,23 +247,23 @@ class RateManager
      */
     public function getDefaultScale($params)
     {
-        $findParams = [];
-        if (isset($params['producer'])){
-            $findParams['producer'] = $params['producer'];
-        }
-        if (isset($params['genericGroup'])){
-            $findParams['genericGroup'] = $params['genericGroup'];
-        }
-        if (isset($params['supplier'])){
-            $findParams['supplier'] = $params['supplier'];
-        }
-        
-        $rates = $this->entityManager->getRepository(Rate::class)
-                ->findBy($findParams);
-        
-        foreach ($rates as $rate){
-            return $rate->getScale();
-        }        
+//        $findParams = [];
+//        if (isset($params['producer'])){
+//            $findParams['producer'] = $params['producer'];
+//        }
+//        if (isset($params['genericGroup'])){
+//            $findParams['genericGroup'] = $params['genericGroup'];
+//        }
+//        if (isset($params['supplier'])){
+//            $findParams['supplier'] = $params['supplier'];
+//        }
+//        
+//        $rates = $this->entityManager->getRepository(Rate::class)
+//                ->findBy($findParams);
+//        
+//        foreach ($rates as $rate){
+//            return $rate->getScale();
+//        }        
         
         return $this->createDefaultScale($params);
     }
@@ -356,6 +356,32 @@ class RateManager
             $this->mlManager->removeModelRateScale($rate);
         }   
         $this->updateRateScale($rate);
+    }
+    
+    /**
+     * Изменить статус расценки
+     * 
+     * @param Rate $rate
+     * @param integer $status
+     */
+    public function updateRateStatus($rate, $status)
+    {
+        $rate->setStatus($status);
+        $this->entityManager->persist($rate);
+        $this->entityManager->flush($rate);
+    }
+    
+    /**
+     * Изменить наименование расценки
+     * 
+     * @param Rate $rate
+     * @param string $name
+     */
+    public function updateRateName($rate, $name)
+    {
+        $rate->setName($name);
+        $this->entityManager->persist($rate);
+        $this->entityManager->flush($rate);        
     }
     
     /**

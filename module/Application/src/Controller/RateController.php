@@ -161,6 +161,47 @@ class RateController extends AbstractActionController
         $this->redirect()->toRoute('rate', ['action' => 'view', 'id' => $rate->getId()]);        
     }
     
+    public function updateRateStatusAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $rateId = $data['pk'];
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findOneById($rateId);
+//            var_dump($data); exit;
+            $status = ($data['value'] == 'true') ? Rate::STATUS_ACTIVE:Rate::STATUS_RETIRED;
+                    
+            if ($rate){
+                $this->rateManager->updateRateStatus($rate, $status);                    
+            }    
+        }
+        
+        exit;
+    }
+
+    public function updateRateNameAction()
+    {
+        $rateId = $this->params()->fromRoute('id', -1);
+        $name = $this->params()->fromQuery('prompt');
+        
+        if ($rateId > 0) {
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findOneById($rateId);
+            if ($rate == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+        
+        $this->rateManager->updateRateName($rate, $name);
+        
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
+
+
     public function deleteAction()
     {
         $rateId = $this->params()->fromRoute('id', -1);

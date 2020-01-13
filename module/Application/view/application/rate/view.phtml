@@ -14,33 +14,45 @@ $col = 1;
 
 <h1>
     <?= $this->escapeHtml($rate->getName()); ?>    
+    <button onclick="ratePromptDialog('/rate/update-rate-name/<?= $rate->getId()?>', '<?= $this->escapeHtml($rate->getName()); ?>')" 
+            class="btn btn-default btn-xs" 
+            title="Изменить наименование расценки">
+        <span class="glyphicon glyphicon-pencil" ></span>
+    </button> 
 </h1>
-<p>
-    <?php if ($rate->getSupplier()):?>
-        <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rate->getSupplier()->getId()])?>">
-            <?= $rate->getSupplier()->getName()?>
-        </a>
-    <?php endif; ?>
-    <?php if ($rate->getGenericGroup()):?>
-        <a href="<?= $this->url('group', ['action' => 'view', 'id' => $rate->getGenericGroup()->getId()])?>">
-            <?= $rate->getGenericGroup()->getName()?>
-        </a>
-    <?php endif; ?>
-    <?php if ($rate->getProducer()):?>
-        <a href="<?= $this->url('producer', ['action' => 'view', 'id' => $rate->getProducer()->getId()])?>">
-            <?= $rate->getProducer()->getName()?>
-        </a>
-    <?php endif; ?> 
-    Закупочные цены от <?= round($minPrice)?> до <?= round($maxPrice)?>.
-    <a class="btn btn-info" href="<?= $this->url('rate',
-            ['action'=>'update-rate-scale', 'id'=>$rate->getId()]); ?>">
-        <span class="glyphicon glyphicon-refresh">Обновить шкалу</span> 
-    </a>    
-    <a class="btn btn-danger" href="<?= $this->url('rate',
-            ['action'=>'delete', 'id'=>$rate->getId()]); ?>">
-        <span class="glyphicon glyphicon-remove"></span> Удалить
-    </a>    
-</p>
+<span>    
+    <div class="pull-left">
+        <input id="ck" type="checkbox" class="rateStatusCheckbox" value="<?= $rate->getId()?>" <?= $rate->getStatusCheckbox()?>/>
+        <label for="ck">Использовать</label>
+    </div>    
+
+    <div class="pull-right">
+        <?php if ($rate->getSupplier()):?>
+            <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rate->getSupplier()->getId()])?>">
+                <?= $rate->getSupplier()->getName()?>
+            </a>
+        <?php endif; ?>
+        <?php if ($rate->getGenericGroup()):?>
+            <a href="<?= $this->url('group', ['action' => 'view', 'id' => $rate->getGenericGroup()->getId()])?>">
+                <?= $rate->getGenericGroup()->getName()?>
+            </a>
+        <?php endif; ?>
+        <?php if ($rate->getProducer()):?>
+            <a href="<?= $this->url('producer', ['action' => 'view', 'id' => $rate->getProducer()->getId()])?>">
+                <?= $rate->getProducer()->getName()?>
+            </a>
+        <?php endif; ?> 
+        Закупочные цены от <?= round($minPrice)?> до <?= round($maxPrice)?>.
+        <a class="btn btn-info" href="<?= $this->url('rate',
+                ['action'=>'update-rate-scale', 'id'=>$rate->getId()]); ?>">
+            <span class="glyphicon glyphicon-refresh">Обновить шкалу</span> 
+        </a>    
+        <a class="btn btn-danger" href="<?= $this->url('rate',
+                ['action'=>'delete', 'id'=>$rate->getId()]); ?>">
+            <span class="glyphicon glyphicon-remove"></span> Удалить
+        </a>    
+    </div>    
+</span>
 <table class="table table-striped">
     <tr>
         <th rowspan="2"  align="center">
@@ -118,3 +130,53 @@ $col = 1;
     <?php endforeach;?>
 </table>
 
+<script type="text/javascript">
+    /**
+    * Промпт диалог
+    *
+    */
+    function ratePromptDialog(url, initValue) {
+        if (url){            
+            bootbox.prompt({ 
+                size: "medium",
+                value: initValue,
+                title: 'Наименование расценки', 
+                callback: function(result){
+                    /* result = String containing user input if OK clicked or null if Cancel clicked */
+                    if (result != null){
+                        $.ajax({
+                            type: 'GET',
+                            url: url+'?prompt='+result,
+                        })
+                            .done(function (data) {
+                                if (data == 'ok'){
+                                    window.location.reload();
+                                }    
+                            })
+                            .fail(function (e) {
+                                bootbox.alert("Произошла ошибка при выполнении операции.");
+                            });
+                    }        
+                }
+            });
+        }        
+    }    
+    
+    $('.rateStatusCheckbox').on('change', function(e, node) {
+        var url = "/rate/update-rate-status";
+
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: e.target.value, value: e.target.checked}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })        
+    
+</script>
