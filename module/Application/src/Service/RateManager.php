@@ -396,5 +396,5 @@ class RateManager
         
 //        $this->entityManager->remove($rate);
 //        $this->entityManager->flush($rate);
-    }
+    }    
 }
