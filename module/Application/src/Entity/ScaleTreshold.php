@@ -111,7 +111,7 @@ class ScaleTreshold
      */
     public function retail($price)
     {
-        var_dump($price + $price*$this->getRate()/100);
+        var_dump(round($price + $price*$this->getRate()/100, $this->rounding));
         return round($price + $price*$this->getRate()/100, $this->rounding);
     }
     
