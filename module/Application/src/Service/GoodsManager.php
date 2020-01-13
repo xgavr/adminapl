@@ -14,6 +14,8 @@ use Application\Entity\Tax;
 use Application\Entity\Images;
 use Application\Entity\Rawprice;
 use Application\Entity\Attribute;
+use Application\Entity\Rate;
+use Application\Entity\ScaleTreshold;
 use Phpml\Math\Statistic\Mean;
 use Phpml\Math\Statistic\StandardDeviation;
 use Application\Validator\Sigma3;
@@ -41,11 +43,18 @@ class GoodsManager
      */
     private $externalManager;
   
+     /**
+     * Ml manager.
+     * @var \Application\Service\MlManager
+     */
+    private $mlManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $externalManager)
+    public function __construct($entityManager, $externalManager, $mlManager)
     {
         $this->entityManager = $entityManager;
         $this->externalManager = $externalManager;
+        $this->mlManager = $mlManager;
     }
         
     public function addNewGoods($data, $flushnow=true) 
@@ -601,13 +610,25 @@ class GoodsManager
         if ($fixPrice < $meanPrice){
             $fixPrice = 0;
         }
+
+        if ($fixPrice == 0){
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findGoodRate($good);
+            $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
+            $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
+        } else {
+            $price = $fixPrice;
+        }    
+//        var_dump($price);
         
         $this->entityManager->getRepository(Goods::class)
                 ->updateGoodId($good->getId(), [
                     'min_price' => $minPrice, 
                     'mean_price' => $meanPrice,
                     'fix_price' => $fixPrice,
+                    'price' => $price,
                         ]);
+//        var_dump($rate->getId());
         
         foreach ($rawprices as $rawprice){
             $this->entityManager->getRepository(Rawprice::class)
@@ -618,6 +639,17 @@ class GoodsManager
         unset($prices);
         
         return;
+    }
+    
+    /**
+     * Получить колонки цен
+     * 
+     * @param Goods $good
+     * @return array
+     */
+    public function priceCols($good)
+    {
+        return [];
     }
     
     /**

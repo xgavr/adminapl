@@ -114,8 +114,9 @@ class RateRepository  extends EntityRepository
      * Найти поставщиков товара
      * 
      * @param Goods $good
+     * @return integer
      */
-    public function findGoodSuppliers($good)
+    public function findGoodSupplier($good)
     {
         $entityManager = $this->getEntityManager();
 
@@ -156,9 +157,27 @@ class RateRepository  extends EntityRepository
         $queryBuilder->select('r')
             ->from(Rate::class, 'r')
             ->where('r.status = ?1')
-            ->setParameter('1', Rate::STATUS_ACTIVE)    
-            ;        
+            ->setParameter('1', Rate::STATUS_ACTIVE)
+            ->setMaxResults(1)    
+            ;       
+        
+        $supplier = $this->findGoodSupplier($good);
+        
+        $orX = $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->eq('r.supplier', $supplier),
+                $queryBuilder->expr()->isNull('r.supplier'),
+                $queryBuilder->expr()->eq('r.genericGroup', $good->getGenericGroup()->getId()),
+                $queryBuilder->expr()->isNull('r.genericGroup'),
+                $queryBuilder->expr()->eq('r.producer', $good->getProducer()->getId()),
+                $queryBuilder->expr()->isNull('r.producer')
+            );
+        $queryBuilder->andWhere($orX)
+                    ->addOrderBy('r.producer', 'DESC')
+                    ->addOrderBy('r.genericGroup', 'DESC')
+                    ->addOrderBy('r.supplier', 'DESC')
+                ;
             
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
     
     /**

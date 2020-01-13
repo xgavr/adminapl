@@ -107,12 +107,14 @@ class ScaleTreshold
      * Розничная цена
      * 
      * @param float $price Закупка
+     * @param float $rate
+     * @param integer $rounding
      * @return float
      */
-    public function retail($price)
+    public static function retail($price, $rate, $rounding)
     {
         $minRetailPrice = ceil($price + $price*self::MIN_RATE/100);
-        $result = round($price + $price*$this->getRate()/100, $this->rounding);
+        $result = round($price + $price*$rate/100, $rounding);
         return max($result, $minRetailPrice);
     }
     
@@ -124,18 +126,20 @@ class ScaleTreshold
      */
     public function getRetail()
     {
-        return $this->retail($this->treshold);
+        return $this->retail($this->treshold, $this->rate, $this->rounding);
     }
     
     /**
      * Получить колонки цен
      * 
      * @param float $price Закупка
+     * @param float $rate
+     * @param integer $rounding
      * @return array
      */
-    public function priceCols($price)            
+    public function priceCols($price, $rate, $rounding)            
     {
-        $retailPrice = $this->retail($price);
+        $retailPrice = $this->retail($price, $rate, $rounding);
         
         $result = [];
         $col = 0;
@@ -155,7 +159,7 @@ class ScaleTreshold
     
     public function getPriceCols()
     {
-        return $this->priceCols($this->treshold);
+        return $this->priceCols($this->treshold, $this->rate, $this->rounding);
     }
 
     /*
