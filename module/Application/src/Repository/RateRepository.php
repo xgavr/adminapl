@@ -221,8 +221,11 @@ class RateRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('g')
+        $queryBuilder->select('g.id, g.aplId, g.code, g.name, p.name, gg.name, tg.name, tg.lemms, g.fixPrice, g.meanPrice, g.minPrice, g.price')
             ->from(Goods::class, 'g')
+            ->join('g.producer', 'p')    
+            ->join('g.tokenGroup', 'tg')    
+            ->join('g.genericGroup', 'gg')    
             ->where('g.fixPrice > 0')
                 ;
 
