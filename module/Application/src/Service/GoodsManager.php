@@ -623,7 +623,9 @@ class GoodsManager
                     $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
                     $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
                 }    
-            }    
+            } else {
+                $price = $oldPrice;
+            }   
         }    
         
         if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
