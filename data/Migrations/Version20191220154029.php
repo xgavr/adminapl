@@ -73,7 +73,7 @@ final class Version20191220154029 extends AbstractMigration
         $table->removeForeignKey('rate_supplier_id_supplier_id_fk');
         $table->removeForeignKey('rate_producer_id_producer_id_fk');
         $table->removeForeignKey('rate_g_group_id_g_group_id_fk');
-//        $table->removeForeignKey('rate_t_group_id_t_group_id_fk');
+        $table->removeForeignKey('rate_t_group_id_t_group_id_fk');
         $schema->dropTable('rate');
         $schema->dropTable('scale_treshold');
         $schema->dropTable('scale');
