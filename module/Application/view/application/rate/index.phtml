@@ -50,10 +50,12 @@
         </td>    
     </tr>
         
-    <?php endforeach; ?>   
-    
+    <?php endforeach; ?>       
 </table>
-
+<a href="
+    <?= $this->url('rate', ['action'=>'fix-price']); ?>">
+    Фиксированные цены &gt;&gt;
+</a>
 <script type="text/javascript">
     /**
     * Промпт диалог

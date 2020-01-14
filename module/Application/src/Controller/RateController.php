@@ -273,8 +273,8 @@ class RateController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         
-        $query = $this->entityManager->getRepository(Producer::class)
-                        ->findAllProducer(['q' => $q, 'sort' => $sort, 'order' => $order]);
+        $query = $this->entityManager->getRepository(Rate::class)
+                        ->findFixPrice();
         
         $total = count($query->getResult(2));
         

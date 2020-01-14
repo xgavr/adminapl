@@ -44,16 +44,14 @@
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                     <th data-field="aplId" data-type="numeric" data-sortable="true">AplId</th>
+                     <th data-field="aplId" data-formatter="aplIdFormatter" data-type="numeric">AplId</th>
                      <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
-                     <th data-field="producerName" data-formatter="linkFormatter" data-sortable="true">Производитель</th>
-                     <th data-field="ggName" data-formatter="linkFormatter" data-sortable="true">Деталь</th>
-                     <th data-field="tgName" data-formatter="linkFormatter" data-sortable="true">Группа</th>
-                     <th data-field="fixPrice" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
-                     <th data-field='unknownProducerCount' data-sortable="true">НП</th>
-                     <th data-field='supplierCount' data-sortable="true">Постащиков</th>
-                     <th data-field='rawpriceCount' data-sortable="true">Строк прайсов</th>
-                     <th data-field="" data-formatter="activeFormatter"></th>
+                     <th data-field="name">Товар</th>
+                     <th data-field="producerName" data-formatter="producerFormatter" data-sortable="true">Производитель</th>
+                     <th data-field="genericGroupName" data-formatter="genericGroupFormatter" data-sortable="true">Деталь</th>
+                     <th data-field="tokenGroupName" data-formatter="tokenGroupFormatter" data-sortable="true">Группа</th>
+                     <th data-field="fixPrice">Цена фикс.</th>
+                     <th data-field="meanPrice">Цена сред.</th>
                  </tr>                
             </thead>
         </table>
@@ -90,27 +88,50 @@
         return params;
     }
     
+    function aplIdFormatter(value, row){
+        if (value > 0){
+            return [
+                '<div class="pull-left">',
+                '<a href="https://autopartslist.ru/goods/view/id/' + value + '" target="_blank">'+value+'</a>',
+                '</div>'
+            ].join(''); 
+        }
+        
+        return '';
+    }    
+        
     function linkFormatter(value, row){
         return [
             '<div class="pull-left">',
-            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '<a href="/goods/view/' + row.id + '" target="_blank">'+value+'</a>',
             '</div>'
         ].join(''); 
     }    
-    
-    function activeFormatter(value, row){
-        var url = '/producer/delete-form/'+row.id;
-        btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' title="Удалить"'; 
-        btn += ' onclick="tableRowDelete(\''+url+'\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btn += '</button>';
-        return btn;
+        
+    function producerFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + row.producerId + '" target="_blank">'+value+'</a>',
+            '</div>'
+        ].join(''); 
     }    
-    
+        
+    function genericGroupFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/group/view/' + row.genericGroupId + '" target="_blank">'+value+'</a>',
+            '</div>'
+        ].join(''); 
+    }    
+        
+    function tokenGroupFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/name/token-group-view/' + row.tokenGroupId + '" target="_blank">'+value+'</a>',
+            '</div>'
+        ].join(''); 
+    }    
+        
     function responseHandler(res) {
         return res;
     }    
