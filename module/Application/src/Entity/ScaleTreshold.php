@@ -146,9 +146,10 @@ class ScaleTreshold
         
         $result = [];
         $col = 0;
-        $priceTreshold = ($retailPrice-$price)/self::PRICE_COL_COUNT;
         $minRetailPrice = ceil($price + $price*self::MIN_RATE/100);
-        while ($col <= self::PRICE_COL_COUNT){
+        $priceTreshold = ($retailPrice - $minRetailPrice)/(self::PRICE_COL_COUNT - 1);
+        
+        while ($col <= self::PRICE_COL_COUNT-1){
             $result[$col]['price'] = round($retailPrice - $col*$priceTreshold, self::DEFAULT_ROUNDING);
             if ($result[$col]['price'] < $minRetailPrice){
                 $result[$col]['price'] = $minRetailPrice;
@@ -160,6 +161,12 @@ class ScaleTreshold
             }    
             $col++;
         }
+        $result[self::PRICE_COL_COUNT]['price'] = $minRetailPrice;
+        if ($price){
+            $result[self::PRICE_COL_COUNT]['percent'] = ($minRetailPrice - $price)*100/$price;
+        } else {
+            $result[self::PRICE_COL_COUNT]['percent'] = 0;
+        }    
         
         return $result;
         
