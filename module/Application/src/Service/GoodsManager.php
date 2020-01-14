@@ -616,11 +616,13 @@ class GoodsManager
         $price = $fixPrice;
 
         if ($fixPrice == 0){
-            $rate = $this->entityManager->getRepository(Rate::class)
-                    ->findGoodRate($good);
-            if ($meanPrice){
-                $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
-                $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
+            if ($oldMeanPrice != $meanPrice || !$oldPrice){
+                $rate = $this->entityManager->getRepository(Rate::class)
+                        ->findGoodRate($good);
+                if ($meanPrice){
+                    $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
+                    $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
+                }    
             }    
         }    
         
