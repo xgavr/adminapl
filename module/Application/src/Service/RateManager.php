@@ -76,7 +76,7 @@ class RateManager
         
         $this->entityManager->persist($treshold);
 
-        $this->entityManager->flush($treshold);
+        //$this->entityManager->flush($treshold);
         
         return $treshold;
     }
@@ -115,6 +115,8 @@ class RateManager
     {
         $scale = new Scale();
         $scale->setName($data['name']);
+        $scale->setMinPrice(0);
+        $scale->setMaxPrice(0);
         
         $this->entityManager->persist($scale);
         $this->entityManager->flush($scale);
@@ -146,7 +148,7 @@ class RateManager
     public function removeTreshold($treshold)
     {
         $this->entityManager->remove($treshold);
-        $this->entityManager->flush($treshold);
+        //$this->entityManager->flush($treshold);
         
         return;
     }
@@ -194,6 +196,10 @@ class RateManager
                 $maxPrice = $samples[count($samples) - 1];
             }
 
+            $scale->setMinPrice($minPrice);
+            $scale->setMaxPrice($maxPrice);
+            $this->entityManager->persist($scale);
+
             $this->addTreshold($scale, [
                 'treshold' => $minPrice,
                 'rounding' => ScaleTreshold::DEFAULT_ROUNDING,
@@ -216,6 +222,8 @@ class RateManager
                 'rate' => $this->mlManager->predictRateScale($maxPrice, $modelFileName),
             ]);        
         }
+        
+        $this->entityManager->flush();
         
         return;
     }
@@ -276,30 +284,39 @@ class RateManager
      */
     public function addRate($data)
     {
+        $defaultOffice = $this->entityManager->getRepository(Office::class)
+                ->findOneById(1);
+        
+        $scale = $this->getDefaultScale($data);
+        
         $rate = new Rate();
         
-        if (isset($data['name'])){
-            $name = $data['name'];
-        }        
+        $rate->setOffice($defaultOffice);
+
         if (isset($data['supplier'])){
             $rate->setSupplier($data['supplier']);
         }
         if (isset($data['genericGroup'])){
             $rate->setGenericGroup($data['genericGroup']);
         }        
+        if (isset($data['tokenGroup'])){
+            $rate->setTokenGroup($data['tokenGroup']);
+        }        
         if (isset($data['producer'])){
             $rate->setProducer($data['producer']);
         }        
-        $defaultOffice = $this->entityManager->getRepository(Office::class)
-                ->findOneById(1);
-        
-        $rate->setOffice($defaultOffice);
+        if (isset($data['name'])){
+            $name = $data['name'];
+        }        
         
         $rate->setName($name);
         $rate->setStatus(Rate::STATUS_ACTIVE);
         $rate->setMode(Rate::MODE_MARKUP);
         
-        $rate->setScale($this->getDefaultScale($data));
+        $rate->setScale($scale);
+        
+        $rate->setMinPrice($scale->getMinPrice());
+        $rate->setMaxPrice($scale->getMaxPrice());
         
         $this->entityManager->persist($rate);
         $this->entityManager->flush($rate);
@@ -322,6 +339,9 @@ class RateManager
         if ($rate->getGenericGroup()){
             $params['genericGroup'] = $rate->getGenericGroup()->getId();
         }
+        if ($rate->getTokenGroup()){
+            $params['tokenGroup'] = $rate->getTokenGroup()->getId();
+        }
         if ($rate->getProducer()){
             $params['producer'] = $rate->getProducer()->getId();
         }
@@ -334,6 +354,11 @@ class RateManager
         $scale = $rate->getScale();
 
         $this->createDefaultTresholds($scale, $minPrice, $maxPrice, $rate->getRateModelFileName());
+        
+        $rate->setMinPrice($scale->getMinPrice());
+        $rate->setMaxPrice($scale->getMaxPrice());
+        $this->entityManager->persist($rate);
+        $this->entityManager->flush($rate);
     }
     
     /**

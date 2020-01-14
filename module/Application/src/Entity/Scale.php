@@ -33,6 +33,16 @@ class Scale {
      */
     protected $name;
 
+    /** 
+     * @ORM\Column(name="min_price")  
+     */
+    protected $minPrice;
+
+    /** 
+     * @ORM\Column(name="max_price")  
+     */
+    protected $maxPrice;
+
    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\ScaleTreshold", mappedBy="scale")
     * @ORM\JoinColumn(name="id", referencedColumnName="scale_id")
@@ -70,6 +80,26 @@ class Scale {
         $this->name = $name;
     }     
 
+    public function getMinPrice() 
+    {
+        return $this->minPrice;
+    }
+
+    public function setMinPrice($minPrice) 
+    {
+        $this->minPrice = $minPrice;
+    }     
+
+    public function getMaxPrice() 
+    {
+        return $this->maxPrice;
+    }
+
+    public function setMaxPrice($maxPrice) 
+    {
+        $this->maxPrice = $maxPrice;
+    }     
+        
     /*
      * Возвращает связанный tresholds.
      * @return ScaleTreshold
@@ -83,7 +113,7 @@ class Scale {
     {
         $this->tresholds[] = $treshold;
     }     
-        
+
     /*
      * Возвращает связанный rates.
      * @return Rate

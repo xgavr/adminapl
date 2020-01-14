@@ -15,6 +15,7 @@ use Application\Entity\ScaleTreshold;
 use Application\Entity\Rate;
 use Application\Entity\Supplier;
 use Application\Entity\GenericGroup;
+use Application\Entity\TokenGroup;
 use Application\Entity\Producer;
 use Application\Entity\Goods;
 
@@ -60,9 +61,10 @@ class RateController extends AbstractActionController
         $name = $this->params()->fromQuery('prompt');
         $supplierId = $this->params()->fromQuery('supplier');
         $genericGroupId = $this->params()->fromQuery('genericGroup');
+        $tokenGroupId = $this->params()->fromQuery('tokenGroup');
         $producerId = $this->params()->fromQuery('producer');
         
-        $producer = $supplier = $genericGroup = null;
+        $producer = $supplier = $genericGroup = $tokenGroup = null;
         if ($supplierId){
             $supplier = $this->entityManager->getRepository(Supplier::class)
                     ->findOneById($supplierId);
@@ -70,6 +72,10 @@ class RateController extends AbstractActionController
         if ($genericGroupId){
             $genericGroup = $this->entityManager->getRepository(GenericGroup::class)
                     ->findOneById($genericGroupId);
+        }
+        if ($tokenGroupId){
+            $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                    ->findOneById($tokenGroupId);
         }
         if ($producerId){
             $producer = $this->entityManager->getRepository(Producer::class)
@@ -80,6 +86,7 @@ class RateController extends AbstractActionController
             'name' => $name,
             'producer' => $producer,
             'genericGroup' => $genericGroup,
+            'tokenGroup' => $tokenGroup,
             'supplier' => $supplier,
         ]);
         
@@ -108,19 +115,15 @@ class RateController extends AbstractActionController
         if ($rate->getGenericGroup()){
             $params['genericGroup'] = $rate->getGenericGroup()->getId();
         }
+        if ($rate->getTokenGroup()){
+            $params['tokenGroup'] = $rate->getTokenGroup()->getId();
+        }
         if ($rate->getProducer()){
             $params['producer'] = $rate->getProducer()->getId();
         }
         
-        $minPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMinPrice($params);
-        $maxPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMaxPrice($params);
-
         return new ViewModel([
             'rate' => $rate,
-            'minPrice' => $minPrice,
-            'maxPrice' => $maxPrice,
         ]);        
     }
 
@@ -254,5 +257,40 @@ class RateController extends AbstractActionController
         $this->rateManager->removeScale($scale);
         
         $this->redirect()->toRoute('rate');
+    }
+    
+    public function fixPriceAction()
+    {
+        return new ViewModel([
+        ]);
+        
+    }
+
+    public function fixPriceContentAction()
+    {
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(Producer::class)
+                        ->findAllProducer(['q' => $q, 'sort' => $sort, 'order' => $order]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+        
     }
 }

@@ -17,6 +17,8 @@ final class Version20191220154029 extends AbstractMigration
         $table = $schema->createTable('scale');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>128]);
+        $table->addColumn('min_price', 'float', ['notnull' => true, 'default' => 0]);
+        $table->addColumn('max_price', 'float', ['notnull' => true, 'default' => 0]);
         $table->setPrimaryKey(['id']);
         $table->addOption('engine' , 'InnoDB');
         
@@ -38,11 +40,14 @@ final class Version20191220154029 extends AbstractMigration
         $table->addColumn('name', 'string', ['notnull'=>true, 'length'=>128]);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => Rate::STATUS_ACTIVE]);
         $table->addColumn('mode', 'integer', ['notnull'=>true, 'default' => Rate::MODE_MARKUP]);
+        $table->addColumn('min_price', 'float', ['notnull' => true, 'default' => 0]);
+        $table->addColumn('max_price', 'float', ['notnull' => true, 'default' => 0]);
         $table->addColumn('scale_id', 'integer', ['notnull'=>true]);
         $table->addColumn('office_id', 'integer', ['notnull'=>true]);
         $table->addColumn('supplier_id', 'integer', ['notnull'=>false]);
         $table->addColumn('producer_id', 'integer', ['notnull'=>false]);
         $table->addColumn('generic_group_id', 'integer', ['notnull'=>false]);
+        $table->addColumn('token_group_id', 'integer', ['notnull'=>false]);
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint('scale', ['scale_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rate_scale_id_scale_id_fk');
@@ -54,6 +59,8 @@ final class Version20191220154029 extends AbstractMigration
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rate_producer_id_producer_id_fk');
         $table->addForeignKeyConstraint('generic_group', ['generic_group_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rate_g_group_id_g_group_id_fk');
+        $table->addForeignKeyConstraint('token_group', ['token_group_id'], ['id'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'rate_t_group_id_t_group_id_fk');
         $table->addOption('engine' , 'InnoDB');
     }
 
@@ -66,6 +73,7 @@ final class Version20191220154029 extends AbstractMigration
         $table->removeForeignKey('rate_supplier_id_supplier_id_fk');
         $table->removeForeignKey('rate_producer_id_producer_id_fk');
         $table->removeForeignKey('rate_g_group_id_g_group_id_fk');
+        $table->removeForeignKey('rate_t_group_id_t_group_id_fk');
         $schema->dropTable('rate');
         $schema->dropTable('scale_treshold');
         $schema->dropTable('scale');

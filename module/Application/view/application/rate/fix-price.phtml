@@ -1,0 +1,114 @@
+<?php
+    $this->headTitle('Фиксированные цены продажи');
+
+    $this->mainMenu()->setActiveItemId('raw');
+
+    $this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Расценки'=>$this->url('rate'),
+            'Фиксированные цены продажи'=>$this->url('rate', ['action' => 'fix-price-action']),
+            ]);
+
+    $this->headLink()
+    //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
+        ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+            ;
+
+    $this->headScript()
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+                ;    
+?>
+
+
+<h1>Фиксированные цены продажи</h1>
+
+<div class="row">
+    <div class="col-md-9">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/rate/fix-price-content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                     <th data-field="aplId" data-type="numeric" data-sortable="true">AplId</th>
+                     <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
+                     <th data-field='unknownProducerCount' data-sortable="true">НП</th>
+                     <th data-field='supplierCount' data-sortable="true">Постащиков</th>
+                     <th data-field='rawpriceCount' data-sortable="true">Строк прайсов</th>
+                     <th data-field="" data-formatter="activeFormatter"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table'),
+        ok = $('#ok');
+
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function linkFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/producer/delete-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
+

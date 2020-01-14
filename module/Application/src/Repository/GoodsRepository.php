@@ -1479,8 +1479,18 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->andWhere('g.genericGroup = ?2')
                         ->setParameter('2', $params['genericGroup']);
             }
+            if (isset($params['tokenGroup'])){
+                $queryBuilder->andWhere('g.tokenGroup = ?3')
+                        ->setParameter('3', $params['tokenGroup']);
+            }
             if (isset($params['supplier'])){
-                return 0;
+                $queryBuilder->join('g.articles', 'a')
+                        ->join('a.rawprice', 'r')
+                        ->join('r.raw', 'raw')
+                        ->join('raw.supplier', 's')
+                        ->andWhere('s.id = ?4')
+                        ->setParameter('4', $params['supplier'])
+                        ;                
             }
         }
 
@@ -1511,8 +1521,18 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->andWhere('g.genericGroup = ?2')
                         ->setParameter('2', $params['genericGroup']);
             }
+            if (isset($params['tokenGroup'])){
+                $queryBuilder->andWhere('g.tokenGroup = ?3')
+                        ->setParameter('3', $params['tokenGroup']);
+            }
             if (isset($params['supplier'])){
-                return 0;
+                $queryBuilder->join('g.articles', 'a')
+                        ->join('a.rawprice', 'r')
+                        ->join('r.raw', 'raw')
+                        ->join('raw.supplier', 's')
+                        ->andWhere('s.id = ?4')
+                        ->setParameter('4', $params['supplier']);
+                        ;                
             }
         }
         

@@ -14,6 +14,7 @@ use Company\Entity\Office;
 use Application\Entity\Supplier;
 use Application\Entity\Producer;
 use Application\Entity\GenericGroup;
+use Application\Entity\TokenGroup;
 
 /**
  * Description of Phone
@@ -51,6 +52,16 @@ class Rate
      */
     protected $mode;
     
+    /** 
+     * @ORM\Column(name="min_price")  
+     */
+    protected $minPrice;
+
+    /** 
+     * @ORM\Column(name="max_price")  
+     */
+    protected $maxPrice;
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Scale", inversedBy="rates") 
      * @ORM\JoinColumn(name="scale_id", referencedColumnName="id")
@@ -81,6 +92,11 @@ class Rate
      */
     protected $genericGroup;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="TokenGroup", inversedBy="rates") 
+     * @ORM\JoinColumn(name="token_group_id", referencedColumnName="id")
+     */
+    protected $tokenGroup;
 
     
     public function getId() 
@@ -106,6 +122,26 @@ class Rate
     public function setName($name) 
     {
         $this->name = $name;
+    }     
+
+    public function getMinPrice() 
+    {
+        return $this->minPrice;
+    }
+
+    public function setMinPrice($minPrice) 
+    {
+        $this->minPrice = $minPrice;
+    }     
+
+    public function getMaxPrice() 
+    {
+        return $this->maxPrice;
+    }
+
+    public function setMaxPrice($maxPrice) 
+    {
+        $this->maxPrice = $maxPrice;
     }     
 
     /**
@@ -325,6 +361,25 @@ class Rate
     public function getGenericGroup() 
     {
         return $this->genericGroup;
+    }
+
+    /**
+     * Задает связанный tokenGroup.
+     * @param TokenGroup $tokenGroup
+     */    
+    public function setTokenGroup($tokenGroup) 
+    {
+        $this->tokenGroup = $tokenGroup;
+        $tokenGroup->addRate($this);
+    }     
+        
+    /*
+     * Возвращает связанный tokenGroup.
+     * @return TokenGroup
+     */    
+    public function getTokenGroup() 
+    {
+        return $this->tokenGroup;
     }
 
 }

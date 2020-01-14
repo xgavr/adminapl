@@ -103,6 +103,47 @@ $this->pageBreadcrumbs()->setItems([
                 <?php endforeach;?>
             <?php endif;?>        
         </ul>
+        <?php if ($this->access('rate.manage')):?>
+            <div class="panel panel-info">
+                <?php if ($rate):?>
+                    <div class="panel-heading">
+                        Расценка
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Мин. цена
+                        </div>
+                        <div class="pull-right">
+                            <?= $rate->getMinPrice()?>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                           Макс. цена
+                        </div>
+                        <div class="pull-right">
+                            <?= $rate->getMaxPrice()?>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <a href="<?= $this->url('rate', ['action' => 'view', 'id' => $rate->getId()])?>">
+                                <?= $rate->getName()?>
+                            </a>
+                        </div>
+                        <?php if (!$rate->getTokenGroup()):?>
+                            <div class="pull-right">
+                                <button value="/rate/add/?tokenGroup=<?= $tokenGroup->getId()?>&prompt=Расценка для <?= ($tokenGroup->getName()) ? $tokenGroup->getName():$tokenGroup->getLemms()?>" class="btn btn-info btn-xs refresh-button"
+                                        title="Создать специальную расценку">
+                                    <span class="glyphicon glyphicon-plus" ></span>
+                                </button> 
+                            </div>
+                        <?php else:?>
+                        <?php endif;?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>    
 </div>
 

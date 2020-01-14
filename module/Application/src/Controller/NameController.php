@@ -16,6 +16,7 @@ use Application\Entity\TokenGroup;
 use Application\Entity\GenericGroup;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Goods;
+use Application\Entity\Rate;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -914,6 +915,9 @@ class NameController extends AbstractActionController
         
         $meanFrequency = $this->entityManager->getRepository(TokenGroup::class)
                 ->meanFrequency($tokenGroup);
+
+        $rate = $this->entityManager->getRepository(Rate::class)
+                ->findRate(['tokenGroup' => $tokenGroup->getId()]);
 //        var_dump($tdGroups); exit;
 
         // Render the view template.
@@ -928,6 +932,7 @@ class NameController extends AbstractActionController
             'tdGroupActive' => $tdGroup,
             'aplGroups' => $aplGroups,
             'meanFrequency' => $meanFrequency,
+            'rate' => $rate,
         ]);
     }    
     

@@ -39,6 +39,7 @@ class RateRepository  extends EntityRepository
             ->setParameter('1', Rate::STATUS_ACTIVE)
             ->andWhere('r.producer is null')
             ->andWhere('r.genericGroup is null')
+            ->andWhere('r.tokenGroup is null')
             ->andWhere('r.supplier is null')    
             ->orderBy('r.id', 'ASC')
             ;
@@ -83,8 +84,13 @@ class RateRepository  extends EntityRepository
                 $queryBuilder->andWhere('r.genericGroup = ?4')
                         ->setParameter('4', $params['genericGroup']);
             }
+            if (isset($params['tokenGroup'])){
+                $queryBuilder->andWhere('r.tokenGroup = ?5')
+                        ->setParameter('5', $params['tokenGroup']);
+            }
         }
 
+//        var_dump($queryBuilder->getQuery()->getSQL());
         $rates = $queryBuilder->getQuery()->getResult();
         foreach ($rates as $rate){
             return $rate;
@@ -165,16 +171,21 @@ class RateRepository  extends EntityRepository
                 $queryBuilder->expr()->isNull('r.supplier'),
                 $queryBuilder->expr()->eq('r.genericGroup', $good->getGenericGroup()->getId()),
                 $queryBuilder->expr()->isNull('r.genericGroup'),
+                $queryBuilder->expr()->isNull('r.tokenGroup'),
                 $queryBuilder->expr()->eq('r.producer', $good->getProducer()->getId()),
                 $queryBuilder->expr()->isNull('r.producer')
             );
         
+        if ($good->getTokenGroup()){
+            $orX->add($queryBuilder->expr()->eq('r.tokenGroup', $good->getTokenGroup()->getId()));
+        }
         $supplier = $this->findGoodSupplier($good);
         if ($supplier){
             $orX->add($queryBuilder->expr()->eq('r.supplier', $supplier));
         }
         
         $queryBuilder->andWhere($orX)
+                    ->addOrderBy('r.tokenGroup', 'DESC')
                     ->addOrderBy('r.producer', 'DESC')
                     ->addOrderBy('r.genericGroup', 'DESC')
                     ->addOrderBy('r.supplier', 'DESC')
@@ -198,6 +209,21 @@ class RateRepository  extends EntityRepository
             ->from(ScaleTreshold::class, 't')
             ->where('t.scale = ?1')
             ->setParameter('1', $scale->getId())    
+                ;
+
+        return $queryBuilder->getQuery();
+        
+    }
+    
+    public function findFixPrice()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.fixPrice > 0')
                 ;
 
         return $queryBuilder->getQuery();

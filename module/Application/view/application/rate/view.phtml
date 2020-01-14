@@ -37,12 +37,17 @@ $col = 1;
                 <?= $rate->getGenericGroup()->getName()?>
             </a>
         <?php endif; ?>
+        <?php if ($rate->getTokenGroup()):?>
+            <a href="<?= $this->url('name', ['action' => 'view-token-group', 'id' => $rate->getTokenGroup()->getId()])?>">
+                <?= $rate->getTokenGroup()->getName()?>
+            </a>
+        <?php endif; ?>
         <?php if ($rate->getProducer()):?>
             <a href="<?= $this->url('producer', ['action' => 'view', 'id' => $rate->getProducer()->getId()])?>">
                 <?= $rate->getProducer()->getName()?>
             </a>
         <?php endif; ?> 
-        Закупочные цены от <?= round($minPrice)?> до <?= round($maxPrice)?>.
+        Закупочные цены от <?= round($rate->getMinPrice())?> до <?= round($rate->getMaxPrice())?>.
         <a class="btn btn-info" href="<?= $this->url('rate',
                 ['action'=>'update-rate-scale', 'id'=>$rate->getId()]); ?>">
             <span class="glyphicon glyphicon-refresh">Обновить шкалу</span> 

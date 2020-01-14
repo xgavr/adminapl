@@ -129,7 +129,7 @@ if ($unknownProducerQuery){
                                 Мин. цена
                             </div>
                             <div class="pull-right">
-                                <?= $minPrice?>
+                                <?= $rate->getMinPrice()?>
                             </div>
                         </div>
                         <div class="panel-body">
@@ -137,7 +137,7 @@ if ($unknownProducerQuery){
                                Макс. цена
                             </div>
                             <div class="pull-right">
-                                <?= $maxPrice?>
+                                <?= $rate->getMaxPrice()?>
                             </div>
                         </div>
                         <?php if ($rate):?>

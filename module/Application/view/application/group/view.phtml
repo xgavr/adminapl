@@ -211,7 +211,7 @@ $this->pageBreadcrumbs()->setItems([
                                 Мин. цена
                             </div>
                             <div class="pull-right">
-                                <?= $minPrice?>
+                                <?= $rate->getMinPrice()?>
                             </div>
                         </div>
                         <div class="panel-body">
@@ -219,7 +219,7 @@ $this->pageBreadcrumbs()->setItems([
                                Макс. цена
                             </div>
                             <div class="pull-right">
-                                <?= $maxPrice?>
+                                <?= $rate->getMaxPrice()?>
                             </div>
                         </div>
                         <?php if ($rate):?>

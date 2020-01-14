@@ -11,6 +11,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Filter\IdsFormat;
+use Application\Entity\Rate;
 
 /**
  * Description of NameGroup
@@ -64,11 +65,18 @@ class TokenGroup {
      *      )
      */
     private $tokens;
+    
+   /**
+    * @ORM\OneToMany(targetEntity="Rate", mappedBy="tokenGroup")
+    * @ORM\JoinColumn(name="id", referencedColumnName="token_group_id")
+   */
+   private $rates;        
 
 
     public function __construct() {
         $this->goods = new ArrayCollection();
         $this->tokens = new ArrayCollection();
+        $this->rates = new ArrayCollection();
     }
 
     public function getId() 
@@ -186,4 +194,17 @@ class TokenGroup {
         return 'NaN';
     }
     
+    /*
+     * Возвращает связанный rates.
+     * @return Rate
+     */    
+    public function getRates() 
+    {
+        return $this->rates;
+    }
+
+    public function addRate($rate) 
+    {
+        $this->rates[] = $rate;
+    }             
 }

@@ -352,6 +352,25 @@ $this->headScript()
                 <?php if ($this->access('rate.manage')):?>
                     <div class="panel panel-info">
                         <?php if ($rate):?>
+                            <div class="panel-heading">
+                                Расценка
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Мин. цена
+                                </div>
+                                <div class="pull-right">
+                                    <?= $rate->getMinPrice()?>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                   Макс. цена
+                                </div>
+                                <div class="pull-right">
+                                    <?= $rate->getMaxPrice()?>
+                                </div>
+                            </div>
                             <div class="panel-body">
                                 <div class="pull-left">
                                     <a href="<?= $this->url('rate', ['action' => 'view', 'id' => $rate->getId()])?>">

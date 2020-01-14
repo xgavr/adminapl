@@ -91,10 +91,6 @@ class GroupController extends AbstractActionController
         $aplGroups = $this->entityManager->getRepository(GenericGroup::class)
                 ->getGroupApl($group);
 
-        $minPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMinPrice(['genericGroup' => $group->getId()]);
-        $maxPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMaxPrice(['genericGroup' => $group->getId()]);
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findRate(['genericGroup' => $group->getId()]);
         
@@ -103,8 +99,6 @@ class GroupController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'aplGroups' => $aplGroups,
-            'minPrice' => $minPrice,
-            'maxPrice' =>$maxPrice,
             'rate' => $rate,
         ]);
     }      

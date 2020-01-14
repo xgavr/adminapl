@@ -250,11 +250,6 @@ class ProducerController extends AbstractActionController
         $nextQuery = $this->entityManager->getRepository(Producer::class)
                         ->findAllProducer(['next1' => $producer->getName()]);
         
-        $minPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMinPrice(['producer' => $producer->getId()]);
-        $maxPrice = $this->entityManager->getRepository(Goods::class)
-                ->findMaxPrice(['producer' => $producer->getId()]);
-        
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findRate(['producer' => $producer->getId()]);
 
@@ -264,8 +259,6 @@ class ProducerController extends AbstractActionController
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'producerManager' => $this->producerManager,
-            'minPrice' => $minPrice,
-            'maxPrice' =>$maxPrice,
             'rate' => $rate,
         ]);
     }
