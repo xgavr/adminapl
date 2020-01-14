@@ -604,6 +604,9 @@ class GoodsManager
         
         $prices = $this->getPricesFromRawprices($rawprices);
         
+        $oldMeanPrice = $good->getMeanPrice();
+        $oldPrice = $good->getPrice();
+        
         $minPrice = $this->minPrice($prices);
         $meanPrice = $this->meanPrice($prices);
         $fixPrice = $good->getFixPrice();
@@ -621,13 +624,16 @@ class GoodsManager
             }    
         }    
         
-        $this->entityManager->getRepository(Goods::class)
-                ->updateGoodId($good->getId(), [
-                    'min_price' => $minPrice, 
-                    'mean_price' => $meanPrice,
-                    'fix_price' => $fixPrice,
-                    'price' => $price,
-                        ]);
+        if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), [
+                        'min_price' => $minPrice, 
+                        'mean_price' => $meanPrice,
+                        'fix_price' => $fixPrice,
+                        'price' => $price,
+                        'status_price_ex' => Goods::PRICE_EX_NEW,
+                            ]);
+        }    
 //        var_dump($rate->getId());
         
         foreach ($rawprices as $rawprice){
