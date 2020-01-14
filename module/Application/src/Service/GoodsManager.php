@@ -596,8 +596,9 @@ class GoodsManager
      * Обновить расчетные цены товара
      * 
      * @param Goods $good
+     * @param bool $flag
      */
-    public function updatePrices($good)
+    public function updatePrices($good, $flag = false)
     {
         $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->rawpriceArticles($good);
@@ -616,7 +617,7 @@ class GoodsManager
         $price = $fixPrice;
 
         if ($fixPrice == 0){
-            if ($oldMeanPrice != $meanPrice || !$oldPrice){
+            if ($oldMeanPrice != $meanPrice || !$oldPrice || $flag){
                 $rate = $this->entityManager->getRepository(Rate::class)
                         ->findGoodRate($good);
                 if ($meanPrice){
