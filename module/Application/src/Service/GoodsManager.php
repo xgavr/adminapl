@@ -548,7 +548,7 @@ class GoodsManager
         if (count($prices)){
             $minPrice = min($prices);
             
-            $mean = Mean::median($prices);
+            $mean = Mean::mode($prices);
             $deviation = StandardDeviation::population($prices, count($prices)>1);
 
             $validator = new Sigma3();
@@ -560,7 +560,7 @@ class GoodsManager
             
             $newPrices = array_filter($prices);
             if (count($newPrices)){
-                return Mean::median($newPrices);
+                return Mean::mode($newPrices);
             } else {
                 return $minPrice;
             }    
