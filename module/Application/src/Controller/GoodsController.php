@@ -14,6 +14,7 @@ use Application\Entity\Goods;
 use Application\Entity\Rawprice;
 use Application\Entity\Raw;
 use Application\Entity\Images;
+use Application\Entity\Rate;
 use Application\Form\GoodsForm;
 use Application\Form\GoodSettingsForm;
 use Application\Form\UploadForm;
@@ -462,6 +463,9 @@ class GoodsController extends AbstractActionController
         
         $images = $this->entityManager->getRepository(Images::class)
                 ->findByGood($goods->getId());
+        
+        $rate = $this->entityManager->getRepository(Rate::class)
+                ->findGoodRate($goods);
 
         // Render the view template.
         return new ViewModel([
@@ -477,6 +481,7 @@ class GoodsController extends AbstractActionController
             'oemStatuses' => \Application\Entity\Oem::getStatusList(),
             'oemSources' => \Application\Entity\Oem::getSourceList(),
             'priceStatuses' => Rawprice::getStatusList(),
+            'rate' => $rate,
         ]);
     }      
     

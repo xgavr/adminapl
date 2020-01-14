@@ -328,7 +328,14 @@ $priceCols = $goodsManager->priceCols($goods);
                                                     <?= $goods->getFixPrice()?>
                                                 </a>
                                             </td>
-                                        </tr>                                              
+                                        </tr> 
+                                        <?php if ($rate):?>
+                                            <tr>
+                                                <td>Расценка</td>
+                                                <td></td>
+                                                <td><a href="<?= $this->url('rate', ['action' => 'view', 'id' => $rate->getId()])?>" target="_blank"><?= $rate->getName()?></a></td>
+                                            </tr>
+                                        <?php endif; ?>    
                                         <tr>
                                             <td>
                                                 Розница продажа
