@@ -46,12 +46,12 @@
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
                      <th data-field="aplId" data-formatter="aplIdFormatter" data-type="numeric">AplId</th>
                      <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
-                     <th data-field="name">Товар</th>
+                     <!--<th data-field="name">Товар</th>-->
                      <th data-field="producerName" data-formatter="producerFormatter" data-sortable="true">Производитель</th>
                      <th data-field="genericGroupName" data-formatter="genericGroupFormatter" data-sortable="true">Деталь</th>
                      <th data-field="tokenGroupName" data-formatter="tokenGroupFormatter" data-sortable="true">Группа</th>
-                     <th data-field="fixPrice">Цена фикс.</th>
-                     <th data-field="meanPrice">Цена сред.</th>
+                     <th data-field="fixPrice" data-formatter="numberFormatter">Цена фикс.</th>
+                     <th data-field="meanPrice" data-formatter="numberFormatter">Цена сред.</th>
                  </tr>                
             </thead>
         </table>
@@ -131,6 +131,11 @@
             '</div>'
         ].join(''); 
     }    
+    
+    function numberFormatter(value)
+    {
+        return Math.round(value * 100) / 100;
+    }
         
     function responseHandler(res) {
         return res;
