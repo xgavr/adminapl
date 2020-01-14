@@ -147,7 +147,7 @@ class ScaleTreshold
         $result = [];
         $col = 0;
         $minRetailPrice = ceil($price + $price*self::MIN_RATE/100);
-        $priceTreshold = ($retailPrice - $price)/(self::PRICE_COL_COUNT);
+        $priceTreshold = ($retailPrice - $price)/(self::PRICE_COL_COUNT + 1);
         
         while ($col <= self::PRICE_COL_COUNT){
             $result[$col]['price'] = round($retailPrice - $col*$priceTreshold, self::DEFAULT_ROUNDING);
