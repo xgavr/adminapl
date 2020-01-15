@@ -39,16 +39,26 @@ class MlController extends AbstractActionController
     
     public function indexAction()
     {
-        $trains = $this->mlManager->trainPrimaryScale();
+        //$trains = $this->mlManager->trainPrimaryScale();
         
         return new ViewModel([
 //            'testTreshold' => $testTreshold,
 //            'predictRate' => $predictRate,
-            'trains' => $trains,
+            //'trains' => $trains,
             'mlManager' => $this->mlManager,
         ]);
     }
     
+    public function primaryScaleAction()
+    {
+        $trains = $this->mlManager->trainPrimaryScale();
+        
+        return new ViewModel([
+            'trains' => $trains,
+            'mlManager' => $this->mlManager,
+        ]);
+    }
+
     public function trainPrimaryScaleAction()
     {
         $this->mlManager->trainPrimaryScale();

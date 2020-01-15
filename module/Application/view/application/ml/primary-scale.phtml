@@ -1,0 +1,61 @@
+<?php
+$this->headTitle('Начальная шкала для расценки');
+
+$this->mainMenu()->setActiveItemId('ml');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Машинное обучение'=>$this->url('ml'),
+            'Начальная шкала для расценки'=>$this->url('ml', ['action' => 'primary-scale']),
+            ]);
+?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Расценка
+            </div>
+            <div class="panel-body">
+                <button value="/ml/train-primary-scale" class="btn btn-info btn-xs refresh-button">
+                    Инициализация начальной шкалы
+                </button>  
+                <table width="100%">
+                    <tr>
+                        <th>Порог</th>
+                        <?php foreach($trains['predicts'] as $epsilon=>$predict):?>
+                            <th><?= $epsilon ?></th>
+                        <?php endforeach;?>                    
+                    </tr>
+                    <?php foreach($trains['treshots'] as $key => $treshot):?>
+                    <tr>
+                        <td>
+                            <?= $treshot?>                        
+                        </td>
+                        <?php foreach($trains['predicts'] as $epsilon=>$predict):?>
+                            <?php 
+                                $accuracy = $mlManager->rateAccuracy(
+                                        $treshot,
+                                        $predict[$key],
+                                        $trains['samples'],
+                                        $trains['targets']
+                                        );
+                                if ($accuracy){
+                                    $label = 'success';
+                                } else {
+                                    $label = 'danger';                                
+                                }
+                            ?>
+                            <td>
+                                <span class="label label-<?= $label?>">
+                                    <?= $predict[$key] ?>                                
+                                </span>
+                            </td>
+                        <?php endforeach;?>                    
+                    </tr>
+                    <?php endforeach;?>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

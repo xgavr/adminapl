@@ -10,69 +10,32 @@ $this->pageBreadcrumbs()->setItems([
 ?>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
         <div class="panel panel-info">
             <div class="panel-heading">
                 Наименования товаров
             </div>
-        </div>
-        <div class="panel-body">
-            <button value="/ml/fill-ml-titles" class="btn btn-info btn-xs refresh-button">
-                Заполнить обучающую таблицу наименований
-            </button>         
-            <a href="/ml/ml-titles">
-                Обучающая выборка
-            </a>
-            <button value="/ml/cluster-tokengroup" class="btn btn-info btn-xs refresh-button">
-                Кластеризация групп наименований
-            </button>                             
+            <div class="panel-body">
+                <button value="/ml/fill-ml-titles" class="btn btn-info btn-xs refresh-button">
+                    Заполнить обучающую таблицу наименований
+                </button>         
+                <a href="/ml/ml-titles">
+                    Обучающая выборка
+                </a>
+                <button value="/ml/cluster-tokengroup" class="btn btn-info btn-xs refresh-button">
+                    Кластеризация групп наименований
+                </button>                             
+            </div>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-4">
         <div class="panel panel-info">
             <div class="panel-heading">
                 Расценка
             </div>
-        </div>
-        <div class="panel-body">
-            <button value="/ml/train-primary-scale" class="btn btn-info btn-xs refresh-button">
-                Инициализация начальной шкалы
-            </button>  
-            <table width="100%">
-                <tr>
-                    <th>Порог</th>
-                    <?php foreach($trains['predicts'] as $epsilon=>$predict):?>
-                        <th><?= $epsilon ?></th>
-                    <?php endforeach;?>                    
-                </tr>
-                <?php foreach($trains['treshots'] as $key => $treshot):?>
-                <tr>
-                    <td>
-                        <?= $treshot?>                        
-                    </td>
-                    <?php foreach($trains['predicts'] as $epsilon=>$predict):?>
-                        <?php 
-                            $accuracy = $mlManager->rateAccuracy(
-                                    $treshot,
-                                    $predict[$key],
-                                    $trains['samples'],
-                                    $trains['targets']
-                                    );
-                            if ($accuracy){
-                                $label = 'success';
-                            } else {
-                                $label = 'danger';                                
-                            }
-                        ?>
-                        <td>
-                            <span class="label label-<?= $label?>">
-                                <?= $predict[$key] ?>                                
-                            </span>
-                        </td>
-                    <?php endforeach;?>                    
-                </tr>
-                <?php endforeach;?>
-            </table>
+            <div class="panel-body">
+                <a href='<?= $this->url('ml', ['action' => 'primary-scale'])?>'>Инициализация начальной шкалы</a>
+            </div>
         </div>
     </div>
 </div>

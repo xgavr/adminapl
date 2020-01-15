@@ -20,6 +20,7 @@ use Phpml\Regression\LeastSquares;
 use Phpml\SupportVectorMachine\Kernel;
 use Application\Entity\MlTitle;
 use Application\Entity\Goods;
+use Application\Entity\TokenGroup;
 use Application\Entity\Rawprice;
 use Application\Entity\Token;
 use Application\Entity\Bigram;
@@ -382,13 +383,18 @@ class MlManager
      * 
      * @param Rawprice $rawprice
      * @param integer $gc
+     * @param integer $tgc
      * 
      * @return array
      */
-    public function titleToToken($rawprice, $gc = null)
+    public function titleToToken($rawprice, $gc = null, $tgc = null)
     {
         if (!$gc){
             $gc = $this->entityManager->getRepository(Goods::class)
+                    ->count([]);
+        }
+        if (!$tgc){
+            $tgc = $this->entityManager->getRepository(TokenGroup::class)
                     ->count([]);
         }
         
