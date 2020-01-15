@@ -1042,6 +1042,51 @@ class TokenRepository  extends EntityRepository
     }
     
     /**
+     * Количество токенов в группе токенов
+     * @param TokenGroup $tokenGroup
+     * 
+     * @return integer
+     */
+    public function tokenGroupTokenCount($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('at.id)')
+                ->from(ArticleToken::class, 'at')
+                ->join('at.article', 'a')
+                ->join('a.good', 'g')
+                ->where('g.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());
+    }
+    
+    /**
+     * Число вхождений токена в группу токенов
+     * @param string $lemma
+     * @param TokenGroup $tokenGroup
+     * 
+     * @return integer
+     */
+    public function tokenInTokenGroupCount($lemma, $tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('at.id)')
+                ->from(ArticleToken::class, 'at')
+                ->join('at.article', 'a')
+                ->join('a.good', 'g')
+                ->where('g.tokenGroup = ?2')
+                ->andWhere('at.lemma = ?1')
+                ->setParameter('1', $lemma)
+                ->setParameter('2', $tokenGroup->getId())
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());
+    }
+    
+    /**
      * Наименования товара
      * 
      * @param Goods $good

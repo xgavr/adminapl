@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Bigram;
 use Application\Entity\Article;
 use Application\Entity\ArticleBigram;
+use Application\Entity\TokenGroup;
 use Application\Entity\Rawprice;
 
 
@@ -400,6 +401,8 @@ class BigramRepository  extends EntityRepository
     /**
      * Количество товаров с этим биграмом
      * @param Bigram $bigram
+     * 
+     * @return integer
      */
     public function bigramGoodCount($bigram)
     {
@@ -419,6 +422,8 @@ class BigramRepository  extends EntityRepository
     /**
      * Количество групп токенов с этим биграмом
      * @param Bigram $bigram
+     * 
+     * @return integer
      */
     public function bigramTokenGroupCount($bigram)
     {
@@ -431,6 +436,51 @@ class BigramRepository  extends EntityRepository
                 ->join('a.good', 'g')
                 ->where('ab.bigram = ?1')
                 ->setParameter('1', $bigram->getId())
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());
+    }
+    
+    /**
+     * Количество биграм в группе токенов
+     * @param TokenGroup $tokenGroup
+     * 
+     * @return integer
+     */
+    public function tokenGroupBigramCount($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('ab.id)')
+                ->from(ArticleBigram::class, 'ab')
+                ->join('ab.article', 'a')
+                ->join('a.good', 'g')
+                ->where('g.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());
+    }
+    
+    /**
+     * Число вхождений биграмы в группу токенов
+     * @param Bigram $bigram
+     * @param TokenGroup $tokenGroup
+     * 
+     * @return integer
+     */
+    public function bigramInTokenGroupCount($bigram, $tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('ab.id)')
+                ->from(ArticleBigram::class, 'ab')
+                ->join('ab.article', 'a')
+                ->join('a.good', 'g')
+                ->where('g.tokenGroup = ?2')
+                ->andWhere('ab.bigram = ?1')
+                ->setParameter('1', $bigram->getId())
+                ->setParameter('2', $tokenGroup->getId())
                 ;
         
         return count($queryBuilder->getQuery()->getResult());

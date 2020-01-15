@@ -560,8 +560,10 @@ class NameManager
      * @param Token $token
      * @param integer $goodCount
      * @param integer $goods
+     * @param integer $groupTokenCount
+     * @param integer $tokenGroups
      */
-    public function updateTokenArticleCount($token, $goodCount = null, $goods = null, $groupTokenCount = null)
+    public function updateTokenArticleCount($token, $goodCount = null, $goods = null, $groupTokenCount = null, $tokenGroups = null)
     {
         if ($goodCount == null){
             $goodCount = $this->entityManager->getRepository(ArticleToken::class)
@@ -576,7 +578,14 @@ class NameManager
                     ->count([]);
         }
         
-        $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
+        if ($tokenGroups == null){
+            $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                    ->count([]);
+        }
+        $idf = 0;
+        if ($groupTokenCount){
+            $idf = log($tokenGroups/$groupTokenCount);
+        }    
         
         $this->entityManager->getRepository(Token::class)
                 ->updateToken($token->getLemma(), [
@@ -597,13 +606,15 @@ class NameManager
         
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
+        $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                ->count([]);
         
         $tokensQuery = $this->entityManager->getRepository(Token::class)
                 ->findAllToken();
         $iterable = $tokensQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $token){
-                $this->updateTokenArticleCount($token, null, $goods);
+                $this->updateTokenArticleCount($token, null, $goods, null, $tokenGroups);
                 $this->entityManager->detach($token);
             }   
         }    
@@ -642,7 +653,7 @@ class NameManager
      * @param integer $goodCount
      * @param integer $goods
      */
-    public function updateBigramArticleCount($bigram, $goodCount = null, $goods = null, $tokenGroupCount = null)
+    public function updateBigramArticleCount($bigram, $goodCount = null, $goods = null, $tokenGroupCount = null, $tokenGroups = null)
     {
         if ($goodCount == null){
             $goodCount = $this->entityManager->getRepository(ArticleBigram::class)
@@ -656,8 +667,15 @@ class NameManager
             $tokenGroupCount = $this->entityManager->getRepository(ArticleBigram::class)
                     ->bigramTokenGroupCount($bigram);
         }    
+        if ($tokenGroups == null){
+            $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                    ->count([]);
+        }
+        $idf = 0;
         
-        $idf = log10(($goods - $goodCount + 0.5)/($goodCount + 0.5));
+        if ($tokenGroupCount){
+            $idf = log($tokenGroups/$tokenGroupCount);
+        }    
         
         $this->entityManager->getRepository(Bigram::class)
                 ->updateBigram($bigram, [
@@ -678,13 +696,15 @@ class NameManager
         
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
+        $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                ->count([]);
         
         $bigramsQuery = $this->entityManager->getRepository(Bigram::class)
                 ->findAllBigram();
         $iterable = $bigramsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $bigram){
-                $this->updateBigramArticleCount($bigram, null, $goods);
+                $this->updateBigramArticleCount($bigram, null, $goods, null, $tokenGroups);
                 $this->entityManager->detach($bigram);
             }   
         }    
