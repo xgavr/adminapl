@@ -628,6 +628,17 @@ $priceCols = $goodsManager->priceCols($goods);
                                     </button>                             
                                 </div>
                             </div>                        
+                            <div class="panel-body">
+                                <div class="pull-left">
+                                    Цены 
+                                </div>
+                                <div class="pull-right">                                                
+                                    <button value="/apl/update-good-price/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
+                                            title="Обновить цены">
+                                        <span class="glyphicon glyphicon-export" ></span>
+                                    </button>                             
+                                </div>
+                            </div>                        
                         <?php endif;?>
                     </div>    
                 </div>                

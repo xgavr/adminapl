@@ -207,6 +207,26 @@ class AplController extends AbstractActionController
         ]);
     }
 
+    public function updateGoodPriceAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->findOneById($goodId);  
+        	
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $this->aplService->updateGoodPrice($good);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
     public function makeAplIdAction()
     {
         $makeId = $this->params()->fromRoute('id', -1);

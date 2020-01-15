@@ -1540,4 +1540,47 @@ class GoodsRepository extends EntityRepository
         return $result['maxPrice'];
     }
     
+    /**
+     * Найти поставщиков товара
+     * 
+     * @param Goods $good
+     * @return integer
+     */
+    public function findGoodSuppliers($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('s.id, s.aplId')
+                ->distinct()
+                ->from(Goods::class, 'g')
+                ->join('g.articles', 'a')
+                ->join('a.rawprice', 'r')
+                ->join('r.raw', 'raw')
+                ->join('raw.supplier', 's')
+                ->where('g.id = ?1')
+                ->setParameter('1', $good->getId())
+                ->andWhere('r.status = ?2')
+                ->setParameter('2', Rawprice::STATUS_PARSED)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    } 
+    
+    /**
+     * Получить апл коды поставщиков товара
+     * 
+     * @param Goods $good
+     * @return array
+     */
+    public function findGoodAplIdSuppliers($good)
+    {
+        $result = [];
+        $data = $this->findGoodSuppliers($good);
+        foreach ($data as $row){
+            $result[] = $row['aplId'];
+        }
+        return $result;
+    }
 }

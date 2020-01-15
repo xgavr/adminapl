@@ -1939,5 +1939,54 @@ class AplService {
         return;
     }
     
-    
+    /**
+     * Обновить цен товара в АПЛ
+     * 
+     * @param Goods $good
+     */ 
+    public function updateGoodPrice($good)
+    {
+        
+        $result = true;
+        if ($good->getPrice() && $good->getAplId()){
+        
+            $url = $this->aplApi().'update-price?api='.$this->aplApiKey();
+            
+            $post = [
+                'goodId' => $good->getAplId(),
+                'price' => $good->getPrice(),
+                'mp' => $good->getMinPrice(),
+                'optsn' => $good->getOpts(),
+                'presence' => 1,
+                'suppliers' => $this->entityManager->getRepository(Goods::class)
+                    ->findGoodAplIdSuppliers($good),
+            ];
+            
+            var_dump($post); exit;
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 30]);
+            $client->setParameterPost($post);
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+    //            var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $ok = $result = true;
+                }
+            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGood($good, ['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
+            }
+        }
+        
+        return $result;
+    }    
 }

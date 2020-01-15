@@ -4,6 +4,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Application\Entity\ScaleTreshold;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -346,6 +347,20 @@ class Goods {
     public function getPrice() 
     {
         return $this->price;
+    }
+    
+    public function getOpts()
+    {
+        $result = [];
+        $priceCols = ScaleTreshold::retailPriceCols($this->getPrice(), $this->getMeanPrice());
+        if (is_array($priceCols)){
+            foreach ($priceCols as $priceCol){
+                if (isset($priceCol['price'])){
+                    $result[] = $priceCol['price'];
+                }    
+            }
+        }    
+        return $result;
     }
 
     public function setPrice($price) 
