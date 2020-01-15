@@ -226,6 +226,17 @@ class AplController extends AbstractActionController
             'result' => 'ok-reload',
         ]);
     }
+    
+    public function updateGoodPricesAction()
+    {
+        
+        $this->aplService->updateGoodPrices();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }    
+    
 
     public function makeAplIdAction()
     {

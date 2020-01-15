@@ -678,6 +678,26 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления цен
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdatePrice()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->andWhere('g.aplId > 0')    
+            ->andWhere('g.statusPriceEx = ?1')
+            ->setParameter('1', Goods::PRICE_EX_NEW)
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
      * Найти товары для обновления картинок
      * 
      * @return object

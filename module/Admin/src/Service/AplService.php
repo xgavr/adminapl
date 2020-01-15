@@ -1989,4 +1989,38 @@ class AplService {
         
         return $result;
     }    
+    
+    /**
+     * Обновление цен в товарах
+     * 
+     * @return type
+     */
+    public function updateGoodPrices()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdatePrice();
+        
+        $iterable = $goodsQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $result = $this->updateGoodPrice($good);
+                $this->entityManager->detach($good);
+                
+                if (!$result){
+                    return;
+                }
+            }    
+            usleep(100);
+            if (time() > $startTime + 1740){
+                return;
+            }
+        }
+        return;
+    }    
+    
 }
