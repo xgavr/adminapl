@@ -412,14 +412,13 @@ class MlManager
                             ->findBigram($preWord, $word);
                     if ($bigram && $preToken->getFrequency() > 0 && $token->getFrequency() > 0){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $pmi = log($bigram->getGf()*$tgc/($preToken->getGf()*$token->getGf() + 0.05))*
-                                    ($preToken->getIdf() + $token->getIdf() - $bigram->getIdf());
-                            if ($pmi < 0 
+                            $pmi = log($bigram->getGf()*$tgc/($preToken->getGf()*$token->getGf() + 0.05));
+//                            if ($pmi < 0 
 //                                    || $bigram->getFlag() != Bigram::WHITE_LIST
 //                                    || $bigram->getFrequency() < 10
-                            ){
-                                $pmi = 0;
-                            }
+//                            ){
+//                                $pmi = 0;
+//                            }
                             $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
                         }    
                     }    
@@ -434,14 +433,13 @@ class MlManager
 
             if ($bigram){
                 if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                    $pmi = log(($bigram->getGf()*$tgc)/($token->getGf()*2 + 0.05))*
-                            ($token->getIdf()*2 - $bigram->getIdf());
-                    if ($pmi < 0 
+                    $pmi = log(($bigram->getGf()*$tgc)/($token->getGf()*2 + 0.05));
+//                    if ($pmi < 0 
 //                            || $bigram->getFlag() != Bigram::WHITE_LIST
 //                            || $bigram->getFrequency() < 10
-                    ){
-                        $pmi = 0;
-                    }
+//                    ){
+//                        $pmi = 0;
+//                    }
                     $result[] = ['pmi' => $pmi, 'token1' => $token, 'bigram' => $bigram];
                 }    
             }    
