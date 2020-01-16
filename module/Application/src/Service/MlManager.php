@@ -412,7 +412,7 @@ class MlManager
                             ->findBigram($preWord, $word);
                     if ($bigram && $preToken->getFrequency() > 0 && $token->getFrequency() > 0){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $pmi = log($bigram->getGf()*$tgc/($preToken->getGf()*$token->getGf() + 0.05));
+                            $pmi = log($bigram->getGf()/($preToken->getGf()*$token->getGf() + 0.05));
 //                            $pmi += log($bigram->getFrequency()*$gc/($preToken->getFrequency()*$token->getFrequency() + 0.05));
                             if ($pmi < 0 
 //                                    || $bigram->getFlag() != Bigram::WHITE_LIST
@@ -434,7 +434,7 @@ class MlManager
 
             if ($bigram){
                 if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                    $pmi = log(($bigram->getGf()*$tgc)/($token->getGf()*2 + 0.05));
+                    $pmi = log(($bigram->getGf())/($token->getGf()*2 + 0.05));
 //                    $pmi += log(($bigram->getFrequency()*$gc)/($token->getFrequency()*2 + 0.05));
                     if ($pmi < 0 
 //                            || $bigram->getFlag() != Bigram::WHITE_LIST
