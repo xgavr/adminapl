@@ -41,6 +41,7 @@ class Statement {
         $client->setUri($this->auth->getUri().'/account/list');
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
+        $client->setOptions(['timeout' => 30]);
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
@@ -72,6 +73,7 @@ class Statement {
         $client->setUri($this->auth->getUri().'/statement/result/'.$request_id);
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
+        $client->setOptions(['timeout' => 30]);
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
@@ -102,6 +104,7 @@ class Statement {
         $client->setUri($this->auth->getUri().'/statement/status/'.$request_id);
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
+        $client->setOptions(['timeout' => 30]);
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
@@ -149,6 +152,7 @@ class Statement {
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('POST');
         $client->setRawBody(Encoder::encode($postParameters));
+        $client->setOptions(['timeout' => 30]);
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([

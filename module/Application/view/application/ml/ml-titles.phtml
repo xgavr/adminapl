@@ -16,7 +16,7 @@ $this->pageBreadcrumbs()->setItems([
 
         <table class="table table-striped">
             <tr>
-                <td colspan="10">
+                <td colspan="11">
                     <?= $this->paginationControl($mlTitles,
                                 'Sliding',
                                 'application/partial/paginator', 
@@ -26,6 +26,7 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <?php foreach ($mlTitles as $mlTitle):?>
                 <tr>
+                    <td></td>
                     <td colspan="10">
                         <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $mlTitle->getRawprice()->getId()])?>" target="_blank">
                             <small><?= $mlTitle->getRawprice()->getGoodname();?></small>
@@ -34,6 +35,7 @@ $this->pageBreadcrumbs()->setItems([
                 </tr>
                 <?php $tokens = $this->mlManager->rawpriceToMlTitle($mlTitle->getRawprice())?>
                 <tr>
+                    <td>Б</td>
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>
@@ -45,6 +47,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endforeach;?>
                 </tr>
                 <tr>
+                    <td>Pmi</td>
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>
@@ -56,6 +59,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endforeach;?>
                 </tr>
                 <tr>
+                    <td>ЧТ</td>
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>
@@ -71,6 +75,23 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endforeach;?>
                 </tr>
                 <tr>
+                    <td>ЧГ</td>
+                    <?php foreach ($tokens as $token):?>
+                        <td>
+                            <?php if (is_array($token)):?>
+                                <?php if ($token['bigram']):?>
+                                    <small>b:<?= $token['bigram']->getGf(); ?></small>
+                                    <small>t1:<?= $token['token1']->getGf(); ?></small> 
+                                <?php endif; ?>
+                                <?php if (isset($token['token2'])):?>
+                                    <small>t2:<?= $token['token2']->getGf(); ?></small> 
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    <?php endforeach;?>
+                </tr>
+                <tr>
+                    <td>Idf</td>
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>

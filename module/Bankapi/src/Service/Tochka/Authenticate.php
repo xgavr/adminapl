@@ -237,7 +237,8 @@ class Authenticate {
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('POST');
         $client->setRawBody(Encoder::encode($postParameters));
-
+        $client->setOptions(['timeout' => 30]);
+        
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
              'Content-Type: application/json',

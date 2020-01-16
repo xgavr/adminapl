@@ -63,6 +63,7 @@ class Payment {
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('POST');
         $client->setRawBody(Encoder::encode($data_payment));
+        $client->setOptions(['timeout' => 30]);
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
@@ -96,6 +97,7 @@ class Payment {
         $client->setUri($this->auth->getUri().'/payment/status/'.$request_id);
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
+        $client->setOptions(['timeout' => 30]);
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([

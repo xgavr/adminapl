@@ -411,15 +411,16 @@ class MlManager
                     $bigram = $this->entityManager->getRepository(Bigram::class)
                             ->findBigram($preWord, $word);
                     if ($bigram && $preToken->getFrequency() > 0 && $token->getFrequency() > 0){
-                        if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $pmi = log($bigram->getFrequency()*$gc*$bigram->getStatus()/($preToken->getFrequency()*$token->getFrequency()*$k));
-                            if ($pmi < 0 
-                                    || $bigram->getFlag() != Bigram::WHITE_LIST
-                                    || $bigram->getFrequency() < 10){
-                                $pmi = 0;
-                            }
-                            $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
-                        }    
+                        $pmi = 0; 
+                        $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+//                        if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+//                            $pmi = log($bigram->getFrequency()*$gc*$bigram->getStatus()/($preToken->getFrequency()*$token->getFrequency()*$k));
+//                            if ($pmi < 0 
+//                                    || $bigram->getFlag() != Bigram::WHITE_LIST
+//                                    || $bigram->getFrequency() < 10){
+//                                $pmi = 0;
+//                            }
+//                        }    
                     }    
                 }
                 $preWord = $word;
@@ -431,15 +432,16 @@ class MlManager
                             ->findBigram($token->getLemma());
 
             if ($bigram){
-                if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                    $pmi = log(($bigram->getFrequency()*$gc*$bigram->getStatus())/($token->getFrequency()*2));
-                    if ($pmi < 0 
-                            || $bigram->getFlag() != Bigram::WHITE_LIST
-                            || $bigram->getFrequency() < 10){
-                        $pmi = 0;
-                    }
-                    $result[] = ['pmi' => $pmi, 'token1' => $token, 'bigram' => $bigram];
-                }    
+                $pmi = 0;
+                $result[] = ['pmi' => $pmi, 'token1' => $token, 'bigram' => $bigram];
+//                if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+//                    $pmi = log(($bigram->getFrequency()*$gc*$bigram->getStatus())/($token->getFrequency()*2));
+//                    if ($pmi < 0 
+//                            || $bigram->getFlag() != Bigram::WHITE_LIST
+//                            || $bigram->getFrequency() < 10){
+//                        $pmi = 0;
+//                    }
+//                }    
             }    
         }
         
@@ -461,7 +463,7 @@ class MlManager
      */
     public function rawpriceToMlTitle($rawprice)
     {
-        $result = $this->titleToToken($rawprice, 1040000);
+        $result = $this->titleToToken($rawprice, 1070000, 40000);
         $empt = array_fill(200, 10 - count($result), false);
 //        var_dump($empt);
         return array_merge($result, $empt);
