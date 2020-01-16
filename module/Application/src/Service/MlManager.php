@@ -413,7 +413,7 @@ class MlManager
                     if ($bigram && $preToken->getFrequency() > 0 && $token->getFrequency() > 0){
                         if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
                             $pmi = log($bigram->getGf()*$tgc/($preToken->getGf()*$token->getGf() + 0.05))*
-                                    ($preToken>getIdf() + $token->getIdf() - $bigram->getIdf());
+                                    ($preToken->getIdf() + $token->getIdf() - $bigram->getIdf());
                             if ($pmi < 0 
 //                                    || $bigram->getFlag() != Bigram::WHITE_LIST
 //                                    || $bigram->getFrequency() < 10
