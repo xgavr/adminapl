@@ -262,7 +262,6 @@ class PostManager {
         $filter = new HtmlFilter();
         $emailFilter = new EmailFromStr();
         $fromEmail = $emailFilter->filter($data['from']);
-//        var_dump($fromEmail); exit;
 
         $postLog = new PostLog();
         $postLog->setTo($data['to']);
@@ -278,8 +277,12 @@ class PostManager {
         
         if (isset($data['content'])){
             foreach ($data['content'] as $content){
-                $postLog->setBody($filter->filter($content));
-                break;
+                if (is_string($content)){
+                    if (strlen($content) < 1024){
+                        $postLog->setBody($filter->filter($content));
+                        break;
+                    }    
+                }    
             }
         }    
         
