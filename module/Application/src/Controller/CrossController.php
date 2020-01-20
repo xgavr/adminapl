@@ -221,7 +221,7 @@ class CrossController extends AbstractActionController
         $query = $this->entityManager->getRepository(CrossList::class)
                     ->crossList($cross);            
         
-        $total = count($query->getResult(2));
+        $total = $cross->getRowCount();
         
         if ($offset) {
             $query->setFirstResult($offset);
