@@ -143,10 +143,10 @@ class CrossManager {
                 'password' => $priceSettings['cross_mail_box_password'],
                 'leave_message' => false,
             ];
+            var_dump($box); exit;
 
             $mailList = $this->postManager->readImap($box);
             
-            var_dump($box); exit;
             if (count($mailList)){
                 foreach ($mailList as $mail){
                     if (isset($mail['attachment'])){
