@@ -145,6 +145,7 @@ class CrossManager {
             ];
 
             $mailList = $this->postManager->readImap($box);
+            
             var_dump($box); exit;
             if (count($mailList)){
                 foreach ($mailList as $mail){
