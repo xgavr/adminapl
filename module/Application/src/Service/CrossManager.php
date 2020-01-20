@@ -301,7 +301,6 @@ class CrossManager {
                         $data = [
                             'rawdata' => $filter->filter($row),
                             'status'  => CrossList::STATUS_NEW,
-                            'date_created' => date('Y-m-d H:i:s'),
                             'cross_id' => $cross->getId(),
                             'article_id' => null,
                         ];
