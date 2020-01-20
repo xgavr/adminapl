@@ -359,7 +359,7 @@ class CrossManager {
             $cross->setDateCreated($currentDate);
 
             $this->entityManager->persist($cross);
-            $this->entityManager->flush();
+            $this->entityManager->flush($cross);
 
             $filter = new RawToStr();
 
@@ -413,7 +413,7 @@ class CrossManager {
             }    
             $cross->setRowCount($rows);
             $this->entityManager->persist($cross);
-            $this->entityManager->flush();                    
+            $this->entityManager->flush($cross);                    
 
             unset($spreadsheet);
 
