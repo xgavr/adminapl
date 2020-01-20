@@ -291,7 +291,7 @@ class CrossManager {
                 $cross->setDateCreated($currentDate);
 
                 $this->entityManager->persist($cross);
-                $this->entityManager->flush();
+                $this->entityManager->flush($cross);
 
                 while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
 
@@ -318,7 +318,7 @@ class CrossManager {
                 }    
                 $cross->setRowCount($rows);                    
                 $this->entityManager->persist($cross);
-                $this->entityManager->flush();                    
+                $this->entityManager->flush($cross);                    
 
                 fclose($lines);
             }                                
@@ -466,7 +466,7 @@ class CrossManager {
             $cross->setDateCreated($currentDate);
 
             $this->entityManager->persist($cross);
-            $this->entityManager->flush();
+            $this->entityManager->flush($cross);
 
             $filter = new RawToStr();
 
@@ -503,7 +503,7 @@ class CrossManager {
             }    
             $cross->setRowCount($rows);
             $this->entityManager->persist($cross);
-            $this->entityManager->flush();                    
+            $this->entityManager->flush($cross);                    
 
             unset($excel);
             unset($mvexcel);
