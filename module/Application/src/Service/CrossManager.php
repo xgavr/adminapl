@@ -651,7 +651,7 @@ class CrossManager {
             foreach ($articles as $article){
                 $unknownProducerName = $article->getUnknownProducer()->getName();
                 foreach ($row as $key => $value){
-                    if ($unknownProducerName == $producerNameFilter->filter($value)){
+                    if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value)){
                         $producer = $unknownProducerName;
                         $description['producerName'] = $key;
                         $description['articleBy'] = 'producer';
@@ -670,7 +670,7 @@ class CrossManager {
             foreach ($articles as $article){
                 $unknownProducerName = $article->getUnknownProducer()->getName();
                 foreach ($row as $key => $value){
-                    if ($unknownProducerName == $producerNameFilter->filter($value)){
+                    if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value)){
                         $brandProducer = $unknownProducerName;
                         $description['brandName'] = $key;
                         if (!isset($description['articleBy'])){
