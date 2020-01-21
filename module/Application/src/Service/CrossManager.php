@@ -210,7 +210,7 @@ class CrossManager {
     {    
         $folderName = $this->entityManager->getRepository(Cross::class)
                                             ->getTmpCrossFolder();
-        
+        var_dump($tmpFileName);
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
