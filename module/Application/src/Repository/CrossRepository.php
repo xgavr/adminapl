@@ -178,7 +178,7 @@ class CrossRepository extends EntityRepository{
      */
     public function updateCross($cross, $data)
     {
-        $this->getEntityManager()->getConnection()->update('cross_', $data, ['id' => $line->getId()]);
+        $this->getEntityManager()->getConnection()->update('cross_', $data, ['id' => $cross->getId()]);
         return;
     }
     
