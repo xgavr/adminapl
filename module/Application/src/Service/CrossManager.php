@@ -628,7 +628,7 @@ class CrossManager {
             
             if (!$articleCode || !$brandArticleCode){
                 $code = $articleFilter->filter($value);
-//                var_dump($code);
+                var_dump($code);
                 if ($code && $code != OemRaw::LONG_CODE){
                     $articles = $this->entityManager->getRepository(Article::class)
                             ->findBy(['code' => $code]);
