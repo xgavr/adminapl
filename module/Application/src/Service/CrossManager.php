@@ -633,10 +633,10 @@ class CrossManager {
                             ->findBy(['code' => $code]);
                     if (count($articles)){
                         if (!$articleCode){
-                            $articleCode = $value;
+                            $articleCode = $code;
                             $description['producerArticle'] = $key;
                         } else {
-                            $brandArticleCode = $value;
+                            $brandArticleCode = $code;
                             $description['brandArticle'] = $key;
                         }                        
                         continue;
@@ -645,7 +645,7 @@ class CrossManager {
             }    
         }
         
-        var_dump($articleCode);
+//        var_dump($articleCode);
         if ($articleCode){
             $articles = $this->entityManager->getRepository(Article::class)
                     ->findBy(['code' => $articleCode]);
