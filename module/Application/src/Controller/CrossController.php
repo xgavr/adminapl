@@ -138,7 +138,7 @@ class CrossController extends AbstractActionController
         
     public function deleteTmpFileAction()
     {
-        $filename = urldecode($this->params()->fromQuery('file'));
+        $filename = rawurldecode($this->params()->fromQuery('file'));
 
         if (file_exists($filename)){
             unlink($filename);
