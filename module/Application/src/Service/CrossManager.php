@@ -281,17 +281,13 @@ class CrossManager {
                 $filter = new RawToStr();
 
                 $rows = 0;
-                $cross = new Cross();
-//                $cross->setSupplier($supplier);
-                $cross->setFilename($basenameFilter->filter($filename));
-                $cross->setStatus(Cross::STATUS_LOAD);
-                $cross->setRowCount($rows);                    
-
-                $currentDate = date('Y-m-d H:i:s');
-                $cross->setDateCreated($currentDate);
-
-                $this->entityManager->persist($cross);
-                $this->entityManager->flush($cross);
+                $this->entityManager->getRepository(Cross::class)
+                        ->insertCross($cross, [
+                            'status'=> Cross::STATUS_LOAD, 
+                            'filename' => $basenameFilter->filter($filename),
+                            'date_created' => $currentDate, 
+                            'row_count' => 0,
+                        ]);
 
                 while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
 
