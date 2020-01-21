@@ -312,13 +312,17 @@ class CrossManager {
                 }
 
                 if ($rows > 1){
-                    $cross->setStatus(Raw::STATUS_ACTIVE);
+//                    $cross->setStatus(Cross::STATUS_ACTIVE);
+                    $status = Cross::STATUS_ACTIVE;
                 } else {
-                    $cross->setStatus(Raw::STATUS_RETIRED);                    
+//                    $cross->setStatus(Cross::STATUS_RETIRED);                    
+                    $status = Cross::STATUS_RETIRED;
                 }    
-                $cross->setRowCount($rows);                    
-                $this->entityManager->persist($cross);
-                $this->entityManager->flush($cross);                    
+//                $cross->setRowCount($rows);                    
+//                $this->entityManager->persist($cross);
+//                $this->entityManager->flush($cross);                    
+                $this->entityManager->getRepository(Cross::class)
+                        ->updateCross($cross, ['status'=> $status, 'row_count' => $rows]);
 
                 fclose($lines);
             }                                

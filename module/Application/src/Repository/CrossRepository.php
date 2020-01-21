@@ -161,6 +161,18 @@ class CrossRepository extends EntityRepository{
     }   
     
     /**
+     * Обновление кросс листа
+     * 
+     * @param Cross $cross
+     * @param array $data
+     */
+    public function updateCross($cross, $data)
+    {
+        $this->getEntityManager()->getConnection()->update('cross_', $data, ['id' => $line->getId()]);
+        return;
+    }
+    
+    /**
      * Обновление строки кросс листа
      * 
      * @param CrossList $line
