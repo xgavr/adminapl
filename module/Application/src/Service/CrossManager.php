@@ -650,9 +650,9 @@ class CrossManager {
                     ->findBy(['code' => $articleCode]);
             foreach ($articles as $article){
                 $unknownProducerName = $article->getUnknownProducer()->getName();
-                var_dump($unknownProducerName);
                 foreach ($row as $key => $value){
                     if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value)){
+                        var_dump($unknownProducerName);
                         $producer = $unknownProducerName;
                         $description['producerName'] = $key;
                         $description['articleBy'] = 'producer';
