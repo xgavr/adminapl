@@ -652,7 +652,6 @@ class CrossManager {
                 $unknownProducerName = $article->getUnknownProducer()->getName();
                 foreach ($row as $key => $value){
                     if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value)){
-                        var_dump($unknownProducerName);
                         $producer = $unknownProducerName;
                         $description['producerName'] = $key;
                         $description['articleBy'] = 'producer';
@@ -665,6 +664,9 @@ class CrossManager {
                 }
             }        
         }
+
+        var_dump($brandArticleCode);
+
         if ($brandArticleCode){
             $articles = $this->entityManager->getRepository(Article::class)
                     ->findBy(['code' => $brandArticleCode]);
