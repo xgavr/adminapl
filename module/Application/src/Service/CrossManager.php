@@ -602,7 +602,7 @@ class CrossManager {
     public function exploreLine($line)
     {
         $row = $line->getRawdataAsArray();
-        
+        var_dump($row);
         $producerNameFilter = new ProducerName();
         $articleFilter = new ArticleCode();
         $isRuValidator = new IsRU();
