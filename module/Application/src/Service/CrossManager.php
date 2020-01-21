@@ -174,33 +174,6 @@ class CrossManager {
         return;
     }    
 
-    /*
-     * Очистить содержимое папки
-     * 
-     * @var Application\Entity\Supplier $supplier
-     * @var string $folderName
-     * 
-     */
-    public function clearPriceFolder($supplier, $folderName)
-    {
-        if (is_dir($folderName)){
-            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
-                if ($fileInfo->isDot()) continue;
-                if ($fileInfo->isFile()){
-                    unlink($fileInfo->getPathname());                            
-                }
-                if ($fileInfo->isDir()){
-                    $this->clearPriceFolder($supplier, $fileInfo->getPathname());
-                    
-                }
-            }
-            if ($folderName != self::PRICE_FOLDER.'/'.$supplier->getId()){
-                rmdir($folderName);
-            }
-        }
-        
-    }
-    
     /**
      * 
      * Проверка папки с кроссами. Если в папке есть кросс то загружаем его
@@ -228,22 +201,21 @@ class CrossManager {
     
     /*
      * 
-     * Удаление старых файлов
+     * Удаление файлов
      * 
-     * @var Application\Entity\Supplier $supplier
-     * @var string $folderName
+     * @var string $tmpFileName
      * 
      */
-    public function removeOldPrices($supplier)
+    public function removeMd5TmpFile($tmpFileName)
     {    
-        $check_time = 60*60*24*7; //Неделя
+        $folderName = $this->entityManager->getRepository(Cross::class)
+                                            ->getTmpCrossFolder();
         
-        $folderName = $supplier->getArxPriceFolder();
         if (is_dir($folderName)){
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
-                    if ((time() - $check_time) > $fileInfo->getMTime()){
+                    if (md5($fileInfo->getFilename()) == $tmpFileName){
                         unlink(realpath($fileInfo->getPathname()));
                     }    
                 }

@@ -31,7 +31,7 @@ $this->headScript()
                                 <?= $fileInfo->getFileName() ?>
                             </div>
                             <div class="pull-right">
-                                <button value="/cross/upload-tmp-file/?file=<?= rawurlencode($fileInfo->getPathname()) ?>" class="btn btn-default btn-xs refresh-button"
+                                <button value="/cross/upload-tmp-file/?file=<?= md5($fileInfo->getFileName()) ?>" class="btn btn-default btn-xs refresh-button"
                                         title="Загрузить">
                                     <span class="glyphicon glyphicon-import" ></span>
                                 </button>

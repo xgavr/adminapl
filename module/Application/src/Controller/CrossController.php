@@ -138,11 +138,9 @@ class CrossController extends AbstractActionController
         
     public function deleteTmpFileAction()
     {
-        $filename = rawurldecode($this->params()->fromQuery('file'));
-var_dump($filename); exit;
-        if (file_exists($filename)){
-            unlink($filename);
-        }
+        $md5filename = $this->params()->fromQuery('file');
+
+        $this->crossManager->removeMd5TmpFile($md5filename);
         
         return new JsonModel([
             'ok',
