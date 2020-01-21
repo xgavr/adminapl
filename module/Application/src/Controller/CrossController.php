@@ -326,11 +326,39 @@ class CrossController extends AbstractActionController
         $line = $this->entityManager->getRepository(CrossList::class)
                 ->findOneById($lineId);
         
-        $this->crossManager->exploreLine($line);
+        $description = $this->crossManager->exploreLine($line);
         
-        return new JsonModel(
-           ['ok']
-        );                   
+        $message = '<ul>';
+        if (is_array($description)){
+            if (isset($description['producerArticle'])){
+                $message .= '<li>Артикул: ';                
+                $message .= $description['producerArticle'];                
+            }                
+            if (isset($description['producerArticleName'])){
+                $message .= '<li>Производитель: ';                
+                $message .= $description['producerArticleName'];                
+            }                
+            if (isset($description['brandArticle'])){
+                $message .= '<li>ОЕ артикул: ';                
+                $message .= $description['brandArticle'];                
+            }                
+            if (isset($description['brandArticleName'])){
+                $message .= '<li>ОЕ производитель: ';                
+                $message .= $description['brandArticleName'];                
+            }                
+            if (isset($description['brandName'])){
+                $message .= '<li>ОЕ brandName: ';                
+                $message .= $description['brandName'];                
+            }                
+            if (isset($description['articleBy'])){
+                $message .= '<li>articleBy: ';                
+                $message .= $description['articleBy'];                
+            }                
+        }
+        $message .= '</ul>';
+        
+        echo $message;
+        exit;
     }
     
     public function parseAction()

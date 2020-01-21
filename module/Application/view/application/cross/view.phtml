@@ -166,15 +166,25 @@ $this->headScript()
     }
     
     function activeFormatter(value, row){
-        var url = '/cross/delete-line/'+row.id;
-        btn = '<button';
+        var url = '/cross/explore-line/'+row.id;
+        btn = '<nobr><button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-info btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowExplore(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-education" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        url = '/cross/delete-line/'+row.id;
+        btn += ' <button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
         btn += ' onclick="tableRowDelete(\''+url+'\')">';
         btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btn += '</button>';
+        btn += '</button></nobr>';
         return btn;
     }
     
@@ -226,5 +236,25 @@ $this->headScript()
     function dateCreatedFormatter(value, row) {
         return value;
     }    
+    
+    function tableRowExplore(url) {
+        if (url){
+            $.ajax({
+                type: 'GET',
+                url: url,
+            }).done(function (data) {
+//                console.log(data);
+                if (data){
+                    bootbox.alert(data);
+                } else {
+                    bootbox.alert("Не удалось изучить!");
+                }    
+            })
+            .fail(function (e) {
+                bootbox.alert("Не удалось изучить.");
+
+            });
+        }        
+    }   
     
 </script>
