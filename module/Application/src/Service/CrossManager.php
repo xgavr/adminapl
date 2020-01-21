@@ -665,8 +665,6 @@ class CrossManager {
             }        
         }
 
-        var_dump($brandArticleCode);
-
         if ($brandArticleCode){
             $articles = $this->entityManager->getRepository(Article::class)
                     ->findBy(['code' => $brandArticleCode]);
