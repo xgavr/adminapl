@@ -820,16 +820,17 @@ class CrossManager {
             }
 
             if (isset($code) && isset($unknownProducerName)){
-                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneByName($unknownProducerName);
+                $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                        ->findUnknownProducerByName($unknownProducerName);
                 
-                if ($unknownProducer){
+                foreach ($unknownProducers as $unknownProducer){
                     $article = $this->entityManager->getRepository(Article::class)
                            ->findOneBy(['code' => $code, 'unknownProducer' => $unknownProducer->getId()]);
                     if ($article){
                         $data['article_id'] = $article->getId();
                         if ($article->getGood()){
                             $data['code_id'] = $article->getGood()->getId();
+                            break;
                         }    
                     }
                 }    
