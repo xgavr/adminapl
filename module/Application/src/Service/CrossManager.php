@@ -664,7 +664,7 @@ class CrossManager {
         }
         
 //        var_dump($row);
-//        var_dump($description);
+        var_dump($description);
         if (isset($description['articleBy'])){
             if ($description['articleBy'] == 'producer' && isset($description['brandArticle'])){
                 return $description;
