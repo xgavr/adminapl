@@ -376,14 +376,18 @@ class CrossController extends AbstractActionController
             return;
         }
         
-        if ($this->getRequest()->isPost()) {
-            // Получаем POST-данные.
-            $data = $this->params()->fromPost();                
-            $key = $data['pk'];
-            $value = $data['value'];
-            $this->crossManager->updateCrossDescription($cross, [$key => $value]);                    
-        }
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneBiId($crossId);
         
+        if ($cross){
+            if ($this->getRequest()->isPost()) {
+                // Получаем POST-данные.
+                $data = $this->params()->fromPost();                
+                $key = $data['pk'];
+                $value = $data['value'];
+                $this->crossManager->updateCrossDescription($cross, [$key => $value]);                    
+            }
+        }    
         exit;
     }
     
