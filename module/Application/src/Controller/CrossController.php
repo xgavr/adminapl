@@ -366,6 +366,27 @@ class CrossController extends AbstractActionController
         exit;
     }
     
+    public function updateCrossDescriptionAction()
+    {
+        $crossId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($crossId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();                
+            $key = $data['pk'];
+            $value = $data['value'];
+            $this->crossManager->updateCrossDescription($cross, [$key => $value]);                    
+        }
+        
+        exit;
+    }
+    
     public function parseAction()
     {
         $crossId = (int)$this->params()->fromRoute('id', -1);

@@ -709,6 +709,27 @@ class CrossManager {
     }
     
     /**
+     * Обновить описание кросса
+     * 
+     * @param Cross $cross
+     * @param array $data
+     */
+    public function updateCrossDescription($cross, $data)
+    {
+        $description = $cross->getDescription();
+        
+        foreach ($data as $key => $value){
+            $description[$key] = $value;            
+        }
+        
+        $cross->setDescription($description);
+        $this->entityManager->persist($cross);
+        $this->entityManager->flush($cross);
+        
+        return;
+    }
+    
+    /**
      * Разобрать строку кросса
      * 
      * @param CrossList $line
