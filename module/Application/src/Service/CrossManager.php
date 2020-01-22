@@ -573,13 +573,13 @@ class CrossManager {
                 }
             }    
             
-            if (!$articleCode || !$brandArticleCode){
+            if (!isset($articleCode) || !isset($brandArticleCode)){
                 $code = $articleFilter->filter($value);
                 if ($code && $code != OemRaw::LONG_CODE){
                     $oes = $this->entityManager->getRepository(Oem::class)
                             ->findBy(['oe' => $code, 'status' => Oem::STATUS_ACTIVE]);
                     if (count($oes)){
-                        if (!$articleCode){
+                        if (!isset($articleCode)){
                             $articleCode = $code;
                             $description['producerArticle'] = $key;
                         } else {
@@ -591,14 +591,14 @@ class CrossManager {
                 }
             }    
 
-            if (!$producer || !$brandProducer){
+            if (!isset($producer) || !isset($brandProducer)){
                 $producerName = $producerNameFilter->filter($value);
 //                var_dump($producerName);
                 if ($producerName){
                     $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                             ->findUnknownProducerByName($producerName);
                     if (count($unknownProducers)){
-                        if (!$producer){
+                        if (!isset($producer)){
                             $producer = $producerName;
                             $description['producerName'] = $key;
                             if ($articleCode == $producerName){
