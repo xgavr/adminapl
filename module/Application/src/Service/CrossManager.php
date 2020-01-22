@@ -749,11 +749,9 @@ class CrossManager {
             }    
         }
 
-        if (count($data)){
-            $data['status'] = CrossList::STATUS_PARSED;
-            $this->entityManager->getRepository(CrossList::class)
-                    ->updateCrossList($line, $data);
-        }
+        $data['status'] = CrossList::STATUS_PARSED;
+        $this->entityManager->getRepository(CrossList::class)
+                ->updateCrossList($line, $data);
         
         return;
     }
