@@ -138,7 +138,7 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('u')
                 ->from(UnknownProducer::class, 'u')
-                ->where('n.name = ?1')
+                ->where('u.name = ?1')
                 ->orWhere('u.nameTd = ?1')
                 ->setParameter('1', $name)
                 ;
