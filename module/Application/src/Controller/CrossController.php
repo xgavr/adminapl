@@ -328,6 +328,7 @@ class CrossController extends AbstractActionController
         
         $description = $this->crossManager->exploreLine($line);
         
+        $message = "<h4>{$line->getRawdata()}</h4>";
         $message = '<ul>';
         if (is_array($description)){
             if (isset($description['producerArticle'])){
