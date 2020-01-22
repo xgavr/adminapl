@@ -603,12 +603,14 @@ class CrossManager {
                             $description['producerName'] = $key;
                             if ($articleCode == $producerName){
                                 unset($articleCode);
+                                unset($description['producerArticle']);
                             }
                         } else {
                             $brandProducer = $producerName;
                             $description['brandName'] = $key;
                             if ($brandArticleCode == $producerName){
                                 unset($brandArticleCode);
+                                unset($description['brandArticle']);
                             }
                         }                        
                         continue;
