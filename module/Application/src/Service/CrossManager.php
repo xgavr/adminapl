@@ -763,6 +763,9 @@ class CrossManager {
      */
     public function parseCross($cross)
     {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(0);
+
         $cross->setStatus(Cross::STATUS_PARSE);
         $this->entityManager->persist($cross);
         $this->entityManager->flush($cross);
@@ -849,6 +852,8 @@ class CrossManager {
      */
     public function bindCross($cross)
     {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(0);
 
         $lineQuery = $this->entityManager->getRepository(Cross::class)
                 ->crossList($cross, ['status' => CrossList::STATUS_PARSED]);
@@ -879,6 +884,8 @@ class CrossManager {
      */
     public function resetCross($cross)
     {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(0);
 
         $lineQuery = $this->entityManager->getRepository(Cross::class)
                 ->crossList($cross);
