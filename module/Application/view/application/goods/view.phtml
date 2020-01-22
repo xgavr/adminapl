@@ -768,7 +768,7 @@ $priceCols = $goodsManager->priceCols($goods);
             status = 1;
         }            
         var url = '/oem/oem-status-form/'+row.id+'?status='+status;
-        var btn = '<nobr><button';
+        var btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 
@@ -788,8 +788,8 @@ $priceCols = $goodsManager->priceCols($goods);
         editBtn += ' title="Изменить"'; 
         editBtn += ' value="'+editUrl+'">';
         editBtn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-        editBtn += '</button></nobr>';
-        return editBtn+' '+btn;
+        editBtn += '</button>';
+        return '<nobr>'+editBtn+' '+btn+'</nobr>';
     }    
     
     function carFormatter(value, row) {
