@@ -622,8 +622,10 @@ class CrossManager {
                     ->findBy(['code' => $articleCode]);
             foreach ($articles as $article){
                 $unknownProducerName = $article->getUnknownProducer()->getName();
+                $unknownProducerNameTd = $article->getUnknownProducer()->getNameTd();
                 foreach ($row as $key => $value){
-                    if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value)){
+                    if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value) ||
+                            $producerNameFilter->filter($unknownProducerNameTd) == $producerNameFilter->filter($value)){
                         $producer = $unknownProducerName;
                         $description['producerName'] = $key;
                         $description['articleBy'] = 'producer';
@@ -642,8 +644,10 @@ class CrossManager {
                     ->findBy(['code' => $brandArticleCode]);
             foreach ($articles as $article){
                 $unknownProducerName = $article->getUnknownProducer()->getName();
+                $unknownProducerNameTd = $article->getUnknownProducer()->getNameTd();
                 foreach ($row as $key => $value){
-                    if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value)){
+                    if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value) ||
+                            $producerNameFilter->filter($unknownProducerNameTd) == $producerNameFilter->filter($value)){
                         $brandProducer = $unknownProducerName;
                         $description['brandName'] = $key;
                         if (!isset($description['articleBy'])){
@@ -660,7 +664,7 @@ class CrossManager {
         }
         
 //        var_dump($row);
-        var_dump($description);
+//        var_dump($description);
         if (isset($description['articleBy'])){
             if ($description['articleBy'] == 'producer' && isset($description['brandArticle'])){
                 return $description;
