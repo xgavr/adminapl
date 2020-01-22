@@ -623,8 +623,10 @@ class CrossManager {
             foreach ($articles as $article){
                 $unknownProducerName = $article->getUnknownProducer()->getName();
                 $unknownProducerNameTd = $article->getUnknownProducer()->getNameTd();
-                var_dump($unknownProducerNameTd);
                 foreach ($row as $key => $value){
+                    var_dump($value);
+                    var_dump($unknownProducerName);
+                    var_dump($unknownProducerNameTd);
                     if ($producerNameFilter->filter($unknownProducerName) == $producerNameFilter->filter($value) ||
                             $producerNameFilter->filter($unknownProducerNameTd) == $producerNameFilter->filter($value)){
                         $producer = $unknownProducerName;
