@@ -601,9 +601,15 @@ class CrossManager {
                         if (!$producer){
                             $producer = $producerName;
                             $description['producerName'] = $key;
+                            if ($articleCode == $producerName){
+                                unset($articleCode);
+                            }
                         } else {
                             $brandProducer = $producerName;
                             $description['brandName'] = $key;
+                            if ($brandArticleCode == $producerName){
+                                unset($brandArticleCode);
+                            }
                         }                        
                         continue;
                     }
