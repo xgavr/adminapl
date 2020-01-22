@@ -36,7 +36,7 @@ $this->headScript()
                                     <span class="glyphicon glyphicon-import" ></span>
                                 </button>
                                 <?php if ($crossManager->isCompressFile($fileInfo->getPathName())): ?>
-                                    <button value="/cross/decompress-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
+                                    <button value="/cross/decompress-tmp-file/?file=<?= rawurlencode($fileInfo->getPathname()) ?>" class="btn btn-default btn-xs refresh-button"
                                             title="Распаковать">
                                         <span class="glyphicon glyphicon-compressed" ></span>
                                     </button>                             

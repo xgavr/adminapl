@@ -12,6 +12,7 @@ use Zend\ServiceManager\ServiceManager;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Article;
 use Application\Entity\OemRaw;
+use Application\Entity\Oem;
 use Application\Entity\Cross;
 use Application\Entity\CrossList;
 use Application\Filter\RawToStr;
@@ -197,33 +198,7 @@ class CrossManager {
         }
         return;
     }    
-    
-    
-    /*
-     * 
-     * Удаление файлов
-     * 
-     * @var string $tmpFileName
-     * 
-     */
-    public function removeMd5TmpFile($tmpFileName)
-    {    
-        $folderName = $this->entityManager->getRepository(Cross::class)
-                                            ->getTmpCrossFolder();
-        var_dump($tmpFileName);
-        if (is_dir($folderName)){
-            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
-                if ($fileInfo->isDot()) continue;
-                if ($fileInfo->isFile()){
-                    if (md5($fileInfo->getFilename()) == $tmpFileName){
-                        unlink(realpath($fileInfo->getPathname()));
-                    }    
-                }
-            }
-        }
-        return;
-    }    
-    
+        
     /**
      * Загрузка сырого кросса csv, txt
      * @var string $filename
@@ -601,15 +576,31 @@ class CrossManager {
             if (!$articleCode || !$brandArticleCode){
                 $code = $articleFilter->filter($value);
                 if ($code && $code != OemRaw::LONG_CODE){
-                    $articles = $this->entityManager->getRepository(Article::class)
-                            ->findBy(['code' => $code]);
-                    if (count($articles)){
+                    $oes = $this->entityManager->getRepository(Oem::class)
+                            ->findBy(['oe' => $code]);
+                    if (count($oes)){
                         if (!$articleCode){
                             $articleCode = $code;
                             $description['producerArticle'] = $key;
                         } else {
                             $brandArticleCode = $code;
                             $description['brandArticle'] = $key;
+                        }                        
+                        continue;
+                    }
+                }
+            }    
+
+            if (!$producer || !$brandProducer){
+                $producerName = $producerNameFilter->filter($value);
+                if ($producerName){
+                    $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                            ->findBy(['name' => $producerName]);
+                    if (count($unknownProducers)){
+                        if (!$producer){
+                            $description['producerName'] = $key;
+                        } else {
+                            $description['brandName'] = $key;
                         }                        
                         continue;
                     }

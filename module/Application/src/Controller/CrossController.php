@@ -112,7 +112,7 @@ class CrossController extends AbstractActionController
     
     public function decompressTmpFileAction()
     {
-        $filename = $this->params()->fromQuery('file');
+        $filename = rawurldecode($this->params()->fromQuery('file'));
 
         if (file_exists($filename)){
             $this->crossManager->decompress($filename);
