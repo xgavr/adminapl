@@ -586,7 +586,7 @@ class CrossManager {
                             $brandArticleCode = $code;
                             $description['brandArticle'] = $key;
                         }                        
-                        continue;
+//                        continue;
                     }
                 }
             }    
