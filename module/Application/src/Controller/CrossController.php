@@ -377,7 +377,7 @@ class CrossController extends AbstractActionController
         }
         
         $cross = $this->entityManager->getRepository(Cross::class)
-                ->findOneBiId($crossId);
+                ->findOneById($crossId);
         
         if ($cross){
             if ($this->getRequest()->isPost()) {
