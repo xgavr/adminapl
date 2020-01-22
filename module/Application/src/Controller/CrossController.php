@@ -334,21 +334,25 @@ class CrossController extends AbstractActionController
                 $message .= '<li>Артикул: ';                
                 $message .= $description['producerArticle'];                
             }                
-            if (isset($description['producerArticleName'])){
+            if (isset($description['producerName'])){
                 $message .= '<li>Производитель: ';                
+                $message .= $description['producerName'];                
+            }                
+            if (isset($description['producerArticleName'])){
+                $message .= '<li>Наименование: ';                
                 $message .= $description['producerArticleName'];                
             }                
             if (isset($description['brandArticle'])){
                 $message .= '<li>ОЕ артикул: ';                
                 $message .= $description['brandArticle'];                
             }                
-            if (isset($description['brandArticleName'])){
-                $message .= '<li>ОЕ производитель: ';                
-                $message .= $description['brandArticleName'];                
-            }                
             if (isset($description['brandName'])){
-                $message .= '<li>ОЕ brandName: ';                
+                $message .= '<li>ОЕ производитель: ';                
                 $message .= $description['brandName'];                
+            }                
+            if (isset($description['brandArticleName'])){
+                $message .= '<li>ОЕ наименование: ';                
+                $message .= $description['brandArticleName'];                
             }                
             if (isset($description['articleBy'])){
                 $message .= '<li>articleBy: ';                
