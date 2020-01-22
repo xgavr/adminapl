@@ -127,6 +127,26 @@ class ProducerRepository  extends EntityRepository{
     }
     
     /**
+     * Найти неизвестног производителя по наименованию
+     * 
+     * @param string $name
+     * @return UnknownProducer
+     */
+    public function findUnknownProducerByName($name)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('u')
+                ->from(UnknownProducer::class, 'u')
+                ->where('n.name = ?1')
+                ->orWhere('u.nameTd = ?1')
+                ->setParameter('1', $name)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
      * Быстрая вставка неизвестного производителя
      * @param array $row 
      * @return integer
