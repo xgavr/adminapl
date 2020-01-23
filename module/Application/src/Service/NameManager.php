@@ -570,8 +570,12 @@ class NameManager
                     ->tokenGoodCount($token->getLemma());
         }    
         if ($groupTokenCount == null){
-            $groupTokenCount = $this->entityManager->getRepository(ArticleToken::class)
-                    ->tokenGroupCount($token->getLemma());
+            if ($token->getFrequency() > Token::MIN_DF){
+                $groupTokenCount = $this->entityManager->getRepository(ArticleToken::class)
+                        ->tokenGroupCount($token->getLemma());
+            } else {
+                $groupTokenCount = 0;
+            }    
         }    
         if ($goods == null){
             $goods = $this->entityManager->getRepository(Goods::class)
@@ -601,7 +605,7 @@ class NameManager
      */
     public function updateAllTokenArticleCount()
     {
-        set_time_limit(1800);        
+        set_time_limit(0);        
         ini_set('memory_limit', '2048M');
         
         $goods = $this->entityManager->getRepository(Goods::class)
