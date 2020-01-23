@@ -328,7 +328,8 @@ class CrossController extends AbstractActionController
         
         $description = $this->crossManager->exploreLine($line);
         
-        $message = '<ul>';
+        $message = "<h4>{$line->getRawdata()}</h4>";
+        $message .= '<ul>';
         if (is_array($description)){
             if (isset($description['producerArticle'])){
                 $message .= '<li>Артикул: ';                
@@ -362,6 +363,31 @@ class CrossController extends AbstractActionController
         $message .= '</ul>';
         
         echo $message;
+        exit;
+    }
+    
+    public function updateCrossDescriptionAction()
+    {
+        $crossId = (int)$this->params()->fromRoute('id', -1);
+
+        // Validate input parameter
+        if ($crossId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $cross = $this->entityManager->getRepository(Cross::class)
+                ->findOneById($crossId);
+        
+        if ($cross){
+            if ($this->getRequest()->isPost()) {
+                // Получаем POST-данные.
+                $data = $this->params()->fromPost();                
+                $key = $data['pk'];
+                $value = $data['value'];
+                $this->crossManager->updateCrossDescription($cross, [$key => $value]);                    
+            }
+        }    
         exit;
     }
     

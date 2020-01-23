@@ -12,11 +12,13 @@ $this->pageBreadcrumbs()->setItems([
 $this->headLink()
 //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
     ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
         ;
 
 $this->headScript()
     ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
     ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
             ;    
 
 ?>
@@ -120,7 +122,16 @@ $this->headScript()
                                                     <?= $key?>
                                                 </td>
                                                 <td align="right">
-                                                    <?= $value?>
+                                                    <?php if ($cross->getStatus() == $cross::STATUS_EXPLORED):?>
+                                                        <a href="#" 
+                                                           class="editable" data-type="text" 
+                                                           data-pk="<?= $key ?>" 
+                                                           data-url="/cross/update-cross-description/<?= $cross->getId()?>">
+                                                            <?= $value ?>
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <?= $value?>
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach;?>                                        
@@ -137,6 +148,10 @@ $this->headScript()
 </div>    
 
 <script type="text/javascript">
+    $(window).on('load', function() {
+        $('.editable').editable();
+    });
+
     var table = $('#table'),
         ok = $('#ok');
 
