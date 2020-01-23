@@ -29,7 +29,7 @@ class Bigram {
     const GRAY_LIST    = 8; // серый список 
     const BLACK_LIST   = 9; // черный список 
     
-    const MIN_FREQUENCY = 5; //минимальная частота
+    const MIN_FREQUENCY = 10; //минимальная частота
     
     /**
      * @ORM\Id

@@ -971,7 +971,7 @@ class NameManager
      */
     public function removeEmptyBigram()
     {
-        set_time_limit(900);        
+        set_time_limit(0);        
         ini_set('memory_limit', '2048M');
         $startTime = time();
         
@@ -981,10 +981,7 @@ class NameManager
         foreach ($iterable as $row){
             foreach($row as $bigram){
                 $this->removeBigram($bigram);
-            }    
-            if (time() > $startTime + 840){
-                return;
-            }
+            }                
         }
         
         return;
