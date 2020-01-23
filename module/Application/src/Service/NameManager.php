@@ -664,8 +664,10 @@ class NameManager
                     ->count([]);
         }
         if ($tokenGroupCount == null){
-            $tokenGroupCount = $this->entityManager->getRepository(ArticleBigram::class)
-                    ->bigramTokenGroupCount($bigram);
+            if ($bigram->getFrequency() > Bigram::MIN_FREQUENCY){
+                $tokenGroupCount = $this->entityManager->getRepository(ArticleBigram::class)
+                        ->bigramTokenGroupCount($bigram);
+            }    
         }    
         if ($tokenGroups == null){
             $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
