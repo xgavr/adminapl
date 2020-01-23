@@ -429,13 +429,16 @@ class BigramRepository  extends EntityRepository
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('identity(g.tokenGroup)')
+        $queryBuilder->select('tg.id')
                 ->distinct()
                 ->from(ArticleBigram::class, 'ab')
                 ->join('ab.article', 'a')
                 ->join('a.good', 'g')
+                ->join('g.tokenGroup', 'tg')
                 ->where('ab.bigram = ?1')
+                ->andWhere('tg.goodCount > ?2')
                 ->setParameter('1', $bigram->getId())
+                ->setParameter('2', TokenGroup::MIN_GOODCOUNT)
                 ;
         
         return count($queryBuilder->getQuery()->getResult());

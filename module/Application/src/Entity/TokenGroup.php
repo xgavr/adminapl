@@ -22,6 +22,7 @@ use Application\Entity\Rate;
 class TokenGroup {
     
     const FREQUENCY_MIN   = 5000; // минимальная чатота токена
+    const MIN_GOODCOUNT = 10; // минимальное количество товаров в группе
 
     /**
      * @ORM\Id
