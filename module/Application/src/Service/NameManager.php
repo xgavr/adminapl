@@ -691,7 +691,7 @@ class NameManager
      */
     public function updateAllBigramArticleCount()
     {
-        set_time_limit(3600);        
+        set_time_limit(0);        
         ini_set('memory_limit', '2048M');
         
         $goods = $this->entityManager->getRepository(Goods::class)
