@@ -379,6 +379,23 @@ class MlManager
     }
     
     /**
+     * Получить строки прайсов товара из строки прайса
+     * 
+     * @param Rawprice $rawprice
+     * @return type
+     */
+    public function rawpricesFromGoodRawprice($rawprice)
+    {
+        $good = $rawprice->getGood();
+        if ($good){
+            return $this->entityManager->getRepository(Goods::class)
+                ->rawpriceArticles($good);
+        } 
+       
+       return;
+    }
+    
+    /**
      * Заголовок товара разбить на значимые токены 
      * 
      * @param Rawprice $rawprice

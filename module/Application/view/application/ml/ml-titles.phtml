@@ -9,6 +9,7 @@ $this->pageBreadcrumbs()->setItems([
             'Обучающая выборка для наименований товаров'=>$this->url('ml', ['action'=>'ml-titles'])
             ]);
 
+$preGood = null;
 ?>
 
 <div class="row">
@@ -25,51 +26,59 @@ $this->pageBreadcrumbs()->setItems([
                 </td>
             </tr>
             <?php foreach ($mlTitles as $mlTitle):?>
-                <tr>
-                    <td></td>
-                    <td colspan="10">
-                        <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $mlTitle->getRawprice()->getId()])?>" target="_blank">
-                            <small><?= $mlTitle->getRawprice()->getGoodname();?></small>
-                        </a>
-                    </td>
-                </tr>
-                <?php $tokens = $this->mlManager->rawpriceToMlTitle($mlTitle->getRawprice())?>
-                <tr>
-                    <td>Б</td>
-                    <?php foreach ($tokens as $token):?>
-                        <td>
-                            <?php if (is_array($token)):?>
-                                <?php if ($token['token']):?>
-                                    <small><?= $token['token']->getLemma()?></small>
-                                <?php endif; ?>
-                            <?php endif; ?>
+                <?php
+                    $rawprices = $mlManager->rawpricesFromGoodRawprice($mlTitle->getRawprice());
+                    if (!$rawprices) continue;
+                    $good = $mlTitle->getRawprice()->getGood();
+                ?>
+                <?php if ($preGood != $good): ?>
+                    <?php $preGood = $good?>
+                    <tr>
+                        <th colspan="">
+                            
+                        </th>
+                        <th colspan="10">
+                            <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()])?>" target="_blank">
+                                <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
+                            </a>                            
+                        </th>
+                    </tr>
+                <?php endif;?>
+                <?php foreach ($rawprices as $rawprice): ?>
+                    <tr>
+                        <td></td>
+                        <td colspan="10">
+                            <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()])?>" target="_blank">
+                                <small><?= $rawprice->getGoodname();?></small>
+                            </a>
                         </td>
-                    <?php endforeach;?>
-                </tr>
-                <tr>
-                    <td>Pmi</td>
-                    <?php foreach ($tokens as $token):?>
-                        <td>
-                            <?php if (is_array($token)):?>
-                                <?php if ($token['token']):?>
-                                    <small>pmi:<?= $token['pmi']; ?></small>
+                    </tr>
+                    <?php $tokens = $this->mlManager->rawpriceToMlTitle($rawprice)?>
+                    <tr>
+                        <td>Б</td>
+                        <?php foreach ($tokens as $token):?>
+                            <td>
+                                <?php if (is_array($token)):?>
+                                    <?php if ($token['token']):?>
+                                        <small><?= $token['token']->getLemma()?></small>
+                                    <?php endif; ?>
                                 <?php endif; ?>
-                            <?php endif; ?>
-                        </td>
-                    <?php endforeach;?>
-                </tr>
-                <tr>
-                    <td>Idf</td>
-                    <?php foreach ($tokens as $token):?>
-                        <td>
-                            <?php if (is_array($token)):?>
-                                <?php if ($token['token']):?>
-                                    <small>b:<?= $token['token']->getIdf(); ?></small>
+                            </td>
+                        <?php endforeach;?>
+                    </tr>
+                    <tr>
+                        <td>Pmi</td>
+                        <?php foreach ($tokens as $token):?>
+                            <td>
+                                <?php if (is_array($token)):?>
+                                    <?php if ($token['token']):?>
+                                        <small>pmi:<?= $token['pmi']; ?></small>
+                                    <?php endif; ?>
                                 <?php endif; ?>
-                            <?php endif; ?>
-                        </td>
-                    <?php endforeach;?>
-                </tr>
+                            </td>
+                        <?php endforeach;?>
+                    </tr>
+                <?php endforeach;?>        
             <?php endforeach;?>        
             <tr>
                 <td colspan="10">
