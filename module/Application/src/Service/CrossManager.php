@@ -804,9 +804,8 @@ class CrossManager {
         }
 
         if (count($lineQuery->getResult()) == 0){
-            $cross->setStatus(Cross::STATUS_PARSED);
-            $this->entityManager->persist($cross);
-            $this->entityManager->flush($cross);
+            $this->entityManager->getRepository(Cross::class)
+                    ->updateCross($cross, ['status'=> Cross::STATUS_PARSED]);
         }
 
         unset($iterator);
@@ -889,9 +888,8 @@ class CrossManager {
         }
 
         if (count($lineQuery->getResult()) == 0){
-            $cross->setStatus(Cross::STATUS_BIND);
-            $this->entityManager->persist($cross);
-            $this->entityManager->flush($cross);
+            $this->entityManager->getRepository(Cross::class)
+                    ->updateCross($cross, ['status'=> Cross::STATUS_BIND]);
         }
 
         unset($iterator);
@@ -926,9 +924,8 @@ class CrossManager {
             }
         }
 
-        $cross->setStatus(Cross::STATUS_ACTIVE);
-        $this->entityManager->persist($cross);
-        $this->entityManager->flush($cross);
+        $this->entityManager->getRepository(Cross::class)
+                ->updateCross($cross, ['status'=> Cross::STATUS_ACTIVE]);
 
         unset($iterator);
         return;

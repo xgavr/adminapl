@@ -569,33 +569,33 @@ class NameManager
             $goodCount = $this->entityManager->getRepository(ArticleToken::class)
                     ->tokenGoodCount($token->getLemma());
         }    
-        if ($groupTokenCount == null){
-            if ($token->getFrequency() > Token::MIN_DF){
-                $groupTokenCount = $this->entityManager->getRepository(ArticleToken::class)
-                        ->tokenGroupCount($token->getLemma());
-            } else {
-                $groupTokenCount = 0;
-            }    
-        }    
+//        if ($groupTokenCount == null){
+//            if ($token->getFrequency() > Token::MIN_DF){
+//                $groupTokenCount = $this->entityManager->getRepository(ArticleToken::class)
+//                        ->tokenGroupCount($token->getLemma());
+//            } else {
+//                $groupTokenCount = 0;
+//            }    
+//        }    
         if ($goods == null){
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
         
-        if ($tokenGroups == null){
-            $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
-                    ->count([]);
-        }
+//        if ($tokenGroups == null){
+//            $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+//                    ->count([]);
+//        }
         $idf = 0;
-        if ($groupTokenCount){
-            $idf = log($tokenGroups/$groupTokenCount);
+        if ($goods){
+            $idf = log($goods/$goodCount);
         }    
         
         $this->entityManager->getRepository(Token::class)
                 ->updateToken($token->getLemma(), [
                     'frequency' => $goodCount, 
                     'idf' => $idf,
-                    'gf' => $groupTokenCount,
+                    'gf' => 0,
                     ]);
 
     }
@@ -667,29 +667,29 @@ class NameManager
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
-        if ($tokenGroupCount == null){
-            if ($bigram->getFrequency() > Bigram::MIN_FREQUENCY){
-                $tokenGroupCount = $this->entityManager->getRepository(ArticleBigram::class)
-                        ->bigramTokenGroupCount($bigram);
-            } else {
-                $tokenGroupCount = 0;
-            }    
-        }    
-        if ($tokenGroups == null){
-            $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
-                    ->count([]);
-        }
+//        if ($tokenGroupCount == null){
+//            if ($bigram->getFrequency() > Bigram::MIN_FREQUENCY){
+//                $tokenGroupCount = $this->entityManager->getRepository(ArticleBigram::class)
+//                        ->bigramTokenGroupCount($bigram);
+//            } else {
+//                $tokenGroupCount = 0;
+//            }    
+//        }    
+//        if ($tokenGroups == null){
+//            $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+//                    ->count([]);
+//        }
         $idf = 0;
         
-        if ($tokenGroupCount){
-            $idf = log($tokenGroups/$tokenGroupCount);
+        if ($goodCount){
+            $idf = log($goods/$goodCount);
         }    
         
         $this->entityManager->getRepository(Bigram::class)
                 ->updateBigram($bigram, [
                     'frequency' => $goodCount, 
                     'idf' => $idf,
-                    'gf' => $tokenGroupCount,
+                    'gf' => 0,
                     ]);
 
     }
@@ -803,12 +803,8 @@ class NameManager
                     }   
                     
                     if ($k > 0){
-                        $flag = Bigram::WHITE_LIST;
-                        if ($token && $preToken){
-                            $flag = max($token->getFlag(), $preToken->getFlag());
-                        }
                         $bigram = $this->entityManager->getRepository(Bigram::class)
-                                        ->insertBigram($preWord, $word, $flag);
+                                        ->insertBigram($preWord, $word);
                         
                         $this->entityManager->getRepository(Bigram::class)
                                 ->insertArticleBigram($article, $bigram);
