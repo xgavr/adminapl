@@ -406,46 +406,49 @@ class MlManager
             foreach ($words as $key => $word){
                 $token = $this->entityManager->getRepository(Token::class)
                         ->findOneByLemma($word);
-
-                if ($k > 0 && $token && $preToken){
-                    $bigram = $this->entityManager->getRepository(Bigram::class)
-                            ->findBigram($preWord, $word);
-                    if ($bigram && $preToken->getFrequency() > 0 && $token->getFrequency() > 0){
-                        if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                            $pmi = log($bigram->getGf()*$tgc/($preToken->getGf()*$token->getGf() + 0.05));
-//                            $pmi += log($bigram->getFrequency()*$gc/($preToken->getFrequency()*$token->getFrequency() + 0.05));
-                            if ($pmi < 0 
-//                                    || $bigram->getFlag() != Bigram::WHITE_LIST
-//                                    || $bigram->getFrequency() < 10
-                            ){
-                                $pmi = 0;
-                            }
-                            $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
-                        }    
-                    }    
+                
+                $pmi = 0;
+                if ($token->getFrequency() > Token::MIN_DF && in_array($token->getStatus(), [Token::IS_DICT, Token::IS_RU, Token::IS_RU_1])){
+                    $pmi = $token->getFrequency();
                 }
-                $preWord = $word;
-                $preToken = $token;
+                $result[] = ['pmi' => $pmi,  'token' => $token];
+
+//                if ($k > 0 && $token && $preToken){
+//                    $bigram = $this->entityManager->getRepository(Bigram::class)
+//                            ->findBigram($preWord, $word);
+//                    if ($bigram && $preToken->getFrequency() > 0 && $token->getFrequency() > 0){
+//                        if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+//                            $pmi = log($bigram->getGf()*$tgc/($preToken->getGf()*$token->getGf() + 0.05));
+//                            if ($pmi < 0 
+//                            ){
+//                                $pmi = 0;
+//                            }
+//                            $result[] = ['pmi' => $pmi,  'token1' => $preToken, 'token2' => $token, 'bigram' => $bigram];
+//                        }    
+//                    }    
+//                }
+//                $preWord = $word;
+//                $preToken = $token;
             }
         }
-        if ($k == 0 && $token){
-            $bigram = $this->entityManager->getRepository(Bigram::class)
-                            ->findBigram($token->getLemma());
-
-            if ($bigram){
-                if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
-                    $pmi = log(($bigram->getGf()*$tgc)/($token->getGf()*2 + 0.05));
-//                    $pmi += log(($bigram->getFrequency()*$gc)/($token->getFrequency()*2 + 0.05));
-                    if ($pmi < 0 
-//                            || $bigram->getFlag() != Bigram::WHITE_LIST
-//                            || $bigram->getFrequency() < 10
-                    ){
-                        $pmi = 0;
-                    }
-                    $result[] = ['pmi' => $pmi, 'token1' => $token, 'bigram' => $bigram];
-                }    
-            }    
-        }
+//        if ($k == 0 && $token){
+//            $bigram = $this->entityManager->getRepository(Bigram::class)
+//                            ->findBigram($token->getLemma());
+//
+//            if ($bigram){
+//                if (in_array($bigram->getStatus(), [Bigram::RU_RU, Bigram::RU_EN, Bigram::RU_NUM])){
+//                    $pmi = log(($bigram->getGf()*$tgc)/($token->getGf()*2 + 0.05));
+////                    $pmi += log(($bigram->getFrequency()*$gc)/($token->getFrequency()*2 + 0.05));
+//                    if ($pmi < 0 
+////                            || $bigram->getFlag() != Bigram::WHITE_LIST
+////                            || $bigram->getFrequency() < 10
+//                    ){
+//                        $pmi = 0;
+//                    }
+//                    $result[] = ['pmi' => $pmi, 'token1' => $token, 'bigram' => $bigram];
+//                }    
+//            }    
+//        }
         
         usort($result, function($a, $b){
             if ($a['pmi'] == $b['pmi']) {

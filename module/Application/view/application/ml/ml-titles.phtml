@@ -39,8 +39,8 @@ $this->pageBreadcrumbs()->setItems([
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>
-                                <?php if ($token['bigram']):?>
-                                    <small><?= $token['bigram']->getBilemma()?></small>
+                                <?php if ($token['token']):?>
+                                    <small><?= $token['token']->getLemma()?></small>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>
@@ -51,40 +51,8 @@ $this->pageBreadcrumbs()->setItems([
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>
-                                <?php if ($token['bigram']):?>
+                                <?php if ($token['token']):?>
                                     <small>pmi:<?= $token['pmi']; ?></small>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </td>
-                    <?php endforeach;?>
-                </tr>
-                <tr>
-                    <td>ЧТ</td>
-                    <?php foreach ($tokens as $token):?>
-                        <td>
-                            <?php if (is_array($token)):?>
-                                <?php if ($token['bigram']):?>
-                                    <small>b:<?= $token['bigram']->getFrequency(); ?></small>
-                                    <small>t1:<?= $token['token1']->getFrequency(); ?></small> 
-                                <?php endif; ?>
-                                <?php if (isset($token['token2'])):?>
-                                    <small>t2:<?= $token['token2']->getFrequency(); ?></small> 
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </td>
-                    <?php endforeach;?>
-                </tr>
-                <tr>
-                    <td>ЧГ</td>
-                    <?php foreach ($tokens as $token):?>
-                        <td>
-                            <?php if (is_array($token)):?>
-                                <?php if ($token['bigram']):?>
-                                    <small>b:<?= $token['bigram']->getGf(); ?></small>
-                                    <small>t1:<?= $token['token1']->getGf(); ?></small> 
-                                <?php endif; ?>
-                                <?php if (isset($token['token2'])):?>
-                                    <small>t2:<?= $token['token2']->getGf(); ?></small> 
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>
@@ -95,12 +63,8 @@ $this->pageBreadcrumbs()->setItems([
                     <?php foreach ($tokens as $token):?>
                         <td>
                             <?php if (is_array($token)):?>
-                                <?php if ($token['bigram']):?>
-                                    <small>b:<?= $token['bigram']->getIdf(); ?></small>
-                                    <small>t1:<?= $token['token1']->getIdf(); ?></small> 
-                                <?php endif; ?>
-                                <?php if (isset($token['token2'])):?>
-                                    <small>t2:<?= $token['token2']->getIdf(); ?></small> 
+                                <?php if ($token['token']):?>
+                                    <small>b:<?= $token['token']->getIdf(); ?></small>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </td>
