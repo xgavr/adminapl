@@ -587,7 +587,7 @@ class NameManager
 //                    ->count([]);
 //        }
         $idf = 0;
-        if ($goods){
+        if ($goodCount){
             $idf = log($goods/$goodCount);
         }    
         
