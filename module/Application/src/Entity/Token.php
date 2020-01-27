@@ -138,6 +138,12 @@ class Token {
      */
     private $genericGroups;
     
+     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\FpTree", mappedBy="token")
+    * @ORM\JoinColumn(name="id", referencedColumnName="token_id")
+     */
+    private $fpTree;
+    
 
     public function getId() 
     {
@@ -375,6 +381,15 @@ class Token {
     {
         return $this->genericGroups;
     }        
+    
+    /**
+     * Returns the array of fpTree assigned to this token.
+     * @return array
+     */
+    public function getFpTree()
+    {
+        return $this->fpTree;
+    }            
     
     public function wordInMyDict($word)
     {
