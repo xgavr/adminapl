@@ -26,11 +26,11 @@ class FpTreeRepository  extends EntityRepository{
      * 
      * @param Token $token
      * @param Token|integer $rootToken
-     * @param FpTree|integer $rootTree
+     * @param integer $rootTree
      * 
      * @return FpTree|null;
      */
-    public function findBanch($token, $rootToken = 0, $rootTree = 0)
+    public function findBanch($token, $rootToken = 0, $rootTreeId = 0)
     {
         if (is_numeric($rootToken)){
             $rootTokenId = $rootToken;            
@@ -38,14 +38,8 @@ class FpTreeRepository  extends EntityRepository{
             $rootTokenId = $rootToken->getId();            
         }
         
-        if (is_numeric($rootTree)){
-            $rootTreeId = $rootTree;            
-        } else {
-            $rootTreeId = $rootTree->getId();            
-        }
-
         return $this->getEntityManager()->getRepository(FpTree::class)
-                ->findOneBy(['rootTree' => $rootTreeId, 'rootToken' => $rootToken, 'token' => $token->getId()]);
+                ->findOneBy(['rootTree' => $rootTreeId, 'rootToken' => $rootTokenId, 'token' => $token->getId()]);
     }    
 
     /**
@@ -53,22 +47,16 @@ class FpTreeRepository  extends EntityRepository{
      * 
      * @param Token $token
      * @param Token|integer $rootToken
-     * @param FpTree|integer $rootTree
+     * @param integer $rootTreeId
      * 
      * @return null;
      */
-    public function addBanch($token, $rootToken = 0, $rootTree = 0)
+    public function addBanch($token, $rootTokenId = 0, $rootTreeId = 0)
     {
         if (is_numeric($rootToken)){
             $rootTokenId = $rootToken;            
         } else {
             $rootTokenId = $rootToken->getId();            
-        }
-        
-        if (is_numeric($rootTree)){
-            $rootTreeId = $rootTree;            
-        } else {
-            $rootTreeId = $rootTree->getId();            
         }
         
         $fpTree = $this->findBanch($token, $rootTokenId, $rootTreeId);
