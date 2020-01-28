@@ -106,7 +106,7 @@ class FpTreeRepository  extends EntityRepository{
             $fpTree = $this->addBanch($token, $rootTokenId, $rootTreeId);
             $rootTokenId = $token->getId();
             if (!$rootTreeId){
-                $rootTreeId = $fpTree->getRootTree();
+                $rootTreeId = $fpTree->getId();
             }    
         }
         
