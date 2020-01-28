@@ -51,7 +51,7 @@ class FpTreeRepository  extends EntityRepository{
      * 
      * @return null;
      */
-    public function addBanch($token, $rootTokenId = 0, $rootTreeId = 0)
+    public function addBanch($token, $rootToken = 0, $rootTreeId = 0)
     {
         if (is_numeric($rootToken)){
             $rootTokenId = $rootToken;            
