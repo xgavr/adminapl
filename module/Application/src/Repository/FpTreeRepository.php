@@ -80,6 +80,11 @@ class FpTreeRepository  extends EntityRepository{
                 'token_id' => $token->getId(),
             ]);           
             $fpTree = $this->findBanch($token, $rootTokenId, $rootTreeId);
+            if (!$fpTree->getRootTree()){
+                $this->getEntityManager()->getConnection()->update('fp_tree', [
+                    'root_tree_id' => $fpTree->getId(),
+                ], ['id' => $fpTree->getId()]);                           
+            }
         }
                 
         return $fpTree;
@@ -115,9 +120,9 @@ class FpTreeRepository  extends EntityRepository{
         
         $rootTokenId = $rootTreeId = 0;
         foreach ($tokens as $token){
-            $rootTree = $this->addBanch($token, $rootTokenId, $rootTreeId);
+            $fpTree = $this->addBanch($token, $rootTokenId, $rootTreeId);
             $rootTokenId = $token->getId();
-            $rootTreeId = $rootTree->getId();
+            $rootTreeId = $fpTree->getRootTree();
         }
         
         if ($rootTreeId > 0){
