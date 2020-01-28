@@ -115,7 +115,7 @@ class FpTreeRepository  extends EntityRepository{
         
         $rootTokenId = $rootTreeId = 0;
         foreach ($tokens as $token){
-            $rootTree = $this->addBanch($token->getId(), $rootTokenId, $rootTreeId);
+            $rootTree = $this->addBanch($token, $rootTokenId, $rootTreeId);
             $rootTokenId = $token->getId();
             $rootTreeId = $rootTree->getId();
         }
