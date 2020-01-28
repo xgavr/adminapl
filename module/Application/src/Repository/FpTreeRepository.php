@@ -108,7 +108,7 @@ class FpTreeRepository  extends EntityRepository{
                 ->setParameter('4', Token::IS_RU_1)
                 ->setParameter('5', Token::IS_RU)
                 ->setParameter('6', Token::WHITE_LIST)
-                ->orderBy(['t.frequency'], 'DESC')
+                ->orderBy('t.frequency', 'DESC')
                 ->setMaxResults(Token::MAX_TOKENS_FOR_GROUP)
                 ;
         $tokens = $queryBuilder->getQuery()->getResult();
