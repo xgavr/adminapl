@@ -10,6 +10,9 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Token;
 use Application\Entity\FpTree;
+use Application\Entity\ArticleTitle;
+use Application\Entity\ArticleToken;
+use Application\Entity\Article;
 
 /**
  * Description of FpTreeRepository
@@ -83,138 +86,63 @@ class FpTreeRepository  extends EntityRepository{
     }
     
     /**
-     * Обновить атрибут
+     * Обработать наименование артикула
      * 
-     * @param Attribute $attribute
-     * @param array $data
+     * @param ArticleTitle $articleTitle
      */
-    public function updateAttribute($attribute, $data)
+    public function addFromArticleTitle($articleTitle)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->update(Attribute::class, 'a')
-                ->where('a.id = ?1')
-                ->setParameter('1', $attribute->getId())
+        $queryBuilder->select('t')
+                ->from(ArticleToken::class, 'at')
+                ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')
+                ->where('at.articleTitle = ?1')
+                ->andWhere('t.frequency > ?2')
+                ->andWhere('t.status in (?3, ?4, ?5)')
+                ->andWhere('t.flag = ?6')
+                ->setParameter('1', $articleTitle->getId())
+                ->setParameter('2', Token::MIN_DF)
+                ->setParameter('3', Token::IS_DICT)
+                ->setParameter('4', Token::IS_RU_1)
+                ->setParameter('5', Token::IS_RU)
+                ->setParameter('6', Token::WHITE_LIST)
+                ->orderBy(['t.frequency'], 'DESC')
+                ->setMaxResults(Token::MAX_TOKENS_FOR_GROUP)
                 ;
+        $tokens = $queryBuilder->getQuery()->getResult();
         
-        foreach ($data as $key => $value){
-            $queryBuilder->set('a'.$key, $value);
+        $rootTokenId = $rootTreeId = 0;
+        foreach ($tokens as $token){
+            $rootTree = $this->addBanch($token->getId(), $rootTokenId, $rootTreeId);
+            $rootTokenId = $token->getId();
+            $rootTreeId = $rootTree->getId();
         }
         
-        return $queryBuilder->getQuery()->getResult();        
-        
-    }
-    
-    /**
-     * Добавить значение атрибута
-     * 
-     * @param array $attr
-     * @return AttributeValue;
-     */
-    public function addAtributeValue($attr)
-    {
-        $value = isset($attr['attrValue']) ? $attr['attrValue']:'';
-        $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                ->findOneBy(['tdId' => $attr['attrValueId'], 'value' => $value]);
-
-        if ($attributeValue == null){
-            $data = [
-                'td_id' => $attr['attrValueId'],
-                'value' => $value,
-                'status_ex' => AttributeValue::EX_TO_TRANSFER,
-            ];
-
-            $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           
-
-            $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                    ->findOneBy(['tdId' => $attr['attrValueId'], 'value' => $value]);
-        }
-        
-        return $attributeValue;
-    }
-    
-    /**
-     * Запрос значений атрибутов для экспорта
-     * 
-     * @return query;
-     */
-    public function queryAtributeValueEx()
-    {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('av')
-                ->from(AttributeValue::class, 'av')
-                ->where('av.statusEx = ?1')
-                ->setParameter('1', AttributeValue::EX_TO_TRANSFER)
-                ;
-        
-        return $queryBuilder->getQuery();//->iterate();        
-    }
-    
-    /**
-     * Добавление значения атрибута к товару
-     * 
-     * @param Goods $good
-     * @param array $attr
-     * @param bool $similarGood
-     */
-    public function addGoodAttributeValue($good, $attr, $similarGood = false)
-    {
-
-        $attribute = $this->addAtribute($attr);
-        
-        if ($attribute){            
-            
-            if ($similarGood){
-                if ($attribute->getSimilarGood() == Attribute::FOR_SIMILAR_NO_GOOD){
-                    return;
-                }
-            }
-            
-            $attributeValue = $this->addAtributeValue($attr);
-            
-            if ($attributeValue){
-                $this->getEntityManager()->getRepository(Goods::class)
-                            ->addGoodAttributeValue($good, $attribute, $attributeValue);
-            }                
+        if ($rootTreeId > 0){
+            $this->getEntityManager()->getConnection()->update('article_title', [
+                'fp_tree_id' => $rootTreeId,
+            ], ['id' => $articleTitle->getId()]);                       
         }
         
         return;
-
     }
-        
-    /**
-     * Атрибуты для наименования товара
-     * 
-     * @param Goods $good
-     */
-    public function nameAttribute($good)
-    {
-        $result = [];
-        $entityManager = $this->getEntityManager();
 
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('av.value')
-                ->distinct()
-                ->from(GoodAttributeValue::class, 'gav')
-                ->join('gav.attribute', 'a')
-                ->join('gav.attributeValue', 'av')
-                ->where('gav.good = ?1')
-                ->andWhere('a.toBestName = ?2')
-                ->andWhere('a.status = ?3')
-                ->setParameter('1', $good->getId())
-                ->setParameter('2', Attribute::TO_BEST_NAME)
-                ->setParameter('3', Attribute::STATUS_ACTIVE)                
-                ;
+    /**
+     * Обработать артикул
+     * 
+     * @param Article $article
+     */
+    public function addFromArticle($article)
+    {
+        $titles = $this->getEntityManager()->getRepository(ArticleTitle::class)
+                ->findBy(['article' => $article->getId()]);
         
-        $data = $queryBuilder->getQuery()->getResult();        
-        
-        foreach ($data as $row){
-            $result[] = $row['value'];
+        foreach ($titles as $title){
+            $this->addFromArticleTitle($title);
         }
         
-        return implode(' ', $result);
+        return;
     }
 }

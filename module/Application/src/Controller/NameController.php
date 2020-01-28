@@ -17,6 +17,7 @@ use Application\Entity\GenericGroup;
 use Zend\View\Model\JsonModel;
 use Application\Entity\Goods;
 use Application\Entity\Rate;
+use Application\Entity\FpTree;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -603,6 +604,11 @@ class NameController extends AbstractActionController
         }        
 
         $this->nameManager->addNewTokenFromRawprice($rawprice, true);
+        
+        if ($rawprice->getCode()){
+            $this->entityManager->getRepository(FpTree::class)
+                    ->addFromArticle($rawprice->getCode());
+        }
         
         return new JsonModel([
             'ok',
