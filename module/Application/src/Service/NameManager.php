@@ -10,6 +10,7 @@ namespace Application\Service;
 use Application\Entity\Token;
 use Application\Entity\Article;
 use Application\Entity\ArticleToken;
+use Application\Entity\ArticleTitle;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
@@ -766,61 +767,76 @@ class NameManager
     public function addNewTokenFromRawprice($rawprice, $updateArticleToken = false) 
     {
         $article = $rawprice->getCode();
+        
         if ($article && $updateArticleToken){
             $this->entityManager->getRepository(Article::class)
                     ->deleteArticleToken($article->getId());
+            
+            $this->entityManager->getRepository(Article::class)
+                    ->deleteArticleTitle($article->getId());
+            
+            $this->entityManager->getRepository(Article::class)
+                    ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $rawprice->getTitleUp(), 'title_md5' => $rawprice->getTitleMd5()]);
         }    
-
-        $lemms = $this->lemmsFromRawprice($rawprice);
-//        var_dump($lemms);
-        $preWord = $preToken = $token = null;
-        $k = 0;
-        foreach ($lemms as $k => $words){
-            foreach ($words as $key => $word){
-                if (mb_strlen($word) < 64){
-                    $token = $this->entityManager->getRepository(Token::class)
-                            ->findOneByLemma($word);
-                    if (!$token){
-                        $this->entityManager->getRepository(Token::class)
-                                ->insertToken([
-                                    'lemma' => $word,
-                                    'status' => $key,
-                                    ]);
+        
+        $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
+                ->findOneBy(['article' => $article->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
+        
+        if ($articleTitle){
+                        
+            $lemms = $this->lemmsFromRawprice($rawprice);
+    //        var_dump($lemms);
+            $preWord = $preToken = $token = null;
+            $k = 0;
+            foreach ($lemms as $k => $words){
+                foreach ($words as $key => $word){
+                    if (mb_strlen($word) < 64){
                         $token = $this->entityManager->getRepository(Token::class)
                                 ->findOneByLemma($word);
+                        if (!$token){
+                            $this->entityManager->getRepository(Token::class)
+                                    ->insertToken([
+                                        'lemma' => $word,
+                                        'status' => $key,
+                                        ]);
+                            $token = $this->entityManager->getRepository(Token::class)
+                                    ->findOneByLemma($word);
+                        }    
+
+                        $articleToken = $this->entityManager->getRepository(ArticleToken::class)
+                                ->findOneBy(['article' => $article->getId(), 'lemma' => $word]);
+
+                        if (!$articleToken){
+                            $this->entityManager->getRepository(Token::class)
+                                    ->insertArticleToken([
+                                        'article_id' => $article->getId(),
+                                        'lemma' => $word,
+                                        'status' => $key,
+                                        'title_id' => $articleTitle->getId(),
+                                    ]);
+                        }   
+
+                        if ($k > 0){
+                            $bigram = $this->entityManager->getRepository(Bigram::class)
+                                            ->insertBigram($preWord, $word);
+
+                            $this->entityManager->getRepository(Bigram::class)
+                                    ->insertArticleBigram($article, $bigram);
+                        }
+                        $preWord = $word;
+                        $preToken = $token;
                     }    
-
-                    $articleToken = $this->entityManager->getRepository(ArticleToken::class)
-                            ->findOneBy(['article' => $article->getId(), 'lemma' => $word]);
-
-                    if (!$articleToken){
-                        $this->entityManager->getRepository(Token::class)
-                                ->insertArticleToken([
-                                    'article_id' => $article->getId(),
-                                    'lemma' => $word,
-                                    'status' => $key,
-                                ]);
-                    }   
-                    
-                    if ($k > 0){
-                        $bigram = $this->entityManager->getRepository(Bigram::class)
-                                        ->insertBigram($preWord, $word);
-                        
-                        $this->entityManager->getRepository(Bigram::class)
-                                ->insertArticleBigram($article, $bigram);
-                    }
-                    $preWord = $word;
-                    $preToken = $token;
                 }    
             }    
-        }    
-        if ($k == 0 && $token){
-            $bigram = $this->entityManager->getRepository(Bigram::class)
-                            ->insertBigram($token->getLemma(), null, $token->getFlag());
+            if ($k == 0 && $token){
+                $bigram = $this->entityManager->getRepository(Bigram::class)
+                                ->insertBigram($token->getLemma(), null, $token->getFlag());
 
-            $this->entityManager->getRepository(Bigram::class)
-                    ->insertArticleBigram($article, $bigram);
+                $this->entityManager->getRepository(Bigram::class)
+                        ->insertArticleBigram($article, $bigram);
+            }
         }
+        
         $this->entityManager->getRepository(Rawprice::class)
                 ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);        
         return;
@@ -872,20 +888,21 @@ class NameManager
                 if ($article){
                     $this->checkUpdateTokenFlag($article->getId(), $article->getTokenUpdateFlag());
 
-                    $title = mb_strtoupper(trim($rawprice->getTitle()), 'UTF-8');
-                    $titleMd5 = md5($title);
+                    $title = $rawprice->getTitleUp();
+                    $titleMd5 = $rawprice->getTitleMd5();
 
-                    $articleTitle = $this->entityManager->getRepository(\Application\Entity\ArticleTitle::class)
+                    $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
                             ->findOneBy(['article' => $article->getId(), 'titleMd5' => $titleMd5]);
 
                     if ($articleTitle == null){
                         $this->entityManager->getRepository(Article::class)
                                 ->deleteArticleTitle($article->getId());
                         
-                        $this->addNewTokenFromRawprice($rawprice);
-                        
                         $this->entityManager->getRepository(Article::class)
                                 ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $title, 'title_md5' => $titleMd5]);
+                        
+                        $this->addNewTokenFromRawprice($rawprice);
+                        
                     } else {
                         $this->entityManager->getRepository(Rawprice::class)
                                 ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);                        

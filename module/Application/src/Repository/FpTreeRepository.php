@@ -75,13 +75,8 @@ class FpTreeRepository  extends EntityRepository{
                 'root_tree_id' => $rootTreeId,
                 'root_token_id' => $rootTokenId,
                 'token_id' => $token->getId(),
-                'frequency' => 1,
             ]);           
             $fpTree = $this->findBanch($token, $rootTokenId, $rootTreeId);
-        } else {
-            $this->getEntityManager()->getConnection()->update('fp_tree', [
-                'frequency' => $fpTree->getFrequency() + 1,
-            ], ['id' => $fpTree->getId()]);                       
         }
                 
         return $fpTree;

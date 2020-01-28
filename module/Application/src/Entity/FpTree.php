@@ -31,7 +31,7 @@ class FpTree {
     protected $id;
     
     /**
-     * @ORM\Column(name="root_token_id")   
+     * @ORM\Column(name="root_tree_id")   
      */
     protected $rootTree;
 
@@ -50,6 +50,12 @@ class FpTree {
      * @ORM\JoinColumn(name="token_id", referencedColumnName="id")
      */
     protected $token;        
+    
+    /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\ArticleTitle", mappedBy="fpTree")
+    * @ORM\JoinColumn(name="id", referencedColumnName="fp_tree_id")
+     */
+    private $articleTitles;
     
 
     public function getId() 
@@ -97,4 +103,13 @@ class FpTree {
     {
         return $this->token;
     }    
+    
+    /**
+     * Returns the array of article titles assigned to this fpTree.
+     * @return array
+     */
+    public function getArticleTitles()
+    {
+        return $this->articleTitles;
+    }            
 }

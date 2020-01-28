@@ -40,6 +40,12 @@ class ArticleToken {
      */
     protected $article;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\ArticleTitle", inversedBy="articleTokens") 
+     * @ORM\JoinColumn(name="title_id", referencedColumnName="id")
+     */
+    protected $articleTitle;    
+    
 
     public function getId() 
     {
@@ -102,6 +108,24 @@ class ArticleToken {
         $this->article = $article;
     }           
     
+    /**
+     * Возвращает связанный articleTitle.
+     * @return \Application\Entity\ArticleTitle
+     */    
+    public function getArticleTitle() 
+    {
+        return $this->articleTitle;
+    }
+
+    /**
+     * Задает связанный articleTitle.
+     * @param \Application\Entity\ArticleTitle $articleTitle
+     */    
+    public function setArticleTitle($articleTitle) 
+    {
+        $this->articleTitle = $articleTitle;
+    }           
+
     /**
      * Возвращает связанный token.
      * @return \Application\Entity\Token

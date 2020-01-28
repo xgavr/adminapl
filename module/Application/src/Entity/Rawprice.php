@@ -734,6 +734,16 @@ class Rawprice {
         return $this->goodname;
     }
 
+    public function getTitleUp() 
+    {
+        return mb_strtoupper(trim($this->getTitle()), 'UTF-8');
+    }
+
+    public function getTitleMd5() 
+    {
+        return md5($this->getTitleUp());
+    }
+
     public function setTitle($title) 
     {
         $this->goodname = mb_substr($title, 0, 200);
