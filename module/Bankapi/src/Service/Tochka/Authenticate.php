@@ -123,9 +123,9 @@ class Authenticate {
     /**
      * Хранение кодов в папке token_dir
      * @param string $code код
-     * @param string $gran_type тип кода
+     * @param string $grant_type тип кода
      */
-    public function saveCode($code, $gran_type)
+    public function saveCode($code, $grant_type)
     {
         if (file_exists($this->token_filename)){
             $config = new \Zend\Config\Config(include $this->token_filename, true);
@@ -133,7 +133,7 @@ class Authenticate {
             $config = new \Zend\Config\Config([], true);
         }
         
-        $config->$gran_type = $code;
+        $config->$grant_type = $code;
         
         $writer = new \Zend\Config\Writer\PhpArray();
         $writer->toFile($this->token_filename, $config);
@@ -143,13 +143,13 @@ class Authenticate {
     
     /**
      * Получить код доступа
-     *@param string $gran_type тип кода
+     *@param string $grant_type тип кода
      */
-    public function readCode($gran_type)
+    public function readCode($grant_type)
     {
         if (file_exists($this->token_filename)){
             $config = new \Zend\Config\Config(include $this->token_filename);
-            return $config->$gran_type;
+            return $config->$grant_type;
         }
         
         return;
@@ -222,19 +222,19 @@ class Authenticate {
     /**
      * Обмен кода авторизации на access_token и refresh_token
      * @param string $code код
-     * @param string $gran_type тип кода
+     * @param string $grant_type тип кода
      */    
-    public function accessToken($code, $gran_type)
+    public function accessToken($code, $grant_type)
     {
         
         $postParameters = [
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
-            'grant_type' => $gran_type,            
+            'grant_type' => $grant_type,            
         ];
         
-        if ($gran_type == self::TOKEN_AUTH) $postParameters['code'] = $code;
-        if ($gran_type == self::TOKEN_REFRESH) $postParameters['refresh_token'] = $code;
+        if ($grant_type == self::TOKEN_AUTH) $postParameters['code'] = $code;
+        if ($grant_type == self::TOKEN_REFRESH) $postParameters['refresh_token'] = $code;
 
         $client = new Client();
         $client->setUri($this->uri.'/oauth2/token');
@@ -252,11 +252,11 @@ class Authenticate {
                 
         if ($response->isOk()){
             $result = Decoder::decode($response->getBody());
-            if ($gran_type == self::TOKEN_AUTH){
+            if ($grant_type == self::TOKEN_AUTH){
                 $this->saveCode($code, self::TOKEN_AUTH);
                 return $this->accessToken($result->refresh_token, self::TOKEN_REFRESH);
             }    
-            if ($gran_type == self::TOKEN_REFRESH){
+            if ($grant_type == self::TOKEN_REFRESH){
                 $this->saveCode($result->access_token, self::TOKEN_ACCESS);
                 return true;
             }
