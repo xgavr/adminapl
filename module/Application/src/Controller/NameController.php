@@ -1091,4 +1091,15 @@ class NameController extends AbstractActionController
             'total' => $result,
         ]);                  
     }
+    
+    public function fillFpTreeAction()
+    {
+        $this->entityManager->getRepository(FpTree::class)
+                ->fillFromArticles();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+        
+    }
 }
