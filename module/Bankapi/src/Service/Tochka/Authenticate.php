@@ -149,6 +149,8 @@ class Authenticate {
     {
         if (file_exists($this->token_filename)){
             $config = new \Zend\Config\Config(include $this->token_filename);
+            var_dump($grant_type);
+            var_dump($config->$grant_type);
             return $config->$grant_type;
         }
         
