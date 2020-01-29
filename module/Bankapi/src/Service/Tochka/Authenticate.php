@@ -154,7 +154,6 @@ class Authenticate {
     public function readCode($grant_type)
     {
         if ($grant_type == self::TOKEN_ACCESS){
-            var_dump($this->permanent_access_token);
             if ($this->permanent_access_token){
                 return $this->permanent_access_token;
             }
