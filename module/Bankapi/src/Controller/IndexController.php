@@ -15,7 +15,7 @@ class IndexController extends AbstractActionController
 
     /**
      * Authentication manager.
-     * @var Bankapi\Service\Tochka\Authenticate
+     * @var \Bankapi\Service\Tochka\Authenticate
      */
     private $tochkaAuth;    
 
