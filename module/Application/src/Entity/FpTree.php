@@ -57,6 +57,11 @@ class FpTree {
      */
     private $articleTitles;
     
+    /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\ArticleToken", mappedBy="fpTree")
+    * @ORM\JoinColumn(name="id", referencedColumnName="fp_tree_id")
+     */
+    private $articleTokens;
 
     public function getId() 
     {
@@ -111,5 +116,14 @@ class FpTree {
     public function getArticleTitles()
     {
         return $this->articleTitles;
+    }            
+
+    /**
+     * Returns the array of article tokens assigned to this fpTree.
+     * @return array
+     */
+    public function getArticleTokens()
+    {
+        return $this->articleTokens;
     }            
 }

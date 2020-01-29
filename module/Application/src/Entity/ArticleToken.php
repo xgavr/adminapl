@@ -46,6 +46,11 @@ class ArticleToken {
      */
     protected $articleTitle;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\FpTree", inversedBy="articleTokens") 
+     * @ORM\JoinColumn(name="fp_tree_id", referencedColumnName="id")
+     */
+    protected $fpTree;   
 
     public function getId() 
     {
@@ -126,6 +131,24 @@ class ArticleToken {
         $this->articleTitle = $articleTitle;
     }           
 
+    /**
+     * Возвращает связанный fpTree.
+     * @return \Application\Entity\FpTree
+     */    
+    public function getFpTree() 
+    {
+        return $this->fpTree;
+    }
+
+    /**
+     * Задает связанный fpTree.
+     * @param \Application\Entity\FpTree $fpTree
+     */    
+    public function setFpTree($fpTree) 
+    {
+        $this->fpTree = $fpTree;
+    }           
+        
     /**
      * Возвращает связанный token.
      * @return \Application\Entity\Token

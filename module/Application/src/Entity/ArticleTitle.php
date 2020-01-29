@@ -102,7 +102,7 @@ class ArticleTitle {
 
     /**
      * Задает связанный fpTree.
-     * @param \Application\Entity\Article $fpTree
+     * @param \Application\Entity\FpTree $fpTree
      */    
     public function setFpTree($fpTree) 
     {
