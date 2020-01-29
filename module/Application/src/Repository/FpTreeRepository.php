@@ -24,7 +24,7 @@ class FpTreeRepository  extends EntityRepository{
     /**
      * Добавить ветвь
      * 
-     * @param Token $token
+     * @param Token|integer $token
      * @param Token|integer $rootToken
      * @param integer $rootTree
      * 
@@ -32,6 +32,12 @@ class FpTreeRepository  extends EntityRepository{
      */
     public function findBanch($token, $rootToken = 0, $rootTreeId = 0)
     {
+        if (is_numeric($token)){
+            $tokenId = $token;            
+        } else {
+            $tokenId = $token->getId();            
+        }
+        
         if (is_numeric($rootToken)){
             $rootTokenId = $rootToken;            
         } else {
@@ -39,7 +45,7 @@ class FpTreeRepository  extends EntityRepository{
         }
         
         return $this->getEntityManager()->getRepository(FpTree::class)
-                ->findOneBy(['rootTree' => $rootTreeId, 'rootToken' => $rootTokenId, 'token' => $token->getId()]);
+                ->findOneBy(['rootTree' => $rootTreeId, 'rootToken' => $rootTokenId, 'token' => $tokenId]);
     }    
 
     /**
@@ -53,21 +59,27 @@ class FpTreeRepository  extends EntityRepository{
      */
     public function addBanch($token, $rootToken = 0, $rootTreeId = 0)
     {
+        if (is_numeric($token)){
+            $tokenId = $token;            
+        } else {
+            $tokenId = $token->getId();            
+        }
+
         if (is_numeric($rootToken)){
             $rootTokenId = $rootToken;            
         } else {
             $rootTokenId = $rootToken->getId();            
         }
         
-        $fpTree = $this->findBanch($token, $rootTokenId, $rootTreeId);
+        $fpTree = $this->findBanch($tokenId, $rootTokenId, $rootTreeId);
         
         if (!$fpTree){
             $this->getEntityManager()->getConnection()->insert('fp_tree', [
                 'root_tree_id' => $rootTreeId,
                 'root_token_id' => $rootTokenId,
-                'token_id' => $token->getId(),
+                'token_id' => $tokenId,
             ]);           
-            $fpTree = $this->findBanch($token, $rootTokenId, $rootTreeId);
+            $fpTree = $this->findBanch($tokenId, $rootTokenId, $rootTreeId);
         }
                 
         return $fpTree;
@@ -83,7 +95,7 @@ class FpTreeRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('t')
+        $queryBuilder->select('t.id as tid, at.id as atid')
                 ->from(ArticleToken::class, 'at')
                 ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')
                 ->where('at.articleTitle = ?1')
@@ -99,15 +111,18 @@ class FpTreeRepository  extends EntityRepository{
                 ->orderBy('t.frequency', 'DESC')
                 ->setMaxResults(Token::MAX_TOKENS_FOR_GROUP)
                 ;
-        $tokens = $queryBuilder->getQuery()->getResult();
+        $rows = $queryBuilder->getQuery()->getResult();
         
         $rootTokenId = $rootTreeId = 0;
-        foreach ($tokens as $token){
-            $fpTree = $this->addBanch($token, $rootTokenId, $rootTreeId);
-            $rootTokenId = $token->getId();
+        foreach ($rows as $row){
+            $fpTree = $this->addBanch($row['tid'], $rootTokenId, $rootTreeId);
+            $rootTokenId = $row['tid'];
             if (!$rootTreeId){
                 $rootTreeId = $fpTree->getId();
             }    
+            $this->getEntityManager()->getConnection()->update('article_token', [
+                'fp_tree_id' => $fpTree->getId(),
+            ], ['id' => $row['atid']]);                       
         }
         
         if ($rootTreeId > 0){
@@ -137,20 +152,22 @@ class FpTreeRepository  extends EntityRepository{
     }
     
     /**
-     * Заполнить по всем артикулам
+     * Заполнить по всем наименованиям артикулов
      * 
      */
     public function fillFromArticles()
     {
         ini_set('memory_limit', '1024M');
-        set_time_limit(0);        
+        set_time_limit(1800);        
+        $startTime = time();
         
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('a')
-            ->from(Article::class, 'a')
+        $queryBuilder->select('at')
+            ->from(ArticleTitle::class, 'at')
+            ->where('at.fpTree = 0')    
             ;    
         
         $query = $queryBuilder->getQuery();
@@ -158,9 +175,12 @@ class FpTreeRepository  extends EntityRepository{
         $iterable = $query->iterate();
         
         foreach ($iterable as $row){
-            foreach ($row as $article){        
-                $this->addFromArticle($article);
-                $this->getEntityManager()->detach($article);
+            foreach ($row as $articleTitle){        
+                $this->addFromArticleTitle($articleTitle);
+                $this->getEntityManager()->detach($articleTitle);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
             }
         }
         
