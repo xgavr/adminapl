@@ -142,13 +142,26 @@ class FpTreeRepository  extends EntityRepository{
      */
     public function fillFromArticles()
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '1024M');
         set_time_limit(0);        
         
-        $articles = $this->getEntityManager()->getRepository(Article::class)
-                ->findBy([]);
-        foreach ($articles as $article){
-            $this->addFromArticle($article);
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('a')
+            ->from(Article::class, 'a')
+            ;    
+        
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $article){        
+                $this->addFromArticle($article);
+                $this->getEntityManager()->detach($article);
+            }
         }
         
         return;
