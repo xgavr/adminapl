@@ -69,6 +69,11 @@ class Authenticate {
     /**
      * @var string
      */
+    private $permanent_access_token;
+
+    /**
+     * @var string
+     */
     private $token_filename;
     
 
@@ -77,6 +82,7 @@ class Authenticate {
         $this->client_id = $authParams['client_id'];
         $this->client_secret = $authParams['client_secret'];
         $this->token_dir = $authParams['token_dir'];
+        $this->permanent_access_token = $authParams['access_token'];
 
         if ($authParams['debug']){
             $this->uri = self::URI_DEBUGGING;
@@ -147,10 +153,14 @@ class Authenticate {
      */
     public function readCode($grant_type)
     {
+        if ($grant_type == self::TOKEN_ACCESS){
+            if ($this->permanent_access_token){
+                return $this->permanent_access_token;
+            }
+        }
+        
         if (file_exists($this->token_filename)){
             $config = new \Zend\Config\Config(include $this->token_filename);
-            var_dump($grant_type);
-            var_dump($config->$grant_type);
             return $config->$grant_type;
         }
         
