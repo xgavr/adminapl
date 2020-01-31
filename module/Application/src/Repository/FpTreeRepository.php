@@ -186,4 +186,59 @@ class FpTreeRepository  extends EntityRepository{
         
         return;
     }
+    
+    /**
+     * Количество поддержек ветви
+     * 
+     * @param FpTree $fpTree
+     */
+    public function suppportCount($fpTree)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('at.id')
+            ->from(ArticleToken::class, 'at')
+            ->where('at.fpTree = ?1')    
+            ->setParameter('1', $fpTree->getId())
+            ;    
+        
+        $this->getEntityManager()->getConnection()->update('fp_tree', [
+            'frequency' => count($queryBuilder->getQuery()->getResult()),
+            ], ['id' => $fpTree->getId()]);
+        
+        return;        
+    }
+    
+    public function updateSupportCount()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(1800);        
+        $startTime = time();
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('f')
+            ->from(FpTree::class, 'f')
+            ;    
+        
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $fpTree){        
+                $this->suppportCount($fpTree);
+                $this->getEntityManager()->detach($fpTree);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+            }
+        }
+        
+        return;        
+    }
 }

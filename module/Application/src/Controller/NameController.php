@@ -1102,4 +1102,16 @@ class NameController extends AbstractActionController
         ]);          
         
     }
+    
+    public function countFpTreeAction()
+    {
+        $this->entityManager->getRepository(FpTree::class)
+                ->updateSupportCount();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+        
+    }
+    
 }
