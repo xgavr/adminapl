@@ -278,10 +278,13 @@ class FpTreeRepository  extends EntityRepository{
                     $fpTree = $this->getEntityManager()->getRepository(FpTree::class)
                             ->findOneBy(['rootTree' => $rootTree, 'token' => $rootToken]);
                     
-                    $result[$row->getId()][$rootTree][$fpTree->getToken()->getId()] = $fpTree->getToken()->getLemma();
+                    if ($fpTree){
+                        $result[$row->getId()][$rootTree][$fpTree->getToken()->getId()] = $fpTree->getToken()->getLemma();
 
-                    $rootToken = $fpTree->getRootToken();
-                    
+                        $rootToken = $fpTree->getRootToken();
+                    } else {
+                        $rootToken = null;
+                    }                       
                 } else {
                     break;
                 }                
