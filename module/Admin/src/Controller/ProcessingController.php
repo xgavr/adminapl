@@ -12,6 +12,7 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\Stdlib\RequestInterface as Request;
 use Zend\Stdlib\ResponseInterface as Response;
+use Application\Entity\FpTree;
 
 
 class ProcessingController extends AbstractActionController
@@ -563,6 +564,24 @@ class ProcessingController extends AbstractActionController
         if ($settings['parse_name'] == 1){
             $this->nameManager->updateAllTokenArticleCount();
             $this->nameManager->removeEmptyToken();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
+    /**
+     * Заполнение дерева токенов
+     */
+    public function fillFpTreeAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            $this->entityManager->getRepository(FpTree::class)
+                    ->fillFromArticles();
         }    
                 
         return new JsonModel(
