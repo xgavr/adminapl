@@ -277,7 +277,7 @@ class FpTreeRepository  extends EntityRepository{
         foreach ($data as $fpTree){
             $ways[$fpTree->getRootTree()][$tokenId] = $fpTree->getToken()->getLemma();
             if ($fpTree->getRootToken() > 0){
-                $ways = array_merge($ways, $this->prefixWays($fpTree->getRootToken(), $fpTree->getRootTree(), $ways));
+                $this->prefixWays($fpTree->getRootToken(), $fpTree->getRootTree(), $ways);
             }
         }
         
