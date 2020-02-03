@@ -133,6 +133,22 @@ class FpTreeRepository  extends EntityRepository{
         
         return;
     }
+    
+    /**
+     * Очистить деревья и связи
+     */
+    public function resetFpTree()
+    {
+        set_time_limit(0);        
+        
+        $this->getEntityManager()->getConnection()->update('article_token', [
+            'fp_tree_id' => 0], ['1' => 1]);                       
+        
+        $this->getEntityManager()->getConnection()->update('article_title', [
+            'fp_tree_id' => 0], ['1' => 1]);                       
+
+        $this->getEntityManager()->getConnection()->delete('fp_tree', ['1' => 1]);                       
+    }
 
     /**
      * Обработать артикул

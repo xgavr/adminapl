@@ -1114,6 +1114,17 @@ class NameController extends AbstractActionController
         
     }
     
+    public function resetFpTreeAction()
+    {
+        $this->entityManager->getRepository(FpTree::class)
+                ->resetFpTree();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+        
+    }
+    
     public function prefixWaysAction()
     {
         $tokenId = $this->params()->fromRoute('id', -1);
