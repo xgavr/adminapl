@@ -249,9 +249,9 @@ class FpTreeRepository  extends EntityRepository{
      * @param integer $rootTreeId
      * @param array $ways
      */
-    public function prefixWays($tokenId, $rootTreeId = null, $ways = null)
+    public function prefixWays($tokenId)
     {
-        ini_set('memory_limit', '1024M');
+//        ini_set('memory_limit', '1024M');
 //        set_time_limit(1800);        
         
         $entityManager = $this->getEntityManager();
@@ -264,23 +264,30 @@ class FpTreeRepository  extends EntityRepository{
             ->setParameter('1', $tokenId)
             ;  
         
-        if ($rootTreeId){
-            $queryBuilder->andWhere('ft.rootTree = ?2')
-                    ->setParameter('2', $rootTreeId);
-        }
-        
         $data = $queryBuilder->getQuery()->getResult();
         
-        if (!is_array($ways)){
-            $ways = [];
-        }    
-        foreach ($data as $fpTree){
-            $ways[$fpTree->getRootTree()][$tokenId] = $fpTree->getToken()->getLemma();
-            if ($fpTree->getRootToken() > 0){
-                $this->prefixWays($fpTree->getRootToken(), $fpTree->getRootTree(), $ways);
+        $result = [];
+        foreach ($data as $row){
+            $rootToken = $row->getRootToken();
+            $rootTree = $row->getRootTree();
+            
+            $result[$row->getId()][$rootTree][$tokenId] = $row->getToken()->getLemma();
+            
+            while (true){
+                if ($rootToken){
+                    $fpTree = $this->getEntityManager()->getRepository(FpTree::class)
+                            ->findOneBy(['rootTree' => $rootTree, 'token' => $rootToken]);
+                    
+                    $result[$row->getId()][$rootTree][$fpTree->getToken()->getId()] = $fpTree->getToken()->getLemma();
+
+                    $rootToken = $fpTree->getRootToken();
+                    
+                } else {
+                    break;
+                }                
             }
         }
         
-        return $ways;                
+        return $result;                
     }
 }
