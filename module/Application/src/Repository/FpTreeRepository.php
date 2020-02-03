@@ -266,11 +266,11 @@ class FpTreeRepository  extends EntityRepository{
         
         $data = $queryBuilder->getQuery()->getResult();
         
-        $result['frequency'] = 0;
+        $result = [];
         foreach ($data as $row){
             $rootToken = $row->getRootToken();
             $rootTree = $row->getRootTree();
-            $result['frequency'] += $row->getFrequency();
+//            $result['frequency'] += $row->getFrequency();
             
             $result[$row->getId()][$rootTree][$tokenId] = $row->getToken()->getLemma();
             
@@ -285,7 +285,7 @@ class FpTreeRepository  extends EntityRepository{
                     }    
 
                     if ($fpTree){
-                        array_unshift($result[$row->getId()][$rootTree], [$fpTree->getToken()->getId() => $fpTree->getToken()->getLemma()]);
+                        $result = [$fpTree->getToken()->getId() => $fpTree->getToken()->getLemma()] + $result[$row->getId()][$rootTree];
                         $rootToken = $fpTree->getRootToken();
                     } else {
                         $rootToken = null;
