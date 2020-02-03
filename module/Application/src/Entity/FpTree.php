@@ -46,6 +46,11 @@ class FpTree {
     protected $frequency;        
 
     /**
+     * @ORM\Column(name="parent_tree_id")  
+     */
+    protected $parentTree;        
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Token", inversedBy="fpTree") 
      * @ORM\JoinColumn(name="token_id", referencedColumnName="id")
      */
@@ -102,6 +107,16 @@ class FpTree {
     public function getFrequency()
     {
         return $this->frequency;
+    }
+    
+    public function setParentTree($parentTreeId)
+    {
+        $this->parentTree = $parentTreeId;
+    }
+    
+    public function getParentTree()
+    {
+        return $this->parentTree;
     }
     
     public function getToken() 

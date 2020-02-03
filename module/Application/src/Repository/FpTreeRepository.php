@@ -54,10 +54,11 @@ class FpTreeRepository  extends EntityRepository{
      * @param Token $token
      * @param Token|integer $rootToken
      * @param integer $rootTreeId
+     * @param integer $parentTreeId
      * 
      * @return null;
      */
-    public function addBanch($token, $rootToken = 0, $rootTreeId = 0)
+    public function addBanch($token, $rootToken = 0, $rootTreeId = 0, $parentTreeId = 0)
     {
         if (is_numeric($token)){
             $tokenId = $token;            
@@ -78,6 +79,7 @@ class FpTreeRepository  extends EntityRepository{
                 'root_tree_id' => $rootTreeId,
                 'root_token_id' => $rootTokenId,
                 'token_id' => $tokenId,
+                'parent_tree_id' => $parentTreeId,
             ]);           
             $fpTree = $this->findBanch($tokenId, $rootTokenId, $rootTreeId);
         }
@@ -113,10 +115,11 @@ class FpTreeRepository  extends EntityRepository{
                 ;
         $rows = $queryBuilder->getQuery()->getResult();
         
-        $rootTokenId = $rootTreeId = 0;
+        $rootTokenId = $rootTreeId = $parentTreeId = 0;
         foreach ($rows as $row){
-            $fpTree = $this->addBanch($row['tid'], $rootTokenId, $rootTreeId);
+            $fpTree = $this->addBanch($row['tid'], $rootTokenId, $rootTreeId, $parentTreeId);
             $rootTokenId = $row['tid'];
+            $parentTreeId = $fpTree->getId();
             if (!$rootTreeId){
                 $rootTreeId = $fpTree->getId();
             }    
@@ -285,25 +288,20 @@ class FpTreeRepository  extends EntityRepository{
         $result = [];
         foreach ($data as $row){
             $rootToken = $row->getRootToken();
-            $rootTree = $row->getRootTree();                        
+            $rootTree = $row->getRootTree();    
+            $parentTreeId = $row->getParentTree();
             
             $way = [$tokenId => $row->getToken()->getLemma()];
             
             while (true){
-                if ($rootToken){
+                if ($parentTreeId){
                     $fpTree = $this->getEntityManager()->getRepository(FpTree::class)
-                            ->findOneBy(['rootTree' => $rootTree, 'token' => $rootToken]);
+                            ->findOneBy(['id' => $parentTreeId]);
                     
-                    if (!$fpTree){
-                        $fpTree = $this->getEntityManager()->getRepository(FpTree::class)
-                                ->findOneBy(['rootTree' => 0, 'id' => $rootTree]);
-                    }    
-
                     if ($fpTree){
                         $way = [$fpTree->getToken()->getId() => $fpTree->getToken()->getLemma()] + $way;
-                        $rootToken = $fpTree->getRootToken();
+                        $parentTreeId = $fpTree->getParentTree();
                     } else {
-                        $rootToken = null;
                         break;
                     }                       
                 } else {
