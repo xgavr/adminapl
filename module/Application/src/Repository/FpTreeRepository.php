@@ -285,8 +285,7 @@ class FpTreeRepository  extends EntityRepository{
                     }    
 
                     if ($fpTree){
-                        $result[$row->getId()][$rootTree][$fpTree->getToken()->getId()] = $fpTree->getToken()->getLemma();
-
+                        array_unshift($result[$row->getId()][$rootTree], [$fpTree->getToken()->getId() => $fpTree->getToken()->getLemma()]);
                         $rootToken = $fpTree->getRootToken();
                     } else {
                         $rootToken = null;
