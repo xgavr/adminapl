@@ -524,12 +524,16 @@ class BankManager
         if (is_array($tochkaStatement)){
             foreach ($tochkaStatement['statements'] as $bik => $accounts){
                 foreach ($accounts as $code => $account){
-                    $this->addNewOrUpdateBalance(['bik' => $bik, 'account' => $code, 'dateBalance' => $dateStart, 'balance' => $account['balance_opening']]);
-                    foreach($account['payments'] as $payment){
-                        $payment['bik'] = $bik;
-                        $payment['account'] = $code;
-                        $this->addNewOrUpdateStatement($payment);
-                    }
+                    if (isset($account['balance_opening'])){
+                        $this->addNewOrUpdateBalance(['bik' => $bik, 'account' => $code, 'dateBalance' => $dateStart, 'balance' => $account['balance_opening']]);
+                    }    
+                    if (isset($account['payments'])){
+                        foreach($account['payments'] as $payment){
+                            $payment['bik'] = $bik;
+                            $payment['account'] = $code;
+                            $this->addNewOrUpdateStatement($payment);
+                        }
+                    }    
                 }
             }
         }

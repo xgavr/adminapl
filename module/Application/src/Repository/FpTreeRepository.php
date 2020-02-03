@@ -288,6 +288,7 @@ class FpTreeRepository  extends EntityRepository{
                         $rootToken = $fpTree->getRootToken();
                     } else {
                         $rootToken = null;
+                        break;
                     }                       
                 } else {
                     break;
