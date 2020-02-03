@@ -251,6 +251,9 @@ class FpTreeRepository  extends EntityRepository{
      */
     public function prefixWays($tokenId, $rootTreeId = null, $ways = null)
     {
+        ini_set('memory_limit', '1024M');
+//        set_time_limit(1800);        
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
