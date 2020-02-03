@@ -241,4 +241,43 @@ class FpTreeRepository  extends EntityRepository{
         
         return;        
     }
+    
+    /**
+     * Найти префиксные пути
+     * 
+     * @param integer $tokenId
+     * @param integer $rootTreeId
+     * @param array $ways
+     */
+    public function prefixWays($tokenId, $rootTreeId = null, $ways = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('ft')
+            ->from(FpTree::class, 'ft')
+            ->where('ft.token = ?1')    
+            ->setParameter('1', $tokenId)
+            ;  
+        
+        if ($rootTreeId){
+            $queryBuilder->andWhere('ft.rootTree = ?2')
+                    ->setParameter('2', $rootTreeId);
+        }
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        
+        if (!is_array($ways)){
+            $ways = [];
+        }    
+        foreach ($data as $fpTree){
+            $ways[$fpTree->getRootTree()][$tokenId] = $fpTree->getToken()->getLemma();
+            if ($fpTree->getRootToken() > 0){
+                $ways = array_merge($ways, $this->prefixWays($fpTree->getRootToken(), $fpTree->getRootTree(), $ways));
+            }
+        }
+        
+        return $ways;                
+    }
 }

@@ -1114,4 +1114,18 @@ class NameController extends AbstractActionController
         
     }
     
+    public function prefixWaysAction()
+    {
+        $tokenId = $this->params()->fromRoute('id', -1);
+        if ($tokenId > 0){
+            $ways = $this->entityManager->getRepository(FpTree::class)
+                    ->prefixWays($tokenId); 
+            var_dump($ways);
+        }
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+        
+    }
 }
