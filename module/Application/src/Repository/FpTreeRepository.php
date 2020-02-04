@@ -323,13 +323,14 @@ class FpTreeRepository  extends EntityRepository{
                 if (isset($counter[$key])){
                     $counter[$key]['count'] += 1;
                 } else {
-                    $counter[$key] = ['count' => 1, 'lemma' => $lemma];
+                    $counter[$key] = ['count' => 1];
                 }
             }    
         }
         foreach ($ways as $way){
             $newWay = $way;
             foreach ($way as $key => $lemma){
+                var_dump($counter[$key]['count']);
                 if ($counter[$key]['count'] < FpTree::MIN_FREQUENCY){
                     unset($newWay[$key]);
                 }
