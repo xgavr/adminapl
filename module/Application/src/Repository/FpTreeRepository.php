@@ -280,8 +280,6 @@ class FpTreeRepository  extends EntityRepository{
         
         $result = [];
         foreach ($data as $row){
-            $rootToken = $row->getRootToken();
-            $rootTree = $row->getRootTree();    
             $parentTreeId = $row->getParentTree();
             
             $way = [$tokenId => $row->getToken()->getLemma()];
@@ -302,7 +300,7 @@ class FpTreeRepository  extends EntityRepository{
                 }                
             }
             
-            $result[$row->getId()][$rootTree] = $way;            
+            $result[$row->getId()] = $way;            
         }
         
         return $result;                
