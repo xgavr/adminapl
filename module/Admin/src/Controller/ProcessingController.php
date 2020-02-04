@@ -586,8 +586,24 @@ class ProcessingController extends AbstractActionController
                 
         return new JsonModel(
             ['ok']
-        );
-        
+        );        
+    }
+    
+    /**
+     * Пересчет поддержки дерева токенов
+     */
+    public function supportFpTreeAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            $this->entityManager->getRepository(FpTree::class)
+                    ->updateSupportCount();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
     }
     
     /**
