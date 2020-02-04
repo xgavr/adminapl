@@ -1117,7 +1117,7 @@ class NameController extends AbstractActionController
     public function resetFpTreeAction()
     {
         $this->entityManager->getRepository(FpTree::class)
-                ->nominalFpTree();
+                ->resetFpTree();
         
         return new JsonModel([
             'result' => 'ok',
@@ -1129,8 +1129,11 @@ class NameController extends AbstractActionController
     {
         $tokenId = $this->params()->fromRoute('id', -1);
         if ($tokenId > 0){
+            $token = $this->entityManager->getRepository(Token::class)
+                    ->findOneBy(['id' => $tokenId]);
+            
             $ways = $this->entityManager->getRepository(FpTree::class)
-                    ->prefixWays($tokenId); 
+                    ->nominalFpTree($token); 
             var_dump($ways);
         }
         
