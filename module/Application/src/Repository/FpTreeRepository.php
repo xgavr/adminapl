@@ -319,28 +319,26 @@ class FpTreeRepository  extends EntityRepository{
         $counter = [];
         
         foreach ($ways as $way){
-            $parentKey = 0;
             foreach ($way as $key => $lemma){
                 if (isset($counter[$key])){
                     $counter[$key]['count'] += 1;
                 } else {
                     $counter[$key] = ['count' => 1, 'lemma' => $lemma];
                 }
-                if (!isset($result[$parentKey][$key])){
-                    $result[$parentKey][$key] = [
-                        'lemma' => $lemma,
-                    ];
-                    $parentKey = $key;
-                }
             }    
         }
-        
-        usort($counter, function($a, $b){
-            if ($a['count'] == $b['count']) {
-                return 0;
+        foreach ($ways as $way){
+            $newWay = $way;
+            foreach ($way as $key => $lemma){
+                if ($counter[$key]['count'] < FpTree::MIN_FREQUENCY){
+                    unset($newWay[$key]);
+                }
+            }       
+            $newWayStr = implode('_', $newWay);
+            if (isset($result[$newWayStr])){
+                $result[$newWayStr] = $newWayStr;
             }
-            return ($a['count'] > $b['count']) ? -1 : 1;            
-        }); 
+        }
         
         return $result;
     }
