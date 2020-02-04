@@ -329,12 +329,12 @@ class FpTreeRepository  extends EntityRepository{
         }
         foreach ($ways as $way){
             $newWay = $way;
-            var_dump($newWay);
             foreach ($way as $key => $lemma){
                 if ($counter[$key]['count'] < FpTree::MIN_FREQUENCY){
                     unset($newWay[$key]);
                 }
             }       
+            var_dump($newWay);
             $newWayStr = implode('_', $newWay);
             if (isset($result[$newWayStr])){
                 $result[$newWayStr] = $newWayStr+'_'+$token->getLemma();
