@@ -282,7 +282,7 @@ class FpTreeRepository  extends EntityRepository{
         foreach ($data as $row){
             $parentTreeId = $row->getParentTree();
             
-            $way = [$tokenId => $row->getToken()->getLemma()];
+//            $way = [$tokenId => $row->getToken()->getLemma()];
             
             while (true){
                 if ($parentTreeId){
@@ -304,5 +304,36 @@ class FpTreeRepository  extends EntityRepository{
         }
         
         return $result;                
+    }
+    
+    /**
+     * Условное дерево наименований
+     * 
+     * @param Token $token
+     */
+    public function nominalFpTree($token)
+    {
+        $ways = $this->prefixWays($token->getId());
+        $result = [];
+        $counter = [];
+        
+        foreach ($ways as $way){
+            foreach ($way as $key => $lemma){
+                if (isset($counter[$key])){
+                    $counter[$key]['count'] += 1;
+                } else {
+                    $counter[$key] = ['count' => 1, 'lemma' => $lemma];
+                }
+            }            
+        }
+        
+        usort($counter, function($a, $b){
+            if ($a['count'] == $b['count']) {
+                return 0;
+            }
+            return ($a['count'] > $b['count']) ? -1 : 1;            
+        }); 
+        
+        return $counter;
     }
 }

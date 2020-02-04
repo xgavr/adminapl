@@ -1117,7 +1117,7 @@ class NameController extends AbstractActionController
     public function resetFpTreeAction()
     {
         $this->entityManager->getRepository(FpTree::class)
-                ->resetFpTree();
+                ->nominalFpTree();
         
         return new JsonModel([
             'result' => 'ok',
