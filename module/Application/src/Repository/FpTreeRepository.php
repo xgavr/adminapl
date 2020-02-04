@@ -283,6 +283,7 @@ class FpTreeRepository  extends EntityRepository{
             $parentTreeId = $row->getParentTree();
             
 //            $way = [$tokenId => $row->getToken()->getLemma()];
+            $way = [];
             
             while (true){
                 if ($parentTreeId){
