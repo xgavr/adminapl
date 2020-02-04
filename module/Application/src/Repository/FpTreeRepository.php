@@ -319,13 +319,20 @@ class FpTreeRepository  extends EntityRepository{
         $counter = [];
         
         foreach ($ways as $way){
+            $parentKey = 0;
             foreach ($way as $key => $lemma){
                 if (isset($counter[$key])){
                     $counter[$key]['count'] += 1;
                 } else {
                     $counter[$key] = ['count' => 1, 'lemma' => $lemma];
                 }
-            }            
+                if (!isset($result[$parentKey][$key])){
+                    $result[$parentKey][$key] = [
+                        'lemma' => $lemma,
+                    ];
+                    $parentKey = $key;
+                }
+            }    
         }
         
         usort($counter, function($a, $b){
@@ -335,6 +342,6 @@ class FpTreeRepository  extends EntityRepository{
             return ($a['count'] > $b['count']) ? -1 : 1;            
         }); 
         
-        return $counter;
+        return $result;
     }
 }
