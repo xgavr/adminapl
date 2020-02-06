@@ -599,6 +599,8 @@ class ProcessingController extends AbstractActionController
         if ($settings['parse_name'] == 1){
             $this->entityManager->getRepository(FpTree::class)
                     ->updateSupportCount();
+            $this->entityManager->getRepository(FpTree::class)
+                    ->deleteEmpty();
         }    
                 
         return new JsonModel(
