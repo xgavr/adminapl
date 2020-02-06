@@ -410,7 +410,7 @@ class FpTreeRepository  extends EntityRepository{
                 }
                 
                 $newWayStr = implode('_', $lemms);
-                if (!isset($result[$newWayStr]['name'])){
+                if (!isset($result[$newWayStr])){
                     $result[$newWayStr]['name'] = $newWayStr.'_'.$token->getLemma();
                     $result[$newWayStr]['count'] = 1;
                 } else {
