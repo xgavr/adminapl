@@ -388,14 +388,28 @@ class FpTreeRepository  extends EntityRepository{
             }    
         }
         foreach ($ways as $way){
-            $newWay = $way;
+            $newWay = [];
             foreach ($way as $key => $lemma){
-                if ($counter[$key]['count'] < FpTree::MIN_FREQUENCY){
-                    unset($newWay[$key]);
+                if ($counter[$key]['count'] > FpTree::MIN_FREQUENCY){
+                    $newWay[$key]['count'] = $counter[$key]['count'];
+                    $newWay[$key]['lemma'] = $lemma;
                 }
             }       
+            
             if (count($newWay)){
-                $newWayStr = implode('_', $newWay);
+                usort($newWay, function($a, $b){
+                    if ($a['count'] == $b['count']) {
+                        return 0;
+                    }
+                    return ($a['count'] > $b['count']) ? -1 : 1;            
+                }); 
+                
+                $lemms = [];
+                foreach ($newWay as $newRow){
+                    $lemms[] = $newRom['lemma'];
+                }
+                
+                $newWayStr = implode('_', $lemms);
                 if (!isset($result[$newWayStr])){
                     $result[$newWayStr] = $newWayStr.'_'.$token->getLemma();
                 }
