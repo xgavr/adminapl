@@ -299,7 +299,7 @@ class FpTreeRepository  extends EntityRepository{
             ->where('f.frequency = 0')
             ;    
         
-        $querry = $queryBuilder->getQuery();
+        $query = $queryBuilder->getQuery();
         
         $iterable = $query->iterate();
         
