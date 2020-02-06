@@ -406,7 +406,7 @@ class FpTreeRepository  extends EntityRepository{
                 
                 $lemms = [];
                 foreach ($newWay as $newRow){
-                    $lemms[] = $newRom['lemma'];
+                    $lemms[] = $newRow['lemma'];
                 }
                 
                 $newWayStr = implode('_', $lemms);
