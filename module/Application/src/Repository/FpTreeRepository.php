@@ -267,7 +267,7 @@ class FpTreeRepository  extends EntityRepository{
 
         $queryBuilder->select('f')
             ->from(FpTree::class, 'f')
-            ->where('f.parenTree = ?1')
+            ->where('f.parentTree = ?1')
             ->setParameter('1', $fpTree->getId())    
             ;    
         
