@@ -415,16 +415,16 @@ class FpTreeRepository  extends EntityRepository{
                     $result[$newWayStr]['count'] = 1;
                 } else {
                     $result[$newWayStr]['count'] += 1;                    
-                }
-                
-                usort($result, function($a, $b){
-                    if ($a['count'] == $b['count']) {
-                        return 0;
-                    }
-                    return ($a['count'] > $b['count']) ? -1 : 1;            
-                }); 
+                }                
             }    
         }
+        
+        usort($result, function($a, $b){
+            if ($a['count'] == $b['count']) {
+                return 0;
+            }
+            return ($a['count'] > $b['count']) ? -1 : 1;            
+        }); 
         
         return $result;
     }
