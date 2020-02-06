@@ -1125,6 +1125,19 @@ class NameController extends AbstractActionController
         
     }
     
+    public function deleteEmptyFpTreeAction()
+    {
+        $this->entityManager->getRepository(FpTree::class)
+                ->updateSupportCount();
+        $this->entityManager->getRepository(FpTree::class)
+                ->deleteEmpty();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+        
+    }
+    
     public function prefixWaysAction()
     {
         $tokenId = $this->params()->fromRoute('id', -1);

@@ -255,6 +255,66 @@ class FpTreeRepository  extends EntityRepository{
     }
     
     /**
+     * Удалить узел и потомки
+     * 
+     * @param FpTree $fpTree
+     */
+    public function recursiveDelete($fpTree)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('f')
+            ->from(FpTree::class, 'f')
+            ->where('f.parenTree = ?1')
+            ->setParameter('1', $fpTree->getId())    
+            ;    
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($data as $row){
+            $this->recursiveDelete($row);
+        }
+
+        $this->getEntityManager()->getConnection()->delete('fp_tree', ['id' => $fpTree->getId()]);                               
+    }
+    
+    /**
+     * 
+     * Удаление пустых узлов
+     */
+    public function deleteEmpty()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(1800);        
+        $startTime = time();
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('f')
+            ->from(FpTree::class, 'f')
+            ->where('f.frequency = 0')
+            ;    
+        
+        $querry = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $fpTree){        
+                $this->recursiveDelete($fpTree);
+                $this->getEntityManager()->detach($fpTree);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+            }
+        }        
+    }
+    
+    /**
      * Найти префиксные пути
      * 
      * @param integer $tokenId
