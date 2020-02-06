@@ -411,8 +411,18 @@ class FpTreeRepository  extends EntityRepository{
                 
                 $newWayStr = implode('_', $lemms);
                 if (!isset($result[$newWayStr])){
-                    $result[$newWayStr] = $newWayStr.'_'.$token->getLemma();
+                    $result[$newWayStr]['name'] = $newWayStr.'_'.$token->getLemma();
+                    $result[$newWayStr]['count'] = 1;
+                } else {
+                    $result[$newWayStr]['count'] += 1;                    
                 }
+                
+                usort($result, function($a, $b){
+                    if ($a['count'] == $b['count']) {
+                        return 0;
+                    }
+                    return ($a['count'] > $b['count']) ? -1 : 1;            
+                }); 
             }    
         }
         
