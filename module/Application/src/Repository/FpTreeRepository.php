@@ -469,7 +469,7 @@ class FpTreeRepository  extends EntityRepository{
     public function updateFpGroups()
     {
         ini_set('memory_limit', '1024M');
-//        set_time_limit(1800);        
+        set_time_limit(1800);        
         
         $entityManager = $this->getEntityManager();
 
