@@ -485,9 +485,9 @@ class FpTreeRepository  extends EntityRepository{
         
         $tokens = $queryBuilder->getQuery()->getResult();
         
-        foreach ($tokens as $tokenId){
+        foreach ($tokens as $row){
             $token = $this->getEntityManager(Token::class)
-                    ->findOneBy(['id' => $tokenId]);
+                    ->findOneBy(['id' => row['tokenId']]);
             if ($token){
                 $this->updateFpGroup($token);
             }
