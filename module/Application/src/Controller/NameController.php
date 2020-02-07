@@ -18,6 +18,7 @@ use Zend\View\Model\JsonModel;
 use Application\Entity\Goods;
 use Application\Entity\Rate;
 use Application\Entity\FpTree;
+use Application\Entity\FpGroup;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -1150,6 +1151,17 @@ class NameController extends AbstractActionController
 //            var_dump($ways);
         }
         
+        return new JsonModel([
+            'result' => 'ok',
+        ]);          
+        
+    }
+    
+    public function fpGroupsAction()
+    {
+        $this->entityManager->getRepository(FpGroup::class)
+                ->updateFpGroups(); 
+
         return new JsonModel([
             'result' => 'ok',
         ]);          

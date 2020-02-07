@@ -437,7 +437,7 @@ class FpTreeRepository  extends EntityRepository{
      */
     public function updateFpGroup($token)
     {
-        $sets = $this->nominalFpTree($token);
+        $sets = $this->nominalFpTree($token);  
         
         if (count($sets)){
             foreach ($sets as $set){
@@ -454,10 +454,43 @@ class FpTreeRepository  extends EntityRepository{
                                 'name' => $set['name'],
                                 'frequency' => $set['count'],
                                 'token_id' => $token->getId(),
-                            ]);                                           
-                    
+                            ]);                                                               
                 }
             }            
+        }
+        
+        return;
+    }
+    
+    /**
+     * 
+     * Сформировать популярные группы
+     */
+    public function updateFpGroups()
+    {
+//        ini_set('memory_limit', '1024M');
+//        set_time_limit(1800);        
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('identity(ft.token) as tokenId, sum(ft.frequency) as frequencySum')
+            ->from(FpTree::class, 'ft')
+            ->groupBy('ft.token')
+            ->having('frequencySum > &1')
+            ->orderBy('frequencySum')
+            ->setParameter('1', FpTree::MIN_FREQUENCY)    
+            ;  
+        
+        $tokens = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($tokens as $tokenId){
+            $token = $this->getEntityManager(Token::class)
+                    ->findOneById($tokenId);
+            if ($token){
+                $this->updateFpGroup($token);
+            }
         }
         
         return;
