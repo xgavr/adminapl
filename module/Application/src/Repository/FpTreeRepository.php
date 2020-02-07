@@ -478,7 +478,7 @@ class FpTreeRepository  extends EntityRepository{
         $queryBuilder->select('identity(ft.token) as tokenId, sum(ft.frequency) as frequencySum')
             ->from(FpTree::class, 'ft')
             ->groupBy('ft.token')
-            ->having('frequencySum > &1')
+            ->having('frequencySum > ?1')
             ->orderBy('frequencySum')
             ->setParameter('1', FpTree::MIN_FREQUENCY)    
             ;  
