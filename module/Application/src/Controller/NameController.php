@@ -1163,7 +1163,7 @@ class NameController extends AbstractActionController
                 ->updateFpGroups(); 
 
         return new JsonModel([
-            'result' => 'ok',
+            'result' => 'oke',
         ]);          
         
     }
