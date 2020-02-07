@@ -938,6 +938,7 @@ class NameManager
                 ->deleteGoodToken($token);
         $this->entityManager->getConnection()->delete('token_group_token', ['token_id' => $token->getId()]);
         $this->entityManager->getConnection()->delete('generic_group_token', ['token_id' => $token->getId()]);
+        $this->entityManager->getConnection()->delete('fp_group', ['token_id' => $token->getId()]);
         $this->entityManager->getConnection()->delete('token', ['id' => $token->getId()]);
     }    
     

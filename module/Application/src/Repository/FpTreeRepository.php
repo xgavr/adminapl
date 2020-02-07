@@ -10,6 +10,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Token;
 use Application\Entity\FpTree;
+use Application\Entity\FpGroup;
 use Application\Entity\ArticleTitle;
 use Application\Entity\ArticleToken;
 use Application\Entity\Article;
@@ -427,5 +428,38 @@ class FpTreeRepository  extends EntityRepository{
         }); 
         
         return $result;
+    }
+    
+    /**
+     * Обновить популярные наборы
+     * 
+     * @param Token $token
+     */
+    public function updateFpGroup($token)
+    {
+        $sets = $this->nominalFpTree($token);
+        
+        if (count($sets)){
+            foreach ($sets as $set){
+                $fpGroup = $this->getEntityManager()->getRepository(FpGroup::class)
+                        ->findOneByName($set['name']);
+                if ($fpGroup){
+                    if ($fpGroup->getFrequency() != $set['count']){
+                        $this->getEntityManager()->getConnection()->update('fp_group', [
+                            'frequency' => $set['count']], ['id' => $fpGroup->getId()]);                                           
+                    }    
+                } else {
+                    $this->getEntityManager()->getConnection()->insert('fp_group', 
+                            [
+                                'name' => $set['name'],
+                                'frequency' => $set['count'],
+                                'token_id' => $token->getId(),
+                            ]);                                           
+                    
+                }
+            }            
+        }
+        
+        return;
     }
 }

@@ -1146,8 +1146,8 @@ class NameController extends AbstractActionController
                     ->findOneBy(['id' => $tokenId]);
             
             $ways = $this->entityManager->getRepository(FpTree::class)
-                    ->nominalFpTree($token); 
-            var_dump($ways);
+                    ->updateFpGroup($token); 
+//            var_dump($ways);
         }
         
         return new JsonModel([
