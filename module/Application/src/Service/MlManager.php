@@ -448,7 +448,11 @@ class MlManager
             $fpGroupNames[] = $row['token']->getLemma();
         }
         
-        return array_slice($result, 0, 10, true);
+        $data = [
+            'tokens' => array_slice($result, 0, 10, true),
+        ];
+        
+        return $data; 
     }
            
     /**
