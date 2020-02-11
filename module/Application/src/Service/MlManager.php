@@ -430,7 +430,7 @@ class MlManager
                     if ($token->getFrequency() > Token::MIN_DF && 
                             in_array($token->getStatus(), [Token::IS_DICT, Token::IS_RU, Token::IS_RU_1])){
                             //&& $token->getFlag() == Token::WHITE_LIST){
-                        $pmi = $token->getFrequency();
+                        $pmi = $token->getIdf();
                         $result[] = ['pmi' => $pmi,  'token' => $token];
                     }
                 }    
