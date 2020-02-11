@@ -452,6 +452,7 @@ class MlManager
         while (true){
             if (count($fpGroupNames)){
                 $fpName = implode('_', $fpGroupNames);
+                var_dump($fpName);
                 $fpGroup = $this->entityManager->getRepository(FpGroup::class)
                         ->findOneBy(['name' => $fpName]);
                 if ($fpGroup){
