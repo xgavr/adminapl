@@ -443,6 +443,11 @@ class MlManager
             return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
         }); 
         
+        $fpGroupNames = [];
+        foreach ($result as $row){
+            $fpGroupNames[] = $row['token']->getLemma();
+        }
+        
         return array_slice($result, 0, 10, true);
     }
            
