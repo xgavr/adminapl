@@ -441,7 +441,7 @@ class MlManager
             if ($a['pmi'] == $b['pmi']) {
                 return 0;
             }
-            return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
+            return ($a['pmi'] < $b['pmi']) ? -1 : 1;            
         }); 
         
         $fpGroupNames = [];
