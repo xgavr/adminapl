@@ -448,6 +448,11 @@ class MlManager
         foreach ($result as $row){
             $fpGroupNames[] = $row['token']->getLemma();
         }
+
+        $data = [
+            'tokens' => array_slice($result, 0, 10, true),
+        ];        
+        
         
         while (true){
             if (count($fpGroupNames)){
@@ -464,10 +469,6 @@ class MlManager
             }
             array_pop($fpGroupNames);
         }
-        
-        $data = [
-            'tokens' => array_slice($result, 0, 10, true),
-        ];        
         
         return $data; 
     }
