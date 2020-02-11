@@ -430,8 +430,8 @@ class MlManager
                             in_array($token->getStatus(), [Token::IS_DICT, Token::IS_RU, Token::IS_RU_1])){
                             //&& $token->getFlag() == Token::WHITE_LIST){
                         $pmi = $token->getFrequency();
+                        $result[] = ['pmi' => $pmi,  'token' => $token];
                     }
-                    $result[] = ['pmi' => $pmi,  'token' => $token];
                 }    
             }
         }    
