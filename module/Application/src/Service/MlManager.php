@@ -26,6 +26,7 @@ use Application\Entity\Token;
 use Application\Entity\Bigram;
 use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
+use Application\Entity\FpGroup;
 
 
 use Application\Filter\TokenizerQualifier;
@@ -448,9 +449,24 @@ class MlManager
             $fpGroupNames[] = $row['token']->getLemma();
         }
         
+        while (true){
+            if (count($fpGroupNames)){
+                $fpName = implode('_', $fpGroupNames);
+                $fpGroup = $this->entityManager->getRepository(FpGroup::class)
+                        ->findOneBy(['name' => $fpName]);
+                if ($fpGroup){
+                    $data['fpGroup'] = $fpGroup;
+                    break;
+                }
+            } else {
+                break;
+            }
+            array_pop($fpGroupNames);
+        }
+        
         $data = [
             'tokens' => array_slice($result, 0, 10, true),
-        ];
+        ];        
         
         return $data; 
     }
