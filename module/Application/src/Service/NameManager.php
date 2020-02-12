@@ -768,19 +768,22 @@ class NameManager
     {
         $article = $rawprice->getCode();
         
-        if ($article && $updateArticleToken){
-            $this->entityManager->getRepository(Article::class)
-                    ->deleteArticleToken($article->getId());
-            
-            $this->entityManager->getRepository(Article::class)
-                    ->deleteArticleTitle($article->getId());
-            
-            $this->entityManager->getRepository(Article::class)
-                    ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $rawprice->getTitleUp(), 'title_md5' => $rawprice->getTitleMd5()]);
-        }    
-        
         $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
                 ->findOneBy(['article' => $article->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
+        
+        if ($article && $updateArticleToken){
+            $this->entityManager->getRepository(Article::class)
+                    ->deleteArticleToken($article->getId(), $articleTitle);
+            
+            if (!$articleTitle){        
+                $this->entityManager->getRepository(Article::class)
+                        ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $rawprice->getTitleUp(), 'title_md5' => $rawprice->getTitleMd5()]);
+                
+                $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
+                        ->findOneBy(['article' => $article->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
+            }    
+        }    
+        
         
         if ($articleTitle){
                         
@@ -804,7 +807,11 @@ class NameManager
                         }    
 
                         $articleToken = $this->entityManager->getRepository(ArticleToken::class)
-                                ->findOneBy(['article' => $article->getId(), 'lemma' => $word]);
+                                ->findOneBy([
+                                    'article' => $article->getId(), 
+                                    'articleTitle' => $articleTitle->getId(),
+                                    'lemma' => $word,
+                                        ]);
 
                         if (!$articleToken){
                             $this->entityManager->getRepository(Token::class)
@@ -895,8 +902,6 @@ class NameManager
                             ->findOneBy(['article' => $article->getId(), 'titleMd5' => $titleMd5]);
 
                     if ($articleTitle == null){
-                        $this->entityManager->getRepository(Article::class)
-                                ->deleteArticleTitle($article->getId());
                         
                         $this->entityManager->getRepository(Article::class)
                                 ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $title, 'title_md5' => $titleMd5]);

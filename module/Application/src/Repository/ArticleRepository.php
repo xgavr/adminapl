@@ -176,10 +176,11 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление токенов, свзанных с артикулом
-     * @param Application\Entity\Article|integer $article 
+     * @param \Application\Entity\Article|integer $article
+     * @param \Application\Entity\ArticleTitle $articleTitle 
      * @return integer
      */
-    public function deleteArticleToken($article)
+    public function deleteArticleToken($article, $articleTitle = null)
     {
         if (is_numeric($article)){
             $articleId = $article;
@@ -187,7 +188,15 @@ class ArticleRepository  extends EntityRepository
             $articleId = $article->getId();
         }
 
-        $deleted = $this->getEntityManager()->getConnection()->delete('article_token', ['article_id' => $articleId]);
+        if ($articleTitle){
+            $deleted = $this->getEntityManager()->getConnection()->delete('article_token', 
+                    [
+                        'article_id' => $articleId,
+                        'title_id' => $articleTitle->getId(),
+                    ]);            
+        } else {
+            $deleted = $this->getEntityManager()->getConnection()->delete('article_token', ['article_id' => $articleId]);
+        }    
         return $deleted;
     }    
 
