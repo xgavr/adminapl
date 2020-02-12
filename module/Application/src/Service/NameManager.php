@@ -770,7 +770,7 @@ class NameManager
         
         $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
                 ->findOneBy(['article' => $article->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
-        
+        var_dump($rawprice->getTitleMd5());
         if ($article && $updateArticleToken){
             $this->entityManager->getRepository(Article::class)
                     ->deleteArticleToken($article->getId(), $articleTitle);
