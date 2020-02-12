@@ -430,7 +430,7 @@ class MlManager
                     if ($token->getFrequency() > Token::MIN_DF && 
                             in_array($token->getStatus(), [Token::IS_DICT, Token::IS_RU, Token::IS_RU_1])){
                             //&& $token->getFlag() == Token::WHITE_LIST){
-                        $pmi = $token->getIdf();
+                        $pmi = $token->getFrequency();
                         $result[] = ['pmi' => $pmi,  'token' => $token];
                     }
                 }    
@@ -441,7 +441,7 @@ class MlManager
             if ($a['pmi'] == $b['pmi']) {
                 return 0;
             }
-            return ($a['pmi'] < $b['pmi']) ? -1 : 1;            
+            return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
         }); 
         
         $fpGroupNames = [];
@@ -453,22 +453,6 @@ class MlManager
             'tokens' => array_slice($result, 0, 10, true),
         ];        
         
-        
-        while (true){
-            if (count($fpGroupNames)){
-                $fpName = implode('_', $fpGroupNames);
-//                var_dump($fpName);
-                $fpGroup = $this->entityManager->getRepository(FpGroup::class)
-                        ->findOneBy(['name' => $fpName]);
-                if ($fpGroup){
-                    $data['fpGroup'] = $fpGroup;
-                    break;
-                }
-            } else {
-                break;
-            }
-            array_pop($fpGroupNames);
-        }
         
         return $data; 
     }
