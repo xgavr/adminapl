@@ -27,6 +27,8 @@ use Application\Entity\Bigram;
 use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\FpGroup;
+use Application\Entity\ArticleTitle;
+use Application\Entity\ArticleToken;
 
 
 use Application\Filter\TokenizerQualifier;
@@ -417,14 +419,21 @@ class MlManager
         }
         
         $result = [];
-        $lemms = $this->nameManager->lemmsFromRawprice($rawprice);
-        $preWord = $preToken = $token = null;
-        $k = 0;
-        foreach ($lemms as $k => $words){
-            foreach ($words as $key => $word){
+//        $lemms = $this->nameManager->lemmsFromRawprice($rawprice);
+        $titleMd5 = $rawprice->getTitleMd5();
+        $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
+                ->findOneBy(['article' => $rawprice->getCode()->getId(), 'titleMd5' => $titleMd5]);
+        
+        if ($articleTitle){
+            $articleTokens = $this->entityManager->getRepository(ArticleToken::class)
+                    ->findBy(['articleTitle' => $articleTitle->getId()]);
+
+
+            $preWord = $preToken = $token = null;
+            $k = 0;
+            foreach ($articleTokens as $articleToken){
                 $token = $this->entityManager->getRepository(Token::class)
-                        ->findOneByLemma($word);
-                
+                        ->findOneByLemma($articleToken->getLemma());
                 if ($token){
                     $pmi = 0;
                     if ($token->getFrequency() > Token::MIN_DF && 
@@ -434,21 +443,20 @@ class MlManager
                         $result[] = ['pmi' => $pmi,  'token' => $token];
                     }
                 }    
+            }    
+
+            usort($result, function($a, $b){
+                if ($a['pmi'] == $b['pmi']) {
+                    return 0;
+                }
+                return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
+            }); 
+
+            $fpGroupNames = [];
+            foreach ($result as $row){
+                $fpGroupNames[] = $row['token']->getLemma();
             }
         }    
-        
-        usort($result, function($a, $b){
-            if ($a['pmi'] == $b['pmi']) {
-                return 0;
-            }
-            return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
-        }); 
-        
-        $fpGroupNames = [];
-        foreach ($result as $row){
-            $fpGroupNames[] = $row['token']->getLemma();
-        }
-
         $data = [
             'tokens' => array_slice($result, 0, 10, true),
         ];        
