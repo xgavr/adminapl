@@ -13,6 +13,7 @@ use Application\Entity\Goods;
 use Application\Entity\Rawprice;
 use Application\Entity\OemRaw;
 use Application\Filter\ArticleCode;
+use Application\Entity\ArticleTitle;
 
 
 

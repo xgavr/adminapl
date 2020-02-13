@@ -48,15 +48,13 @@ $preGood = null;
                     <tr>
                         <td></td>
                         <td colspan="10">
-                            <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $title->getArticle()->getId()])?>" target="_blank">
-                                <small><?= $title->getTitle();?></small>
-                            </a>
+                            <small><?= $title->getTitle();?></small>
                         </td>
                     </tr>                    
                     <?php $tokens = $this->mlManager->rawpriceToMlTitle($title)?>
                     <tr>
                         <td>Б</td>
-                        <?php foreach ($tokens['tokens'] as $token):?>
+                        <?php foreach ($tokens as $token):?>
                             <td>
                                 <?php if (is_array($token)):?>
                                     <?php if ($token['token']):?>
@@ -68,7 +66,7 @@ $preGood = null;
                     </tr>
                     <tr>
                         <td>Pmi</td>
-                        <?php foreach ($tokens['tokens'] as $token):?>
+                        <?php foreach ($tokens as $token):?>
                             <td>
                                 <?php if (is_array($token)):?>
                                     <?php if ($token['token']):?>

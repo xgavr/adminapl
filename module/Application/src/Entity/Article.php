@@ -103,7 +103,7 @@ class Article {
     private $articleBigrams;
 
     /**
-    * @ORM\OneToMany(targetEntity="\Application\Entity\ArticleTitle", mappedBy="article")
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleTitle", mappedBy="article")
     * @ORM\JoinColumn(name="id", referencedColumnName="article_id")
      */
     private $articleTitles;
