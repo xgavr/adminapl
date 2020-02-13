@@ -399,15 +399,32 @@ class MlManager
     }
     
     /**
-     * Заголовок товара разбить на значимые токены 
+     * Получить наименования товара из строки прайса
      * 
      * @param Rawprice $rawprice
+     * @return type
+     */
+    public function titlesFromGoodRawprice($rawprice)
+    {
+        $good = $rawprice->getGood();
+        if ($good){
+            return $this->entityManager->getRepository(Goods::class)
+                ->articleTitles($good);
+        } 
+       
+       return;
+    }
+
+    /**
+     * Заголовок товара разбить на значимые токены 
+     * 
+     * @param ArticleTtile $articleTitle
      * @param integer $gc
      * @param integer $tgc
      * 
      * @return array
      */
-    public function titleToToken($rawprice, $gc = null, $tgc = null)
+    public function titleToToken($articleTitle, $gc = null, $tgc = null)
     {
         if (!$gc){
             $gc = $this->entityManager->getRepository(Goods::class)
@@ -419,45 +436,38 @@ class MlManager
         }
         
         $result = [];
-
-//        $lemms = $this->nameManager->lemmsFromRawprice($rawprice);
-        $titleMd5 = $rawprice->getTitleMd5();
-        $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
-                ->findOneBy(['article' => $rawprice->getCode()->getId(), 'titleMd5' => $titleMd5]);
         
-        if ($articleTitle){
-            $articleTokens = $this->entityManager->getRepository(ArticleToken::class)
-                    ->findBy(['articleTitle' => $articleTitle->getId()]);
+        $articleTokens = $this->entityManager->getRepository(ArticleToken::class)
+                ->findBy(['articleTitle' => $articleTitle->getId()]);
 
 
-            $preWord = $preToken = $token = null;
-            $k = 0;
-            foreach ($articleTokens as $articleToken){
-                $token = $this->entityManager->getRepository(Token::class)
-                        ->findOneByLemma($articleToken->getLemma());
-                if ($token){
-                    $pmi = 0;
-                    if ($token->getFrequency() > Token::MIN_DF && 
-                            in_array($token->getStatus(), [Token::IS_DICT, Token::IS_RU, Token::IS_RU_1])){
-                            //&& $token->getFlag() == Token::WHITE_LIST){
-                        $pmi = $token->getFrequency();
-                        $result[] = ['pmi' => $pmi,  'token' => $token];
-                    }
-                }    
-            }    
-
-            usort($result, function($a, $b){
-                if ($a['pmi'] == $b['pmi']) {
-                    return 0;
+        $preWord = $preToken = $token = null;
+        $k = 0;
+        foreach ($articleTokens as $articleToken){
+            $token = $this->entityManager->getRepository(Token::class)
+                    ->findOneByLemma($articleToken->getLemma());
+            if ($token){
+                $pmi = 0;
+                if ($token->getFrequency() > Token::MIN_DF && 
+                        in_array($token->getStatus(), [Token::IS_DICT, Token::IS_RU, Token::IS_RU_1])){
+                        //&& $token->getFlag() == Token::WHITE_LIST){
+                    $pmi = $token->getFrequency();
+                    $result[] = ['pmi' => $pmi,  'token' => $token];
                 }
-                return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
-            }); 
+            }    
+        }    
 
-            $fpGroupNames = [];
-            foreach ($result as $row){
-                $fpGroupNames[] = $row['token']->getLemma();
+        usort($result, function($a, $b){
+            if ($a['pmi'] == $b['pmi']) {
+                return 0;
             }
-        }     
+            return ($a['pmi'] > $b['pmi']) ? -1 : 1;            
+        }); 
+
+        $fpGroupNames = [];
+        foreach ($result as $row){
+            $fpGroupNames[] = $row['token']->getLemma();
+        }
         
         return $result; 
     }
@@ -465,12 +475,12 @@ class MlManager
     /**
      * Разложить наименование из строки прайса
      * 
-     * @param \Application\Entity\Rawprice $rawprice
+     * @param ArticleTitle $articleTitle
      * @return array
      */
-    public function rawpriceToMlTitle($rawprice)
+    public function rawpriceToMlTitle($articleTitle)
     {
-        $result = $this->titleToToken($rawprice, 1070000, 40000);
+        $result = $this->titleToToken($articleTitle, 1070000, 40000);
         $empt = array_fill(200, 10 - count($result), false);
 //        var_dump($empt);
         return array_merge($result, $empt);

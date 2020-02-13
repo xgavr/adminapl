@@ -443,6 +443,29 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Наименования этого товара
+     * 
+     * @param Goods $good
+     * 
+     * @return object
+     */
+    public function articleTitles($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('at')
+            ->from(Goods::class, 'g')
+            ->join('g.articles', 'a')
+            ->join('a.articleTitles', 'at')    
+            ->where('g.id = ?1')
+            ->setParameter('1', $good->getId()) 
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();    
+    }
+    
+    /**
      * Выборка из прайсов по id товара и id поставщика 
      * @param array $params
      * @return object
