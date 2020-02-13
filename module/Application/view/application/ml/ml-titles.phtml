@@ -55,16 +55,6 @@ $preGood = null;
                     </tr>                    
                     <?php $tokens = $this->mlManager->rawpriceToMlTitle($rawprice)?>
                     <tr>
-                        <td></td>
-                        <td colspan="10">
-                            <?php if (isset($tokens['fpGroup'])):?>
-                                <small><b><?= $tokens['fpGroup']->getName()?></b></small>
-                            <?php else:?>
-                                <small><i>группа не выбрана</i></small>
-                            <?php endif;?>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Б</td>
                         <?php foreach ($tokens['tokens'] as $token):?>
                             <td>

@@ -419,6 +419,7 @@ class MlManager
         }
         
         $result = [];
+
 //        $lemms = $this->nameManager->lemmsFromRawprice($rawprice);
         $titleMd5 = $rawprice->getTitleMd5();
         $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
@@ -456,13 +457,9 @@ class MlManager
             foreach ($result as $row){
                 $fpGroupNames[] = $row['token']->getLemma();
             }
-        }    
-        $data = [
-            'tokens' => array_slice($result, 0, 10, true),
-        ];        
+        }     
         
-        
-        return $data; 
+        return $result; 
     }
            
     /**
