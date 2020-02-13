@@ -27,7 +27,7 @@ $preGood = null;
             </tr>
             <?php foreach ($mlTitles as $mlTitle):?>
                 <?php
-                    $titles = $mlManager->rawpricesFromGoodRawprice($mlTitle->getRawprice());
+                    $titles = $mlManager->titlesFromGoodRawprice($mlTitle->getRawprice());
                     if (!$titles) continue;
                     $good = $mlTitle->getRawprice()->getGood();
                 ?>
@@ -48,7 +48,9 @@ $preGood = null;
                     <tr>
                         <td></td>
                         <td colspan="10">
-                            <small><?= $title->getTitle();?></small>
+                            <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $title->getArticle()->getId()])?>" target="_blank">
+                                <small><?= $title->getTitle();?></small>
+                            </a>
                         </td>
                     </tr>                    
                     <?php $tokens = $this->mlManager->rawpriceToMlTitle($title)?>

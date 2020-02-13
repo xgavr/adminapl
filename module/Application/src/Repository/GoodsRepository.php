@@ -458,7 +458,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('at')
             ->from(Goods::class, 'g')
             ->join('g.articles', 'a')
-            ->join('a.articleTitles', 'at')    
+            ->join(ArticleTitle::class, 'at', 'WITH', 'at.article = a.id')    
             ->where('g.id = ?1')
             ->setParameter('1', $good->getId()) 
                 ;
