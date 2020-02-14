@@ -756,7 +756,28 @@ class NameManager
         
         return $this->lemmsFromStr($titleStr);
     }
-            
+        
+
+    /**
+     * Обновить наименование группы токенов
+     * 
+     * @param ArticleTitle $articleTitle
+     */
+    public function updateTokenGroupArticleTitle($articleTitle)
+    {
+        $tokenGroupTitle = $this->entityManager->getRepository(Token::class)
+                ->tokenGroupArticleTitle($articleTitle);
+        $tokenGroupTitleMd5 = md5(mb_strtoupper(trim($tokenGroupTitle), 'UTF-8'));
+        
+        if ($tokenGroupTitleMd5 != $articleTitle->getTokenGroupTitleMd5()){
+            $this->entityManager->getConnection()->update('article_title', [
+                'token_group_title' => $tokenGroupTitle,
+                'token_group_title_md5' => $tokenGroupTitleMd5,
+            ], ['id' => $articleTitle->getId()]);                                   
+        }
+        
+        return;
+    }
     
     /**
      * Добавление нового слова из прайса
@@ -842,6 +863,8 @@ class NameManager
                 $this->entityManager->getRepository(Bigram::class)
                         ->insertArticleBigram($article, $bigram);
             }
+            
+            $this->updateTokenGroupArticleTitle($articleTitle);
         }
         
         $this->entityManager->getRepository(Rawprice::class)
@@ -909,6 +932,8 @@ class NameManager
                         $this->addNewTokenFromRawprice($rawprice);
                         
                     } else {
+                        $this->updateTokenGroupArticleTitle($articleTitle);
+                        
                         $this->entityManager->getRepository(Rawprice::class)
                                 ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);                        
                     }   

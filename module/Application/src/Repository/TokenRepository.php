@@ -1107,4 +1107,39 @@ class TokenRepository  extends EntityRepository
                 ;
         return $queryBuilder->getQuery()->getResult();
     }
+    
+    /**
+     * Токен наименование группы
+     * 
+     * @param ArticleTitle $articleTitle
+     */
+    public function tokenGroupArticleTitle($articleTitle)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('at.id', 'at.lemma')
+                ->from(ArticleToken::class, 'at')
+                ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')
+                ->where('at.articleTitle = ?1')
+                ->andWhere('t.frequency > ?2')
+                ->andWhere('t.status in (?3, ?4, ?5)')
+                ->andWhere('t.flag = ?6')
+                ->setParameter('1', $articleTitle->getId())
+                ->setParameter('2', Token::MIN_DF)
+                ->setParameter('3', Token::IS_DICT)
+                ->setParameter('4', Token::IS_RU_1)
+                ->setParameter('5', Token::IS_RU)
+                ->setParameter('6', Token::WHITE_LIST)
+                ->orderBy('t.frequency', 'DESC')
+                ->setMaxResults(Token::MAX_TOKENS_FOR_GROUP)
+                ;
+        $rows = $queryBuilder->getQuery()->getResult();         
+        $result = [];
+        foreach ($rows as $row){
+            $result[] = $row['lemma'];
+        }
+        
+        return implode('_', $result);
+    }    
 }

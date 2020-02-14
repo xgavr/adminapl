@@ -117,6 +117,7 @@ return [
             'orm_default' => [
                 'string_functions' => [
                     'match' => 'DoctrineExtensions\Query\Mysql\MatchAgainst',
+                    'group_concat' => 'DoctrineExtensions\Query\Mysql\GroupConcat',
                 ],
                 'numeric_functions' => [
                     'floor' => 'DoctrineExtensions\Query\Mysql\Floor',

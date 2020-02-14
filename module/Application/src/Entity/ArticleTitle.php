@@ -35,6 +35,16 @@ class ArticleTitle {
     protected $titleMd5;
     
     /**
+     * @ORM\Column(name="token_group_title")  
+     */
+    protected $tokenGroupTitle;
+
+    /**
+     * @ORM\Column(name="token_group_title_md5")  
+     */
+    protected $tokenGroupTitleMd5;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Article", inversedBy="articleTitles") 
      * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
      */
@@ -46,6 +56,11 @@ class ArticleTitle {
      */
     protected $fpTree;   
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\TokenGroup", inversedBy="articleTitles") 
+     * @ORM\JoinColumn(name="token_group_id", referencedColumnName="id")
+     */
+    protected $tokenGroup;   
 
     public function getId() 
     {
@@ -71,6 +86,22 @@ class ArticleTitle {
     public function getTitleMd5()
     {
         return $this->titleMd5;
+    }
+    
+    public function setTokenGroupTitle($tokenGroupTitle)
+    {
+        $this->tokenGroupTitle = mb_strtoupper(trim($tokenGroupTitle), 'UTF-8');
+        $this->tokenGroupTitleMd5 = md5($this->tokenGroupTitle);
+    }
+    
+    public function getTokenGroupTitle()
+    {
+        return $this->tokenGroupTitle;
+    }
+
+    public function getTokenGroupTitleMd5()
+    {
+        return $this->tokenGroupTitleMd5;
     }
     
     /**
@@ -107,6 +138,24 @@ class ArticleTitle {
     public function setFpTree($fpTree) 
     {
         $this->fpTree = $fpTree;
+    }           
+    
+    /**
+     * Возвращает связанный tokenGroup.
+     * @return \Application\Entity\tokenGroup
+     */    
+    public function getTokenGroup() 
+    {
+        return $this->tokenGroup;
+    }
+
+    /**
+     * Задает связанный tokenGroup.
+     * @param \Application\Entity\tokenGroup $tokenGroup
+     */    
+    public function setTokenGroup($tokenGroup) 
+    {
+        $this->tokenGroup = $tokenGroup;
     }           
     
 }

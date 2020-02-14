@@ -414,6 +414,17 @@ class MlManager
        
        return;
     }
+    
+    /**
+     * Наименование группы токенов
+     * 
+     * @param ArticleTitle $articleTitle
+     */
+    public function tokenGroupArticleTitle($articleTitle)
+    {
+        return $this->entityManager->getRepository(Token::class)
+                ->tokenGroupArticleTitle($articleTitle);
+    }
 
     /**
      * Заголовок товара разбить на значимые токены 
