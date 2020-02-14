@@ -48,15 +48,12 @@ $preGood = null;
                     <tr>
                         <td></td>
                         <td colspan="10">
-                            <?= $mlManager->tokenGroupArticleTitle($title);?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td colspan="10">
                             <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $title->getArticle()->getId()])?>" target="_blank">
                                 <small><?= $title->getTitle();?></small>
                             </a>
+                            <div>
+                                <small><?= $title->getGroupTokenTitle();?></small>
+                            </div>
                         </td>
                     </tr>                    
                     <?php $tokens = $this->mlManager->rawpriceToMlTitle($title)?>
