@@ -1215,6 +1215,7 @@ class NameManager
     {
         $groupTitle = $this->entityManager->getRepository(Token::class)
                 ->choiceGroupTitle($good);
+        $tokenGroup = null;
         
         if (is_array($groupTitle)){
             if ($groupTitle['titleCount'] > 1 && $groupTitle['tokenGroupTitle']){

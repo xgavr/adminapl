@@ -425,7 +425,7 @@ class MlManager
         $titles = $this->entityManager->getRepository(Token::class)
                 ->tokenGroupArticleTitle($articleTitle);
         if (is_array($titles)){
-            return $titles[0];
+            return array_shift($titles);
         }
         
         return;
