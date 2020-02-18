@@ -48,15 +48,31 @@ $preGood = null;
                         <th colspan="">
                             
                         </th>
-                        <th colspan="10">
-                            <i>
+                        <th colspan="10">                            
+                            <small><i>
+                                <?php if ($good->getTokenGroup()):?>
+                                    <a href="<?= $this->url('name', ['action' => 'view-token-group', 'id' => $good->getTokenGroeup()->getId()])?>" target="_blank">
+                                        <?= $good->getTokenGroeup()->getname()?>; <?= $good->getTokenGroeup()->getLemms();?>
+                                    </a>                            
+                                <?php else:?>
+                                    Группа не назначена
+                                <?php endif;?>
+                                </i></small>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="">
+                            
+                        </td>
+                        <td colspan="10">                            
+                            <small><i>
                                 <?php if (is_array($groupTitle)):?>
                                     <?= $groupTitle['tokenGroupTitle']; ?> (<?= $groupTitle['titleCount']; ?>)
                                 <?php else:?>
                                     Группа не выбрана
                                 <?php endif;?>
-                            </i>
-                        </th>
+                                </i></small>
+                        </td>
                     </tr>
                 <?php endif;?>
                 <?php foreach ($titles as $title): ?>
