@@ -422,8 +422,13 @@ class MlManager
      */
     public function tokenGroupArticleTitle($articleTitle)
     {
-        return $this->entityManager->getRepository(Token::class)
+        $titles = $this->entityManager->getRepository(Token::class)
                 ->tokenGroupArticleTitle($articleTitle);
+        if (is_array($titles)){
+            return $titles[0];
+        }
+        
+        return;
     }
 
     /**

@@ -1164,10 +1164,10 @@ class TokenRepository  extends EntityRepository
             ->orderBy('titleCount', 'DESC')    
             ->where('g.id = ?1')
             ->setParameter('1', $good->getId())
-            ->setMaxResults(1)    
+            //->setMaxResults(1)    
                 ;
         
-        return $queryBuilder->getQuery()->getOneOrNullResult();    
+        return $queryBuilder->getQuery()->getResult();    
         
     }
 }
