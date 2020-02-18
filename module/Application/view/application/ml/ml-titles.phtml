@@ -51,8 +51,8 @@ $preGood = null;
                         <th colspan="10">                            
                             <small><i>
                                 <?php if ($good->getTokenGroup()):?>
-                                    <a href="<?= $this->url('name', ['action' => 'view-token-group', 'id' => $good->getTokenGroeup()->getId()])?>" target="_blank">
-                                        <?= $good->getTokenGroeup()->getname()?>; <?= $good->getTokenGroeup()->getLemms();?>
+                                    <a href="<?= $this->url('name', ['action' => 'view-token-group', 'id' => $good->getTokenGroup()->getId()])?>" target="_blank">
+                                        <?= $good->getTokenGroup()->getname()?>; <?= $good->getTokenGroup()->getLemms();?>
                                     </a>                            
                                 <?php else:?>
                                     Группа не назначена
