@@ -1213,11 +1213,11 @@ class NameManager
      */
     public function addGroupTokenFromGood($good)
     {
-        $groupTitle = $this->entityManager->getRepository(Token::class)
+        $groupTitles = $this->entityManager->getRepository(Token::class)
                 ->choiceGroupTitle($good);
         $tokenGroup = null;
         
-        if (is_array($groupTitle)){
+        if (is_array($groupTitles)){
             if ($groupTitle['titleCount'] > 1 && $groupTitle['tokenGroupTitle']){
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                         ->findOneByIds($groupTitle['tokenGroupTitleMd5']); 

@@ -437,7 +437,7 @@ class MlManager
         $titles = $this->entityManager->getRepository(Token::class)
                 ->choiceGroupTitle($good);
         if (is_array($titles)){
-            return array_shift($titles);
+            return $titles[0];
         }
         
         return;
