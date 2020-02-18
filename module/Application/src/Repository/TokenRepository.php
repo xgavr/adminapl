@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Token;
 use Application\Entity\Article;
 use Application\Entity\ArticleToken;
+use Application\Entity\ArticleTitle;
 use Application\Entity\GoodToken;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
@@ -1141,5 +1142,32 @@ class TokenRepository  extends EntityRepository
         }
         
         return implode('_', $result);
-    }    
+    }   
+    
+    /**
+     * Выбрать наименование для группы токенов
+     * 
+     * @param Goods $good
+     * @return type
+     */
+    public function choiceGroupTitle($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('max(at.tokenGroupTitle) as tokenGroupTitle, at.tokenGroupTitleMd5, count(at.id) as titleCount')
+            ->from(Goods::class, 'g')
+            ->join('g.articles', 'a')
+            ->join(ArticleTitle::class, 'at', 'WITH', 'at.article = a.id')
+            ->groupBy('at.tokenGroupTitleMd5')
+            ->having('titleCount > 1')  
+            ->orderBy('titleCount', 'DESC')    
+            ->where('g.id = ?1')
+            ->setParameter('1', $good->getId())
+            ->setMaxResults(1)    
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();    
+        
+    }
 }

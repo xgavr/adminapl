@@ -427,6 +427,18 @@ class MlManager
     }
 
     /**
+     * Лучшее наименование группы токенов товара
+     * 
+     * @param Goods $good
+     * @return arrray
+     */
+    public function choiceTokenGroupTitle($good)
+    {
+        return $this->entityManager->getRepository(Token::class)
+                ->choiceGroupTitle($good);
+    }
+
+    /**
      * Заголовок товара разбить на значимые токены 
      * 
      * @param ArticleTtile $articleTitle

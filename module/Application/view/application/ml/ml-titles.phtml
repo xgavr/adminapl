@@ -30,6 +30,7 @@ $preGood = null;
                     $titles = $mlManager->titlesFromGoodRawprice($mlTitle->getRawprice());
                     if (!$titles) continue;
                     $good = $mlTitle->getRawprice()->getGood();
+                    $groupTitle = $mlManager->choiceTokenGroupTitle($good);
                 ?>
                 <?php if ($preGood != $good): ?>
                     <?php $preGood = $good?>
@@ -41,6 +42,20 @@ $preGood = null;
                             <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()])?>" target="_blank">
                                 <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
                             </a>                            
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="">
+                            
+                        </th>
+                        <th colspan="10">
+                            <i>
+                                <?php if (is_array($groupTitle)):?>
+                                    <?= $groupTitle['']; ?>
+                                <?php else:?>
+                                    Группа не выбрана
+                                <?php endif;?>
+                            </i>
                         </th>
                     </tr>
                 <?php endif;?>
