@@ -422,13 +422,8 @@ class MlManager
      */
     public function tokenGroupArticleTitle($articleTitle)
     {
-        $titles = $this->entityManager->getRepository(Token::class)
+        return $this->entityManager->getRepository(Token::class)
                 ->tokenGroupArticleTitle($articleTitle);
-        if (is_array($titles)){
-            return array_shift($titles);
-        }
-        
-        return;
     }
 
     /**
@@ -439,8 +434,13 @@ class MlManager
      */
     public function choiceTokenGroupTitle($good)
     {
-        return $this->entityManager->getRepository(Token::class)
+        $titles = $this->entityManager->getRepository(Token::class)
                 ->choiceGroupTitle($good);
+        if (is_array($titles)){
+            return array_shift($titles);
+        }
+        
+        return;
     }
 
     /**
