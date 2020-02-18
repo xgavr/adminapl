@@ -473,7 +473,7 @@ class GoodsRepository extends EntityRepository
      * @param Goods $good
      * @param integer $tokenGroupId
      */
-    public function updateTokenGroupGoodArticleTitle($good, $tokenGroupId)
+    public function updateTokenGroupGoodArticleTitle($good, $tokenGroupId = 0)
     {
         $titles = $this->articleTitles($good);
         
