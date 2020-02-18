@@ -1240,8 +1240,8 @@ class NameManager
 
         $this->entityManager->getRepository(Goods::class)
                 ->updateGoodId($good->getId(), ['token_group_id' => $updGroupId]);                                
-            $this->entityManager->getRepository(Goods::class)
-                    ->updateTokenGroupGoodArticleTitle($good);
+        $this->entityManager->getRepository(Goods::class)
+                ->updateTokenGroupGoodArticleTitle($good, $updGroupId);
 
         return;
     }
