@@ -1217,10 +1217,10 @@ class NameManager
                 ->choiceGroupTitle($good);
         
         if (is_array($groupTitle)){
-            if ($groupTitle['titleCount'] >= 1 && $groupTitle['tokenGroupTitle']){
+            if ($groupTitle['titleCount'] > 1 && $groupTitle['tokenGroupTitle']){
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                         ->findOneByIds($groupTitle['tokenGroupTitleMd5']); 
-                if (!$tokenGroup && $groupTitle['titleCount'] > 1){
+                if (!$tokenGroup){
                     $this->entityManager->getRepository(TokenGroup::class)
                             ->insertTokenGroup([
                                 'name' => '',
