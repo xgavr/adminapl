@@ -1217,7 +1217,7 @@ class NameManager
                 ->choiceGroupTitle($good);
         
         if (is_array($groupTitle)){
-            if ($groupTitle['titleCount'] > 1){
+            if ($groupTitle['titleCount'] > 1 && $groupTitle['tokenGroupTitle']){
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                         ->findOneByIds($groupTitle['tokenGroupTitleMd5']); 
                 if (!$tokenGroup){
