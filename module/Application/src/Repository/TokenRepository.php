@@ -1160,7 +1160,7 @@ class TokenRepository  extends EntityRepository
             ->join('g.articles', 'a')
             ->join(ArticleTitle::class, 'at', 'WITH', 'at.article = a.id')
             ->groupBy('at.tokenGroupTitleMd5')
-            ->having('titleCount > 1')  
+//            ->having('titleCount > 1')  
             ->orderBy('titleCount', 'DESC')    
             ->where('g.id = ?1')
             ->setParameter('1', $good->getId())
