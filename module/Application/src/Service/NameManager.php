@@ -1208,73 +1208,41 @@ class NameManager
     /**
      * Добавить группу наименований по токенам товара
      * 
-     * @param Application\Entity\Goods $good
-     * @param integer $gc
+     * @param Goods $good
      * 
-     * @return Application\Entity\TokenGroup Description
      */
-    public function addGroupTokenFromGood($good, $gc = null)
+    public function addGroupTokenFromGood($good)
     {
-        if (!$gc){
-            $gc = $this->entityManager->getRepository(Goods::class)
-                    ->count([]);
-        }
+        $groupTitle = $this->entityManager->getRepository(Token::class)
+                ->choiceGroupTitle($good);
         
-        $dictTokens = $this->goodSignTokens($good, $gc);
-        
-//        var_dump(count($dictTokens)); exit;
-        if ($dictTokens){
-            if (isset($dictTokens['tokens'])){
-                if (count($dictTokens['tokens']) > 0){
-        
-                    $tokenIds = [];
-                    $tokenLemms = [];
-                    foreach ($dictTokens['tokens'] as $token){
-                        $tokenIds[] = $token->getId();
-                        $tokenLemms[] = $token->getLemma();
-                    }
-
-                    $idsFilter = new IdsFormat();
-                    $tokenIdsStr = md5($idsFilter->filter($tokenIds));
-
-                    $lemmsFilter = new IdsFormat(['separator' => ' ']);
-                    $tokenLemmsStr = $lemmsFilter->filter($tokenLemms);
-
+        if (is_array($groupTitle)){
+            if ($groupTitle['titleCount'] > 1){
+                $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findOneByIds($groupTitle['tokenGroupTitleMd5']); 
+                if (!$tokenGroup){
+                    $this->entityManager->getRepository(TokenGroup::class)
+                            ->insertTokenGroup([
+                                'name' => '',
+                                'lemms' => $groupTitle['tokenGroupTitle'],
+                                'ids' => $groupTitle['tokenGroupTitleMd5'],
+                                'good_count' => 0,
+                            ]);
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                        ->findOneByIds($tokenIdsStr);
-
-                    if (!$tokenGroup){
-                        $this->entityManager->getRepository(TokenGroup::class)
-                                ->insertTokenGroup([
-                                    'name' => '',
-                                    'lemms' => $tokenLemmsStr,
-                                    'ids' => $tokenIdsStr,
-                                    'good_count' => 0,
-                                ]);
-
-                        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                            ->findOneByIds($tokenIdsStr);
-
-                        foreach($dictTokens['tokens'] as $token){
-                            $this->entityManager->getRepository(TokenGroup::class)
-                                    ->insertTokenGroupToken([
-                                        'token_group_id' => $tokenGroup->getId(),
-                                        'token_id' => $token->getId(),
-                                    ]);
-                        }                
-                    }    
-
-                    if ($tokenGroup){
-                        $this->entityManager->getRepository(Goods::class)
-                                ->updateGoodId($good->getId(), ['token_group_id' => $tokenGroup->getId()]);
-                    }    
-
-                    return $tokenGroup;
-                }
+                            ->findOneByIds($groupTitle['tokenGroupTitleMd5']); 
+                }    
             }
         }    
+        $updGroupId = null;
+        if ($tokenGroup){
+            $updGroupId = $tokenGroup->getId();
+        }    
+
         $this->entityManager->getRepository(Goods::class)
-                ->updateGoodId($good->getId(), ['token_group_id' => null]);
+                ->updateGoodId($good->getId(), ['token_group_id' => $updGroupId]);                                
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateTokenGroupGoodArticleTitle($good);
+
         return;
     }
     
@@ -1289,9 +1257,6 @@ class NameManager
         set_time_limit(900);
         $startTime = time();
         
-        $gc = $this->entityManager->getRepository(Goods::class)
-                ->count([]);
-        
         $rawpricesQuery = $this->entityManager->getRepository(Token::class)
                 ->findTokenGroupsForAccembly($raw);
         $iterable = $rawpricesQuery->iterate();
@@ -1300,32 +1265,12 @@ class NameManager
             foreach ($row as $rawprice){
                 try {
                     $good = $rawprice->getGood();           
-                    $groupTokenUpdateFlag = $good->getGroupTokenUpdateFlag();
                 } catch (\Doctrine\ORM\EntityNotFoundException $e){
                     $good = null;
                 }
                 
                 if ($good){
-                    $this->checkUpdateGroupTokenFlag($good, $groupTokenUpdateFlag);
-
-                    $goodTitleStr = $this->goodTitlesIds($good);
-                    $goodTitleStrMd5 = md5($goodTitleStr);
-
-                    if ($goodTitleStr){ 
-                        $goodTitle = $this->entityManager->getRepository(GoodTitle::class)
-                                ->findOneBy(['good' => $good->getId(), 'titleMd5' => $goodTitleStrMd5]);
-
-                        if ($goodTitle == null){
-
-                            $this->entityManager->getRepository(Goods::class)
-                                    ->removeGoodTitles($good);
-
-                            $this->addGroupTokenFromGood($good, $gc);
-
-                            $this->entityManager->getRepository(Goods::class)
-                                    ->insertGoodTitle(['good_id' => $good->getId(), 'title' => $goodTitleStr, 'title_md5' => $goodTitleStrMd5]);
-                        }
-                    }
+                    $this->addGroupTokenFromGood($good);
                 }    
                 
                 $this->entityManager->getRepository(Rawprice::class)
@@ -1338,9 +1283,8 @@ class NameManager
             }            
         }
         
-        $raw->setParseStage(Raw::STAGE_TOKEN_GROUP_PARSED);
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush();
+        $this->entityManager->getRepository(Raw::class)
+                ->updateRawParseStage($raw, Raw::STAGE_TOKEN_GROUP_PARSED); 
         
         return;
     }

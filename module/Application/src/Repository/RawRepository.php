@@ -172,7 +172,7 @@ class RawRepository extends EntityRepository
     }
     
     /**
-     * Быстрая обновление полей в строке прайса
+     * Быстрое обновление полей в строке прайса
      * @param integer $rawpriceId
      * @param array $data 
      * @return integer
@@ -180,6 +180,19 @@ class RawRepository extends EntityRepository
     public function updateRawpriceField($rawpriceId, $data)
     {
         $updated = $this->getEntityManager()->getConnection()->update('rawprice', $data, ['id' => $rawpriceId]);
+        return $updated;
+    }    
+    
+    /**
+     * Быстрое обновление статуса разборки прайса
+     * @param Raw $raw
+     * @param integer $parseStage 
+     * @return integer
+     */
+    public function updateRawParseStage($raw, $parseStage)
+    {
+        $updated = $this->getEntityManager()->getConnection()->update('raw', 
+                ['parse_stage' => $parseStage], ['id' => $raw->getId()]);
         return $updated;
     }    
     

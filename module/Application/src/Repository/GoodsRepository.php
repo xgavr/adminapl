@@ -14,6 +14,7 @@ use Application\Entity\Rawprice;
 use Application\Entity\OemRaw;
 use Application\Filter\ArticleCode;
 use Application\Entity\ArticleTitle;
+use Application\Entity\TokenGroup;
 
 
 
@@ -464,6 +465,29 @@ class GoodsRepository extends EntityRepository
                 ;
         
         return $queryBuilder->getQuery()->getResult();    
+    }
+    
+    /**
+     * Обновить группы токенов и наименований товаров
+     * 
+     * @param Goods $good
+     */
+    public function updateTokenGroupGoodArticleTitle($good)
+    {
+        $titles = $this->articleTitles($good);
+        
+        if ($good->getTokenGroup()){
+            $updGroupId = 0;
+            if ($good->getTokenGroup()){
+                $updGroupId = $good->getTokenGroup()->getId();
+            }
+            foreach ($titles as $articleTitle){
+                $this->getEntityManager()->getConnection()->update('article_title', 
+                        ['token_group_id' => $updGroupId], ['id' => $articleTitle->getId()]);
+            }
+        }  
+        
+        return;
     }
     
     /**
