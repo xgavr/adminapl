@@ -52,7 +52,7 @@ $preGood = null;
                             <small><i>
                                 <?php if ($good->getTokenGroup()):?>
                                     <a href="<?= $this->url('name', ['action' => 'view-token-group', 'id' => $good->getTokenGroup()->getId()])?>" target="_blank">
-                                        <?= $good->getTokenGroup()->getname()?>; <?= $good->getTokenGroup()->getLemms();?>
+                                        <?= $good->getTokenGroup()->getName()?>; <?= $good->getTokenGroup()->getLemms();?>
                                     </a>                            
                                 <?php else:?>
                                     Группа не назначена
