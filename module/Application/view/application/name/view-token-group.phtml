@@ -43,6 +43,13 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endif;?>                            
                 </td>
             </tr>
+            <?php foreach ($inTokenGroups as $ingroup):?>
+                <tr>
+                    <td colspan="5">
+                        <?= $ingroup['tokenGroupTitle']; ?>
+                    </td>
+                </tr>    
+            <?php endforeach;?>
             <tr>
                 <td colspan="4">
                     <?= $this->paginationControl($goods,
@@ -61,7 +68,7 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <?php    foreach ($goods as $good):?>
                 <tr>
-                    <td colspan="6">
+                    <td colspan="5">
                         <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()]);?>">
                             <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
                         </a>   

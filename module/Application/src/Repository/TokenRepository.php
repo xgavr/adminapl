@@ -1170,4 +1170,27 @@ class TokenRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();    
         
     }
+    
+    /**
+     * Родительские группы наименований
+     * 
+     * @param TokenGroup $tokenGroup
+     */
+    public function inTokenGroup($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, max(at.tokenGroupTitle)as tokenGroupTitle, count(at.tokenGroupTitleMd5) as inTokenCount')
+                ->from(ArticleTitle::class, 'at')
+                ->where('at.tokenGroupTitleMd5 = ?1')
+                ->setParameter('1', $tokenGroup->getIds())
+                ->andWhere('at.tokenGroup != ?2')
+                ->setParameter('2', $tokenGroup->getId())
+                ->groupBy('at.tokenGroup')
+                ->orderBy('inTokenCount', 'DESC')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();                    
+    }
 }

@@ -912,7 +912,7 @@ class NameController extends AbstractActionController
 
         $adapter = new DoctrineAdapter(new ORMPaginator($goodsQuery, false));
         $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setDefaultItemCountPerPage(5);        
         $paginator->setCurrentPageNumber($page);
 
         $totalGoodsCount = $paginator->getTotalItemCount();
@@ -925,6 +925,9 @@ class NameController extends AbstractActionController
 
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findRate(['tokenGroup' => $tokenGroup->getId()]);
+        
+        $inTokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                ->inTokenGroup($tokenGroup);
 //        var_dump($tdGroups); exit;
 
         // Render the view template.
@@ -940,6 +943,7 @@ class NameController extends AbstractActionController
             'aplGroups' => $aplGroups,
             'meanFrequency' => $meanFrequency,
             'rate' => $rate,
+            'inTokenGroups' => $inTokenGroups,
         ]);
     }    
     
