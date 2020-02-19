@@ -1181,16 +1181,18 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, max(at.tokenGroupTitle)as tokenGroupTitle, count(at.tokenGroupTitleMd5) as inTokenCount')
+        $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, max(tg.lemms)as tokenGroupTitle, count(at.tokenGroupTitleMd5) as inTokenCount')
                 ->from(ArticleTitle::class, 'at')
                 ->where('at.tokenGroupTitleMd5 = ?1')
                 ->setParameter('1', $tokenGroup->getIds())
                 ->andWhere('at.tokenGroup != ?2')
+                ->andWhere('at.tokenGroup > 0')
                 ->setParameter('2', $tokenGroup->getId())
+                ->join('at.tokenGroup', 'tg')
                 ->groupBy('at.tokenGroup')
                 ->orderBy('inTokenCount', 'DESC')
                 ;
-        var_dump($queryBuilder->getQuery()->getSQL());
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
     }
 }

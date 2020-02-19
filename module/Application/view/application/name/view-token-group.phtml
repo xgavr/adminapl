@@ -45,9 +45,10 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <?php foreach ($inTokenGroups as $ingroup):?>
                 <tr>
-                    <td colspan="5">
+                    <td colspan="4">
                         <?= $ingroup['tokenGroupTitle']; ?>
                     </td>
+                    <td><?= $ingroup['inTokenCount']; ?></td>
                 </tr>    
             <?php endforeach;?>
             <tr>
