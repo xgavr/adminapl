@@ -928,6 +928,8 @@ class NameController extends AbstractActionController
         
         $inTokenGroups = $this->entityManager->getRepository(TokenGroup::class)
                 ->inTokenGroup($tokenGroup);
+        $outTokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                ->outTokenGroup($tokenGroup);
 //        var_dump($tdGroups); exit;
 
         // Render the view template.
@@ -944,6 +946,7 @@ class NameController extends AbstractActionController
             'meanFrequency' => $meanFrequency,
             'rate' => $rate,
             'inTokenGroups' => $inTokenGroups,
+            'outTokenGroups' => $outTokenGroups,
         ]);
     }    
     
