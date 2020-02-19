@@ -1190,7 +1190,7 @@ class TokenRepository  extends EntityRepository
                 ->groupBy('at.tokenGroup')
                 ->orderBy('inTokenCount', 'DESC')
                 ;
-        
+        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
     }
 }
