@@ -46,7 +46,11 @@ $this->pageBreadcrumbs()->setItems([
             <?php foreach ($inTokenGroups as $ingroup):?>
                 <tr>
                     <td colspan="4">
-                        <?= $ingroup['tokenGroupTitle']; ?>
+                        <small>
+                            <a href="<?= $this->url('name', ['action'=>'view-token-group', 'id'=>$ingroup['tokenGroupId']])?>" target="_blank">
+                                <?= $ingroup['tokenGroupTitle']; ?>
+                            </a>                            
+                        </small>
                     </td>
                     <td><?= $ingroup['inTokenCount']; ?></td>
                 </tr>    
