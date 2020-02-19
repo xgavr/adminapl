@@ -1191,7 +1191,7 @@ class TokenRepository  extends EntityRepository
                 ->join('at.tokenGroup', 'tg')
                 ->groupBy('at.tokenGroup')
                 ->orderBy('inTokenCount', 'DESC')
-                ->having('inTokenCount' > 1)
+                ->having('inTokenCount > 1')
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
