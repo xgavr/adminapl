@@ -1218,14 +1218,16 @@ class NameManager
             if ($title['tokenGroupTitle']){
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                             ->findOneByIds($title['tokenGroupTitleMd5']); 
-                if (!$result){
-                    if ($tokenGroup->getGoodCount() > TokenGroup::MIN_GOODCOUNT){
-                        $result = $tokenGroup;
-                    }
-                } else {
-                    if ($tokenGroup->getGoodCount() > $result->getGoodCount()){
-                        $result = $tokenGroup;
-                    }
+                if ($tokenGroup){
+                    if (!$result){
+                        if ($tokenGroup->getGoodCount() > TokenGroup::MIN_GOODCOUNT){
+                            $result = $tokenGroup;
+                        }
+                    } else {
+                        if ($tokenGroup->getGoodCount() > $result->getGoodCount()){
+                            $result = $tokenGroup;
+                        }
+                    }    
                 }    
             }    
         }
