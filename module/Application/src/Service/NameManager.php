@@ -1205,6 +1205,33 @@ class NameManager
         return;
     }
     
+    
+    /**
+     * Выбрать группу для массива равнозначных наименований
+     * 
+     * @param array $groupTitles
+     */
+    public function selectBestTokenGroupForTitles($groupTitles)
+    {
+        $result = null;
+        foreach ($groupTitles as $title){
+            if ($title['tokenGroupTitle']){
+                $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                            ->findOneByIds($title['tokenGroupTitleMd5']); 
+                if (!$result){
+                    if ($tokenGroup->getGoodCount() > TokenGroup::MIN_GOODCOUNT){
+                        $result = $tokenGroup;
+                    }
+                } else {
+                    if ($tokenGroup->getGoodCount() > $result->getGoodCount()){
+                        $result = $tokenGroup;
+                    }
+                }    
+            }    
+        }
+        return $result;
+    }
+    
     /**
      * Добавить группу наименований по токенам товара
      * 
@@ -1236,6 +1263,8 @@ class NameManager
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                             ->findOneByIds($groupTitle0['tokenGroupTitleMd5']); 
                 }    
+            } else {
+                $tokenGroup = $this->selectBestTokenGroupForTitles($groupTitles);
             }
         }    
         $updGroupId = null;
