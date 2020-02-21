@@ -1184,7 +1184,7 @@ class TokenRepository  extends EntityRepository
         $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, '
                 . 'max(tg.lemms)as tokenGroupTitle, '
                 . 'count(at.tokenGroupTitleMd5) as inTokenCount, '
-                . 'max(tg.goodCount) as inGoodCount')
+                . 'tg.goodCount as inGoodCount')
                 ->from(ArticleTitle::class, 'at')
                 ->where('at.tokenGroupTitleMd5 = ?1')
                 ->setParameter('1', $tokenGroup->getIds())
