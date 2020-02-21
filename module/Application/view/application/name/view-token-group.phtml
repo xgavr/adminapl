@@ -55,18 +55,6 @@ $this->pageBreadcrumbs()->setItems([
                     <td><?= $ingroup['inTokenCount']; ?></td>
                 </tr>    
             <?php endforeach;?>
-            <?php foreach ($outTokenGroups as $outgroup):?>
-                <tr>
-                    <td colspan="4">
-                        <small>
-                            <a href="<?= $this->url('name', ['action'=>'view-token-group', 'id'=>$outgroup['tokenGroupId']])?>" target="_blank">
-                                <?= $outgroup['tokenGroupTitle']; ?>
-                            </a>                            
-                        </small>
-                    </td>
-                    <td><?= $outgroup['inTokenCount']; ?></td>
-                </tr>    
-            <?php endforeach;?>
             <tr>
                 <td colspan="4">
                     <?= $this->paginationControl($goods,

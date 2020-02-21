@@ -1181,7 +1181,10 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, max(tg.lemms)as tokenGroupTitle, count(at.tokenGroupTitleMd5) as inTokenCount')
+        $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, '
+                . 'max(tg.lemms)as tokenGroupTitle, '
+                . 'count(at.tokenGroupTitleMd5) as inTokenCount, '
+                . 'count(tg.goodCount) as inGoodCount')
                 ->from(ArticleTitle::class, 'at')
                 ->where('at.tokenGroupTitleMd5 = ?1')
                 ->setParameter('1', $tokenGroup->getIds())
@@ -1207,7 +1210,10 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('tg.id as tokenGroupId, max(at.tokenGroupTitle) as tokenGroupTitle, count(at.tokenGroupTitleMd5) as inTokenCount')
+        $queryBuilder->select('tg.id as tokenGroupId, '
+                . 'max(at.tokenGroupTitle) as tokenGroupTitle, '
+                . 'count(at.tokenGroupTitleMd5) as outTokenCount'
+                . 'count(tg.goodCount) as outGoodCount')
                 ->from(ArticleTitle::class, 'at')
                 ->where('at.tokenGroup = ?1')
                 ->setParameter('1', $tokenGroup->getId())
@@ -1215,8 +1221,8 @@ class TokenRepository  extends EntityRepository
                 ->setParameter('2', $tokenGroup->getIds())
                 ->join(TokenGroup::class, 'tg', 'WITH', 'tg.ids = at.tokenGroupTitleMd5')
                 ->groupBy('at.tokenGroupTitleMd5')
-                ->orderBy('inTokenCount', 'DESC')
-                ->having('inTokenCount > 1')
+                ->orderBy('outTokenCount', 'DESC')
+                ->having('outTokenCount > 1')
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
