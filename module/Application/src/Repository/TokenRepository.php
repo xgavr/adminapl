@@ -1164,6 +1164,8 @@ class TokenRepository  extends EntityRepository
             ->orderBy('titleCount', 'DESC')    
             ->where('g.id = ?1')
             ->setParameter('1', $good->getId())
+            ->andWhere('at.tokenGroupTitleMd5 != ?2')    
+            ->setParameter('2', md5(''))
             //->setMaxResults(1)    
                 ;
         
