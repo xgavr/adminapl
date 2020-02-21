@@ -1193,8 +1193,9 @@ class TokenRepository  extends EntityRepository
                 ->setParameter('2', $tokenGroup->getId())
                 ->join('at.tokenGroup', 'tg')
                 ->groupBy('at.tokenGroup')
-                ->orderBy('inTokenCount', 'DESC')
-                ->having('inTokenCount > 1')
+                ->orderBy('inGoodCount', 'DESC')
+                ->having('inGoodCount > ?3')
+                ->setParameter('3', TokenGroup::MIN_GOODCOUNT)
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
@@ -1221,8 +1222,9 @@ class TokenRepository  extends EntityRepository
                 ->setParameter('2', $tokenGroup->getIds())
                 ->join(TokenGroup::class, 'tg', 'WITH', 'tg.ids = at.tokenGroupTitleMd5')
                 ->groupBy('at.tokenGroupTitleMd5')
-                ->orderBy('outTokenCount', 'DESC')
-                ->having('outTokenCount > 1')
+                ->orderBy('outGoodCount', 'DESC')
+                ->having('outGoodCount > ?3')
+                ->setParameter('3', TokenGroup::MIN_GOODCOUNT)
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
