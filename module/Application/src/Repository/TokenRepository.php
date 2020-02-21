@@ -1196,6 +1196,8 @@ class TokenRepository  extends EntityRepository
                 ->orderBy('inGoodCount', 'DESC')
                 ->having('inGoodCount > ?3')
                 ->setParameter('3', $tokenGroup->getGoodCount())
+                ->andHaving('inTokenCount > ?4')
+                ->setParameter('4', Token::MIN_DF)
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
