@@ -1178,6 +1178,9 @@ class TokenRepository  extends EntityRepository
      */
     public function inTokenGroup($tokenGroup)
     {
+        $articleTitleCount = $this->getEntityManager()->getRepository(ArticleTitle::class)
+                ->count(['$tokenGroupTitleMd5' => $tokenGroup->getIds()]);
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -1197,7 +1200,7 @@ class TokenRepository  extends EntityRepository
                 ->having('inGoodCount > ?3')
                 ->setParameter('3', $tokenGroup->getGoodCount())
                 ->andHaving('inTokenCount > ?4')
-                ->setParameter('4', Token::MIN_DF)
+                ->setParameter('4', $articleTitleCount)
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
@@ -1210,6 +1213,9 @@ class TokenRepository  extends EntityRepository
      */
     public function outTokenGroup($tokenGroup)
     {
+        $articleTitleCount = $this->getEntityManager()->getRepository(ArticleTitle::class)
+                ->count(['$tokenGroupTitleMd5' => $tokenGroup->getIds()]);
+
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -1227,6 +1233,8 @@ class TokenRepository  extends EntityRepository
                 ->orderBy('outGoodCount', 'DESC')
                 ->having('outGoodCount > ?3')
                 ->setParameter('3', $tokenGroup->getGoodCount())
+                ->andHaving('inTokenCount > ?4')
+                ->setParameter('4', $articleTitleCount)
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
