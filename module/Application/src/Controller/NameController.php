@@ -11,6 +11,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\Rawprice;
 use Application\Entity\Token;
+use Application\Entity\ArticleTitle;
 use Application\Entity\Bigram;
 use Application\Entity\TokenGroup;
 use Application\Entity\GenericGroup;
@@ -928,6 +929,9 @@ class NameController extends AbstractActionController
         
         $inTokenGroups = $this->entityManager->getRepository(TokenGroup::class)
                 ->inTokenGroup($tokenGroup);
+        
+        $articleTitleCount = $this->entityManager->getRepository(ArticleTitle::class)
+                ->count(['tokenGroupTitleMd5' => $tokenGroup->getIds()]);
 //        $outTokenGroups = $this->entityManager->getRepository(TokenGroup::class)
 //                ->outTokenGroup($tokenGroup);
 //        var_dump($tdGroups); exit;
@@ -947,6 +951,7 @@ class NameController extends AbstractActionController
             'rate' => $rate,
             'inTokenGroups' => $inTokenGroups,
 //            'outTokenGroups' => $outTokenGroups,
+            'articleTitleCount' => $articleTitleCount,
         ]);
     }    
     

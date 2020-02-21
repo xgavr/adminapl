@@ -1179,7 +1179,7 @@ class TokenRepository  extends EntityRepository
     public function inTokenGroup($tokenGroup)
     {
         $articleTitleCount = $this->getEntityManager()->getRepository(ArticleTitle::class)
-                ->count(['$tokenGroupTitleMd5' => $tokenGroup->getIds()]);
+                ->count(['tokenGroupTitleMd5' => $tokenGroup->getIds()]);
         
         $entityManager = $this->getEntityManager();
 
@@ -1214,7 +1214,7 @@ class TokenRepository  extends EntityRepository
     public function outTokenGroup($tokenGroup)
     {
         $articleTitleCount = $this->getEntityManager()->getRepository(ArticleTitle::class)
-                ->count(['$tokenGroupTitleMd5' => $tokenGroup->getIds()]);
+                ->count(['tokenGroupTitleMd5' => $tokenGroup->getIds()]);
 
         $entityManager = $this->getEntityManager();
 

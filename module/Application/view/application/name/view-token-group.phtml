@@ -43,6 +43,15 @@ $this->pageBreadcrumbs()->setItems([
                     <?php endif;?>                            
                 </td>
             </tr>
+            <tr>
+                <td colspan="5" align="right" valign="center">
+                    <b><?= $tokenGroup->getGoodCount()?></b>
+                    <button value="/name/update-good-count-token-group/<?= $tokenGroup->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                            title="Обновить количество товара">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                </td>
+            </tr>
             <?php foreach ($inTokenGroups as $ingroup):?>
                 <tr>
                     <td colspan="3">
@@ -57,19 +66,12 @@ $this->pageBreadcrumbs()->setItems([
                 </tr>    
             <?php endforeach;?>
             <tr>
-                <td colspan="4">
+                <td colspan="5">
                     <?= $this->paginationControl($goods,
                                 'Sliding',
                                 'application/partial/paginator', 
                                 ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
 
-                </td>
-                <td align="right" valign="center">
-                    <b><?= $tokenGroup->getGoodCount()?></b>
-                    <button value="/name/update-good-count-token-group/<?= $tokenGroup->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
-                            title="Обновить количество товара">
-                        <span class="glyphicon glyphicon-refresh" ></span>
-                    </button> 
                 </td>
             </tr>
             <?php    foreach ($goods as $good):?>
