@@ -1195,7 +1195,7 @@ class TokenRepository  extends EntityRepository
                 ->groupBy('at.tokenGroup')
                 ->orderBy('inGoodCount', 'DESC')
                 ->having('inGoodCount > ?3')
-                ->setParameter('3', TokenGroup::MIN_GOODCOUNT)
+                ->setParameter('3', $tokenGroup->getGoodCount())
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
@@ -1214,7 +1214,7 @@ class TokenRepository  extends EntityRepository
         $queryBuilder->select('tg.id as tokenGroupId, '
                 . 'max(at.tokenGroupTitle) as tokenGroupTitle, '
                 . 'count(at.tokenGroupTitleMd5) as outTokenCount'
-                . 'sum(tg.goodCount) as outGoodCount')
+                . 'tg.goodCount as outGoodCount')
                 ->from(ArticleTitle::class, 'at')
                 ->where('at.tokenGroup = ?1')
                 ->setParameter('1', $tokenGroup->getId())
@@ -1224,7 +1224,7 @@ class TokenRepository  extends EntityRepository
                 ->groupBy('at.tokenGroupTitleMd5')
                 ->orderBy('outGoodCount', 'DESC')
                 ->having('outGoodCount > ?3')
-                ->setParameter('3', TokenGroup::MIN_GOODCOUNT)
+                ->setParameter('3', $tokenGroup->getGoodCount())
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();                    
