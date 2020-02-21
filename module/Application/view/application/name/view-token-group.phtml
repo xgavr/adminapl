@@ -45,6 +45,7 @@ $this->pageBreadcrumbs()->setItems([
             </tr>
             <tr>
                 <td colspan="5" align="right" valign="center">
+                    <i><?= $articleTitleCount?></i> 
                     <b><?= $tokenGroup->getGoodCount()?></b>
                     <button value="/name/update-good-count-token-group/<?= $tokenGroup->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
                             title="Обновить количество товара">
