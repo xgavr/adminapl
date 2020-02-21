@@ -1172,6 +1172,39 @@ class TokenRepository  extends EntityRepository
     }
     
     /**
+     * Выбор групы наименований по наименованию
+     * 
+     * @param string $articleTitleMd5
+     */
+    public function selectTokenGroupByTitle($articleTitleMd5)
+    {        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, count(at.id) as titleCount, tg.goodCount as goodCount')
+                ->from(ArticleTitle::class, 'at')
+                ->where('at.tokenGroupTitleMd5 = ?1')
+                ->setParameter('1', $articleTitleMd5)
+                ->join('at.tokenGroup', 'tg')
+                ->groupBy('at.tokenGroup')
+                ->having('goodCount > ?2')
+                ->setParameter('2', TokenGroup::MIN_GOODCOUNT)
+                ->orderBy('titleCount', 'DESC')
+                ->addOrderBy('goodCount', 'DESC')
+                ->setMaxResults(1)
+                ;
+        
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        if ($row){
+            return $this->getEntityManager()->getRepository(TokenGroup::class)
+                    ->findOneById($row['tokenGroupId']);                
+        }
+        
+        return;
+    }
+    
+    /**
      * Родительские группы наименований
      * 
      * @param TokenGroup $tokenGroup

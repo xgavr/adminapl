@@ -1268,6 +1268,12 @@ class NameManager
             } else {
                 $tokenGroup = $this->selectBestTokenGroupForTitles($groupTitles);
             }
+            if (!$tokenGroup){
+                if (count($groupTitles) == 1){
+                    $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                            ->selectTokenGroupByTitle($groupTitle0['tokenGroupTitleMd5']);
+                }
+            }
         }    
         $updGroupId = null;
         if ($tokenGroup){
