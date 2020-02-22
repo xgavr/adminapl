@@ -1187,8 +1187,9 @@ class TokenRepository  extends EntityRepository
             $queryBuilder = $entityManager->createQueryBuilder();
             
             $orX = $queryBuilder->expr()->orX();
-            foreach ($articleTitlesMd5 as $articleTitleMd5){
-                $orX->add($queryBuilder->expr()->eq('at.tokenGroupTitleMd5', "$articleTitleMd5"));                
+            foreach ($articleTitlesMd5 as $key => $articleTitleMd5){
+                $orX->add($queryBuilder->expr()->eq('at.tokenGroupTitleMd5', "?$key"));                
+                $queryBuilder->setParameter($key, $articleTitleMd5);
             }
 
             $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, count(at.id) as titleCount, tg.goodCount as goodCount')
@@ -1196,8 +1197,8 @@ class TokenRepository  extends EntityRepository
                     ->where($orX)
                     ->join('at.tokenGroup', 'tg')
                     ->groupBy('at.tokenGroup')
-                    ->having('goodCount > ?2')
-                    ->setParameter('2', TokenGroup::MIN_GOODCOUNT)
+                    ->having('goodCount > :minGoodCount')
+                    ->setParameter('minGoodCount', TokenGroup::MIN_GOODCOUNT)
                     ->orderBy('titleCount', 'DESC')
                     ->addOrderBy('goodCount', 'DESC')
                     ->setMaxResults(1)
