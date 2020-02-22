@@ -1244,36 +1244,41 @@ class NameManager
     {
         $groupTitles = $this->entityManager->getRepository(Token::class)
                 ->choiceGroupTitle($good);
+
         $tokenGroup = null;
         
         if (is_array($groupTitles)){
-            $groupTitle0 = $groupTitles[0];
-            if (($groupTitle0['titleCount'] > 1 && $groupTitle0['tokenGroupTitle']) 
-                    || ($groupTitle0['titleCount'] == 1 && count($groupTitles) == 1)){
-                
-                $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                        ->findOneByIds($groupTitle0['tokenGroupTitleMd5']); 
-                
-                if (!$tokenGroup && $groupTitle0['titleCount'] > 1){
-                    $this->entityManager->getRepository(TokenGroup::class)
-                            ->insertTokenGroup([
-                                'name' => '',
-                                'lemms' => $groupTitle0['tokenGroupTitle'],
-                                'ids' => $groupTitle0['tokenGroupTitleMd5'],
-                                'good_count' => 0,
-                            ]);
+            if (count($groupTitles)){
+                $groupTitle0 = $groupTitles[0];
+                if (($groupTitle0['titleCount'] > 1 && $groupTitle0['tokenGroupTitle']) 
+                        || ($groupTitle0['titleCount'] == 1 && count($groupTitles) == 1)){
+
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                             ->findOneByIds($groupTitle0['tokenGroupTitleMd5']); 
-                }    
-            } else {
-                $tokenGroup = $this->selectBestTokenGroupForTitles($groupTitles);
-            }
-            if (!$tokenGroup){
-                if (count($groupTitles) == 1){
-                    $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                            ->selectTokenGroupByTitle($groupTitle0['tokenGroupTitleMd5']);
+
+                    if (!$tokenGroup && $groupTitle0['titleCount'] > 1){
+                        $this->entityManager->getRepository(TokenGroup::class)
+                                ->insertTokenGroup([
+                                    'name' => '',
+                                    'lemms' => $groupTitle0['tokenGroupTitle'],
+                                    'ids' => $groupTitle0['tokenGroupTitleMd5'],
+                                    'good_count' => 0,
+                                ]);
+                        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                                ->findOneByIds($groupTitle0['tokenGroupTitleMd5']); 
+                    }    
+                } else {
+                    $tokenGroup = $this->selectBestTokenGroupForTitles($groupTitles);
                 }
-            }
+                if (!$tokenGroup){
+                    $titlesMd5 = [];
+                    foreach ($groupTitles as $groupTitle){
+                        $titlesMd5[] = $groupTitle['tokenGroupTitleMd5'];
+                    }
+                    $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                            ->selectTokenGroupByTitle($titlesMd5);
+                }
+            }    
         }    
         $updGroupId = null;
         if ($tokenGroup){

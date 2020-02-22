@@ -1176,31 +1176,39 @@ class TokenRepository  extends EntityRepository
     /**
      * Выбор групы наименований по наименованию
      * 
-     * @param string $articleTitleMd5
+     * @param array $articleTitlesMd5
      */
-    public function selectTokenGroupByTitle($articleTitleMd5)
+    public function selectTokenGroupByTitle($articleTitlesMd5)
     {        
         $entityManager = $this->getEntityManager();
+        
+        if (count($articleTitlesMd5)){
 
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, count(at.id) as titleCount, tg.goodCount as goodCount')
-                ->from(ArticleTitle::class, 'at')
-                ->where('at.tokenGroupTitleMd5 = ?1')
-                ->setParameter('1', $articleTitleMd5)
-                ->join('at.tokenGroup', 'tg')
-                ->groupBy('at.tokenGroup')
-                ->having('goodCount > ?2')
-                ->setParameter('2', TokenGroup::MIN_GOODCOUNT)
-                ->orderBy('titleCount', 'DESC')
-                ->addOrderBy('goodCount', 'DESC')
-                ->setMaxResults(1)
-                ;
-        
-        $row = $queryBuilder->getQuery()->getOneOrNullResult();
-        
-        if ($row){
-            return $this->getEntityManager()->getRepository(TokenGroup::class)
-                    ->findOneById($row['tokenGroupId']);                
+            $queryBuilder = $entityManager->createQueryBuilder();
+            
+            $orX = $queryBuilder->expr()->orX();
+            foreach ($articleTitlesMd5 as $articleTitleMd5){
+                $orX->add($queryBuilder->expr()->eg('at.tokenGroupTitleMd5', $articleTitleMd5));                
+            }
+
+            $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, count(at.id) as titleCount, tg.goodCount as goodCount')
+                    ->from(ArticleTitle::class, 'at')
+                    ->where($orX)
+                    ->join('at.tokenGroup', 'tg')
+                    ->groupBy('at.tokenGroup')
+                    ->having('goodCount > ?2')
+                    ->setParameter('2', TokenGroup::MIN_GOODCOUNT)
+                    ->orderBy('titleCount', 'DESC')
+                    ->addOrderBy('goodCount', 'DESC')
+                    ->setMaxResults(1)
+                    ;
+
+            $row = $queryBuilder->getQuery()->getOneOrNullResult();
+
+            if ($row){
+                return $this->getEntityManager()->getRepository(TokenGroup::class)
+                        ->findOneById($row['tokenGroupId']);                
+            }
         }
         
         return;
