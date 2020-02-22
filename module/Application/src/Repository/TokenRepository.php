@@ -1188,7 +1188,7 @@ class TokenRepository  extends EntityRepository
             
             $orX = $queryBuilder->expr()->orX();
             foreach ($articleTitlesMd5 as $articleTitleMd5){
-                $orX->add($queryBuilder->expr()->eq('at.tokenGroupTitleMd5', $articleTitleMd5));                
+                $orX->add($queryBuilder->expr()->eq('at.tokenGroupTitleMd5', "$articleTitleMd5"));                
             }
 
             $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, count(at.id) as titleCount, tg.goodCount as goodCount')
