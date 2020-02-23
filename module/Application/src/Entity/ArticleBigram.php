@@ -30,6 +30,11 @@ class ArticleBigram {
     protected $bilemma;        
 
     /**
+     * @ORM\Column(name="display_bilemma")  
+     */
+    protected $displayBilemma;        
+
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        
@@ -46,6 +51,11 @@ class ArticleBigram {
      */
     protected $article;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\ArticleTitle", inversedBy="articleBigrams") 
+     * @ORM\JoinColumn(name="title_id", referencedColumnName="id")
+     */
+    protected $articleTitle;        
 
     public function getId() 
     {
@@ -67,6 +77,15 @@ class ArticleBigram {
         $this->bilemma = $bilemma;
     }     
 
+    public function getDisplayBilemma()
+    {
+        return $this->displayBilemma;
+    }
+    
+    public function setDisplayBilemma($displayBilemma) 
+    {
+        $this->displayBilemma = $displayBilemma;
+    }     
 
     public function getStatus() 
     {
@@ -114,5 +133,21 @@ class ArticleBigram {
         $this->article = $article;
     }           
     
-    
+    /**
+     * Возвращает связанный articleTitle.
+     * @return \Application\Entity\ArticleTitle
+     */    
+    public function getArticleTitle() 
+    {
+        return $this->articleTitle;
+    }
+
+    /**
+     * Задает связанный articleTitle.
+     * @param \Application\Entity\ArticleTitle $articleTitle
+     */    
+    public function setArticleTitle($articleTitle) 
+    {
+        $this->articleTitle = $articleTitle;
+    }               
 }

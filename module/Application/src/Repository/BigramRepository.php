@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Bigram;
 use Application\Entity\Article;
 use Application\Entity\ArticleBigram;
+use Application\Entity\ArticleTitle;
 use Application\Entity\TokenGroup;
 use Application\Entity\Rawprice;
 
@@ -221,18 +222,20 @@ class BigramRepository  extends EntityRepository
      * Быстрая вставка артикула биграм
      * @param Article $article
      * @param Bigram $bigram 
+     * @param ArticleTitle $articleTitle
      * @return null
      */
-    public function insertArticleBigram($article, $bigram)
+    public function insertArticleBigram($article, $bigram, $articleTitle)
     {
-        if ($article && $bigram){
+        if ($article && $bigram && $articleTitle){
             $articleBigram = $this->getEntityManager()->getRepository(ArticleBigram::class)
-                    ->findOneBy(['article' => $article->getId(), 'bigram' => $bigram->getId()]);
+                    ->findOneBy(['article' => $article->getId(),'articleTitle' => $articleTitle->getId(), 'bigram' => $bigram->getId()]);
 
             if (!$articleBigram){
                 $row = [
                     'article_id' => $article->getId(),
                     'bigram_id' => $bigram->getId(),
+                    'title_id' => $articleTitle->getId(),
                     'bilemma' => $bigram->getBilemma(),
                     'status' => $bigram->getStatus(),
                 ];

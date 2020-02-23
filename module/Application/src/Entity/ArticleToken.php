@@ -30,6 +30,11 @@ class ArticleToken {
     protected $lemma;        
 
     /**
+     * @ORM\Column(name="display_lemma")  
+     */
+    protected $displayLemma;        
+
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        
@@ -84,6 +89,16 @@ class ArticleToken {
         
         return true;
     }
+
+    public function getDisplayLemma()
+    {
+        return $this->displayLemma;
+    }
+    
+    public function setDisplayLemma($displayLemma) 
+    {
+        $this->displayLemma = $displayLemma;
+    }     
 
     public function getStatus() 
     {

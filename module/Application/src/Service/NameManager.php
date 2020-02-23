@@ -795,6 +795,8 @@ class NameManager
         if ($article && $updateArticleToken){
             $this->entityManager->getRepository(Article::class)
                     ->deleteArticleToken($article->getId(), $articleTitle);
+            $this->entityManager->getRepository(Article::class)
+                    ->deleteArticleBigram($article->getId(), $articleTitle);
             
             if (!$articleTitle){        
                 $this->entityManager->getRepository(Article::class)
@@ -849,7 +851,7 @@ class NameManager
                                             ->insertBigram($preWord, $word);
 
                             $this->entityManager->getRepository(Bigram::class)
-                                    ->insertArticleBigram($article, $bigram);
+                                    ->insertArticleBigram($article, $bigram, $articleTitle);
                         }
                         $preWord = $word;
                         $preToken = $token;
@@ -861,7 +863,7 @@ class NameManager
                                 ->insertBigram($token->getLemma(), null, $token->getFlag());
 
                 $this->entityManager->getRepository(Bigram::class)
-                        ->insertArticleBigram($article, $bigram);
+                        ->insertArticleBigram($article, $bigram, $articleTitle);
             }
             
             $this->updateTokenGroupArticleTitle($articleTitle);
