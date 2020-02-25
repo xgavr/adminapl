@@ -33,7 +33,7 @@ final class Version20200225093125 extends AbstractMigration
         $table->addColumn('group_id', 'integer', ['notnull'=>true]);
         $table->addColumn('title_md5', 'string', ['notnull' => true, 'length' => 128]);
         $table->addColumn('bigram_id', 'integer', ['notnull' => true]);
-        $table->addColumn('display_bigram', 'string', ['notnull' => false, 'length' => 256]);
+        $table->addColumn('display_bilemma', 'string', ['notnull' => false, 'length' => 256]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['group_id', 'title_md5', 'bigram_id'], 'group_title_bigram_uindx');
         $table->addForeignKeyConstraint('token_group', ['group_id'], ['id'], 

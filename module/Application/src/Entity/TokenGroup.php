@@ -73,11 +73,25 @@ class TokenGroup {
    */
    private $rates;        
 
+   /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\TitleToken", mappedBy="tokenGroup")
+    * @ORM\JoinColumn(name="id", referencedColumnName="group_id")
+   */
+   private $titleTokens;        
+
+   /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\TitleBigram", mappedBy="tokenGroup")
+    * @ORM\JoinColumn(name="id", referencedColumnName="group_id")
+   */
+   private $titleBigrams;        
+
 
     public function __construct() {
         $this->goods = new ArrayCollection();
         $this->tokens = new ArrayCollection();
         $this->rates = new ArrayCollection();
+        $this->titleTokens = new ArrayCollection();
+        $this->titleBigrams = new ArrayCollection();
     }
 
     public function getId() 
@@ -207,5 +221,19 @@ class TokenGroup {
     public function addRate($rate) 
     {
         $this->rates[] = $rate;
+    }             
+
+    /*
+     * Возвращает связанный titleTokens.
+     * @return array
+     */    
+    public function getTitleTokens() 
+    {
+        return $this->titleTokens;
+    }
+
+    public function addTitleToken($titleToken) 
+    {
+        $this->titleTokens[] = $titleToken;
     }             
 }
