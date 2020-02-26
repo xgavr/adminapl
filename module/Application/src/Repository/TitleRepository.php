@@ -12,6 +12,7 @@ use Application\Entity\Token;
 use Application\Entity\ArticleTitle;
 use Application\Entity\ArticleToken;
 use Application\Entity\Article;
+use Application\Entity\TokenGroup;
 
 /**
  * Description of TitleRepository
@@ -21,23 +22,28 @@ use Application\Entity\Article;
 class TitleRepository  extends EntityRepository{
 
     /**
-     * Добавить ветвь
+     * Выбрать токены группы 
      * 
-     * @param Token|integer $token
-     * @param integer $parentTreeId
-     * 
-     * @return FpTree|null;
+     * @param TokenGroup $tokenGroup
+     * @return array;
      */
-    public function findBanch($token, $parentTreeId = 0)
+    public function selectTokenGroupToken($tokenGroup)
     {
-        if (is_numeric($token)){
-            $tokenId = $token;            
-        } else {
-            $tokenId = $token->getId();            
-        }
-                
-        return $this->getEntityManager()->getRepository(FpTree::class)
-                ->findOneBy(['token' => $tokenId, 'parentTree' => $parentTreeId]);
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('t')
+                ->from(Token::class, 't')
+                ->join('t.articleTokens', 'at')
+                ->join('at.articleTitle', 'ati')
+                ->distinct()
+                ->where('ati.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ->andWhere('t.frequency > ?2')
+                ->setParameter('2', Token::MIN_DF)
+                ->orderBy('t.frequency', 'DESC')
+                ;
+        return $queryBuilder->getQuery()->getResult();
     }    
 
     /**

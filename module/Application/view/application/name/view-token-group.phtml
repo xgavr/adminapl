@@ -52,6 +52,15 @@ $this->pageBreadcrumbs()->setItems([
                     </button> 
                 </td>
             </tr>
+            <?php    foreach ($tokens as $token):?>
+                <tr>
+                    <td colspan="5">
+                        <a href="<?= $this->url('name', ['action' => 'view-token', 'id' => $token->getId()]);?>">
+                            <?= $token->getLemma();?>
+                        </a>                           
+                    </td>
+                </tr>
+            <?php endforeach; ?>        
             <tr>
                 <td colspan="5">
                     <?= $this->paginationControl($goods,

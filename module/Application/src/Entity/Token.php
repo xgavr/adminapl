@@ -115,7 +115,7 @@ class Token {
     private $rawprice;  
     
      /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleToken", mappedBy="lemma")
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleToken", mappedBy="token")
     * @ORM\JoinColumn(name="lemma", referencedColumnName="lemma")
      */
     private $articleTokens;

@@ -74,6 +74,12 @@ class TokenGroup {
    private $rates;        
 
    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleTitle", mappedBy="tokenGroup")
+    * @ORM\JoinColumn(name="id", referencedColumnName="token_group_id")
+   */
+   private $articleTitles;        
+
+   /**
     * @ORM\OneToMany(targetEntity="Application\Entity\TitleToken", mappedBy="tokenGroup")
     * @ORM\JoinColumn(name="id", referencedColumnName="group_id")
    */
@@ -222,6 +228,15 @@ class TokenGroup {
     {
         $this->rates[] = $rate;
     }             
+
+    /*
+     * Возвращает связанный articleTitles.
+     * @return array
+     */    
+    public function getArticleTitles() 
+    {
+        return $this->articleTitles;
+    }
 
     /*
      * Возвращает связанный titleTokens.

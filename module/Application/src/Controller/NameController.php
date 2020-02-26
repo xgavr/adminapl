@@ -20,6 +20,7 @@ use Application\Entity\Goods;
 use Application\Entity\Rate;
 use Application\Entity\FpTree;
 use Application\Entity\FpGroup;
+use Application\Entity\TitleToken;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -927,6 +928,8 @@ class NameController extends AbstractActionController
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findRate(['tokenGroup' => $tokenGroup->getId()]);
         
+        $tokens = $this->entityManager->getRepository(\Application\Entity\TitleToken::class)
+                ->selectTokenGroupToken($tokenGroup);
 //        var_dump($tdGroups); exit;
 
         // Render the view template.
@@ -942,6 +945,7 @@ class NameController extends AbstractActionController
             'aplGroups' => $aplGroups,
             'meanFrequency' => $meanFrequency,
             'rate' => $rate,
+            'tokens' => $tokens,
         ]);
     }    
     
