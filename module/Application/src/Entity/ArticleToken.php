@@ -45,12 +45,6 @@ class ArticleToken {
      */
     protected $article;    
     
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Application\Entity\Token", inversedBy="articleTokens") 
-//     * @ORM\JoinColumn(name="lemma", referencedColumnName="lemma")
-//     */
-//    protected $token;    
-    
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\ArticleTitle", inversedBy="articleTokens") 
      * @ORM\JoinColumn(name="title_id", referencedColumnName="id")
