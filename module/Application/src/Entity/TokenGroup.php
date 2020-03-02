@@ -67,7 +67,16 @@ class TokenGroup {
      */
     private $tokens;
     
-   /**
+     /**
+     * @ORM\ManyToMany(targetEntity="\Application\Entity\Bigram")
+     * @ORM\JoinTable(name="token_group_bigram",
+     *      joinColumns={@ORM\JoinColumn(name="token_group_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="bigram_id", referencedColumnName="id")}
+     *      )
+     */
+    private $bigrams;
+
+    /**
     * @ORM\OneToMany(targetEntity="Rate", mappedBy="tokenGroup")
     * @ORM\JoinColumn(name="id", referencedColumnName="token_group_id")
    */
@@ -95,6 +104,7 @@ class TokenGroup {
     public function __construct() {
         $this->goods = new ArrayCollection();
         $this->tokens = new ArrayCollection();
+        $this->bigrams = new ArrayCollection();
         $this->rates = new ArrayCollection();
         $this->titleTokens = new ArrayCollection();
         $this->titleBigrams = new ArrayCollection();
@@ -215,6 +225,45 @@ class TokenGroup {
         return 'NaN';
     }
     
+    public function getBigrams() {
+       return $this->bigrams;
+    }    
+   
+    /**
+     * Содержет ли строка bigram?
+     * 
+     * @param \Application\Entity\Bigram $bigram
+     * @return bool
+     */
+    public function hasBigram($bigram)
+    {
+        return $this->bigrams->contains($bigram);
+    }
+
+    /**
+     * 
+     * @param \Application\Entity\Bigram $bigram
+     */
+    public function addBigram($bigram)
+    {
+        $this->bigrams->add($bigram);
+    }
+
+    
+    public function getBigramView()
+    {
+        $result = [];
+        
+        foreach ($this->bigrams as $bigram){
+            $result[] = $bigram->getBilemma();
+        }
+        
+        if (count($result)){
+            return implode(' ', $result);
+        }
+        
+        return 'NaN';
+    }
     /*
      * Возвращает связанный rates.
      * @return Rate

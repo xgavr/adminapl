@@ -1009,6 +1009,7 @@ class NameManager
         $this->entityManager->getRepository(Bigram::class)
                 ->deleteArticleBigram($bigram);
 
+        $this->entityManager->getConnection()->delete('token_group_bigram', ['bigram_id' => $bigram->getId()]);
         $this->entityManager->getConnection()->delete('bigram', ['id' => $bigram->getId()]);
     }    
 
@@ -1402,6 +1403,7 @@ class NameManager
         }
         
         $this->entityManager->getConnection()->delete('token_group_token', ['token_group_id' => $tokenGroup->getId()]);
+        $this->entityManager->getConnection()->delete('token_group_bigram', ['token_group_id' => $tokenGroup->getId()]);
         
         $this->entityManager->getConnection()->delete('token_group', ['id' => $tokenGroup->getId()]);
     }

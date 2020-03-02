@@ -707,6 +707,17 @@ class TokenRepository  extends EntityRepository
     }    
     
     /**
+     * Быстрая вставка связи группы наименований и bigram
+     * @param array $row 
+     * @return integer
+     */
+    public function insertTokenGroupBigram($row)
+    {
+        $inserted = $this->getEntityManager()->getConnection()->insert('token_group_bigram', $row);
+        return $inserted;
+    }    
+    
+    /**
      * Получить токены группы наименований
      * 
      * @param TokenGroup $tokenGroup

@@ -79,6 +79,15 @@ class Bigram {
     protected $gf;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\TokenGroup")
+     * @ORM\JoinTable(name="token_group_bigram",
+     *      joinColumns={@ORM\JoinColumn(name="bigram_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="token_group_id", referencedColumnName="id")}
+     *      )
+     */
+    private $tokenGroups;
+    
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\ArticleBigram", mappedBy="bigram")
     * @ORM\JoinColumn(name="id", referencedColumnName="bigram_id")
      */
@@ -276,6 +285,15 @@ class Bigram {
     {
         $this->flag = $flag;
     }           
+    
+    /**
+     * Returns the array of tokenGroups assigned to this oemRaw.
+     * @return array
+     */
+    public function getTokenGroups()
+    {
+        return $this->tokenGroups;
+    }        
     
     /**
      * Returns the array of article bigrams assigned to this bigram.
