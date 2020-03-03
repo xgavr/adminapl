@@ -973,6 +973,8 @@ class NameController extends AbstractActionController
     
     public function tokenGroupTokenAction()
     {
+        ini_set('memory_limit', '4096M');
+        
         $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
         if ($tokenGroupId<0) {
             $this->getResponse()->setStatusCode(404);
