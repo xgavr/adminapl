@@ -13,6 +13,8 @@ use Zend\View\Model\ViewModel;
 use Zend\Stdlib\RequestInterface as Request;
 use Zend\Stdlib\ResponseInterface as Response;
 use Application\Entity\FpTree;
+use Application\Entity\TokenGroupToken;
+use Application\Entity\TokenGroupBigram;
 
 
 class ProcessingController extends AbstractActionController
@@ -601,6 +603,40 @@ class ProcessingController extends AbstractActionController
                     ->updateSupportCount();
             $this->entityManager->getRepository(FpTree::class)
                     ->deleteEmpty();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    /**
+     * Заполнение токенов групп наименований
+     */
+    public function fillTokenGroupTokenAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            $this->entityManager->getRepository(TokenGroupToken::class)
+                    ->fillTokenGroupToken(); 
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    /**
+     * Заполнение биграм групп наименований
+     */
+    public function fillTokenGroupBigramAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            $this->entityManager->getRepository(TokenGroupBigram::class)
+                    ->fillTokenGroupBigram(); 
         }    
                 
         return new JsonModel(
