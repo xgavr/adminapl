@@ -199,6 +199,80 @@ class TitleRepository  extends EntityRepository{
         
         return;
     }
+    
+    /**
+     * Поддержка токена в группе наименований
+     * 
+     * @param TokenGroup $tokenGroup
+     * @param Token $token
+     */
+    public function supportTokenGroupToken($tokenGroup, $token)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('count(at.lemma) as tokenCount')
+                ->from(Goods::class, 'g')
+                ->join('g.articles', 'a')
+                ->join('a.articleTokens', 'at')
+                ->where('g.tokenGroup = ?1')
+                ->andWhere('at.lemma = ?2')
+                ->setParameter('1', $tokenGroup->getId())
+                ->setParameter('2', $token->getLemma())
+                ->groupBy('g.tokenGroup')
+                ->addGroupBy('at.lemma')
+                ->setMaxResults(1)
+                ;
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();
+        $result = 0;
+        if (is_array($row)){
+            $result = $row['tokenCount'];
+        }
+        
+        $entityManager->getConnection()->update('token_group_count', [
+                'frequency' => $result,
+            ], [
+                'token_group_id' => $tokenGroup->getId(),
+                'token_id' => $token->getId(),
+            ]);
+        
+        return;
+    }
+    
+    /**
+     * Обновить биграмы по всем группам
+     * 
+     */
+    public function fillTokenGroupBigram()
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(1800);        
+        $startTime = time();
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('tg')
+            ->from(TokenGroup::class, 'tg')
+            ;    
+        
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $tokenGroup){        
+                $this->updateTokenGroupBigram($tokenGroup);
+                $this->getEntityManager()->detach($tokenGroup);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+            }
+        }
+        
+        return;
+    }    
 
     /**
      * Обработать наименование артикула
