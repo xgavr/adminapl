@@ -229,21 +229,28 @@ class TitleRepository  extends EntityRepository{
             $result = $row['tokenCount'];
         }
         
-        $entityManager->getConnection()->update('token_group_count', [
-                'frequency' => $result,
-            ], [
-                'token_group_id' => $tokenGroup->getId(),
-                'token_id' => $token->getId(),
-            ]);
+        if ($result){
+            $entityManager->getConnection()->update('token_group_token', [
+                    'frequency' => $result,
+                ], [
+                    'token_group_id' => $tokenGroup->getId(),
+                    'token_id' => $token->getId(),
+                ]);
+        } else {
+            $entityManager->getConnection()->delete('token_group_token', [
+                    'token_group_id' => $tokenGroup->getId(),
+                    'token_id' => $token->getId(),
+                ]);            
+        }    
         
         return;
     }
     
     /**
-     * Обновить биграмы по всем группам
+     * Обновить поддержку по всем записям
      * 
      */
-    public function fillTokenGroupBigram()
+    public function supportTokenGroupTokens()
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(1800);        
@@ -253,8 +260,8 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('tg')
-            ->from(TokenGroup::class, 'tg')
+        $queryBuilder->select('tgt')
+            ->from(TokenGroupToken::class, 'tgt')
             ;    
         
         $query = $queryBuilder->getQuery();
@@ -262,9 +269,90 @@ class TitleRepository  extends EntityRepository{
         $iterable = $query->iterate();
         
         foreach ($iterable as $row){
-            foreach ($row as $tokenGroup){        
-                $this->updateTokenGroupBigram($tokenGroup);
-                $this->getEntityManager()->detach($tokenGroup);
+            foreach ($row as $tokenGroupToken){        
+                $this->supportTokenGroupToken($tokenGroupToken->getTokenGroup(), $tokenGroupToken->getToken());
+                $this->getEntityManager()->detach($tokenGroupToken);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+            }
+        }
+        
+        return;
+    }    
+
+    /**
+     * Поддержка биграма в группе наименований
+     * 
+     * @param TokenGroup $tokenGroup
+     * @param Bigram $bigram
+     */
+    public function supportTokenGroupBigram($tokenGroup, $bigram)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('count(at.lemma) as bigramCount')
+                ->from(Goods::class, 'g')
+                ->join('g.articles', 'a')
+                ->join('a.articleBigrams', 'ab')
+                ->where('g.tokenGroup = ?1')
+                ->andWhere('ab.bigram = ?2')
+                ->setParameter('1', $tokenGroup->getId())
+                ->setParameter('2', $bigram->getId())
+                ->groupBy('g.tokenGroup')
+                ->addGroupBy('ab.bigram')
+                ->setMaxResults(1)
+                ;
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();
+        $result = 0;
+        if (is_array($row)){
+            $result = $row['bigramCount'];
+        }
+        
+        if ($result){
+            $entityManager->getConnection()->update('token_group_bigram', [
+                    'frequency' => $result,
+                ], [
+                    'token_group_id' => $tokenGroup->getId(),
+                    'bigram_id' => $bigram->getId(),
+                ]);
+        } else {
+            $entityManager->getConnection()->delete('token_group_bigram', [
+                    'token_group_id' => $tokenGroup->getId(),
+                    'bigram_id' => $bigram->getId(),
+                ]);            
+        }    
+        
+        return;
+    }
+
+    /**
+     * Обновить поддержку по всем записям
+     * 
+     */
+    public function supportTokenGroupBigrams()
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(1800);        
+        $startTime = time();
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('tgb')
+            ->from(TokenGroupBigram::class, 'tgb')
+            ;    
+        
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $tokenGroupBigram){        
+                $this->supportTokenGroupBigram($tokenGroupBigram->getTokenGroup(), $tokenGroupBigram->getBigram());
+                $this->getEntityManager()->detach($tokenGroupBigram);
                 if (time() > $startTime + 1740){
                     return;
                 }            

@@ -1222,4 +1222,27 @@ class NameController extends AbstractActionController
         ]);          
         
     }
+
+    public function supportTokenGroupTokensAction()
+    {
+        $this->entityManager->getRepository(TokenGroupToken::class)
+                ->supportTokenGroupTokens(); 
+
+        return new JsonModel([
+            'result' => 'oke',
+        ]);          
+        
+    }
+
+    public function supportTokenGroupBigramsAction()
+    {
+        $this->entityManager->getRepository(TokenGroupBigram::class)
+                ->supportTokenGroupBigrams(); 
+
+        return new JsonModel([
+            'result' => 'oke',
+        ]);          
+        
+    }
+
 }
