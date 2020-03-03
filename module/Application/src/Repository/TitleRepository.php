@@ -13,6 +13,10 @@ use Application\Entity\ArticleTitle;
 use Application\Entity\ArticleToken;
 use Application\Entity\Article;
 use Application\Entity\TokenGroup;
+use Application\Entity\TokenGroupToken;
+use Application\Entity\Goods;
+use Application\Entity\Bigram;
+use Application\Entity\TokenGroupBigram;
 
 /**
  * Description of TitleRepository
@@ -33,58 +37,169 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('t')
-                ->from(Token::class, 't')
-                ->join('t.articleTokens', 'at')
-                ->join('at.articleTitle', 'ati')
-                ->distinct()
-                ->where('ati.tokenGroup = ?1')
+                ->from(Goods::class, 'g')
+                ->join('g.articles', 'a')
+                ->join('a.articleTokens', 'at')
+                ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')
+                ->where('g.tokenGroup = ?1')
                 ->setParameter('1', $tokenGroup->getId())
-                ->andWhere('t.frequency > ?2')
-                ->setParameter('2', Token::MIN_DF)
-                ->orderBy('t.frequency', 'DESC')
                 ;
+        
         return $queryBuilder->getQuery()->getResult();
     }    
 
     /**
-     * Добавить ветвь
+     * Обновить токены группы
      * 
-     * @param Token $token
-     * @param Token|integer $rootToken
-     * @param integer $rootTreeId
-     * @param integer $parentTreeId
+     * @param TokenGroup $tokenGroup
      * 
      * @return null;
      */
-    public function addBanch($token, $rootToken = 0, $rootTreeId = 0, $parentTreeId = 0)
+    public function updateTokenGroupToken($tokenGroup)
     {
-        if (is_numeric($token)){
-            $tokenId = $token;            
-        } else {
-            $tokenId = $token->getId();            
-        }
-
-        if (is_numeric($rootToken)){
-            $rootTokenId = $rootToken;            
-        } else {
-            $rootTokenId = $rootToken->getId();            
-        }
-        
-        $fpTree = $this->findBanch($tokenId, $parentTreeId);
-        
-        if (!$fpTree){
-            $this->getEntityManager()->getConnection()->insert('fp_tree', [
-                'root_tree_id' => $rootTreeId,
-                'root_token_id' => $rootTokenId,
-                'token_id' => $tokenId,
-                'parent_tree_id' => $parentTreeId,
-            ]);           
-            $fpTree = $this->findBanch($tokenId, $parentTreeId);
-        }
+        $tokens = $this->selectTokenGroupToken($tokenGroup);
+        if ($tokens){
+            $entityManager = $this->getEntityManager();
+            foreach ($tokens as $token){
                 
-        return $fpTree;
+                $tokenGroupToken = $entityManager->getRepository(TokenGroupToken::class)
+                        ->findOneBy(['tokenGroup' => $tokenGroup->getId(), 'token' => $token->getId()]);
+                
+                if (!$tokenGroupToken){
+                    $entityManager->getConnection()->insert('token_group_token', [
+                       'token_group_id' => $tokenGroup->getId(),
+                        'token_id' => $token->getId(),
+                        'frequency' => 0,
+                    ]);
+                }    
+            }
+        }
+        
+        return;
     }
     
+    /**
+     * Выбрать биграммы группы 
+     * 
+     * @param TokenGroup $tokenGroup
+     * @return array;
+     */
+    public function selectTokenGroupBigram($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('identity(ab.bigram) as bigramId')
+                ->from(Goods::class, 'g')
+                ->join('g.articles', 'a')
+                ->join('a.articleBigrams', 'ab')
+                ->where('g.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }    
+
+    /**
+     * Обновить биграмы группы
+     * 
+     * @param TokenGroup $tokenGroup
+     * 
+     * @return null;
+     */
+    public function updateTokenGroupBigram($tokenGroup)
+    {
+        $bigrams = $this->selectTokenGroupBigram($tokenGroup);
+        if ($bigrams){
+            $entityManager = $this->getEntityManager();
+            foreach ($bigrams as $row){
+                
+                $tokenGroupBigram = $entityManager->getRepository(TokenGroupBigram::class)
+                        ->findOneBy(['tokenGroup' => $tokenGroup->getId(), 'bigram' => $row['bigramId']]);
+                
+                if (!$tokenGroupBigram){
+                    $entityManager->getConnection()->insert('token_group_bigram', [
+                       'token_group_id' => $tokenGroup->getId(),
+                        'bigram_id' => $row['bigramId'],
+                        'frequency' => 0,
+                    ]);
+                }    
+            }
+        }
+        
+        return;
+    }
+
+    /**
+     * Обновить токены по всем группам
+     * 
+     */
+    public function fillTokenGroupToken()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(1800);        
+        $startTime = time();
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('tg')
+            ->from(TokenGroup::class, 'tg')
+            ;    
+        
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $tokenGroup){        
+                $this->updateTokenGroupToken($tokenGroup);
+                $this->getEntityManager()->detach($tokenGroup);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+            }
+        }
+        
+        return;
+    }
+
+    /**
+     * Обновить биграмы по всем группам
+     * 
+     */
+    public function fillTokenGroupBigram()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(1800);        
+        $startTime = time();
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('tg')
+            ->from(TokenGroup::class, 'tg')
+            ;    
+        
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $tokenGroup){        
+                $this->updateTokenGroupBigram($tokenGroup);
+                $this->getEntityManager()->detach($tokenGroup);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+            }
+        }
+        
+        return;
+    }
+
     /**
      * Обработать наименование артикула
      * 
@@ -135,38 +250,6 @@ class TitleRepository  extends EntityRepository{
         return;
     }
     
-    /**
-     * Очистить деревья и связи
-     */
-    public function resetFpTree()
-    {
-        set_time_limit(0);        
-        
-        $this->getEntityManager()->getConnection()->update('article_token', [
-            'fp_tree_id' => 0], ['1' => 1]);                       
-        
-        $this->getEntityManager()->getConnection()->update('article_title', [
-            'fp_tree_id' => 0], ['1' => 1]);                       
-
-        $this->getEntityManager()->getConnection()->delete('fp_tree', ['1' => 1]);                       
-    }
-
-    /**
-     * Обработать артикул
-     * 
-     * @param Article $article
-     */
-    public function addFromArticle($article)
-    {
-        $titles = $this->getEntityManager()->getRepository(ArticleTitle::class)
-                ->findBy(['article' => $article->getId()]);
-        
-        foreach ($titles as $title){
-            $this->addFromArticleTitle($title);
-        }
-        
-        return;
-    }
     
     /**
      * Заполнить по всем наименованиям артикулов

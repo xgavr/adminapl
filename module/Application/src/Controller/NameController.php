@@ -21,6 +21,8 @@ use Application\Entity\Rate;
 use Application\Entity\FpTree;
 use Application\Entity\FpGroup;
 use Application\Entity\TitleToken;
+use Application\Entity\TokenGroupToken;
+use Application\Entity\TokenGroupBigram;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -969,6 +971,32 @@ class NameController extends AbstractActionController
         ]);          
     }
     
+    public function tokenGroupTokenAction()
+    {
+        $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
+        if ($tokenGroupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneById($tokenGroupId);
+        
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(TokenGroupToken::class)
+                ->updateTokenGroupToken($tokenGroup);
+        $this->entityManager->getRepository(TokenGroupBigram::class)
+                ->updateTokenGroupBigram($tokenGroup);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
     public function goodTokenAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);
@@ -1164,6 +1192,28 @@ class NameController extends AbstractActionController
     {
         $this->entityManager->getRepository(FpGroup::class)
                 ->updateFpGroups(); 
+
+        return new JsonModel([
+            'result' => 'oke',
+        ]);          
+        
+    }
+
+    public function fillTokenGroupTokenAction()
+    {
+        $this->entityManager->getRepository(TokenGroupToken::class)
+                ->fillTokenGroupToken(); 
+
+        return new JsonModel([
+            'result' => 'oke',
+        ]);          
+        
+    }
+
+    public function fillTokenGroupBigramAction()
+    {
+        $this->entityManager->getRepository(TokenGroupBigram::class)
+                ->fillTokenGroupBigram(); 
 
         return new JsonModel([
             'result' => 'oke',
