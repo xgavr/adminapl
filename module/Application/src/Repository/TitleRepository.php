@@ -170,6 +170,8 @@ class TitleRepository  extends EntityRepository{
                         'frequency' => 0,
                     ]);
                 }    
+                
+                $entityManager->detach($token);
             }    
             
             if (time() > $startTime + 1740){
