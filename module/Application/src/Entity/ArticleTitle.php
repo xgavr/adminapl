@@ -51,6 +51,12 @@ class ArticleTitle {
     protected $article;        
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleToken", mappedBy="articleTitle")
+    * @ORM\JoinColumn(name="id", referencedColumnName="titile_id")
+   */
+    private $articleTokens;        
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\FpTree", inversedBy="articleTitles") 
      * @ORM\JoinColumn(name="fp_tree_id", referencedColumnName="id")
      */
@@ -121,6 +127,15 @@ class ArticleTitle {
     {
         $this->article = $article;
     }           
+    
+    /*
+     * Возвращает связанный articleTokens.
+     * @return array
+     */    
+    public function getArticleTokens() 
+    {
+        return $this->articleTokens;
+    }
     
     /**
      * Возвращает связанный fpTree.

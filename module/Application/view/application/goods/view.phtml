@@ -68,10 +68,10 @@ $priceCols = $goodsManager->priceCols($goods);
                     <?php endif?>
                 </h5>    
                 <h6>
-                    <button value="/name/good-sign-token/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
+<!--                    <button value="/name/good-sign-token/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
                             title="Показать группу наименований">
                         <span class="glyphicon glyphicon-refresh" ></span>
-                    </button>                             
+                    </button>                             -->
                     <button value="/name/goods-token-group/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                             title="Присвоить группу наименований">
                         <span class="glyphicon glyphicon-refresh" ></span>
@@ -79,7 +79,7 @@ $priceCols = $goodsManager->priceCols($goods);
                     <?php if ($goods->getTokenGroup()):?>
                         <span>
                             <a href="/name/view-token-group/<?= $goods->getTokenGroup()->getId()?>" target="_blank">
-                                <?= $goods->getTokenGroup()->getTokenView();?>
+                                <?= $goods->getTokenGroup()->getLemms();?>
                             </a>
                         </span>    
                     <?php endif?>

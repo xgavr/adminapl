@@ -144,22 +144,36 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('tg')
+        $queryBuilder->select('tg.id as tokenGroupId, at.lemma as lemma')
             ->from(TokenGroup::class, 'tg')
+            ->join('tg.articleTitles', 'ati')
+            ->join('ati.articleTokens', 'at') 
+            ->groupBy('tg.id')
+            ->addGroupBy('at.lemma')    
             ;    
         
-        $query = $queryBuilder->getQuery();
+        $data = $queryBuilder->getQuery()->getResult();
         
-        $iterable = $query->iterate();
-        
-        foreach ($iterable as $row){
-            foreach ($row as $tokenGroup){        
-                $this->updateTokenGroupToken($tokenGroup);
-                $this->getEntityManager()->detach($tokenGroup);
-                if (time() > $startTime + 1740){
-                    return;
-                }            
-            }
+        foreach ($data as $row){
+            $token = $entityManager->getRepository(Token::class)
+                    ->findOnByLemma($row['lemma']);
+            
+            if ($token){
+                $tokenGroupToken = $entityManager->getRepository(TokenGroupToken::class)
+                        ->findOneBy(['tokenGroup' => $row['tokenGroupId'], 'token' => $token->getId()]);
+
+                if (!$tokenGroupToken){
+                    $entityManager->getConnection()->insert('token_group_token', [
+                       'token_group_id' => $row['tokenGroupId'],
+                        'token_id' => $token->getId(),
+                        'frequency' => 0,
+                    ]);
+                }    
+            }    
+            
+            if (time() > $startTime + 1740){
+                return;
+            }            
         }
         
         return;
@@ -211,23 +225,16 @@ class TitleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('count(at.lemma) as tokenCount')
-                ->from(Goods::class, 'g')
-                ->join('g.articles', 'a')
-                ->join('a.articleTokens', 'at')
-                ->where('g.tokenGroup = ?1')
+        $queryBuilder->select('at.lemma')
+                ->from(ArticleTitle::class, 'ati')
+                ->join('ati.articleTokens', 'at')
+                ->where('ati.tokenGroup = ?1')
                 ->andWhere('at.lemma = ?2')
                 ->setParameter('1', $tokenGroup->getId())
                 ->setParameter('2', $token->getLemma())
-                ->groupBy('g.tokenGroup')
-                ->addGroupBy('at.lemma')
-                ->setMaxResults(1)
                 ;
-        $row = $queryBuilder->getQuery()->getOneOrNullResult();
-        $result = 0;
-        if (is_array($row)){
-            $result = $row['tokenCount'];
-        }
+
+        $result = count($queryBuilder->getQuery()->getResult());
         
         if ($result){
             $entityManager->getConnection()->update('token_group_token', [
