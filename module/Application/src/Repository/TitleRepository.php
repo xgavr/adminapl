@@ -145,18 +145,19 @@ class TitleRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('tg.id as tokenGroupId, at.lemma as lemma')
+            ->distinct()    
             ->from(TokenGroup::class, 'tg')
             ->join('tg.articleTitles', 'ati')
             ->join('ati.articleTokens', 'at') 
-            ->groupBy('tg.id')
-            ->addGroupBy('at.lemma')    
+//            ->groupBy('tg.id')
+//            ->addGroupBy('at.lemma')    
             ;    
         
         $data = $queryBuilder->getQuery()->getResult();
         
         foreach ($data as $row){
             $token = $entityManager->getRepository(Token::class)
-                    ->findOnByLemma($row['lemma']);
+                    ->findOneByLemma($row['lemma']);
             
             if ($token){
                 $tokenGroupToken = $entityManager->getRepository(TokenGroupToken::class)
