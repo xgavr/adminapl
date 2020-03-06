@@ -481,6 +481,10 @@ class GoodsRepository extends EntityRepository
             foreach ($titles as $articleTitle){
                 $this->getEntityManager()->getConnection()->update('article_title', 
                     ['token_group_id' => $tokenGroupId], ['id' => $articleTitle->getId()]);
+                $this->getEntityManager()->getConnection()->update('article_token', 
+                    ['token_group_id' => $tokenGroupId], ['title_id' => $articleTitle->getId()]);
+                $this->getEntityManager()->getConnection()->update('article_bigram', 
+                    ['token_group_id' => $tokenGroupId], ['title_id' => $articleTitle->getId()]);
             }
         }  
         

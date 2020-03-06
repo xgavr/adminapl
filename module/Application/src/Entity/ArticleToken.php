@@ -17,6 +17,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Daddy
  */
 class ArticleToken {
+    
+    const STATUS_TAKE_NEW = 1; //новая запись
+    const STATUS_TAKE_OLD = 2; //учтено
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -40,6 +44,11 @@ class ArticleToken {
     protected $status;        
 
     /**
+     * @ORM\Column(name="status_take")  
+     */
+    protected $statusTake;        
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Article", inversedBy="articleTokens") 
      * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
      */
@@ -51,6 +60,12 @@ class ArticleToken {
      */
     protected $articleTitle;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\TokenGroup", inversedBy="articleTokens") 
+     * @ORM\JoinColumn(name="token_group_id", referencedColumnName="id")
+     */
+    protected $tokenGroup;    
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\FpTree", inversedBy="articleTokens") 
      * @ORM\JoinColumn(name="fp_tree_id", referencedColumnName="id")
@@ -110,6 +125,16 @@ class ArticleToken {
         $this->status = $status;
     }     
 
+    public function getStatusTake() 
+    {
+        return $this->statusTake;
+    }
+
+    public function setStatusTake($statusTake) 
+    {
+        $this->statusTake = $statusTake;
+    }     
+
     /**
      * Возвращает связанный article.
      * @return \Application\Entity\Article
@@ -144,6 +169,24 @@ class ArticleToken {
     public function setArticleTitle($articleTitle) 
     {
         $this->articleTitle = $articleTitle;
+    }           
+
+    /**
+     * Возвращает связанный tokenGroup.
+     * @return \Application\Entity\TokenGroup
+     */    
+    public function getTokenGroup() 
+    {
+        return $this->tokenGroup;
+    }
+
+    /**
+     * Задает связанный tokenGroup.
+     * @param \Application\Entity\tokenGroup $tokenGroup
+     */    
+    public function setTokenGroup($tokenGroup) 
+    {
+        $this->tokenGroup = $tokenGroup;
     }           
 
     /**

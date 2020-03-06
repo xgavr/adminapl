@@ -89,6 +89,18 @@ class TokenGroup {
    private $articleTitles;        
 
    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleToken", mappedBy="tokenGroup")
+    * @ORM\JoinColumn(name="id", referencedColumnName="token_group_id")
+   */
+   private $articleTokens;        
+
+   /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleBigram", mappedBy="tokenGroup")
+    * @ORM\JoinColumn(name="id", referencedColumnName="token_group_id")
+   */
+   private $articleBigrams;        
+
+   /**
     * @ORM\OneToMany(targetEntity="Application\Entity\TitleToken", mappedBy="tokenGroup")
     * @ORM\JoinColumn(name="id", referencedColumnName="group_id")
    */
@@ -288,6 +300,24 @@ class TokenGroup {
     }
 
     /*
+     * Возвращает связанный articleTokens.
+     * @return array
+     */    
+    public function getArticleTokens() 
+    {
+        return $this->articleTokens;
+    }
+
+    /*
+     * Возвращает связанный articleBigrams.
+     * @return array
+     */    
+    public function getArticleBigrams() 
+    {
+        return $this->articleBigrams;
+    }
+
+    /*
      * Возвращает связанный titleTokens.
      * @return array
      */    
@@ -300,4 +330,5 @@ class TokenGroup {
     {
         $this->titleTokens[] = $titleToken;
     }             
+
 }

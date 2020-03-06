@@ -17,6 +17,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Daddy
  */
 class ArticleBigram {
+    
+    const STATUS_TAKE_NEW = 1; //новая запись
+    const STATUS_TAKE_OLD = 2; //учтено
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -40,6 +44,11 @@ class ArticleBigram {
     protected $status;        
 
     /**
+     * @ORM\Column(name="status_take")  
+     */
+    protected $statusTake;        
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Bigram", inversedBy="articleBigrams") 
      * @ORM\JoinColumn(name="bigram_id", referencedColumnName="id")
      */
@@ -51,6 +60,12 @@ class ArticleBigram {
      */
     protected $article;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\TokenGroup", inversedBy="articleBigrams") 
+     * @ORM\JoinColumn(name="token_group_id", referencedColumnName="id")
+     */
+    protected $tokenGroup;    
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\ArticleTitle", inversedBy="articleBigrams") 
      * @ORM\JoinColumn(name="title_id", referencedColumnName="id")
@@ -97,6 +112,16 @@ class ArticleBigram {
         $this->status = $status;
     }     
 
+    public function getStatusTake() 
+    {
+        return $this->statusTake;
+    }
+
+    public function setStatusTake($statusTake) 
+    {
+        $this->statusTake = $statusTake;
+    }     
+
     /**
      * Возвращает связанный bigram.
      * @return \Application\Entity\Bigram
@@ -133,6 +158,24 @@ class ArticleBigram {
         $this->article = $article;
     }           
     
+    /**
+     * Возвращает связанный tokenGroup.
+     * @return \Application\Entity\TokenGroup
+     */    
+    public function getTokenGroup() 
+    {
+        return $this->tokenGroup;
+    }
+
+    /**
+     * Задает связанный tokenGroup.
+     * @param \Application\Entity\tokenGroup $tokenGroup
+     */    
+    public function setTokenGroup($tokenGroup) 
+    {
+        $this->tokenGroup = $tokenGroup;
+    }           
+
     /**
      * Возвращает связанный articleTitle.
      * @return \Application\Entity\ArticleTitle
