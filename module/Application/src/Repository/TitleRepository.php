@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Token;
 use Application\Entity\ArticleTitle;
 use Application\Entity\ArticleToken;
+use Application\Entity\ArticleBigram;
 use Application\Entity\Article;
 use Application\Entity\TokenGroup;
 use Application\Entity\TokenGroupToken;
@@ -37,11 +38,9 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('t')
-                ->from(Goods::class, 'g')
-                ->join('g.articles', 'a')
-                ->join('a.articleTokens', 'at')
-                ->join(Token::class, 't', 'WITH', 't.lemma = at.lemma')
-                ->where('g.tokenGroup = ?1')
+                ->from(ArticleToken::class, 'at')
+                ->join(Token::class, 't', 'WITH', 'at.lemma = at.lemma')
+                ->where('at.tokenGroup = ?1')
                 ->setParameter('1', $tokenGroup->getId())
                 ;
         
@@ -90,14 +89,12 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('identity(ab.bigram) as bigramId')
-                ->from(Goods::class, 'g')
-                ->join('g.articles', 'a')
-                ->join('a.articleBigrams', 'ab')
-                ->where('g.tokenGroup = ?1')
+                ->from(ArticleBigram::class, 'ab')
+                ->where('ab.tokenGroup = ?1')
                 ->setParameter('1', $tokenGroup->getId())
                 ;
         
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery();
     }    
 
     /**
@@ -109,22 +106,24 @@ class TitleRepository  extends EntityRepository{
      */
     public function updateTokenGroupBigram($tokenGroup)
     {
-        $bigrams = $this->selectTokenGroupBigram($tokenGroup);
-        if ($bigrams){
-            $entityManager = $this->getEntityManager();
-            foreach ($bigrams as $row){
-                
+        $entityManager = $this->getEntityManager();
+
+        $bigramsQuery = $this->selectTokenGroupBigram($tokenGroup);
+        $iterable = $bigramsQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $bigram){        
                 $tokenGroupBigram = $entityManager->getRepository(TokenGroupBigram::class)
-                        ->findOneBy(['tokenGroup' => $tokenGroup->getId(), 'bigram' => $row['bigramId']]);
-                
+                        ->findOneBy(['tokenGroup' => $tokenGroup->getId(), 'bigram' => $bigram['bigramId']]);
+
                 if (!$tokenGroupBigram){
                     $entityManager->getConnection()->insert('token_group_bigram', [
                        'token_group_id' => $tokenGroup->getId(),
-                        'bigram_id' => $row['bigramId'],
+                        'bigram_id' => $bigram['bigramId'],
                         'frequency' => 0,
                     ]);
                 }    
-            }
+            }    
         }
         
         return;
@@ -136,7 +135,7 @@ class TitleRepository  extends EntityRepository{
      */
     public function fillTokenGroupToken()
     {
-        ini_set('memory_limit', '4096M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(1800);        
         $startTime = time();
         
@@ -144,36 +143,36 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('tg.id as tokenGroupId, at.lemma as lemma')
+        $queryBuilder->select('identity(at.tokenGroup) as tokenGroupId, at.lemma as lemma')
             ->distinct()    
-            ->from(TokenGroup::class, 'tg')
-            ->join('tg.articleTitles', 'ati')
-            ->join('ati.articleTokens', 'at') 
-//            ->groupBy('tg.id')
-//            ->addGroupBy('at.lemma')    
+            ->from(ArticleToken::class, 'at')
             ;    
         
-        $data = $queryBuilder->getQuery()->getResult();
+        $query = $queryBuilder->getQuery();
+        $iterable = $query->iterate();
         
-        foreach ($data as $row){
-            $token = $entityManager->getRepository(Token::class)
-                    ->findOneByLemma($row['lemma']);
-            
-            if ($token){
-                $tokenGroupToken = $entityManager->getRepository(TokenGroupToken::class)
-                        ->findOneBy(['tokenGroup' => $row['tokenGroupId'], 'token' => $token->getId()]);
+        foreach ($iterable as $row){
+            foreach ($row as $tokenGroupLemma){ 
+                if ($tokenGroupLemma['tokenGroupId']){
+                    $token = $entityManager->getRepository(Token::class)
+                            ->findOneByLemma($tokenGroupLemma['lemma']);
 
-                if (!$tokenGroupToken){
-                    $entityManager->getConnection()->insert('token_group_token', [
-                       'token_group_id' => $row['tokenGroupId'],
-                        'token_id' => $token->getId(),
-                        'frequency' => 0,
-                    ]);
+                    if ($token){
+                        $tokenGroupToken = $entityManager->getRepository(TokenGroupToken::class)
+                                ->findOneBy(['tokenGroup' => $tokenGroupLemma['tokenGroupId'], 'token' => $token->getId()]);
+
+                        if (!$tokenGroupToken){
+                            $entityManager->getConnection()->insert('token_group_token', [
+                               'token_group_id' => $tokenGroupLemma['tokenGroupId'],
+                                'token_id' => $token->getId(),
+                                'frequency' => 0,
+                            ]);
+                        }    
+
+                        $entityManager->detach($token);
+                    }    
                 }    
-                
-                $entityManager->detach($token);
-            }    
-            
+            }
             if (time() > $startTime + 1740){
                 return;
             }            
