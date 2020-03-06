@@ -228,9 +228,8 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('at.lemma')
-                ->from(ArticleTitle::class, 'ati')
-                ->join('ati.articleTokens', 'at')
-                ->where('ati.tokenGroup = ?1')
+                ->from(ArticleToken::class, 'at')
+                ->where('at.tokenGroup = ?1')
                 ->andWhere('at.lemma = ?2')
                 ->setParameter('1', $tokenGroup->getId())
                 ->setParameter('2', $token->getLemma())
@@ -301,24 +300,16 @@ class TitleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('count(at.lemma) as bigramCount')
-                ->from(Goods::class, 'g')
-                ->join('g.articles', 'a')
-                ->join('a.articleBigrams', 'ab')
+        $queryBuilder->select('identity(at.bigram)')
+                ->from(ArticleBigram::class, 'ab')
                 ->where('g.tokenGroup = ?1')
                 ->andWhere('ab.bigram = ?2')
                 ->setParameter('1', $tokenGroup->getId())
                 ->setParameter('2', $bigram->getId())
-                ->groupBy('g.tokenGroup')
-                ->addGroupBy('ab.bigram')
-                ->setMaxResults(1)
                 ;
-        $row = $queryBuilder->getQuery()->getOneOrNullResult();
-        $result = 0;
-        if (is_array($row)){
-            $result = $row['bigramCount'];
-        }
         
+        $result = count($queryBuilder->getQuery()->getOneOrNullResult());
+
         if ($result){
             $entityManager->getConnection()->update('token_group_bigram', [
                     'frequency' => $result,
