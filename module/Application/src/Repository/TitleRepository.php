@@ -187,7 +187,7 @@ class TitleRepository  extends EntityRepository{
      */
     public function fillTokenGroupBigram()
     {
-        ini_set('memory_limit', '4096M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(1800);        
         $startTime = time();
         
@@ -195,22 +195,32 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('tg')
-            ->from(TokenGroup::class, 'tg')
+        $queryBuilder->select('identity(ab.tokenGroup) as tokenGroupId, identity(ab.bigram) as bigramId')
+            ->distinct()    
+            ->from(ArticleBigram::class, 'ab')
             ;    
         
         $query = $queryBuilder->getQuery();
-        
         $iterable = $query->iterate();
         
         foreach ($iterable as $row){
-            foreach ($row as $tokenGroup){        
-                $this->updateTokenGroupBigram($tokenGroup);
-                $this->getEntityManager()->detach($tokenGroup);
-                if (time() > $startTime + 1740){
-                    return;
-                }            
+            foreach ($row as $tokenGroupBigramId){ 
+                if ($tokenGroupBigramId['tokenGroupId']){
+                    $tokenGroupBigram = $entityManager->getRepository(TokenGroupBigram::class)
+                            ->findOneBy(['tokenGroup' => $tokenGroupBigramId['tokenGroupId'], 'bigram' => $tokenGroupBigramId['bigramId']]);
+
+                    if (!$tokenGroupBigram){
+                        $entityManager->getConnection()->insert('token_group_bigram', [
+                           'token_group_id' => $tokenGroupBigramId['tokenGroupId'],
+                            'bigram_id' => $tokenGroupBigramId['bigramId'],
+                            'frequency' => 0,
+                        ]);
+                    }    
+                }    
             }
+            if (time() > $startTime + 1740){
+                return;
+            }            
         }
         
         return;
