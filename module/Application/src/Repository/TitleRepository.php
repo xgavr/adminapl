@@ -313,7 +313,7 @@ class TitleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('count(at.id) as bigramCount')
+        $queryBuilder->select('count(ab.id) as bigramCount')
                 ->from(ArticleBigram::class, 'ab')
                 ->where('g.tokenGroup = ?1')
                 ->andWhere('ab.bigram = ?2')
