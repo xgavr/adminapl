@@ -237,28 +237,31 @@ class TitleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('at.lemma')
+        $queryBuilder->select('count(at.id) as lemmaCount')
                 ->from(ArticleToken::class, 'at')
                 ->where('at.tokenGroup = ?1')
                 ->andWhere('at.lemma = ?2')
                 ->setParameter('1', $tokenGroup->getId())
                 ->setParameter('2', $token->getLemma())
+                ->groupBy('at.tokenGroup')
+                ->setMaxResults(1)
                 ;
 
-        $result = count($queryBuilder->getQuery()->getResult());
+        $row = $queryBuilder->getQuery()->getResult();
+        $result = $row['lemmaCount'];
         
-        if ($result){
+        if ($result === 0){
+            $entityManager->getConnection()->delete('token_group_token', [
+                    'token_group_id' => $tokenGroup->getId(),
+                    'token_id' => $token->getId(),
+                ]);            
+        } else {    
             $entityManager->getConnection()->update('token_group_token', [
                     'frequency' => $result,
                 ], [
                     'token_group_id' => $tokenGroup->getId(),
                     'token_id' => $token->getId(),
                 ]);
-        } else {
-            $entityManager->getConnection()->delete('token_group_token', [
-                    'token_group_id' => $tokenGroup->getId(),
-                    'token_id' => $token->getId(),
-                ]);            
         }    
         
         return;
@@ -310,28 +313,31 @@ class TitleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('identity(at.bigram)')
+        $queryBuilder->select('count(at.id) as bigramCount')
                 ->from(ArticleBigram::class, 'ab')
                 ->where('g.tokenGroup = ?1')
                 ->andWhere('ab.bigram = ?2')
                 ->setParameter('1', $tokenGroup->getId())
                 ->setParameter('2', $bigram->getId())
+                ->groupBy('ab.tokenGroup')
+                ->setMaxResults(1)
                 ;
         
-        $result = count($queryBuilder->getQuery()->getOneOrNullResult());
-
-        if ($result){
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();
+        $result = $row['bigramCount'];
+        
+        if ($result === 0){
+            $entityManager->getConnection()->delete('token_group_bigram', [
+                    'token_group_id' => $tokenGroup->getId(),
+                    'bigram_id' => $bigram->getId(),
+                ]);            
+        } else {
             $entityManager->getConnection()->update('token_group_bigram', [
                     'frequency' => $result,
                 ], [
                     'token_group_id' => $tokenGroup->getId(),
                     'bigram_id' => $bigram->getId(),
                 ]);
-        } else {
-            $entityManager->getConnection()->delete('token_group_bigram', [
-                    'token_group_id' => $tokenGroup->getId(),
-                    'bigram_id' => $bigram->getId(),
-                ]);            
         }    
         
         return;
