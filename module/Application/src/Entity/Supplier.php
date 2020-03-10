@@ -575,7 +575,7 @@ class Supplier {
                 ->orderBy(['id' => Criteria::ASC])
                 ;
         
-        return $this->bankAccounts->matching($criteria);                
+        return $this->requestSettings->matching($criteria);                
     }
     
     /**
