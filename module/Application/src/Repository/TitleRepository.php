@@ -354,25 +354,28 @@ class TitleRepository  extends EntityRepository{
         $startTime = time();
         
         $entityManager = $this->getEntityManager();
+        
+        $entityManager->getConnection()->update('token_group_bigram', ['frequency' => 0], ['1=1']);
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('tgb')
-            ->from(TokenGroupBigram::class, 'tgb')
+        $queryBuilder->select('identity(ab.tokenGroup) as tokenGroupId, '
+                . 'identity(ab.bigram) as bigramId,'
+                . 'count(ab.id) as adCount')
+            ->from(ArticleBigram::class, 'ab')
+            ->groupBy('ab.tokenGroup')
+            ->addGroupBy('ab.bigram')    
             ;    
         
-        $query = $queryBuilder->getQuery();
+        $rows = $queryBuilder->getQuery()->getResult();
         
-        $iterable = $query->iterate();
-        
-        foreach ($iterable as $row){
-            foreach ($row as $tokenGroupBigram){        
-                $this->supportTokenGroupBigram($tokenGroupBigram->getTokenGroup(), $tokenGroupBigram->getBigram());
-                $this->getEntityManager()->detach($tokenGroupBigram);
-                if (time() > $startTime + 1740){
-                    return;
-                }            
-            }
+        foreach ($rows as $row){        
+            $entityManager->getConnection()->update('token_group_bigram', 
+                    ['frequency' => $row['abCount']], 
+                    ['token_group_id' => $row['tokenGroupId'], 'bigram_id' => $row['bigramId']]);
+            if (time() > $startTime + 1740){
+                return;
+            }            
         }
         
         return;
