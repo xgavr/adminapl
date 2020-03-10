@@ -355,13 +355,13 @@ class TitleRepository  extends EntityRepository{
         
         $entityManager = $this->getEntityManager();
         
-        $entityManager->getConnection()->update('token_group_bigram', ['frequency' => 0], ['1=1']);
+        $entityManager->getConnection()->update('token_group_bigram', ['frequency' => 0], [1=>1]);
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('identity(ab.tokenGroup) as tokenGroupId, '
                 . 'identity(ab.bigram) as bigramId,'
-                . 'count(ab.id) as adCount')
+                . 'count(ab.id) as abCount')
             ->from(ArticleBigram::class, 'ab')
             ->groupBy('ab.tokenGroup')
             ->addGroupBy('ab.bigram')    
