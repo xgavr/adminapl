@@ -401,7 +401,7 @@ class TitleRepository  extends EntityRepository{
                 ->orderBy('tokenCount', 'DESC')
                 ;
         
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery();
     }
 
     /**

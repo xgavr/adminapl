@@ -930,8 +930,6 @@ class NameController extends AbstractActionController
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findRate(['tokenGroup' => $tokenGroup->getId()]);
         
-        $lemms = $this->entityManager->getRepository(TokenGroupToken::class)
-                ->findTokenGroupToken($tokenGroup);
 //        var_dump($tdGroups); exit;
 
         // Render the view template.
@@ -947,9 +945,52 @@ class NameController extends AbstractActionController
             'aplGroups' => $aplGroups,
             'meanFrequency' => $meanFrequency,
             'rate' => $rate,
-            'lemms' => $lemms,
         ]);
     }    
+    
+    public function tokenGroupTokenContentAction()
+    {
+        $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        // Validate input parameter
+        if ($tokenGroupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneById($tokenGroupId);
+
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(TokenGroupToken::class)
+                        ->findTokenGroupTOken($tokenGroup);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+        
+    }
     
     public function goodsTokenGroupAction()
     {
