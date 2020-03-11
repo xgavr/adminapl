@@ -930,6 +930,8 @@ class NameController extends AbstractActionController
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findRate(['tokenGroup' => $tokenGroup->getId()]);
         
+        $lemms = $this->entityManager->getRepository(TokenGroupToken::class)
+                ->findTokenGroupToken($tokenGroup);
 //        var_dump($tdGroups); exit;
 
         // Render the view template.
@@ -945,6 +947,7 @@ class NameController extends AbstractActionController
             'aplGroups' => $aplGroups,
             'meanFrequency' => $meanFrequency,
             'rate' => $rate,
+            'lemms' => $lemms,
         ]);
     }    
     

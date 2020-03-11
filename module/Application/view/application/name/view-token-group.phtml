@@ -56,6 +56,16 @@ $this->pageBreadcrumbs()->setItems([
                     </button> 
                 </td>
             </tr>
+            <?php    foreach ($lemms as $row):?>
+                <tr>
+                    <td colspan="4">
+                        <?= $row['lemma']?>
+                    </td>
+                    <td>
+                        <?= $row['tokenCount']?>
+                    </td>
+                </tr>
+            <?php endforeach;?>        
             <tr>
                 <td colspan="5">
                     <?= $this->paginationControl($goods,

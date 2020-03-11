@@ -380,6 +380,29 @@ class TitleRepository  extends EntityRepository{
         
         return;
     }    
+    
+    /**
+     * Выбрать токены группы
+     * 
+     * @param TokenGroup $tokenGroup
+     */
+    public function findTokenGroupToken($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('at.lemma, count(at.id) as tokenCount')
+                ->from(ArticleToken::class, 'at')
+                ->where('at.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ->groupBy('at.lemma')
+                ->having('tokenCount > ?2')
+                ->setParameter('2', Token::MIN_DF)
+                ->orderBy('tokenCount', 'DESC')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
 
     /**
      * Обработать наименование артикула
