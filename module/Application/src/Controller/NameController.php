@@ -932,6 +932,8 @@ class NameController extends AbstractActionController
             'aplGroups' => $aplGroups,
             'meanFrequency' => $meanFrequency,
             'rate' => $rate,
+            'tokenStatuses' => Token::getStatusList(),
+            'bigramStatuses' => bigram::getStatusList(),
         ]);
     }    
     
@@ -943,6 +945,7 @@ class NameController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
+        $status = $this->params()->fromQuery('status', Token::IS_DICT);
         
         // Validate input parameter
         if ($tokenGroupId<0) {
@@ -959,7 +962,7 @@ class NameController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(TokenGroupToken::class)
-                        ->findTokenGroupToken($tokenGroup);
+                        ->findTokenGroupToken($tokenGroup, ['status' => $status]);
 
         $total = count($query->getResult(2));
         
@@ -987,6 +990,7 @@ class NameController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
+        $status = $this->params()->fromQuery('status', Bigram::RU_RU);
         
         // Validate input parameter
         if ($tokenGroupId<0) {
@@ -1003,7 +1007,7 @@ class NameController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(TokenGroupBigram::class)
-                        ->findTokenGroupBigram($tokenGroup);
+                        ->findTokenGroupBigram($tokenGroup, ['status' => $status]);
 
         $total = count($query->getResult(2));
         

@@ -385,8 +385,9 @@ class TitleRepository  extends EntityRepository{
      * Выбрать токены группы
      * 
      * @param TokenGroup $tokenGroup
+     * @param array $params
      */
-    public function findTokenGroupToken($tokenGroup)
+    public function findTokenGroupToken($tokenGroup, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -401,6 +402,13 @@ class TitleRepository  extends EntityRepository{
                 ->orderBy('tokenCount', 'DESC')
                 ;
         
+        if (is_array($params)){
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('at.status = ?2')
+                        ->setParameter('2', $params['status']);
+            }
+        }
+        
         return $queryBuilder->getQuery();
     }
 
@@ -408,8 +416,9 @@ class TitleRepository  extends EntityRepository{
      * Выбрать биграмы группы
      * 
      * @param TokenGroup $tokenGroup
+     * @param array $params
      */
-    public function findTokenGroupBigram($tokenGroup)
+    public function findTokenGroupBigram($tokenGroup, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -424,6 +433,12 @@ class TitleRepository  extends EntityRepository{
                 ->setParameter('2', Bigram::MIN_FREQUENCY)
                 ->orderBy('bigramCount', 'DESC')
                 ;
+        if (is_array($params)){
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('b.status = ?2')
+                        ->setParameter('2', $params['status']);
+            }
+        }
         
         return $queryBuilder->getQuery();
     }
