@@ -909,18 +909,7 @@ class NameController extends AbstractActionController
                         ->findAllTokenGroup(['next1' => $tokenGroup->getIds()]); 
         $aplGroups = $this->entityManager->getRepository(TokenGroup::class)
                 ->getGroupApl($tokenGroup);
-        
-        
-        $goodsQuery = $this->entityManager->getRepository(TokenGroup::class)
-                        ->findTokenGroupGoods($tokenGroup, ['tdGroup' => $tdGroup]);
-
-        $adapter = new DoctrineAdapter(new ORMPaginator($goodsQuery, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(5);        
-        $paginator->setCurrentPageNumber($page);
-
-        $totalGoodsCount = $paginator->getTotalItemCount();
-        
+                       
         $tdGroups = $this->entityManager->getRepository(GenericGroup::class)
                 ->genericTokenGroup($tokenGroup);
         
@@ -935,11 +924,9 @@ class NameController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'tokenGroup' => $tokenGroup,
-            'goods' => $paginator,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'nameManager' => $this->nameManager,
-            'totalGoodsCount' => $totalGoodsCount,
             'tdGroups' => $tdGroups,
             'tdGroupActive' => $tdGroup,
             'aplGroups' => $aplGroups,
@@ -966,13 +953,13 @@ class NameController extends AbstractActionController
         $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                 ->findOneById($tokenGroupId);
 
-        if ($goods == null) {
+        if ($tokenGroup == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
         $query = $this->entityManager->getRepository(TokenGroupToken::class)
-                        ->findTokenGroupTOken($tokenGroup);
+                        ->findTokenGroupToken($tokenGroup);
 
         $total = count($query->getResult(2));
         
@@ -991,6 +978,95 @@ class NameController extends AbstractActionController
         ]);                  
         
     }
+    
+    public function tokenGroupTokenBigramAction()
+    {
+        $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        // Validate input parameter
+        if ($tokenGroupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneById($tokenGroupId);
+
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(TokenGroupBigram::class)
+                        ->findTokenGroupBigram($tokenGroup);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+        
+    }
+    
+    public function tokenGroupGoodContentAction()
+    {
+        $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        // Validate input parameter
+        if ($tokenGroupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneById($tokenGroupId);
+
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findTokenGroupGoodName($tokenGroup);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+        
+    }
+    
     
     public function goodsTokenGroupAction()
     {

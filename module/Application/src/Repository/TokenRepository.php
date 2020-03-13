@@ -821,7 +821,7 @@ class TokenRepository  extends EntityRepository
     /**
      * Найти товары группы наименований
      * 
-     * @param Application\Entity\TokenGroup $tokenGroup
+     * @param TokenGroup $tokenGroup
      * @param array $params
      * @return object
      */
@@ -845,6 +845,30 @@ class TokenRepository  extends EntityRepository
                 }    
             }
         }
+        
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
+     * 
+     * @param TokenGroup $tokenGroup
+     */
+    public function findTokenGroupGoodName($tokenGroup)
+    {
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g.id as goodId, g.code as goodCode, p.id as producerId, p.name as producerName, '
+                . 'group_concat(r.goodname) as goodNames')
+                ->from(Goods::class, 'g')
+                ->join('g.producer', 'p')
+                ->join('g.articles', 'a')
+                ->join('a.rawprice', 'r')
+                ->where('g.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ->groupBy('g.id')
+                ;
         
         return $queryBuilder->getQuery();            
     }

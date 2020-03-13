@@ -405,6 +405,30 @@ class TitleRepository  extends EntityRepository{
     }
 
     /**
+     * Выбрать биграмы группы
+     * 
+     * @param TokenGroup $tokenGroup
+     */
+    public function findTokenGroupBigram($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('b.bilemma, count(ab.id) as bigramCount')
+                ->from(ArticleBigram::class, 'ab')
+                ->join('ab.bigram', 'b')
+                ->where('ab.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ->groupBy('ab.bigram')
+                ->having('bigramCount > ?2')
+                ->setParameter('2', Bigram::MIN_FREQUENCY)
+                ->orderBy('bigramCount', 'DESC')
+                ;
+        
+        return $queryBuilder->getQuery();
+    }
+
+    /**
      * Обработать наименование артикула
      * 
      * @param ArticleTitle $articleTitle

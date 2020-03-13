@@ -42,99 +42,78 @@ $this->headScript()
 <div class="row">
     <div class="col-md-9">
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
-            <li role="presentation"><a href="#goods" role="tab" id="price-tab" data-toggle="tab" aria-controls="price" aria-expanded="true">Товары <span id="goodBadge" class="badge">0</span></a></li>
-            <li role="presentation"><a href="#tokens" role="tab" id="home-tab" data-toggle="tab" aria-controls="tokens" aria-expanded="true">Токены <span id="tokenBadge" class="badge">0</span></a></li>
-            <li role="presentation"><a href="#bigrams" role="tab" id="oem-tab" data-toggle="tab" aria-controls="bigrams" aria-expanded="true">Биграмы <span id="bigramBadge" class="badge">0</span></a></li>
+            <li role="presentation"><a href="#goods" role="tab" id="goods-tab" data-toggle="tab" aria-controls="price" aria-expanded="true">Товары <span id="goodBadge" class="badge">0</span></a></li>
+            <li role="presentation"><a href="#tokens" role="tab" id="tokens-tab" data-toggle="tab" aria-controls="tokens" aria-expanded="true">Токены <span id="tokenBadge" class="badge">0</span></a></li>
+            <li role="presentation"><a href="#bigrams" role="tab" id="bigrams-tab" data-toggle="tab" aria-controls="bigrams" aria-expanded="true">Биграмы <span id="bigramBadge" class="badge">0</span></a></li>
         </ul>
-        <div class="tab-pane fade" role="tabpanel" id="tokens" aria-labelledby="tokens-tab">
-            <table id="linkedTable" 
-                data-toggle="table" 
-                data-url="/name/token-group-token-content/<?= $tokenGroup->getId()?>"
-                data-side-pagination="server"
-                data-pagination="true" 
-                data-page-list="[5, 10, 20, 50]"
-                data-toolbar="#tokensToolbar"
-                data-show-refresh="true"
-                data-show-toggle="true"
-                data-query-params="tokenQueryParams"
-                data-response-handler="responseHandler"
-                >
-                <thead>
-                    <tr>
-                         <th data-field="lemma" data-sortable="true">Токен</th>
-                         <th data-field="tokenCount" data-sortable="true">Количество</th>
-                     </tr>                
-                </thead>
-            </table>
-        </div>
+        <div class="tab-content" id="featureTabContent">
+            <div class="tab-pane fade" role="tabpanel" id="goods" aria-labelledby="goods-tab">
+                <table id="goodTable" 
+                    data-toggle="table" 
+                    data-url="/name/token-group-good-content/<?= $tokenGroup->getId()?>"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#goodsToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="goodQueryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="goodId" data-sortable="true">Id</th>
+                             <th data-field="goodCode" data-sortable="true">Артикул</th>
+                             <th data-field="producerName" data-sortable="true">Производитель</th>
+                             <th data-field="goodNames" data-sortable="true">Наименования</th>
+                         </tr>                
+                    </thead>
+                </table>
+            </div>
+            <div class="tab-pane fade" role="tabpanel" id="tokens" aria-labelledby="tokens-tab">
+                <table id="tokenTable" 
+                    data-toggle="table" 
+                    data-url="/name/token-group-token-content/<?= $tokenGroup->getId()?>"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#tokensToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="tokenQueryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="lemma" data-sortable="true">Токен</th>
+                             <th data-field="tokenCount" data-sortable="true">Количество</th>
+                         </tr>                
+                    </thead>
+                </table>
+            </div>
+            <div class="tab-pane fade" role="tabpanel" id="bigrams" aria-labelledby="bigrams-tab">
+                <table id="bigramTable" 
+                    data-toggle="table" 
+                    data-url="/name/token-group-bigram-content/<?= $tokenGroup->getId()?>"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#bigramsToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="true"
+                    data-query-params="bigramQueryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="bilemma" data-sortable="true">Билема</th>
+                             <th data-field="bigramCount" data-sortable="true">Количество</th>
+                         </tr>                
+                    </thead>
+                </table>
+            </div>
+        </div>    
     </div>    
-    <div class="col-md-9">
-        <table class="table table-striped">
-            <tr>
-                <td colspan="2"  style="font-size: x-small">            
-                    <?php if ($prev):?>
-                        <a href="/name/view-token-group/<?= $prev[0]->getId()?>">&larr;<?= ($prev[0]->getName()) ? $prev[0]->getName():$prev[0]->getLemms() ?></a>
-                    <?php endif;?>            
-                </td>
-                <td  colspan="3" align="right"  style="font-size: x-small">
-                    <?php if ($next):?>
-                        <a href="/name/view-token-group/<?= $next[0]->getId()?>"><?= ($next[0]->getName()) ? $next[0]->getName():$next[0]->getLemms()?>&rarr;</a>
-                    <?php endif;?>                            
-                </td>
-            </tr>
-            <tr>
-                <td colspan="5" align="right" valign="center">
-                    <b><?= $tokenGroup->getGoodCount()?></b>
-                    <button value="/name/update-good-count-token-group/<?= $tokenGroup->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                            title="Обновить количество товара">
-                        <span class="glyphicon glyphicon-refresh" ></span>
-                    </button> 
-                    <button value="/name/token-group-token/<?= $tokenGroup->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                            title="Обновить токены группы">
-                        <span class="glyphicon glyphicon-refresh" ></span>
-                    </button> 
-                </td>
-            </tr>            
-            <tr>
-                <td colspan="5">
-                    <?= $this->paginationControl($goods,
-                                'Sliding',
-                                'application/partial/paginator', 
-                                ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
-
-                </td>
-            </tr>
-            <?php    foreach ($goods as $good):?>
-                <tr>
-                    <td colspan="5">
-                        <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()]);?>">
-                            <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
-                        </a>   
-                        <div>
-                            <?php foreach($good->getArticles() as $article):?>
-                                <?php foreach ($article->getRawprice() as $rawprice):?>
-                                    <?php if ($rawprice->getStatus() == $rawprice::STATUS_PARSED):?>
-                                        <span>
-                                            <?= $rawprice->getGoodname();?>
-                                        </span>
-                                    <? endif; ?>        
-                                <?php endforeach;?>                            
-                            <?php endforeach;?>                            
-                        </div>
-                    </td>
-                </tr>
-            <?php endforeach;?>        
-            <tr>
-                <td colspan="5">
-                    <?= $this->paginationControl($goods,
-                                'Sliding',
-                                'application/partial/paginator', 
-                                ['route' => array('route' => 'name', 'action' => 'view-token-group', 'id' => $tokenGroup->getId())]); ?>
-
-                </td>
-            </tr>
-        </table>
-    </div>
     <div class="col-md-3">
         <ul class="list-group">
             <?php if ($tdGroups):?>
@@ -193,6 +172,29 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
+    $(window).on('load', function() {
+        $('.nav-tabs a:first').tab('show');
+        $('.editable').editable();
+    });
+
+    var goodTable = $('#goodTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#goodBadge').html($('#goodTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+
+    var tokenTable = $('#tokenTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#tokenBadge').html($('#tokenTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+
+    var bigramTable = $('#bigramTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#bigramBadge').html($('#bigramTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+    
     function tabQueryParams(tab, params) {
         $(tab +'Toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
@@ -209,11 +211,21 @@ $this->headScript()
         return params;
     }
     
+    function goodQueryParams(params) {
+        return tabQueryParams('#goods', params);
+    }
+
     function tokenQueryParams(params) {
         return tabQueryParams('#tokens', params);
     }
 
+    function bigramQueryParams(params) {
+        return tabQueryParams('#tokens', params);
+    }
     
+    function responseHandler(res) {
+        return res;
+    }       
     
     
     /**
