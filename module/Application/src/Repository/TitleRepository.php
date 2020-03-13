@@ -399,9 +399,9 @@ class TitleRepository  extends EntityRepository{
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('at.lemma')
                 ->addGroupBy('at.articleTitle')
-                ->having('tokenCount > ?2')
+//                ->having('tokenCount > ?2')
                 ->andHaving('tokenCount < ?3')
-                ->setParameter('2', Token::MIN_DF)
+//                ->setParameter('2', Token::MIN_DF)
                 ->setParameter('3', $tokenGroup->getGoodCount())
                 ->orderBy('tokenCount', 'DESC')
                 ;
@@ -435,9 +435,9 @@ class TitleRepository  extends EntityRepository{
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('ab.bigram')
                 ->addGroupBy('ab.articleTitle')
-                ->having('bigramCount > ?2')
+//                ->having('bigramCount > ?2')
                 ->andHaving('bigramCount < ?3')
-                ->setParameter('2', Bigram::MIN_FREQUENCY)
+//                ->setParameter('2', Bigram::MIN_FREQUENCY)
                 ->setParameter('3', $tokenGroup->getGoodCount())
                 ->orderBy('bigramCount', 'DESC')
                 ;
