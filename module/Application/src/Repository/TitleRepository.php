@@ -398,14 +398,16 @@ class TitleRepository  extends EntityRepository{
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('at.lemma')
                 ->having('tokenCount > ?2')
+                ->andHaving('tokenCount < ?3')
                 ->setParameter('2', Token::MIN_DF)
+                ->setParameter('3', $tokenGroup->getGoodCount())
                 ->orderBy('tokenCount', 'DESC')
                 ;
         
         if (is_array($params)){
             if (isset($params['status'])){
-                $queryBuilder->andWhere('at.status = ?3')
-                        ->setParameter('3', $params['status']);
+                $queryBuilder->andWhere('at.status = ?4')
+                        ->setParameter('4', $params['status']);
             }
         }
         
@@ -430,13 +432,15 @@ class TitleRepository  extends EntityRepository{
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('ab.bigram')
                 ->having('bigramCount > ?2')
+                ->andHaving('bigramCount < ?3')
                 ->setParameter('2', Bigram::MIN_FREQUENCY)
+                ->setParameter('3', $tokenGroup->getGoodCount())
                 ->orderBy('bigramCount', 'DESC')
                 ;
         if (is_array($params)){
             if (isset($params['status'])){
-                $queryBuilder->andWhere('b.status = ?3')
-                        ->setParameter('3', $params['status']);
+                $queryBuilder->andWhere('b.status = ?4')
+                        ->setParameter('4', $params['status']);
             }
         }
         
