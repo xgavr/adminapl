@@ -398,7 +398,7 @@ class TitleRepository  extends EntityRepository{
                 ->where('at.tokenGroup = ?1')
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('at.lemma')
-                ->addGroupBy('ab.articleTitle')
+                ->addGroupBy('at.articleTitle')
                 ->having('tokenCount > ?2')
                 ->andHaving('tokenCount < ?3')
                 ->setParameter('2', Token::MIN_DF)
