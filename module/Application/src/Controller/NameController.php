@@ -979,7 +979,7 @@ class NameController extends AbstractActionController
         
     }
     
-    public function tokenGroupTokenBigramAction()
+    public function tokenGroupBigramContentAction()
     {
         $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
 
