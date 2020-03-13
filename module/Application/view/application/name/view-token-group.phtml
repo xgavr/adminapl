@@ -203,6 +203,15 @@ $this->headScript()
         $('.editable').editable();
     });
 
+    $(function () {
+        $('#tokenStatusSelect').change(function () {
+            ('#tokenTable').bootstrapTable('refresh');
+        });
+        $('#bigramStatusSelect').change(function () {
+            ('#bigramTable').bootstrapTable('refresh');
+        });
+    });
+
     var goodTable = $('#goodTable').bootstrapTable({
         onLoadSuccess: function(res){
             $('#goodBadge').html($('#goodTable').bootstrapTable('getOptions').totalRows)
