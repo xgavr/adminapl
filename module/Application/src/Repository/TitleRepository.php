@@ -404,8 +404,8 @@ class TitleRepository  extends EntityRepository{
         
         if (is_array($params)){
             if (isset($params['status'])){
-                $queryBuilder->andWhere('at.status = ?2')
-                        ->setParameter('2', $params['status']);
+                $queryBuilder->andWhere('at.status = ?3')
+                        ->setParameter('3', $params['status']);
             }
         }
         
@@ -435,8 +435,8 @@ class TitleRepository  extends EntityRepository{
                 ;
         if (is_array($params)){
             if (isset($params['status'])){
-                $queryBuilder->andWhere('b.status = ?2')
-                        ->setParameter('2', $params['status']);
+                $queryBuilder->andWhere('b.status = ?3')
+                        ->setParameter('3', $params['status']);
             }
         }
         
