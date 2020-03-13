@@ -392,11 +392,13 @@ class TitleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('at.lemma, count(at.id) as tokenCount')
+        $queryBuilder->select('at.lemma, ati.title as title, count(at.id) as tokenCount')
                 ->from(ArticleToken::class, 'at')
+                ->join('at.articleTitle', 'ati')
                 ->where('at.tokenGroup = ?1')
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('at.lemma')
+                ->addGroupBy('ab.articleTitle')
                 ->having('tokenCount > ?2')
                 ->andHaving('tokenCount < ?3')
                 ->setParameter('2', Token::MIN_DF)
@@ -425,12 +427,14 @@ class TitleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('b.bilemma, count(ab.id) as bigramCount')
+        $queryBuilder->select('b.bilemma, ati.title as title, count(ab.id) as bigramCount')
                 ->from(ArticleBigram::class, 'ab')
                 ->join('ab.bigram', 'b')
+                ->join('ab.articleTitle', 'ati')
                 ->where('ab.tokenGroup = ?1')
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('ab.bigram')
+                ->addGroupBy('ab.articleTitle')
                 ->having('bigramCount > ?2')
                 ->andHaving('bigramCount < ?3')
                 ->setParameter('2', Bigram::MIN_FREQUENCY)
