@@ -201,14 +201,11 @@ $this->headScript()
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
         $('.editable').editable();
-    });
-
-    $(function () {
         $('#tokenStatusSelect').change(function () {
-            ('#tokenTable').bootstrapTable('refresh');
+            $('#tokenTable').bootstrapTable('refresh');
         });
         $('#bigramStatusSelect').change(function () {
-            ('#bigramTable').bootstrapTable('refresh');
+            $('#bigramTable').bootstrapTable('refresh');
         });
     });
 
