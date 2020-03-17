@@ -121,15 +121,19 @@ class NameController extends AbstractActionController
     public function viewTokenAction() 
     {       
         $tokenId = (int)$this->params()->fromRoute('id', -1);
+        $lemma = $this->params()->fromQuery('lemma');
         $page = $this->params()->fromQuery('page', 1);
 
-        if ($tokenId<0) {
+        if ($tokenId>0) {
+            $token = $this->entityManager->getRepository(Token::class)
+                    ->findOneById($tokenId);        
+        } elseif ($lemma){
+            $token = $this->entityManager->getRepository(Token::class)
+                    ->findOneByLemma($lemma);                        
+        } else {
             $this->getResponse()->setStatusCode(404);
-            return;
+            return;            
         }
-        
-        $token = $this->entityManager->getRepository(Token::class)
-                ->findOneById($tokenId);
         
         if ($token == null) {
             $this->getResponse()->setStatusCode(404);

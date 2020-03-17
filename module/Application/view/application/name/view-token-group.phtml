@@ -99,7 +99,7 @@ $this->headScript()
                     <thead>
                         <tr>
                              <th data-field="tokenCount">Частота</th>
-                             <th data-field="lemma">Токен</th>
+                             <th data-field="lemma" data-formatter="tokenFormatter">Токен</th>
                              <th data-field="lemma">Выводить</th>
                          </tr>                
                     </thead>
@@ -134,7 +134,7 @@ $this->headScript()
                     <thead>
                         <tr>
                              <th data-field="bigramCount">Частота</th>
-                             <th data-field="bilemma">Билема</th>
+                             <th data-field="bilemma" data-formatter="bigramFormatter">Билема</th>
                              <th data-field="bilemma">Выводить</th>
                          </tr>                
                     </thead>
@@ -263,7 +263,23 @@ $this->headScript()
         return res;
     }       
     
+    function tokenFormatter(value, row){
+        var str = '<div class="pull-left">';
+        str += '<a href="/name/view-token/?lemma=' + value + '" target="_blank">' + value + '</a>';
+        str += '</div>';
+
+        return str; 
+    }    
     
+    function bigramFormatter(value, row){
+        var str = '<div class="pull-left">';
+        str += '<a href="/name/view-bigram/' + row.bigramId + '" target="_blank">' + value + '</a>';
+        str += '</div>';
+        
+        return str; 
+    }    
+        
+
     /**
     * Промпт диалог
     *
