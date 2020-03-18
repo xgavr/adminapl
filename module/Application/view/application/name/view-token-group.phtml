@@ -293,6 +293,7 @@ $this->headScript()
             function(data){
                 if (data.displayLemma){
                     $('#'+data.id).html(data.displayLemma);
+                    $('#'+data.id).editable();
                 }            
             }
         );
@@ -314,6 +315,7 @@ $this->headScript()
             function(data){
                 if (data.displayBilemma){
                     $('#'+data.id).html(data.displayBilemma);
+                    $('#'+data.id).editable();
                 }            
             }
         );
