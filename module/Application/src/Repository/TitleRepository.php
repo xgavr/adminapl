@@ -583,7 +583,7 @@ class TitleRepository  extends EntityRepository{
     {
         $entityManager = $this->getEntityManager();
         $articleTokens = $entityManager->getRepository(ArticleToken::class)
-                ->findBy(['tokenGroup' => $tokenGroup->getId(), 'token' => $token->getId()]);
+                ->findBy(['tokenGroup' => $tokenGroup->getId(), 'lemma' => $token->getLemma()]);
         
         foreach($articleTokens as $articleToken){
             $this->updateTitleToken($tokenGroup, $token, $articleToken->getArticleTitle()->getTitleMd5(), $displayLemma);
