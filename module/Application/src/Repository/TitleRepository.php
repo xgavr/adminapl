@@ -586,7 +586,7 @@ class TitleRepository  extends EntityRepository{
                 ->findBy(['tokenGroup' => $tokenGroup->getId(), 'lemma' => $token->getLemma()]);
         
         foreach($articleTokens as $articleToken){
-            $this->updateTitleToken($tokenGroup, $token, $articleToken->getArticleTitle()->getTitleMd5(), $displayLemma);
+            $this->updateTitleToken($tokenGroup, $token, $articleToken->getArticleTitle()->getTokenGroupTitleMd5(), $displayLemma);
         }
     }   
 
@@ -640,7 +640,7 @@ class TitleRepository  extends EntityRepository{
                 ->findBy(['tokenGroup' => $tokenGroup->getId(), 'bigram' => $bigram->getId()]);
         
         foreach($articleBigrams as $articleBigram){
-            $this->updateTitleBigram($tokenGroup, $bigram, $articleBigram->getArticleTitle()->getTitleMd5(), $displayBilemma);
+            $this->updateTitleBigram($tokenGroup, $bigram, $articleBigram->getArticleTitle()->getTokenGroupTitleMd5(), $displayBilemma);
         }
     }   
     
