@@ -135,7 +135,7 @@ $this->headScript()
                         <tr>
                              <th data-field="bigramCount">Частота</th>
                              <th data-field="bilemma" data-formatter="bigramFormatter">Билема</th>
-                             <th data-field="bilemma" data-formatter="displayBigramFormatter">Выводить</th>
+                             <th data-field="bigramId" data-formatter="displayBigramFormatter">Выводить</th>
                          </tr>                
                     </thead>
                 </table>
@@ -280,24 +280,54 @@ $this->headScript()
         return str; 
     }    
         
-    function displayTokenFormatter(value, row){
+    function displayToken(data){
+        if (data.displayLemma){
+            $('#'+data.id).html(data.displayLemma);
+        }            
+    }
+
+    function displayToken(data){
+        if (data.displayLemma){
+            $('#'+data.id).html(data.displayLemma);
+        }            
+    }
+    
+    function displayTokenFormatter(value){
+        $.post(
+            '/name/display-title-token/<?= $tokenGroup->getId()?>?lemma='+value,
+            null,
+            displayToken                
+        );
         return [
             '<a href="#"',
             ' class="editableToken" data-type="text"',
+            ' id="<?= $tokenGroup->getId()?>_'+value+'"',
             ' data-pk="<?= $tokenGroup->getId()?>"',
-            ' data-name="'+row.lemma+'"',
+            ' data-name="'+value+'"',
             ' data-url="/name/update-title-token-display">',
             '</a>',
         ].join(''); 
     } 
-
-    function displayBigramFormatter(value, row){
+    
+    function displayBigram(data){
+        if (data.displayBilemma){
+            $('#'+data.id).html(data.displayBilemma);
+        }            
+    }
+    
+    function displayBigramFormatter(value){
+        $.post(
+            '/name/display-title-bigram/<?= $tokenGroup->getId()?>?bigram='+value,
+            null,
+            displayBigram                
+        );
         return [
             '<a href="#"',
             ' class="editableBigram" data-type="text"',
+            ' id="<?= $tokenGroup->getId()?>_'+value+'"',
             ' data-pk="<?= $tokenGroup->getId()?>"',
-            ' data-name="'+row.bigramId+'"',
-            ' data-url="/name/update-title-bigram-display">'+value,
+            ' data-name="'+value+'"',
+            ' data-url="/name/update-title-bigram-display">',
             '</a>',
         ].join(''); 
     } 
