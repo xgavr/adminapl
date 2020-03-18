@@ -309,7 +309,7 @@ $this->headScript()
     
     function displayBigramFormatter(value){
         $.post(
-            '/name/display-title-token',
+            '/name/display-title-bigram',
             {tokenGroupId: '<?= $tokenGroup->getId()?>', bigramId: value},
             function(data){
                 if (data.displayBilemma){
