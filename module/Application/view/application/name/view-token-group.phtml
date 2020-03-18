@@ -219,14 +219,14 @@ $this->headScript()
     var tokenTable = $('#tokenTable').bootstrapTable({
         onLoadSuccess: function(res){
             $('#tokenBadge').html($('#tokenTable').bootstrapTable('getOptions').totalRows);
-            $('.editableToken').editable();
+//            $('.editableToken').editable();
         }
     });
 
     var bigramTable = $('#bigramTable').bootstrapTable({
         onLoadSuccess: function(res){
             $('#bigramBadge').html($('#bigramTable').bootstrapTable('getOptions').totalRows);
-            $('.editableBigram').editable();
+//            $('.editableBigram').editable();
         }
     });
     
@@ -293,8 +293,8 @@ $this->headScript()
             function(data){
                 if (data.displayLemma){
                     $('#'+data.id).html(data.displayLemma);
-                    $('#'+data.id).editable();
                 }            
+                $('#'+data.id).editable();
             }
         );
         return [
@@ -315,8 +315,8 @@ $this->headScript()
             function(data){
                 if (data.displayBilemma){
                     $('#'+data.id).html(data.displayBilemma);
-                    $('#'+data.id).editable();
                 }            
+                $('#'+data.id).editable();
             }
         );
         return [
