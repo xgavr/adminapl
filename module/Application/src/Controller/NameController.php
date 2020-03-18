@@ -1083,12 +1083,12 @@ class NameController extends AbstractActionController
             $data = $this->params()->fromPost();
             $tokenGroupId = $data['pk'];
             $lemma = $data['name'];
-            if ($tokeGroupId > 0 && $lemma){
+            if ($tokenGroupId > 0 && $lemma){
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                         ->findOneById($tokenGroupId);
                 $token = $this->entityManager->getRepository(Token::class)
                         ->findOneByLemma($lemma);
-                if ($tokeGroup && $token){
+                if ($tokenGroup && $token){
                     $this->entityManager->getRepository(TitleToken::class)
                             ->updateTitleTokens($tokenGroup, $token, $data['value']);
                 }    
@@ -1105,12 +1105,12 @@ class NameController extends AbstractActionController
             $data = $this->params()->fromPost();
             $tokenGroupId = $data['pk'];
             $bigramId = $data['name'];
-            if ($tokeGroupId > 0 && $bigramId > 0){
+            if ($tokenGroupId > 0 && $bigramId > 0){
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                         ->findOneById($tokenGroupId);
-                $token = $this->entityManager->getRepository(Bigram::class)
+                $bigram = $this->entityManager->getRepository(Bigram::class)
                         ->findOneById($bigramId);
-                if ($tokeGroup && $bigram){
+                if ($tokenGroup && $bigram){
                     $this->entityManager->getRepository(TitleBigram::class)
                             ->updateTitleBigrams($tokenGroup, $bigram, $data['value']);
                 }    
