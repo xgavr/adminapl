@@ -286,17 +286,15 @@ $this->headScript()
         }            
     }
 
-    function displayToken(data){
-        if (data.displayLemma){
-            $('#'+data.id).html(data.displayLemma);
-        }            
-    }
-    
     function displayTokenFormatter(value){
         $.post(
-            '/name/display-title-token/<?= $tokenGroup->getId()?>?lemma='+value,
-            null,
-            displayToken                
+            '/name/display-title-token',
+            {tokenGroupId: '<?= $tokenGroup->getId()?>', lemma: value},
+            function(data){
+                if (data.displayLemma){
+                    $('#'+data.id).html(data.displayLemma);
+                }            
+            }
         );
         return [
             '<a href="#"',
@@ -309,17 +307,15 @@ $this->headScript()
         ].join(''); 
     } 
     
-    function displayBigram(data){
-        if (data.displayBilemma){
-            $('#'+data.id).html(data.displayBilemma);
-        }            
-    }
-    
     function displayBigramFormatter(value){
         $.post(
-            '/name/display-title-bigram/<?= $tokenGroup->getId()?>?bigram='+value,
-            null,
-            displayBigram                
+            '/name/display-title-token',
+            {tokenGroupId: '<?= $tokenGroup->getId()?>', bigramId: value},
+            function(data){
+                if (data.displayBilemma){
+                    $('#'+data.id).html(data.displayBilemma);
+                }            
+            }
         );
         return [
             '<a href="#"',

@@ -1122,60 +1122,68 @@ class NameController extends AbstractActionController
 
     public function displayTitleTokenAction()
     {
-        $tokenGroupId = (int) $this->params()->fromRoute('id', -1);
-        $lemma = (int) $this->params()->fromQuery('lemma', -1);
+        $displayLemma = $id = null;
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
         
-        if ($tokenGroupId < 0 || $lemma){
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $token = $this->entityManager->getRepository(Token::class)
-                ->findOneByLemma($lemma);
+            $tokenGroupId = $data['tokenGroupId'];
+            $lemma = $data['lemma'];
+            
+            if (!$tokenGroupId || !$lemma){
+                $this->getResponse()->setStatusCode(404);
+                return;
+            }
 
-        if (!$token){
-            $this->getResponse()->setStatusCode(404);
-            return;
+            $id = $tokenGroupId.'_'.$lemma;
+            
+            $token = $this->entityManager->getRepository(Token::class)
+                    ->findOneByLemma($lemma);
+
+            if (!$token){
+                $this->getResponse()->setStatusCode(404);
+                return;
+            }
+
+            $titleToken = $this->entityManager->getRepository(TitleToken::class)
+                    ->findOneBy(['tokenGroup' => $tokenGroupId, 'token' => $token->getId()]);
+            
+            if ($titleToken){
+                $displayLemma = $titleToken->getDisplayLemma();
+            }
         }
-        
-        $titleToken = $this->entityManager->getRepository(TitleToken::class)
-                ->findOneBy(['tokenGroup' => $tokenGroupId, 'token' => $token->getId()]);
-        
-        $displayLemma = null;
-        if ($titleToken){
-            $displayLemma = $titleToken->getDisplayLemma();
-        }
-        
+
         return new JsonModel([
-            'id' => $tokenGroupId.'_'.$lemma,
-            'tokenGroupId' => $tokenGroupId,
-            'lemma' => $lemma,
+            'id' => $id,
             'displayLemma' => $displayLemma,
         ]);          
     }
     
     public function displayTitleBigramAction()
     {
-        $tokenGroupId = (int) $this->params()->fromRoute('id', -1);
-        $bigramId = (int) $this->params()->fromQuery('bigram', -1);
+        $displayBilemma = $id = null;
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
         
-        if ($tokenGroupId < 0 || $bigramId < 0){
-            $this->getResponse()->setStatusCode(404);
-            return;
+            $tokenGroupId = $data['tokenGroupId'];
+            $bigramId = $data['bigramId'];
+            
+            if (!$tokenGroupId || !$bigramId){
+                $this->getResponse()->setStatusCode(404);
+                return;
+            }
+
+            $id = $tokenGroupId.'_'.$bigramId;
+            
+            $titleBigram = $this->entityManager->getRepository(TitleBigram::class)
+                    ->findOneBy(['tokenGroup' => $tokenGroupId, 'bigram' => $bigramId]);
+            
+            if ($titleBigram){
+                $displayBilemma = $titleBigram->getDisplayBilemma();
+            }
         }
-        
-        $titleBigram = $this->entityManager->getRepository(TitleBigram::class)
-                ->findOneBy(['tokenGroup' => $tokenGroupId, 'bigram' => $bigramId]);
-        
-        $displayBilemma = null;
-        if ($titleBigram){
-            $displayBilemma = $titleBigram->getDisplayBilemma();
-        }
-        
+
         return new JsonModel([
-            'id' => $tokenGroupId.'_'.$bigramId,
-            'tokenGroupId' => $tokenGroupId,
-            'bigramId' => $bigramId,
+            'id' => $id,
             'displayBilemma' => $displayBilemma,
         ]);          
     }
