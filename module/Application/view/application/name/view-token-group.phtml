@@ -202,7 +202,6 @@ $this->headScript()
 <script type="text/javascript">
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
-        $('.editable').editable();
         $('#tokenStatusSelect').change(function () {
             $('#tokenTable').bootstrapTable('refresh');
         });
@@ -213,19 +212,21 @@ $this->headScript()
 
     var goodTable = $('#goodTable').bootstrapTable({
         onLoadSuccess: function(res){
-            $('#goodBadge').html($('#goodTable').bootstrapTable('getOptions').totalRows)
+            $('#goodBadge').html($('#goodTable').bootstrapTable('getOptions').totalRows);
         }
     });
 
     var tokenTable = $('#tokenTable').bootstrapTable({
         onLoadSuccess: function(res){
-            $('#tokenBadge').html($('#tokenTable').bootstrapTable('getOptions').totalRows)
+            $('#tokenBadge').html($('#tokenTable').bootstrapTable('getOptions').totalRows);
+            $('.editableToken').editable();
         }
     });
 
     var bigramTable = $('#bigramTable').bootstrapTable({
         onLoadSuccess: function(res){
-            $('#bigramBadge').html($('#bigramTable').bootstrapTable('getOptions').totalRows)
+            $('#bigramBadge').html($('#bigramTable').bootstrapTable('getOptions').totalRows);
+            $('.editableBigram').editable();
         }
     });
     
@@ -283,7 +284,7 @@ $this->headScript()
         if (row.producer){
             return [
                 '<a href="#"',
-                ' class="editable" data-type="text"',
+                ' class="editableToken" data-type="text"',
                 ' data-pk="<?= $tokenGroup->getId()?>"',
                 ' data-name="'+row.lemma+'"',
                 ' data-url="/name/update-title-token-display">'+value,
@@ -298,7 +299,7 @@ $this->headScript()
         if (row.producer){
             return [
                 '<a href="#"',
-                ' class="editable" data-type="text"',
+                ' class="editableBigram" data-type="text"',
                 ' data-pk="<?= $tokenGroup->getId()?>"',
                 ' data-name="'+row.bigramId+'"',
                 ' data-url="/name/update-title-bigram-display">'+value,
