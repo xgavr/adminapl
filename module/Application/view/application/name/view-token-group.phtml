@@ -281,33 +281,25 @@ $this->headScript()
     }    
         
     function displayTokenFormatter(value, row){
-        if (row.producer){
-            return [
-                '<a href="#"',
-                ' class="editableToken" data-type="text"',
-                ' data-pk="<?= $tokenGroup->getId()?>"',
-                ' data-name="'+row.lemma+'"',
-                ' data-url="/name/update-title-token-display">'+value,
-                '</a>',
-            ].join(''); 
-        }
-        
-        return;
+        return [
+            '<a href="#"',
+            ' class="editableToken" data-type="text"',
+            ' data-pk="<?= $tokenGroup->getId()?>"',
+            ' data-name="'+row.lemma+'"',
+            ' data-url="/name/update-title-token-display">'+value,
+            '</a>',
+        ].join(''); 
     } 
 
     function displayBigramFormatter(value, row){
-        if (row.producer){
-            return [
-                '<a href="#"',
-                ' class="editableBigram" data-type="text"',
-                ' data-pk="<?= $tokenGroup->getId()?>"',
-                ' data-name="'+row.bigramId+'"',
-                ' data-url="/name/update-title-bigram-display">'+value,
-                '</a>',
-            ].join(''); 
-        }
-        
-        return;
+        return [
+            '<a href="#"',
+            ' class="editableBigram" data-type="text"',
+            ' data-pk="<?= $tokenGroup->getId()?>"',
+            ' data-name="'+row.bigramId+'"',
+            ' data-url="/name/update-title-bigram-display">'+value,
+            '</a>',
+        ].join(''); 
     } 
     /**
     * Промпт диалог
