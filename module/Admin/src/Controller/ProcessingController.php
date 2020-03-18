@@ -612,12 +612,13 @@ class ProcessingController extends AbstractActionController
     
     /**
      * Заполнение токенов групп наименований
+     * ОТКЛЮЧЕНО
      */
     public function fillTokenGroupTokenAction()
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_name'] == 1){
+        if ($settings['parse_name'] == 10){
             $this->entityManager->getRepository(TokenGroupToken::class)
                     ->fillTokenGroupToken(); 
         }    
@@ -629,12 +630,13 @@ class ProcessingController extends AbstractActionController
     
     /**
      * Заполнение биграм групп наименований
+     * ОТКЛЮЧЕНО
      */
     public function fillTokenGroupBigramAction()
     {
         $settings = $this->adminManager->getPriceSettings();
 
-        if ($settings['parse_name'] == 1){
+        if ($settings['parse_name'] == 10){
             $this->entityManager->getRepository(TokenGroupBigram::class)
                     ->fillTokenGroupBigram(); 
         }    

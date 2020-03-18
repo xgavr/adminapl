@@ -18,6 +18,8 @@ use Application\Entity\TokenGroupToken;
 use Application\Entity\Goods;
 use Application\Entity\Bigram;
 use Application\Entity\TokenGroupBigram;
+use Application\Entity\TitleToken;
+use Application\Entity\TitleBigram;
 
 /**
  * Description of TitleRepository
@@ -533,6 +535,114 @@ class TitleRepository  extends EntityRepository{
         
         return;
     }
+    
+    /**
+     * Обновить выводимое наименование токена
+     * 
+     * @param TokenGroup $tokenGroup
+     * @param Token $token
+     * @param string $titleMd5
+     * @param string $displayLemma
+     * @return null
+     */
+    public function updateTitleToken($tokenGroup, $token, $titleMd5, $displayLemma = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $titleToken = $entityManager->getRepository(TitleToken::class)
+                ->findOneBy(['tokenGroup' => $tokenGroup->getId(), 'token' => $token->getId(), 'titleMd5' => $titleMd5]);
+        
+        if ($titleToken && $displayLemma){
+            $entityManager->getConnection()->update('title_token', ['display_lemma' => $displayLemma], ['id' => $titleToken->getId()]);           
+        }
+        if ($titleToken && !$displayLemma){
+            $entityManager->getConnection()->delete('title_token', ['id' => $titleToken->getId()]);           
+        }
+        
+        if (!$titleToken && $displayLemma){
+            $entityManager->getConnection()->insert('title_token', 
+                    [
+                        'group_id' => $tokenGroup->getId(),
+                        'token_id' => $token->getId(),
+                        'title_md5' => $titleMd5,
+                        'display_lemma' => $displayLemma,
+                    ]);
+        }
+        
+        return;
+    }
+    
+    /**
+     * Обновить выводимое наименование токенов
+     * 
+     * @param TokenGroup $tokenGroup
+     * @param Token $token
+     * @param string $displayLemma
+     * @return null
+     */
+    public function updateTitleTokens($tokenGroup, $token, $displayLemma = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $articleTokens = $entityManager->getRepository(ArticleToken::class)
+                ->findBy(['tokenGroup' => $tokenGroup->getId(), 'token' => $token->getId()]);
+        
+        foreach($articleTokens as $articleToken){
+            $this->updateTitleToken($tokenGroup, $token, $articleToken->getArticleTitle()->getTtitleMd5(), $displayLemma);
+        }
+    }   
+
+    /**
+     * Обновить выводимое наименование биграм
+     * 
+     * @param TokenGroup $tokenGroup
+     * @param Bigram $bigram
+     * @param string $titleMd5
+     * @param string $displayBilemma
+     * @return null
+     */
+    public function updateTitleBigram($tokenGroup, $bigram, $titleMd5, $displayBilemma = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $titleBigram = $entityManager->getRepository(TitleBigram::class)
+                ->findOneBy(['tokenGroup' => $tokenGroup->getId(), 'bigram' => $bigram->getId(), 'titleMd5' => $titleMd5]);
+        
+        if ($titleBigram && $displayBilemma){
+            $entityManager->getConnection()->update('title_bigram', ['display_bilemma' => $displayBilemma], ['id' => $titleBigram->getId()]);           
+        }
+        if ($titleBigram && !$displayBilemma){
+            $entityManager->getConnection()->delete('title_bigram', ['id' => $titleBigram->getId()]);           
+        }
+        
+        if (!$titleBigram && $displayBilemma){
+            $entityManager->getConnection()->insert('title_bigram', 
+                    [
+                        'group_id' => $tokenGroup->getId(),
+                        'bigram_id' => $bigram->getId(),
+                        'title_md5' => $titleMd5,
+                        'display_bilemma' => $displayBilemma,
+                    ]);
+        }
+        
+        return;
+    }
+    
+    /**
+     * Обновить выводимое наименование биграм
+     * 
+     * @param TokenGroup $tokenGroup
+     * @param Bigram $bigram
+     * @param string $displayBilemma
+     * @return null
+     */
+    public function updateTitleBigrams($tokenGroup, $bigram, $displayBilemma = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $articleBigrams = $entityManager->getRepository(ArticleBigram::class)
+                ->findBy(['tokenGroup' => $tokenGroup->getId(), 'bigram' => $bigram->getId()]);
+        
+        foreach($articleBigrams as $articleBigram){
+            $this->updateTitleBigram($tokenGroup, $bigram, $articleBigram->getArticleTitle()->getTtitleMd5(), $displayBilemma);
+        }
+    }   
     
     /**
      * Количество поддержек ветви

@@ -21,6 +21,7 @@ use Application\Entity\Rate;
 use Application\Entity\FpTree;
 use Application\Entity\FpGroup;
 use Application\Entity\TitleToken;
+use Application\Entity\TitleBigram;
 use Application\Entity\TokenGroupToken;
 use Application\Entity\TokenGroupBigram;
 
@@ -1075,7 +1076,50 @@ class NameController extends AbstractActionController
         
     }
     
+    public function updateTitleTokenDisplayAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $tokenGroupId = $data['pk'];
+            $lemma = $data['name'];
+            if ($tokeGroupId > 0 && $lemma){
+                $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findOneById($tokenGroupId);
+                $token = $this->entityManager->getRepository(Token::class)
+                        ->findOneByLemma($lemma);
+                if ($tokeGroup && $token){
+                    $this->entityManager->getRepository(TitleToken::class)
+                            ->updateTitleTokens($tokenGroup, $token, $data['value']);
+                }    
+            }    
+        }
+        
+        exit;        
+    }
     
+    public function updateTitleBigramDisplayAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $tokenGroupId = $data['pk'];
+            $bigramId = $data['name'];
+            if ($tokeGroupId > 0 && $bigramId > 0){
+                $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                        ->findOneById($tokenGroupId);
+                $token = $this->entityManager->getRepository(Bigram::class)
+                        ->findOneById($bigramId);
+                if ($tokeGroup && $bigram){
+                    $this->entityManager->getRepository(TitleBigram::class)
+                            ->updateTitleBigrams($tokenGroup, $bigram, $data['value']);
+                }    
+            }    
+        }
+        
+        exit;        
+    }
+
     public function goodsTokenGroupAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);
