@@ -62,10 +62,10 @@ $this->headScript()
                     >
                     <thead>
                         <tr>
-                             <th data-field="goodId" data-sortable="true">Id</th>
-                             <th data-field="goodCode" data-sortable="true">Артикул</th>
-                             <th data-field="producerName" data-sortable="true">Производитель</th>
-                             <th data-field="goodNames" data-sortable="true">Наименования</th>
+                             <th data-field="goodId" data-formatter="linkFormatter">Id</th>
+                             <th data-field="goodCode">Артикул</th>
+                             <th data-field="producerName">Производитель</th>
+                             <th data-field="goodNames">Наименования</th>
                          </tr>                
                     </thead>
                 </table>
@@ -264,7 +264,15 @@ $this->headScript()
         return res;
     }       
     
-    function tokenFormatter(value, row){
+    function linkFormatter(value){
+        var str = '<div class="pull-left">';
+        str += '<a href="/goods/view/' + value + '" target="_blank">' + value + '</a>';
+        str += '</div>';
+
+        return str; 
+    }    
+    
+    function tokenFormatter(value){
         var str = '<div class="pull-left">';
         str += '<a href="/name/view-token/?lemma=' + value + '" target="_blank">' + value + '</a>';
         str += '</div>';
