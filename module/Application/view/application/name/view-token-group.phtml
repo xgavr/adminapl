@@ -22,7 +22,7 @@ $this->headScript()
 
 ?>
 <h1>
-    <?= $this->escapeHtml(($tokenGroup->getName()) ? $tokenGroup->getName():'---'); ?>    
+    <span id="tokenGroupName"><?= $this->escapeHtml(($tokenGroup->getName()) ? $tokenGroup->getName():'---'); ?></span>    
     <button onclick="promptDialog('/name/token-group-name-form/<?= $tokenGroup->getId()?>', '<?= $this->escapeHtml($tokenGroup->getName()); ?>')" 
             class="btn btn-default btn-xs" 
             title="Изменить наименование группы">
@@ -356,7 +356,7 @@ $this->headScript()
                         })
                             .done(function (data) {
                                 if (data == 'ok'){
-                                    window.location.reload();
+                                    $('#tokenGroupName').html(result);
                                 }    
                             })
                             .fail(function (e) {
