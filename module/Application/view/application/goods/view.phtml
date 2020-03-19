@@ -200,7 +200,6 @@ $priceCols = $goodsManager->priceCols($goods);
                                 <?php foreach ($titleTokens as $titleToken):?>
                                     <tr>
                                         <td align='right'>
-                                            <?= $titleToken->getDisplayLemma()?>
                                         </td>
                                         <td width="5">
                                         </td>
@@ -209,6 +208,7 @@ $priceCols = $goodsManager->priceCols($goods);
                                         <td>
                                         </td>
                                         <td width="10">
+                                            <?= $titleToken->getDisplayLemma()?>
                                         </td>
                                     </tr>                                              
                                 <?php endforeach;?>
