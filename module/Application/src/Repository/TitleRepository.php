@@ -643,7 +643,32 @@ class TitleRepository  extends EntityRepository{
             $this->updateTitleBigram($tokenGroup, $bigram, $articleBigram->getArticleTitle()->getTokenGroupTitleMd5(), $displayBilemma);
         }
     }   
+
+    /**
+     * Токены товара
+     * 
+     * @param Goods $good
+     */
+    public function goodTitleToken($good)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('tt')
+            ->from(TitleToken::class, 'tt')
+            ->where('tt.tokenGroup = ?1')
+            ->setParameter('1', $good->getTokenGroup()->getId())    
+            ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tt.titleMd5')
+            ->join('at.article', 'a')
+            ->andWhere('a.good = ?2')
+            ->setParameter('2', $good->getId())                
+            ;    
+        
+        return $queryBuilder->getQuery()->getResult();       
+    }
     
+    
+    ////////////////////////////////////////////////////////////////////////////
     /**
      * Количество поддержек ветви
      * 

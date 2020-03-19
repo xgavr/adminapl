@@ -195,6 +195,25 @@ $priceCols = $goodsManager->priceCols($goods);
                                 <?php endforeach;?>
                             </p>
                         </table>                    
+                        <table class="table table-bordered">
+                            <p>
+                                <?php foreach ($titleTokens as $titleToken):?>
+                                    <tr>
+                                        <td align='right'>
+                                            <?= $titleToken->getToken()->getLemma()?>
+                                        </td>
+                                        <td width="5">
+                                        </td>
+                                        <td width="5">
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td width="10">
+                                        </td>
+                                    </tr>                                              
+                                <?php endforeach;?>
+                            </p>
+                        </table>                    
                     </div>
                     <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
                         <div id="oemToolbar">

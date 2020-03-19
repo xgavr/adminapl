@@ -15,6 +15,8 @@ use Application\Entity\Rawprice;
 use Application\Entity\Raw;
 use Application\Entity\Images;
 use Application\Entity\Rate;
+use Application\Entity\TitleToken;
+use Application\Entity\TitleBigram;
 use Application\Form\GoodsForm;
 use Application\Form\GoodSettingsForm;
 use Application\Form\UploadForm;
@@ -443,36 +445,23 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
         
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawprices($goods);
-        
         $prevQuery = $this->entityManager->getRepository(Goods::class)
                         ->findAllGoods(['prev1' => $goods->getCode()]);
         $nextQuery = $this->entityManager->getRepository(Goods::class)
                         ->findAllGoods(['next1' => $goods->getCode()]);        
 
-        $carQuery = $this->entityManager->getRepository(Goods::class)
-                        ->findCars($goods);
-        
-        $carAdapter = new DoctrineAdapter(new ORMPaginator($carQuery, false));
-        $carPaginator = new Paginator($carAdapter);
-        $carPaginator->setDefaultItemCountPerPage(10);        
-        $carPaginator->setCurrentPageNumber($page);
-
-        $totalCars = $carPaginator->getTotalItemCount();
-        
         $images = $this->entityManager->getRepository(Images::class)
                 ->findByGood($goods->getId());
         
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findGoodRate($goods);
+        
+        $titleTokens = $this->entityManager->getRepository(\Application\Entity\TitleToken::class)
+                ->goodTitleToken($goods);
 
         // Render the view template.
         return new ViewModel([
             'goods' => $goods,
-            'cars' => $carPaginator,
-            'totalCars' => $totalCars,
-            'rawprices' => $rawprices,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
             'articleManager' => $this->articleManager,
@@ -482,6 +471,7 @@ class GoodsController extends AbstractActionController
             'oemSources' => \Application\Entity\Oem::getSourceList(),
             'priceStatuses' => Rawprice::getStatusList(),
             'rate' => $rate,
+            'titleTokens' => $titleTokens,
         ]);
     }      
     
