@@ -501,42 +501,6 @@ class TitleRepository  extends EntityRepository{
     
     
     /**
-     * Заполнить по всем наименованиям артикулов
-     * 
-     */
-    public function fillFromArticles()
-    {
-        ini_set('memory_limit', '1024M');
-        set_time_limit(1800);        
-        $startTime = time();
-        
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('at')
-            ->from(ArticleTitle::class, 'at')
-            ->where('at.fpTree = 0')    
-            ;    
-        
-        $query = $queryBuilder->getQuery();
-        
-        $iterable = $query->iterate();
-        
-        foreach ($iterable as $row){
-            foreach ($row as $articleTitle){        
-                $this->addFromArticleTitle($articleTitle);
-                $this->getEntityManager()->detach($articleTitle);
-                if (time() > $startTime + 1740){
-                    return;
-                }            
-            }
-        }
-        
-        return;
-    }
-    
-    /**
      * Обновить выводимое наименование токена
      * 
      * @param TokenGroup $tokenGroup
@@ -669,6 +633,42 @@ class TitleRepository  extends EntityRepository{
     
     
     ////////////////////////////////////////////////////////////////////////////
+    /**
+     * Заполнить по всем наименованиям артикулов
+     * 
+     */
+    public function fillFromArticles()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(1800);        
+        $startTime = time();
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('at')
+            ->from(ArticleTitle::class, 'at')
+            ->where('at.fpTree = 0')    
+            ;    
+        
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $articleTitle){        
+                $this->addFromArticleTitle($articleTitle);
+                $this->getEntityManager()->detach($articleTitle);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+            }
+        }
+        
+        return;
+    }
+    
     /**
      * Количество поддержек ветви
      * 
