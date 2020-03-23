@@ -18,6 +18,7 @@ use Application\Form\PriceDescriptionForm;
 use Application\Filter\StrSimilar;
 use Application\Validator\IsBlackList;
 use Application\Validator\IsNumericPrice;
+use Application\Filter\ArmtekGoodname;
 
 use Phpml\Classification\KNearestNeighbors;
 use Phpml\ModelManager;
@@ -154,9 +155,10 @@ class ParseManager {
      * @param array $priceDescriptionFunc
      * @param bool $flushnow
      * @param integer $status
+     * @param integer $supplierId
      */
     
-    public function updateRawprice($rawprice, $priceDescriptionFunc = null, $status = Rawprice::STATUS_PARSED)
+    public function updateRawprice($rawprice, $priceDescriptionFunc = null, $status = Rawprice::STATUS_PARSED, $supplierId = null)
     {
         $data = $this->parseRawdata($rawprice, $priceDescriptionFunc);
         
@@ -170,9 +172,21 @@ class ParseManager {
             $rawprice->setStatus($status);            
         }    
         
+        $title = $data['title'];
+        $car = $data['car'];
+        
+        if (!$supplierId){
+            $supplierId = $rawprice->getRaw()->getSupplier()->getId();
+        }
+        
+        if ($supplierId == 26){
+            $armtekFilter = new ArmtekGoodname();
+            list($title, $car) = $armtekFilter->filter($title);
+        }
+        
         $rawprice->setArticle($data['article']);
         $rawprice->setProducer($data['producer']);
-        $rawprice->setTitle($data['title']);
+        $rawprice->setTitle($title);
         $rawprice->setPrice(isset($data['price']) ? $data['price']:0);
         $rawprice->setRest(isset($data['rest']) ? $data['rest']:0);            
         $rawprice->setIid($data['iid']);
@@ -182,7 +196,7 @@ class ParseManager {
         $rawprice->setLot($data['lot']);
         $rawprice->setUnit($data['unit']);
         $rawprice->setPack($data['pack']);
-        $rawprice->setCar($data['car']);
+        $rawprice->setCar($car);
         $rawprice->setBar($data['bar']);
         $rawprice->setCurrency($data['currency']);
         $rawprice->setComment($data['comment']);
@@ -369,7 +383,7 @@ class ParseManager {
                 foreach ($rawpriceIterator as $rawpriceItem){
                     foreach ($rawpriceItem as $rawprice){
                         if ($rawprice->getStatus() == Rawprice::STATUS_NEW){
-                            $this->updateRawprice($rawprice, $priceDescriptionFunc, Rawprice::STATUS_PARSED);
+                            $this->updateRawprice($rawprice, $priceDescriptionFunc, Rawprice::STATUS_PARSED, $raw->getSupplier()->getId());
                         }
                         $this->entityManager->detach($rawprice);
                     }    
