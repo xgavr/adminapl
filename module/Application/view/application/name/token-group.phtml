@@ -43,6 +43,11 @@ $this->headScript()
                         <option value="5_5">=5</option>
                         <option value="10_10">=10</option>
                     </select>
+                    <select type="select" class="form-control" id="withoutName">
+                        <option value="0">Все</option>
+                        <option value="1">Без названия</option>
+                        <option value="2">С названием</option>
+                    </select>
                 </div>    
             </div>
         </div>
@@ -185,6 +190,9 @@ $this->headScript()
         $('#goodCountLevel').change(function (){
             $('#table').bootstrapTable('refresh');
         })
+        $('#withoutName').change(function (){
+            $('#table').bootstrapTable('refresh');
+        })
     });
     
     function queryParams(params) {
@@ -200,6 +208,7 @@ $this->headScript()
             params.offset = params.limit * (offset - 1);
         }    
         params.goodCountLevel = $("#goodCountLevel").val();
+        params.withoutName = $("#withoutName").val();
         
         return params;
     }

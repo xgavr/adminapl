@@ -342,7 +342,11 @@ $this->headScript()
     *
     */
     function promptDialog(url, initValue) {
-        if (url){            
+        if (url){    
+            var initValue = $('#tokenGroupName').html();
+            if (initValue == '---'){
+                initValue = '';
+            }
             var dialog = bootbox.prompt({ 
                 size: "medium",
                 value: initValue,

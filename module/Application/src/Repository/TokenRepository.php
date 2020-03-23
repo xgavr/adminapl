@@ -347,6 +347,16 @@ class TokenRepository  extends EntityRepository
                     }
                 }                                
             }
+            if (isset($params['withoutName'])){
+                if ($params['withoutName'] == 1){
+                    $queryBuilder->andWhere('tg.name = ?5')
+                        ->setParameter('5', '');
+                }                                
+                if ($params['withoutName'] == 2){
+                    $queryBuilder->andWhere('tg.name != ?5')
+                        ->setParameter('5', '');
+                }                                
+            }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('tg.'.$params['sort'], $params['order']);                
             }            
