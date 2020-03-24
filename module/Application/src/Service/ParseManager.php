@@ -178,10 +178,12 @@ class ParseManager {
         if (!$supplierId){
             $supplierId = $rawprice->getRaw()->getSupplier()->getId();
         }
-        
+
         if ($supplierId == 26){
             $armtekFilter = new ArmtekGoodname();
-            list($title, $car) = $armtekFilter->filter($title);
+            $armtekParsed = $armtekFilter->filter($title);
+            $title = $armtekParsed['goodname'];
+            $car = $armtekParsed['car'];
         }
         
         $rawprice->setArticle($data['article']);
