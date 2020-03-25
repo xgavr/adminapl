@@ -394,7 +394,7 @@ class MlManager
         }
         $charCount = mb_strlen($rawprice->getFullTitle());
 
-        return ($tokenCount * $charCount)/log($charCount);
+        return ($tokenCount + $charCount)/log($charCount);
     }
     
     
