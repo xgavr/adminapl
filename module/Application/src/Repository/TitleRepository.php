@@ -615,20 +615,24 @@ class TitleRepository  extends EntityRepository{
      */
     public function goodTitleToken($good)
     {
-        $entityManager = $this->getEntityManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
+        if ($good->getTokenGroup()){
+            $entityManager = $this->getEntityManager();
+            $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('tt')
-            ->from(TitleToken::class, 'tt')
-            ->where('tt.tokenGroup = ?1')
-            ->setParameter('1', $good->getTokenGroup()->getId())    
-            ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tt.titleMd5')
-            ->join('at.article', 'a')
-            ->andWhere('a.good = ?2')
-            ->setParameter('2', $good->getId())                
-            ;    
+            $queryBuilder->select('tt')
+                ->from(TitleToken::class, 'tt')
+                ->where('tt.tokenGroup = ?1')
+                ->setParameter('1', $good->getTokenGroup()->getId())    
+                ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tt.titleMd5')
+                ->join('at.article', 'a')
+                ->andWhere('a.good = ?2')
+                ->setParameter('2', $good->getId())                
+                ;    
+
+            return $queryBuilder->getQuery()->getResult();       
+        }
         
-        return $queryBuilder->getQuery()->getResult();       
+        return;
     }
     
     
