@@ -384,7 +384,7 @@ class MlManager
     public function numberRawpriceTitle($rawprice)
     {
         $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
-                ->findOneByTitleMd5($rawprice->getTitleMd5());
+                ->findOneBy(['article' => $rawprice->getCode()->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
         
         $tokenCount = 0;
         if ($articleTitle){
