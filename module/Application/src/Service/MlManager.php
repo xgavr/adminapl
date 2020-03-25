@@ -381,6 +381,23 @@ class MlManager
                 ->meanFrequency($tokenGroup);
     }
     
+    public function numberRawpriceTitle($rawprice)
+    {
+        $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
+                ->findOneByTitleMd5($rawprice->getTitleMd5());
+        
+        $tokenCount = 0;
+        if ($articleTitle){
+            if ($articleTitle->getTokenGroupTitle()){
+                $tokenCount = count(explode('_', $articleTitle->getTokenGroupTitle()));
+            }            
+        }
+        $charCount = mb_strlen($rawprice->getFullTitle());
+
+        return $tokenCount*log($charCount)/$charCount;
+    }
+    
+    
     /**
      * Получить строки прайсов товара из строки прайса
      * 

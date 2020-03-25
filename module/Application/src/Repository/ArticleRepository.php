@@ -93,7 +93,7 @@ class ArticleRepository  extends EntityRepository
     {
         ini_set('memory_limit', '2048M');
         
-        if ($flag == Article::TOKEN_UPDATE_FLAG){
+        if ($flag == Article::getUpdateFlag()){
             return;
         }
         
@@ -106,7 +106,7 @@ class ArticleRepository  extends EntityRepository
                 ->where('at.lemma = ?1')
                 ->andWhere('a.tokenUpdateFlag = ?2')
                 ->setParameter('1', $lemma)
-                ->setParameter('2', Article::TOKEN_UPDATE_FLAG)
+                ->setParameter('2', Article::getUpdateFlag())
                 ;
         
         $articles = $queryBuilder->getQuery()->getResult();
@@ -127,7 +127,7 @@ class ArticleRepository  extends EntityRepository
     {
         ini_set('memory_limit', '2048M');
         
-        if ($flag == Article::TOKEN_UPDATE_FLAG){
+        if ($flag == Article::getUpdateFlag()){
             return;
         }
         
@@ -140,7 +140,7 @@ class ArticleRepository  extends EntityRepository
                 ->where('ab.bigram = ?1')
                 ->andWhere('a.tokenUpdateFlag = ?2')
                 ->setParameter('1', $bigram->getId())
-                ->setParameter('2', Article::TOKEN_UPDATE_FLAG)
+                ->setParameter('2', Article::getUpdateFlag())
                 ;
         
         $articles = $queryBuilder->getQuery()->getResult();

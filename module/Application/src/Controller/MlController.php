@@ -125,6 +125,27 @@ class MlController extends AbstractActionController
         ]);  
         
     }
+            
+    public function mlRawpricesAction()
+    {
+        $page = $this->params()->fromQuery('page', 1);
+        
+        $query = $this->entityManager->getRepository(\Application\Entity\Token::class)
+                    ->findMlTitles();
+                
+        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(3);        
+        $paginator->setCurrentPageNumber($page);
+
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'mlTitles' => $paginator,
+            'mlManager' => $this->mlManager,            
+        ]);  
+        
+    }
     
     public function mlTitlesToCsvAction()
     {

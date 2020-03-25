@@ -883,7 +883,7 @@ class NameManager
      */
     public function checkUpdateTokenFlag($articleId, $tokenUpdateFlag)
     {
-        if ($tokenUpdateFlag != Article::TOKEN_UPDATE_FLAG){
+        if ($tokenUpdateFlag != Article::getUpdateFlag()){
             $this->entityManager->getRepository(Article::class)
                     ->deleteArticleToken($articleId);
 
@@ -894,7 +894,7 @@ class NameManager
                     ->deleteArticleTitle($articleId);
 
             $this->entityManager->getRepository(Article::class)
-                    ->updateArticle($articleId, ['token_update_flag' => Article::TOKEN_UPDATE_FLAG]);
+                    ->updateArticle($articleId, ['token_update_flag' => Article::getUpdateFlag()]);
         }
         
         return;
@@ -2032,6 +2032,57 @@ class NameManager
         }
         
         return $result;
+    }
+    
+    /**
+     * Данные для сравнения наименования товара
+     * 
+     * @param Rawprice $rawprice
+     * @return float
+     * 
+     */
+    public function numberRawpriceTitle($rawprice)
+    {
+        $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
+                ->findOneByTitleM5($rawprice->getTitleMd5());
+        
+        $tokenCount = 0;
+        if ($articleTitle){
+            if ($articleTitle->getTokenGroupTitle()){
+                $tokenCount = count(explode('_', $articleTitle->getTokenGroupTitle()));
+            }            
+        }
+        $charCount = mb_strlen($rawprice->getTitle()) + mb_strlen($rawprice->getCar());
+        
+        return ln($tokenCount*$charCount)/$charCount;
+    }
+    
+    /**
+     * Найти лучшее описание
+     * 
+     * @param Goods $good
+     */
+    public function findBestDescription($good)
+    {
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                ->rawpriceArticles($good);
+        
+        $numberGoodTitle = 0;
+        $newDescription = '';
+        
+        foreach ($rawprices as $rawprice){
+            $numberRawpriceTitle = $this->numberRawpriceTitle($rawprice);
+            if ($numberRawpriceTitle > $numberGoodTitle){
+                $numberGoodTitle = $numberRawpriceTitle;
+                $newDescription = $rawprice->getFullTitle();
+            }
+        }
+        if ($newDescription != $good->getDescription()){
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), ['description' => $newDescription]);
+        }
+        
+        return;
     }
     
     /**

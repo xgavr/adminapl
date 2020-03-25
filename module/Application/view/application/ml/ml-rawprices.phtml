@@ -1,0 +1,159 @@
+<?php
+$this->headTitle('Обучающая выборка для наименований товаров');
+
+$this->mainMenu()->setActiveItemId('ml');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Машинное обучение'=>$this->url('ml'),
+            'Обучающая выборка для наименований товаров'=>$this->url('ml', ['action'=>'ml-titles'])
+            ]);
+
+$preGood = null;
+?>
+
+<div class="row">
+    <div class="col-md-9">
+
+        <table class="table table-striped">
+            <tr>
+                <td colspan="11">
+                    <?= $this->paginationControl($mlTitles,
+                                'Sliding',
+                                'application/partial/paginator', 
+                                ['route' => array('route' => 'ml', 'action' => 'ml-rawprices')]); ?>
+
+                </td>
+            </tr>
+            <?php foreach ($mlTitles as $mlTitle):?>
+                <?php
+                    $rawprices = $mlManager->rawpricesFromGoodRawprice($mlTitle->getRawprice());
+                    $good = $mlTitle->getRawprice()->getGood();
+                    $groupTitle = $mlManager->choiceTokenGroupTitle($good);
+                ?>
+                <?php if ($preGood != $good): ?>
+                    <?php $preGood = $good?>
+                    <tr>
+                        <th colspan="">
+                            
+                        </th>
+                        <th colspan="10">
+                            <a href="<?= $this->url('goods', ['action' => 'view', 'id' => $good->getId()])?>" target="_blank">
+                                <?= $good->getCode();?> <?= $good->getProducer()->getName();?>
+                            </a>                            
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="">
+                            
+                        </th>
+                        <th colspan="10">                            
+                            <small><i>
+                                <?php if ($good->getTokenGroup()):?>
+                                    <a href="<?= $this->url('name', ['action' => 'view-token-group', 'id' => $good->getTokenGroup()->getId()])?>" target="_blank">
+                                        <?= $good->getTokenGroup()->getName()?>; <?= $good->getTokenGroup()->getLemms();?>
+                                    </a>                            
+                                <?php else:?>
+                                    Группа не назначена
+                                <?php endif;?>
+                                </i></small>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="">
+                            
+                        </td>
+                        <td colspan="10">                            
+                            <small><i>
+                                <?php if (is_array($groupTitle)):?>
+                                    <?= $groupTitle['tokenGroupTitle']; ?> (<?= $groupTitle['titleCount']; ?>)
+                                <?php else:?>
+                                    Группа не выбрана
+                                <?php endif;?>
+                                </i></small>
+                        </td>
+                    </tr>
+                <?php endif;?>
+                <?php foreach ($rawprices as $rawprice): ?>
+                    <tr>
+                        <td></td>
+                        <td colspan="9">
+                            <a href="<?= $this->url('rawprice', ['action' => 'view', 'id' => $rawprice->getId()])?>" target="_blank">
+                                <small><?= $rawprice->getFullTitle();?></small>
+                            </a>
+                        </td>
+                        <td><?= round($mlManager->numberRawpriceTitle($rawprice), 5)?></td>
+                    </tr>                    
+                <?php endforeach;?>        
+            <?php endforeach;?>        
+            <tr>
+                <td colspan="10">
+                    <?= $this->paginationControl($mlTitles,
+                                'Sliding',
+                                'application/partial/paginator', 
+                                ['route' => array('route' => 'ml', 'action' => 'ml-rawprices')]); ?>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                        </div>
+                        <div class="pull-right">
+                            <button value="/ml/fill-ml-titles" class="btn btn-info btn-xs refresh-button">
+                                Обновить
+                            </button> 
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                        </div>
+                        <div class="pull-right">
+                            <button value="/ml/ml-titles-to-csv" class="btn btn-info btn-xs refresh-button">
+                                Выгрузить
+                            </button> 
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                        </div>
+                        <div class="pull-right">
+<!--                            <button value="/ml/ml-title-predict" class="btn btn-info btn-xs refresh-button">
+                                Обучить
+                            </button> -->
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.statusMlTitle').on('change', function(e, node) {
+        var url = "/ml/update-ml-title-status/";
+
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: e.target.name, value: e.target.value}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })            
+</script>
+

@@ -744,6 +744,13 @@ class Rawprice {
         return md5($this->getTitleUp());
     }
 
+    public function getFullTitle() 
+    {
+        $fGn = mb_strtoupper(mb_substr(trim($this->goodname), 0, 1));
+        $Gn = $fGn.mb_substr(trim($this->goodname), 1);
+        return trim($Gn.' '.$this->car);
+    }
+
     public function setTitle($title) 
     {
         $this->goodname = mb_substr($title, 0, 200);

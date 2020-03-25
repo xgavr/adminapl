@@ -117,6 +117,10 @@ class Article {
         $this->crossList = new ArrayCollection();
     }
     
+    public static function getUpdateFlag()
+    {
+        return date('n');
+    }
 
     public function getId() 
     {
