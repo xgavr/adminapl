@@ -2044,7 +2044,7 @@ class NameManager
     public function numberRawpriceTitle($rawprice)
     {
         $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
-                ->findOneByTitleM5($rawprice->getTitleMd5());
+                ->findOneBy(['article' => $rawprice->getCode()->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
         
         $tokenCount = 0;
         if ($articleTitle){
@@ -2052,17 +2052,17 @@ class NameManager
                 $tokenCount = count(explode('_', $articleTitle->getTokenGroupTitle()));
             }            
         }
-        $charCount = mb_strlen($rawprice->getTitle()) + mb_strlen($rawprice->getCar());
-        
-        return ln($tokenCount*$charCount)/$charCount;
+        $charCount = mb_strlen($rawprice->getFullTitle());
+
+        return ($tokenCount + $charCount)/log($charCount);
     }
     
     /**
-     * Найти лучшее описание
+     * Найти и установить лучшее описание
      * 
      * @param Goods $good
      */
-    public function findBestDescription($good)
+    public function updateBestDescription($good)
     {
         $rawprices = $this->entityManager->getRepository(Goods::class)
                 ->rawpriceArticles($good);

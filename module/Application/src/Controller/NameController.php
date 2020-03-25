@@ -756,6 +756,30 @@ class NameController extends AbstractActionController
         ]);          
     }
     
+    public function updateDescriptionAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodId);
+
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->updateBestDescription($good);
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);           
+    }
+    
     public function updateBestNameFromRawAction()
     {
         $rawId = $this->params()->fromRoute('id', -1);
