@@ -797,7 +797,7 @@ class NameController extends AbstractActionController
             return;                        
         }        
 
-        $this->nameManager->descrptionFromRaw($raw);
+        $this->nameManager->descriptionFromRaw($raw);
                 
         return new JsonModel([
             'ok',
