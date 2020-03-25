@@ -2107,7 +2107,7 @@ class NameManager
                 }    
                 
                 $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::BEST_NAME_UPDATE]);                        
+                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::DESCRIPTION_UPDATE]);                        
                 $this->entityManager->detach($rawprice);
             }    
             
@@ -2115,10 +2115,9 @@ class NameManager
                 return;
             }            
         }
-
-        $raw->setParseStage(Raw::STAGE_BEST_NAME);
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush($raw);
+        
+        $this->entityManager->getRepository(Raw::class)
+                ->updateRawParseStage($raw, Raw::STAGE_DESCRIPTION);
         
         return;
     }
@@ -2218,9 +2217,8 @@ class NameManager
             }            
         }
 
-        $raw->setParseStage(Raw::STAGE_BEST_NAME);
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush($raw);
+        $this->entityManager->getRepository(Raw::class)
+                ->updateRawParseStage($raw, Raw::STAGE_BEST_NAME);
         
         return;
     }

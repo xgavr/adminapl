@@ -336,10 +336,30 @@ $this->pageBreadcrumbs()->setItems([
                                     </div>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == Raw::STAGE_TOKEN_GROUP_PARSED):?>
+                                    <button value="/name/update-description-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Обновить описания товаров">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                    <div>
+                                        <small>
+                                            <i>
+                                                <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::DESCRIPTION_UPDATE)*100/$totalRawpriceCount).'%'?>
+                                            </i>
+                                        </small>
+                                    </div>
+                                <?php endif;?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_DESCRIPTION):?>
                                     <button value="/name/update-best-name-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Обновить наименования товаров">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
+                                    <div>
+                                        <small>
+                                            <i>
+                                                <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::BEST_NAME_UPDATE)*100/$totalRawpriceCount).'%'?>
+                                            </i>
+                                        </small>
+                                    </div>
                                 <?php endif;?>
                             </div>    
                         </div>    

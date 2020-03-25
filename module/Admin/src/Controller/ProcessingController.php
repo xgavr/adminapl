@@ -1265,6 +1265,29 @@ class ProcessingController extends AbstractActionController
     }
 
     /**
+     * Обновление описания товаров из прайса
+     */
+    public function updateDescriptionAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['update_good_name'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_GROUP_PARSED]);
+            
+            if ($raw){
+                $this->nameManager->descriptionFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
      * Обновление наименований товаров из прайса
      */
     public function updateBestNameAction()
@@ -1274,7 +1297,7 @@ class ProcessingController extends AbstractActionController
         if ($settings['update_good_name'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_GROUP_PARSED]);
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_DESCRIPTION]);
             
             if ($raw){
                 $this->nameManager->bestNameFromRaw($raw);

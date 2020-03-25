@@ -47,7 +47,8 @@ class Rawprice {
     const TOKEN_PARSED    = 2; // прошел разборку.
     const TOKEN_GOOD_PARSED = 3; // прошел разборку наименований товаров.
     const TOKEN_GROUP_PARSED = 4; // прошел разборку группу наименований.
-    const BEST_NAME_UPDATE = 5; //обновили наименование товара
+    const DESCRIPTION_UPDATE = 5; //обновили описания товара
+    const BEST_NAME_UPDATE = 6; //обновили наименование товара
     
     const EX_NEW            = 1; // не передано
     const EX_TO_TRANSFER    = 3; // нужно передать
