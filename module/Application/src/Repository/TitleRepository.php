@@ -626,7 +626,7 @@ class TitleRepository  extends EntityRepository{
             ->andWhere('at.lemma = ?2')    
             ->setParameter('2', $titleToken->getToken()->getLemma())    
             ->join('at.articleTitle', 'ati')
-            ->andWhere('ati.tokenGroupMd5 = ?3')
+            ->andWhere('ati.tokenGroupTitleMd5 = ?3')
             ->setParameter('3', $titleToken->getTitleMd5())                
             ;    
         
