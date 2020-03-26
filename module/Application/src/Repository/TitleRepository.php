@@ -683,7 +683,7 @@ class TitleRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
         
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('count(at.lemma) as bigramCount')
+        $queryBuilder->select('count(ab.bigram) as bigramCount')
             ->from(ArticleTitle::class, 'ati')                
             ->where('ati.tokenGroupTitleMd5 = ?1')
             ->setParameter('1', $titleBigram->getTitleMd5())
