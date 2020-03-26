@@ -623,9 +623,11 @@ class TitleRepository  extends EntityRepository{
             ->from(ArticleTitle::class, 'ati')                
             ->where('ati.tokenGroupTitleMd5 = ?1')
             ->setParameter('1', $titleToken->getTitleMd5())
+            ->andWhere('ati.tokenGroup = ?2')    
+            ->setParameter('2', $titleToken->getTokenGroup()->getId())
             ->join('ati.articleTokens', 'at')    
-            ->andWhere('at.lemma = ?2')    
-            ->setParameter('2', $titleToken->getToken()->getLemma())    
+            ->andWhere('at.lemma = ?3')    
+            ->setParameter('3', $titleToken->getToken()->getLemma())    
             ->groupBy('ati.tokenGroupTitleMd5')    
             ;    
         
