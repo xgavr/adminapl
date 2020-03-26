@@ -621,8 +621,8 @@ class TitleRepository  extends EntityRepository{
 
         $queryBuilder->select('at')
             ->from(ArticleToken::class, 'at')
-            ->where('at.tokenGroup = ?1')
-            ->setParameter('1', $titleToken->getTokenGroup()->getId())    
+//            ->where('at.tokenGroup = ?1')
+//            ->setParameter('1', $titleToken->getTokenGroup()->getId())    
             ->andWhere('at.lemma = ?2')    
             ->setParameter('2', $titleToken->getToken()->getLemma())    
             ->join('at.articleTitle', 'ati')
@@ -645,12 +645,19 @@ class TitleRepository  extends EntityRepository{
      */
     public function supporTitleTokens()
     {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(1800);        
+        $startTime = time();
+
         $entityManager = $this->getEntityManager();
         $titleTokens = $entityManager->getRepository(TitleToken::class)
                 ->findBy([]);
         
         foreach($titleTokens as $titleToken){
             $this->supportTitleToken($titleToken);
+            if (time() > $startTime + 1740){
+                return;
+            }            
         }
         
         return;
