@@ -619,22 +619,21 @@ class TitleRepository  extends EntityRepository{
         
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('at')
-            ->from(ArticleToken::class, 'at')
-//            ->where('at.tokenGroup = ?1')
-//            ->setParameter('1', $titleToken->getTokenGroup()->getId())    
+        $queryBuilder->select('count(at.lemma) as tokenCount')
+            ->from(ArticleTitle::class, 'ati')                
+            ->where('ati.tokenGroupTitleMd5 = ?1')
+            ->setParameter('1', $titleToken->getTitleMd5())
+            ->join('ati.articleTokens', 'at')    
             ->andWhere('at.lemma = ?2')    
             ->setParameter('2', $titleToken->getToken()->getLemma())    
-            ->join('at.articleTitle', 'ati')
-            ->andWhere('ati.tokenGroupTitleMd5 = ?3')
-            ->setParameter('3', $titleToken->getTitleMd5())                
+            ->groupBy('ati.tokenGroupTitleMd5')    
             ;    
         
-        $articleTokens = $queryBuilder->getQuery()->getResult(); 
+        $articleTokens = $queryBuilder->getQuery()->getOneOrNullResult(); 
         
         $articleTokenCount = 0;
         if ($articleTokens){
-            $articleTokenCount = count($articleTokens);
+            $articleTokenCount = $articleTokens['tokenCount'];
         }
                 
         $entityManager->getConnection()->update('title_token', ['frequency' => $articleTokenCount], ['id' => $titleToken->getId()]);
