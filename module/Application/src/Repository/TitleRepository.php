@@ -650,14 +650,23 @@ class TitleRepository  extends EntityRepository{
         $startTime = time();
 
         $entityManager = $this->getEntityManager();
-        $titleTokens = $entityManager->getRepository(TitleToken::class)
-                ->findBy([]);
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('tt')
+            ->from(TitleToken::class, 'tt')
+            ;    
         
-        foreach($titleTokens as $titleToken){
-            $this->supportTitleToken($titleToken);
-            if (time() > $startTime + 1740){
-                return;
-            }            
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $titleToken){                
+                $this->supportTitleToken($titleToken);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+                $entityManager->detach($titleToken);
+            }    
         }
         
         return;
