@@ -52,9 +52,15 @@ class ArticleTitle {
     
     /**
     * @ORM\OneToMany(targetEntity="Application\Entity\ArticleToken", mappedBy="articleTitle")
-    * @ORM\JoinColumn(name="id", referencedColumnName="titile_id")
+    * @ORM\JoinColumn(name="id", referencedColumnName="title_id")
    */
     private $articleTokens;        
+
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\ArticleBigram", mappedBy="articleTitle")
+    * @ORM\JoinColumn(name="id", referencedColumnName="title_id")
+   */
+    private $articleBigrams;        
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\FpTree", inversedBy="articleTitles") 
@@ -135,6 +141,15 @@ class ArticleTitle {
     public function getArticleTokens() 
     {
         return $this->articleTokens;
+    }
+    
+    /*
+     * Возвращает связанный articleBigrams.
+     * @return array
+     */    
+    public function getArticleBigrams() 
+    {
+        return $this->articleBigrams;
     }
     
     /**
