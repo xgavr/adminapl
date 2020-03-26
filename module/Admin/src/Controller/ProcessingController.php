@@ -1283,8 +1283,41 @@ class ProcessingController extends AbstractActionController
                 
         return new JsonModel(
             ['ok']
-        );
-        
+        );        
+    }
+
+    /**
+     * Поддержка токенов наименований
+     */
+    public function supportTitleTokensAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['update_good_name'] == 1){            
+            $this->entityManager->getRepository(TokenGroupToken::class)
+                    ->supporTitleTokens(); 
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+
+    /**
+     * Поддержка биграм наименований
+     */
+    public function supportTitleBigramsAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['update_good_name'] == 1){            
+            $this->entityManager->getRepository(TokenGroupBigram::class)
+                    ->supporTitleBigrams(); 
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
     }
 
     /**
