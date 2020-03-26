@@ -33,6 +33,11 @@ class TitleBigram {
      * @ORM\Column(name="title_md5")  
      */
     protected $titleMd5;        
+    
+    /**
+     * @ORM\Column(name="frequency")  
+     */
+    protected $frequency;            
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\TokenGroup", inversedBy="titleTokens") 
@@ -71,6 +76,16 @@ class TitleBigram {
         return $this->titleMd5;
     }
 
+    public function setFrequency($frequency)
+    {
+        $this->frequency = $frequency;
+    }
+    
+    public function getFrequency()
+    {
+        return $this->frequency;
+    }
+    
     public function setTitleMd5($titleMd5) 
     {
         $this->titleMd5 = $titleMd5;

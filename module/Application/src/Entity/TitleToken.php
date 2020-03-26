@@ -35,6 +35,11 @@ class TitleToken {
     protected $titleMd5;        
 
     /**
+     * @ORM\Column(name="frequency")  
+     */
+    protected $frequency;            
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\TokenGroup", inversedBy="titleTokens") 
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
      */
@@ -76,6 +81,17 @@ class TitleToken {
         $this->titleMd5 = $titleMd5;
     }     
 
+    public function setFrequency($frequency)
+    {
+        $this->frequency = $frequency;
+    }
+    
+    public function getFrequency()
+    {
+        return $this->frequency;
+    }
+    
+    
     /**
      * Возвращает связанный tokenGroup.
      * @return \Application\Entity\TokenGroup

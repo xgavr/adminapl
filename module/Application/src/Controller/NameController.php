@@ -1514,10 +1514,10 @@ class NameController extends AbstractActionController
         
     }
 
-    public function supportTokenGroupTokensAction()
+    public function supportTitleTokensAction()
     {
         $this->entityManager->getRepository(TokenGroupToken::class)
-                ->supportTokenGroupTokens(); 
+                ->supporTitleTokens(); 
 
         return new JsonModel([
             'result' => 'oke',
@@ -1525,10 +1525,10 @@ class NameController extends AbstractActionController
         
     }
 
-    public function supportTokenGroupBigramsAction()
+    public function supportTitleBigramsAction()
     {
         $this->entityManager->getRepository(TokenGroupBigram::class)
-                ->supportTokenGroupBigrams(); 
+                ->supporTitleBigrams(); 
 
         return new JsonModel([
             'result' => 'oke',

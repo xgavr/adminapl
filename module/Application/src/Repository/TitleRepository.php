@@ -609,6 +609,74 @@ class TitleRepository  extends EntityRepository{
     }   
 
     /**
+     * Поддержка токенов наименования
+     * 
+     * @param TitleToken $titleToken
+     */
+    public function supportTitleToken($titleToken)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $articleTokenCount = $entityManager->getRepository(ArticleToken::class)
+                ->count([
+                    'tokenGroup' => $titleToken->getTokenGroup()->getId(),
+                    'lemma' => $titleToken->getToken()->getLemma(),
+                    'titleMd5' => $titleToken->getTitleMd5(),
+                ]);
+        $entityManager->getConnection()->update('title_token', ['frequency' => $articleTokenCount], ['id' => $titleToken->getId()]);
+    }
+    
+    /**
+     * Обновить поддержку всех токенов наименований
+     */
+    public function supporTitleTokens()
+    {
+        $entityManager = $this->getEntityManager();
+        $titleTokens = $entityManager->getRepository(TitleToken::class)
+                ->findBy([]);
+        
+        foreach($titleTokens as $titleToken){
+            $this->supportTitleToken($titleToken);
+        }
+        
+        return;
+    }   
+
+    /**
+     * Поддержка биграм наименования
+     * 
+     * @param TitleBigram $titleBigram
+     */
+    public function supportTitleBigram($titleBigram)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $articleBigramCount = $entityManager->getRepository(ArticleBigram::class)
+                ->count([
+                    'tokenGroup' => $titleBigram->getTokenGroup()->getId(),
+                    'bigram' => $titleBigram->getBigram()->getId(),
+                    'titleMd5' => $titleBigram->getTitleMd5(),
+                ]);
+        $entityManager->getConnection()->update('title_bigram', ['frequency' => $articleBigramCount], ['id' => $titleBigram->getId()]);
+    }
+    
+    /**
+     * Обновить поддержку всех бтграм наименований
+     */
+    public function supporTitleBigrams()
+    {
+        $entityManager = $this->getEntityManager();
+        $titleBigrams = $entityManager->getRepository(TitleBigram::class)
+                ->findBy([]);
+        
+        foreach($titleBigrams as $titleBigram){
+            $this->supportTitleBigram($titleBigram);
+        }
+        
+        return;
+    }   
+
+    /**
      * Токены товара
      * 
      * @param Goods $good
