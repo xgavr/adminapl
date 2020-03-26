@@ -682,12 +682,26 @@ class TitleRepository  extends EntityRepository{
     {
         $entityManager = $this->getEntityManager();
         
-        $articleBigramCount = $entityManager->getRepository(ArticleBigram::class)
-                ->count([
-                    'tokenGroup' => $titleBigram->getTokenGroup()->getId(),
-                    'bigram' => $titleBigram->getBigram()->getId(),
-                    'titleMd5' => $titleBigram->getTitleMd5(),
-                ]);
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('count(at.lemma) as bigramCount')
+            ->from(ArticleTitle::class, 'ati')                
+            ->where('ati.tokenGroupTitleMd5 = ?1')
+            ->setParameter('1', $titleBigram->getTitleMd5())
+            ->andWhere('ati.tokenGroup = ?2')    
+            ->setParameter('2', $titleBigram->getTokenGroup()->getId())
+            ->join('ati.articleBigrams', 'ab')    
+            ->andWhere('ab.bigram = ?3')    
+            ->setParameter('3', $titleBigram->getBigram()->getId())    
+            ->groupBy('ati.tokenGroupTitleMd5')    
+            ;    
+        
+        $articleBigrams = $queryBuilder->getQuery()->getOneOrNullResult(); 
+
+        $articleBigramCount = 0;
+        if ($articleBigrams){
+            $articleBigramCount = $articleBigrams['bigramCount'];
+        }
+
         $entityManager->getConnection()->update('title_bigram', ['frequency' => $articleBigramCount], ['id' => $titleBigram->getId()]);
     }
     
@@ -696,12 +710,28 @@ class TitleRepository  extends EntityRepository{
      */
     public function supporTitleBigrams()
     {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(1800);        
+        $startTime = time();
+
         $entityManager = $this->getEntityManager();
-        $titleBigrams = $entityManager->getRepository(TitleBigram::class)
-                ->findBy([]);
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('tb')
+            ->from(TitleBigram::class, 'tb')
+            ;    
         
-        foreach($titleBigrams as $titleBigram){
-            $this->supportTitleBigram($titleBigram);
+        $query = $queryBuilder->getQuery();
+        
+        $iterable = $query->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $titleBigram){                
+                $this->supportTitleBigram($titleBigram);
+                if (time() > $startTime + 1740){
+                    return;
+                }            
+                $entityManager->detach($titleBigram);
+            }    
         }
         
         return;
