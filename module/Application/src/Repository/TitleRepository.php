@@ -764,19 +764,19 @@ class TitleRepository  extends EntityRepository{
                 ->join('at.article', 'a')
                 ->andWhere('a.good = ?2')
                 ->setParameter('2', $good->getId())
-                ->orderBy('tt.frequency', 'desc')    
+//                ->orderBy('tt.frequency', 'desc')    
                 ;    
 
             $qbb = $entityManager->createQueryBuilder();
             $qbb->select('tb.displayBilemma as displayLemma, tb.frequency as frequency, at.title as title')
                 ->from(TitleBigram::class, 'tb')
-                ->where('tb.tokenGroup = ?1')
-                ->setParameter('1', $good->getTokenGroup()->getId())    
+                ->where('tb.tokenGroup = ?3')
+                ->setParameter('3', $good->getTokenGroup()->getId())    
                 ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tb.titleMd5')
                 ->join('at.article', 'a')
-                ->andWhere('a.good = ?2')
-                ->setParameter('2', $good->getId())
-                ->orderBy('tb.frequency', 'desc')    
+                ->andWhere('a.good = ?4')
+                ->setParameter('4', $good->getId())
+//                ->orderBy('tb.frequency', 'desc')    
                 ;    
             
             $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
@@ -790,6 +790,9 @@ class TitleRepository  extends EntityRepository{
             );
             
             foreach ($qbt->getParameters() as $k => $p) {
+                $native->setParameter($p->getName(), $p->getValue(), $p->getType());
+            }
+            foreach ($qbb->getParameters() as $k => $p) {
                 $native->setParameter($p->getName(), $p->getValue(), $p->getType());
             }
             
