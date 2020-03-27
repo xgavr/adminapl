@@ -604,7 +604,7 @@ class TitleRepository  extends EntityRepository{
                 ->findBy(['tokenGroup' => $tokenGroup->getId(), 'bigram' => $bigram->getId()]);
         
         foreach($articleBigrams as $articleBigram){
-            $this->updateTitleBigram($tokenGroup, $bigram, $articleBigram->getArticleTitle()->getTokenGroupTitleMd5(), $displayBilemma);
+            $this->updateTitleBigram($tokenGroup, $bigram, $articleBigram->getArticleTitle()->getTitleMd5(), $displayBilemma);
         }
     }   
 
@@ -689,14 +689,14 @@ class TitleRepository  extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('count(ab.bigram) as bigramCount')
             ->from(ArticleTitle::class, 'ati')                
-            ->where('ati.tokenGroupTitleMd5 = ?1')
+            ->where('ati.TitleMd5 = ?1')
             ->setParameter('1', $titleBigram->getTitleMd5())
             ->andWhere('ati.tokenGroup = ?2')    
             ->setParameter('2', $titleBigram->getTokenGroup()->getId())
             ->join('ati.articleBigrams', 'ab')    
             ->andWhere('ab.bigram = ?3')    
             ->setParameter('3', $titleBigram->getBigram()->getId())    
-            ->groupBy('ati.tokenGroupTitleMd5')    
+            ->groupBy('ati.titleMd5')    
             ;    
         
         $articleBigrams = $queryBuilder->getQuery()->getOneOrNullResult(); 
