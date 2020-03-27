@@ -637,8 +637,12 @@ class TitleRepository  extends EntityRepository{
         if ($articleTokens){
             $articleTokenCount = $articleTokens['tokenCount'];
         }
-                
-        $entityManager->getConnection()->update('title_token', ['frequency' => $articleTokenCount], ['id' => $titleToken->getId()]);
+        
+        if ($articleTokenCount > 0){
+            $entityManager->getConnection()->update('title_token', ['frequency' => $articleTokenCount], ['id' => $titleToken->getId()]);
+        } else {
+            $entityManager->getConnection()->delete('title_token', ['id' => $titleToken->getId()]);            
+        }    
     }
     
     /**
@@ -701,8 +705,12 @@ class TitleRepository  extends EntityRepository{
         if ($articleBigrams){
             $articleBigramCount = $articleBigrams['bigramCount'];
         }
-
-        $entityManager->getConnection()->update('title_bigram', ['frequency' => $articleBigramCount], ['id' => $titleBigram->getId()]);
+        
+        if ($articleBigramCount > 0){
+            $entityManager->getConnection()->update('title_bigram', ['frequency' => $articleBigramCount], ['id' => $titleBigram->getId()]);
+        } else {
+            $entityManager->getConnection()->delete('title_bigram', ['id' => $titleBigram->getId()]);            
+        }    
     }
     
     /**
