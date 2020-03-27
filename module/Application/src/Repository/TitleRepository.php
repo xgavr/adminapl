@@ -756,7 +756,7 @@ class TitleRepository  extends EntityRepository{
             $entityManager = $this->getEntityManager();
             $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('tt.id as titleTokenId, tt.displayLemma as displayLemma'
+            $queryBuilder->select('tt.id as titleTokenId, tt.displayLemma as displayLemma, '
                     . 'tt.frequency as frequency, at.title')
                 ->from(TitleToken::class, 'tt')
                 ->where('tt.tokenGroup = ?1')
