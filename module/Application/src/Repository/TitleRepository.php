@@ -781,11 +781,11 @@ class TitleRepository  extends EntityRepository{
             
             $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
             $native = $entityManager->createNativeQuery(
-                '('
+                'select * from(('
                 . $qbt->getQuery()->getSQL()
                 . ') UNION ('
                 . $qbb->getQuery()->getSQL() 
-                . ') order by frequency desc',
+                . ')) order by frequency desc',
                 $rsm
             );
             
