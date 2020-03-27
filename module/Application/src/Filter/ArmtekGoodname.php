@@ -68,7 +68,17 @@ class ArmtekGoodname extends AbstractFilter
                 $strDesc = $strDesc2;
             }
             if ($this->checkChar($strDesc, '\\')){
-                list($goodname, $car) = explode('\\', $strDesc); 
+                list($goodname, $car) = explode('\\', $strDesc);
+                
+                if ($this->checkChar($strDesc, '=')){
+                    $words = explode(' ', $goodname);
+                    $goodname = '';
+                    foreach ($words as $word){
+                        if (!$this->checkChar($word, '=')){
+                            $goodname .= $word.' ';
+                        }
+                    }
+                }
 
                 $result['goodname'] = trim(str_replace('!', ' ', $goodname));
                 $result['car'] = trim($car);
