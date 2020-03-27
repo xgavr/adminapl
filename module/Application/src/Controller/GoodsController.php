@@ -456,7 +456,7 @@ class GoodsController extends AbstractActionController
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findGoodRate($goods);
         
-        $titleTokens = $this->entityManager->getRepository(TitleToken::class)
+        $titleFeatures = $this->entityManager->getRepository(TitleToken::class)
                 ->goodTitleFeatures($goods);
 
         // Render the view template.
@@ -471,7 +471,7 @@ class GoodsController extends AbstractActionController
             'oemSources' => \Application\Entity\Oem::getSourceList(),
             'priceStatuses' => Rawprice::getStatusList(),
             'rate' => $rate,
-            'titleTokens' => $titleTokens,
+            'titleFeatures' => $titleFeatures,
         ]);
     }      
     

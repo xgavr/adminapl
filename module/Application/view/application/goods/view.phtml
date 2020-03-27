@@ -168,16 +168,16 @@ $priceCols = $goodsManager->priceCols($goods);
                         </table>                    
                         <table class="table table-bordered">
                             <p>
-                                <?php foreach ($titleTokens as $titleToken):?>
+                                <?php foreach ($titleFeatures as $titleFeature):?>
                                     <tr>
                                         <td align='right' width="5">
-                                            <?= $titleToken['frequency']?>
+                                            <?= $titleFeature['frequency']?>
                                         </td>
                                         <td colspan="3">
-                                            <?= $titleToken['title']?>
+                                            <?= $titleFeature['title']?>
                                         </td>
                                         <td width="10">
-                                            <?= $titleToken['displayLemma']?>
+                                            <?= $titleFeature['displayLemma']?>
                                         </td>
                                     </tr>                                              
                                 <?php endforeach;?>

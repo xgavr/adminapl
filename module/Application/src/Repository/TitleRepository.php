@@ -843,7 +843,7 @@ class TitleRepository  extends EntityRepository{
             }); 
         }    
         
-        return result;
+        return $result;
     }
 
 
