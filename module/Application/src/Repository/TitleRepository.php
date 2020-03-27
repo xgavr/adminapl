@@ -768,7 +768,7 @@ class TitleRepository  extends EntityRepository{
                 ;    
 
             $qbb = $entityManager->createQueryBuilder();
-            $qbb->select('tb.displayLemma as displayLemma, tb.frequency as frequency, at.title as title')
+            $qbb->select('tb.displayBilemma as displayLemma, tb.frequency as frequency, at.title as title')
                 ->from(TitleBigram::class, 'tb')
                 ->where('tb.tokenGroup = ?1')
                 ->setParameter('1', $good->getTokenGroup()->getId())    
