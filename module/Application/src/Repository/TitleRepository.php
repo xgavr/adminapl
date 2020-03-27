@@ -765,7 +765,7 @@ class TitleRepository  extends EntityRepository{
                 ->join('at.article', 'a')
                 ->andWhere('a.good = ?2')
                 ->setParameter('2', $good->getId())
-                ->orderBy('tt.frequency')    
+                ->orderBy('tt.frequency', 'desc')    
                 ;    
 
             return $queryBuilder->getQuery()->getResult();       

@@ -170,14 +170,10 @@ $priceCols = $goodsManager->priceCols($goods);
                             <p>
                                 <?php foreach ($titleTokens as $titleToken):?>
                                     <tr>
-                                        <td align='right'>
+                                        <td align='right' width="5">
                                             <?= $titleToken['frequency']?>
                                         </td>
-                                        <td width="5">
-                                        </td>
-                                        <td width="5">
-                                        </td>
-                                        <td>
+                                        <td colspan="3">
                                             <?= $titleToken['title']?>
                                         </td>
                                         <td width="10">
