@@ -754,10 +754,9 @@ class TitleRepository  extends EntityRepository{
     {
         if ($good->getTokenGroup()){
             $entityManager = $this->getEntityManager();
-            $queryBuilder = $entityManager->createQueryBuilder();
-
-            $queryBuilder->select('tt.id as titleTokenId, tt.displayLemma as displayLemma, '
-                    . 'tt.frequency as frequency, at.title as title')
+            
+            $qbt = $entityManager->createQueryBuilder();
+            $qbt->select('tt.displayLemma as displayLemma, tt.frequency as frequency, at.title as title')
                 ->from(TitleToken::class, 'tt')
                 ->where('tt.tokenGroup = ?1')
                 ->setParameter('1', $good->getTokenGroup()->getId())    
@@ -768,7 +767,33 @@ class TitleRepository  extends EntityRepository{
                 ->orderBy('tt.frequency', 'desc')    
                 ;    
 
-            return $queryBuilder->getQuery()->getResult();       
+            $qbb = $entityManager->createQueryBuilder();
+            $qbb->select('tb.displayLemma as displayLemma, tb.frequency as frequency, at.title as title')
+                ->from(TitleBigram::class, 'tb')
+                ->where('tb.tokenGroup = ?1')
+                ->setParameter('1', $good->getTokenGroup()->getId())    
+                ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tb.titleMd5')
+                ->join('at.article', 'a')
+                ->andWhere('a.good = ?2')
+                ->setParameter('2', $good->getId())
+                ->orderBy('tb.frequency', 'desc')    
+                ;    
+            
+            $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
+            $native = $entityManager->createNativeQuery(
+                '('
+                . $qbt->getQuery()->getSQL()
+                . ') UNION ('
+                . $qbb->getQuery()->getSQL() 
+                . ')',
+                $rsm
+            );
+            
+            foreach ($qbt->getParameters() as $k => $p) {
+                $native->setParameter($p->getName(), $p->getValue(), $p->getType());
+            }
+            
+            return $native->getResult();       
         }
         
         return;
