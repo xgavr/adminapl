@@ -765,7 +765,7 @@ class TitleRepository  extends EntityRepository{
                 ->join('at.article', 'a')
                 ->andWhere('a.good = ?2')
                 ->setParameter('2', $good->getId())
-                ->orderBy('tt.frequency')    
+                ->orderBy('tt.frequency', 'desc')    
                 ;    
 
             return $queryBuilder->getQuery()->getResult();       
@@ -774,7 +774,79 @@ class TitleRepository  extends EntityRepository{
         return;
     }
     
+    /**
+     * Биграмы товара
+     * 
+     * @param Goods $good
+     */
+    public function goodTitleBigram($good)
+    {
+        if ($good->getTokenGroup()){
+            $entityManager = $this->getEntityManager();
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('tb.id as titleBigramd, tb.displayBilemma as displayLemma, '
+                    . 'tb.frequency as frequency, at.title')
+                ->from(TitleBigram::class, 'tb')
+                ->where('tb.tokenGroup = ?1')
+                ->setParameter('1', $good->getTokenGroup()->getId())    
+                ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tt.titleMd5')
+                ->join('at.article', 'a')
+                ->andWhere('a.good = ?2')
+                ->setParameter('2', $good->getId())
+                ->orderBy('tb.frequency', 'desc')    
+                ;    
+
+            return $queryBuilder->getQuery()->getResult();       
+        }
+        
+        return;
+    }
     
+    /**
+     * Токены и биграмы товара
+     * 
+     * @param Goods $good
+     */
+    public function goodTitleFeatures($good)
+    {
+        $tokens = $this->goodTitleToken($good);
+        $bigrams = $this->goodTitleBigram($good);
+        
+        $result = [];
+        
+        if ($tokens){
+            foreach($tokens as $token){
+                $result[] = [
+                    'frequency' => $token['frequency'],
+                    'displayLemma' => $token['displayLemma'],
+                    'title' => $token['title'],
+                ];
+            }
+        }    
+        if ($bigrams){
+            foreach($bigrams as $bigram){
+                $result[] = [
+                    'frequency' => $bigram['frequency'],
+                    'displayLemma' => $bigram['displayLemma'],
+                    'title' => $bigram['title'],
+                ];
+            }
+        }    
+        
+        if (count($result)){
+            usort($result, function($a, $b){
+                if ($a['frequency'] == $b['frequency']) {
+                    return 0;
+                }
+                return ($a['frequency'] > $b['frequency']) ? -1 : 1;            
+            }); 
+        }    
+        
+        return result;
+    }
+
+
     ////////////////////////////////////////////////////////////////////////////
     /**
      * Заполнить по всем наименованиям артикулов

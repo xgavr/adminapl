@@ -457,7 +457,7 @@ class GoodsController extends AbstractActionController
                 ->findGoodRate($goods);
         
         $titleTokens = $this->entityManager->getRepository(TitleToken::class)
-                ->goodTitleToken($goods);
+                ->goodTitleFeatures($goods);
 
         // Render the view template.
         return new ViewModel([
