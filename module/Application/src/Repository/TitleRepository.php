@@ -790,7 +790,7 @@ class TitleRepository  extends EntityRepository{
                 ->from(TitleBigram::class, 'tb')
                 ->where('tb.tokenGroup = ?1')
                 ->setParameter('1', $good->getTokenGroup()->getId())    
-                ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tt.titleMd5')
+                ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tb.titleMd5')
                 ->join('at.article', 'a')
                 ->andWhere('a.good = ?2')
                 ->setParameter('2', $good->getId())
