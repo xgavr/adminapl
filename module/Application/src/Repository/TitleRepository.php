@@ -785,7 +785,7 @@ class TitleRepository  extends EntityRepository{
                 . $qbt->getQuery()->getSQL()
                 . ') UNION ('
                 . $qbb->getQuery()->getSQL() 
-                . ')',
+                . ') order by frequency desc',
                 $rsm
             );
             
