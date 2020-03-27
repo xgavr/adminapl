@@ -756,14 +756,16 @@ class TitleRepository  extends EntityRepository{
             $entityManager = $this->getEntityManager();
             $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('tt')
+            $queryBuilder->select('tt.id as titleTokenId, tt.displayLemma as displayLemma'
+                    . 'tt.frequency as frequency, at.title as title')
                 ->from(TitleToken::class, 'tt')
                 ->where('tt.tokenGroup = ?1')
                 ->setParameter('1', $good->getTokenGroup()->getId())    
                 ->join(ArticleTitle::class, 'at', 'WITH', 'at.tokenGroupTitleMd5 = tt.titleMd5')
                 ->join('at.article', 'a')
                 ->andWhere('a.good = ?2')
-                ->setParameter('2', $good->getId())                
+                ->setParameter('2', $good->getId())
+                ->orderBy('tt.frequency')    
                 ;    
 
             return $queryBuilder->getQuery()->getResult();       
