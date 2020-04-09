@@ -530,7 +530,7 @@ class ProducerManager
                     $rawValues = $rawprice->getRawdataAsArray();
                     $newName = $rawValues[$priceDescription->getProducer() - 1];
 //                    var_dump($priceDescription->getProducer());
-                    if ($newName != $producer->getName()){
+                    if ($newName != $producer->getName() && $newName){
                         $producerWithName = $this->entityManager->getRepository(Producer::class)
                                 ->findOneByName($newName);
                         if (!$producerWithName){
