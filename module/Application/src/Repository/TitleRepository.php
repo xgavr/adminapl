@@ -846,6 +846,23 @@ class TitleRepository  extends EntityRepository{
         return $result;
     }
 
+    /**
+     * Токены и биграмы товара как строка для наименования
+     * 
+     * @param Goods $good
+     */
+    public function goodTitleFeaturesStr($good)
+    {
+        $features = $this->goodTitleFeatures($good);
+        
+        $result = [];
+        foreach($features as $feature){
+            $result[$feature['displayLemma']] = $feature['displayLemma'];
+        }
+        
+        return implode(' ', $result);
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////
     /**

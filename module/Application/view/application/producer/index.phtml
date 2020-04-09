@@ -149,6 +149,9 @@
     }
     
     function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
         return [
             '<div class="pull-left">',
             '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',

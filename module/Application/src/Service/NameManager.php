@@ -19,6 +19,7 @@ use Application\Entity\Bigram;
 use Application\Entity\ArticleBigram;
 use Application\Entity\Goods;
 use Application\Entity\GoodTitle;
+use Application\Entity\TitleToken;
 use Application\Entity\Car;
 use Application\Entity\Oem;
 use Application\Entity\GoodAttributeValue;
@@ -800,7 +801,7 @@ class NameManager
             
             if (!$articleTitle){        
                 $this->entityManager->getRepository(Article::class)
-                        ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $rawprice->getTitleUp(), 'title_md5' => $rawprice->getTitleMd5()]);
+                        ->insertArticleTitle(['article_id' => $article->getId(), 'title' => $rawprice->getTitle(), 'title_md5' => $rawprice->getTitleMd5()]);
                 
                 $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
                         ->findOneBy(['article' => $article->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
@@ -2007,6 +2008,45 @@ class NameManager
         return implode($makeSeparator, $makeNames);
     }
     
+    /**
+     * Машины для наименования из прайсов
+     * 
+     * @param Good $good
+     */
+    public function priceCarStr($good)
+    {
+        $result = '';
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                ->rawpriceArticles($good);
+        foreach ($rawprices as $rawprice){
+            if ($rawprice->getCar()){
+                if (mb_strlen($result) < mb_strlen($rawprice->getCar())){
+                    $result = $rawprice->getCar();
+                }
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Аттрибуты товара из прайсов
+     * 
+     * @param Goods $good
+     * @return string
+     */
+    public function attrPrice($good)
+    {
+        return $this->entityManager->getRepository(TitleToken::class)
+                ->goodTitleFeaturesStr($good);
+    }
+    
+    /**
+     * Атрибуты товара из ТД
+     * 
+     * @param Goods $good
+     * @return string
+     */
     private function attrPart($good)
     {
         return $this->entityManager->getRepository(GoodAttributeValue::class)
@@ -2032,7 +2072,7 @@ class NameManager
         }
         
         return $result;
-    }
+    }    
     
     /**
      * Данные для сравнения наименования товара
@@ -2131,59 +2171,63 @@ class NameManager
      */
     public function findBestName($good, $flag = false)
     {
-        $textPart = $this->textPart($good);
-        $result['bestName'] = '';
-        $result['oeCarPart'] = '';
-        $oePart = $carPartStr = $carStr = '';
-        $carPart = [];
-        
-        if ($textPart){            
-            $carPart = $this->carPart($good);
-            $carPartStr = $this->carPartStr($carPart);
-            if ($carPartStr){
-                $carStr = $carPartStr;
-            } else {
-                $oePart = $this->oeCar($good);
-                if ($oePart){
-                    $carStr = $oePart;
-                }    
-            }
-            if ($textPart && $carStr){
-                if (mb_strpos($textPart, '[машины]') !== false){
-                    $result['bestName'] = str_replace('[машины]', $carStr, $textPart);
-                } else {                        
-                    $result['bestName'] = $textPart.' '.$carStr;
-                }   
-                                
-                if (mb_strpos($textPart, '[свойства]') !== false){
-                    $attrPart = $this->attrPart($good);
-                    $result['bestName'] = str_replace('[свойства]', $attrPart, $result['bestName']);
+        if ($good->getDescription()){
+            $textPart = $this->textPart($good);
+            $result['bestName'] = '';
+            $result['oeCarPart'] = '';
+            $oePart = $carPartStr = $carStr = '';
+            $carPart = [];
+
+            if ($textPart){            
+                $carPart = $this->carPart($good);
+                $carPartStr = $this->carPartStr($carPart);
+                if ($carPartStr){
+                    $carStr = $carPartStr;
+                } else {
+                    $oePart = $this->oeCar($good);
+                    if ($oePart){
+                        $carStr = $oePart;
+                    }    
+                }
+                if ($textPart && $carStr){
+                    if (mb_strpos($textPart, '[машины]') !== false){
+                        $result['bestName'] = str_replace('[машины]', $carStr, $textPart);
+                    } else {                        
+                        $result['bestName'] = $textPart.' '.$carStr;
+                    }   
+
+                    if (mb_strpos($textPart, '[свойства]') !== false){
+                        $attrPart = $this->attrPart($good);
+                        $result['bestName'] = str_replace('[свойства]', $attrPart, $result['bestName']);
+                    }
                 }
             }
-        }
-        
-        if ($flag){
-            if ($good->getName() != $result['bestName']){
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGoodId($good->getId(), ['name' => $result['bestName'], 'status_name_ex' => Goods::NAME_EX_NEW]);
-            }    
-            return;
-        }
 
-        if ($good->getGenericGroup()){
-            $result['genericGroup'] = $good->getGenericGroup()->getName();
-        }    
-        if ($good->getTokenGroup()){
-            $result['tokenGroup'] = $good->getTokenGroup()->getName();
+            if ($flag){
+                if ($good->getName() != $result['bestName']){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($good->getId(), ['name' => $result['bestName'], 'status_name_ex' => Goods::NAME_EX_NEW]);
+                }    
+                return;
+            }
+
+            if ($good->getGenericGroup()){
+                $result['genericGroup'] = $good->getGenericGroup()->getName();
+            }    
+            if ($good->getTokenGroup()){
+                $result['tokenGroup'] = $good->getTokenGroup()->getName();
+            }    
+
+            $result['textPart'] = $textPart;
+            $result['oeCarPart'] = $oePart;
+            $result['carPartStr'] = $carPartStr;
+            $result['carPartStrLen'] = mb_strlen($carPartStr);
+            $result['carPart'] = $carPart;
+
+            return $result;
         }    
         
-        $result['textPart'] = $textPart;
-        $result['oeCarPart'] = $oePart;
-        $result['carPartStr'] = $carPartStr;
-        $result['carPartStrLen'] = mb_strlen($carPartStr);
-        $result['carPart'] = $carPart;
-        
-        return $result;
+        return;
     }
         
     /**
