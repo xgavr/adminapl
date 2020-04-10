@@ -2093,8 +2093,12 @@ class NameManager
             }            
         }
         $charCount = mb_strlen($rawprice->getFullTitle());
-
-        return ($tokenCount + $charCount)/log($charCount);
+        $logCharCount = log($charCount);
+        if ($logCharCount > 0){
+            return ($tokenCount + $charCount)/$logCharCount;
+        } else {
+            return 0;
+        }    
     }
     
     /**
