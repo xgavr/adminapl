@@ -10,6 +10,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Zend\Json\Decoder;
 
 /**
  * Description of Article
@@ -59,6 +60,11 @@ class Article {
      * @ORM\Column(name="total_rest")  
      */
     protected $totalRest = 0.0;        
+
+    /**
+     * @ORM\Column(name="description")  
+     */
+    protected $description;        
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="good") 
@@ -190,6 +196,25 @@ class Article {
     public function setTotalRest($totalRest) 
     {
         $this->totalRest = $totalRest;
+    }     
+
+    public function getDescription() 
+    {
+        return $this->description;
+    }
+
+    public function getDescriptionAsArray() 
+    {
+        if ($this->description){
+            return Decoder::decode($this->description, \Zend\Json\Json::TYPE_ARRAY);
+        }
+        
+        return;
+    }
+
+    public function setDescription($description) 
+    {
+        $this->description = $description;
     }     
 
     /**

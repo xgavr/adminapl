@@ -868,6 +868,7 @@ class NameManager
             }
             
             $this->updateTokenGroupArticleTitle($articleTitle);
+            $this->updateArticleDescription($article, $articleTitle, $rawprice);
         }
         
         $this->entityManager->getRepository(Rawprice::class)
@@ -897,6 +898,37 @@ class NameManager
             $this->entityManager->getRepository(Article::class)
                     ->updateArticle($articleId, ['token_update_flag' => Article::getUpdateFlag()]);
         }
+        
+        return;
+    }
+    
+    /**
+     * Обновить описание артикула
+     * 
+     * @param Article $article
+     * @param ArticleTitle $articleTitle
+     * @param Rawprice $rawprice
+     * @return type
+     */
+    public function updateArticleDescription($article, $articleTitle, $rawprice)
+    {
+        $description = $article->getDescriptionAsArray();        
+        $numberTitle = $this->numberRawpriceTitle($rawprice, $articleTitle);        
+        $newDescription = \Zend\Json\Encoder::encode([
+            'name' => $rawprice->getTitle(), 
+            'car' => $rawprice->getCar(), 
+            'fullName' => $rawprice->getFullTitle(),
+            'numberTitle' => $numberTitle,
+        ]);
+        
+        if (is_array($description)){
+            if ($description['numberTitle'] >= $numberTitle){
+                return;
+            }
+        }
+        
+        $this->entityManager->getConnection()
+                ->update('article', ['description' => $newDescription], ['id' => $article->getId()]);                            
         
         return;
     }
@@ -936,6 +968,8 @@ class NameManager
                         
                     } else {
                         $this->updateTokenGroupArticleTitle($articleTitle);
+                        
+                        $this->updateArticleDescription($article, $articleTitle, $rawprice);
                         
                         $this->entityManager->getRepository(Rawprice::class)
                                 ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);                        
@@ -2078,13 +2112,16 @@ class NameManager
      * Данные для сравнения наименования товара
      * 
      * @param Rawprice $rawprice
+     * @param ArticleTitle $articleTitle
      * @return float
      * 
      */
-    public function numberRawpriceTitle($rawprice)
+    public function numberRawpriceTitle($rawprice, $articleTitle = null)
     {
-        $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
-                ->findOneBy(['article' => $rawprice->getCode()->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
+        if (!$articleTitle){
+            $articleTitle = $this->entityManager->getRepository(ArticleTitle::class)
+                    ->findOneBy(['article' => $rawprice->getCode()->getId(), 'titleMd5' => $rawprice->getTitleMd5()]);
+        }    
         
         $tokenCount = 0;
         if ($articleTitle){

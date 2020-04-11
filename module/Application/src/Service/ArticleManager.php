@@ -14,6 +14,8 @@ use Application\Entity\Rawprice;
 use Application\Validator\Sigma3;
 use Phpml\Math\Statistic\Mean;
 use Phpml\Math\Statistic\StandardDeviation;
+use Zend\Json\Decoder;
+use Zend\Json\Encoder;
 
 /**
  * Description of RbService
@@ -184,6 +186,7 @@ class ArticleManager
                                 'code' => $filteredCode,
                                 'fullcode' => mb_substr($rawprice->getArticle(), 0, 36),
                                 'unknown_producer_id' => $rawprice->getUnknownProducer()->getId(),
+                                'description' => Encoder::encode(['name' => $rawprice->getTitle(), 'car' => $rawprice->getCar(), 'fullName' => $rawprice->getFullTitle()]),
                             ]);
                     
                     $article = $this->entityManager->getRepository(Article::class)
