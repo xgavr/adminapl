@@ -27,9 +27,19 @@ $this->headScript()
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                    <select style="width: 200px" class="form-control" id='rawStatusSelect'>
+                        <option selected>Все</option>
+                        <?php foreach ($rawStatuses as $key => $value):?>
+                            <option value="<?= $value['status']?>"><?= $value['name']?></option>
+                        <?php endforeach;?>
+                    </select>
+                    <select style="width: 200px" class="form-control" id='rawStageSelect'>
+                        <option selected>Все</option>
+                        <?php foreach ($rawStages as $key => $value):?>
+                            <option value="<?= $value['stage']?>"><?= $value['name']?></option>
+                        <?php endforeach;?>
+                    </select>
                 </div>
-                <button id="ok" type="submit" class="btn btn-default">OK</button>
             </div>
         </div>
         <table id="table" 
@@ -132,13 +142,15 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
-    var $table = $('#table'),
-        $ok = $('#ok');
+    var table = $('#table');
 
     $(function () {
-        $ok.click(function () {
-            $table.bootstrapTable('refresh');
-        });
+        $('#rawStatusSelect').change(function (){
+            table.bootstrapTable('refresh');
+        })
+        $('#rawStageSelect').change(function (){
+            table.bootstrapTable('refresh');
+        })
     });
     
     function queryParams() {
@@ -154,6 +166,8 @@ $this->headScript()
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
+        params.status = $('#rawStatusSelect').val();
+        params.stage = $('#rawStageSelect').val();
         return params;
     }
     function responseHandler(res) {

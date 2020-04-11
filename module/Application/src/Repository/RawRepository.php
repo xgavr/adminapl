@@ -239,8 +239,13 @@ class RawRepository extends EntityRepository
          ]);
     }
     
-
-    public function findAllRaw($status = null, $supplier = null, $exceptRaw = null)
+    /**
+     * Выборка прайсов
+     * 
+     * @param array $params
+     * @return Query 
+     */
+    public function findAllRaw($params)
     {
         $entityManager = $this->getEntityManager();
 
@@ -249,26 +254,33 @@ class RawRepository extends EntityRepository
         $queryBuilder->select("c, s")
             ->from(Raw::class, 'c')
             ->join('c.supplier', 's')    
-            //->leftJoin('c.rawprice', 'r', 'WITH', 'r.raw = c.id')
-            //->groupBy('c.id')     
                 ;
         
-        if ($status){
-            $queryBuilder->andWhere('c.status = ?2')
-            ->setParameter('2', (int) $status)    
-                ;                    
+        if (isset($params['status'])){
+            if (is_numeric($params['status'])){
+                $queryBuilder->andWhere('c.status = ?1')
+                ->setParameter('1', (int) $params['status'])    
+                    ;                    
+            }    
+        }
+        if (isset($params['stage'])){
+            if (is_numeric($params['stage'])){
+                $queryBuilder->andWhere('c.parseStage = ?2')
+                ->setParameter('2', (int) $params['stage'])    
+                    ;                    
+            }    
         }
 
-        if ($supplier){
+        if (isset($params['supplier'])){
             $queryBuilder->andWhere('c.supplier = ?3')
-            ->setParameter('3', $supplier->getId())    
+            ->setParameter('3', $params['suppplier'])    
             ->addOrderBy('c.filename', 'DESC')        
                 ;                    
         }
 
-        if ($exceptRaw){
+        if (isset($params['exceptRaw'])){
             $queryBuilder->andWhere('c.id != ?4')
-            ->setParameter('4', $exceptRaw->getId())    
+            ->setParameter('4', $params['exceptRaw'])    
             ->addOrderBy('c.filename', 'DESC')        
                 ;                    
         }

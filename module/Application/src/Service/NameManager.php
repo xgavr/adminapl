@@ -2176,6 +2176,9 @@ class NameManager
     public function findBestName($good, $flag = false)
     {
         if ($good->getDescription()){
+//            $result['bestName'] = $good->getDescription();
+            
+            
             $textPart = $this->textPart($good);
             $result['bestName'] = '';
             $result['oeCarPart'] = '';

@@ -66,7 +66,7 @@ class RawpriceController extends AbstractActionController
         $page = $this->params()->fromQuery('page', 1);
         
         $query = $this->entityManager->getRepository(Raw::class)
-                    ->findAllRaw();
+                    ->findAllRaw([]);
                 
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);

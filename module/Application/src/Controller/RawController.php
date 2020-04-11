@@ -75,7 +75,7 @@ class RawController extends AbstractActionController
         foreach ($rawStages as $key => $stage){
             $rawStages[$key]['name'] = Raw::getParseStageName($stage['stage']);
         }
-        //var_dump($rawStages);
+//        var_dump($rawStages);
         // Визуализируем шаблон представления.
         return new ViewModel([
 //            'statuses' => $statuses,
@@ -89,11 +89,12 @@ class RawController extends AbstractActionController
         
         $q = $this->params()->fromQuery('search', '');
         $status = $this->params()->fromQuery('status');
+        $stage = $this->params()->fromQuery('stage');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         
         $query = $this->entityManager->getRepository(Raw::class)
-                    ->findAllRaw($status);            
+                    ->findAllRaw(['status' => $status, 'stage' => $stage]);            
         
         $total = count($query->getResult(2));
         
@@ -151,7 +152,7 @@ class RawController extends AbstractActionController
         $priceDescriptionForm = new PriceDescriptionForm();
         
         $otherRaws = $this->entityManager->getRepository(Raw::class)
-            ->findAllRaw(null, $raw->getSupplier(), $raw)
+            ->findAllRaw(['supplier' => $raw->getSupplier()->getId(), 'exceptRaw' => $raw->getId()])
             ->getResult()
                 ;
         

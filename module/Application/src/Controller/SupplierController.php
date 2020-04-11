@@ -352,7 +352,7 @@ class SupplierController extends AbstractActionController
         }
         
         $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-            ->findAllRaw(null, $supplier)
+            ->findAllRaw(['supplier' => $supplier->getId()])
             ->getResult();
 
         $rate = $this->entityManager->getRepository(Rate::class)
