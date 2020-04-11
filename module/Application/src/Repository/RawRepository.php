@@ -273,7 +273,7 @@ class RawRepository extends EntityRepository
 
         if (isset($params['supplier'])){
             $queryBuilder->andWhere('c.supplier = ?3')
-            ->setParameter('3', $params['suppplier'])    
+            ->setParameter('3', $params['supplier'])    
             ->addOrderBy('c.filename', 'DESC')        
                 ;                    
         }
