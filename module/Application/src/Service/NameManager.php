@@ -922,9 +922,11 @@ class NameManager
         ]);
         
         if (is_array($description)){
-            if ($description['numberTitle'] >= $numberTitle){
-                return;
-            }
+            if (isset($description['numberTitle'])){
+                if ($description['numberTitle'] >= $numberTitle){
+                    return;
+                }
+            }    
         }
         
         $this->entityManager->getConnection()
