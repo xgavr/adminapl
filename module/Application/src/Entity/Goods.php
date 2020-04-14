@@ -5,6 +5,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\ScaleTreshold;
+use Zend\Json\Decoder;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -514,6 +515,19 @@ class Goods {
     {
         return $this->description;
     }
+    
+    public function getDescriptionAsArray() 
+    {
+        if ($this->description){
+            try{
+                return Decoder::decode($this->description, \Zend\Json\Json::TYPE_ARRAY);
+            } catch (Exception $e){
+                return;
+            }    
+        }
+        
+        return;
+    }    
 
     public function setDescription($description) 
     {

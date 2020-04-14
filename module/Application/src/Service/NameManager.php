@@ -2147,18 +2147,23 @@ class NameManager
      */
     public function updateBestDescription($good)
     {
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticles($good);
+        $articles = $this->entityManager->getRepository(Article::class)
+                ->findByGood($good->getId());
         
-        $numberGoodTitle = 0;
-        $newDescription = '';
-        
-        foreach ($rawprices as $rawprice){
-            $numberRawpriceTitle = $this->numberRawpriceTitle($rawprice);
-            if ($numberRawpriceTitle > $numberGoodTitle){
-                $numberGoodTitle = $numberRawpriceTitle;
-                $newDescription = $rawprice->getFullTitle();
-            }
+        $newDescription = $good->getDescription();
+        $numberTitle = 0;
+        foreach ($articles as $article){
+            $description = $article->getDescriptionAsArray();
+            if (is_array($description)){
+                if (isset($description['numberTitle'])){
+                    if ($description['numberTitle'] > $numberTitle){
+                        $numberTitle = $description['numberTitle'];
+                        if (isset($description['fullName'])){
+                            $newDescription = $description['fullName'];
+                        }    
+                    }
+                }    
+            }    
         }
         if ($newDescription != $good->getDescription()){
             $this->entityManager->getRepository(Goods::class)
