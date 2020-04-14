@@ -2299,7 +2299,7 @@ class NameManager
             foreach ($row as $rawprice){
                 $good = $rawprice->getGood();
                 if ($good){
-                    $this->findBestName($good, true);
+//                    $this->findBestName($good, true);
                 }    
                 
                 $this->entityManager->getRepository(Rawprice::class)
