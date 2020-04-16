@@ -44,13 +44,6 @@ $preGood = null;
                             </a>                            
                         </th>
                     </tr>
-                    <? foreach($name as $key => $value):?>
-                        <tr>
-                            <td></td>
-                            <td colspan="2"><?= $key ?></td>
-                            <td colspan="8"><?= $value ?></td>
-                        </tr>                    
-                    <? endforeach;?>
                     <tr>
                         <th colspan="">
                             
@@ -81,6 +74,13 @@ $preGood = null;
                                 </i></small>
                         </td>
                     </tr>
+                    <? foreach($name as $key => $value):?>
+                        <tr>
+                            <td></td>
+                            <td colspan="2"><?= $key ?></td>
+                            <td colspan="8"><?= $value ?></td>
+                        </tr>                    
+                    <? endforeach;?>
                 <?php endif;?>
 <!--                <?php foreach ($rawprices as $rawprice): ?>
                     <tr>
