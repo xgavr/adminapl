@@ -2179,7 +2179,7 @@ class NameManager
      */
     public function descriptionFromRaw($raw)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(900);
         $startTime = time();
         
