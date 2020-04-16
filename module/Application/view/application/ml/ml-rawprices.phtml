@@ -30,7 +30,15 @@ $preGood = null;
                     $rawprices = $mlManager->rawpricesFromGoodRawprice($mlTitle->getRawprice());
                     $good = $mlTitle->getRawprice()->getGood();
                     $groupTitle = $mlManager->choiceTokenGroupTitle($good);
+                    $name = $nameManager->findBestName($good);
                 ?>
+                <? foreach($name as $key => $value):?>
+                    <tr>
+                        <td></td>
+                        <td colspan="2"><?= $key ?></td>
+                        <td colspan="8"><?= $value ?></td>
+                    </tr>                    
+                <? endforeach;?>
                 <?php if ($preGood != $good): ?>
                     <?php $preGood = $good?>
                     <tr>

@@ -2052,12 +2052,15 @@ class NameManager
     public function priceCarStr($good)
     {
         $result = '';
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticles($good);
-        foreach ($rawprices as $rawprice){
-            if ($rawprice->getCar()){
-                if (mb_strlen($result) < mb_strlen($rawprice->getCar())){
-                    $result = $rawprice->getCar();
+        $articles = $this->entityManager->getRepository(Article::class)
+                ->findByGood($good->getId());
+        foreach ($articles as $article){
+            $description = $article->getDescriptionAsArray();
+            if (is_array($description)){
+                if (isset($description['car'])){
+                    if (mb_strlen($result) < mb_strlen($description['car'])){
+                        $result = $description['car'];
+                    }                    
                 }
             }
         }
@@ -2229,30 +2232,30 @@ class NameManager
             $oePart = $carPartStr = $carStr = '';
             $carPart = [];
 
-            if ($textPart){            
-                $carPart = $this->carPart($good);
-                $carPartStr = $this->carPartStr($carPart);
-                if ($carPartStr){
-                    $carStr = $carPartStr;
-                } else {
-                    $oePart = $this->oeCar($good);
-                    if ($oePart){
-                        $carStr = $oePart;
-                    }    
-                }
-                if ($textPart && $carStr){
-                    if (mb_strpos($textPart, '[машины]') !== false){
-                        $result['bestName'] = str_replace('[машины]', $carStr, $textPart);
-                    } else {                        
-                        $result['bestName'] = $textPart.' '.$carStr;
-                    }   
-
-                    if (mb_strpos($textPart, '[свойства]') !== false){
-                        $attrPart = $this->attrPart($good);
-                        $result['bestName'] = str_replace('[свойства]', $attrPart, $result['bestName']);
-                    }
-                }
-            }
+//            if ($textPart){            
+//                $carPart = $this->carPart($good);
+//                $carPartStr = $this->carPartStr($carPart);
+//                if ($carPartStr){
+//                    $carStr = $carPartStr;
+//                } else {
+//                    $oePart = $this->oeCar($good);
+//                    if ($oePart){
+//                        $carStr = $oePart;
+//                    }    
+//                }
+//                if ($textPart && $carStr){
+//                    if (mb_strpos($textPart, '[машины]') !== false){
+//                        $result['bestName'] = str_replace('[машины]', $carStr, $textPart);
+//                    } else {                        
+//                        $result['bestName'] = $textPart.' '.$carStr;
+//                    }   
+//
+//                    if (mb_strpos($textPart, '[свойства]') !== false){
+//                        $attrPart = $this->attrPart($good);
+//                        $result['bestName'] = str_replace('[свойства]', $attrPart, $result['bestName']);
+//                    }
+//                }
+//            }
 
             if ($flag){
                 if ($good->getName() != $result['bestName']){
@@ -2270,10 +2273,14 @@ class NameManager
             }    
 
             $result['textPart'] = $textPart;
-            $result['oeCarPart'] = $oePart;
+            $result['attrPrice'] = $this->attrPrice($good);
+            $result['attrPart'] = $this->attrPart($good);
+            $result['carPrice'] = $this->priceCarStr($good);
             $result['carPartStr'] = $carPartStr;
+            $result['oeCarPart'] = $oePart;
             $result['carPartStrLen'] = mb_strlen($carPartStr);
             $result['carPart'] = $carPart;
+            $result['description'] = $good->getDescription();
 
             return $result;
         }    

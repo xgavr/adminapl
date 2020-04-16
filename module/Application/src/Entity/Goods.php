@@ -516,18 +516,18 @@ class Goods {
         return $this->description;
     }
     
-    public function getDescriptionAsArray() 
-    {
-        if ($this->description){
-            try{
-                return Decoder::decode($this->description, \Zend\Json\Json::TYPE_ARRAY);
-            } catch (Exception $e){
-                return;
-            }    
-        }
-        
-        return;
-    }    
+//    public function getDescriptionAsArray() 
+//    {
+//        if ($this->description){
+//            try{
+//                return Decoder::decode($this->description, \Zend\Json\Json::TYPE_ARRAY);
+//            } catch (Exception $e){
+//                return;
+//            }    
+//        }
+//        
+//        return;
+//    }    
 
     public function setDescription($description) 
     {
