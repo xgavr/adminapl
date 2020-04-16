@@ -700,4 +700,15 @@ class MlManager
         var_dump($result);  
         return;
     }
+    
+    /**
+     * Поиск лучшего наименования товара
+     * 
+     * @param Goods $good
+     * @return array
+     */
+    public function fundBestName($good)
+    {
+        return $this->nameManager->findBestName($good);
+    }
 }
