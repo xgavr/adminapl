@@ -2279,7 +2279,7 @@ class NameManager
             $result['carPartStr'] = $carPartStr;
             $result['oeCarPart'] = $oePart;
             $result['carPartStrLen'] = mb_strlen($carPartStr);
-            $result['carPart'] = $carPart;
+            $result['carPart'] = implode(' ', $carPart);
             $result['description'] = $good->getDescription();
 
             return $result;
