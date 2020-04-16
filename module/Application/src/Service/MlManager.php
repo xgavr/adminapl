@@ -707,7 +707,7 @@ class MlManager
      * @param Goods $good
      * @return array
      */
-    public function fundBestName($good)
+    public function findBestName($good)
     {
         return $this->nameManager->findBestName($good);
     }
