@@ -32,13 +32,6 @@ $preGood = null;
                     $groupTitle = $mlManager->choiceTokenGroupTitle($good);
                     $name = $mlManager->findBestName($good);
                 ?>
-                <? foreach($name as $key => $value):?>
-                    <tr>
-                        <td></td>
-                        <td colspan="2"><?= $key ?></td>
-                        <td colspan="8"><?= $value ?></td>
-                    </tr>                    
-                <? endforeach;?>
                 <?php if ($preGood != $good): ?>
                     <?php $preGood = $good?>
                     <tr>
@@ -51,6 +44,13 @@ $preGood = null;
                             </a>                            
                         </th>
                     </tr>
+                    <? foreach($name as $key => $value):?>
+                        <tr>
+                            <td></td>
+                            <td colspan="2"><?= $key ?></td>
+                            <td colspan="8"><?= $value ?></td>
+                        </tr>                    
+                    <? endforeach;?>
                     <tr>
                         <th colspan="">
                             
