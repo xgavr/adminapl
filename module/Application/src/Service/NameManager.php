@@ -2228,7 +2228,6 @@ class NameManager
             
             $textPart = $this->textPart($good);
             $result['bestName'] = '';
-            $result['oeCarPart'] = '';
             $oePart = $this->oeCar($good);
             $carPart = $this->carPart($good);
             $carPartStr = $this->carPartStr($carPart);
@@ -2255,7 +2254,7 @@ class NameManager
             $result['carPrice'] = $this->priceCarStr($good);
             $result['carPartStr'] = $carPartStr;
             $result['carPartStrLen'] = mb_strlen($carPartStr);
-            $result['carPart'] = implode(' ', $carPart);
+//            $result['carPart'] = implode(' ', $carPart);
             $result['description'] = $good->getDescription();
 
             return $result;
