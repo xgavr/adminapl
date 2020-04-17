@@ -2229,33 +2229,9 @@ class NameManager
             $textPart = $this->textPart($good);
             $result['bestName'] = '';
             $result['oeCarPart'] = '';
-            $oePart = $carPartStr = $carStr = '';
-            $carPart = [];
-
-//            if ($textPart){            
-//                $carPart = $this->carPart($good);
-//                $carPartStr = $this->carPartStr($carPart);
-//                if ($carPartStr){
-//                    $carStr = $carPartStr;
-//                } else {
-//                    $oePart = $this->oeCar($good);
-//                    if ($oePart){
-//                        $carStr = $oePart;
-//                    }    
-//                }
-//                if ($textPart && $carStr){
-//                    if (mb_strpos($textPart, '[машины]') !== false){
-//                        $result['bestName'] = str_replace('[машины]', $carStr, $textPart);
-//                    } else {                        
-//                        $result['bestName'] = $textPart.' '.$carStr;
-//                    }   
-//
-//                    if (mb_strpos($textPart, '[свойства]') !== false){
-//                        $attrPart = $this->attrPart($good);
-//                        $result['bestName'] = str_replace('[свойства]', $attrPart, $result['bestName']);
-//                    }
-//                }
-//            }
+            $oePart = $this->oeCar($good);
+            $carPart = $this->carPart($good);
+            $carPartStr = $this->carPartStr($carPart);
 
             if ($flag){
                 if ($good->getName() != $result['bestName']){
@@ -2275,9 +2251,9 @@ class NameManager
             $result['textPart'] = $textPart;
             $result['attrPrice'] = $this->attrPrice($good);
             $result['attrPart'] = $this->attrPart($good);
+            $result['oeCarPart'] = $oePart;
             $result['carPrice'] = $this->priceCarStr($good);
             $result['carPartStr'] = $carPartStr;
-            $result['oeCarPart'] = $oePart;
             $result['carPartStrLen'] = mb_strlen($carPartStr);
             $result['carPart'] = implode(' ', $carPart);
             $result['description'] = $good->getDescription();
