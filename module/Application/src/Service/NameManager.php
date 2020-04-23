@@ -2057,9 +2057,9 @@ class NameManager
         foreach ($articles as $article){
             $description = $article->getDescriptionAsArray();
             if (is_array($description)){
-                if (isset($description['car'])){
-                    if (mb_strlen($result) < mb_strlen($description['car'])){
-                        $result = $description['car'];
+                if (isset(trim($description['car']))){
+                    if (mb_strlen($result) < mb_strlen(trim($description['car']))){
+                        $result = trim($description['car']);
                     }                    
                 }
             }
