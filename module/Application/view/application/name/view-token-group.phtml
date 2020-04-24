@@ -21,6 +21,16 @@ $this->headScript()
             ; 
 
 ?>
+<style>
+   .goodName {
+    text-decoration: none; /* Убираем подчеркивание */
+    border-bottom: 1px dashed #000080; /* Добавляем свою линию */ 
+   }
+   .goodName:hover {
+    color: #f00000; /* Цвет ссылки при наведении на нее курсора */
+   }
+</style>
+
 <h1>
     <span id="tokenGroupName"><?= $this->escapeHtml(($tokenGroup->getName()) ? $tokenGroup->getName():'---'); ?></span>    
     <button onclick="promptDialog('/name/token-group-name-form/<?= $tokenGroup->getId()?>', '<?= $this->escapeHtml($tokenGroup->getName()); ?>')" 
@@ -343,7 +353,7 @@ $this->headScript()
         var names = value.split(';');
         var result = [];
         for (var i in names){
-            result.push('<span>'+names[i]+'</span>');
+            result.push('<span class="goodName">'+names[i]+'</span>');
         }
         return result.join('@ ');
     }
