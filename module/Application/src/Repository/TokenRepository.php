@@ -870,7 +870,7 @@ class TokenRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g.id as goodId, g.code as goodCode, p.id as producerId, p.name as producerName, '
-                . 'group_concat(distinct r.goodname) as goodNames')
+                . 'group_concat(distinct r.goodname separator ";") as goodNames')
                 ->from(Goods::class, 'g')
                 ->join('g.producer', 'p')
                 ->join('g.articles', 'a')
