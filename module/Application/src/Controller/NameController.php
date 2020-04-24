@@ -841,10 +841,10 @@ class NameController extends AbstractActionController
             return;                        
         }        
         
-        $this->nameManager->updateTokenGroupName($tokenGroup, $name);
+        $newName = $this->nameManager->updateTokenGroupName($tokenGroup, $name);
         
         return new JsonModel([
-            'ok',
+            $newName,
         ]);          
     }
     

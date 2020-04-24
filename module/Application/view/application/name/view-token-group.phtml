@@ -354,7 +354,7 @@ $this->headScript()
         var names = value.split(';');
         var result = [];
         for (var i in names){
-            result.push('<span class="goodName">'+names[i]+'</span>');
+            result.push('<span class="goodName" onclick="">'+names[i]+'</span>');
         }
         return result.join(' ');
     }
@@ -363,7 +363,7 @@ $this->headScript()
     * Промпт диалог
     *
     */
-    function promptDialog(url, initValue) {
+    function promptDialog(url) {
         if (url){    
             var initValue = $('#tokenGroupName').html();
             if (initValue == '---'){
@@ -381,8 +381,8 @@ $this->headScript()
                             url: url+'?prompt='+result,
                         })
                             .done(function (data) {
-                                if (data == 'ok'){
-                                    $('#tokenGroupName').html(result);
+                                if (data){
+                                    $('#tokenGroupName').html(data);
                                 }    
                             })
                             .fail(function (e) {

@@ -1390,6 +1390,7 @@ class NameManager
         
         $this->entityManager->flush($tokenGroup);
         
+        return $tokenGroup->getName();
     }
     
     /**
