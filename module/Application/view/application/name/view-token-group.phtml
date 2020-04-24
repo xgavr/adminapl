@@ -342,8 +342,8 @@ $this->headScript()
     {
         var names = value.split(';');
         var result = [];
-        for (var str in names){
-            result.push('<span>'+str+'</span>');
+        for (var i in names){
+            result.push('<span>'+names[i]+'</span>');
         }
         return result.join('@ ');
     }
