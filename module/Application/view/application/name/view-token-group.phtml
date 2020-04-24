@@ -340,7 +340,7 @@ $this->headScript()
     
     function goodNameFormatter(value)
     {
-        var names = string.split(';');
+        var names = value.split(';');
         var result = [];
         for (var str in names){
             result.push('<span>'+str+'</span>');
