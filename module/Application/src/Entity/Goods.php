@@ -531,7 +531,7 @@ class Goods {
 
     public function setDescription($description) 
     {
-        $this->description = $description;
+        $this->description = trim($description);
     }     
 
     public function getDateEx() 

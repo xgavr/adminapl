@@ -139,7 +139,9 @@ class TokenGroup {
 
     public function setName($name) 
     {
-        $this->name = trim($name);
+        $fGn = mb_strtoupper(mb_substr(trim($name), 0, 1));
+        $Gn = $fGn.mb_substr(trim($name), 1);
+        $this->name = $Gn;
     }  
     
     public function getLemms() 

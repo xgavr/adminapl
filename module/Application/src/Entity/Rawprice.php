@@ -876,7 +876,7 @@ class Rawprice {
 
     public function getCar() 
     {
-        return $this->car;
+        return trim($this->car);
     }
 
     public function setCar($car) 
