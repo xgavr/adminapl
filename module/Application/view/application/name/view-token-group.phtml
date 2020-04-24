@@ -34,7 +34,7 @@ $this->headScript()
 
 <h1>
     <span id="tokenGroupName"><?= $this->escapeHtml(($tokenGroup->getName()) ? $tokenGroup->getName():'---'); ?></span>    
-    <button onclick="promptDialog('/name/token-group-name-form/<?= $tokenGroup->getId()?>', '<?= $this->escapeHtml($tokenGroup->getName()); ?>')" 
+    <button onclick="promptDialog()" 
             class="btn btn-default btn-xs" 
             title="Изменить наименование группы">
         <span class="glyphicon glyphicon-pencil" ></span>
@@ -351,24 +351,31 @@ $this->headScript()
     
     function goodNameFormatter(value)
     {
-        var names = value.split(';');
-        var result = [];
-        for (var i in names){
-            result.push('<span class="goodName" onclick="">'+names[i]+'</span>');
-        }
-        return result.join(' ');
+        <?php if (!$tokenGroup->getName()):?>
+            var names = value.split(';');
+            var result = [];
+            for (var i in names){
+                result.push('<span class="goodName" onclick="promptDialog(\''+names[i]+'\')">'+names[i]+'</span>');
+            }
+            return result.join(' ');
+        <?php else:?>
+            return value;
+        <?php endif;?>
     }
     
     /**
     * Промпт диалог
     *
     */
-    function promptDialog(url) {
-        if (url){    
-            var initValue = $('#tokenGroupName').html();
-            if (initValue == '---'){
-                initValue = '';
-            }
+    function promptDialog(initValue) {
+        var url = '/name/token-group-name-form/<?= $tokenGroup->getId()?>';
+        if (url){
+            if (!initValue){
+                var initValue = $('#tokenGroupName').html();
+                if (initValue == '---'){
+                    initValue = '';
+                }
+            }    
             var dialog = bootbox.prompt({ 
                 size: "medium",
                 value: initValue,
