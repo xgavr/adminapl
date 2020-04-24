@@ -65,7 +65,7 @@ $this->headScript()
                              <th data-field="goodId" data-formatter="linkFormatter">Id</th>
                              <th data-field="goodCode">Артикул</th>
                              <th data-field="producerName">Производитель</th>
-                             <th data-field="goodNames">Наименования</th>
+                             <th data-field="goodNames" data-formatter="goodNameFormatter">Наименования</th>
                          </tr>                
                     </thead>
                 </table>
@@ -337,6 +337,17 @@ $this->headScript()
             '</a>',
         ].join(''); 
     } 
+    
+    function goodNameFormatter(value)
+    {
+        var names = string.split(';');
+        var result = [];
+        for (var str in names){
+            result.push('<span>'+str+'</span>');
+        }
+        return result.join('@ ');
+    }
+    
     /**
     * Промпт диалог
     *
