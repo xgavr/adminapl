@@ -355,7 +355,8 @@ $this->headScript()
             var names = value.split(';');
             var result = [];
             for (var i in names){
-                result.push('<span class="goodName" onclick="promptDialog(\''+$.escapeSelector(names[i].toLowerCase())+'\')">'+names[i]+'</span>');
+                var name = names[i].replace(/"/g, '\'');
+                result.push('<span class="goodName" onclick="promptDialog(\''+name.toLowerCase()+'\')">'+names[i]+'</span>');
             }
             return result.join(' ');
         <?php else:?>
