@@ -40,8 +40,10 @@ class TokenRepository  extends EntityRepository
             ->from(Rawprice::class, 'r')
             ->where('r.raw = ?1')
             ->andWhere('r.statusToken = ?2')
+            ->andWhere('r.status = ?3')    
             ->setParameter('1', $raw->getId())    
             ->setParameter('2', Rawprice::TOKEN_NEW)    
+            ->setParameter('3', Rawprice::STATUS_PARSED)    
             ;    
 
 //            var_dump($queryBuilder->getQuery()->getSQL()); exit;
