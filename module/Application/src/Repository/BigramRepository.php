@@ -134,7 +134,8 @@ class BigramRepository  extends EntityRepository
                 }
             }    
             if ($bigram->getCorrect() == $bigram->getBilemma()){
-                $this->updateBigram($bigram, ['correct' => null]);
+                $this->getEntityManager()->getConnection()
+                        ->update('bigram', ['correct' => null], ['id' => $bigram->getId()]);
             }
         }        
         return $bigram;
