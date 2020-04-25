@@ -722,7 +722,7 @@ class Rawprice {
     
     public function getGoodname() 
     {
-        return $this->goodname;
+        return trim($this->goodname);
     }
 
     public function setGoodname($goodname) 
@@ -732,7 +732,7 @@ class Rawprice {
     
     public function getTitle() 
     {
-        return $this->goodname;
+        return trim($this->goodname);
     }
 
     public function getTitleUp() 

@@ -986,10 +986,9 @@ class NameManager
             }            
         }
 
-        $raw->setParseStage(Raw::STAGE_TOKEN_PARSED);
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush();
-        
+        $this->entityManager->getRepository(Raw::class)
+                ->updateRawParseStage($raw, Raw::STAGE_TOKEN_PARSED); 
+
         return;
     }
     
@@ -1217,9 +1216,8 @@ class NameManager
             }            
         }
         
-        $raw->setParseStage(Raw::STAGE_GOOD_TOKEN);
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush();
+        $this->entityManager->getRepository(Raw::class)
+                ->updateRawParseStage($raw, Raw::STAGE_GOOD_TOKEN); 
         
         return;
     }
