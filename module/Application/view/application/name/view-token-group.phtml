@@ -355,7 +355,7 @@ $this->headScript()
             var names = value.split(';');
             var result = [];
             for (var i in names){
-                var name = names[i].replace(/[^А-ЯЁа-яё \,\-]/g, '').replace(/\s+/g, ' ').trim();
+                var name = names[i].replace(/[^А-ЯЁа-яё ]/g, '').replace(/\s+/g, ' ').trim();
                 result.push('<span class="goodName" onclick="promptDialog(\''+name.toLowerCase()+'\')">'+names[i]+'</span>');
             }
             return result.join(' ');
