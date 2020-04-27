@@ -359,6 +359,13 @@ class TokenRepository  extends EntityRepository
                         ->setParameter('5', '');
                 }                                
             }
+            if (isset($params['withGenericGroup'])){
+                if ($params['withGenericGroup'] == 1){
+                    $queryBuilder->join('tg.goods', 'g')
+                            ->andWhere('g.genericGroup > 0')
+                            ;
+                }                                
+            }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('tg.'.$params['sort'], $params['order']);                
             }            

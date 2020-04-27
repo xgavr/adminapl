@@ -24,7 +24,7 @@ $this->headScript()
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input name="search" style="width: 300px" class="form-control" type="text" placeholder="Поиск">
+                    <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
                 <div class="form-group">
@@ -49,6 +49,9 @@ $this->headScript()
                         <option value="2">С названием</option>
                     </select>
                 </div>    
+                <div class="form-group">
+                    <input id="withGenericGroup" class="form-control" type="checkbox">
+                </div>
             </div>
         </div>
         <table id="table" 
@@ -193,6 +196,9 @@ $this->headScript()
         $('#withoutName').change(function (){
             $('#table').bootstrapTable('refresh');
         })
+        $('#withGenericGroup').change(function (){
+            $('#table').bootstrapTable('refresh');
+        })
     });
     
     function queryParams(params) {
@@ -209,6 +215,9 @@ $this->headScript()
         }    
         params.goodCountLevel = $("#goodCountLevel").val();
         params.withoutName = $("#withoutName").val();
+        if ($('#withGenericGroup').is(":checked")){
+            params.withGenericGroup = 1;
+        }
         
         return params;
     }
