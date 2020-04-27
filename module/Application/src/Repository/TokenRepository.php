@@ -16,6 +16,7 @@ use Application\Entity\GoodToken;
 use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
 use Application\Entity\Goods;
+use Application\Entity\GenericGroup;
 
 
 /**
@@ -361,15 +362,24 @@ class TokenRepository  extends EntityRepository
             }
             if (isset($params['withGenericGroup'])){
                 if ($params['withGenericGroup'] == 1){
+                    
+                    $zeroGroup = $this->getEntityManager()->getRepository(GenericGroup::class)
+                        ->findOneByTdId(0);
+                    
                     $queryBuilder->join('tg.goods', 'g')
                             ->distinct()
-                            ->andWhere('g.genericGroup > 0')
+                            ->andWhere('g.genericGroup != ?6')
+                            ->setParameter('6', $zeroGroup)
                             ;
                 }                                
                 if ($params['withGenericGroup'] == 2){
+                    $zeroGroup = $this->getEntityManager()->getRepository(GenericGroup::class)
+                        ->findOneByTdId(0);
+
                     $queryBuilder->join('tg.goods', 'g')
                             ->distinct()
-                            ->andWhere('g.genericGroup = 0')
+                            ->andWhere('g.genericGroup = ?7')
+                            ->setParameter('7', $zeroGroup)
                             ;
                 }                                
             }
