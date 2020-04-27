@@ -51,6 +51,11 @@ $this->headScript()
                 </div>    
                 <div class="form-group">
                     <input id="withGenericGroup" class="form-control" type="checkbox">
+                    <select type="select" class="form-control" id="withGenericGroup">
+                        <option value="0">Все</option>
+                        <option value="1">с группами ТД</option>
+                        <option value="2">без групп ТД</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -215,9 +220,7 @@ $this->headScript()
         }    
         params.goodCountLevel = $("#goodCountLevel").val();
         params.withoutName = $("#withoutName").val();
-        if ($('#withGenericGroup').is(":checked")){
-            params.withGenericGroup = 1;
-        }
+        params.withGenericGroup = $("#withGenericGroup").val();
         
         return params;
     }

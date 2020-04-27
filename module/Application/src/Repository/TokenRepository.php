@@ -362,7 +362,14 @@ class TokenRepository  extends EntityRepository
             if (isset($params['withGenericGroup'])){
                 if ($params['withGenericGroup'] == 1){
                     $queryBuilder->join('tg.goods', 'g')
+                            ->distinct()
                             ->andWhere('g.genericGroup > 0')
+                            ;
+                }                                
+                if ($params['withGenericGroup'] == 1){
+                    $queryBuilder->join('tg.goods', 'g')
+                            ->distinct()
+                            ->andWhere('g.genericGroup = 0')
                             ;
                 }                                
             }
