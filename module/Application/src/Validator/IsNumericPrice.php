@@ -39,6 +39,12 @@ class IsNumericPrice extends AbstractValidator
      */
     public function isValid($value)
     {
+        $enWord = mb_ereg_replace('[^A-Z]', '', $value);
+        $ruWord = mb_ereg_replace('[^А-ЯЁ]', '', $value);
+        if ($enWord || $ruWord){
+            return false;
+        }
+
         $digit = $this->toFloatFilter->filter($value);
         
         return is_numeric($digit) && $digit;
