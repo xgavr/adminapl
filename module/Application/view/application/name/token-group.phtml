@@ -53,7 +53,7 @@ $this->headScript()
                     <select type="select" class="form-control" id="withGenericGroup">
                         <option value="0">Все</option>
                         <option value="1">с группами ТД</option>
-                        <option value="2">без групп ТД</option>
+                        <!--<option value="2">без групп ТД</option>-->
                     </select>
                 </div>
             </div>
@@ -75,7 +75,7 @@ $this->headScript()
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                     <th data-field="name" data-formatter="nameFormatter" data-sortable="true">Наименование</th>
+                     <th data-field="lemms" data-formatter="nameFormatter" data-sortable="true">Наименование</th>
 <!--                     <th data-field="lemms" data-sortable="true">Токены</th>             -->
                      <th data-field="goodCount" data-align='right' data-sortable="true">Товаров</th>             
                      <th data-field="" data-formatter="activeFormatter" data-align="center"></th>
@@ -225,7 +225,7 @@ $this->headScript()
     }
     
     function nameFormatter(value, row){
-        var str = value;
+        var str = row.name;
         if (!str){
             str = '---';
         }
@@ -234,7 +234,7 @@ $this->headScript()
         link += '</a>';
         
         var tokens = '<div style="font-size: xx-small; color: gray">';
-        tokens += row.lemms;
+        tokens += value;
         tokens += '</div>';
         return link + tokens;        
     }
