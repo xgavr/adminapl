@@ -829,33 +829,35 @@ class NameManager
                             $token = $this->entityManager->getRepository(Token::class)
                                     ->findOneByLemma($word);
                         }    
+                        
+                        if ($token){
+                            $articleToken = $this->entityManager->getRepository(ArticleToken::class)
+                                    ->findOneBy([
+                                        'article' => $article->getId(), 
+                                        'articleTitle' => $articleTitle->getId(),
+                                        'lemma' => $token->getLemma(),
+                                            ]);
 
-                        $articleToken = $this->entityManager->getRepository(ArticleToken::class)
-                                ->findOneBy([
-                                    'article' => $article->getId(), 
-                                    'articleTitle' => $articleTitle->getId(),
-                                    'lemma' => $word,
+                            if (!$articleToken){
+                                $this->entityManager->getRepository(Token::class)
+                                        ->insertArticleToken([
+                                            'article_id' => $article->getId(),
+                                            'lemma' => $token->getLemma(),
+                                            'status' => $key,
+                                            'title_id' => $articleTitle->getId(),
                                         ]);
+                            }   
 
-                        if (!$articleToken){
-                            $this->entityManager->getRepository(Token::class)
-                                    ->insertArticleToken([
-                                        'article_id' => $article->getId(),
-                                        'lemma' => $word,
-                                        'status' => $key,
-                                        'title_id' => $articleTitle->getId(),
-                                    ]);
-                        }   
+                            if ($k > 0){
+                                $bigram = $this->entityManager->getRepository(Bigram::class)
+                                                ->insertBigram($preWord, $token->getLemma());
 
-                        if ($k > 0){
-                            $bigram = $this->entityManager->getRepository(Bigram::class)
-                                            ->insertBigram($preWord, $word);
-
-                            $this->entityManager->getRepository(Bigram::class)
-                                    ->insertArticleBigram($article, $bigram, $articleTitle);
-                        }
-                        $preWord = $word;
-                        $preToken = $token;
+                                $this->entityManager->getRepository(Bigram::class)
+                                        ->insertArticleBigram($article, $bigram, $articleTitle);
+                            }
+                            $preWord = $token->getLemma();
+                            $preToken = $token;
+                        }    
                     }    
                 }    
             }    
