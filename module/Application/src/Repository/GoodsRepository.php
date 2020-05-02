@@ -1681,6 +1681,11 @@ class GoodsRepository extends EntityRepository
         return $result;
     }
     
+    /**
+     * Количество генерированных наименований
+     * 
+     * @return integer
+     */
     public function counWithBestName()
     {
         $entityManager = $this->getEntityManager();
@@ -1691,7 +1696,7 @@ class GoodsRepository extends EntityRepository
                 ->from(Goods::class, 'g')
                 ->where('g.name != ?1')
                 ->setParameter('1', '')
-                ->andWhere('r.name != g.description')
+                ->andWhere('g.name != g.description')
                 ;
         
         return count($queryBuilder->getQuery()->getResult());        
