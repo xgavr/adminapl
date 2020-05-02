@@ -1680,4 +1680,20 @@ class GoodsRepository extends EntityRepository
         }
         return $result;
     }
+    
+    public function counWithBestName()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('g')
+                ->from(Goods::class, 'g')
+                ->where('g.name != ?1')
+                ->setParameter('1', '')
+                ->andWhere('r.name != g.description')
+                ;
+        
+        return count($queryBuilder->getQuery()->getResult());        
+    }
 }

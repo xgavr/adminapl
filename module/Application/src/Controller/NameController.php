@@ -896,10 +896,12 @@ class NameController extends AbstractActionController
                 ->count([]);
         $nameCoverage = $this->entityManager->getRepository(TokenGroup::class)->nameCoverage();
         $goodCoverage = $this->entityManager->getRepository(TokenGroup::class)->goodCoverage();
+        $goodWithBestName = $this->entityManager->getRepository(Goods::class)->counWithBestName();
                 
         return new ViewModel([
             'total' => $total,
             'totalGoods' => $totalGoods,
+            '$goodWithBestName' => $goodWithBestName,
             'nameCoverage' => $nameCoverage,
             'goodCoverage' => $goodCoverage,
         ]);  
