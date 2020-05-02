@@ -901,7 +901,7 @@ class NameController extends AbstractActionController
         return new ViewModel([
             'total' => $total,
             'totalGoods' => $totalGoods,
-            '$goodWithBestName' => $goodWithBestName,
+            'goodWithBestName' => $goodWithBestName,
             'nameCoverage' => $nameCoverage,
             'goodCoverage' => $goodCoverage,
         ]);  
