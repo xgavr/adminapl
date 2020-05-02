@@ -1692,13 +1692,15 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('g')
+        $queryBuilder->select('count(g.id) as goodCount')
                 ->from(Goods::class, 'g')
                 ->where('g.name != ?1')
                 ->setParameter('1', '')
-//                ->andWhere('g.name != g.description')
+                ->andWhere('g.name != g.description')                
+                ->setMaxResults(1)
                 ;
         
-        return count($queryBuilder->getQuery()->getResult());        
+        $row = $queryBuilder->getQuery()->getResult();
+        return $row['goodCount'];        
     }
 }
