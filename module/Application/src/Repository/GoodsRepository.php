@@ -1697,10 +1697,12 @@ class GoodsRepository extends EntityRepository
                 ->where('g.name != ?1')
                 ->setParameter('1', '')
                 ->andWhere('g.name != g.description')                
-                ->setMaxResults(1)
                 ;
         
-        $row = $queryBuilder->getQuery()->getResult();
-        return $row['goodCount'];        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $row){
+            return $row['goodCount'];
+        }
+        return 0;        
     }
 }
