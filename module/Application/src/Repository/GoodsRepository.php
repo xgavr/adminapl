@@ -1696,7 +1696,7 @@ class GoodsRepository extends EntityRepository
                 ->from(Goods::class, 'g')
                 ->where('g.name != ?1')
                 ->setParameter('1', '')
-                ->andWhere('g.name != g.description')
+//                ->andWhere('g.name != g.description')
                 ;
         
         return count($queryBuilder->getQuery()->getResult());        
