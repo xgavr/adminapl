@@ -2226,6 +2226,7 @@ class NameManager
     public function findBestName($good, $flag = false)
     {
         if ($good->getDescription()){
+            
             $result['description'] = $good->getDescription();
             $result['bestName'] = $result['description'];                
 
@@ -2261,7 +2262,10 @@ class NameManager
             if ($flag){
                 if ($good->getName() != $result['bestName']){
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), ['name' => $result['bestName'], 'status_name_ex' => Goods::NAME_EX_NEW]);
+                            ->updateGoodId($good->getId(), [
+                                'name' => $result['bestName'], 
+                                'group_token_update_flag' => date('n'),
+                                'status_name_ex' => Goods::NAME_EX_NEW]);
                 }    
                 return;
             }
@@ -2289,7 +2293,7 @@ class NameManager
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
                 $good = $rawprice->getGood();
-                if ($good){
+                if ($good && $good->getGroupTokenUpdateFlag() != date('n')){
                     $this->findBestName($good, true);
                 }    
                 
