@@ -73,6 +73,7 @@ class ArticleManager
             $article->setCode($filteredCode);            
             $article->setFullCode($code);
             $article->setUnknownProducer($unknownProducer);
+            $article->setUpdWeek();
 
             // Добавляем сущность в менеджер сущностей.
             $this->entityManager->persist($article);
@@ -187,6 +188,7 @@ class ArticleManager
                                 'fullcode' => mb_substr($rawprice->getArticle(), 0, 36),
                                 'unknown_producer_id' => $rawprice->getUnknownProducer()->getId(),
                                 'description' => Encoder::encode(['name' => $rawprice->getTitle(), 'car' => $rawprice->getCar(), 'fullName' => $rawprice->getFullTitle()]),
+                                'upd_week' => date('W'),
                             ]);
                     
                     $article = $this->entityManager->getRepository(Article::class)

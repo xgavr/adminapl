@@ -67,6 +67,11 @@ class Article {
     protected $description;        
 
     /**
+     * @ORM\Column(name="upd_week")  
+     */
+    protected $updWeek;        
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="good") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
@@ -202,6 +207,16 @@ class Article {
     {
         return $this->description;
     }
+
+    public function getUpdWeek() 
+    {
+        return $this->updWeek;
+    }
+
+    public function setUpdWeek() 
+    {
+        $this->updWeek = date('W');
+    }     
 
     public function getDescriptionAsArray() 
     {
