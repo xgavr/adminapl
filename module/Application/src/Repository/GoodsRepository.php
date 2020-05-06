@@ -632,7 +632,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
-            ->where('g.aplId = 0')
+//            ->where('g.aplId = 0')
             //->setMaxResults(10000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -717,8 +717,8 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusNameEx = ?1')
             ->setParameter('1', Goods::NAME_EX_NEW)
-            ->andWhere('g.tokenGroup = ?2')
-            ->setParameter('2', 26288) // только воздушный фильтр    
+//            ->andWhere('g.tokenGroup = ?2')
+//            ->setParameter('2', 26288) // только воздушный фильтр    
             //->setMaxResults(10000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;

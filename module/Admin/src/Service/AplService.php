@@ -737,13 +737,16 @@ class AplService {
         
             $url = $this->aplApi().'get-good-id?api='.$this->aplApiKey();
             
-            $post = [
+            $post = [                
                 'art' => $good->getCode(),
                 'makerid' => $good->getProducer()->getAplId(),
                 'createnew' => 1,
             ];
             if ($good->getGroupApl()>0){
                 $post['g2'] = $good->getGroupApl();
+            }
+            if ($good->getAplId()){
+                $post['id'] = $good->getAplId();
             }
             
             $client = new Client();
@@ -880,7 +883,8 @@ class AplService {
             $post = [
                 'goodId' => $good->getAplId(),
                 'newname' => $good->getName(),
-                'nameok' => 1,
+                'description' => $good->getDescription(),
+                'nameok' => 0,
             ];
             
             $client = new Client();
