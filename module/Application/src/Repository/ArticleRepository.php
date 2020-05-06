@@ -500,16 +500,11 @@ class ArticleRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('a')
-            ->addSelect('count(r.id) as rawpriceCount')    
             ->from(Article::class, 'a')
-            ->leftJoin('a.rawprice', 'r')
-            ->groupBy('a.id')
-            ->having('rawpriceCount = 0')    
-            ->setMaxResults(5000)    
-            //->setParameter('1', Rawprice::STATUS_PARSED)
+            ->where('a.updWeek != ?1')
+            ->setParameter('1', date('W'))    
                 ;
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
 
     /**

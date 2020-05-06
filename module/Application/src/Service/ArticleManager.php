@@ -228,9 +228,9 @@ class ArticleManager
             }
         }    
 
-        $raw->setParseStage(Raw::STAGE_ARTICLE_PARSED);
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush();        
+        $this->entityManager->getRepository(Raw::class)
+                ->updateRawParseStage($raw, Raw::STAGE_ARTICLE_PARSED); 
+
     }
     
 
@@ -257,11 +257,7 @@ class ArticleManager
         $this->entityManager->getRepository(Article::class)
                 ->deleteArticleCross($article);
         
-        $this->entityManager->remove($article);
-        
-        if ($flush){
-            $this->entityManager->flush();
-        }    
+        $this->entityManager->getConnection()->delete('article', ['id' => $article->getId()]);
     }    
     
     /**
@@ -269,16 +265,27 @@ class ArticleManager
      */
     public function removeEmptyArticles()
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '1024M');
         set_time_limit(900);        
         $startTime = time();
         $finishTime = $startTime + 840;
         
-        $articlesForDelete = $this->entityManager->getRepository(Article::class)
+        $articleQuery = $this->entityManager->getRepository(Article::class)
                 ->findArticlesForDelete();
-
-        foreach ($articlesForDelete as $row){
-            $this->removeArticle($row[0]);
+        $iterable = $articleQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $article){
+                $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
+                        ->count(['code' => $article->getId()]);
+                if ($rawpriceCount == 0){
+                    $this->removeArticle($article);
+                } else {
+                    $this->entityManager->getRepository(Article::class)
+                            ->updateArticle($article->getId(), ['upd_week' => date('W')]);
+                }    
+                $this->entityManager->detach($article);
+            }    
             if (time() >= $finishTime){
                 return;
             }
