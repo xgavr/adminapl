@@ -2260,13 +2260,17 @@ class NameManager
             
 
             if ($flag){
+                $upd = [                    
+                    'group_token_update_flag' => date('n'),
+                ];
                 if ($good->getName() != $result['bestName']){
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), [
-                                'name' => $result['bestName'], 
-                                'group_token_update_flag' => date('n'),
-                                'status_name_ex' => Goods::NAME_EX_NEW]);
+                    $upd['name'] = $result['bestName'];
+                    $upd['status_name_ex'] = Goods::NAME_EX_NEW;
                 }    
+                
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), $upd);
+                
                 return;
             }
             
