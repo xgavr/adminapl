@@ -20,6 +20,8 @@ use Application\Entity\VehicleDetailValue;
 use Application\Entity\Oem;
 use Application\Entity\GenericGroup;
 use Application\Entity\GoodAttributeValue;
+use Application\Entity\Images;
+use Application\Filter\ZetasoftCarKey;
 
 /**
  * Description of ExternalManager
@@ -43,6 +45,15 @@ class ExternalManager
      */
 
     private $abcpManager;
+
+    /**
+     * Менеджер zetasoft
+     * 
+     * @var \Application\Service\ExternalDB\ZetasoftManager 
+     */
+
+    private $zetasoftManager;
+
     /**
      * Менеджер auto-db
      * 
@@ -58,12 +69,13 @@ class ExternalManager
     private $partsApiManager;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $autoDbManager, $partsApiManager, $abcpManager)
+    public function __construct($entityManager, $autoDbManager, $partsApiManager, $abcpManager, $zetasoftManager)
     {
         $this->entityManager = $entityManager;
         $this->autoDbManager = $autoDbManager;
         $this->partsApiManager = $partsApiManager;
         $this->abcpManager = $abcpManager;
+        $this->zetasoftManager = $zetasoftManager;
     }
     
     /**
@@ -117,6 +129,33 @@ class ExternalManager
     }
     
     /**
+     * Подключение к zetasoft api
+     * 
+     * @param string $action
+     * @param array $params
+     * @return array|null;
+     */
+    public function zetasoft($action, $params = null)
+    {
+        switch($action){
+            case 'ping': $result = $this->zetasoftManager->ping(); break;
+//            case 'token': $result = $this->zetasoftManager->token(); break;
+            case 'vendorCode': $result = $this->zetasoftManager->getVendorCode($params['good']); break;
+            case 'getPartGroup': $result = $this->zetasoftManager->getPartGroups(); break;
+            case 'getLinked': $result = $this->zetasoftManager->getGoodLinked($params['good']); break;
+            case 'сriteria': $result = $this->zetasoftManager->getCriteria2(); break;
+            case 'getBestArticle': $result = $this->zetasoftManager->getBestArticle($params['good']); break;
+            case 'getInfo': $result = $this->zetasoftManager->getDirectInfo($params['good']); break;
+            case 'getSimilarInfo': $result = $this->zetasoftManager->getSimilarDirectInfo($params['good']); break;
+            case 'getImages': $result = $this->zetasoftManager->getImages($params['good']); break;
+            default: break;
+        }
+        
+//        var_dump($result);
+        return $result;
+    }
+    
+    /**
      * Подключение к parts api
      * 
      * @param string $action
@@ -156,30 +195,28 @@ class ExternalManager
         $this->entityManager->getRepository(GenericGroup::class)
                 ->updateZeroGroup();
         
-        $data = $this->autoDb('getGenericArticles');
+        $data = $this->zetasoft('getPartGroup');
 //        var_dump($data); exit;
         if (isset($data['data'])){
-            if (isset($data['data']['array'])){
-                foreach ($data['data']['array'] as $row){
-                    $usageDesignation = null;
-                    if (isset($row['usageDesignation'])){
-                        $usageDesignation = $row['usageDesignation'];
-                    }
-                    $assemblyGroup = null;
-                    if (isset($row['assemblyGroup'])){
-                        $assemblyGroup = $row['assemblyGroup'];
-                    }
-                    
-                    $this->entityManager->getRepository(GenericGroup::class)
-                            ->addGenericGroup([
-                                'td_id' => $row['genericArticleId'],
-                                'name' => $row['designation'],
-                                'assembly_group' => $assemblyGroup,
-                                'master_name' => $row['masterDesignation'],
-                                'usage_name' => $usageDesignation,
-                            ]);
+            foreach ($data['data'] as $row){
+                $usageDesignation = null;
+                if (isset($row['usageDescription'])){
+                    $usageDesignation = $row['usageDescription'];
                 }
-            }    
+                $assemblyGroup = null;
+                if (isset($row['categoryName'])){
+                    $assemblyGroup = $row['categoryName'];
+                }
+
+                $this->entityManager->getRepository(GenericGroup::class)
+                        ->addGenericGroup([
+                            'td_id' => $row['id'],
+                            'name' => $row['partName'],
+                            'assembly_group' => $assemblyGroup,
+                            'master_name' => $row['name'],
+                            'usage_name' => $usageDesignation,
+                        ]);
+            }
         }    
         return;
     }
@@ -188,7 +225,7 @@ class ExternalManager
      * 
      * @param array $data
      * @param array $group
-     * @return \Application\Entity\Make
+     * @return Make
      */
     public function addMake($data, $group = null)
     {
@@ -456,6 +493,7 @@ class ExternalManager
             $car->setPassenger(Car::PASSENGER_NO); 
             $car->setUpdateFlag(0);
             $car->setTransferFlag(Car::TRANSFER_NO);
+            $car->setGoodCount(0);
             
             $car->setModel($model);
 
@@ -545,91 +583,15 @@ class ExternalManager
     
     
     /**
-     * Заполнить машины
-     * 
-     * @param Application\Entity\Model $model 
-     * @return null
-     */
-    public function fillCars($model)
-    {
-//        $data1 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'passenger']);
-//        if (is_array($data1)){
-//            $this->fillCarFromArray($model, $data1,['passenger' => Car::PASSENGER_YES]);
-//        }    
-//        $data2 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'commercial']);
-//        if (is_array($data2)){
-//            $this->fillCarFromArray($model, $data2,['commerc' => Car::COMMERC_YES]);
-//        }    
-//        $data3 = $this->partsApi('cars', ['makeId' => $model->getMake()->getTdId(), 'modelId' => $model->getTdId(), 'group' => 'moto']);
-//        if (is_array($data3)){
-//            $this->fillCarFromArray($model, $data3,['moto' => Car::MOTO_YES]);
-//        }    
-        return;
-    }
-        
-    /**
-     * НЕИСПОЛЬЗУЕТСЯ
-     * Добавление машины к товару 
-     * 
-     * @param Application\Entity\Goods $good
-     * @param array $carData
-     * @param bool $addCar
-     */
-    public function addCarToGood($good, $carData, $addCar = true)
-    {
-        if (isset($carData['carId'])){
-            $car = $this->entityManager->getRepository(Car::class)
-                    ->findOneByTdId($carData['carId']);
-            if (!$car && $addCar){
-                if (isset($carData['modId'])){
-                    $model = $this->entityManager->getRepository(Model::class)
-                            ->findOneByTdId($carData['modId']);
-                    if (!$model){
-                        if (isset($carData['manuId'])){
-                            $make = $this->entityManager->getRepository(Make::class)
-                                    ->findOneByTdId($carData['manuId']);
-                            if (!$make){
-                                $this->fillMakes();
-                                $make = $this->entityManager->getRepository(Make::class)
-                                        ->findOneByTdId($carData['manuId']);
-                            }
-                        }
-                        if ($make){
-                            $this->fillModels($make);
-                            $model = $this->entityManager->getRepository(Model::class)
-                                    ->findOneByTdId($carData['modId']);
-                        }    
-                        
-                    }
-                    if ($model){
-                        $this->fillCars($model);
-                        $car = $this->entityManager->getRepository(Car::class)
-                                ->findOneByTdId($carData['carId']);                        
-                    }
-                }    
-            }   
-
-            if ($car){
-                
-                $goodCar = $this->entityManager->getRepository(Car::class)
-                        ->findGoodCar($good, $car);
-                
-                if (count($goodCar) == 0){
-                    $this->entityManager->getRepository(Goods::class)
-                            ->addGoodCar($good, $car);
-                }    
-            }    
-        }
-        return;
-    }
-    
-    /**
      * Добавить наименование описания машины
-     * @param string $name
+     * @param string $key
      * @return VehicleDetail
      */
-    public function addVehicleDetail($name)
+    public function addVehicleDetail($key)
     {
+        $filter = new ZetasoftCarKey();
+        $name = $filter->filter($key);
+        
         $vehicleDetail = $this->entityManager->getRepository(VehicleDetail::class)
                 ->findOneByName($name);
         
@@ -677,7 +639,7 @@ class ExternalManager
     public function addVehicleDetailCarKeyValue($car, $key, $value)
     {
         $vehicleDetail = $this->addVehicleDetail($key);
-        if ($vehicleDetail){
+        if ($vehicleDetail && $value){
             $vehicleDetailValue = $this->addVehicleDetailValue($vehicleDetail, $value);
 
             $vehicleDetailCar = $this->entityManager->getRepository(VehicleDetailCar::class)
@@ -704,31 +666,38 @@ class ExternalManager
     {
         if ($car->getUpdateFlag() != date('n')){
             
+            $carData['dateFrom'] = date('Ym', strtotime($carData['dateFrom']));
+            if (isset($carData['dateTo'])){
+                $carData['dateTo'] = date('Ym', strtotime($carData['dateTo']));
+            }    
+            
             foreach ($carData as $key => $value){
-                $this->addVehicleDetailCarKeyValue($car, $key, $value);
+                if (!is_array($value)){
+                    $this->addVehicleDetailCarKeyValue($car, $key, $value);
+                }    
             }
 
             $pcon = '';
-            if (!empty($carData['yearOfConstrFrom'])){
-                $pcon = substr($carData['yearOfConstrFrom'], -2).'.'.substr($carData['yearOfConstrFrom'], 0, 4).'-';
+            if (!empty($carData['dateFrom'])){
+                $pcon = substr($carData['dateFrom'], -2).'.'.substr($carData['dateFrom'], 0, 4).'-';
 
                 $modelConstructionFrom = $car->getModel()->getConstructionFrom(); 
 
                 $model = $car->getModel();
                 $model->setTransferFlag(Model::TRANSFER_NO);
 
-                if ($modelConstructionFrom > $carData['yearOfConstrFrom']){
-                    $model->setConstructionFrom($carData['yearOfConstrFrom']);
+                if (!$modelConstructionFrom || $modelConstructionFrom > $carData['dateFrom']){
+                    $model->setConstructionFrom($carData['dateFrom']);
                     $this->entityManager->persist($model);
                     $this->entityManager->flush($model);
                 }
 
-                if (!empty($carData['yearOfConstrTo'])){
-                    $pcon .= substr($carData['yearOfConstrTo'], -2).'.'.substr($carData['yearOfConstrTo'], 0, 4);
+                if (!empty($carData['dateTo'])){
+                    $pcon .= substr($carData['dateTo'], -2).'.'.substr($carData['dateTo'], 0, 4);
 
                     $modelConstructionTo = $car->getModel()->getConstructionTo(); 
-                    if ($modelConstructionTo < $carData['yearOfConstrTo'] || $modelConstructionTo == Model::COSTRUCTION_MAX_PERIOD){
-                        $model->setConstructionTo($carData['yearOfConstrTo']);
+                    if (!$modelConstructionTo || $modelConstructionTo < $carData['dateTo'] || $modelConstructionTo == Model::COSTRUCTION_MAX_PERIOD){
+                        $model->setConstructionTo($carData['dateTo']);
                         $this->entityManager->persist($model);
                         $this->entityManager->flush($model);
                     }
@@ -752,7 +721,7 @@ class ExternalManager
     /**
      * Обновление машин товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param Model $model
      * @param array $carData
        
@@ -783,12 +752,13 @@ class ExternalManager
           ["yearOfConstrFrom"] =>    int(200901)
           ["yearOfConstrTo"] =>      int(201512)
           ["rmiTypeId"] =>          int(67586)
-     * @param bool $addFlag
+     * 
+     * 
      */
-    public function updateGoodCar($good, $model, $carData, $addFlag)
+    public function updateGoodCar($good, $model, $carData)
     {
         if ($model){
-            $car = $this->addCar($model, ['tdId' => $carData['carId'], 'aplId' => 0, 'name' => $carData['typeName']]);
+            $car = $this->addCar($model, ['tdId' => $carData['id'], 'aplId' => 0, 'name' => $carData['name']]);
             if ($car){
                 $this->addVehicleDetailCar($car, $carData);
                 $goodCar = $this->entityManager->getRepository(Car::class)
@@ -806,7 +776,7 @@ class ExternalManager
     /**
      * Добавление машин к товару
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function addCarsToGood($good)
     {
@@ -815,36 +785,32 @@ class ExternalManager
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
         $updateStatuses = ['status_car' => Goods::CAR_UPDATED];
     
-        $cars = $this->abcpManager->adaptabilityManufacturers($good);
+        $cars = $this->zetasoftManager->getGoodLinked($good);
         if (is_array($cars)){
-            var_dump($cars); exit;
             $this->entityManager->getRepository(Goods::class)
                     ->removeGoodCars($good);                
             $updateStatuses['status_car_ex'] = Goods::CAR_EX_NEW;
                     
             $makes = [];
             $models = [];
-            foreach ($cars as $carData){
-                if (isset($carData['vehicleDetails'])){
-                    $vehicleDetails = $carData['vehicleDetails'];
-                    if (!isset($makes[$vehicleDetails['manuId']])){
-                        $makes[$vehicleDetails['manuId']] = $this->addMake([
-                            'tdId' => $vehicleDetails['manuId'], 
-                            'aplId' => 0, 
-                            'name' => $vehicleDetails['manuName']
-                        ]);
-                    }
-                    if (!isset($models[$vehicleDetails['modId']])){
-                        $models[$vehicleDetails['modId']] = $this->addModel(
-                                $makes[$vehicleDetails['manuId']],[
-                                    'tdId' => $vehicleDetails['modId'], 
-                                    'aplId' => 0, 
-                                    'name' => $vehicleDetails['modelName'],
-                                    'constructioninterval' => '',
-                                ]);
-                    }
-
-                    $this->updateGoodCar($good, $models[$vehicleDetails['modId']], $vehicleDetails, $addFlag);
+            foreach ($cars as $manufacturerId => $models){
+                foreach ($models as $modelId => $carData){
+                    if (isset($carData['data'])){
+                        foreach ($carData['data'] as $car){
+                            $make = $this->addMake([
+                                'tdId' => $car['manufacturerId'],
+                                'aplId' => 0,
+                                'name' => $car['manufacturerName'],
+                            ]);
+                            $model = $this->addModel($make, [
+                                'tdId' => $car['modelId'], 
+                                'aplId' => 0, 
+                                'name' => $car['modelName'],
+                                'constructioninterval' => '',
+                            ]);
+                            $this->updateGoodCar($good, $model, $car);
+                        }
+                    }                    
                 }    
             }
         }  
@@ -856,13 +822,13 @@ class ExternalManager
     /**
      * Добавление номеров к товару
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function addOemsToGood($good)
     {
-        $info = $this->autoDbManager->getDirectInfo($good, null, 'oe');
+        $info = $this->zetasoftManager->getDirectInfo($good);
         if (!is_array($info)){
-            $info = $this->autoDbManager->getSimilarDirectInfo($good, null, 'oe');
+            $info = $this->zetasoftManager->getSimilarDirectInfo($good);
             if (!is_array($info)){
                 $this->entityManager->getRepository(Goods::class)
                         ->removeGoodSourceOem($good, Oem::SOURCE_TD);
@@ -882,22 +848,24 @@ class ExternalManager
         $this->entityManager->getRepository(Oem::class)
                 ->addSupOem($good);
         $this->entityManager->getRepository(Oem::class)
-                ->addCrosOem($good);                                
+                ->addCrossOem($good);                                
         
         if (is_array($info)){
-            if ($info['change']){
-                if (isset($info['data'])){
-                    if (isset($info['data']['array'])){
-                        foreach ($info['data']['array'] as $infoArray){
-                            if (isset($infoArray['oenNumbers'])){
-                                if (isset($infoArray['oenNumbers']['array'])){
-                                    foreach ($infoArray['oenNumbers']['array'] as $oen){
-                                        $this->entityManager->getRepository(Oem::class)
-                                                ->addOemToGood($good, $oen, Oem::SOURCE_TD);
-                                    }
-                                }    
-                            }    
-                        }    
+            $change = $info['change'];
+            if (!$change){
+                $oemCount = $this->entityManager->getRepository(Oem::class)
+                        ->count(['good' => $good->getId(), 'source' => Oem::SOURCE_TD]);
+                $change = $oemCount === 0;
+            }
+            
+            if ($change){
+                if (isset($info['crossCodes'])){
+                    foreach ($info['crossCodes'] as $oen){
+                        $this->entityManager->getRepository(Oem::class)
+                                ->addOemToGood($good, [
+                                    'oeNumber' => $oen['vendorCode'],
+                                    'brandName' => $oen['vendorName'],
+                                ], Oem::SOURCE_TD);
                     }
                 }    
             }
@@ -911,23 +879,23 @@ class ExternalManager
     /**
      * Добавление номеров к товару
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function updateGoodGenericGroup($good)
     {
         $statusData = ['td_direct' => Goods::TD_NO_DIRECT];
         $genericArticleId = null;
         
-        $tdData = $this->autoDbManager->getBestArticle($good);
-        if (is_numeric($tdData['genericArticleId'])){
-            $genericArticleId = $tdData['genericArticleId'];
+        $tdData = $this->zetasoftManager->getBestArticle($good);
+        if (is_numeric($tdData['partGroupId'])){
+            $genericArticleId = $tdData['partGroupId'];
             $statusData = ['td_direct' => Goods::TD_DIRECT];
         }
-        
+
         if (!$genericArticleId){
-            $tdData = $this->autoDbManager->getSimilarArticle($good, true);
-            if (is_numeric($tdData['genericArticleId'])){
-                $genericArticleId = $tdData['genericArticleId'];
+            $tdData = $this->zetasoftManager->getSimilarArticle($good, true);
+            if (is_numeric($tdData['partGroupId'])){
+                $genericArticleId = $tdData['partGroupId'];
             }            
         }
 
@@ -981,15 +949,15 @@ class ExternalManager
     /**
      * Добавление атрибутов к товару
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function addAttributesToGood($good)
     {
         
-        $info = $this->autoDbManager->getDirectInfo($good, null, 'attr');
+        $info = $this->zetasoftManager->getDirectInfo($good);
         $similarGood = false;
         if (!is_array($info)){
-            $info = $this->autoDbManager->getSimilarDirectInfo($good, null, 'attr');
+            $info = $this->zetasoftManager->getSimilarDirectInfo($good, null, 'attr');
             $similarGood = true;
             if (!is_array($info)){
                 $this->entityManager->getRepository(Goods::class)
@@ -997,23 +965,21 @@ class ExternalManager
             }
         }
         if (is_array($info)){
-            if ($info['change']){
+            $change = $info['change'];
+            if (!$change){
+                $attrCount = $this->entityManager->getRepository(GoodAttributeValue::class)
+                        ->count(['good' => $good->getId()]);
+                $change = $attrCount === 0;
+            }
+            if ($change){
 
                 $this->entityManager->getRepository(Goods::class)
                         ->removeGoodAttributeValues($good);                
 
-                if (isset($info['data'])){
-                    if (isset($info['data']['array'])){
-                        foreach ($info['data']['array'] as $infoArray){
-                            if (isset($infoArray['articleAttributes'])){
-                                if (isset($infoArray['articleAttributes']['array'])){
-                                    foreach ($infoArray['articleAttributes']['array'] as $attr){
-                                        $this->entityManager->getRepository(GoodAttributeValue::class)
-                                                ->addGoodAttributeValue($good, $attr, $similarGood);
-                                    }
-                                }    
-                            }    
-                        }    
+                if (isset($info['properties'])){
+                    foreach ($info['properties'] as $attr){
+                        $this->entityManager->getRepository(GoodAttributeValue::class)
+                                ->addGoodAttributeValue($good, $attr, $similarGood);
                     }
                 }    
             }
@@ -1033,10 +999,10 @@ class ExternalManager
     public function addImageToGood($good)
     {
     
-        $this->entityManager->getRepository(\Application\Entity\Images::class)
+        $this->entityManager->getRepository(Images::class)
                 ->saveImageFromGoodRawprice($good);
         
-        $this->autoDbManager->getImages($good);
+        $this->zetasoftManager->getImages($good);
         
         $this->entityManager->getConnection()->update('goods', ['status_image' => Goods::IMAGE_UPDATED], ['id' => $good->getId()]);
         return;

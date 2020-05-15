@@ -10,6 +10,7 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Images;
+use Application\Entity\Goods;
 
 /**
  * Description of ImageRepository
@@ -26,7 +27,7 @@ class ImageRepository extends EntityRepository
     /**
      * Получить путь к папке с картинками
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param status integer
      * @return string
      */
@@ -38,7 +39,7 @@ class ImageRepository extends EntityRepository
     /**
      * Создать папку с картинками
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param integer $status
      */
     public function addImageFolder($good, $status)
@@ -69,7 +70,7 @@ class ImageRepository extends EntityRepository
     /*
      * Очистить содержимое папки c картинками товара
      * 
-     * @param \Application\Entity\Goods $folderName
+     * @param Goods $folderName
      * @param integer $status
      * 
      */
@@ -157,8 +158,8 @@ class ImageRepository extends EntityRepository
 
         if ($image == null){
             $this->getEntityManager()->getConnection()->insert('images', $data);
-            $this->getEntityManager()->getRepository(\Application\Entity\Goods::class)
-                    ->updateGoodId($data['good_id'], ['status_img_ex' => \Application\Entity\Goods::IMG_EX_NEW]);
+            $this->getEntityManager()->getRepository(Goods::class)
+                    ->updateGoodId($data['good_id'], ['status_img_ex' => Goods::IMG_EX_NEW]);
         }
        
        return;
@@ -170,7 +171,7 @@ class ImageRepository extends EntityRepository
      * 
      * @param string $filename
      * @param integer $status
-     * @return \Application\Entity\Goods 
+     * @return Goods 
      * 
      */
     public function findGoodByImageFileName($filename, $status)
@@ -184,7 +185,7 @@ class ImageRepository extends EntityRepository
         
         $filter = new \Application\Filter\ArticleCode();
         
-        $data = $this->getEntityManager()->getRepository(\Application\Entity\Goods::class)
+        $data = $this->getEntityManager()->getRepository(Goods::class)
                 ->findByCode($filter->filter($code));
         
         if (count($data) == 1){
@@ -256,7 +257,7 @@ class ImageRepository extends EntityRepository
     
     /**
      * Удаление картинок товара
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param integer $status
      * 
      */
@@ -273,7 +274,7 @@ class ImageRepository extends EntityRepository
     /**
      * Сохранить картинку товара по ссылке
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param string $uri
      * @param string $docFileName
      * @param integer $status
@@ -282,7 +283,6 @@ class ImageRepository extends EntityRepository
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
         $headers = get_headers($uri, 1);
-//        var_dump($headers);
         if (preg_match("|301|", $headers[0])){
             $uri = $headers['Location'];
             $headers = get_headers($uri);
@@ -290,7 +290,7 @@ class ImageRepository extends EntityRepository
         }
         
         if(preg_match("|200|", $headers[0])) {
-            $saveDocFileName = mb_ereg_replace("[\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`ÂÅÁÉËÖÜ]", '_',  $docFileName);
+            $saveDocFileName = mb_ereg_replace("[\\\/\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`ÂÅÁÉËÖÜ]", '_',  $docFileName);
             $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
             $image = file_get_contents($uri);
             if ($image){
@@ -314,7 +314,7 @@ class ImageRepository extends EntityRepository
     /**
      * Сохранить ссылку на картинку товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param string $url
      * @param string $docFileName
      * @param integer $status
@@ -339,11 +339,11 @@ class ImageRepository extends EntityRepository
     /**
      * Сохранить картинку из прайса
      * 
-     * @param \Application\Entyti\Goods $good
+     * @param Goods $good
      */
     public function saveImageFromGoodRawprice($good)
     {
-        $rawprices = $this->getEntityManager()->getRepository(\Application\Entity\Goods::class)
+        $rawprices = $this->getEntityManager()->getRepository(Goods::class)
                 ->rawpriceArticles($good);
         foreach ($rawprices as $rawprice){
             if ($rawprice->getImage()){
@@ -359,7 +359,7 @@ class ImageRepository extends EntityRepository
     /**
      * Сохранить картинку товара загруженная вручную
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @param string $path
      * @param integer $status
      * @param integer $similar

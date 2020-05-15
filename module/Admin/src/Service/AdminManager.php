@@ -26,6 +26,7 @@ class AdminManager {
     const TELEGRAM_SETTINGS_FILE       = './data/settings/telegram_config.php'; // файл с настройками telegram
     const ABCP_SETTINGS_FILE                    = './data/settings/abcp_config.php'; //файл с настройками abcp
     const AVTOIT_SETTINGS_FILE                    = './data/settings/avtoit_config.php'; //файл с настройками abcp
+    const ZETASOFT_SETTINGS_FILE                    = './data/settings/zetasoft_config.php'; //файл с настройками abcp
     const PARTS_API_SETTINGS_FILE      = './data/settings/parts_api_config.php'; //файл с настройками abcp
     
     /**
@@ -500,5 +501,54 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::AVTOIT_SETTINGS_FILE, $config);
+    }
+
+    /**
+     * Получить настройки Zetasoft
+     * 
+     * @return array
+     */
+    public function getZetasoftSettings()
+    {
+        if (file_exists(self::ZETASOFT_SETTINGS_FILE)){
+            $config = new Config(include self::ZETASOFT_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->zetasoft_settings = [];
+        }   
+        
+        return $config->zetasoft_settings;
+    }
+
+    
+    /**
+     * Настройки zetasoft
+     * @param array $data
+     */
+    public function setZetasoftSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::ZETASOFT_SETTINGS_FILE)){
+            $config = new Config(include self::ZETASOFT_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->zetasoft_settings = [];
+        }
+        
+        if (!isset($config->zetasoft_settings)){
+            $config->zetasoft_settings = [];
+        }
+        
+        $config->zetasoft_settings->host = $data['host'];
+        $config->zetasoft_settings->login = $data['login'];
+        $config->zetasoft_settings->md5_key = $data['md5_key'];
+        $config->zetasoft_settings->api_key = $data['api_key'];
+        $config->zetasoft_settings->max_query = $data['max_query'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::ZETASOFT_SETTINGS_FILE, $config);
     }
 }

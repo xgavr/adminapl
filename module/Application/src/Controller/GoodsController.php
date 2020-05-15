@@ -658,9 +658,9 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $data = $this->externalManager->autoDb('getInfo', ['good' => $goods]);
+        $data = $this->externalManager->zetasoft('getInfo', ['good' => $goods]);
         if (!$data){
-            $data = $this->externalManager->autoDb('getSimilarInfo', ['good' => $goods]);            
+            $data = $this->externalManager->zetasoft('getSimilarInfo', ['good' => $goods]);            
         }
         
         // Перенаправляем пользователя на страницу "goods".
@@ -682,7 +682,7 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $data = $this->externalManager->autoDb('getArticle', ['good' => $goods]);
+        $data = $this->externalManager->zetasoft('vendorCode', ['good' => $goods]);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([
@@ -724,7 +724,7 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $data = $this->externalManager->abcp('getLinked', ['good' => $goods]);
+        $data = $this->externalManager->zetasoft('getLinked', ['good' => $goods]);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

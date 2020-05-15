@@ -330,9 +330,9 @@ class NavManager
                 ];
 
                 $settingsDropDownItems[] = [
-                    'id' => 'avtoit',
-                    'label' => 'Настройи Avtoit',
-                    'link'  => $url('admin', ['action' => 'avtoit-settings'])                    
+                    'id' => 'zetasoft',
+                    'label' => 'Настройи ZetaSoft',
+                    'link'  => $url('admin', ['action' => 'zetasoft-settings'])                    
                 ];
                 $settingsDropDownItems[] = [
                     'id' => 'tdExchange',

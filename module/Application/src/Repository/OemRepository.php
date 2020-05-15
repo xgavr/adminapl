@@ -527,7 +527,7 @@ class OemRepository  extends EntityRepository{
      * 
      * @param Goods $good
      */
-    public function addCrosOem($good)
+    public function addCrossOem($good)
     {
         $this->getEntityManager()->getRepository(Goods::class)
                 ->removeGoodSourceOem($good, Oem::SOURCE_CROSS);

@@ -428,6 +428,7 @@ return [
             Service\ExternalDB\AutodbManager::class => Service\Factory\ExternalDB\AutodbManagerFactory::class,
             Service\ExternalDB\AvtoitManager::class => Service\Factory\ExternalDB\AvtoitManagerFactory::class,
             Service\ExternalDB\PartsApiManager::class => Service\Factory\ExternalDB\PartsApiManagerFactory::class,
+            Service\ExternalDB\ZetasoftManager::class => Service\Factory\ExternalDB\ZetasoftManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
             Service\ImageManager::class => Service\Factory\ImageManagerFactory::class,
             Service\MakeManager::class => Service\Factory\MakeManagerFactory::class,

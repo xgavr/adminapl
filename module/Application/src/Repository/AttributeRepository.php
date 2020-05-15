@@ -30,19 +30,20 @@ class AttributeRepository  extends EntityRepository{
     public function addAtribute($attr)
     {
         $attribute = $this->getEntityManager()->getRepository(Attribute::class)
-                ->findOneByTdId($attr['attrId']);
+                ->findOneByTdId($attr['id']);
 
         if ($attribute == null){
             $data = [
-                'td_id' => $attr['attrId'],
+                'td_id' => $attr['id'],
+                'value_id' => 0,
                 'block_no' => $attr['attrBlockNo'],
-                'is_conditional' => (int) boolval($attr['attrIsConditional']),
-                'is_interval' => (int) boolval($attr['attrIsInterval']),
-                'is_linked' => (int) boolval($attr['attrIsLinked']),
-                'value_type' => $attr['attrType'],
-                'value_unit' => (isset($attr['attrUnit'])) ? $attr['attrUnit']:'',
-                'name' => $attr['attrName'],
-                'short_name' => (isset($attr['attrShortName'])) ? $attr['attrShortName']:$attr['attrName'],
+                'is_conditional' => (int) boolval($attr['conditional']),
+                'is_interval' => (int) boolval($attr['interval']),
+                'is_linked' => (int) boolval($attr['applicable']),
+                'value_type' => substr($attr['type'], 0, 3),
+                'value_unit' => (isset($attr['unitName'])) ? $attr['unitName']:'',
+                'name' => $attr['name'],
+                'short_name' => (isset($attr['nameAbbreviation'])) ? $attr['nameAbbreviation']:$attr['name'],
                 'status' => Attribute::STATUS_ACTIVE,
                 'status_ex' => Attribute::EX_TO_TRANSFER,
             ];
@@ -50,7 +51,7 @@ class AttributeRepository  extends EntityRepository{
             $this->getEntityManager()->getConnection()->insert('attribute', $data);           
 
             $attribute = $this->getEntityManager()->getRepository(Attribute::class)
-                 ->findOneByTdId($attr['attrId']);
+                 ->findOneByTdId($attr['id']);
         }
         
         return $attribute;
@@ -88,13 +89,13 @@ class AttributeRepository  extends EntityRepository{
      */
     public function addAtributeValue($attr)
     {
-        $value = isset($attr['attrValue']) ? $attr['attrValue']:'';
+        $value = isset($attr['value']) ? $attr['value']:'';
         $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                ->findOneBy(['tdId' => $attr['attrValueId'], 'value' => $value]);
+                ->findOneBy(['tdId' => $attr['id'], 'value' => $value]);
 
         if ($attributeValue == null){
             $data = [
-                'td_id' => $attr['attrValueId'],
+                'td_id' => $attr['id'],
                 'value' => $value,
                 'status_ex' => AttributeValue::EX_TO_TRANSFER,
             ];
@@ -102,7 +103,7 @@ class AttributeRepository  extends EntityRepository{
             $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           
 
             $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                    ->findOneBy(['tdId' => $attr['attrValueId'], 'value' => $value]);
+                    ->findOneBy(['tdId' => $attr['id'], 'value' => $value]);
         }
         
         return $attributeValue;
@@ -137,7 +138,7 @@ class AttributeRepository  extends EntityRepository{
     public function addGoodAttributeValue($good, $attr, $similarGood = false)
     {
 
-        $attribute = $this->addAtribute($attr);
+        $attribute = $this->addAtribute($attr['property']);
         
         if ($attribute){            
             
@@ -147,7 +148,7 @@ class AttributeRepository  extends EntityRepository{
                 }
             }
             
-            $attributeValue = $this->addAtributeValue($attr);
+            $attributeValue = $this->addAtributeValue($attr['value']);
             
             if ($attributeValue){
                 $this->getEntityManager()->getRepository(Goods::class)

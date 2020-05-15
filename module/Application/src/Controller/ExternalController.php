@@ -16,19 +16,19 @@ class ExternalController extends AbstractActionController
    
     /**
     * Менеджер сущностей.
-    * @var Doctrine\ORM\EntityManager
+    * @var \Doctrine\ORM\EntityManager
     */
     private $entityManager;
     
     /**
      * Менеджер справочников.
-     * @var Application\Service\RbManager 
+     * @var \Application\Service\RbManager 
      */
     private $rbManager;    
     
     /**
      * Менеджер внешних баз.
-     * @var Application\Service\ExternalManager 
+     * @var \Application\Service\ExternalManager 
      */
     private $externalManager;    
     
@@ -108,6 +108,23 @@ class ExternalController extends AbstractActionController
             'message' => $result,
         ]);           
         
+    }
+    
+    public function zetasoftAction()
+    {
+        $action = $this->params()->fromQuery('action');
+        
+        if ($action == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $result = $this->externalManager->zetasoft($action);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'message' => $result,
+        ]);                   
     }
     
 }
