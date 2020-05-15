@@ -211,7 +211,7 @@ class ZetasoftManager
             $client->setUri($uri);
             $client->setAdapter($this::HTTPS_ADAPTER);
             $client->setMethod('GET');
-            $client->setOptions(['timeout' => 30]);
+            $client->setOptions(['timeout' => 60]);
 
             $headers = $client->getRequest()->getHeaders();
             $headers->addHeaders([
@@ -569,7 +569,7 @@ class ZetasoftManager
             'CabinsNames' => 'true',
             'PlatformCodes' => 'true',
             'Page' => 1,
-            'PerPage' => 100,
+            'PerPage' => 25,
             ]);
     }
     
