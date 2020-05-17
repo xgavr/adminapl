@@ -648,6 +648,7 @@ class ZetasoftManager
         }
         if (is_array($articleInfo)){
             $change = $articleInfo['change'];
+            var_dump($change);
             if (!$change){
                 $imgCount = $this->entityManager->getRepository(Images::class)
                         ->count(['good' => $good->getId(), 'status' => Images::STATUS_TD]);
