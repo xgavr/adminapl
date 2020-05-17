@@ -826,32 +826,31 @@ class ExternalManager
      */
     public function addOemsToGood($good)
     {
+        $notSimilar = true;
+        $change = false;
         $info = $this->zetasoftManager->getDirectInfo($good);
         if (!is_array($info)){
+            $notSimilar = false;                
             $info = $this->zetasoftManager->getSimilarDirectInfo($good);
-            if (!is_array($info)){
-                $this->entityManager->getRepository(Goods::class)
-                        ->removeGoodSourceOem($good, Oem::SOURCE_TD);
-                $this->entityManager->getRepository(Oem::class)
-                        ->removeIntersectOem($good);
-            }
         }
+        
         if (is_array($info)){
-            if ($info['change']){
-                $this->entityManager->getRepository(Goods::class)
-                        ->removeGoodSourceOem($good, Oem::SOURCE_TD);
-                $this->entityManager->getRepository(Oem::class)
-                        ->removeIntersectOem($good);
-            }            
+            $change = $info['change'];
         }
+        
+        if ($change || !$notSimilar){
+            $this->entityManager->getRepository(Goods::class)
+                    ->removeGoodSourceOem($good, Oem::SOURCE_TD);
+            $this->entityManager->getRepository(Oem::class)
+                    ->removeIntersectOem($good);
+        }    
         
         $this->entityManager->getRepository(Oem::class)
                 ->addSupOem($good);
         $this->entityManager->getRepository(Oem::class)
                 ->addCrossOem($good);                                
         
-        if (is_array($info)){
-            $change = $info['change'];
+        if (is_array($info) && $notSimilar){
             if (!$change){
                 $oemCount = $this->entityManager->getRepository(Oem::class)
                         ->count(['good' => $good->getId(), 'source' => Oem::SOURCE_TD]);
