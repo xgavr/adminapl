@@ -393,7 +393,7 @@ class ZetasoftManager
         
         if ($genericGroup->getTdId()>0){
             $result = $this->getVendorCodeAndPartGroup($good->getCode(), $genericGroup->getTdId());
-            if (isset($result['data'])){
+            if (isset($result['data'])){                
                 return $result;
             }
             
@@ -460,14 +460,17 @@ class ZetasoftManager
     {
         $filter = new ProducerName();
         $articles = $this->getVendorCode($good);
+        $change = $articles['change'];
         if ($articles['data']){
             foreach ($articles['data'] as $row){
                 foreach($good->getProducer()->getUnknownProducer() as $unknownProducer){
                     if ($filter->filter($row['vendorName']) == $filter->filter($unknownProducer->getName())){
+                        $row['change'] = $change;
                         return $row;
                     }
                     if ($unknownProducer->getNameTd()){
                         if ($filter->filter($row['vendorName']) == $filter->filter($unknownProducer->getNameTd())){
+                            $row['change'] = $change;
                             return $row;
                         }                        
                     }
@@ -643,10 +646,8 @@ class ZetasoftManager
                 $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);                
             }
         }
-        var_dump($articleInfo);
         if (is_array($articleInfo)){
             $change = $articleInfo['change'];
-            var_dump($change);
             if (!$change){
                 $imgCount = $this->entityManager->getRepository(Images::class)
                         ->count(['good' => $good->getId(), 'status' => Images::STATUS_TD]);
