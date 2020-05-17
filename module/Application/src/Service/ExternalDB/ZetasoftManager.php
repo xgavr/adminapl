@@ -200,11 +200,11 @@ class ZetasoftManager
             
             $result = $this->getResponseData($uri);
             if (is_array($result)){
-//                if (isset($body['status'])){
-//                    if ($body['status'] == 404){
-//                        return;
-//                    }
-//                }
+                if (isset($result['status'])){
+                    if ($result['status'] == 404){
+                        return;
+                    }
+                }
                 return $result;
             }
             
