@@ -200,6 +200,11 @@ class ZetasoftManager
             
             $result = $this->getResponseData($uri);
             if (is_array($result)){
+//                if (isset($body['status'])){
+//                    if ($body['status'] == 404){
+//                        return;
+//                    }
+//                }
                 return $result;
             }
             
@@ -228,6 +233,11 @@ class ZetasoftManager
                     $body = $response->getBody();
                     $result = Decoder::decode($body, \Zend\Json\Json::TYPE_ARRAY);
                     $result['change'] = $this->updateAutoDbResponse($uri, $body);
+                    if (isset($result['status'])){
+                        if ($result['status'] === 404){
+                            return;
+                        }
+                    }
                     return $result;            
                 } catch (\Zend\Json\Exception\RuntimeException $e){
                    // var_dump($response->getBody()); exit;
