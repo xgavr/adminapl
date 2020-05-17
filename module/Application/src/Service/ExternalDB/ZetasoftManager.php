@@ -307,7 +307,7 @@ class ZetasoftManager
         return $this->getAction('ru-ru/Part/VendorCode', [
             'vendorCode' => $good->getCode(),
             'vendorCodeStartsWith' => 'false',
-            'disableOem' => 'false',
+            'disableOem' => 'true',
             'NewVendorCodes' => 'true',
             'OldVendorCodes' => 'true',
             'Barcodes' => 'false',
@@ -321,7 +321,7 @@ class ZetasoftManager
             'Links' => 'false',
             'AnaloguesCodes' => 'true',
             'Page' => 1,
-            'PerPage' => 100,
+            'PerPage' => 25,
         ]);
     }
     
@@ -351,7 +351,7 @@ class ZetasoftManager
             'Links' => 'false',
             'AnaloguesCodes' => 'true',
             'Page' => 1,
-            'PerPage' => 100,
+            'PerPage' => 25,
         ]);
     }
     
@@ -466,29 +466,6 @@ class ZetasoftManager
         return;
     }
     
-    /**
-     * Получить группу текдока
-     * 
-     * @param Goods $good
-     * @param bool $newSearch
-     * 
-     * @return integer|null
-     */
-    public function getGenericArticleId($good, $newSearch = false)
-    {
-        $tdData = $this->getBestArticle($good);
-        if (is_numeric($tdData['genericArticleId'])){
-            return $tdData['genericArticleId'];
-        }
-        
-        $tdSimilarData = $this->getSimilarArticle($good, $newSearch);
-        if (is_numeric($tdSimilarData['genericArticleId'])){
-            return $tdSimilarData['genericArticleId'];
-        }
-        
-        return;
-    }
-
     /**
      * Получить информацию по товару
      * 
@@ -611,233 +588,6 @@ class ZetasoftManager
         }    
     }
         
-////////////////////////////////////////////////////////////////////////////////    
-    /**
-     * Получение модификации по идентификатору
-     * @param array $params
-     * @return array|Esception
-     */
-    public function getModification($params)
-    {
-        return $this->getAction('modification', ['modelVariant' => $params['modificationId']]);
-    }
-
-    /**
-     * Получение списка брендов
-     * @param array $params
-     * @return array|Esception
-     */
-    public function getBrands($params = null)
-    {
-        return $this->getAction('brands', $params);
-    }
-    
-    /**
-     * Поулчить бренд из неизвестного производителя
-     * 
-     * @param UnknownProducer $unknownProducer
-     * @param array $brands
-     * 
-     * @return string
-     */
-    public function brandFromUnknownProducer($unknownProducer, $brands = null)
-    {
-        if ($brands == null){
-            $brands = $this->getBrands();
-        }
-        
-        $filter = new ProducerName();
-        foreach ($brands as $row){
-            if ($filter->filter($row['name']) == $filter->filter($unknownProducer->getName())){
-                return $row['name'];
-            }            
-            if ($unknownProducer->getNameTd()){
-                if ($filter->filter($row['name']) == $filter->filter($unknownProducer->getNameTd())){
-                    return $row['name'];
-                }                        
-            }
-        }
-        
-        return;
-    }
-    
-    /**
-     * Получить бренд из производителя
-     * 
-     * @param Producer $producer
-     * @return string 
-     */
-    public function brandFromProducer($producer)
-    {
-        
-        $brands = $this->getBrands();
-        $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
-                ->findByProducer($producer->getId());
-        
-        foreach($unknownProducers as $unknownProducer){
-            $brandName = $this->brandFromUnknownProducer($unknownProducer, $brands);
-            if ($brandName){
-                return $brandName;
-            }
-        }        
-        
-        return;
-    }    
-    
-    /**
-     * Получить список производителей использующих деталь
-     * 
-     * @param Goods $good
-     * @param string $brandName
-     * @param string $manufacturerName
-     * @param string $modelName
-     */
-    protected function findBrandByPart($vehiclesTypeId, $partId)
-    {
-        return $this->getAction('find/brand-by-part/', [
-            'vehiclesTypeId' => $brandName, 
-            'partId' => $good->getCode(),
-            ]);                
-    }
-    
-    /**
-     * Возвращает список моделей, применимых для выбранной детали и производителю.
-     * 
-     * @param Goods $good
-     * @param string $brandName
-     * @param string $manufacturerName
-     * 
-     * @return array
-     */
-    protected function adaptabilityModels($good, $brandName, $manufacturerName)
-    {
-        $models = $this->getAction('adaptabilityModels', [
-            'brandName' => $brandName, 
-            'number' => $good->getCode(),
-            'manufacturerName' => $manufacturerName,
-            ]);
-        
-        $result = [];
-        if (is_array($models)){
-            foreach ($models as $modelName) {
-                $cars = $this->adaptabilityModifications($good, $brandName, $manufacturerName, $modelName);
-                if (is_array($cars)){
-                    $result = array_merge($result, $cars);
-                }    
-            }
-        }    
-        return $result;
-    }
-
-    /**
-     * Получение списка применимости
-     * 
-     * @param Goods $good
-     * @return array
-     */
-    public function adaptabilityManufacturers($good)
-    {
-        $brandName = $this->brandFromProducer($good->getProducer());
-        if ($brandName){
-            $manufacturers = $this->getAction('adaptabilityManufacturers', ['brandName' => $brandName, 'number' => $good->getCode()]);
-            $result = [];
-            if (is_array($manufacturers)){
-                foreach ($manufacturers as $manufacturer){
-                    $modelsCar = $this->adaptabilityModels($good, $brandName, $manufacturer['name']);
-                    if (is_array($modelsCar)){
-                        $result = array_merge($result, $modelsCar);
-                    }    
-                }
-            }    
-            return $result;
-        }
-        
-        return;
-    }
-
-    /**
-     * Получить articleId
-     * 
-     * @param Goods $good
-     * @param string $oper
-     * @return array|Esception
-     */
-    public function getArticleDirectSearchAllNumbersWithState($good, $oper = null)
-    {
-        $params = [
-            'articleNumber' => $good->getCode(), 
-            'articleCountry' => 'RU',            
-            'numberType' => 0,
-            'searchExact' => true,
-        ];
-        
-        $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params, $good->getId(), $oper);
-
-        if (isset($result['data'])){
-            if (isset($result['data']['array'])){
-                return $result;
-            }
-        }
-        
-        $params['numberType'] = 10;
-        $result = $this->getAction('getArticleDirectSearchAllNumbersWithState', $params, $good->getId(), $oper);            
-
-        if (isset($result['data'])){
-            if (isset($result['data']['array'])){
-                return $result;
-            }
-        }
-        
-        return;
-    }
-    
-
-    /**
-     * Получить машины, связанные с артикулом
-     * 
-     * @param integer $tdId
-     * @param integer $goodId
-     * @param string $oper
-     * @return array|null
-     */
-    public function getLinked($tdId, $goodId = null, $oper = null)
-    {
-        $cars = $this->getArticleLinkedAllLinkingTarget3($tdId, $goodId, $oper);
-        $carIds = [];
-        $i = 0;
-        if (isset($cars['data'])){
-            if (isset($cars['data']['array'])){
-                foreach ($cars['data']['array'] as $links){
-                    if (isset($links['articleLinkages'])){
-                        if (isset($links['articleLinkages']['array'])){
-                            foreach ($links['articleLinkages']['array'] as $carLinks){
-                                if (isset($carLinks['linkingTargetId'])){
-                                    $carIds[$i][] = $carLinks['linkingTargetId'];
-                                    if (count($carIds[$i]) > 20){
-                                        $i++;
-                                    }
-                                }    
-                            }
-                        }    
-                    }    
-                }
-            }    
-        }    
-
-        if (count($carIds)){
-            $result = [];
-            $result['change'] = $cars['change'];
-            foreach($carIds as $key => $value){
-                $result[$key] = $this->getVehicleByIds3($value);
-            } 
-            
-            return $result;
-        }
-        
-        return;
-        
-    }
-
     /**
      * Получить машины, связанные с похожим товаром
      * 
@@ -846,10 +596,10 @@ class ZetasoftManager
      */
     public function getSimilarGoodLinked($good)
     {
-        $article = $this->getSimilarArticleId($good);        
-        return $this->getLinked($article);        
+        $article = $this->getSimilarArticle($good);        
+        return $this->getGoodLinked($article);        
     }
-    
+
     /**
      * Получить картинку по номеру документа
      * 
@@ -913,4 +663,5 @@ class ZetasoftManager
         
         return;
     }    
+    
 }

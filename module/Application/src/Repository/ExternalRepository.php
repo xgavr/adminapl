@@ -86,7 +86,7 @@ class ExternalRepository extends EntityRepository
      */
     public function deleteOld($uriMd5 = null)
     {
-        $dateAgo = new \DateTime('3 month ago');
+        $dateAgo = new \DateTime('1 year ago');
         
         $entityManager = $this->getEntityManager();
 
