@@ -317,7 +317,7 @@ class ZetasoftManager
     public function getVendorCode($good)
     {
         return $this->getAction('ru-ru/Part/VendorCode', [
-            'vendorCode' => $good->getCode(),
+            'vendorCode' => urlencode($good->getCode()),
             'vendorCodeStartsWith' => 'false',
             'disableOem' => 'true',
             'NewVendorCodes' => 'true',
@@ -347,7 +347,7 @@ class ZetasoftManager
     public function getVendorCodeAndPartGroup($vendorCode, $partGroupId)
     {
         return $this->getAction('ru-ru/Part/VendorCodeAndPartGroup', [
-            'vendorCode' => $vendorCode,
+            'vendorCode' => urlencode($vendorCode),
             'partGroupId' => $partGroupId,
             'vendorCodeStartsWith' => 'false',
             'NewVendorCodes' => 'true',
@@ -514,8 +514,8 @@ class ZetasoftManager
     public function getManufacturers($vendorCode, $vendorName)
     {
         return $this->getAction('ru-ru/Manufacturer/Part', [
-            'VendorCode' => $vendorCode,
-            'VendorName' => $vendorName,
+            'VendorCode' => urlencode($vendorCode),
+            'VendorName' => urlencode($vendorName),
             'types' => 'All',
             'popular' => 'true',
                 ]);
@@ -531,8 +531,8 @@ class ZetasoftManager
     public function getModels($vendorCode, $vendorName, $manufacturerId)
     {
         return $this->getAction('ru-ru/Model/Part', [
-            'VendorCode' => $vendorCode,
-            'VendorName' => $vendorName,
+            'VendorCode' => urlencode($vendorCode),
+            'VendorName' => urlencode($vendorName),
             'manufacturerId' => $manufacturerId, 
             'types' => 'All',
             'popular' => 'true',
@@ -550,8 +550,8 @@ class ZetasoftManager
     public function getModifications($vendorCode, $vendorName, $manufacturerId, $modelId)
     {
         return $this->getAction('ru-ru/Modification/Part', [
-            'VendorCode' => $vendorCode,
-            'VendorName' => $vendorName,
+            'VendorCode' => urlencode($vendorCode),
+            'VendorName' => urlencode($vendorName),
             'manufacturerId' => $manufacturerId, 
             'modelId' => $modelId,
             'types' => 'All',
