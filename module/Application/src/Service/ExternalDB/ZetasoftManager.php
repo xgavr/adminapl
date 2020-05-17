@@ -345,9 +345,6 @@ class ZetasoftManager
      */
     public function getVendorCodeAndPartGroup($vendorCode, $partGroupId)
     {
-            var_dump($vendorCode);
-            var_dump($partGroupId); exit;
-        
         return $this->getAction('ru-ru/Part/VendorCodeAndPartGroup', [
             'vendorCode' => $vendorCode,
             'partGroupId' => $partGroupId,
