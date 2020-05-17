@@ -571,7 +571,7 @@ class ZetasoftManager
     public function getGoodLinked($good)
     {
         $article = $this->getBestArticle($good);  
-        var_dump($article); exit;
+//        var_dump($article); exit;
         if (!$article){
             $article = $this->getSimilarArticle($good);
         }
@@ -646,6 +646,7 @@ class ZetasoftManager
         
         if (is_array($articleInfo)){
             $change = $articleInfo['change'];
+            var_dump($change);
             if (!$change){
                 $imgCount = $this->entityManager->getRepository(Images::class)
                         ->count(['good' => $good->getId(), 'status' => Images::STATUS_TD]);
