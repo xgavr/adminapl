@@ -440,7 +440,9 @@ class ZetasoftManager
         
         if (isset($articles['data'])){
             if (isset($articles['data'])){
+                $change = $articles['change'];
                 foreach ($articles['data'] as $row){
+                    $row['change'] = $change;
                     return $row;
                 }
             }    
@@ -647,8 +649,10 @@ class ZetasoftManager
             }
         }
         if (is_array($articleInfo)){
-            $change = $articleInfo['change'];
-            var_dump($change);
+            $change = false;
+            if (isset($articleInfo['change'])){
+                $change = $articleInfo['change'];
+            }    
             if (!$change){
                 $imgCount = $this->entityManager->getRepository(Images::class)
                         ->count(['good' => $good->getId(), 'status' => Images::STATUS_TD]);
