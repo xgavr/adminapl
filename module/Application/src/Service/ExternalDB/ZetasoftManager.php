@@ -380,6 +380,8 @@ class ZetasoftManager
         }
         
         if ($genericGroup->getTdId()>0){
+            var_dump($good->getCode());
+            var_dump($genericGroup->getTdId()); exit;
             $result = $this->getVendorCodeAndPartGroup($good->getCode(), $genericGroup->getTdId());
             if (isset($result['data'])){
                 return $result;
