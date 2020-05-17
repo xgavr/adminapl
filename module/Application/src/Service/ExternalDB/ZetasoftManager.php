@@ -89,7 +89,7 @@ class ZetasoftManager
      * @param string $response
      * @return boolean
      */
-    private function updateAutoDbResponse($uri, $response)
+    private function updateAutoDbResponse($uri, $response = null)
     {
         $autoDbResponse = $this->entityManager->getRepository(AutoDbResponse::class)
                 ->findOneByUriMd5(md5(mb_strtoupper(trim($uri), 'UTF-8')));
@@ -223,7 +223,7 @@ class ZetasoftManager
 
             $response = $client->send();
 //            var_dump($response->getContent());exit;
-            if ($response->isOk()){
+            if ($response->isOk() || $response->isNotFound()){
                 try {
                     $body = $response->getBody();
                     $result = Decoder::decode($body, \Zend\Json\Json::TYPE_ARRAY);
@@ -232,9 +232,6 @@ class ZetasoftManager
                 } catch (\Zend\Json\Exception\RuntimeException $e){
                    // var_dump($response->getBody()); exit;
                 }    
-            } elseif ($response->isNotFound()) {
-                $result = Decoder::decode($body, \Zend\Json\Json::TYPE_ARRAY);
-                $this->updateAutoDbResponse($uri, $body);                
             } else {
                 return;
 //                var_dump($response->getBody()); exit;                
