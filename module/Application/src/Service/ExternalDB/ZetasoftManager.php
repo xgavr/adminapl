@@ -477,7 +477,7 @@ class ZetasoftManager
      */
     public function getDirectInfo($good)
     {
-        return $this->getBestArticle($good, $oper);        
+        return $this->getBestArticle($good);        
     }
 
     /**
@@ -561,7 +561,8 @@ class ZetasoftManager
      */
     public function getGoodLinked($good)
     {
-        $article = $this->getBestArticle($good);    
+        $article = $this->getBestArticle($good);  
+        var_dump($article); exit;
         if (!$article){
             $article = $this->getSimilarArticle($good);
         }

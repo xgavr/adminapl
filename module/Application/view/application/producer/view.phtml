@@ -20,7 +20,7 @@ $this->headScript()
             ; 
 
 $unknownProducerQueryId = null;
-if ($unknownProducerQuery){
+if (isset($unknownProducerQuery)){
     $unknownProducerQueryId = $unknownProducerQuery->getId();
 }    
 
