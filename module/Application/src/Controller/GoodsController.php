@@ -16,14 +16,9 @@ use Application\Entity\Raw;
 use Application\Entity\Images;
 use Application\Entity\Rate;
 use Application\Entity\TitleToken;
-use Application\Entity\TitleBigram;
 use Application\Form\GoodsForm;
 use Application\Form\GoodSettingsForm;
 use Application\Form\UploadForm;
-
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
 
 class GoodsController extends AbstractActionController
 {

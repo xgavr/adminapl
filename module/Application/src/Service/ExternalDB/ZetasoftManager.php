@@ -334,6 +334,9 @@ class ZetasoftManager
      */
     public function getVendorCodeAndPartGroup($vendorCode, $partGroupId)
     {
+            var_dump($vendorCode);
+            var_dump($partGroupId); exit;
+        
         return $this->getAction('ru-ru/Part/VendorCodeAndPartGroup', [
             'vendorCode' => $vendorCode,
             'partGroupId' => $partGroupId,
@@ -380,8 +383,6 @@ class ZetasoftManager
         }
         
         if ($genericGroup->getTdId()>0){
-            var_dump($good->getCode());
-            var_dump($genericGroup->getTdId()); exit;
             $result = $this->getVendorCodeAndPartGroup($good->getCode(), $genericGroup->getTdId());
             if (isset($result['data'])){
                 return $result;
