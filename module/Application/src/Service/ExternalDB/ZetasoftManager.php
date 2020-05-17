@@ -643,7 +643,7 @@ class ZetasoftManager
                 $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);                
             }
         }
-        
+        var_dump($articleInfo);
         if (is_array($articleInfo)){
             $change = $articleInfo['change'];
             var_dump($change);
