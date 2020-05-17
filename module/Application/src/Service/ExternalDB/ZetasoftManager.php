@@ -232,8 +232,12 @@ class ZetasoftManager
                 } catch (\Zend\Json\Exception\RuntimeException $e){
                    // var_dump($response->getBody()); exit;
                 }    
+            } elseif ($response->isNotFound()) {
+                $result = Decoder::decode($body, \Zend\Json\Json::TYPE_ARRAY);
+                $this->updateAutoDbResponse($uri, $body);                
             } else {
-                var_dump($response->getBody()); exit;                
+                return;
+//                var_dump($response->getBody()); exit;                
             }
         }        
 
