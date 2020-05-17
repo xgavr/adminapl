@@ -205,6 +205,7 @@ class ZetasoftManager
                         return;
                     }
                 }
+                $result['change'] = true;
                 return $result;
             }
             
