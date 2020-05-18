@@ -245,7 +245,7 @@ class ZetasoftManager
                 }    
             } else {
                 return;
-//                var_dump($response->getBody()); exit;                
+                var_dump($response->getBody()); exit;                
             }
         }        
 
