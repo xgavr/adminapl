@@ -243,9 +243,10 @@ class ZetasoftManager
                 } catch (\Zend\Json\Exception\RuntimeException $e){
                    // var_dump($response->getBody()); exit;
                 }    
+            } elseif ($response->getStatusCode() === 402){   
+                throw new \Exception("Оплаченный лимит исчерпан");
             } else {
-                return;
-                var_dump($response->getBody()); exit;                
+                throw new \Exception("Неизвестная ошибка");
             }
         }        
 
