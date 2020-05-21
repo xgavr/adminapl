@@ -212,7 +212,7 @@ class ZetasoftManager
             if ($settings['max_query'] <= $this->getResponseTodayCount()){
                 throw new \Exception("Достигнут лимит запросов {$settings['max_query']}");
             }
-            var_dump($uri); exit;
+//            var_dump($uri); exit;
             $client = new Client();
             $client->setUri($uri);
             $client->setAdapter($this::HTTPS_ADAPTER);
