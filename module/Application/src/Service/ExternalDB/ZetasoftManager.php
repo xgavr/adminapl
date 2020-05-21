@@ -246,7 +246,7 @@ class ZetasoftManager
             } elseif ($response->getStatusCode() === 402){   
                 throw new \Exception("Оплаченный лимит исчерпан");
             } else {
-                throw new \Exception("Неизвестная ошибка");
+                throw new \Exception($response->getStatusCode()." Неизвестная ошибка");
             }
         }        
 
