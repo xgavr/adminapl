@@ -1203,7 +1203,7 @@ class AplService {
 
         foreach ($rawprices as $rawprice){
             $key =  md5($rawprice->getRaw()->getSupplier()->getAplId().":".$codeFilter->filter($rawprice->getCode()->getCode()).":".$nameFilter->filter($rawprice->getUnknownProducer()));
-            $post['rawprices'] = [
+            $post['rawprices'][] = [
                 'key' => $key,
                 'parent' => $rawprice->getCode()->getGood()->getAplId(),
                 'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
