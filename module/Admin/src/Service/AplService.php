@@ -27,6 +27,8 @@ use Application\Entity\AttributeValue;
 use Company\Entity\Contract;
 use Application\Entity\PriceGetting;
 use Zend\Http\Client;
+use Application\Filter\ArticleCode;
+use Application\Filter\ProducerName;
 
 /**
  * Description of AplService
@@ -1195,34 +1197,38 @@ class AplService {
         ];
         
         $result = count($rawprices);
+        
+        $codeFilter = new ArticleCode();
+        $nameFilter = new ProducerName();
 
         foreach ($rawprices as $rawprice){
-            $post['rawprices'][$rawprice->getId()] = [                
-                'key'       => $rawprice->getId(),
-                'type'      => $rawprice->getRaw()->getId(),
-                'parent'    => $rawprice->getCode()->getGood()->getAplId(),
-                'created'   => $rawprice->getDateCreated(),
-                'article'   => $rawprice->getArticle(),
-                'producer'  => $rawprice->getProducer(),
-                'goodname'  => $rawprice->getGoodname(),
-                'price'     => $rawprice->getRealPrice(),
-                'rest'      => $rawprice->getRealRest(),
-                'iid'       => $rawprice->getIid(),
-                'lot'       => $rawprice->getLot(),
-                'unit'      => $rawprice->getUnit(),
-                'bar'       => $rawprice->getBar(),
-                'currency'  => $rawprice->getCurrency(),
-                'weight'    => $rawprice->getWeight(),
-                'country'   => $rawprice->getCountry(),
-                'markdown'  => $rawprice->getMarkdown(),
-                'sale'      => $rawprice->getSale(),
-                'pack'      => $rawprice->getPack(),
-                'name'      => $rawprice->getRaw()->getSupplier()->getAplId(),
-                'publish'   => $rawprice->getStatusAsAplPublish(),
+            $key =  md5($rawprice->getRaw()->getSupplier()->getAplId().":".$codeFilter->filter($rawprice->getCode()->getCode()).":".$nameFilter->filter($rawprice->getUnknownProducer()));
+            $post['rawprices'] = [
+                'key' => $key,
+                'parent' => $rawprice->getCode()->getGood()->getAplId(),
+                'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
+                'art' => $codeFilter->filter($rawprice->getCode()->getCode()),
+                'price' => $rawprice->getRealPrice(),
+                'desc' => 'col0=adm|'
+                . 'col1='.$rawprice->getArticle().'|'
+                . 'col2='.$rawprice->getProducer().'|'
+                . 'col3='.$rawprice->getGoodname().'|'
+                . 'col4='.$rawprice->getRealPrice().'|'
+                . 'col5='.$rawprice->getRealRest().'|'
+                . 'col6='.$rawprice->getIid().'|'
+                . 'col7='.$rawprice->getLot().'|'
+                . 'col8='.$rawprice->getUnit().'|'
+                . 'col9='.$rawprice->getBar().'|'
+                . 'col10='.$rawprice->getCurrency().'|'
+                . 'col11='.$rawprice->getWeight().'|'
+                . 'col12='.$rawprice->getCountry().'|'
+                . 'col13='.$rawprice->getMarkdown().'|'
+                . 'col14='.$rawprice->getSale().'|'
+                . 'col15='.$rawprice->getPack().'|'
             ]; 
         }
 
-//        var_dump($post); //exit;
+        var_dump($post); //exit;
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');

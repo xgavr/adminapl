@@ -140,8 +140,8 @@ class ExternalManager
         switch($action){
             case 'ping': $result = $this->zetasoftManager->ping(); break;
 //            case 'token': $result = $this->zetasoftManager->token(); break;
-            case 'vendorCode': $result = $this->zetasoftManager->getVendorCode($params['good']); break;
-//            case 'vendorCode': $result = $this->zetasoftManager->getVendorCodeV2($params['good']); break;
+//            case 'vendorCode': $result = $this->zetasoftManager->getVendorCode($params['good']); break;
+            case 'vendorCode': $result = $this->zetasoftManager->getVendorCodeV2($params['good']); break;
             case 'getPartGroup': $result = $this->zetasoftManager->getPartGroups(); break;
             case 'getLinked': $result = $this->zetasoftManager->getGoodLinked($params['good']); break;
             case 'сriteria': $result = $this->zetasoftManager->getCriteria2(); break;
