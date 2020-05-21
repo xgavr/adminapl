@@ -448,7 +448,7 @@ class ZetasoftManager
         }
         
         if ($genericGroup->getTdId()>0){
-            $result = $this->getVendorCodeAndPartGroupV2($good->getCode(), $genericGroup->getTdId());
+            $result = $this->getVendorCodeAndPartGroup($good->getCode(), $genericGroup->getTdId());
             if (isset($result['data'])){                
                 return $result;
             }
@@ -458,7 +458,7 @@ class ZetasoftManager
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){
-                $result = $this->getVendorCodeAndPartGroupV2($oem->getOe(), $genericGroup->getTdId());
+                $result = $this->getVendorCodeAndPartGroup($oem->getOe(), $genericGroup->getTdId());
                 if (isset($result['data'])){
                     return $result;
                 }
