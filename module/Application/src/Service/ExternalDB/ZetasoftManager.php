@@ -339,6 +339,33 @@ class ZetasoftManager
     }
     
     /**
+     * Найти запчасти по коду (артикулу) (уточнение бренда)
+     * 
+     * @param Goods $good
+     * @return array|Esception
+     */
+    public function getVendorCodeV2($good)
+    {
+        return $this->getAction('ru-ru/v2/Part/VendorCode', [
+            'vendorCode' => urlencode($good->getCode()),
+            'vendorCodeStartsWith' => 'false',
+            'disableOem' => 'true',
+            'NewVendorCodes' => 'false',
+            'OldVendorCodes' => 'false',
+            'Barcodes' => 'false',
+            'TradeCodes' => 'false',
+            'OemCodes' => 'true',
+            'KitCodes' => 'true',
+            'Properties' => 'true',
+            'Documents' => 'false',
+            'TechnicalInformation' => 'false',
+            'Images' => 'true',
+            'Links' => 'false',
+            'AnaloguesCodes' => 'true',
+        ]);
+    }
+    
+    /**
      * Найти запчасти по коду (артикулу) и идентификатору группы запчастей
      * 
      * @param string $vendorCode
@@ -369,6 +396,34 @@ class ZetasoftManager
     }
     
     /**
+     * Найти запчасти по коду (артикулу) и идентификатору группы запчастей
+     * 
+     * @param string $vendorCode
+     * @param integr $partGroupId
+     * @return array|Exception
+     */
+    public function getVendorCodeAndPartGroupV2($vendorCode, $partGroupId)
+    {
+        return $this->getAction('ru-ru/v2/Part/VendorCodeAndPartGroup', [
+            'vendorCode' => urlencode($vendorCode),
+            'partGroupId' => $partGroupId,
+            'vendorCodeStartsWith' => 'false',
+            'NewVendorCodes' => 'false',
+            'OldVendorCodes' => 'false',
+            'Barcodes' => 'false',
+            'TradeCodes' => 'false',
+            'OemCodes' => 'true',
+            'KitCodes' => 'true',
+            'Properties' => 'true',
+            'Documents' => 'false',
+            'TechnicalInformation' => 'false',
+            'Images' => 'true',
+            'Links' => 'false',
+            'AnaloguesCodes' => 'true',
+        ]);
+    }
+    
+    /**
      * Получить полный список групп запчастей
      * 
      * @return array
@@ -393,7 +448,7 @@ class ZetasoftManager
         }
         
         if ($genericGroup->getTdId()>0){
-            $result = $this->getVendorCodeAndPartGroup($good->getCode(), $genericGroup->getTdId());
+            $result = $this->getVendorCodeAndPartGroupV2($good->getCode(), $genericGroup->getTdId());
             if (isset($result['data'])){                
                 return $result;
             }
@@ -403,7 +458,7 @@ class ZetasoftManager
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){
-                $result = $this->getVendorCodeAndPartGroup($oem->getOe(), $genericGroup->getTdId());
+                $result = $this->getVendorCodeAndPartGroupV2($oem->getOe(), $genericGroup->getTdId());
                 if (isset($result['data'])){
                     return $result;
                 }

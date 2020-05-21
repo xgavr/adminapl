@@ -122,7 +122,7 @@ class ArticleManager
     
     /**
      * Обновление средней ценыи остатка артикула
-     * @param \Application\Entity\Article $article
+     * @param Article $article
      * @return null
      */
     public function updatePriceRest($article)

@@ -13,6 +13,7 @@ use Application\Entity\Producer;
 use Application\Entity\Tax;
 use Application\Entity\Images;
 use Application\Entity\Rawprice;
+use Application\Entity\Raw;
 use Application\Entity\Attribute;
 use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
@@ -129,7 +130,7 @@ class GoodsManager
     /**
      * Обновить наименование товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      * @param string $name
      */
     public function updateGoodName($good, $name)
@@ -142,7 +143,7 @@ class GoodsManager
     /**
      * Проверка возможности удаления товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      * @return boolean
      */
     public function allowRemove($good)
@@ -153,7 +154,7 @@ class GoodsManager
     /**
      * Удалене карточки товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function removeGood($good) 
     {   
@@ -249,7 +250,7 @@ class GoodsManager
     /**
      * Получить картинки товара
      * 
-     * @param Application\Entity\Goods $good
+     * @param Goods $good
      * @return array
      */
     public function images($good)
@@ -511,7 +512,7 @@ class GoodsManager
     
     /**
      * Получить массив цен товара
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      * @return array
      */
     public function rawpricesPrices($good)
@@ -572,7 +573,7 @@ class GoodsManager
     /**
      * Проверка цены из прайса
      * 
-     * @param \Application\Entity\Rawprice $rawprice
+     * @param Rawprice $rawprice
      * @param array $prices
      * 
      * @return bool
@@ -665,7 +666,7 @@ class GoodsManager
     
     /**
      * Пересчет цен товаров прайса
-     * @param Appllication\Entity\Raw $raw
+     * @param Raw $raw
      */
     public function updatePricesRaw($raw)
     {
@@ -691,9 +692,8 @@ class GoodsManager
             }
         }
         
-        $raw->setParseStage(\Application\Entity\Raw::STAGE_PRICE_UPDATET);
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush();
+        $this->entityManager->getRepository(Raw::class)
+                ->updateRawParseStage($raw, Raw::STAGE_PRICE_UPDATET); 
         
         return;
     }

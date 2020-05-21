@@ -17,8 +17,13 @@ use User\Entity\User;
 use Company\Entity\Office;
 use Application\Entity\Contact;
 use Application\Entity\Supplier;
+use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
+use Application\Entity\Model;
+use Application\Entity\Car;
+use Application\Entity\Attribute;
+use Application\Entity\AttributeValue;
 use Company\Entity\Contract;
 use Application\Entity\PriceGetting;
 use Zend\Http\Client;
@@ -728,7 +733,7 @@ class AplService {
     
     /**
      * Получить код товара
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */ 
     public function getGoodAplId($good)
     {
@@ -805,7 +810,7 @@ class AplService {
     
     /**
      * Получить код группы товара
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */ 
     public function getGroupAplId($good)
     {
@@ -991,7 +996,7 @@ class AplService {
     /**
      * Обновление aplId моделей авто
      * 
-     * @param \Application\Entity\Model $model
+     * @param Model $model
      * @return null
      */
     public function getModelAplId($model)
@@ -1025,7 +1030,7 @@ class AplService {
                 if (is_numeric($response->getBody())){
 //                        var_dump($response);
                     $model->setAplId($response->getBody());
-                    $model->setTransferFlag(\Application\Entity\Model::TRANSFER_YES);
+                    $model->setTransferFlag(Model::TRANSFER_YES);
                     $this->entityManager->persist($model);
                     $this->entityManager->flush($model);
                     return;
@@ -1043,8 +1048,8 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $models = $this->entityManager->getRepository(\Application\Entity\Model::class)
-                ->findBy(['status' => \Application\Entity\Model::STATUS_ACTIVE, 'transferFlag' => \Application\Entity\Model::TRANSFER_NO]);
+        $models = $this->entityManager->getRepository(Model::class)
+                ->findBy(['status' => Model::STATUS_ACTIVE, 'transferFlag' => Model::TRANSFER_NO]);
         foreach ($models as $model){
             $this->getModelAplId($model);
             if (time() > $startTime + 1740){
@@ -1059,7 +1064,7 @@ class AplService {
     /**
      * Обновление aplId машин
      * 
-     * @param \Application\Entity\Car $car
+     * @param Car $car
      * @return null
      */
     public function getCarAplId($car)
@@ -1101,7 +1106,7 @@ class AplService {
                     if (is_numeric($response->getBody())){
     //                        var_dump($response);
                         $car->setAplId($response->getBody());
-                        $car->setTransferFlag(\Application\Entity\Car::TRANSFER_YES);
+                        $car->setTransferFlag(Car::TRANSFER_YES);
                         $this->entityManager->persist($car);
                         $this->entityManager->flush($car);
                         return;
@@ -1120,8 +1125,8 @@ class AplService {
         set_time_limit(1800);
         $startTime = time();
         
-        $cars = $this->entityManager->getRepository(\Application\Entity\Car::class)
-                ->findBy(['status' => \Application\Entity\Car::STATUS_ACTIVE, 'updateFlag' => date('m'), 'transferFlag' => \Application\Entity\Car::TRANSFER_NO], null, 1000);
+        $cars = $this->entityManager->getRepository(Car::class)
+                ->findBy(['status' => Car::STATUS_ACTIVE, 'updateFlag' => date('m'), 'transferFlag' => Car::TRANSFER_NO], null, 1000);
         foreach ($cars as $car){
             $this->getCarAplId($car);
             if (time() > $startTime + 1740){
@@ -1145,11 +1150,11 @@ class AplService {
         $data = Json::decode(file_get_contents($url), Json::TYPE_ARRAY);
         if (is_array($data)){
             foreach ($data as $row){
-                $payment = $this->entityManager->getRepository(\Bank\Entity\AplPayment::class)
+                $payment = $this->entityManager->getRepository(AplPayment::class)
                         ->findOneByAplPaymentId($row['id']);
                 if ($payment == null){
 
-                    $payment = new \Bank\Entity\AplPayment();
+                    $payment = new AplPayment();
                     $payment->setAplPaymentId($row['id']);
                     $payment->setAplPaymentDate($row['created']);
                     $payment->setAplPaymentSum($row['sort']);
@@ -1313,7 +1318,7 @@ class AplService {
     /**
      * Удалить прайс
      * 
-     * @param \Application\Entity\Raw $raw
+     * @param Raw $raw
      */
     public function deleteRaw($raw)
     {
@@ -1354,8 +1359,8 @@ class AplService {
         set_time_limit(900);
         $startTime = time();
 
-        $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                ->findBy(['statusEx' => \Application\Entity\Raw::EX_TO_DELETE], null, 5);
+        $raws = $this->entityManager->getRepository(Raw::class)
+                ->findBy(['statusEx' => Raw::EX_TO_DELETE], null, 5);
 
         foreach ($raws as $raw){
             $result = $this->deleteRaw($raw);
@@ -1373,7 +1378,7 @@ class AplService {
     /**
      * Обновить номера товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function sendGoodOem($good)
     {
@@ -1467,7 +1472,7 @@ class AplService {
     /**
      * Обновить картинки товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function sendGoodImg($good)
     {
@@ -1560,7 +1565,7 @@ class AplService {
     /**
      * Обновить группу товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function sendGroup($good)
     {
@@ -1634,7 +1639,7 @@ class AplService {
     /**
      * Обновить машины товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function sendGoodCar($good)
     {
@@ -1723,7 +1728,7 @@ class AplService {
      /**
      * Обновить aplId атрибутов
      * 
-     * @param \Application\Entity\Attribute $attribute
+     * @param Attribute $attribute
      * @return null
      */
     public function getAttributeAplId($attribute)
@@ -1773,8 +1778,8 @@ class AplService {
      */
     public function updateAttributeAplId()
     {
-        $attributes = $this->entityManager->getRepository(\Application\Entity\Attribute::class)
-                ->findBy(['statusEx' => \Application\Entity\Attribute::EX_TO_TRANSFER]);
+        $attributes = $this->entityManager->getRepository(Attribute::class)
+                ->findBy(['statusEx' => Attribute::EX_TO_TRANSFER]);
         
         foreach ($attributes as $attribute){
             $this->getAttributeAplId($attribute);
@@ -1816,7 +1821,7 @@ class AplService {
 //                var_dump($response->getBody()); exit;
                 if (is_numeric($response->getBody())){
                     $attributeValue->setAplId($response->getBody());
-                    $attributeValue->setStatusEx(\Application\Entity\AttributeValue::EX_TRANSFERRED);
+                    $attributeValue->setStatusEx(AttributeValue::EX_TRANSFERRED);
                     $this->entityManager->persist($attributeValue);
                     $this->entityManager->flush($attributeValue);
                 }
@@ -1838,7 +1843,7 @@ class AplService {
         set_time_limit(1800);
 
         $startTime = time();
-        $attributeValuesQuery = $this->entityManager->getRepository(\Application\Entity\AttributeValue::class)
+        $attributeValuesQuery = $this->entityManager->getRepository(AttributeValue::class)
                 ->queryAtributeValueEx();
 
         $iterable = $attributeValuesQuery->iterate();
@@ -1858,7 +1863,7 @@ class AplService {
     /**
      * Обновить атрибуты товара
      * 
-     * @param \Application\Entity\Goods $good
+     * @param Goods $good
      */
     public function sendGoodAttribute($good)
     {
@@ -1872,7 +1877,7 @@ class AplService {
             ];
 
             $attrQuery = $this->entityManager->getRepository(Goods::class)
-                    ->findGoodAttributeValuesEx($good, ['status' => \Application\Entity\Attribute::STATUS_ACTIVE]);
+                    ->findGoodAttributeValuesEx($good, ['status' => Attribute::STATUS_ACTIVE]);
             
             $attributes = $attrQuery->getResult();                       
 
