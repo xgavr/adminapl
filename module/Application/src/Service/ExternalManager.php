@@ -955,7 +955,6 @@ class ExternalManager
     {
         
         $info = $this->zetasoftManager->getDirectInfo($good);
-        var_dump($info); exit;
         $similarGood = false;
         if (!is_array($info)){
             $info = $this->zetasoftManager->getSimilarDirectInfo($good, null, 'attr');

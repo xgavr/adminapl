@@ -138,7 +138,18 @@ class AttributeRepository  extends EntityRepository{
     public function addGoodAttributeValue($good, $attr, $similarGood = false)
     {
 
-        $attribute = $this->addAtribute($attr['property']);
+//        $attribute = $this->addAtribute($attr['property']);
+        $attribute = $this->addAtribute([
+            'id' => $attr['propertyId'],
+            'attrBlockNo' => 0,
+            'conditional' => $attr['valueCritical'],
+            'applicable' => $attr['valueApplicable'],
+            'interval' => $attr['valueInterval'],
+            'type' => $attr['propertyType'],
+            'unitName' => $attr['propertyUnitName'],
+            'nameAbbreviation' => $attr['propertyShortName'],
+        ]);
+        
         
         if ($attribute){            
             
@@ -148,7 +159,11 @@ class AttributeRepository  extends EntityRepository{
                 }
             }
             
-            $attributeValue = $this->addAtributeValue($attr['value']);
+//            $attributeValue = $this->addAtributeValue($attr['value']);
+            $attributeValue = $this->addAtributeValue([
+                'id' => $attr['valueId'],
+                'value' => $attr['value'],
+            ]);
             
             if ($attributeValue){
                 $this->getEntityManager()->getRepository(Goods::class)
