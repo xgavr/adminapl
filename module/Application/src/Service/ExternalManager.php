@@ -993,18 +993,23 @@ class ExternalManager
     /**
      * Добавление картинки к товару
      * 
-     * @param Application\Entity\Good $good
+     * @param Good $good
      * @return type
      */
     public function addImageToGood($good)
     {
     
-        $this->entityManager->getRepository(Images::class)
-                ->saveImageFromGoodRawprice($good);
+        $mathImages = $this->entityManager->getRepository(Images::class)
+                ->count(['good' => $good->getId(), 'similar' => Images::SIMILAR_SIMILAR]);
         
-        $this->zetasoftManager->getImages($good);
-        
-        $this->entityManager->getConnection()->update('goods', ['status_image' => Goods::IMAGE_UPDATED], ['id' => $good->getId()]);
+        if (!$mathImages){
+            $this->entityManager->getRepository(Images::class)
+                    ->saveImageFromGoodRawprice($good);
+
+            $this->zetasoftManager->getImages($good);
+
+            $this->entityManager->getConnection()->update('goods', ['status_image' => Goods::IMAGE_UPDATED], ['id' => $good->getId()]);
+        }    
         return;
         
     }
