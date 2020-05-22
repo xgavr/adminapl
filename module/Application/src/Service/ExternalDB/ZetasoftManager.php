@@ -408,6 +408,7 @@ class ZetasoftManager
             'vendorCode' => urlencode($vendorCode),
             'partGroupId' => $partGroupId,
             'vendorCodeStartsWith' => 'false',
+            'disableOem' => 'true',
             'NewVendorCodes' => 'false',
             'OldVendorCodes' => 'false',
             'Barcodes' => 'false',
