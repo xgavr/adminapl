@@ -1207,6 +1207,7 @@ class AplService {
                 'key' => $key,
                 'parent' => $rawprice->getCode()->getGood()->getAplId(),
                 'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
+                'iid' => $rawprice->getIid(),
                 'art' => $codeFilter->filter($rawprice->getCode()->getCode()),
                 'price' => $rawprice->getRealPrice(),
                 'desc' => 'col0=adm|'
