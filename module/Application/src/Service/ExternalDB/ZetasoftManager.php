@@ -517,7 +517,7 @@ class ZetasoftManager
     public function getBestArticle($good)
     {
         $filter = new ProducerName();
-        $articles = $this->getVendorCode($good);
+        $articles = $this->getVendorCodeV2($good);
         $change = $articles['change'];
         if ($articles['data']){
             foreach ($articles['data'] as $row){
