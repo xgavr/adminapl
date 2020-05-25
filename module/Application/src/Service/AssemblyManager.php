@@ -778,10 +778,9 @@ class AssemblyManager
             }
         }
         
-        $raw->setParseStage(Raw::STAGE_GOOD_ASSEMBLY);
-        $raw->setStatusEx(Raw::EX_TO_TRANSFER);
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush();
+        $this->entityManager->getRepository(Raw::class)
+                ->updateRawParseStage($raw, Raw::STAGE_GOOD_ASSEMBLY); 
+
         return;
     }
     

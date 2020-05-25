@@ -24,6 +24,7 @@ use Application\Entity\Model;
 use Application\Entity\Car;
 use Application\Entity\Attribute;
 use Application\Entity\AttributeValue;
+use Bank\Entity\AplPayment;
 use Company\Entity\Contract;
 use Application\Entity\PriceGetting;
 use Zend\Http\Client;

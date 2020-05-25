@@ -10,6 +10,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Article;
 use Application\Entity\ArticleToken;
+use Application\Entity\ArticleTitle;
 use Application\Entity\Token;
 use Application\Entity\Bigram;
 use Application\Entity\ArticleBigram;
@@ -165,7 +166,7 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление номеров, свзанных с артикулом
-     * @param Application\Entity\Article $article 
+     * @param rticle $article 
      * @return integer
      */
     public function deleteOemRaw($article)
@@ -176,8 +177,8 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление токенов, свзанных с артикулом
-     * @param \Application\Entity\Article|integer $article
-     * @param \Application\Entity\ArticleTitle $articleTitle 
+     * @param Article|integer $article
+     * @param ArticleTitle $articleTitle 
      * @return integer
      */
     public function deleteArticleToken($article, $articleTitle = null)
@@ -202,8 +203,8 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление биграм, свзанных с артикулом
-     * @param Application\Entity\Article|integer $article 
-     * @param \Application\Entity\ArticleTitle $articleTitle 
+     * @param Article|integer $article 
+     * @param ArticleTitle $articleTitle 
      * @return integer
      */
     public function deleteArticleBigram($article, $articleTitle = null)
@@ -228,7 +229,7 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление наименований, свзанных с артикулом
-     * @param Application\Entity\Article|integer $article 
+     * @param Article|integer $article 
      * @return integer
      */
     public function deleteArticleTitle($article)
@@ -245,7 +246,7 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление кроссов, свзанных с артикулом
-     * @param Application\Entity\Article|integer $article 
+     * @param Article|integer $article 
      * @return integer
      */
     public function deleteArticleCross($article)
@@ -302,7 +303,7 @@ class ArticleRepository  extends EntityRepository
     /**
      * Количество записей в прайсах с этим артикулом
      * 
-     * @param Application\Entity\Article $article
+     * @param Article $article
      */
     public function rawpriceCount($article)
     {
@@ -325,7 +326,7 @@ class ArticleRepository  extends EntityRepository
     /**
      * Выборка артикулов из прайса
      * 
-     * @param Application\Entity\Raw $raw
+     * @param Raw $raw
      * @return object
      */
     public function findArticleFromRaw($raw)
@@ -382,7 +383,7 @@ class ArticleRepository  extends EntityRepository
      * Количество записей в прайсах с этим артикулом
      * в разрезе поставщиков
      * 
-     * @param \Application\Entity\Article $article
+     * @param Article $article
      * @param array $params
      * @return object
      */
