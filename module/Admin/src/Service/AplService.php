@@ -838,15 +838,15 @@ class AplService {
                 if (is_numeric($body)){
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGoodId($good->getId(), ['group_apl' => $body]);
-                    return;
+                    return true;
                 }
             } catch (\Exception $ex) {
 //                var_dump($ex->getMessage());
-                return;
+                return false;
             }
         }
         
-        return;
+        return true;
     }
     
     /**
@@ -864,7 +864,10 @@ class AplService {
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $good){
-                $this->getGroupAplId($good);
+                $result = $this->getGroupAplId($good);
+                if (!$result){
+                    return;
+                }
                 $this->entityManager->detach($good);
             }    
             usleep(100);
