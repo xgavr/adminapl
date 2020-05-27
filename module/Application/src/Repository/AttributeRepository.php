@@ -42,7 +42,7 @@ class AttributeRepository  extends EntityRepository{
                 'is_linked' => (int) boolval($attr['applicable']),
                 'value_type' => substr($attr['type'], 0, 3),
                 'value_unit' => (isset($attr['unitName'])) ? $attr['unitName']:'',
-                'name' => $attr['name'],
+                'name' => (isset($attr['name'])) ? $attr['name']:'',
                 'short_name' => (isset($attr['nameAbbreviation'])) ? $attr['nameAbbreviation']:$attr['name'],
                 'status' => Attribute::STATUS_ACTIVE,
                 'status_ex' => Attribute::EX_TO_TRANSFER,
