@@ -862,7 +862,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['get_group_apl'] == 1){
             
-            $this->aplService->updateGroupAplId();
+//            $this->aplService->updateGroupAplId();
 
         }    
         
