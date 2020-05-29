@@ -142,6 +142,9 @@ class SettingManager {
         if ($proc->getStatus() == Setting::STATUS_ACTIVE && time() > $lastMod){
             return TRUE;
         }                
+        if ($proc->getStatus() == Setting::STATUS_ERROR && time() > $lastMod){
+            return TRUE;
+        }                
         
         return FALSE;
     }
