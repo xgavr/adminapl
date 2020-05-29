@@ -90,6 +90,27 @@ class SettingManager {
     }    
     
     /**
+     * Установить метку процесс завершился с ошибкой
+     * 
+     * @param string $controller
+     * @param string $action
+     */
+    public function errorProcess($controller, $action)
+    {
+        $proc = $this->entityManager->getRepository(Setting::class)
+                ->findOneBy(['controller' => $controller, 'action' => $action]);
+        
+        if ($proc){
+            $this->entityManager->getConnection()->update('setting',
+                    [
+                        'status' => Setting::STATUS_ERROR,
+                        'last_mod' => date('Y-m-d H:i:s'),
+                    ], ['id' => $proc->getId()]);
+        }
+        return;
+    }    
+    
+    /**
      * Определяем возможность старта процесса
      * 
      * @param string $controller

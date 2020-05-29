@@ -21,6 +21,7 @@ class Setting {
     
     const STATUS_ACTIVE       = 1; // Active proccess.
     const STATUS_RETIRED      = 2; // Deactive process.
+    const STATUS_ERROR      = 3; // Error process.
     
     /**
      * @ORM\Id

@@ -104,7 +104,11 @@ class Module
 
             if ($controllerName == ProcessingController::class) {
                 $settingManager = $event->getApplication()->getServiceManager()->get(SettingManager::class);
-                $settingManager->removeProcess($controllerName, $actionName);
+                if ($event->isError()){
+                    $settingManager->errorProcess($controllerName, $actionName);                    
+                } else {
+                    $settingManager->removeProcess($controllerName, $actionName);
+                }    
             }
         }    
         
