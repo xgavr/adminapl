@@ -1243,7 +1243,7 @@ class AplService {
         $ok = false;
         try{
             $response = $client->send();
-            var_dump($response->getBody()); exit;
+//            var_dump($response->getBody()); exit;
             if ($response->isOk()) {
                 $ok = true;
             }
@@ -1454,7 +1454,7 @@ class AplService {
      */
     public function updateGoodsOem()
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(1800);
         $startTime = time();
         
