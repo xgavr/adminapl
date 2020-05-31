@@ -696,7 +696,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusOemEx = ?1')
             ->setParameter('1', Goods::OEM_EX_NEW)    
-            //->setMaxResults(10000)    
+            ->setMaxResults(100000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
@@ -717,9 +717,9 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusNameEx = ?1')
             ->setParameter('1', Goods::NAME_EX_NEW)
+            ->setMaxResults(100000)    
 //            ->andWhere('g.tokenGroup = ?2')
 //            ->setParameter('2', 26288) // только воздушный фильтр    
-            //->setMaxResults(10000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
@@ -740,6 +740,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusPriceEx = ?1')
             ->setParameter('1', Goods::PRICE_EX_NEW)
+            ->setMaxResults(100000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
@@ -760,7 +761,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusImgEx = ?1')
             ->setParameter('1', Goods::IMG_EX_NEW)    
-//            ->setMaxResults(10000)    
+            ->setMaxResults(100000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
@@ -783,7 +784,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->setParameter('1', Goods::CAR_EX_NEW)    
             ->setParameter('2', Goods::DEFAULT_GROUP_APL_ID)    
-            //->setMaxResults(10000) 
+            ->setMaxResults(100000)    
                 
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -805,7 +806,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusGroupEx = ?1')
             ->setParameter('1', Goods::GROUP_EX_NEW)    
-//            ->setMaxResults(10000)    
+            ->setMaxResults(100000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
@@ -826,6 +827,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusAttrEx = ?1')
             ->setParameter('1', Goods::ATTR_EX_NEW)    
+            ->setMaxResults(100000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();//->iterate();            
@@ -894,7 +896,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusCar = ?1')
             ->setParameter('1', Goods::CAR_FOR_UPDATE)    
-            //->setMaxResults(2000) 
+            ->setMaxResults(100000) 
                 
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
