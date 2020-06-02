@@ -7,9 +7,9 @@
 
 namespace Admin;
 
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
+use Laminas\ModuleManager\ModuleManager;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\MvcEvent;
 use Admin\Service\SettingManager;
 use Admin\Controller\ProcessingController;
 
@@ -42,7 +42,7 @@ class Module
 //        $sharedEventManager->attach(__NAMESPACE__, 
 //                MvcEvent::EVENT_RENDER_ERROR, [$this, 'onFinish'], 100);
 
-        $sharedEventManager->attach('Zend\Mvc\Application', 
+        $sharedEventManager->attach('Laminas\Mvc\Application', 
                 MvcEvent::EVENT_FINISH, [$this, 'onFinish'], 100);
     }
     

@@ -14,8 +14,8 @@ use Application\Entity\Rawprice;
 use Application\Validator\Sigma3;
 use Phpml\Math\Statistic\Mean;
 use Phpml\Math\Statistic\StandardDeviation;
-use Zend\Json\Decoder;
-use Zend\Json\Encoder;
+use Laminas\Json\Decoder;
+use Laminas\Json\Encoder;
 
 /**
  * Description of RbService

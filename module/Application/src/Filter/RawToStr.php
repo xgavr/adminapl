@@ -8,10 +8,10 @@
 
 namespace Application\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 use Application\Filter\ToUtf8;
-use Zend\Filter\StripNewlines;
-use Zend\Filter\StringTrim;
+use Laminas\Filter\StripNewlines;
+use Laminas\Filter\StringTrim;
 
 /**
  * Декодирует строку в utf-8

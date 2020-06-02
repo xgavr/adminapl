@@ -7,9 +7,9 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use Application\Entity\Scale;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\Rate;

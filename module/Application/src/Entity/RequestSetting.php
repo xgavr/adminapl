@@ -9,7 +9,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Filter\UriNormalize;
+use Laminas\Filter\UriNormalize;
 
 
 /**

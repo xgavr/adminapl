@@ -7,9 +7,9 @@
  */
 namespace Application\Service\ExternalDB;
 
-use Zend\Http\Client;
-use Zend\Json\Decoder;
-use Zend\Json\Encoder;
+use Laminas\Http\Client;
+use Laminas\Json\Decoder;
+use Laminas\Json\Encoder;
 use Application\Filter\ProducerName;
 use Application\Entity\Images;
 use Application\Entity\AutoDbResponse;
@@ -28,7 +28,7 @@ use Application\Entity\Oem;
 class ZetasoftManager
 {
     
-    const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
+    const HTTPS_ADAPTER = 'Laminas\Http\Client\Adapter\Curl';  
     
     /**
      * Doctrine entity manager.
@@ -51,7 +51,7 @@ class ZetasoftManager
     
     /**
      * Обработка ошибок
-     * @param \Zend\Http\Response $response
+     * @param \Laminas\Http\Response $response
      */
     public function exception($response)
     {
@@ -65,7 +65,7 @@ class ZetasoftManager
             case 403: //The access token is missing
                 throw new \Exception('Доступ запрещен');
             default:
-                $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);
+                $error = Decoder::decode($response->getContent(), \Laminas\Json\Json::TYPE_ARRAY);
                 $error_msg = $response->getStatusCode();
                 if (isset($error['error'])){
                     $error_msg .= ' ('.$error['error'].')';
@@ -232,7 +232,7 @@ class ZetasoftManager
             if ($response->isOk() || $response->isNotFound()){
                 try {
                     $body = $response->getBody();
-                    $result = Decoder::decode($body, \Zend\Json\Json::TYPE_ARRAY);
+                    $result = Decoder::decode($body, \Laminas\Json\Json::TYPE_ARRAY);
                     $result['change'] = $this->updateAutoDbResponse($uri, $body);
                     if (isset($result['status'])){
                         if ($result['status'] === 404){
@@ -240,7 +240,7 @@ class ZetasoftManager
                         }
                     }
                     return $result;            
-                } catch (\Zend\Json\Exception\RuntimeException $e){
+                } catch (\Laminas\Json\Exception\RuntimeException $e){
                    // var_dump($response->getBody()); exit;
                 }    
             } elseif ($response->getStatusCode() === 402){   
@@ -295,12 +295,12 @@ class ZetasoftManager
 
         try {
             $body = $response->getBody();
-            $result = Decoder::decode($body, \Zend\Json\Json::TYPE_ARRAY);
+            $result = Decoder::decode($body, \Laminas\Json\Json::TYPE_ARRAY);
             if ($response->isOk()){
                 
             }
             return $result;            
-        } catch (\Zend\Json\Exception\RuntimeException $e){
+        } catch (\Laminas\Json\Exception\RuntimeException $e){
            // var_dump($response->getBody()); exit;
         }    
 

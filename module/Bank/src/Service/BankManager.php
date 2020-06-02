@@ -130,7 +130,7 @@ class BankManager
             $statement = new Statement();            
         }
         
-        $filter = new \Zend\Filter\Word\SeparatorToCamelCase('_');
+        $filter = new \Laminas\Filter\Word\SeparatorToCamelCase('_');
         $methods = get_class_methods($statement);
         foreach ($data as $key => $value){
             $func = 'set'.ucfirst($filter->filter($key));

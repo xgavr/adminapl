@@ -7,7 +7,7 @@
  */
 namespace Application\Service;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\Goods;
 use Application\Entity\Cart;
 use Application\Entity\Client;

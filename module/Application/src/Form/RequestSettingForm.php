@@ -7,8 +7,8 @@
  */
 namespace Application\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Description of RequestSettingForm
@@ -248,7 +248,7 @@ class RequestSettingForm extends Form
                     [
                         'name' => 'Uri',
                         'options' => [
-//                            'allow' => \Zend\Validator\Uri::INVALID,
+//                            'allow' => \Laminas\Validator\Uri::INVALID,
 //                            'useMxCheck'    => false,                            
                         ],
                     ],

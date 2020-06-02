@@ -2,7 +2,7 @@
 
 namespace Application\Validator;
 
-use Zend\Validator\File\Extension;
+use Laminas\Validator\File\Extension;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -28,7 +28,7 @@ class FileExtensionValidator extends Extension
      * set extension list
      *
      * @param  string|array $value Real file to check for extension
-     * @param  array        $file  File data from \Zend\File\Transfer\Transfer (optional)
+     * @param  array        $file  File data from \Laminas\File\Transfer\Transfer (optional)
      * @return bool
      */
     public function isValid($value, $file = null)

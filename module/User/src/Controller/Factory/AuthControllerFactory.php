@@ -3,7 +3,7 @@ namespace User\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
 use User\Controller\AuthController;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use User\Service\AuthManager;
 use User\Service\UserManager;
 

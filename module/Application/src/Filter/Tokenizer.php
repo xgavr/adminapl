@@ -8,7 +8,7 @@
 
 namespace Application\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 
 /**
  * Разбивает предложение товара на токены

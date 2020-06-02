@@ -7,9 +7,9 @@
  */
 namespace Application\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\FileInput;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\FileInput;
 /**
  * Description of UploadPrice
  *

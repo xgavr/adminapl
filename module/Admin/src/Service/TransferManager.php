@@ -8,7 +8,7 @@
 
 Namespace Admin\Service;
 
-use Zend\Filter\File\RenameUpload;
+use Laminas\Filter\File\RenameUpload;
 
 class TransferManager
 {

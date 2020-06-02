@@ -99,7 +99,7 @@ class Images {
                 return $this->publicPath($this->path);
             }                        
         }
-        $uriValidator = new \Zend\Validator\Uri();
+        $uriValidator = new \Laminas\Validator\Uri();
         if ($uriValidator->isValid($this->path)){
             return $this->path;
         }
@@ -138,7 +138,7 @@ class Images {
             return false;
         }
 
-        $uriValidator = new \Zend\Validator\Uri();
+        $uriValidator = new \Laminas\Validator\Uri();
         if (!$uriValidator->isValid($this->path)){
             return FALSE;
         }

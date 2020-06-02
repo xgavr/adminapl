@@ -10,7 +10,7 @@ namespace Application\Service;
 
 use Application\Entity\Supplier;
 use Application\Entity\PriceGetting;
-use Zend\Http\Client;
+use Laminas\Http\Client;
 use Application\Validator\FileExtensionValidator;
 use Application\Validator\PriceNameValidator;
 use Application\Filter\Basename;

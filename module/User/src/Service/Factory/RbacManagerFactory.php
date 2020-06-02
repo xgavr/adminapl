@@ -3,7 +3,7 @@ namespace User\Service\Factory;
 
 use Interop\Container\ContainerInterface;
 use User\Service\RbacManager;
-use Zend\Authentication\AuthenticationService;
+use Laminas\Authentication\AuthenticationService;
 
 /**
  * This is the factory class for RbacManager service. The purpose of the factory
@@ -17,7 +17,7 @@ class RbacManagerFactory
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {        
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
+        $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
         if (extension_loaded('memcached')){ //если отладка на локальной машине, либо использовать sendmail
             $cache  = $container->get('memcached');
         } else {    

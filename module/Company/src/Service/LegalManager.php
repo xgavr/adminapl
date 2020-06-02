@@ -5,7 +5,7 @@ use Company\Entity\Legal;
 use Company\Entity\BankAccount;
 use Company\Entity\Contract;
 use Company\Entity\Office;
-use Zend\Json\Json;
+use Laminas\Json\Json;
 
 /**
  * This service is responsible for adding/editing roles.

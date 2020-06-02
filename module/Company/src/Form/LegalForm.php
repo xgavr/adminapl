@@ -1,9 +1,9 @@
 <?php
 namespace Company\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\Date;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\Date;
 
 
 /**

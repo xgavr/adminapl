@@ -7,7 +7,7 @@
  */
 namespace Application\Service;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\Make;
 use Application\Entity\Model;
 

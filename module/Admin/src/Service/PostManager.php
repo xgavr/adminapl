@@ -8,17 +8,17 @@
 
 namespace Admin\Service;
 
-use Zend\Mail\Message;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Mime;
-use Zend\Mime\Part as MimePart;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
-use Zend\Mail\Transport\SmtpOptions;
-use Zend\Mail\Storage\Imap;
-use Zend\Mail\Exception;
+use Laminas\Mail\Message;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Mime;
+use Laminas\Mime\Part as MimePart;
+use Laminas\Mail\Transport\Smtp as SmtpTransport;
+use Laminas\Mail\Transport\SmtpOptions;
+use Laminas\Mail\Storage\Imap;
+use Laminas\Mail\Exception;
 use RecursiveIteratorIterator;
-use Zend\Log\Writer\Stream;
-use Zend\Log\Logger;
+use Laminas\Log\Writer\Stream;
+use Laminas\Log\Logger;
 use Admin\Filter\HtmlFilter;
 use Admin\Filter\EmailFromStr;
 use Admin\Entity\PostLog;

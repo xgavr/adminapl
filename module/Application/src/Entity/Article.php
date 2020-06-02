@@ -10,7 +10,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Zend\Json\Decoder;
+use Laminas\Json\Decoder;
 
 /**
  * Description of Article
@@ -221,7 +221,7 @@ class Article {
     public function getDescriptionAsArray() 
     {
         if ($this->description){
-            return Decoder::decode($this->description, \Zend\Json\Json::TYPE_ARRAY);
+            return Decoder::decode($this->description, \Laminas\Json\Json::TYPE_ARRAY);
         }
         
         return;

@@ -8,9 +8,9 @@
 
 namespace Bankapi\Service\Tochka;
 
-use Zend\Http\Client;
-use Zend\Json\Decoder;
-use Zend\Json\Encoder;
+use Laminas\Http\Client;
+use Laminas\Json\Decoder;
+use Laminas\Json\Encoder;
 
 /**
  * Подготовка платежных поручений для банка Точка

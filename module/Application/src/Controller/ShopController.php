@@ -7,16 +7,16 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Application\Entity\Goods;
 use Application\Entity\Cart;
 use Application\Entity\Client;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 
 class ShopController extends AbstractActionController
 {

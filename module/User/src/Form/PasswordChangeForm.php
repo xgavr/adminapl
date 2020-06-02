@@ -1,9 +1,9 @@
 <?php
 namespace User\Form;
 
-use Zend\Form\Form;
-use Zend\Form\Fieldset;
-use Zend\InputFilter\InputFilter;
+use Laminas\Form\Form;
+use Laminas\Form\Fieldset;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * This form is used when changing user's password (to collect user's old password 

@@ -8,9 +8,9 @@
 
 namespace Admin\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 use User\Filter\PhoneFilter;
-use Zend\Validator\EmailAddress;
+use Laminas\Validator\EmailAddress;
 
 /**
  * Удаляет html и css тэги
@@ -67,7 +67,7 @@ class AutoruOrderFilter extends AbstractFilter
             }
             if (trim($dqs[0]) == 'Email'){                
                 if ($dqs[1]){
-                    $emailValidator = new EmailAddress(['allow' => \Zend\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
+                    $emailValidator = new EmailAddress(['allow' => \Laminas\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
                     if ($emailValidator->isValid(trim($dqs[1]))){
                         $result['email'] = trim($dqs[1]);
                     }    

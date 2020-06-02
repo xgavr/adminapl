@@ -7,21 +7,21 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Application\Entity\Tax;
 use Application\Entity\Country;
 use Application\Entity\Producer;
 use Application\Form\TaxForm;
 use Application\Form\CountryForm;
 use Application\Form\ProducerForm;
-use Zend\Session\Container;
-use Zend\View\Model\JsonModel;
+use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
 use Application\Filter\BikFilter;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 
 class RbController extends AbstractActionController
 {

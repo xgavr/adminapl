@@ -7,14 +7,14 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Application\Entity\Article;
 use Application\Entity\OemRaw;
 use Application\Entity\Oem;
 use Application\Entity\Goods;
 use Application\Form\OemForm;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 
 
 class OemController extends AbstractActionController

@@ -2,7 +2,7 @@
 namespace Company\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Company\Controller\OfficeController;
 use Company\Service\OfficeManager;
 use Application\Service\ContactManager;

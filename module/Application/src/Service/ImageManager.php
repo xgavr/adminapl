@@ -10,8 +10,8 @@ namespace Application\Service;
 
 use Application\Validator\FileExtensionValidator;
 use Application\Entity\Images;
-use Zend\Validator\File\IsCompressed;
-use Zend\Filter\Decompress;
+use Laminas\Validator\File\IsCompressed;
+use Laminas\Filter\Decompress;
 
 /**
  * Description of ImageManager

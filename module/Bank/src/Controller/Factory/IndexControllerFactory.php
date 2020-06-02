@@ -8,7 +8,7 @@
 namespace Bank\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Bank\Controller\IndexController;
 use Bank\Service\BankManager;
 

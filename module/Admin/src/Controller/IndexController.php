@@ -16,9 +16,9 @@ use Admin\Form\TelegramSettingsForm;
 use Admin\Form\AbcpSettings;
 use Admin\Form\ZetasoftSettings;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
 {
@@ -89,7 +89,7 @@ class IndexController extends AbstractActionController
 
             $title = 'Memcached';
 
-            $cache  = new \Zend\Cache\Storage\Adapter\Memcached();
+            $cache  = new \Laminas\Cache\Storage\Adapter\Memcached();
             $cache->getOptions()
                     ->setTtl(3600)
                     ->setServers(
@@ -98,7 +98,7 @@ class IndexController extends AbstractActionController
                         )
                     );
 
-            $plugin = new \Zend\Cache\Storage\Plugin\ExceptionHandler();
+            $plugin = new \Laminas\Cache\Storage\Plugin\ExceptionHandler();
             $plugin->getOptions()->setThrowExceptions(false);
             $cache->addPlugin($plugin);
 
@@ -106,7 +106,7 @@ class IndexController extends AbstractActionController
                 
             $title = 'Memcache';
 
-            $cache  = new \Zend\Cache\Storage\Adapter\Memcache();
+            $cache  = new \Laminas\Cache\Storage\Adapter\Memcache();
             $cache->getOptions()
                     ->setTtl(3600)
                     ->setServers(
@@ -115,7 +115,7 @@ class IndexController extends AbstractActionController
                         )
                     );
 
-            $plugin = new \Zend\Cache\Storage\Plugin\ExceptionHandler();
+            $plugin = new \Laminas\Cache\Storage\Plugin\ExceptionHandler();
             $plugin->getOptions()->setThrowExceptions(false);
             $cache->addPlugin($plugin);
         }	

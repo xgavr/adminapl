@@ -1,7 +1,7 @@
 <?php
 namespace Company\Validator;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use Company\Entity\Legal;
 
 /**

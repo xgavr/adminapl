@@ -8,7 +8,7 @@
 namespace Application\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\SupplierController;
 use Application\Service\SupplierManager;
 use Application\Service\ContactManager;

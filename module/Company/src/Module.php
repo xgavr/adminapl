@@ -7,8 +7,8 @@
 
 namespace Company;
 
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\MvcEvent;
+use Laminas\ModuleManager\ModuleManager;
+use Laminas\Mvc\MvcEvent;
 
 class Module
 {

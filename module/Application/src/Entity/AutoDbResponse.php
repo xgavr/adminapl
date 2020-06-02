@@ -9,7 +9,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Json\Decoder;
+use Laminas\Json\Decoder;
 
 /**
  * Description of Producer
@@ -97,7 +97,7 @@ class AutoDbResponse {
     {
         if ($this->response){
             try {
-                return Decoder::decode($this->response, \Zend\Json\Json::TYPE_ARRAY);
+                return Decoder::decode($this->response, \Laminas\Json\Json::TYPE_ARRAY);
             } catch (\Exception $e){
                 
             }    

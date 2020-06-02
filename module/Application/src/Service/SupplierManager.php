@@ -7,7 +7,7 @@
  */
 namespace Application\Service;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\Supplier;
 use Application\Entity\PriceDescription;
 use Application\Entity\PriceGetting;
@@ -15,7 +15,7 @@ use Application\Entity\BillGetting;
 use Application\Entity\RequestSetting;
 use Application\Entity\SupplySetting;
 use Company\Entity\Office;
-use Zend\File\ClassFileLocator;
+use Laminas\File\ClassFileLocator;
 
 
 /**

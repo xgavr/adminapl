@@ -1,7 +1,7 @@
 <?php
 namespace User\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 
 // Этот класс фильтра предназначен для преобразования произвольного номера телефона в 
 // локальный или международный формат.

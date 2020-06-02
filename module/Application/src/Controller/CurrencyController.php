@@ -7,8 +7,8 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Application\Entity\Currency;
 use Application\Entity\Currencyrate;
 use Application\Form\CurrencyForm;
@@ -16,7 +16,7 @@ use Application\Form\CurrencyrateForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 
 class CurrencyController extends AbstractActionController
 {

@@ -8,9 +8,9 @@
 
 namespace Admin\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 use User\Filter\PhoneFilter;
-use Zend\Validator\EmailAddress;
+use Laminas\Validator\EmailAddress;
 
 /**
  * Парсинг письма с турбо страниц
@@ -81,7 +81,7 @@ class TurboOrderFilter extends AbstractFilter
                 $contacts = trim($line[1]);
                 $dqs = explode(';', trim($contacts));
                 $phoneFilter = new PhoneFilter();
-                $emailValidator = new EmailAddress(['allow' => \Zend\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
+                $emailValidator = new EmailAddress(['allow' => \Laminas\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
                 $emails = []; $phones = [];
                 foreach ($dqs as $dbStr){
                     if ($emailValidator->isValid(trim($dbStr))){
@@ -131,7 +131,7 @@ class TurboOrderFilter extends AbstractFilter
                 $contacts = str_replace(['email:', ['phone:']], '', $contacts);
                 $dqs = explode(';', trim($contacts));
                 $phoneFilter = new PhoneFilter();
-                $emailValidator = new EmailAddress(['allow' => \Zend\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
+                $emailValidator = new EmailAddress(['allow' => \Laminas\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
                 $emails = []; $phones = [];
                 foreach ($dqs as $dbStr){
                     if ($emailValidator->isValid(trim($dbStr))){

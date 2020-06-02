@@ -8,7 +8,7 @@
 
 namespace Bank\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 
 /**
  * Преобразует выписку 1с формата в массив

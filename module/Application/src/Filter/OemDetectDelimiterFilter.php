@@ -8,7 +8,7 @@
 
 namespace Application\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 
 /**
  * Определяет разделитель для оригинальных номеров в строке прайса

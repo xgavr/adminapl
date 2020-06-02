@@ -9,7 +9,7 @@
 namespace Application\Service\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\CarManager;
 use Application\Service\ExternalManager;
 

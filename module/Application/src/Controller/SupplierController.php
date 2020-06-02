@@ -7,8 +7,8 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Application\Entity\Supplier;
 use Application\Entity\Contact;
 use Application\Entity\PriceGetting;
@@ -26,11 +26,11 @@ use Application\Form\RequestSettingForm;
 use Application\Form\ContactForm;
 use Application\Form\SupplySettingForm;
 use Application\Form\UploadForm;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 
 class SupplierController extends AbstractActionController
 {

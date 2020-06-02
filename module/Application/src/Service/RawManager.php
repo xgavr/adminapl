@@ -8,7 +8,7 @@
 
 namespace Application\Service;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\Supplier;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
@@ -17,8 +17,8 @@ use Application\Filter\CsvDetectDelimiterFilter;
 use MvlabsPHPExcel\Service;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-use Zend\Validator\File\IsCompressed;
-use Zend\Filter\Decompress;
+use Laminas\Validator\File\IsCompressed;
+use Laminas\Filter\Decompress;
 use Application\Filter\Basename;
 
 

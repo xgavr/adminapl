@@ -4,8 +4,8 @@ namespace User\Service;
 use User\Entity\User;
 use User\Entity\Role;
 use Application\Entity\Contact;
-use Zend\Crypt\Password\Bcrypt;
-use Zend\Math\Rand;
+use Laminas\Crypt\Password\Bcrypt;
+use Laminas\Math\Rand;
 use Application\Entity\Email;
 use User\Validator\TokenNoExistsValidator;
 

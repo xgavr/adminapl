@@ -12,9 +12,9 @@
 
 namespace Bankapi\Service\Tochka;
 
-use Zend\Http\Client;
-use Zend\Json\Decoder;
-use Zend\Json\Encoder;
+use Laminas\Http\Client;
+use Laminas\Json\Decoder;
+use Laminas\Json\Encoder;
 
 /**
  * Description of Authenticate
@@ -39,7 +39,7 @@ class Authenticate {
     /**
      * Adapter
      */
-    const HTTPS_ADAPTER = 'Zend\Http\Client\Adapter\Curl';  
+    const HTTPS_ADAPTER = 'Laminas\Http\Client\Adapter\Curl';  
     
     /**
      * @var string
@@ -134,14 +134,14 @@ class Authenticate {
     public function saveCode($code, $grant_type)
     {
         if (file_exists($this->token_filename)){
-            $config = new \Zend\Config\Config(include $this->token_filename, true);
+            $config = new \Laminas\Config\Config(include $this->token_filename, true);
         } else {
-            $config = new \Zend\Config\Config([], true);
+            $config = new \Laminas\Config\Config([], true);
         }
         
         $config->$grant_type = $code;
         
-        $writer = new \Zend\Config\Writer\PhpArray();
+        $writer = new \Laminas\Config\Writer\PhpArray();
         $writer->toFile($this->token_filename, $config);
         
         return;
@@ -160,7 +160,7 @@ class Authenticate {
         }
         
         if (file_exists($this->token_filename)){
-            $config = new \Zend\Config\Config(include $this->token_filename);
+            $config = new \Laminas\Config\Config(include $this->token_filename);
             return $config->$grant_type;
         }
         
@@ -203,7 +203,7 @@ class Authenticate {
     
     /**
      * Обработка ошибок
-     * @param \Zend\Http\Response $response
+     * @param \Laminas\Http\Response $response
      */
     public function exception($response)
     {
@@ -213,7 +213,7 @@ class Authenticate {
             case 403: //The access token is missing
                 $this->reAuth();
             default:
-                $error = Decoder::decode($response->getContent(), \Zend\Json\Json::TYPE_ARRAY);
+                $error = Decoder::decode($response->getContent(), \Laminas\Json\Json::TYPE_ARRAY);
                 $error_msg = $response->getStatusCode();
                 if (isset($error['error'])){
                     $error_msg .= ' ('.$error['error'].')';

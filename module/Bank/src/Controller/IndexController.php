@@ -7,9 +7,9 @@
 
 namespace Bank\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
 use Bank\Entity\Acquiring;
@@ -58,7 +58,7 @@ class IndexController extends AbstractActionController
             'bankAccounts' => $bankAccounts,
             'account' => $account,
             'currentBalances' => $curentBalances,
-            'numberFormatFilter' => new \Zend\I18n\Filter\NumberFormat('ru-RU'),
+            'numberFormatFilter' => new \Laminas\I18n\Filter\NumberFormat('ru-RU'),
             'avatar' => new \LasseRafn\InitialAvatarGenerator\InitialAvatar(),
         ]);
     }

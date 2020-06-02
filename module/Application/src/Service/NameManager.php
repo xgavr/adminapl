@@ -39,8 +39,8 @@ use Application\Filter\ProducerName;
 use Application\Filter\ModelName;
 use Admin\Filter\TransferName;
 
-use Zend\Config\Config;
-use Zend\Config\Writer\PhpArray;
+use Laminas\Config\Config;
+use Laminas\Config\Writer\PhpArray;
 
 
 /**
@@ -916,7 +916,7 @@ class NameManager
     {
         $description = $article->getDescriptionAsArray();        
         $numberTitle = $this->numberRawpriceTitle($rawprice, $articleTitle);        
-        $newDescription = \Zend\Json\Encoder::encode([
+        $newDescription = \Laminas\Json\Encoder::encode([
             'name' => $rawprice->getTitle(), 
             'car' => $rawprice->getCar(), 
             'fullName' => $rawprice->getFullTitle(),
@@ -1564,7 +1564,7 @@ class NameManager
             $result[Token::IS_UNKNOWN] = count(array_unique(str_split($punktuation)));
         }    
         
-        $toIntFilter = new \Zend\Filter\ToInt();
+        $toIntFilter = new \Laminas\Filter\ToInt();
         if ($article){
             $result[Token::IS_ARTICLE] = $toIntFilter->filter(mb_stripos($str, $article) !== FALSE);
         }

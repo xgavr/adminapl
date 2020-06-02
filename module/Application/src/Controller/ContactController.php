@@ -7,8 +7,8 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Application\Entity\Contact;
 use Application\Entity\Client;
 use Application\Entity\Supplier;
@@ -23,11 +23,11 @@ use Application\Form\EmailForm;
 use Application\Form\AddressForm;
 use Application\Form\MessengerForm;
 use Company\Form\LegalForm;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 
 class ContactController extends AbstractActionController
 {

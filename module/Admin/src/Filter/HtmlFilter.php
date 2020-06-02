@@ -8,7 +8,7 @@
 
 namespace Admin\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 
 /**
  * Удаляет html и css тэги

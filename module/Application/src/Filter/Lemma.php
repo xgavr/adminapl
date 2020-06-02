@@ -8,7 +8,7 @@
 
 namespace Application\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 use Application\Entity\Token;
 use Application\Entity\Bigram;
 use Application\Validator\IsRU;

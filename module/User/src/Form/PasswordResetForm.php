@@ -1,8 +1,8 @@
 <?php
 namespace User\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * This form is used to collect user's E-mail address (used to recover password).
@@ -103,7 +103,7 @@ class PasswordResetForm extends Form
                     [
                         'name' => 'EmailAddress',
                         'options' => [
-                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'allow' => \Laminas\Validator\Hostname::ALLOW_DNS,
                             'useMxCheck'    => false,                            
                         ],
                     ],

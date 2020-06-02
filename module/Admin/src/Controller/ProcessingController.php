@@ -7,11 +7,11 @@
 
 namespace Admin\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
-use Zend\Stdlib\RequestInterface as Request;
-use Zend\Stdlib\ResponseInterface as Response;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
+use Laminas\Stdlib\RequestInterface as Request;
+use Laminas\Stdlib\ResponseInterface as Response;
 use Application\Entity\FpTree;
 use Application\Entity\TokenGroupToken;
 use Application\Entity\TokenGroupBigram;

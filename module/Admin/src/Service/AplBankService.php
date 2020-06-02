@@ -10,7 +10,7 @@ namespace Admin\Service;
 
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
-use Zend\Http\Client;
+use Laminas\Http\Client;
 
 
 /**

@@ -7,8 +7,8 @@
 
 namespace Company\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Company\Entity\Office;
 use Company\Entity\Legal;
 use Company\Entity\BankAccount;
@@ -17,7 +17,7 @@ use Company\Form\LegalForm;
 use Company\Form\BankAccountForm;
 use Company\Form\ContractForm;
 use Application\Entity\Contact;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 
 class LegalController extends AbstractActionController
 {

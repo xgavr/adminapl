@@ -9,7 +9,7 @@
 namespace Application\Service\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\OrderManager;
 /**
  * Description of OrderManagerFactory
@@ -23,7 +23,7 @@ class OrderManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $authService = $container->get(\Zend\Authentication\AuthenticationService::class);        
+        $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);        
         
         // Инстанцируем сервис и внедряем зависимости.
         return new OrderManager($entityManager, $authService);

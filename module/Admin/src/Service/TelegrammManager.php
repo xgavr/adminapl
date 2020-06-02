@@ -10,8 +10,8 @@ namespace Admin\Service;
 
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Request;
-use Zend\Log\Writer\Stream;
-use Zend\Log\Logger;
+use Laminas\Log\Writer\Stream;
+use Laminas\Log\Logger;
 use GuzzleHttp\Client;
 
 /**
@@ -187,7 +187,7 @@ class TelegrammManager
             } catch (\Longman\TelegramBot\Exception\TelegramException $e){
                 $logger->err($e->getMessage());
                 $result = false;
-            } catch (\Zend\Http\Client\Adapter\Exception $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception $e){
                 $logger->err($e->getMessage());
                 $result = false;
             }    
@@ -216,7 +216,7 @@ class TelegrammManager
                 $file = file(self::POSTPONE_MSG_FILE);
                 if (count($file)){
                     try {
-                        $result = $this->sendMessage(\Zend\Json\Json::decode(trim($file[0]), \Zend\Json\Json::TYPE_ARRAY));
+                        $result = $this->sendMessage(\Laminas\Json\Json::decode(trim($file[0]), \Laminas\Json\Json::TYPE_ARRAY));
                         if ($result){
                             $fp = fopen(self::POSTPONE_MSG_FILE, 'w');
                             unset($file[0]);
@@ -257,7 +257,7 @@ class TelegrammManager
         
         $params['text'] = $params['text'].PHP_EOL.date('Y-m-d H:i:s');
         
-        file_put_contents(self::POSTPONE_MSG_FILE, \Zend\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
+        file_put_contents(self::POSTPONE_MSG_FILE, \Laminas\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
         
 //        $client = new Client();
 //        $promise = $client->requestAsync('GET', 'http://'.$_SERVER['HTTP_HOST'].'/telegramm/postpone');

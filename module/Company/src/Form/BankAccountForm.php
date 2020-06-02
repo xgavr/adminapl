@@ -1,8 +1,8 @@
 <?php
 namespace Company\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * The form for collecting information about Role.

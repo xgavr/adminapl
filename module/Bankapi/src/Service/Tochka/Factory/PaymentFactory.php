@@ -9,7 +9,7 @@
 namespace Bankapi\Service\Tochka\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Bankapi\Service\Tochka\Authenticate;
 use Bankapi\Service\Tochka\Payment;
 

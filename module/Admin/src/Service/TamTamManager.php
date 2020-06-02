@@ -8,8 +8,8 @@
 
 namespace Admin\Service;
 
-use Zend\Http\Client;
-use Zend\Json\Json;
+use Laminas\Http\Client;
+use Laminas\Json\Json;
 
 /**
  * Description of SmsManager

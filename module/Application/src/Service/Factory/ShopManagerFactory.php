@@ -9,7 +9,7 @@
 namespace Application\Service\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ShopManager;
 use User\Service\RbacManager;
 
@@ -25,7 +25,7 @@ class ShopManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
+        $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
         $sessionContainer = $container->get('ContainerNamespace');
         $rbacManager = $container->get(RbacManager::class);
         

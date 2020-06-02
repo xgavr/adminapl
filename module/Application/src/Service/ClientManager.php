@@ -7,7 +7,7 @@
  */
 namespace Application\Service;
 
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\Client;
 use Application\Entity\Contact;
 use User\Entity\User;

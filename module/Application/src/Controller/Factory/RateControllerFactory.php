@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller\Factory;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\RateController;
 use Application\Service\RateManager;
 /**

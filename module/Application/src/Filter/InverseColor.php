@@ -8,7 +8,7 @@
 
 namespace Application\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 
 /**
  * Генерирует  color (#000000) противоположный введенному

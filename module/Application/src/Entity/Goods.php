@@ -5,7 +5,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\ScaleTreshold;
-use Zend\Json\Decoder;
+use Laminas\Json\Decoder;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -520,7 +520,7 @@ class Goods {
 //    {
 //        if ($this->description){
 //            try{
-//                return Decoder::decode($this->description, \Zend\Json\Json::TYPE_ARRAY);
+//                return Decoder::decode($this->description, \Laminas\Json\Json::TYPE_ARRAY);
 //            } catch (Exception $e){
 //                return;
 //            }    

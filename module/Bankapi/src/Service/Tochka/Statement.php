@@ -8,9 +8,9 @@
 
 namespace Bankapi\Service\Tochka;
 
-use Zend\Http\Client;
-use Zend\Json\Decoder;
-use Zend\Json\Encoder;
+use Laminas\Http\Client;
+use Laminas\Json\Decoder;
+use Laminas\Json\Encoder;
 
 /**
  * Description of Statement
@@ -54,7 +54,7 @@ class Statement {
         $response = $client->send();
         
         if ($response->isOk()){
-            return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY);            
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
         }
 
         return $this->auth->exception($response);
@@ -86,7 +86,7 @@ class Statement {
         $response = $client->send();
         
         if ($response->isOk()){
-            return Decoder::decode($response->getBody(), \Zend\Json\Json::TYPE_ARRAY); 
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY); 
         }
         
         return $this->exception($response);

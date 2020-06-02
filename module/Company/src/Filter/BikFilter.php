@@ -8,8 +8,8 @@
 
 namespace Company\Filter;
 
-use Zend\Filter\AbstractFilter;
-use Zend\Json\Json;
+use Laminas\Filter\AbstractFilter;
+use Laminas\Json\Json;
 /**
  * Предназначен для получения информции о банке по коду БИК
  * с использованием вебсервиса www.bik-info.ru

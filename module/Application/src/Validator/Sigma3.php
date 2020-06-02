@@ -2,7 +2,7 @@
 
 namespace Application\Validator;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use Application\Entity\PriceGetting;
 /*
  * To change this license header, choose License Headers in Project Properties.

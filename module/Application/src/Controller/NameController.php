@@ -7,15 +7,15 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Application\Entity\Rawprice;
 use Application\Entity\Token;
 use Application\Entity\ArticleTitle;
 use Application\Entity\Bigram;
 use Application\Entity\TokenGroup;
 use Application\Entity\GenericGroup;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 use Application\Entity\Goods;
 use Application\Entity\Rate;
 use Application\Entity\FpTree;
@@ -27,7 +27,7 @@ use Application\Entity\TokenGroupBigram;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Zend\Paginator\Paginator;
+use Laminas\Paginator\Paginator;
 
 class NameController extends AbstractActionController
 {

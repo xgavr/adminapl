@@ -1,9 +1,9 @@
 <?php
 namespace User\Service;
 
-use Zend\Authentication\Adapter\AdapterInterface;
-use Zend\Authentication\Result;
-use Zend\Crypt\Password\Bcrypt;
+use Laminas\Authentication\Adapter\AdapterInterface;
+use Laminas\Authentication\Result;
+use Laminas\Crypt\Password\Bcrypt;
 use User\Entity\User;
 use Application\Entity\Phone;
 use Application\Entity\Email;

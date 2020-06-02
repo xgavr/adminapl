@@ -7,8 +7,8 @@
  */
 namespace Application\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Description of PriceDescription

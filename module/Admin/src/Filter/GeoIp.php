@@ -8,7 +8,7 @@
 
 namespace Admin\Filter;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 
 /**
  * Страна по ип
@@ -59,7 +59,7 @@ class GeoIp extends AbstractFilter
         if (!isset($parsedUrl['host'])){
             $parsedUrl['host'] = '';
         }
-        $result = \Zend\Json\Json::decode(file_get_contents("http://ip-api.com/json/{$parsedUrl['host']}?lang=ru"), \Zend\Json\Json::TYPE_ARRAY);
+        $result = \Laminas\Json\Json::decode(file_get_contents("http://ip-api.com/json/{$parsedUrl['host']}?lang=ru"), \Laminas\Json\Json::TYPE_ARRAY);
 //var_dump($result);
         return $result;
     }

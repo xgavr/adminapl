@@ -8,8 +8,8 @@
 
 namespace Admin\Service;
 
-use Zend\Config\Config;
-use Zend\Config\Writer\PhpArray;
+use Laminas\Config\Config;
+use Laminas\Config\Writer\PhpArray;
 /**
  * Description of AdminManager
  *

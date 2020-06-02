@@ -9,7 +9,7 @@
 namespace Application\Service\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ClientManager;
 use Application\Service\ContactManager;
 use User\Service\UserManager;
@@ -27,7 +27,7 @@ class ClientManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $contactManager = $container->get(ContactManager::class);        
         $userManager = $container->get(UserManager::class);  
-        $authService = $container->get(\Zend\Authentication\AuthenticationService::class);
+        $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new ClientManager($entityManager, $contactManager, $userManager, $authService);

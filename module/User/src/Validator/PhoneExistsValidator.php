@@ -1,7 +1,7 @@
 <?php
 namespace User\Validator;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use Application\Entity\Phone;
 use User\Filter\PhoneFilter;
 /**

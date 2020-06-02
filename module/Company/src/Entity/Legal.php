@@ -12,7 +12,7 @@ namespace Company\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use Zend\Filter\Digits;
+use Laminas\Filter\Digits;
 
 /**
  * Description of Legal

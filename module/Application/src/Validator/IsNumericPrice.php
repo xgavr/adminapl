@@ -2,7 +2,7 @@
 
 namespace Application\Validator;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use Application\Filter\ToFloat;
 
 /*

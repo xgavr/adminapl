@@ -7,12 +7,12 @@
 
 namespace User;
 
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\ModuleManager\ModuleManager;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Controller\AbstractActionController;
 use User\Controller\AuthController;
 use User\Service\AuthManager;
-use Zend\Session\SessionManager;
+use Laminas\Session\SessionManager;
 
 class Module
 {

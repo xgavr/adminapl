@@ -1,8 +1,8 @@
 <?php
 namespace User\Service;
 
-use Zend\Permissions\Rbac\Rbac;
-use Zend\Permissions\Rbac\Role as RbacRole;
+use Laminas\Permissions\Rbac\Rbac;
+use Laminas\Permissions\Rbac\Role as RbacRole;
 use User\Entity\User;
 use User\Entity\Role;
 use User\Entity\Permission;
@@ -20,19 +20,19 @@ class RbacManager
     
     /**
      * RBAC service.
-     * @var \Zend\Permissions\Rbac\Rbac
+     * @var \Laminas\Permissions\Rbac\Rbac
      */
     private $rbac;
     
     /**
      * Auth service.
-     * @var \Zend\Authentication\AuthenticationService 
+     * @var \Laminas\Authentication\AuthenticationService 
      */
     private $authService;
     
     /**
      * Filesystem cache.
-     * @var \Zend\Cache\Storage\StorageInterface
+     * @var \Laminas\Cache\Storage\StorageInterface
      */
     private $cache;
     

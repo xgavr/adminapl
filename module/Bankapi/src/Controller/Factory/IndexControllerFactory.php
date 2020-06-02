@@ -2,7 +2,7 @@
 namespace Bankapi\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Bankapi\Controller\IndexController;
 use Bankapi\Service\Tochka\Authenticate;
 use Bankapi\Service\Tochka\Statement;

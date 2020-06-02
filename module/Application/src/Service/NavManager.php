@@ -9,13 +9,13 @@ class NavManager
 {
     /**
      * Auth service.
-     * @var \Zend\Authentication\Authentication
+     * @var \Laminas\Authentication\Authentication
      */
     private $authService;
     
     /**
      * Url view helper.
-     * @var \Zend\View\Helper\Url
+     * @var \Laminas\View\Helper\Url
      */
     private $urlHelper;
     

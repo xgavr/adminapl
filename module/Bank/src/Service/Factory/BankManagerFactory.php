@@ -9,7 +9,7 @@
 namespace Bank\Service\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Bank\Service\BankManager;
 use Bankapi\Service\Tochka\Statement;
 use Admin\Service\AdminManager;

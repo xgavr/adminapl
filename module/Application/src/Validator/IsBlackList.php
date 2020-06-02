@@ -2,8 +2,8 @@
 
 namespace Application\Validator;
 
-use Zend\Validator\AbstractValidator;
-use Zend\Config\Config;
+use Laminas\Validator\AbstractValidator;
+use Laminas\Config\Config;
 use Application\Entity\Token;
 
 /*

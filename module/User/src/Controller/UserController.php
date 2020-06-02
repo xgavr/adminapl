@@ -1,8 +1,8 @@
 <?php
 namespace User\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use User\Entity\User;
 use User\Entity\Role;
 use Application\Entity\Phone;
@@ -11,7 +11,7 @@ use User\Form\PasswordChangeForm;
 use User\Form\PasswordResetForm;
 use User\Form\PasswordResetPhoneForm;
 use User\Filter\PhoneFilter;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\JsonModel;
 
 /**
  * This controller is responsible for user management (adding, editing, 

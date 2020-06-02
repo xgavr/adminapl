@@ -8,7 +8,7 @@
 namespace Application\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\ImageController;
 use Application\Service\ImageManager;
 

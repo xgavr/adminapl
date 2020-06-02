@@ -9,7 +9,7 @@
 namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Filter\Digits;
+use Laminas\Filter\Digits;
 
 /**
  * Description of BankAccount

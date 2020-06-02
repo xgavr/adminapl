@@ -7,8 +7,8 @@
  */
 namespace Application\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
 use Application\Entity\Contact;
 use User\Validator\UserExistsValidator;
 use User\Filter\PhoneFilter;
@@ -268,7 +268,7 @@ class ContactForm extends Form
                     [
                         'name' => 'EmailAddress',
                         'options' => [
-                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'allow' => \Laminas\Validator\Hostname::ALLOW_DNS,
                             'useMxCheck'    => false,                            
                         ],
                     ],

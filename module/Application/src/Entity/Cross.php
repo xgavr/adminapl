@@ -201,7 +201,7 @@ class Cross {
     public function getDescription()
     {
         if ($this->description){
-            return \Zend\Json\Json::decode($this->description, \Zend\Json\Json::TYPE_ARRAY);
+            return \Laminas\Json\Json::decode($this->description, \Laminas\Json\Json::TYPE_ARRAY);
         }    
         
         return;
@@ -214,7 +214,7 @@ class Cross {
     public function setDescription($description)
     {
         if (is_array($description)){
-            $this->description = \Zend\Json\Json::encode($description);
+            $this->description = \Laminas\Json\Json::encode($description);
         } else {
             $this->description = $description;
         }    

@@ -8,7 +8,7 @@
 
 namespace Admin\Service;
 
-use Zend\Json\Json;
+use Laminas\Json\Json;
 
 use Application\Entity\Email;
 use Application\Entity\Phone;
@@ -27,7 +27,7 @@ use Application\Entity\AttributeValue;
 use Bank\Entity\AplPayment;
 use Company\Entity\Contract;
 use Application\Entity\PriceGetting;
-use Zend\Http\Client;
+use Laminas\Http\Client;
 use Application\Filter\ArticleCode;
 use Application\Filter\ProducerName;
 
@@ -170,7 +170,7 @@ class AplService {
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
         }
@@ -261,7 +261,7 @@ class AplService {
                         $this->entityManager->flush($supplier);
                     }
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
         }    
@@ -773,7 +773,7 @@ class AplService {
                             ->updateGoodId($good->getId(), ['apl_id' => $body]);
                     $result = true;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $ex){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $ex){
 //                var_dump($ex->getMessage());
                 $result = false;
             }
@@ -911,7 +911,7 @@ class AplService {
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
 
@@ -1247,7 +1247,7 @@ class AplService {
             if ($response->isOk()) {
                 $ok = true;
             }
-        } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+        } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             $ok = true;
             $result = 0;
         }    
@@ -1352,7 +1352,7 @@ class AplService {
             if ($response->isOk()) {
                 $ok = $result = true;
             }
-        } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+        } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             $ok = true;
         }    
         
@@ -1432,7 +1432,7 @@ class AplService {
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
 
@@ -1526,7 +1526,7 @@ class AplService {
                 if ($response->isOk()) {
                     $ok = $result = true;                    
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
             
@@ -1601,7 +1601,7 @@ class AplService {
                 if ($response->isOk()) {
                     $result = $ok = TRUE;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
             
@@ -1688,7 +1688,7 @@ class AplService {
                 if ($response->isOk()) {
                     $ok = $result = TRUE;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = TRUE;
             }    
             
@@ -1775,7 +1775,7 @@ class AplService {
                     $this->entityManager->persist($attribute);
                     $this->entityManager->flush($attribute);
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 return;
             }    
         }    
@@ -1836,7 +1836,7 @@ class AplService {
                     $this->entityManager->persist($attributeValue);
                     $this->entityManager->flush($attributeValue);
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 return;
             }    
         }    
@@ -1914,7 +1914,7 @@ class AplService {
                 if ($response->isOk()) {
                     $result = $ok = true;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $result = false;
             }    
             
@@ -1997,7 +1997,7 @@ class AplService {
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
-            } catch (\Zend\Http\Client\Adapter\Exception\TimeoutException $e){
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
 

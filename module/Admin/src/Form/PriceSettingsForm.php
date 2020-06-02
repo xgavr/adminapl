@@ -7,8 +7,8 @@
  */
 namespace Admin\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilter;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -499,7 +499,7 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
                     [
                         'name' => 'EmailAddress',
                         'options' => [
-                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'allow' => \Laminas\Validator\Hostname::ALLOW_DNS,
                             'useMxCheck'    => false,                            
                         ],
                     ],
@@ -553,7 +553,7 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
                     [
                         'name' => 'EmailAddress',
                         'options' => [
-                            'allow' => \Zend\Validator\Hostname::ALLOW_DNS,
+                            'allow' => \Laminas\Validator\Hostname::ALLOW_DNS,
                             'useMxCheck'    => false,                            
                         ],
                     ],
