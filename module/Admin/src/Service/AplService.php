@@ -824,6 +824,9 @@ class AplService {
             
             $post = [
                 'id' => $good->getAplId(),
+                'art' => $good->getCode(),
+                'makerid' => $good->getProducer()->getAplId(),
+                'createnew' => 1,
             ];
             
             $client = new Client();
@@ -896,6 +899,9 @@ class AplService {
                 'newname' => $good->getName(),
                 'description' => $good->getDescription(),
                 'nameok' => 0,
+                'art' => $good->getCode(),
+                'makerid' => $good->getProducer()->getAplId(),
+                'createnew' => 1,
             ];
             
             $client = new Client();
