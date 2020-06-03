@@ -1440,6 +1440,11 @@ class AplService {
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
+                if ($response->getStatusCode() == 204) {
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGood($good, ['aplId' => 0]);
+                    $result = true;
+                }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
