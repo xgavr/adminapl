@@ -1119,6 +1119,15 @@ class SupplierController extends AbstractActionController
         );           
     }
     
+    public function parsPriceListGenericAction()
+    {
+        $filter = new \Application\Filter\ParseRawpriceApl();
+        $text = '<pre>'.$filter->filter().'</pre>';
+        return new JsonModel(
+           ['text' => $text]
+        );           
+    }
+    
     public function requestAsTextAction()
     {
         $supplierId = $this->params()->fromRoute('id', -1);

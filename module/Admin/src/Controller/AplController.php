@@ -405,8 +405,8 @@ class AplController extends AbstractActionController
             return;                        
         } 
         
-        $this->aplService->sendRawprices('400', $goodId);
-        $this->aplService->updateGoodsRawprice($goodId);
+        $this->aplService->sendRawprices('400', $good);
+//        $this->aplService->updateGoodsRawprice($good);
         
         return new JsonModel([
             'oke'

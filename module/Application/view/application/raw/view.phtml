@@ -196,7 +196,11 @@ $this->pageBreadcrumbs()->setItems([
                                     <span class="glyphicon glyphicon-remove" ></span>
                                 </button>                                                                                                                                       
                                 <button id="pars_price_list_text_button" class="btn btn-info btn-xs"
-                                        title="Текст для АПЛ" value="<?= $priceDescription->getId() ?>">
+                                        title="Скрипт для АПЛ" value="<?= $priceDescription->getId() ?>">
+                                    <span class="glyphicon glyphicon-menu-hamburger" ></span>
+                                </button>                                                                                                                                       
+                                <button id="pars_price_list_generic_button" class="btn btn-info btn-xs"
+                                        title="Скрипт общий">
                                     <span class="glyphicon glyphicon-menu-hamburger" ></span>
                                 </button>                                                                                                                                       
                             </div>
@@ -406,4 +410,18 @@ $this->pageBreadcrumbs()->setItems([
             });
     })    
     
+    $('#pars_price_list_generic_button').on('click', function() {        
+        $.ajax({
+            type: 'POST',
+            url: '/supplier/pars-price-list-generic/',
+            data: $('#price-description-form').serialize()
+        })
+            .done(function (data) {
+                bootbox.alert(data.text);
+            })
+            .fail(function () {
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });
+    })    
+        
 </script>
