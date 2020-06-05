@@ -1212,7 +1212,7 @@ class AplService {
             $post['rawprices'][] = $filter->filter($rawprice);
         }
 
-        var_dump($post); //exit;
+//        var_dump($post); //exit;
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');
@@ -1222,7 +1222,7 @@ class AplService {
         $ok = false;
         try{
             $response = $client->send();
-//            var_dump($response->getBody()); exit;
+            var_dump($response->getStatusCode()); exit;
             if ($response->isOk()) {
                 $ok = true;
             }
