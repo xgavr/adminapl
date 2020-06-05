@@ -73,13 +73,13 @@ class ParseRawpriceApl extends AbstractFilter
         if ($rawprice == null){
             return $this->_pars_script();
         } else {
-            $key =  md5($rawprice->getRaw()->getSupplier()->getAplId().":".$this->codeFilter->filter($rawprice->getCode()->getCode()).":".$this->nameFilter->filter($rawprice->getUnknownProducer()));
+            $key =  md5($rawprice->getRaw()->getSupplier()->getAplId().":".$this->codeFilter->filter($rawprice->getArticle()).":".$this->nameFilter->filter($rawprice->getProducer()));
             return [
                     'key' => $key,
-                    'parent' => $rawprice->getCode()->getGood()->getAplId(),
+                    'parent' => $rawprice->getGood()->getAplId(),
                     'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
                     'iid' => $rawprice->getIid(),
-                    'art' => $codeFilter->filter($rawprice->getCode()->getCode()),
+                    'art' => $codeFilter->filter($rawprice->getArticle()),
                     'price' => $rawprice->getRealPrice(),
                     'desc' => 'col0=adm|'
                     . 'col1='.$rawprice->getArticle().'|'
