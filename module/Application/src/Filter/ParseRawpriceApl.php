@@ -79,7 +79,7 @@ class ParseRawpriceApl extends AbstractFilter
                     'parent' => $rawprice->getGood()->getAplId(),
                     'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
                     'iid' => $rawprice->getIid(),
-                    'art' => $codeFilter->filter($rawprice->getArticle()),
+                    'art' => $this->codeFilter->filter($rawprice->getArticle()),
                     'price' => $rawprice->getRealPrice(),
                     'desc' => 'col0=adm|'
                     . 'col1='.$rawprice->getArticle().'|'
