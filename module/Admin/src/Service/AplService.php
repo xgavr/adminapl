@@ -29,6 +29,7 @@ use Company\Entity\Contract;
 use Application\Entity\PriceGetting;
 use Laminas\Http\Client;
 use Application\Filter\ParseRawpriceApl;
+use Application\Entity\Article;
 
 /**
  * Description of AplService
@@ -1191,28 +1192,30 @@ class AplService {
     public function sendRawprices($good)
     {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
-        
-        $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                ->findBy([
-                    'good' => $good->getId(),
-                    'status' => Rawprice::STATUS_PARSED,
-                ]);        
-        
-        $post = [
-            'rawprices' => [],
-        ];
-        
-        if (isset($good)){
-            $post['id'] = $good->getAplId();
-        }
-        
-        $result = count($rawprices);
-        $filter = new ParseRawpriceApl();
-        foreach ($rawprices as $rawprice){
-            $post['rawprices'][] = $filter->filter($rawprice);
-        }
 
-//        var_dump($post); //exit;
+        $post = [
+            'id' => $good->getId(),
+            'rawprices' => [],            
+        ];        
+        
+        $filter = new ParseRawpriceApl();        
+        $result = 0;
+        
+        $articles = $this->entityManager->getRepository(Article::class)
+                ->findBy(['good' => $good->getId()]);
+        foreach ($articles as $article){
+            $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                    ->findBy([
+                        'code' => $article->getId(),
+                        'status' => Rawprice::STATUS_PARSED,
+                    ]);        
+            $result += count($rawprices);
+            foreach ($rawprices as $rawprice){
+                $post['rawprices'][] = $filter->filter($rawprice);
+            }
+        }            
+
+        var_dump($post); //exit;
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');
