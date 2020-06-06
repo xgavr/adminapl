@@ -24,18 +24,23 @@ class ParseRawpriceApl extends AbstractFilter
     
     protected $nameFilter;
     
+    protected $aplGoodId;
+    
     // Доступные опции фильтра.
     protected $options = [
     ];    
 
     // Конструктор.
-    public function __construct($options = null) 
+    public function __construct($options) 
     {     
         $this->codeFilter = new ArticleCode();
         $this->nameFilter = new ProducerName();
         // Задает опции фильтра (если они предоставлены).
         if(is_array($options)) {
             if(isset($options['format'])){
+            }
+            if(isset($options['aplGoodId'])){
+                $this->aplGoodId = $options['aplGoodId'];
             }
         }    
     }
@@ -73,10 +78,14 @@ class ParseRawpriceApl extends AbstractFilter
         if ($rawprice == null){
             return $this->_pars_script();
         } else {
+            if (!isset($this->aplGoodId)){
+                return;
+            }
+
             $key =  md5($rawprice->getRaw()->getSupplier()->getAplId().":".$this->codeFilter->filter($rawprice->getArticle()).":".$this->nameFilter->filter($rawprice->getProducer()));
             return [
                     'key' => $key,
-                    'parent' => $rawprice->getGood()->getAplId(),
+                    'parent' => $this->aplGoodId,
                     'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
                     'iid' => $rawprice->getIid(),
                     'art' => $this->codeFilter->filter($rawprice->getArticle()),

@@ -1193,61 +1193,65 @@ class AplService {
     {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
 
-        $post = [
-            'id' => $good->getAplId(),
-            'rawprices' => [],            
-        ];        
-        
-        $filter = new ParseRawpriceApl();        
         $result = 0;
         
-        $articles = $this->entityManager->getRepository(Article::class)
-                ->findBy(['good' => $good->getId()]);
-        foreach ($articles as $article){
-            $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                    ->findBy([
-                        'code' => $article->getId(),
-                        'status' => Rawprice::STATUS_PARSED,
-                    ]);        
-            $result += count($rawprices);
-            foreach ($rawprices as $rawprice){
-                $post['rawprices'][] = $filter->filter($rawprice);
-            }
-        }            
+        if ($good->getAplId()>0){
 
-//        var_dump($post); //exit;
-        $client = new Client();
-        $client->setUri($url);
-        $client->setMethod('POST');
-        $client->setOptions(['timeout' => 30]);
-        $client->setParameterPost($post);
+            $post = [
+                'id' => $good->getAplId(),
+                'rawprices' => [],            
+            ];        
 
-        $ok = false;
-        try{
-            $response = $client->send();
-//            var_dump($response->getStatusCode()); exit;
-            if ($response->isOk()) {
+            $filter = new ParseRawpriceApl(['aplGoodId' => $good->getAplId()]);        
+
+            $articles = $this->entityManager->getRepository(Article::class)
+                    ->findBy(['good' => $good->getId()]);
+            foreach ($articles as $article){
+                $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                        ->findBy([
+                            'code' => $article->getId(),
+                            'status' => Rawprice::STATUS_PARSED,
+                        ]);        
+                $result += count($rawprices);
+                foreach ($rawprices as $rawprice){
+                    $post['rawprices'][] = $filter->filter($rawprice);
+                }
+            }            
+
+    //        var_dump($post); //exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 30]);
+            $client->setParameterPost($post);
+
+            $ok = false;
+            try{
+                $response = $client->send();
+    //            var_dump($response->getStatusCode()); exit;
+                if ($response->isOk()) {
+                    $ok = true;
+                }
+                if ($response->getStatusCode() == 204) {
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGood($good, ['aplId' => 0]);
+                    $result = true;
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
+                $result = 0;
+            }    
+
+            if ($ok) {            
+                if (isset($good)){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);                
+                }
             }
-            if ($response->getStatusCode() == 204) {
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['aplId' => 0]);
-                $result = true;
-            }
-        } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
-            $ok = true;
-            $result = 0;
+
+            unset($post);
+            unset($rawprices);
         }    
-        
-        if ($ok) {            
-            if (isset($good)){
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);                
-            }
-        }
-        
-        unset($post);
-        unset($rawprices);
         
         return $result;
     }
@@ -1656,6 +1660,8 @@ class AplService {
      */
     public function sendGoodCar($good)
     {
+        $ok = $result = FALSE;
+        
         if ($good->getAplId() && $good->getGroupApl() != Goods::DEFAULT_GROUP_APL_ID){
             $url = $this->aplApi().'update-good-car?api='.$this->aplApiKey();
 
@@ -1683,7 +1689,6 @@ class AplService {
             $client->setOptions(['timeout' => 30]);
             $client->setParameterPost($post);
 
-            $ok = $result = FALSE;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
