@@ -608,15 +608,11 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g')
-            ->addSelect('count(a.id) as articleCount')    
             ->from(Goods::class, 'g')
-            ->leftJoin('g.articles', 'a')
-            ->groupBy('g.id')
-            ->having('articleCount = 0')
-            ->setMaxResults(5000)    
+            ->where('g.updWeek != ?1')
+            ->setParameter('1', date('W'))    
                 ;
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();            
+        return $queryBuilder->getQuery();            
     }
 
     

@@ -148,6 +148,7 @@ class AssemblyManager
             'markup' => 0.0,
             'group_apl' => Goods::DEFAULT_GROUP_APL_ID,
             'token_group_id' => NULL,
+            'upd_week' => date('W'),
         ];
 
         if (!$zeroGroup){

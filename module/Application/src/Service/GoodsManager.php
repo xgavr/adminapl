@@ -20,6 +20,7 @@ use Application\Entity\ScaleTreshold;
 use Phpml\Math\Statistic\Mean;
 use Phpml\Math\Statistic\StandardDeviation;
 use Application\Validator\Sigma3;
+use Application\Entity\Article;
 
 /**
  * Description of GoodsService
@@ -197,23 +198,35 @@ class GoodsManager
      */
     public function removeEmpty()
     {
+
+        ini_set('memory_limit', '1024M');
         set_time_limit(900);        
-        ini_set('memory_limit', '2048M');
         $startTime = time();
         $finishTime = $startTime + 840;
-
+        
         $goodsForDelete = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForDelete();
-
-        foreach ($goodsForDelete as $row){
-            $this->removeGood($row[0]);
+        $iterable = $goodsForDelete->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $articleCount = $this->entityManager->getRepository(Article::class)
+                        ->count(['good' => $good->getId()]);
+                if ($articleCount == 0){
+                    $this->removeGood($good);
+                } else {
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($good->getId(), ['upd_week' => date('W')]);
+                }    
+                $this->entityManager->detach($good);
+            }    
             if (time() >= $finishTime){
-                break;;
+                return;
             }
         }
         
-        unset($goodsForDelete);
         return;
+        
     }
     
     

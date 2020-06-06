@@ -71,7 +71,7 @@ class Goods {
     const TD_DIRECT = 1; //точно совпадает с товаровм в ТД
     const TD_NO_DIRECT = 2; //не совпадает с товаровм в ТД
     
-    const GROUP_TOKEN_UPDATE_FLAG = 2; // установить любое число (2-9), для запуска обновления групп токенов
+    const GROUP_TOKEN_UPDATE_FLAG = 2; // месяц обновления наименования товара
     
     /**
      * @ORM\Id
@@ -122,7 +122,7 @@ class Goods {
     /**
      * @ORM\Column(name="status_oem")   
      */
-    protected $statusOem;
+    protected $statusOem;    
 
     /**
      * @ORM\Column(name="status_rawprice_ex")   
@@ -218,6 +218,11 @@ class Goods {
      * @ORM\Column(name="date_ex")  
      */
     protected $dateEx;
+        
+    /**
+     * @ORM\Column(name="upd_week")  
+     */
+    protected $updWeek;        
     
     /**
      * @ORM\ManyToOne(targetEntity="\Application\Entity\Producer", inversedBy="goods") 
@@ -906,6 +911,16 @@ class Goods {
     {
         $this->groupTokenUpdateFlag = $groupTokenUpdateFlag;
     }    
+    
+    public function getUpdWeek() 
+    {
+        return $this->updWeek;
+    }
+
+    public function setUpdWeek() 
+    {
+        $this->updWeek = date('W');
+    }     
     
     /**
      * Returns the array of good tokens assigned to this token.

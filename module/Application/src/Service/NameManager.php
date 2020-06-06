@@ -2261,7 +2261,7 @@ class NameManager
 
             if ($flag){
                 $upd = [                    
-                    'group_token_update_flag' => date('n'),
+                    'group_token_update_flag' => date('n'), //номер месяца
                 ];
                 if ($good->getName() != $result['bestName']){
                     $upd['name'] = $result['bestName'];
