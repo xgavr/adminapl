@@ -1194,7 +1194,7 @@ class AplService {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
 
         $post = [
-            'id' => $good->getId(),
+            'id' => $good->getAplId(),
             'rawprices' => [],            
         ];        
         
@@ -1215,7 +1215,7 @@ class AplService {
             }
         }            
 
-        var_dump($post); //exit;
+//        var_dump($post); //exit;
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');
