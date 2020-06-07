@@ -1263,15 +1263,22 @@ class AplService {
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
         $startTime = time();
-
-        while (true){
-            if ($this->sendRawprices($limit) == 0){
-                return;
+        
+        $goodsQuery = $this->entityManager->getRepository(Goods::class)
+                ->findForRawpriceEx();
+        
+        $iterable = $goodsQuery->iterate();
+        foreach($iterable as $item){
+            foreach ($item as $good){
+                if (!$this->sendRawprices($good)){
+                    return;
+                }
             }
             if (time() > $startTime + 840){
-                return;
+                break;
             }
-        }
+        }        
+        unset($iterable);
         return;
     }
 

@@ -271,33 +271,24 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
-     * Запрос на выборку товаров для экспорта
+     * Запрос на выборку товаров для экспорта строк прайса
      * 
-     * @param int $statusRawpriceEx
-     * @param array $params
      * @return object
      */
-    public function findForRawpriceEx($statusRawpriceEx, $params = null)
+    public function findForRawpriceEx()
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('g.id', 'g.dateEx')
+        $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
-                ->where('g.statusRawpriceEx = ?1')
+//                ->where('g.statusRawpriceEx = ?1')
                 ->andWhere('g.aplId > 0')
-                ->setParameter('1', $statusRawpriceEx)
+//                ->setParameter('1', Goods::RAWPRICE_EX_NEW)
+                ->orderBy('g.dateEx', 'ASC')
+                ->setMaxResults(2000)
                 ;
-        if (is_array($params)){
-            if (isset($params['goodId'])){
-                $queryBuilder->andWhere('g.id = ?2')
-                        ->setParameter('2', $params['goodId']);
-            }
-            if (isset($params['limit'])){
-                $queryBuilder->setMaxResults($params['limit']);
-            }
-        }
         
         return $queryBuilder->getQuery();        
     }
