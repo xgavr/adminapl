@@ -1193,7 +1193,7 @@ class AplService {
     {
         $url = $this->aplApi().'update-rawprice?api='.$this->aplApiKey();
 
-        $result = 0;
+        $result = true;
         
         if ($good->getAplId()>0){
 
@@ -1212,7 +1212,6 @@ class AplService {
                             'code' => $article->getId(),
                             'status' => Rawprice::STATUS_PARSED,
                         ]);        
-                $result += count($rawprices);
                 foreach ($rawprices as $rawprice){
                     $post['rawprices'][] = $filter->filter($rawprice);
                 }
@@ -1225,12 +1224,12 @@ class AplService {
             $client->setOptions(['timeout' => 30]);
             $client->setParameterPost($post);
 
-            $ok = false;
+            $ok = $result = false;
             try{
                 $response = $client->send();
     //            var_dump($response->getStatusCode()); exit;
                 if ($response->isOk()) {
-                    $ok = true;
+                    $ok = $result = true;
                 }
                 if ($response->getStatusCode() == 204) {
                     $this->entityManager->getRepository(Goods::class)
@@ -1239,7 +1238,6 @@ class AplService {
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
-                $result = 0;
             }    
 
             if ($ok) {            
