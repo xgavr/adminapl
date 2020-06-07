@@ -287,7 +287,7 @@ class GoodsRepository extends EntityRepository
                 ->andWhere('g.aplId > 0')
 //                ->setParameter('1', Goods::RAWPRICE_EX_NEW)
                 ->orderBy('g.dateEx', 'ASC')
-                ->setMaxResults(2000)
+                ->setMaxResults(20000)
                 ;
         
         return $queryBuilder->getQuery();        
