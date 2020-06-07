@@ -62,7 +62,7 @@ class TurboOrderFilter extends AbstractFilter
         $bags = [];
         $info = [];
         $goodStr = false;
-//        var_dump($lines); exit;
+//        var_dump($value); exit;
         foreach ($lines as $key => $line){
             if ($line[0] == 'product id'){
                 $goodStr = true;
@@ -73,7 +73,7 @@ class TurboOrderFilter extends AbstractFilter
                 continue;
             }
             if ($goodStr){
-                $bags[] = [
+                $bags[$line[0]] = [
                     'offerId' => $line[0],
                     'count' => (float) $line[2],
                     'price' => (float) $line[3],
@@ -109,7 +109,7 @@ class TurboOrderFilter extends AbstractFilter
         array_filter($info);
         $result['text'] = implode(PHP_EOL, $info);
         $result['items'] = $bags;
-//        var_dump($result);
+//        var_dump($result); exit;
         return $result;
         
     }
