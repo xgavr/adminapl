@@ -129,6 +129,7 @@ class AutoruManager {
         } else {
             $filtered = $filter->filter($msg['content']['PLAIN'], false);             
         }    
+//        var_dump($filtered); exit;
         $text = 'Заказ с Яндекс.Турбо'.PHP_EOL.$filtered['text'];
 
         $name = null;
@@ -204,6 +205,7 @@ class AutoruManager {
                 if (isset($msg['content']['PLAIN'])){
                     if (mb_strpos($msg['content']['PLAIN'], 'Турбо-страницы') !== false 
                             && mb_strpos($msg['subject'], 'Новый заказ') !== false){
+//        var_dump($msg); exit;
                         $this->turboMsg($msg);
     //                    exit;
                     }

@@ -941,6 +941,7 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * НЕИСПОЛЬЗУЕТСЯ
      * Обновление строк прайсов товаров
      * 
      * @return JsonModel
@@ -951,7 +952,7 @@ class ProcessingController extends AbstractActionController
         
         if ($settings['rawprice'] == 1){
             
-            $this->aplService->updateGoodsRawprice();
+//            $this->aplService->updateGoodsRawprice();
             
         }    
         
@@ -972,7 +973,7 @@ class ProcessingController extends AbstractActionController
         
         if ($settings['rawprice'] == 1){
             
-            $this->goodsManager->compareGoodsRawprice();
+//            $this->goodsManager->compareGoodsRawprice();
             
         }    
         
@@ -1002,6 +1003,7 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * НЕИСПОЛЬЗУЕТСЯ
      * Удаление старых прайсов в АПЛ
      */
     public function deleteOldRawAction()
@@ -1010,7 +1012,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
         
         if ($settings['rawprice'] == 1){
-            $this->aplService->deleteRaws();
+//            $this->aplService->deleteRaws();
         }    
         
         return new JsonModel(

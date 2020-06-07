@@ -36,6 +36,7 @@ class TurboOrderFilter extends AbstractFilter
     
     protected function _domTable($html)
     {
+//        var_dump($html); exit;
         $dom = new \DOMDocument();
         $dom->loadHTML($html);
         $xpath = new \DOMXPath($dom);
@@ -43,7 +44,7 @@ class TurboOrderFilter extends AbstractFilter
         $result = [];
         $row = 0;
         foreach ($xpath->query('//table') as $table){
-            foreach ($xpath->query('tr', $table) as $tr){
+            foreach ($xpath->query('//tr', $table) as $tr){
                 foreach ($xpath->query('td', $tr) as $td){
                     $result[$row][] = trim($td->textContent);
                 }
@@ -61,6 +62,7 @@ class TurboOrderFilter extends AbstractFilter
         $bags = [];
         $info = [];
         $goodStr = false;
+//        var_dump($lines); exit;
         foreach ($lines as $key => $line){
             if ($line[0] == 'product id'){
                 $goodStr = true;
@@ -119,6 +121,7 @@ class TurboOrderFilter extends AbstractFilter
         $bags = [];
         $info = [];
         $offerId = $price = null;
+//        var_dump($lines); exit;
         foreach ($lines as $key => $line){
             if ($line == 'ID предложения'){
                 $offerId = trim($lines[$key+1]);

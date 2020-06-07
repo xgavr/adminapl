@@ -1243,10 +1243,8 @@ class AplService {
             }    
 
             if ($ok) {            
-                if (isset($good)){
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);                
-                }
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);                
             }
 
             unset($post);
@@ -1266,8 +1264,6 @@ class AplService {
         set_time_limit(900);
         $startTime = time();
 
-        $limit = 400;
-        
         while (true){
             if ($this->sendRawprices($limit) == 0){
                 return;
