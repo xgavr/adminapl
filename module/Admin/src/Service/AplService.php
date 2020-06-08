@@ -1341,7 +1341,7 @@ class AplService {
                 ->findForRawpriceEx();
         
         $iterable = $goodsQuery->iterate();
-        $k = 1; $border = 400;
+        $k = 1; $border = 300;
         $goods = [];
         foreach($iterable as $item){
             foreach ($item as $good){
