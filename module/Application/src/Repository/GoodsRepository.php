@@ -289,7 +289,7 @@ class GoodsRepository extends EntityRepository
                 ->orderBy('g.dateEx', 'ASC')
                 ->setMaxResults(50000)
                 ;
-        var_dump(date('Y-m-d H:i:s', strtotime("-12 hours"))); exit;
+//        var_dump(date('Y-m-d H:i:s', strtotime("-12 hours"))); exit;
         return $queryBuilder->getQuery();        
     }
     
