@@ -283,13 +283,13 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
-//                ->where('g.statusRawpriceEx = ?1')
                 ->andWhere('g.aplId > 0')
-//                ->setParameter('1', Goods::RAWPRICE_EX_NEW)
+                ->andWhere('g.dateEx < ?1')
+                ->setParameter('1', date('Y-m-d H:i:s', strtotime("-12 hours")))
                 ->orderBy('g.dateEx', 'ASC')
-                ->setMaxResults(20000)
+                ->setMaxResults(50000)
                 ;
-        
+        var_dump($queryBuilder->getQuery()->getDQL()); exit;
         return $queryBuilder->getQuery();        
     }
     
