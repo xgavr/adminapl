@@ -1253,6 +1253,83 @@ class AplService {
     }
 
     /**
+     * Отправить строки прайсов пакета товаров 
+     * 
+     * @param array $data
+     */
+    public function sendRawpricesPackage($data)
+    {
+        $url = $this->aplApi().'update-rawprice-package?api='.$this->aplApiKey();
+
+        $result = true;
+        $post = [];
+        
+        foreach ($data as $good){
+            if ($good->getAplId()>0){
+
+                $package[] = [
+                    'id' => $good->getAplId(),
+                    'rawprices' => [],            
+                ];        
+
+                $filter = new ParseRawpriceApl(['aplGoodId' => $good->getAplId()]);        
+
+                $articles = $this->entityManager->getRepository(Article::class)
+                        ->findBy(['good' => $good->getId()]);
+                foreach ($articles as $article){
+                    $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                            ->findBy([
+                                'code' => $article->getId(),
+                                'status' => Rawprice::STATUS_PARSED,
+                            ]);        
+                    foreach ($rawprices as $rawprice){
+                        $post['rawprices'][] = $filter->filter($rawprice);
+                    }
+                }
+            }
+        }
+        
+        if (count($package)){
+            $post['package'] = $package;
+
+            var_dump($post); //exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+    //            var_dump($response->getStatusCode()); exit;
+                if ($response->isOk()) {
+                    $ok = $result = true;
+                }
+                if ($response->getStatusCode() == 204) {
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGood($good, ['aplId' => 0]);
+                    $result = true;
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                foreach ($data as $good){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
+                }    
+            }
+
+            unset($post);
+            unset($rawprices);
+        }    
+        
+        return $result;
+    }
+
+    /**
      * Обновить строки прайсов товаров
      * 
      */
