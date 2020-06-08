@@ -1266,12 +1266,9 @@ class AplService {
         
         foreach ($data as $good){
             if ($good->getAplId()>0){
-
-                $package[] = [
-                    'id' => $good->getAplId(),
-                    'rawprices' => [],            
-                ];        
-
+                
+                $rp = [];
+                
                 $filter = new ParseRawpriceApl(['aplGoodId' => $good->getAplId()]);        
 
                 $articles = $this->entityManager->getRepository(Article::class)
@@ -1283,9 +1280,15 @@ class AplService {
                                 'status' => Rawprice::STATUS_PARSED,
                             ]);        
                     foreach ($rawprices as $rawprice){
-                        $package['rawprices'][] = $filter->filter($rawprice);
+                        $rp[] = $filter->filter($rawprice);
                     }
                 }
+                
+                $package[] = [
+                    'id' => $good->getAplId(),
+                    'rawprices' => $rp,            
+                ];        
+
             }
         }
         
