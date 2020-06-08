@@ -1295,7 +1295,7 @@ class AplService {
         if (count($package)){
             $post['package'] = $package;
 
-//            var_dump($post); //exit;
+            var_dump($post); //exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
@@ -1341,12 +1341,20 @@ class AplService {
                 ->findForRawpriceEx();
         
         $iterable = $goodsQuery->iterate();
+        $k = 1; $border = 500;
+        $goods = [];
         foreach($iterable as $item){
             foreach ($item as $good){
-                if (!$this->sendRawprices($good)){
+                $goods[] = $good;
+            }
+            if ($k >= $border){
+                $k = 1;
+                if (!$this->sendRawpricesPackage($goods)){
                     return;
                 }
+                $goods = [];
             }
+            $k++;
             if (time() > $startTime + 840){
                 break;
             }
