@@ -690,12 +690,12 @@ class Rawprice {
     
     public function getArticle() 
     {
-        return $this->article;
+        return trim($this->article);
     }
 
     public function setArticle($article) 
     {
-        $this->article = (string) $article;
+        $this->article = trim((string) $article);
     }     
     
     public function getIid() 
@@ -710,14 +710,14 @@ class Rawprice {
 
     public function getProducer() 
     {
-        return $this->producer;
+        return trim($this->producer);
     }
 
     public function setProducer($producer) 
     {
 //        $producerNameFilter = new ProducerName();
 //        $this->producer = $producerNameFilter->filter($producer);
-        $this->producer = $producer;
+        $this->producer = trim($producer);
     }     
     
     public function getGoodname() 

@@ -1283,7 +1283,7 @@ class AplService {
                                 'status' => Rawprice::STATUS_PARSED,
                             ]);        
                     foreach ($rawprices as $rawprice){
-                        $post['rawprices'][] = $filter->filter($rawprice);
+                        $package['rawprices'][] = $filter->filter($rawprice);
                     }
                 }
             }
