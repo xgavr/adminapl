@@ -270,7 +270,7 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'get_group_apl',
-                'required' => true,
+                'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
                 ],                

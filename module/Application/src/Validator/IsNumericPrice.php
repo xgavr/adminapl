@@ -39,6 +39,10 @@ class IsNumericPrice extends AbstractValidator
      */
     public function isValid($value)
     {
+        if (mb_strlen(trim($value)) > 25){
+            return false;
+        }
+        
         $enWord = mb_ereg_replace('[^A-Z]', '', $value);
         $ruWord = mb_ereg_replace('[^А-ЯЁ]', '', $value);
         if ($enWord || $ruWord){

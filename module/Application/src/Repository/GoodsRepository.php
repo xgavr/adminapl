@@ -1694,4 +1694,28 @@ class GoodsRepository extends EntityRepository
         }
         return 0;        
     }
+
+    /**
+     * Количество товаров передавшие строки прайсов в АПЛ а сегодня
+     * 
+     * @return integer
+     */
+    public function countDateEx()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('count(g.id) as goodCount')
+                ->from(Goods::class, 'g')
+                ->where('g.dateEx >= ?1')
+                ->setParameter('1', date("Y-m-d"))
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $row){
+            return $row['goodCount'];
+        }
+        return 0;        
+    }
 }

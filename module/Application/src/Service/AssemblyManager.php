@@ -193,7 +193,7 @@ class AssemblyManager
         
     /**
      * Проверка строки прайса на возможность создания товара
-     * @param Application\Entity\Rawprice $rawprice
+     * @param Rawprice $rawprice
      * @return bool
      */
     
@@ -255,7 +255,7 @@ class AssemblyManager
     /**
      * Получить все возможные неизвестные производители по строке прайса 
      * 
-     * @param Application\Entity\Rawprice $rawprice
+     * @param Rawprice $rawprice
      * @return array
      */
     public function findUnknownProducers($rawprice)

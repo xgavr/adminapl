@@ -34,6 +34,10 @@ class ToFloat extends AbstractFilter
     
     public function filter($value)
     {
+        if (mb_strlen(trim($value)) > 25){
+            return;
+        }
+        
         $value = htmlentities($value);
         $value = str_replace([' ', '&nbsp;'], "", $value); //  
 
