@@ -926,7 +926,7 @@ class NameManager
         
         if (is_array($description)){
             if (isset($description['updWeek'])){
-                if ($description['updWeek'] == date('n')){
+                if ($description['updWeek'] == date('W')){
                     if (isset($description['numberTitle'])){
                         if ($description['numberTitle'] >= $numberTitle){
                             return;
