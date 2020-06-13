@@ -1347,7 +1347,7 @@ class AplService {
             foreach ($item as $good){
                 $goods[] = $good;
             }
-            if ($k >= $border){
+            if ($k >= $border && count($goods)){
                 $k = 1;
                 if (!$this->sendRawpricesPackage($goods)){
                     return;

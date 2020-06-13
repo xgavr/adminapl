@@ -921,14 +921,19 @@ class NameManager
             'car' => $rawprice->getCar(), 
             'fullName' => $rawprice->getFullTitle(),
             'numberTitle' => $numberTitle,
+            'updWeek' => date('W'),
         ]);
         
         if (is_array($description)){
-            if (isset($description['numberTitle'])){
-                if ($description['numberTitle'] >= $numberTitle){
-                    return;
+            if (isset($description['updWeek'])){
+                if ($description['updWeek'] == date('n')){
+                    if (isset($description['numberTitle'])){
+                        if ($description['numberTitle'] >= $numberTitle){
+                            return;
+                        }
+                    }                        
                 }
-            }    
+            }
         }
         
         $this->entityManager->getConnection()
