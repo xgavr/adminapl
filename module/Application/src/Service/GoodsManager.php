@@ -620,8 +620,8 @@ class GoodsManager
                 ->findBy(['good' => $good->getId()]);
         $rawprices = [];
         foreach ($articles as $article){
-            $rawprices[] = $this->entityManager->getRepository(Rawprice::class)
-                    ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED]);
+            $rawprices = array_merge($rawprices, $this->entityManager->getRepository(Rawprice::class)
+                    ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED])->toArray());
         }
         
         if (count($rawprices)){
