@@ -614,54 +614,61 @@ class GoodsManager
      */
     public function updatePrices($good, $flag = false)
     {
-        $rawprices = $this->entityManager->getRepository(Goods::class)
-                ->rawpriceArticles($good);
-        
-        $prices = $this->getPricesFromRawprices($rawprices);
-        
-        $oldMeanPrice = $good->getMeanPrice();
-        $oldPrice = $good->getPrice();
-        
-        $minPrice = $this->minPrice($prices);
-        $meanPrice = $this->meanPrice($prices);
-        $fixPrice = $good->getFixPrice();
-        if ($fixPrice < $meanPrice){
-            $fixPrice = 0;
+//        $rawprices = $this->entityManager->getRepository(Goods::class)
+//                ->rawpriceArticles($good);
+        $articles = $this->entityManager->getRepository(Article::class)
+                ->findBy(['good' => $good->getId()]);
+        $rawprices = [];
+        foreach ($articles as $article){
+            $rawprices[] = $this->entityManager->getRepository(Rawprice::class)
+                    ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED]);
         }
-        $price = $fixPrice;
+        
+        if (count($rawprices)){
+            $prices = $this->getPricesFromRawprices($rawprices);
 
-        if ($fixPrice == 0){
-            if ($oldMeanPrice != $meanPrice || !$oldPrice || $flag){
-                $rate = $this->entityManager->getRepository(Rate::class)
-                        ->findGoodRate($good);
-                if ($meanPrice){
-                    $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
-                    $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
-                }    
-            } else {
+            $oldMeanPrice = $good->getMeanPrice();
+            $oldPrice = $good->getPrice();
+
+            $minPrice = $this->minPrice($prices);
+            $meanPrice = $this->meanPrice($prices);
+            $fixPrice = $good->getFixPrice();
+            if ($fixPrice < $meanPrice){
+                $fixPrice = 0;
+            }
+            $price = $fixPrice;
+            if ($fixPrice == 0){
                 $price = $oldPrice;
-            }   
+            }    
+
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findGoodRate($good);
+
+            if ($meanPrice){
+                $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
+                $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
+            }    
+
+            if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), [
+                            'min_price' => $minPrice, 
+                            'mean_price' => $meanPrice,
+                            'fix_price' => $fixPrice,
+                            'price' => $price,
+                            'status_price_ex' => Goods::PRICE_EX_NEW,
+                                ]);
+            }    
+    //        var_dump($rate->getId());
+
+//            foreach ($rawprices as $rawprice){
+//                $this->entityManager->getRepository(Rawprice::class)
+//                        ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
+//            }
+            unset($prices);
         }    
-        
-        if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
-            $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), [
-                        'min_price' => $minPrice, 
-                        'mean_price' => $meanPrice,
-                        'fix_price' => $fixPrice,
-                        'price' => $price,
-                        'status_price_ex' => Goods::PRICE_EX_NEW,
-                            ]);
-        }    
-//        var_dump($rate->getId());
-        
-        foreach ($rawprices as $rawprice){
-            $this->entityManager->getRepository(Rawprice::class)
-                    ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
-        }
-        
         unset($rawprices);
-        unset($prices);
+        unset($articles);
         
         return;
     }
