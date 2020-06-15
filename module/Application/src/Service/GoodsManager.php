@@ -704,8 +704,10 @@ class GoodsManager
                 if ($good){
                     $this->updatePrices($good);
                     $this->entityManager->detach($good);
-                    $this->entityManager->detach($rawprice);
                 }    
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
+                $this->entityManager->detach($rawprice);
             }    
             if (time() > $startTime + 840){
                 return;
