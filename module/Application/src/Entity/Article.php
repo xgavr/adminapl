@@ -221,7 +221,11 @@ class Article {
     public function getDescriptionAsArray() 
     {
         if ($this->description){
-            return Decoder::decode($this->description, \Laminas\Json\Json::TYPE_ARRAY);
+            try{
+                return Decoder::decode($this->description, \Laminas\Json\Json::TYPE_ARRAY);
+            } catch (Laminas\Json\Exception\RuntimeException $err){
+                return;
+            }    
         }
         
         return;
