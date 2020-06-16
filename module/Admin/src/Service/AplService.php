@@ -2069,7 +2069,7 @@ class AplService {
     {
         
         $result = true;
-        if ($good->getPrice() && $good->getAplId()){
+        if ($good->getAplId()){
         
             $url = $this->aplApi().'update-price?api='.$this->aplApiKey();
             
