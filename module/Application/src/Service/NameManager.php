@@ -915,21 +915,31 @@ class NameManager
     public function updateArticleDescription($article, $articleTitle, $rawprice)
     {
         $description = $article->getDescriptionAsArray();        
-        $numberTitle = $this->numberRawpriceTitle($rawprice, $articleTitle);        
+        $numberTitle = $this->numberRawpriceTitle($rawprice, $articleTitle);
+        $car = $rawprice->getCar();
         $newDescription = \Laminas\Json\Encoder::encode([
             'name' => $rawprice->getTitle(), 
-            'car' => $rawprice->getCar(), 
+            'car' => $car, 
             'fullName' => $rawprice->getFullTitle(),
             'numberTitle' => $numberTitle,
             'updWeek' => date('W'),
         ]);
         
         if (is_array($description)){
+            $updCar = false;
+            if (mb_strlen($description['car']) < mb_strlen($car)){
+                $description['car'] = $car;
+                $updCar = true;
+            }
             if (isset($description['updWeek'])){
                 if ($description['updWeek'] == date('W')){
                     if (isset($description['numberTitle'])){
                         if ($description['numberTitle'] >= $numberTitle){
-                            return;
+                            if ($updCar){
+                                $newDescription = $description;
+                            } else {
+                                return;
+                            }
                         }
                     }                        
                 }

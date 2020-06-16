@@ -2141,7 +2141,7 @@ class AplService {
                     return;
                 }
             }    
-            usleep(100);
+//            usleep(100);
             if (time() > $startTime + 1740){
                 return;
             }
