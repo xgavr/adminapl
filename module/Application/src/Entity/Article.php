@@ -223,7 +223,7 @@ class Article {
         if ($this->description){
             try{
                 return Decoder::decode($this->description, \Laminas\Json\Json::TYPE_ARRAY);
-            } catch (Laminas\Json\Exception\RuntimeException $err){
+            } catch (\Laminas\Json\Exception\RuntimeException $err){
                 return;
             }    
         }
