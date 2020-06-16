@@ -917,13 +917,13 @@ class NameManager
         $description = $article->getDescriptionAsArray();        
         $numberTitle = $this->numberRawpriceTitle($rawprice, $articleTitle);
         $car = $rawprice->getCar();
-        $newDescription = \Laminas\Json\Encoder::encode([
+        $newDescription = [
             'name' => $rawprice->getTitle(), 
             'car' => $car, 
             'fullName' => $rawprice->getFullTitle(),
             'numberTitle' => $numberTitle,
             'updWeek' => date('W'),
-        ]);
+        ];
         
         if (is_array($description)){
             $updCar = false;
@@ -947,7 +947,7 @@ class NameManager
         }
         
         $this->entityManager->getConnection()
-                ->update('article', ['description' => $newDescription], ['id' => $article->getId()]);                            
+                ->update('article', ['description' => \Laminas\Json\Encoder::encode($newDescription)], ['id' => $article->getId()]);                            
         
         return;
     }
