@@ -2078,9 +2078,7 @@ class AplService {
                 'price' => $good->getPrice(),
                 'mp' => $good->getMinPrice(),
                 'optsn' => $good->getOpts(),
-                'presence' => 1,
-                'suppliers' => $this->entityManager->getRepository(Goods::class)
-                    ->findGoodAplIdSuppliers($good),
+                'presence' => $good->getAvailable(),
             ];
             
 //            var_dump($post); exit;
