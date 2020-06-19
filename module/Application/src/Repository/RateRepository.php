@@ -168,7 +168,7 @@ class RateRepository  extends EntityRepository
             ;       
         
         $orX = $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->isNull('r.supplier'),
+//                $queryBuilder->expr()->isNull('r.supplier'),
                 $queryBuilder->expr()->eq('r.genericGroup', $good->getGenericGroup()->getId()),
                 $queryBuilder->expr()->isNull('r.genericGroup'),
                 $queryBuilder->expr()->isNull('r.tokenGroup'),
@@ -186,9 +186,9 @@ class RateRepository  extends EntityRepository
         
         $queryBuilder->andWhere($orX)
                     ->addOrderBy('r.tokenGroup', 'DESC')
-                    ->addOrderBy('r.producer', 'DESC')
                     ->addOrderBy('r.genericGroup', 'DESC')
-                    ->addOrderBy('r.supplier', 'DESC')
+                    ->addOrderBy('r.producer', 'DESC')
+//                    ->addOrderBy('r.supplier', 'DESC')
                 ;
             
         return $queryBuilder->getQuery()->getOneOrNullResult();
