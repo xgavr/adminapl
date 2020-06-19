@@ -201,14 +201,11 @@ class MlManager
     }
     
     /**
-     * Предсказание процента по порогу по специальной шкале расценки
+     * Получить модель из хранилища
      * 
-     * @param float $treshold
      * @param string $modelFileName
-     * 
-     * @return float
      */
-    public function predictRateScale($treshold, $modelFileName = null)
+    public function rateScaleRegression($modelFileName = null)
     {
         $modelFileNameFull = self::ML_RATE_PRIMARY_SCALE;
         if ($modelFileName){
@@ -218,11 +215,38 @@ class MlManager
         }    
 
         $modelManager = new ModelManager();
-        $regression = $modelManager->restoreFromFile($modelFileNameFull);
+        return $modelManager->restoreFromFile($modelFileNameFull);        
+    }
+    
+    /**
+     * Предсказание процента по порогу по специальной шкале расценки
+     * 
+     * @param float $treshold
+     * @param string $modelFileName
+     * 
+     * @return float
+     */
+    public function predictRateScale($treshold, $modelFileName = null)
+    {
+        $regression = $this->rateScaleRegression($modelFileName);
         $treshold_log = [log($treshold)];
         return max(round($regression->predict($treshold_log), 2), ScaleTreshold::MIN_RATE);                
     }
     
+    /**
+     * Предсказание процента по порогу по специальной шкале расценки
+     * 
+     * @param object $regression
+     * @param float $treshold
+     * 
+     * @return float
+     */
+    public function predictRateScaleRegression($regression, $treshold)
+    {
+        $treshold_log = [log($treshold)];
+        return max(round($regression->predict($treshold_log), 2), ScaleTreshold::MIN_RATE);                
+    }
+
     /**
      * Удалить модель специальной шкалы
      * @param Rate $rate

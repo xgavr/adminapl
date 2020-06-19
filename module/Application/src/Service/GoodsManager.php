@@ -610,18 +610,23 @@ class GoodsManager
      * Обновить расчетные цены товара
      * 
      * @param Goods $good
-     * @param bool $flag
+     * @param object $flag
      */
-    public function updatePrices($good, $flag = false)
+    public function updatePrices($good, $regression = null)
     {
-//        $rawprices = $this->entityManager->getRepository(Goods::class)
-//                ->rawpriceArticles($good);
+
         $articles = $this->entityManager->getRepository(Article::class)
                 ->findBy(['good' => $good->getId()]);
-        $rawprices = [];
+        $prices = [];
         foreach ($articles as $article){
-            $rawprices = array_merge($rawprices, $this->entityManager->getRepository(Rawprice::class)
-                    ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED]));
+                $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                        ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED]);
+                foreach ($rawprices as $rawprice){
+                    if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
+                        $rest = min(1000, $rawprice->getRealRest());
+                        $prices = array_merge($prices, array_fill(0, $rest, $rawprice->getRealPrice()));
+                    }
+                }    
         }
                 
         $meanPrice = $price = $minPrice = 0;
@@ -629,8 +634,7 @@ class GoodsManager
         $oldPrice = $good->getPrice();
         $fixPrice = $good->getFixPrice();
         
-        if (count($rawprices)){
-            $prices = $this->getPricesFromRawprices($rawprices);
+        if (count($prices)){
 
             $minPrice = $this->minPrice($prices);
             $meanPrice = $this->meanPrice($prices);
@@ -641,17 +645,19 @@ class GoodsManager
             if ($fixPrice == 0){
                 $price = $oldPrice;
             }    
+            
+            if (!$regression){
+                $rate = $this->entityManager->getRepository(Rate::class)
+                        ->findGoodRate($good);
+                $regression = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
+            }    
 
-            $rate = $this->entityManager->getRepository(Rate::class)
-                    ->findGoodRate($good);
-
-            if ($meanPrice){
-                $percent = $this->mlManager->predictRateScale($meanPrice, $rate->getRateModelFileName());
+            if ($meanPrice && $regression){
+                $percent = $this->mlManager->predictRateScaleRegression($regression, $meanPrice);
                 $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
             }    
             unset($prices);
         }    
-        unset($rawprices);
         unset($articles);
 
         if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
@@ -693,11 +699,20 @@ class GoodsManager
                 ->findRawpriceForUpdatePrice($raw);
         $iterable = $rawpriceQuery->iterate();
         
+        $regressions = [];
+        
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
                 $good = $rawprice->getGood();
+                
+                
                 if ($good){
-                    $this->updatePrices($good);
+                    $rate = $this->entityManager->getRepository(Rate::class)
+                            ->findGoodRate($good);
+                    if (!array_key_exists($rate->getId(), $regressions)){
+                        $regressions[$rate->getId()] = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
+                    }                
+                    $this->updatePrices($good, $regressions[$rate->getId()]);
                     $this->entityManager->detach($good);
                 }    
                 $this->entityManager->getRepository(Rawprice::class)
@@ -708,6 +723,8 @@ class GoodsManager
                 return;
             }
         }
+        
+        unset($regressions);
         
         $this->entityManager->getRepository(Raw::class)
                 ->updateRawParseStage($raw, Raw::STAGE_PRICE_UPDATET); 

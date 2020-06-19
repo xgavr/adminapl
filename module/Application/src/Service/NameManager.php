@@ -18,7 +18,6 @@ use Application\Entity\GoodToken;
 use Application\Entity\Bigram;
 use Application\Entity\ArticleBigram;
 use Application\Entity\Goods;
-use Application\Entity\GoodTitle;
 use Application\Entity\TitleToken;
 use Application\Entity\Car;
 use Application\Entity\Oem;
