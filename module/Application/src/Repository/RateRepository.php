@@ -179,10 +179,10 @@ class RateRepository  extends EntityRepository
         if ($good->getTokenGroup()){
             $orX->add($queryBuilder->expr()->eq('r.tokenGroup', $good->getTokenGroup()->getId()));
         }
-        $supplier = $this->findGoodSupplier($good);
-        if ($supplier){
-            $orX->add($queryBuilder->expr()->eq('r.supplier', $supplier));
-        }
+//        $supplier = $this->findGoodSupplier($good);
+//        if ($supplier){
+//            $orX->add($queryBuilder->expr()->eq('r.supplier', $supplier));
+//        }
         
         $queryBuilder->andWhere($orX)
                     ->addOrderBy('r.tokenGroup', 'DESC')
