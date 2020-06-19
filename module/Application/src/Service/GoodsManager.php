@@ -610,7 +610,7 @@ class GoodsManager
      * Обновить расчетные цены товара
      * 
      * @param Goods $good
-     * @param object $flag
+     * @param object $regression
      */
     public function updatePrices($good, $regression = null)
     {
