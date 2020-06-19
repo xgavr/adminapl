@@ -626,6 +626,8 @@ class GoodsManager
                         $rest = min(1000, $rawprice->getRealRest());
                         $prices = array_merge($prices, array_fill(0, $rest, $rawprice->getRealPrice()));
                     }
+                    $this->entityManager->getRepository(Rawprice::class)
+                            ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
                 }    
         }
                 
@@ -715,8 +717,6 @@ class GoodsManager
                     $this->updatePrices($good, $regressions[$rate->getId()]);
                     $this->entityManager->detach($good);
                 }    
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
                 $this->entityManager->detach($rawprice);
             }    
             if (time() > $startTime + 840){
