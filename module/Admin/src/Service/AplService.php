@@ -2071,11 +2071,12 @@ class AplService {
         $result = true;
         if (count($goods)){
             
-            $url = $this->aplApi().'update-price?api='.$this->aplApiKey();
+            $url = $this->aplApi().'update-price-package?api='.$this->aplApiKey();
             
+            $post['package'] = [];
             foreach ($goods as $good){
                 if ($good->getAplId()){
-                    $post[$good->getAplId()] = [
+                    $post['package'][$good->getAplId()] = [
                         'goodId' => $good->getAplId(),
                         'price' => $good->getPrice(),
                         'mp' => $good->getMinPrice(),
@@ -2096,7 +2097,7 @@ class AplService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-    //            var_dump($response->getBody()); exit;
+                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
