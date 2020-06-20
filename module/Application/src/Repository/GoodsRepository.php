@@ -726,6 +726,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusPriceEx = ?1')
+            ->andWhere('g.price > 0')
             ->setParameter('1', Goods::PRICE_EX_NEW)
             ->setMaxResults(100000)    
                 ;
