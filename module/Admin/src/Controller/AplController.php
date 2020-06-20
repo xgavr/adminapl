@@ -220,7 +220,7 @@ class AplController extends AbstractActionController
             return;                        
         } 
         
-        $this->aplService->updateGoodPrice($good);
+        $this->aplService->updateGoodPrice([$good]);
         
         return new JsonModel([
             'result' => 'ok-reload',

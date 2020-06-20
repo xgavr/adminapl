@@ -1348,7 +1348,7 @@ class AplService {
                 $goods[] = $good;
             }
             if ($k >= $border && count($goods)){
-                $k = 1;
+                $k = 0;
                 if (!$this->sendRawpricesPackage($goods)){
                     return;
                 }
@@ -1823,7 +1823,7 @@ class AplService {
                     return;
                 }
             }
-            usleep(100);
+//            usleep(100);
             if (time() > $startTime + 1740){
                 return;
             }
@@ -2063,25 +2063,27 @@ class AplService {
     /**
      * Обновить цен товара в АПЛ
      * 
-     * @param Goods $good
+     * @param array $goods
      */ 
-    public function updateGoodPrice($good)
+    public function updateGoodPrice($goods)
     {
         
         $result = true;
-        if ($good->getAplId()){
+        if ($good->getAplId() && count($goods)){
         
             $url = $this->aplApi().'update-price?api='.$this->aplApiKey();
             
-            $post = [
-                'goodId' => $good->getAplId(),
-                'price' => $good->getPrice(),
-                'mp' => $good->getMinPrice(),
-                'optsn' => $good->getOpts(),
-                'presence' => $good->getAvailable(),
-            ];
+            foreach ($goods as $good){
+                $post[$good->getAplId()] = [
+                    'goodId' => $good->getAplId(),
+                    'price' => $good->getPrice(),
+                    'mp' => $good->getMinPrice(),
+                    'optsn' => $good->getOpts(),
+                    'presence' => $good->getAvailable(),
+                ];
+            }    
             
-//            var_dump($post); exit;
+            var_dump($post); exit;
             
             $client = new Client();
             $client->setUri($url);
@@ -2096,18 +2098,20 @@ class AplService {
                 if ($response->isOk()) {
                     $ok = $result = true;
                 }
-                if ($response->getStatusCode() == 204) {
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['aplId' => 0]);
-                    $result = true;
-                }
+//                if ($response->getStatusCode() == 204) {
+//                    $this->entityManager->getRepository(Goods::class)
+//                            ->updateGood($good, ['aplId' => 0]);
+//                    $result = true;
+//                }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
 
             if ($ok){
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
+                foreach ($goods as $good){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGood($good, ['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
+                }    
             }
         }
         
@@ -2129,21 +2133,25 @@ class AplService {
                 ->findGoodsForUpdatePrice();
         
         $iterable = $goodsQuery->iterate();
-        
+        $k = 1; $border = 100;
+        $goods = [];        
         foreach ($iterable as $row){
             foreach ($row as $good){
-                $result = $this->updateGoodPrice($good);
-                $this->entityManager->detach($good);
-                
-                if (!$result){
-                    return;
+                $goods[] = $good;
+                if ($k >= $border && count($goods)){
+                    $k = 0;
+                    if (!$this->updateGoodPrice($goods)){
+                        return;
+                    }
+                    $goods = [];
                 }
-            }    
-//            usleep(100);
-            if (time() > $startTime + 1740){
-                return;
+                $k++;
+                $this->entityManager->detach($good);
+                if (time() > $startTime + 840){
+                    break;
+                }
             }
-        }
+        }    
         return;
     }    
     
