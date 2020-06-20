@@ -2137,16 +2137,15 @@ class AplService {
         foreach ($iterable as $row){
             foreach ($row as $good){
                 $goods[] = $good;
-                if ($k >= $border && count($goods)){
-                    $k = 0;
-                    if (!$this->updateGoodPrice($goods)){
-                        return;
-                    }
-                    $goods = [];
+            }    
+            if ($k >= $border && count($goods)){
+                $k = 0;
+                if (!$this->updateGoodPrice($goods)){
+                    return;
                 }
-                $k++;
-                $this->entityManager->detach($good);
+                $goods = [];
             }
+            $k++;
             if (time() > $startTime + 840){
                 break;
             }
