@@ -2125,7 +2125,7 @@ class AplService {
     public function updateGoodPrices()
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(1800);
+        set_time_limit(900);
         $startTime = time();
         
         $goodsQuery = $this->entityManager->getRepository(Goods::class)
