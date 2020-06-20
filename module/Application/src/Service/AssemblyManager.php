@@ -134,6 +134,7 @@ class AssemblyManager
             'status_oem' => Goods::OEM_FOR_UPDATE,
             'status_rawprice_ex' => Goods::RAWPRICE_EX_NEW,
             'date_ex' => date('Y-m-d H:i:s'),
+            'date_price' => date('Y-m-d H:i:s'),
             'car_count' => 0,
             'apl_id' => 0,
             'status_oem_ex' => Goods::OEM_EX_NEW,

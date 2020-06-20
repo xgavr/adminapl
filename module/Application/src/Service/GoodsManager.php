@@ -626,8 +626,6 @@ class GoodsManager
                         $rest = min(1000, $rawprice->getRealRest());
                         $prices = array_merge($prices, array_fill(0, $rest, $rawprice->getRealPrice()));
                     }
-                    $this->entityManager->getRepository(Rawprice::class)
-                            ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
                 }    
         }
                 
@@ -670,8 +668,14 @@ class GoodsManager
                         'fix_price' => $fixPrice,
                         'price' => $price,
                         'status_price_ex' => Goods::PRICE_EX_NEW,
+                        'date_price' => date('Y-m-d H:i:s'),
                             ]);
-        }    
+        } else {
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), [
+                        'date_price' => date('Y-m-d H:i:s'),
+                            ]);            
+        }   
         
         return;
     }
@@ -709,14 +713,18 @@ class GoodsManager
                 
                 
                 if ($good){
-                    $rate = $this->entityManager->getRepository(Rate::class)
-                            ->findGoodRate($good);
-                    if (!array_key_exists($rate->getId(), $regressions)){
-                        $regressions[$rate->getId()] = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
-                    }                
-                    $this->updatePrices($good, $regressions[$rate->getId()]);
+                    if ($good->getDatePrice() < date('Y-m-d') || !$good->getPrice()){
+                        $rate = $this->entityManager->getRepository(Rate::class)
+                                ->findGoodRate($good);
+                        if (!array_key_exists($rate->getId(), $regressions)){
+                            $regressions[$rate->getId()] = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
+                        }                
+                        $this->updatePrices($good, $regressions[$rate->getId()]);
+                    }    
                     $this->entityManager->detach($good);
                 }    
+                $this->entityManager->getRepository(Rawprice::class)
+                        ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
                 $this->entityManager->detach($rawprice);
             }    
             if (time() > $startTime + 840){

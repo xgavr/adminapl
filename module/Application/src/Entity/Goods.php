@@ -219,6 +219,11 @@ class Goods {
      */
     protected $dateEx;
         
+    /** 
+     * @ORM\Column(name="date_price")  
+     */
+    protected $datePrice;
+        
     /**
      * @ORM\Column(name="upd_week")  
      */
@@ -547,6 +552,16 @@ class Goods {
     public function setDateEx($dateEx) 
     {
         $this->dateEx = $dateEx;
+    }     
+
+    public function getDatePrice() 
+    {
+        return $this->datePrice;
+    }
+
+    public function setDatePrice($datePrice) 
+    {
+        $this->datePrice = $datePrice;
     }     
 
     /**
