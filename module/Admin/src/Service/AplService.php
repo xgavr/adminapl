@@ -2136,7 +2136,7 @@ class AplService {
                 ->findGoodsForUpdatePrice();
         
         $iterable = $goodsQuery->iterate();
-        $k = 1; $border = 100;
+        $k = 1; $border = 500;
         $goods = [];        
         foreach ($iterable as $row){
             foreach ($row as $good){
