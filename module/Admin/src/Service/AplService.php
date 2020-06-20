@@ -2146,9 +2146,9 @@ class AplService {
                 }
                 $k++;
                 $this->entityManager->detach($good);
-                if (time() > $startTime + 840){
-                    break;
-                }
+            }
+            if (time() > $startTime + 840){
+                break;
             }
         }    
         return;
