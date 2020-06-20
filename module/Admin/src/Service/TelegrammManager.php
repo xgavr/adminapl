@@ -165,18 +165,20 @@ class TelegrammManager
 
             try {
                 $telegram = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
+                $clientParams = [
+                        'base_uri' => 'https://api.telegram.org', 
+                        'timeout' => 10.0,
+                        'cookie' => true,
+                    ];
                 
                 $proxy = $settings['telegram_proxy'];
                 
                 if ($proxy){
-                    Request::setClient(new Client([
-                        'proxy' => $proxy,
-                        'base_uri' => 'https://api.telegram.org', 
-                        'timeout' => 10.0,
-                        'cookie' => true,
-                    ]));
+                    $clientParams['proxy'] = $proxy;
                 }    
                 
+                Request::setClient(new Client($clientParams));
+
                 if (isset($params['chat_id'])){
                     $chatId = $params['chat_id'];
                 } else {
