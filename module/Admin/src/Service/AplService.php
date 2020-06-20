@@ -2066,8 +2066,7 @@ class AplService {
      * @param array $goods
      */ 
     public function updateGoodPrice($goods)
-    {
-        
+    {        
         $result = true;
         if (count($goods)){
             
@@ -2075,7 +2074,7 @@ class AplService {
             
             $post['package'] = [];
             foreach ($goods as $good){
-                if ($good->getAplId()){
+                if ($good->getAplId() && $good->getPrice()){
                     $post['package'][$good->getAplId()] = [
                         'goodId' => $good->getAplId(),
                         'price' => $good->getPrice(),
@@ -2087,35 +2086,37 @@ class AplService {
             }    
             
 //            var_dump($post); exit;
+            if (count($post['package'])){
             
-            $client = new Client();
-            $client->setUri($url);
-            $client->setMethod('POST');
-            $client->setOptions(['timeout' => 60]);
-            $client->setParameterPost($post);
+                $client = new Client();
+                $client->setUri($url);
+                $client->setMethod('POST');
+                $client->setOptions(['timeout' => 60]);
+                $client->setParameterPost($post);
 
-            $ok = $result = false;
-            try{
-                $response = $client->send();
-//                var_dump($response->getBody()); exit;
-                if ($response->isOk()) {
-                    $ok = $result = true;
-                }
-//                if ($response->getStatusCode() == 204) {
-//                    $this->entityManager->getRepository(Goods::class)
-//                            ->updateGood($good, ['aplId' => 0]);
-//                    $result = true;
-//                }
-            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
-                $ok = true;
-            }    
-
-            if ($ok){
-                foreach ($goods as $good){
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
+                $ok = $result = false;
+                try{
+                    $response = $client->send();
+    //                var_dump($response->getBody()); exit;
+                    if ($response->isOk()) {
+                        $ok = $result = true;
+                    }
+    //                if ($response->getStatusCode() == 204) {
+    //                    $this->entityManager->getRepository(Goods::class)
+    //                            ->updateGood($good, ['aplId' => 0]);
+    //                    $result = true;
+    //                }
+                } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                    $ok = true;
                 }    
-            }
+
+                if ($ok){
+                    foreach ($goods as $good){
+                        $this->entityManager->getRepository(Goods::class)
+                                ->updateGood($good, ['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
+                    }    
+                }
+            }    
         }
         
         return $result;
@@ -2136,7 +2137,7 @@ class AplService {
                 ->findGoodsForUpdatePrice();
         
         $iterable = $goodsQuery->iterate();
-        $k = 1; $border = 200;
+        $k = 1; $border = 300;
         $goods = [];        
         foreach ($iterable as $row){
             foreach ($row as $good){
