@@ -2069,18 +2069,20 @@ class AplService {
     {
         
         $result = true;
-        if ($good->getAplId() && count($goods)){
-        
+        if (count($goods)){
+            
             $url = $this->aplApi().'update-price?api='.$this->aplApiKey();
             
             foreach ($goods as $good){
-                $post[$good->getAplId()] = [
-                    'goodId' => $good->getAplId(),
-                    'price' => $good->getPrice(),
-                    'mp' => $good->getMinPrice(),
-                    'optsn' => $good->getOpts(),
-                    'presence' => $good->getAvailable(),
-                ];
+                if ($good->getAplId()){
+                    $post[$good->getAplId()] = [
+                        'goodId' => $good->getAplId(),
+                        'price' => $good->getPrice(),
+                        'mp' => $good->getMinPrice(),
+                        'optsn' => $good->getOpts(),
+                        'presence' => $good->getAvailable(),
+                    ];
+                }    
             }    
             
             var_dump($post); exit;
