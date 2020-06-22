@@ -317,7 +317,7 @@ class Rawprice {
         return 0;
     }  
     
-    public function getStatusName($status)
+    public static function getStatusName($status)
     {
         $list = self::getStatusList();
         if (isset($list[$status]))

@@ -198,7 +198,7 @@ class Raw {
         return 'Unknown';
     }    
     
-    public function getStatusName($status)
+    public static function getStatusName($status)
     {
         $list = self::getStatusList();
         if (isset($list[$status]))
@@ -326,7 +326,7 @@ class Raw {
         return 'Unknown';
     }    
     
-    public function getParseStageName($parseStage)
+    public static function getParseStageName($parseStage)
     {
         $list = self::getParseStageList();
         if (isset($list[$parseStage]))
