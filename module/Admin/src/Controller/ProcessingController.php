@@ -309,14 +309,11 @@ class ProcessingController extends AbstractActionController
      * Удаление старых прайсов
      */
     public function deleteOldPricesAction()
-    {
-        
-        $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                ->findRawForRemove();
-        
-        foreach ($raws as $raw){
-            $this->rawManager->removeRaw($raw);
-        }
+    {        
+        $settings = $this->adminManager->getPriceSettings();
+        if ($settings['parse_raw'] == 1){
+            $this->rawManager->removeOldRaws();
+        }    
         
         return new JsonModel(
             ['ok']

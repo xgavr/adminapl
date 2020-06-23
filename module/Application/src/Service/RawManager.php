@@ -537,7 +537,7 @@ class RawManager {
         $this->entityManager->remove($rawprice);
         $this->entityManager->flush();        
     }
-    
+        
     /**
      * Удаление прайса
      * 
@@ -545,10 +545,7 @@ class RawManager {
      * 
      */
     public function removeRaw($raw)
-    {
-        ini_set('memory_limit', '1024M');
-        set_time_limit(0);
-                
+    {                
         $this->entityManager->getRepository(Raw::class)->deleteRawRawprices($raw);
         
         $rawpricesCount = $this->entityManager->getRepository(Rawprice::class)
@@ -561,5 +558,36 @@ class RawManager {
         
         return;
     }  
+    
+    /**
+     * Удаление старых прайсов
+     * 
+     */
+    public function removeOldRaws()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(3600);
+        $startTime = time();        
+        
+        $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                ->findRawForRemove();
 
+        foreach ($raws as $raw){
+            $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)
+                    ->deleteRawRawpricesQuery($raw);
+            $iterator = $rawpriceQuery->iterate();
+            foreach ($iterator as $item){
+                foreach ($item as $row){
+                    $this->entityManager->getConnection()->delete('rawprice', ['id' => $row['id']]);                
+                }
+                if (time() > $startTime + 3540){
+                    return;
+                }            
+            }                        
+            
+            $this->entityManager->getConnection()->delete('raw', ['id' => $raw->getId()]);                
+        }        
+        
+        return;
+    }
 }
