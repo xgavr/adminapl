@@ -573,6 +573,7 @@ class RawManager {
                 ->findRawForRemove();
 
         foreach ($raws as $raw){
+            var_dump($raw->getId()); exit;
             $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)
                     ->deleteRawRawpricesQuery($raw);
             $iterator = $rawpriceQuery->iterate();
