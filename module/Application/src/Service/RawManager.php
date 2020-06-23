@@ -569,7 +569,7 @@ class RawManager {
         set_time_limit(3600);
         $startTime = time();        
         
-        $raws = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+        $raws = $this->entityManager->getRepository(Raw::class)
                 ->findRawForRemove();
 
         foreach ($raws as $raw){
