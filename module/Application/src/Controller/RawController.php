@@ -243,7 +243,7 @@ class RawController extends AbstractActionController
 
     public function deleteOldRawsAction()
     {
-        
+        var_dump(111); exit;
         $this->rawManager->removeOldRaws();
         
         return new JsonModel(
