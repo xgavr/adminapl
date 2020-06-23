@@ -241,6 +241,15 @@ class RawController extends AbstractActionController
         );           
     }    
 
+    public function deleteOldRawsAction()
+    {
+        $this->rawManager->removeOldRaws();
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
+
     public function parseAction()
     {
         $rawId = (int)$this->params()->fromRoute('id', -1);
