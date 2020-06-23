@@ -260,7 +260,7 @@ class Supplier {
         return 'Unknown';
     }    
     
-    public function getStatusName($status)
+    public static function getStatusName($status)
     {
         $list = self::getStatusList();
         if (isset($list[$status]))
