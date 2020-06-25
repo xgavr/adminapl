@@ -188,6 +188,7 @@ class RateRepository  extends EntityRepository
         }    
         
         if (!$rate && $good->getProducer()){
+            $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
                 ->where('r.status = ?1')
