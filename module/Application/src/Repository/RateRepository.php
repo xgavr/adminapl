@@ -190,7 +190,7 @@ class RateRepository  extends EntityRepository
                     ->addOrderBy('r.producer', 'DESC')
 //                    ->addOrderBy('r.supplier', 'DESC')
                 ;
-            
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
     
