@@ -159,7 +159,8 @@ class RateRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-
+        
+        $rate = null;
         if ($good->getTokenGroup()){
             $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
@@ -170,10 +171,10 @@ class RateRepository  extends EntityRepository
                 ->setParameter('2', $good->getTokenGroup()->getId())
                 ->setMaxResults(1)    
                 ;       
-            return $queryBuilder->getQuery()->getOneOrNullResult();
+            $rate = $queryBuilder->getQuery()->getOneOrNullResult();
         }    
         
-        if ($good->getGenericGroup()){
+        if (!$rate && $good->getGenericGroup()){
             $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
@@ -183,11 +184,10 @@ class RateRepository  extends EntityRepository
                 ->setParameter('2', $good->getGenericGroup()->getId())
                 ->setMaxResults(1)    
                 ;       
-            return $queryBuilder->getQuery()->getOneOrNullResult();
+            $rate = $queryBuilder->getQuery()->getOneOrNullResult();
         }    
         
-        if ($good->getProducer()){
-            $queryBuilder->resetDQLParts();
+        if (!$rate && $good->getProducer()){
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
                 ->where('r.status = ?1')
@@ -196,10 +196,14 @@ class RateRepository  extends EntityRepository
                 ->setParameter('2', $good->getProducer()->getId())
                 ->setMaxResults(1)    
                 ;       
-            return $queryBuilder->getQuery()->getOneOrNullResult();
+            $rate = $queryBuilder->getQuery()->getOneOrNullResult();
         }    
         
-        return $this->findDefaultRate();
+        if (!$rate){
+            $rate =  $this->findDefaultRate();
+        }
+        
+        return $rate;
     }
     
     /**
