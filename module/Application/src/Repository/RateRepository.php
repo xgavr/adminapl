@@ -161,6 +161,7 @@ class RateRepository  extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
 
         if ($good->getTokenGroup()){
+            $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
                 ->where('r.status = ?1')
@@ -173,6 +174,7 @@ class RateRepository  extends EntityRepository
         }    
         
         if ($good->getGenericGroup()){
+            $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
                 ->where('r.status = ?1')
@@ -185,6 +187,7 @@ class RateRepository  extends EntityRepository
         }    
         
         if ($good->getProducer()){
+            $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
                 ->where('r.status = ?1')
