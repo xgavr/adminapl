@@ -186,8 +186,8 @@ class RateRepository  extends EntityRepository
         
         $queryBuilder->andWhere($orX)
                     ->addOrderBy('r.tokenGroup', 'DESC')
-                    ->addOrderBy('r.genericGroup', 'DESC')
                     ->addOrderBy('r.producer', 'DESC')
+                    ->addOrderBy('r.genericGroup', 'DESC')
 //                    ->addOrderBy('r.supplier', 'DESC')
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
