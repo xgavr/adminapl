@@ -63,7 +63,8 @@
             "Company\\": "module/Company/src/",
             "User\\": "module/User/src/",
             "Bankapi\\": "module/Bankapi/src/",
-            "Bank\\": "module/Bank/src/"
+            "Bank\\": "module/Bank/src/",
+            "Stock\\": "module/Stock/src/"
         }
     },
     "autoload-dev": {

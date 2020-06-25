@@ -48,7 +48,7 @@
     <?php 
         $price = $this->goodsManager->getMaxPrice($row);
         $inCart = $this->shopManager->getGoodInCart($row->getId());
-        $avialable = $price>0;
+        $available = $price>0;
     ?>
     <tr>
         <td><?= $this->escapeHtml($row->getId()); ?></td>
@@ -61,7 +61,7 @@
         <td><?= $this->escapeHtml($row->getProducer()->getName()); ?></td>        
         <td><?= $price; ?></td>        
         <td>
-            <input type="text" id="num<?= $row->getId()?>" value="1" class="form-control" <?= ($avialable) ? '':'disabled' ?>/>
+            <input type="text" id="num<?= $row->getId()?>" value="1" class="form-control" <?= ($available) ? '':'disabled' ?>/>
         </td>
         <td>
             <button type="button" class="btn <?= ($inCart ? 'btn-success':'btn-default') ?>" aria-label="Left Align" id="shop_index_add_cart_<?= $row->getId()?>" 
@@ -69,7 +69,7 @@
                                 good: <?= $row->getId()?>, 
                                 price: <?= $price; ?>
                     })"
-                     <?= ($avialable) ? '':'disabled' ?>
+                     <?= ($available) ? '':'disabled' ?>
              >
                 <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">
                 </span>
