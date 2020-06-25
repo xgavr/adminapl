@@ -40,7 +40,7 @@ class RateRepository  extends EntityRepository
             ->andWhere('r.producer is null')
             ->andWhere('r.genericGroup is null')
             ->andWhere('r.tokenGroup is null')
-            ->andWhere('r.supplier is null')    
+//            ->andWhere('r.supplier is null')    
             ->orderBy('r.id', 'ASC')
             ;
         
@@ -159,39 +159,52 @@ class RateRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('r')
-            ->from(Rate::class, 'r')
-            ->where('r.status = ?1')
-            ->setParameter('1', Rate::STATUS_ACTIVE)
-            ->setMaxResults(1)    
-            ;       
         
-        $orX = $queryBuilder->expr()->orX(
-//                $queryBuilder->expr()->isNull('r.supplier'),
-                $queryBuilder->expr()->eq('r.genericGroup', $good->getGenericGroup()->getId()),
-                $queryBuilder->expr()->isNull('r.genericGroup'),
-                $queryBuilder->expr()->isNull('r.tokenGroup'),
-                $queryBuilder->expr()->eq('r.producer', $good->getProducer()->getId()),
-                $queryBuilder->expr()->isNull('r.producer')
-            );
-        
+        $rate = null;
         if ($good->getTokenGroup()){
-            $orX->add($queryBuilder->expr()->eq('r.tokenGroup', $good->getTokenGroup()->getId()));
-        }
-//        $supplier = $this->findGoodSupplier($good);
-//        if ($supplier){
-//            $orX->add($queryBuilder->expr()->eq('r.supplier', $supplier));
-//        }
+            $queryBuilder->resetDQLParts();
+            $queryBuilder->select('r')
+                ->from(Rate::class, 'r')
+                ->where('r.status = ?1')
+                ->andWhere('r.tokenGroup = ?2')    
+                ->setParameter('1', Rate::STATUS_ACTIVE)
+                ->setParameter('2', $good->getTokenGroup()->getId())
+                ->setMaxResults(1)    
+                ;       
+            $rate = $queryBuilder->getQuery()->getOneOrNullResult();
+        }    
         
-        $queryBuilder->andWhere($orX)
-                    ->addOrderBy('r.tokenGroup', 'DESC')
-                    ->addOrderBy('r.genericGroup', 'DESC')
-                    ->addOrderBy('r.producer', 'DESC')
-//                    ->addOrderBy('r.supplier', 'DESC')
-                ;
-            
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        if (!$rate && $good->getGenericGroup()){
+            $queryBuilder->resetDQLParts();
+            $queryBuilder->select('r')
+                ->from(Rate::class, 'r')
+                ->where('r.status = ?1')
+                ->andWhere('r.genericGroup = ?2')    
+                ->setParameter('1', Rate::STATUS_ACTIVE)
+                ->setParameter('2', $good->getGenericGroup()->getId())
+                ->setMaxResults(1)    
+                ;       
+            $rate = $queryBuilder->getQuery()->getOneOrNullResult();
+        }    
+        
+        if (!$rate && $good->getProducer()){
+            $queryBuilder->resetDQLParts();
+            $queryBuilder->select('r')
+                ->from(Rate::class, 'r')
+                ->where('r.status = ?1')
+                ->andWhere('r.producer = ?2')    
+                ->setParameter('1', Rate::STATUS_ACTIVE)
+                ->setParameter('2', $good->getProducer()->getId())
+                ->setMaxResults(1)    
+                ;       
+            $rate = $queryBuilder->getQuery()->getOneOrNullResult();
+        }    
+        
+        if (!$rate){
+            $rate =  $this->findDefaultRate();
+        }
+        
+        return $rate;
     }
     
     /**
