@@ -28,9 +28,9 @@ $this->headScript()
             <div class="form-inline" role="form">
                 <div class="form-group">
                     <select style="width: 200px" class="form-control" id='rawStatusSelect'>
-                        <option selected>Все</option>
+                        <option>Все</option>
                         <?php foreach ($rawStatuses as $key => $value):?>
-                            <option value="<?= $value['status']?>"><?= $value['name']?></option>
+                        <option value="<?= $value['status']?>" <?= ($value['status'] == Application\Entity\Raw::STATUS_PARSED) ? 'selected':'' ?>><?= $value['name']?></option>
                         <?php endforeach;?>
                     </select>
                     <select style="width: 200px" class="form-control" id='rawStageSelect'>
