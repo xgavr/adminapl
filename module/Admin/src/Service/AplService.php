@@ -1402,6 +1402,7 @@ class AplService {
     }
     
     /**
+     * НЕИСПОЛЬЗУЕТСЯ
      * Удалить прайс
      * 
      * @param Raw $raw

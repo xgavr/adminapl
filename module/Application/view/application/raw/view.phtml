@@ -314,19 +314,6 @@ $this->pageBreadcrumbs()->setItems([
                                     </div>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == $raw::STAGE_PRICE_UPDATET):?>
-                                    <button value="/name/update-good-token-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать токены товаров">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                    <div>
-                                        <small>
-                                            <i>
-                                                <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::TOKEN_GOOD_PARSED)*100/$totalRawpriceCount).'%'?>
-                                            </i>
-                                        </small>
-                                    </div>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_GOOD_TOKEN):?>
                                     <button value="/name/update-token-group-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Разобрать группы наименований">
                                         <span class="glyphicon glyphicon-wrench" ></span>

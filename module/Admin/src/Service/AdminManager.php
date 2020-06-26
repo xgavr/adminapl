@@ -152,7 +152,7 @@ class AdminManager {
         $config->price->assembly_producer = $data['assembly_producer']; //создавать производителей
         $config->price->assembly_good = $data['assembly_good']; //создавать товары
         $config->price->update_good_price = $data['update_good_price']; //рассчитать цены в товарах
-        $config->price->good_token = $data['good_token']; //токены товаров
+//        $config->price->good_token = $data['good_token']; //токены товаров
         $config->price->assembly_group_name = $data['assembly_group_name']; //собирать группы наименований
         $config->price->update_good_name = $data['update_good_name']; // наименований
         $config->price->image_mail_box = $data['image_mail_box']; //ящик для сбора картинок
