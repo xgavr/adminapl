@@ -92,8 +92,8 @@ class TurboOrderFilter extends AbstractFilter
                         $phones[] = $phoneFilter->filter(trim($dbStr));                                                
                     }
                 }
-                $result['email'] = implode(';', $emails);
-                $result['phone'] = implode(';', $phones);
+                $result['email'] = implode(';', array_filter($emails));
+                $result['phone'] = implode(';', array_filter($phones));
             }
             if ($line[0] == 'Комментарий'){
                 $info[] = trim($line[1]);

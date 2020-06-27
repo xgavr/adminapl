@@ -67,6 +67,11 @@ class PhoneFilter extends AbstractFilter
     // Сперва удаляем все нецифровые символы.
     $digits = preg_replace('#[^0-9]#', '', $value);
         
+    if(strlen($digits)<5) {
+      // Возвращаем пустое значение.
+      return;
+    }
+
     $format = $this->options['format'];
         
     if($format == self::PHONE_FORMAT_INTL) {            
