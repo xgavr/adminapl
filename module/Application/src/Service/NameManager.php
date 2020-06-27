@@ -2189,13 +2189,16 @@ class NameManager
             $upd = ['description' => $newDescription];
             if (!$good->getName()){
                 $upd['name'] = $newDescription;
+                $upd['status_name_ex'] = Goods::NAME_EX_NEW;
             }
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), $upd);
         }
         if (!$good->getName() && $good->getDescription()){
+            $upd['name'] = $good->getDescription();
+            $upd['status_name_ex'] = Goods::NAME_EX_NEW;
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), ['name' => $good->getDescription()]);
+                    ->updateGoodId($good->getId(), $upd);
         }
         
         return;
