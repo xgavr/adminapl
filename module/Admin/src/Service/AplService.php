@@ -1309,7 +1309,7 @@ class AplService {
 //                var_dump($response->getBody());
                 if ($response->isOk()) {
                     $ok = $result = true;
-                    $aplIdFlag = $response->getBody() == 1000;
+                    $aplIdFlag = (int) $response->getBody() === 1000;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
