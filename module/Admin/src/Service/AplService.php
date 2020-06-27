@@ -1262,6 +1262,7 @@ class AplService {
         $url = $this->aplApi().'update-rawprice-package?api='.$this->aplApiKey();
 
         $result = true;
+        $aplIdFlag = false;
         $post = [];
         
         foreach ($data as $good){
@@ -1305,9 +1306,10 @@ class AplService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-                var_dump($response->getBody());
+//                var_dump($response->getBody());
                 if ($response->isOk()) {
                     $ok = $result = true;
+                    $aplIdFlag = $response->getBody() === 1000;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
@@ -1315,8 +1317,12 @@ class AplService {
 
             if ($ok) {            
                 foreach ($data as $good){
+                    $upd = ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')];
+                    if ($aplIdFlag){
+                        $upd['apl_id'] = 0;
+                    }    
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')]);
+                            ->updateGoodId($good->getId(), $upd);                        
                 }    
             }
 
