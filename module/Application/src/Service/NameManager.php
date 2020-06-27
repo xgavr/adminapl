@@ -2186,8 +2186,12 @@ class NameManager
             }    
         }
         if ($newDescription != $good->getDescription()){
+            $upd = ['description' => $newDescription];
+            if (!$good->getName()){
+                $upd['name'] = $newDescription;
+            }
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), ['description' => $newDescription]);
+                    ->updateGoodId($good->getId(), $upd);
         }
         if (!$good->getName() && $good->getDescription()){
             $this->entityManager->getRepository(Goods::class)
