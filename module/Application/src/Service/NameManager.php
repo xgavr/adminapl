@@ -2189,6 +2189,10 @@ class NameManager
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), ['description' => $newDescription]);
         }
+        if (!$good->getName() && $good->getDescription()){
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), ['name' => $good->getDescription()]);
+        }
         
         return;
     }
