@@ -2311,7 +2311,7 @@ class NameManager
      */
     public function bestNameFromRaw($raw)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(900);
         $startTime = time();
         
