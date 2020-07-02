@@ -8,7 +8,7 @@
 
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\Country;
+use Company\Entity\Country;
 use Application\Entity\Producer;
 /**
  * Description of RbRepository

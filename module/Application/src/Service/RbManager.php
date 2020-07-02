@@ -65,7 +65,6 @@ class RbManager
 
     public function addNewCountry($data) 
     {
-        // Создаем новую сущность Tax.
         $country = new Country();
         $country->setName($data['name']);
         $country->setFullname($data['fullname']);

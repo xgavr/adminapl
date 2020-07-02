@@ -21,10 +21,10 @@ use Laminas\Json\Encoder;
 /**
  * Description of Ptu
  * @ORM\Entity(repositoryClass="\Stock\Repository\StockRepository")
- * @ORM\Table(name="ptu")
+ * @ORM\Table(name="ptu_good")
  * @author Daddy
  */
-class Ptu {
+class PtuGood {
         
      // Ptu status constants.
     const STATUS_ACTIVE       = 1; // Active.
@@ -34,11 +34,6 @@ class Ptu {
     const STATUS_DOC_RECD       = 1; // Получено.
     const STATUS_DOC_NOT_RECD  = 2; // Не получено.
 
-     // Ptu status doc constants.
-    const STATUS_EX_NEW  = 1; // Не отправлено.
-    const STATUS_EX_RECD  = 2; // Получено из АПЛ.
-    const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -46,11 +41,6 @@ class Ptu {
      */
     protected $id;
     
-    /** 
-     * @ORM\Column(name="date_created")  
-     */
-    protected $dateCreated;    
-
     /**
      * @ORM\Column(name="comment")   
      */
@@ -60,11 +50,6 @@ class Ptu {
      * @ORM\Column(name="info")   
      */
     protected $info;
-
-    /**
-     * @ORM\Column(name="apl_id")   
-     */
-    protected $aplId;
 
     /** 
      * @ORM\Column(name="status")  
@@ -77,44 +62,45 @@ class Ptu {
     protected $statusDoc;
 
     /** 
-     * @ORM\Column(name="status_ex")  
+     * @ORM\Column(name="quantity")  
      */
-    protected $statusEx;
+    protected $quantity;
 
-    /** 
-     * @ORM\Column(name="number_doc")  
-     */
-    protected $numberDoc;
-        
-    /** 
-     * @ORM\Column(name="date_doc")  
-     */
-    protected $dateDoc;
-        
     /** 
      * @ORM\Column(name="amount")  
      */
     protected $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="ptu") 
-     * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ptu", inversedBy="ptuGoods") 
+     * @ORM\JoinColumn(name="ptu_id", referencedColumnName="id")
      */
-    private $legal;
-    
+    private $ptu;
+        
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Contract", inversedBy="ptu") 
-     * @ORM\JoinColumn(name="contract_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="ptuGoods") 
+     * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
-    private $contract;
-    
+    private $good;
+        
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="ptu") 
-     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Country", inversedBy="ptuGoods") 
+     * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
      */
-    private $office;
-    
-    
+    private $country;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Unit", inversedBy="ptuGoods") 
+     * @ORM\JoinColumn(name="unit_id", referencedColumnName="id")
+     */
+    private $unit;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ntd", inversedBy="ptuGoods") 
+     * @ORM\JoinColumn(name="ntd_id", referencedColumnName="id")
+     */
+    private $ntd;
+
     /**
      * Constructor.
      */
@@ -353,21 +339,21 @@ class Ptu {
     }
     
     /**
-     * Sets  amount.
-     * @param float $amount     
+     * Sets  total.
+     * @param float $total     
      */
-    public function setAmount($amount) 
+    public function setTotal($total) 
     {
-        $this->amount = $amount;
+        $this->total = $total;
     }    
     
     /**
-     * Returns the amount of doc.
+     * Returns the total of doc.
      * @return float     
      */
-    public function getAmount() 
+    public function getTotal() 
     {
-        return $this->amount;
+        return $this->total;
     }
     
     /**
@@ -404,6 +390,51 @@ class Ptu {
     public function getOffice() 
     {
         return $this->office;
+    }
+    
+    /**
+     * Returns the country.
+     * @return Country     
+     */
+    public function getCountry() 
+    {
+        return $this->country;
+    }
+    
+    /**
+     * Returns the unit.
+     * @return Unit     
+     */
+    public function getUnit() 
+    {
+        return $this->unit;
+    }
+    
+    /**
+     * Returns the good.
+     * @return Goods     
+     */
+    public function getGood() 
+    {
+        return $this->good;
+    }
+    
+    /**
+     * Returns the ntd.
+     * @return Ntd     
+     */
+    public function getNtd() 
+    {
+        return $this->ntd;
+    }
+    
+    /**
+     * Returns the ptu.
+     * @return Ptu     
+     */
+    public function getPtu() 
+    {
+        return $this->ptu;
     }
     
 }

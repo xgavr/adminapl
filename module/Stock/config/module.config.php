@@ -31,7 +31,6 @@ return [
     'access_filter' => [
         'controllers' => [
             Controller\IndexController::class => [
-                // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@'],
             ],
         ],
@@ -43,7 +42,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-//            Service\StockManager::class => Service\Factory\BankManagerFactory::class,
+            Service\PtuManager::class => Service\Factory\PtuManagerFactory::class,
         ],
     ],        
     'view_manager' => [

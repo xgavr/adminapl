@@ -10,7 +10,7 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Application\Entity\Tax;
-use Application\Entity\Country;
+use Company\Entity\Country;
 use Application\Entity\Producer;
 use Application\Form\TaxForm;
 use Application\Form\CountryForm;
