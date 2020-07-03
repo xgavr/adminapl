@@ -23,7 +23,7 @@ class AuthManager
     
     /**
      * Session manager.
-     * @var Laminas\Session\SessionManager
+     * @var \Laminas\Session\SessionManager
      */
     private $sessionManager;
     
@@ -35,7 +35,7 @@ class AuthManager
     
     /**
      * RBAC manager.
-     * @var User\Service\RbacManager
+     * @var \sUser\Service\RbacManager
      */
     private $rbacManager;
     

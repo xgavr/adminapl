@@ -38,16 +38,36 @@ class PtuManager
             'status' => Ptu::STATUS_ACTIVE,
             'status_doc' => Ptu::STATUS_DOC_NOT_RECD,
             'status_ex' => Ptu::STATUS_EX_NEW,
-            'number_doc' => $data['number_doc'],
-            'date_doc' => $data['date_doc'],
-            'legal_id' => $data['legal_id'],
-            'contract_id' => $data['contract_id'],
-            'office_id' => $data['office_id'],
+            'amount' => 0,
+//            'number_doc' => $data['number_doc'],
+//            'date_doc' => $data['date_doc'],
+//            'legal_id' => $data['legal_id'],
+//            'contract_id' => $data['contract_id'],
+//            'office_id' => $data['office_id'],
+//            'comment' => $data['comment'],
+//            'info' => $data['info'],
         ];
+        foreach ($data as $key => $value){
+            $ptu[$key] = $value;
+        }
         
         $connection = $this->entityManager->getConnection(); 
         $connection->insert('ptu', $ptu);
         return $connection->lastInsertId();
+    }
+    
+    /**
+     * Update ptu.
+     * @param Ptu $ptu
+     * @param array $data
+     * @return integer
+     */
+    public function updatePtu($ptu, $data)            
+    {
+        
+        $connection = $this->entityManager->getConnection(); 
+        $connection->update('ptu', $data, ['id' => $ptu->getId()]);
+        return;
     }
     
     /**
@@ -166,6 +186,8 @@ class PtuManager
             'quantity' => $data['quantity'],
             'amount' => $data['amount'],
             'good_id' => $data['good_id'],
+            'comment' => $data['comment'],
+            'info' => $data['info'],
             'country_id' => $this->findCountry($data['countryName'], $data['countryCode']),
             'unit_id' => $this->findUnit($data['unitName'], $data['unitCode']),
             'ntd_id' => $this->findNtd($data['unit']),
@@ -173,6 +195,20 @@ class PtuManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->insert('ptu', $ptu);
+        return;
+    }
+    
+    /**
+     * Update ptu_good.
+     * @param PtuGood $ptuGood
+     * @param array $data
+     * @return integer
+     */
+    public function updatePtuGood($ptuGood, $data)            
+    {
+        
+        $connection = $this->entityManager->getConnection(); 
+        $connection->update('ptu_good', $data, ['id' => $ptuGood->getId()]);
         return;
     }
     
@@ -189,7 +225,7 @@ class PtuManager
     }
     
     /**
-     * Удаление мтрок ПТУ
+     * Удаление строк ПТУ
      * @param Ptu $ptu
      */
     public function removePtuGood($ptu)
@@ -201,10 +237,28 @@ class PtuManager
                     ->delete('ptu_good', ['ptu_id' => $ptu->getId()]);
         }
         
+        return;
+    }
+    
+    /**
+     * Обновление строк ПТУ
+     * 
+     * @param Ptu $ptu
+     * @param array $data
+     */
+    public function updatePtuGoods($ptu, $data)
+    {
+        $this->removePtuGood($ptu);
+        
+        foreach ($data as $row){
+            $this->addPtuGood($ptu->getId(), $row);
+        }
+        
         $this->updatePtuAmount($ptu);
         
         return;
     }
+    
     
 }
 

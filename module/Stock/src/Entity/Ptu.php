@@ -128,6 +128,11 @@ class Ptu {
         return $this->id;
     }
 
+    public function getLogKey() 
+    {
+        return 'ptu:'.$this->id;
+    }
+
     public function setId($id) 
     {
         $this->id = $id;
