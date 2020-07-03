@@ -339,21 +339,39 @@ class PtuGood {
     }
     
     /**
-     * Sets  total.
-     * @param float $total     
+     * Sets  quantity.
+     * @param float $quantity     
      */
-    public function setTotal($total) 
+    public function setQuantity($quantity) 
     {
-        $this->total = $total;
+        $this->quantity = $quantity;
     }    
     
     /**
-     * Returns the total of doc.
+     * Sets  amount.
+     * @param float $amount     
+     */
+    public function setAmount($amount) 
+    {
+        $this->amount = $amount;
+    }    
+    
+    /**
+     * Returns the amount of doc.
      * @return float     
      */
-    public function getTotal() 
+    public function getAmount() 
     {
-        return $this->total;
+        return $this->amount;
+    }
+    
+    /**
+     * Returns the quantity of doc.
+     * @return float     
+     */
+    public function getQuantity() 
+    {
+        return $this->quantity;
     }
     
     /**

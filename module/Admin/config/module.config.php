@@ -138,6 +138,7 @@ return [
             Service\AplBankService::class => Service\Factory\AplBankServiceFactory::class,
             Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
             Service\FtpManager::class => Service\Factory\FtpManagerFactory::class,
+            Service\LogManager::class => Service\Factory\LogManagerFactory::class,
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\SettingManager::class => Service\Factory\SettingManagerFactory::class,
             Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,

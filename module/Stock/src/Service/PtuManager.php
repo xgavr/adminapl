@@ -6,6 +6,7 @@ use Stock\Entity\Ntd;
 use Stock\Entity\Unit;
 use Company\Entity\Country;
 use Stock\Entity\PtuGood;
+use Admin\Entity\Log;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -29,11 +30,12 @@ class PtuManager
     /**
      * Adds a new ptu.
      * @param array $data
+     * @param integer $userId
      * @return integer
      */
-    public function addPtu($data)
+    public function addPtu($data, $userId = 0)
     {
-        $ptu = [
+        $rec = [
             'date_created' => date('Y-m-d Y:i:s'),
             'status' => Ptu::STATUS_ACTIVE,
             'status_doc' => Ptu::STATUS_DOC_NOT_RECD,
@@ -48,25 +50,36 @@ class PtuManager
 //            'info' => $data['info'],
         ];
         foreach ($data as $key => $value){
-            $ptu[$key] = $value;
+            $rec[$key] = $value;
         }
         
         $connection = $this->entityManager->getConnection(); 
-        $connection->insert('ptu', $ptu);
-        return $connection->lastInsertId();
+        $ptuId = $connection->insert('ptu', $rec);
+        if ($ptuId){
+            $ptu = $this->entityManager->getRepository(Ptu::class)
+                    ->findOneById($ptuId);
+            $this->entityManager->getRepository(Log::class)
+                    ->infoPtu($ptu, Log::STATUS_NEW, $userId);
+        }
+        
+        return $ptuId;
     }
     
     /**
      * Update ptu.
      * @param Ptu $ptu
      * @param array $data
+     * @param integer $userId
      * @return integer
      */
-    public function updatePtu($ptu, $data)            
+    public function updatePtu($ptu, $data, $userId = 0)            
     {
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('ptu', $data, ['id' => $ptu->getId()]);
+        
+        $this->entityManager->getRepository(Log::class)
+                ->infoPtu($ptu, Log::STATUS_UPDATE, $userId);
         return;
     }
     
@@ -215,12 +228,15 @@ class PtuManager
     /**
      * Обновить сумму ПТУ
      * @param Ptu $ptu
+     * @param integer $userId
      */
-    public function updatePtuAmount($ptu)
+    public function updatePtuAmount($ptu, $userId = 0)
     {
         $ptuAmountTotal = $this->entityManager->getRepository(Ptu::class)
                 ->ptuAmountTotal($ptu);
         $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal]);
+        $this->entityManager->getRepository(Log::class)
+                ->infoPtu($ptu, Log::STATUS_UPDATE, $userId);
         return;
     }
     

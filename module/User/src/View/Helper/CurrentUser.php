@@ -23,7 +23,7 @@ class CurrentUser extends AbstractHelper
     
     /**
      * Previously fetched User entity.
-     * @var User\Entity\User
+     * @var \User\Entity\User
      */
     private $user = null;
     

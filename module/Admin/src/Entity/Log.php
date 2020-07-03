@@ -15,7 +15,7 @@ use User\Entity\User;
 /**
  * Description of Log
  * @ORM\Entity(repositoryClass="\Admin\Repository\LogRepository")
- * @ORM\Table(name="post_log")
+ * @ORM\Table(name="log")
  * @author Daddy
  */
 class Log {

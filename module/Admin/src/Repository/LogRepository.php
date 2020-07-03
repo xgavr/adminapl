@@ -9,12 +9,15 @@
 namespace Admin\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Laminas\Json\Json;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Admin\Entity\Log;
+use User\Entity\User;
 use Laminas\Serializer\Serializer;
 use Laminas\Serializer\Adapter;
 use Laminas\Serializer\Exception;
+
 
 /**
  * Description of LogRepository
@@ -26,9 +29,10 @@ class LogRepository extends EntityRepository{
     /**
      * Добавить запись в лог ptu
      * @param Ptu $ptu
-     * @params integer $status 
+     * @param integer $status 
+     * @param integer $userId 
      */
-    public function infoPtu($ptu, $status)
+    public function infoPtu($ptu, $status, $userId = 0)
     {
         $serializer = new Adapter\PhpSerialize();
 
@@ -45,7 +49,7 @@ class LogRepository extends EntityRepository{
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,
-                'user_id' => 
+                'user_id' => $userId,
             ];
             
             $this->getEntityManager()->getConnection()->insert('log', $data);
@@ -53,6 +57,5 @@ class LogRepository extends EntityRepository{
         }
         
         return;
-    }
-    
+    }           
 }
