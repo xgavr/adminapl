@@ -113,6 +113,11 @@ class PtuGood {
     {
         return $this->id;
     }
+    
+    public function getDocRowKey() 
+    {
+        return 'ptu_good:'.$this->id;
+    }    
 
     public function setId($id) 
     {

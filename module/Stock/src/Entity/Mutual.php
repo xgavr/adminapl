@@ -11,20 +11,23 @@ namespace Stock\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Company\Entity\Legal;
 use Company\Entity\Office;
-use Application\Entity\Goods;
+use Company\Entity\Contract;
 
 
 /**
- * Description of Movement
- * @ORM\Entity(repositoryClass="\Stock\Repository\MovementRepository")
- * @ORM\Table(name="movement")
+ * Description of Mutual
+ * @ORM\Entity(repositoryClass="\Stock\Repository\MutualRepository")
+ * @ORM\Table(name="mutual")
  * @author Daddy
  */
-class Movement {
+class Mutual {
     
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
+    const REVISE_OK       = 1; // Сверка ок.
+    const REVISE_NOT      = 2; // Сверки нет.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -37,11 +40,6 @@ class Movement {
      */
     protected $docKey;
     
-    /**
-     * @ORM\Column(name="doc_row_key")   
-     */
-    protected $docRowKey;
-    
     /** 
      * @ORM\Column(name="date_oper")  
      */
@@ -52,10 +50,10 @@ class Movement {
      */
     protected $status;
 
-    /** 
-     * @ORM\Column(name="quantity")  
+    /**
+     * @ORM\Column(name="revise")   
      */
-    protected $quantity;
+    protected $revise;
 
     /** 
      * @ORM\Column(name="amount")  
@@ -63,17 +61,29 @@ class Movement {
     protected $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="movements") 
-     * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="mutuals") 
+     * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
      */
-    private $good;
-            
+    private $legal;
+    
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="movements") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Contract", inversedBy="mutuals") 
+     * @ORM\JoinColumn(name="contract_id", referencedColumnName="id")
+     */
+    private $contract;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="mutuals") 
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
      */
     private $office;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="mutuals") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;
+
     public function __construct() {
     }
    
@@ -87,11 +97,6 @@ class Movement {
         $this->id = $id;
     }     
 
-    public function getDocRowKey() 
-    {
-        return $this->docRowKey;
-    }
-
     public function setDocKey($docKey) 
     {
         $this->docKey = $docKey;
@@ -101,11 +106,6 @@ class Movement {
     {
         return $this->docKey;
     }
-
-    public function setDocRowKey($docRowKey) 
-    {
-        $this->docRowKey = $docRowKey;
-    }     
 
     /**
      * Returns the date of operation.
@@ -143,23 +143,6 @@ class Movement {
         return $this->amount;
     }
     
-    /**
-     * Sets  quantity.
-     * @param float $quantity     
-     */
-    public function setQuantity($quantity) 
-    {
-        $this->quantity = $quantity;
-    }    
-    
-    /**
-     * Returns the quantity of doc.
-     * @return float     
-     */
-    public function getQuantity() 
-    {
-        return $this->quantity;
-    }
         
     /**
      * Returns status.
@@ -205,6 +188,68 @@ class Movement {
     }   
     
     /**
+     * Returns revise.
+     * @return int     
+     */
+    public function getRevise() 
+    {
+        return $this->revise;
+    }
+
+    /**
+     * Returns possible revises as array.
+     * @return array
+     */
+    public static function getReviseList() 
+    {
+        return [
+            self::REVISE_OK => 'Проверено',
+            self::REVISE_NOT => 'Не проверено'
+        ];
+    }    
+    
+    /**
+     * Returns revise as string.
+     * @return string
+     */
+    public function getReviseAsString()
+    {
+        $list = self::getReviseList();
+        if (isset($list[$this->revise]))
+            return $list[$this->revise];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets revise.
+     * @param int $revise     
+     */
+    public function setRevise($revise) 
+    {
+        $this->revise = $revise;
+    }   
+    
+    /**
+     * Returns the legal.
+     * @return Legal     
+     */
+    public function getLegal() 
+    {
+        return $this->legal;
+    }
+
+    /**
+     * Returns the contract.
+     * @return Contract     
+     */
+    public function getContract() 
+    {
+        return $this->contract;
+    }
+
+
+    /**
      * Returns the office.
      * @return Office     
      */
@@ -214,12 +259,12 @@ class Movement {
     }
 
     /**
-     * Returns the good.
-     * @return Goods     
+     * Returns the company.
+     * @return Legal     
      */
-    public function getGood() 
+    public function getCompany() 
     {
-        return $this->good;
+        return $this->company;
     }
-        
+
 }

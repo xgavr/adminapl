@@ -7,6 +7,8 @@ use Stock\Entity\Unit;
 use Company\Entity\Country;
 use Stock\Entity\PtuGood;
 use Admin\Entity\Log;
+use Stock\Entity\Movement;
+use Stock\Entity\Mutual;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -26,6 +28,83 @@ class PtuManager
     {
         $this->entityManager = $entityManager;
     }
+    
+    /**
+     * Лог пту
+     * 
+     * @param Ptu $ptu
+     */
+    public function addLog($ptu)
+    {
+        $this->entityManager->getRepository(Log::class)
+                ->infoPtu($ptu, Log::STATUS_NEW, $this->currentUser()->getId());
+        return;
+    }
+    
+    /**
+     * Обновить взаиморасчеты документа
+     * 
+     * @param Ptu $ptu
+     */
+    public function updatePtuMutuals($ptu)
+    {
+        
+        $this->entityManager->getRepository(Mutual::class)
+                ->removeDocMutuals($ptu->getLogKey());
+        
+        if ($ptu->getStatus() === Ptu::STATUS_ACTIVE){
+            $data = [
+                'doc_key' => $ptu->getLogKey(),
+                'date_oper' => $ptu->getDateDoc(),
+                'status' => Mutual::STATUS_ACTIVE,
+                'revise' => Mutual::REVISE_NOT,
+                'amount' => $ptuGood->getAmount(),
+                'legal_id' => $ptuGood->getLegal()->getId(),
+                'contract_id' => $ptuGood->getContract()->getId(),
+                'office_id' => $ptu->getOffice()->getId(),
+                'company_id' => $ptu->getContract()->getLegal()->getId(),
+            ];
+
+            $this->entityManager->getRepository(Mutual::class)
+                    ->insertMutual($data);
+        }   
+        
+        return;
+    }    
+    
+    /**
+     * Обновить движения документа
+     * 
+     * @param Ptu $ptu
+     */
+    public function updatePtuMovement($ptu)
+    {
+        
+        $this->entityManager->getRepository(Movement::class)
+                ->removeDocMovements($ptu->getLogKey());
+        
+        if ($ptu->getStatus() === Ptu::STATUS_ACTIVE){
+            $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
+                    ->findByPtu($ptu->getId());
+            foreach ($ptuGoods as $ptuGood){
+                $data = [
+                    'doc_key' => $ptu->getLogKey(),
+                    'doc_row_key' => $ptuGood->getDocRowKey(),
+                    'date_oper' => $ptu->getDateDoc(),
+                    'status' => Movement::STATUS_ACTIVE,
+                    'quantity' => $ptuGood->getQuantity(),
+                    'amount' => $ptuGood->getAmount(),
+                    'good_id' => $ptuGood->getGood()->getId(),
+                    'office_id' => $ptu->getOffice()->getId(),
+                ];
+
+                $this->entityManager->getRepository(Movement::class)
+                        ->insertMovement($data);
+            }
+        }   
+        
+        return;
+    }    
     
     /**
      * Adds a new ptu.
@@ -58,8 +137,6 @@ class PtuManager
         if ($ptuId){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->findOneById($ptuId);
-            $this->entityManager->getRepository(Log::class)
-                    ->infoPtu($ptu, Log::STATUS_NEW, $userId);
         }
         
         return $ptuId;
@@ -235,8 +312,6 @@ class PtuManager
         $ptuAmountTotal = $this->entityManager->getRepository(Ptu::class)
                 ->ptuAmountTotal($ptu);
         $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal]);
-        $this->entityManager->getRepository(Log::class)
-                ->infoPtu($ptu, Log::STATUS_UPDATE, $userId);
         return;
     }
     
@@ -271,10 +346,9 @@ class PtuManager
         }
         
         $this->updatePtuAmount($ptu);
-        
+        $this->updatePtuMovement($ptu);
+        $this->updatePtuMutuals($ptu);
         return;
-    }
-    
-    
+    }    
 }
 
