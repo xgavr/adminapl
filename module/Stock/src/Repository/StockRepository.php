@@ -47,4 +47,37 @@ class StockRepository extends EntityRepository{
         return 0;
     }
 
+    /**
+     * Запрос по пту
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findAllPtu($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+            ->from(Ptu::class, 'p')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['sort'])){
+//                if ($params['sort'] == 'unknownProducerCount'){
+//                    $queryBuilder->orderBy('unknownProducerCount', $params['order']);
+//                } elseif ($params['sort'] == 'supplierCount'){
+//                    $queryBuilder->orderBy('supplierCount', $params['order']);
+//                } elseif ($params['sort'] == 'rawpriceCount'){
+//                    $queryBuilder->orderBy('rawpriceCount', $params['order']);
+//                } else {
+//                    $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);                
+//                }    
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }    
+    
 }

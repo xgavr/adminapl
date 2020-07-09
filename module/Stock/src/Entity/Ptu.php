@@ -82,14 +82,14 @@ class Ptu {
     protected $statusEx;
 
     /** 
-     * @ORM\Column(name="number_doc")  
+     * @ORM\Column(name="doc_no")  
      */
-    protected $numberDoc;
+    protected $docNo;
         
     /** 
-     * @ORM\Column(name="date_doc")  
+     * @ORM\Column(name="doc_date")  
      */
-    protected $dateDoc;
+    protected $docDate;
         
     /** 
      * @ORM\Column(name="amount")  
@@ -334,28 +334,37 @@ class Ptu {
      * Returns the date of doc.
      * @return string     
      */
-    public function getDateDoc() 
+    public function getDocDate() 
     {
-        return $this->dateDoc;
+        return $this->docDate;
     }
     
     /**
      * Sets the date when doc.
-     * @param string $dateStart     
+     * @param date $docDate     
      */
-    public function setDateDoc($dateDoc) 
+    public function setDocDate($docDate) 
     {
-        $this->dateDoc = $dateDoc;
+        $this->docNo = $docDate;
     }    
         
     /**
      * Returns the number of doc.
      * @return string     
      */
-    public function getNumberDoc() 
+    public function getDocNo() 
     {
-        return $this->numberDoc;
+        return $this->docNo;
     }
+    
+    /**
+     * Sets the number when doc.
+     * @param string $docNo     
+     */
+    public function setDocNo($docNo) 
+    {
+        $this->docNo = $docNo;
+    }    
     
     /**
      * Sets  amount.
@@ -374,15 +383,6 @@ class Ptu {
     {
         return $this->amount;
     }
-    
-    /**
-     * Sets the number when doc.
-     * @param string $numberDoc     
-     */
-    public function setNumberDoc($numberDoc) 
-    {
-        $this->numberDoc = $numberDoc;
-    }    
     
     /**
      * Returns the legal.

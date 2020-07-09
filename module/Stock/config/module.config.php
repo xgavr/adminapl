@@ -26,6 +26,25 @@ return [
                     // route defined above here.
                 ],
             ],    
+            'ptu' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/ptu[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\PtuController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
         ],
     ],
     'access_filter' => [
@@ -33,11 +52,15 @@ return [
             Controller\IndexController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
+            Controller\PtuController::class => [
+                ['actions' => '*', 'allow' => '@'],
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\PtuController::class => Controller\Factory\PtuControllerFactory::class,
         ],
     ],
     'service_manager' => [

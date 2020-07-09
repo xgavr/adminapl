@@ -41,8 +41,8 @@ final class Version20200630193856 extends AbstractMigration
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default'=> Ptu::STATUS_ACTIVE]);
         $table->addColumn('status_doc', 'integer', ['notnull'=>true, 'default'=> Ptu::STATUS_DOC_NOT_RECD]);
         $table->addColumn('status_ex', 'integer', ['notnull'=>true, 'default'=> Ptu::STATUS_EX_NEW]);
-        $table->addColumn('number_doc', 'string', ['notnull'=>false, 'length'=>64]);
-        $table->addColumn('date_doc', 'date', ['notnull'=>false]);
+        $table->addColumn('doc_no', 'string', ['notnull'=>false, 'length'=>64]);
+        $table->addColumn('doc_date', 'date', ['notnull'=>false]);
         $table->addColumn('amount', 'float', ['notnull'=>true, 'default'=>0]);
         $table->addColumn('legal_id', 'integer', ['notnull'=>true]);
         $table->addColumn('contract_id', 'integer', ['notnull'=>true]);

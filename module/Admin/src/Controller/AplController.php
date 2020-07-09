@@ -32,12 +32,19 @@ class AplController extends AbstractActionController
      */
     private $aplBankService;    
 
+    /**
+     * AplDocService manager.
+     * @var \Admin\Service\AplDocService
+     */
+    private $aplDocService;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $aplService, $aplBankService) 
+    public function __construct($entityManager, $aplService, $aplBankService, $aplDocService) 
     {
         $this->entityManager = $entityManager;
         $this->aplService = $aplService;        
         $this->aplBankService = $aplBankService;        
+        $this->aplDocService = $aplDocService;        
     }   
 
     
@@ -662,4 +669,15 @@ class AplController extends AbstractActionController
             'result' => 'ok-reload',
         ]);
     }    
+    
+    public function unloadDocAction()
+    {
+                
+        $this->aplDocService->unloadDoc();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }    
+    
 }
