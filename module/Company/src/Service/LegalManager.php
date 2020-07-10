@@ -201,7 +201,7 @@ class LegalManager
     /**
      * Добавить договор
      * 
-     * @param \Company\Entity\Legal $legal
+     * @param Legal $legal
      * @param array $data
      * @param bool $flushnow
      */
@@ -216,6 +216,14 @@ class LegalManager
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($data['office']);
         $contract->setOffice($office);
+        if (isset($data['company'])){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->findOneById($data['company']);
+        } else {
+            $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office);
+        }    
+        $contract->setCompany($company);
         
         $currentDate = date('Y-m-d H:i:s');
         $contract->setDateCreated($currentDate);

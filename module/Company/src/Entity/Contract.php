@@ -3,6 +3,7 @@
 namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Company\Entity\Legal;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -56,16 +57,22 @@ class Contract {
     protected $status;    
         
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contract") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contracts") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
      */
     private $legal;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="contract") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="contracts") 
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
      */
     private $office;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contracts") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;
 
     /**
      * Constructor.
@@ -216,4 +223,21 @@ class Contract {
         $this->office = $office;
         $office->addContract($this);
     }             
+
+    /*
+     * @return Legal
+     */    
+    public function getCompany() 
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param Legal $company
+     */    
+    public function setCompany($company) 
+    {
+        $this->company = $company;
+    }             
+
 }

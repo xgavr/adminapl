@@ -10,6 +10,8 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Supplier;
+use Company\Entity\Legal;
+use Application\Entity\Contact;
 /**
  * Description of SupplierRepository
  *
@@ -127,6 +129,38 @@ class SupplierRepository extends EntityRepository{
                 ;
         
         return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
+     * Получить юрлицо по умолчанию поставщика
+     * 
+     * @param Supplier $supplier
+     * @param date $dateDoc
+     * 
+     * @return Legal
+     */
+    public function fundDefaultSupplierLegal($supplier, $dateDoc = null)
+    {
+        if (!$dateDoc){
+            $dateDoc = date();
+        }
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('l')
+                ->from(Contact::class, 'c')
+                ->join('c.legals', 'l')
+                ->where('c.supplier = ?1')
+                ->setParameter('1', $supplier->getId())
+                ->andWhere('c.status = ?2')
+                ->setParameter('2', Contact::STATUS_LEGAL)
+                ->andWhere('l.date <= ?3')
+                ->setParameter('3', $dateDoc)
+                ->orderBy('l.dateStart', 'DESC')
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+        
     }
     
 }

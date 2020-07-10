@@ -115,6 +115,25 @@ class ContractForm extends Form
             ],
        ]);
         
+        // Добавляем поле "company"
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'company',
+            'attributes' => [                
+                'id' => 'contract_company',
+                'data-live-search'=> "true",
+                'class' => "selectpicker",
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Company\Entity\Legal',
+                'label' => 'Компания',
+                'property'       => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--выберете компанию--',                 
+            ],
+       ]);
+        
         // Add the Submit button
         $this->add([
             'type'  => 'submit',
