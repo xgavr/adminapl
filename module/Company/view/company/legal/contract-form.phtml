@@ -2,6 +2,10 @@
 
 $form = $this->form;
 
+$form->get('kind')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('name')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -19,6 +23,10 @@ $form->get('status')->setAttributes([
     ]);
 
 $form->get('office')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -43,9 +51,21 @@ $form->prepare();
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
+                            <?= $this->formLabel($form->get('kind')); ?>
+                            <?= $this->formElement($form->get('kind')); ?>
+                            <?= $this->formElementErrors($form->get('kind')); ?>                  
+                        </div>
+
+                        <div class="form-group">
                             <?= $this->formLabel($form->get('office')); ?>
                             <?= $this->formElement($form->get('office')); ?>
                             <?= $this->formElementErrors($form->get('office')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('company')); ?>
+                            <?= $this->formElement($form->get('company')); ?>
+                            <?= $this->formElementErrors($form->get('company')); ?>                  
                         </div>
 
                         <div class="form-group">

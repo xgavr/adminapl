@@ -8,7 +8,7 @@ use Company\Entity\Office;
 use Laminas\Json\Json;
 
 /**
- * This service is responsible for adding/editing roles.
+ * This service legal.
  */
 class LegalManager
 {

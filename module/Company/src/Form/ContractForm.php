@@ -5,6 +5,7 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Company\Entity\Contract;
 
 /**
  * The form for collecting information about Role.
@@ -87,12 +88,20 @@ class ContractForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'status',
+            'value' => Contract::STATUS_ACTIVE,
             'options' => [
                 'label' => 'Статус',
-                'value_options' => [
-                    1 => 'Действующий',
-                    2 => 'Закрыт',                    
-                ]
+                'value_options' => Contract::getStatusList(),
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'kind',
+            'value' => Contract::KIND_SUPPLIER,
+            'options' => [
+                'label' => 'Тип',
+                'value_options' => Contract::getKindList(),
             ],
         ]);
         
@@ -221,6 +230,17 @@ class ContractForm extends Form
                 ],                
                 'validators' => [
                     ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'kind',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3]]]
                 ],
             ]); 
 

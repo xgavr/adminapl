@@ -1,0 +1,52 @@
+<?php
+$this->headTitle('Изменить регион');
+
+$this->mainMenu()->setActiveItemId('regions');
+
+$this->pageBreadcrumbs()->setItems([
+            'Home'=>$this->url('home'),
+            'Регионы'=>$this->url('regions'),
+            'Изменить регион'=>$this->url('regions', ['action'=>'edit', 'id'=>$region->getId()])
+            ]);
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Сокращение'
+    ]);
+
+$form->get('fullName')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Полное наименование'
+    ]);
+
+$form->get('submit')
+        ->setAttributes(['class'=>'btn btn-primary'])
+        ->setValue('Сохранить');
+
+$form->prepare();
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('fullName')); ?>
+            <?= $this->formElement($form->get('fullName')); ?>
+            <?= $this->formElementErrors($form->get('fullName')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('csrf')); ?>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   
+

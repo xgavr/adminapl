@@ -5,6 +5,7 @@ namespace Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Company\Entity\Contract;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -65,6 +66,7 @@ final class Version20200710063426 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('contract');
         $table->addColumn('company_id', 'integer', ['notnull'=>true, 'default' => 0]);
+        $table->addColumn('kind', 'integer', ['notnull' => true, 'default' => Contract::KIND_SUPPLIER]);
         $table->addForeignKeyConstraint('legal', ['company_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'legal_id_contract_company_id_fk');
     }

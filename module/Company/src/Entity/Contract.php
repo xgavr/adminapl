@@ -24,6 +24,11 @@ class Contract {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
 
+     // Contract type constants.
+    const KIND_SUPPLIER       = 1; // С поставщиком.
+    const KIND_CUSTOMER      = 2; // С покупателем.
+    const KIND_OTHER         = 3; // Прочее
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -56,6 +61,11 @@ class Contract {
      */
     protected $status;    
         
+    /** 
+     * @ORM\Column(name="kind")  
+     */
+    protected $kind;    
+
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contracts") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
@@ -133,7 +143,7 @@ class Contract {
     }    
     
     /**
-     * Returns user status as string.
+     * Returns contract status as string.
      * @return string
      */
     public function getStatusAsString()
@@ -155,7 +165,51 @@ class Contract {
     }   
     
     /**
-     * Returns the date of user creation.
+     * Returns kind.
+     * @return int     
+     */
+    public function getKind() 
+    {
+        return $this->kind;
+    }
+
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getKindList() 
+    {
+        return [
+            self::KIND_SUPPLIER => 'С поставщиком',
+            self::KIND_CUSTOMER => 'С покупателем',
+            self::KIND_OTHER => 'Прочее'
+        ];
+    }    
+    
+    /**
+     * Returns contract kind as string.
+     * @return string
+     */
+    public function getKindAsString()
+    {
+        $list = self::getKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets kind.
+     * @param int $kind     
+     */
+    public function setKind($kind) 
+    {
+        $this->kind = $kind;
+    }   
+
+    /**
+     * Returns the date of contract creation.
      * @return string     
      */
     public function getDateCreated() 
