@@ -64,6 +64,8 @@ class LegalRepository extends EntityRepository
     public function formOfficeLegals($params)
     {
         if (isset($params['officeId'])){
+            
+        }
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
