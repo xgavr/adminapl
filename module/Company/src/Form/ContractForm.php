@@ -138,6 +138,13 @@ class ContractForm extends Form
                 'target_class'   => 'Company\Entity\Legal',
                 'label' => 'Компания',
                 'property'       => 'name',
+                'is_method'      => true,
+                'find_method'    => array(
+                   'name'   => 'formOfficeLegals',
+                   'params' => [
+                       'params' => ['officeId' => $officeId],
+                   ],
+               ),                
                 'display_empty_item' => true,
                 'empty_item_label'   => '--выберете компанию--',                 
             ],
@@ -246,6 +253,23 @@ class ContractForm extends Form
 
         $inputFilter->add([
                 'name'     => 'office',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'company',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

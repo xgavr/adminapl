@@ -4,6 +4,7 @@ namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Company\Entity\Legal;
+use Company\Entity\Office;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -253,7 +254,7 @@ class Contract {
     }
 
     /**
-     * @param \Company\Entity\Legal $legal
+     * @param Legal $legal
      */    
     public function setLegal($legal) 
     {
@@ -270,7 +271,7 @@ class Contract {
     }
 
     /**
-     * @param \Company\Entity\Office $office
+     * @param Office $office
      */    
     public function setOffice($office) 
     {

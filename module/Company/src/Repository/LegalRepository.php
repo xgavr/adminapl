@@ -10,6 +10,7 @@ namespace Company\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Company\Entity\Legal;
+use Application\Entity\Contact;
 /**
  * Description of SupplierRepository
  *
@@ -53,5 +54,30 @@ class LegalRepository extends EntityRepository
         } else {
             return $queryBuilder->getQuery()->getOneOrNullResult();                    
         }    
+    }
+    
+    /**
+     * Получить юрлица офиса
+     * 
+     * @param array $params
+     */
+    public function formOfficeLegals($params)
+    {
+        if (isset($params['officeId'])){
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('l')
+            ->from(Contact::class, 'c')
+            ->where('c.office = ?1')    
+            ->setParameter('1', $params['officeId'])    
+            ->andWhere('c.status = ?2')
+            ->setParameter('2', Contact::STATUS_LEGAL)    
+            ->join(Legal::class, 'l')
+            ->where('l.status = ?3')    
+            ->setParameter('3', Legal::STATUS_ACTIVE)
+                ;
+
+        return $queryBuilder->getQuery()->getResult();        
     }
 }
