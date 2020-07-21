@@ -25,10 +25,14 @@ class Contract {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
 
-     // Contract type constants.
+     // Contract kind constants.
     const KIND_SUPPLIER       = 1; // С поставщиком.
     const KIND_CUSTOMER      = 2; // С покупателем.
     const KIND_OTHER         = 3; // Прочее
+
+     // Contract pay constants.
+    const PAY_CASH       = 1; // Оплата нал.
+    const PAY_CASHLESS   = 2; // Оплата безнал.
 
     /**
      * @ORM\Id
@@ -66,6 +70,11 @@ class Contract {
      * @ORM\Column(name="kind")  
      */
     protected $kind;    
+
+    /** 
+     * @ORM\Column(name="pay")  
+     */
+    protected $pay;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contracts") 
@@ -207,6 +216,49 @@ class Contract {
     public function setKind($kind) 
     {
         $this->kind = $kind;
+    }   
+
+    /**
+     * Returns pay.
+     * @return int     
+     */
+    public function getPay() 
+    {
+        return $this->pay;
+    }
+
+    /**
+     * Returns possible pay as array.
+     * @return array
+     */
+    public static function getPayList() 
+    {
+        return [
+            self::PAY_CASH => 'Нал',
+            self::PAY_CASHLESS => 'Безнал',
+        ];
+    }    
+    
+    /**
+     * Returns contract pay as string.
+     * @return string
+     */
+    public function getPayAsString()
+    {
+        $list = self::getPayList();
+        if (isset($list[$this->pay]))
+            return $list[$this->pay];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets pay.
+     * @param int $pay     
+     */
+    public function setPay($pay) 
+    {
+        $this->pay = $pay;
     }   
 
     /**

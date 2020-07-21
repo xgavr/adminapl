@@ -67,6 +67,7 @@ final class Version20200710063426 extends AbstractMigration
         $table = $schema->getTable('contract');
         $table->addColumn('company_id', 'integer', ['notnull'=>true, 'default' => 0]);
         $table->addColumn('kind', 'integer', ['notnull' => true, 'default' => Contract::KIND_SUPPLIER]);
+        $table->addColumn('pay', 'integer', ['notnull' => true, 'default' => Contract::PAY_CASH]);
         $table->addForeignKeyConstraint('legal', ['company_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'legal_id_contract_company_id_fk');
     }
@@ -77,6 +78,8 @@ final class Version20200710063426 extends AbstractMigration
         $table = $schema->getTable('contract');
         $table->removeForeignKey('legal_id_contract_company_id_fk');
         $table->dropColumn('company_id');
+        $table->dropColumn('kind');
+        $table->dropColumn('pay');
 
     }
 }

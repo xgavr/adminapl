@@ -66,18 +66,21 @@ class LegalRepository extends EntityRepository
         if (isset($params['officeId'])){
             
         }
+        
+//        var_dump($params);
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('l')
-            ->from(Contact::class, 'c')
+            ->from(Legal::class, 'l')
+            ->join('l.contacts', 'c')
             ->where('c.office = ?1')    
             ->setParameter('1', $params['officeId'])    
             ->andWhere('c.status = ?2')
             ->setParameter('2', Contact::STATUS_LEGAL)    
-            ->join(Legal::class, 'l')
-            ->where('l.status = ?3')    
-            ->setParameter('3', Legal::STATUS_ACTIVE)
+//            ->where('l.status = ?3')    
+//            ->setParameter('3', Legal::STATUS_ACTIVE)
                 ;
 
         return $queryBuilder->getQuery()->getResult();        

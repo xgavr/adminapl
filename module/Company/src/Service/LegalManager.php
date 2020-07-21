@@ -212,6 +212,8 @@ class LegalManager
         $contract->setAct($data['act']);            
         $contract->setDateStart($data['dateStart']);            
         $contract->setStatus($data['status']);
+        $contract->setKind($data['kind']);
+        $contract->setPay($data['pay']);
         
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($data['office']);
@@ -237,16 +239,29 @@ class LegalManager
         }
     }
    
+    /**
+     * Обновить договор
+     * 
+     * @param Contract $contract
+     * @param array $data
+     * @param bool $flushnow
+     */
     public function updateContract($contract, $data, $flushnow = false)
     {                
         $contract->setName($data['name']);            
         $contract->setAct($data['act']);            
         $contract->setDateStart($data['dateStart']);            
-        $contract->setStatus($data['status']);            
+        $contract->setStatus($data['status']); 
+        $contract->setKind($data['kind']);
+        $contract->setPay($data['pay']);
 
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($data['office']);
         $contract->setOffice($office);
+
+        $company = $this->entityManager->getRepository(Legal::class)
+                ->findOneById($data['company']);
+        $contract->setCompany($company);
 
         $this->entityManager->persist($contract);
 

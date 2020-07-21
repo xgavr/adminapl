@@ -6,6 +6,7 @@ use Laminas\InputFilter\InputFilter;
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Company\Entity\Contract;
+use Company\Entity\Office;
 
 /**
  * The form for collecting information about Role.
@@ -18,15 +19,22 @@ class ContractForm extends Form
     protected $entityManager;    
     
     /**
+     *
+     * @var Office 
+     */
+    protected $office;
+    
+    /**
      * Constructor.     
      */
-    public function __construct($entityManager)
+    public function __construct($entityManager, $office)
     {
         
         // Define form name
         parent::__construct('contract-form');
 
-        $this->entityManager = $entityManager;        
+        $this->entityManager = $entityManager;   
+        $this->office = $office;
      
         // Set POST method for this form
         $this->setAttribute('method', 'post');
@@ -105,6 +113,16 @@ class ContractForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'pay',
+            'value' => Contract::PAY_CASH,
+            'options' => [
+                'label' => 'Оплата',
+                'value_options' => Contract::getPayList(),
+            ],
+        ]);
+        
         // Добавляем поле "office"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
@@ -113,6 +131,8 @@ class ContractForm extends Form
                 'id' => 'contract_office',
                 'data-live-search'=> "true",
                 'class' => "selectpicker",
+                'disabled' => 'disabled',
+                'value' => $this->office->getId(),
             ],
             'options' => [
                 'object_manager' => $this->entityManager,
@@ -142,7 +162,7 @@ class ContractForm extends Form
                 'find_method'    => array(
                    'name'   => 'formOfficeLegals',
                    'params' => [
-                       'params' => ['officeId' => $officeId],
+                       'params' => ['officeId' => $this->office->getId()],
                    ],
                ),                
                 'display_empty_item' => true,
@@ -242,6 +262,17 @@ class ContractForm extends Form
 
         $inputFilter->add([
                 'name'     => 'kind',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3]]]
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'pay',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

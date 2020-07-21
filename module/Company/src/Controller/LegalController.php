@@ -560,12 +560,16 @@ class LegalController extends AbstractActionController
             $contract = null;
         }
         
+        $officeId = (int)$this->params()->fromQuery('office', 1);
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($officeId);
         
-        $form = new ContractForm($this->entityManager);
+        $form = new ContractForm($this->entityManager, $office);
 
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
+            $data['office'] = $office->getId();
             $form->setData($data);
 
             if ($form->isValid()) {
@@ -588,6 +592,9 @@ class LegalController extends AbstractActionController
                     'dateStart' => $contract->getDateStart(),  
                     'status' => $contract->getStatus(),
                     'office' => $contract->getOffice(),
+                    'company' => $contract->getCompany(),
+                    'kind' =>$contract->getKind(),
+                    'pay' => $contract->getPay(),
                 ];
                 $form->setData($data);
             }    
