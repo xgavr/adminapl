@@ -148,13 +148,13 @@ class SupplierRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('l')
-                ->from(Contact::class, 'c')
-                ->join('c.legals', 'l')
+                ->from(Legal::class, 'l')
+                ->join('l.contacts', 'c')
                 ->where('c.supplier = ?1')
                 ->setParameter('1', $supplier->getId())
                 ->andWhere('c.status = ?2')
                 ->setParameter('2', Contact::STATUS_LEGAL)
-                ->andWhere('l.date <= ?3')
+                ->andWhere('l.dateStart <= ?3')
                 ->setParameter('3', $dateDoc)
                 ->orderBy('l.dateStart', 'DESC')
                 ;

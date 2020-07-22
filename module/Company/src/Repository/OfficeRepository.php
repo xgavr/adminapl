@@ -74,9 +74,9 @@ class OfficeRepository extends EntityRepository{
                 ->setParameter('1', $office->getId())
                 ->andWhere('c.legal = ?2')
                 ->setParameter('2', $legal->getId())
-                ->andWhere('l.dateStart <= ?3')
+                ->andWhere('c.dateStart <= ?3')
                 ->setParameter('3', $dateDoc)
-                ->orderBy('l.dateStart', 'DESC')
+                ->orderBy('c.dateStart', 'DESC')
                 ;
         
         return $queryBuilder->getQuery()->getOneOrNullResult();

@@ -260,14 +260,12 @@ class LegalManager
         
         $currentDate = date('Y-m-d H:i:s');
         $contract->setDateCreated($currentDate);
+        $contract->setLegal($legal);
             
         $this->entityManager->persist($contract);
+        $this->entityManager->flush();                
         
-        $contract->setLegal($legal);
-        
-        if ($flushnow){
-            $this->entityManager->flush();                
-        }
+        return $contract;
     }
    
     /**

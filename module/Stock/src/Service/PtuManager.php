@@ -115,7 +115,7 @@ class PtuManager
     public function addPtu($data, $userId = 0)
     {
         $rec = [
-            'date_created' => date('Y-m-d Y:i:s'),
+            'date_created' => date('Y-m-d H:i:s'),
             'status' => Ptu::STATUS_ACTIVE,
             'status_doc' => Ptu::STATUS_DOC_NOT_RECD,
             'status_ex' => Ptu::STATUS_EX_NEW,

@@ -97,8 +97,25 @@ class AplDocService {
                 ->findOneBy(['aplId' => $supplierAplId]);
         
         if ($supplier){
-            return $this->entityManager->getRepository(Supplier::class)
+            $legal = $this->entityManager->getRepository(Supplier::class)
                     ->fundDefaultSupplierLegal($supplier, $dateStart);
+            
+            if (!$legal){
+                $legal = $this->legalManager->addLegal($supplier->getLegalContact(), [
+                    'name' => $supplier->getName(),
+                    'inn' => '',
+                    'kpp' => '',
+                    'ogrn' => '',
+                    'okpo' => '',
+                    'head' => '',
+                    'chiefAccount' => '',
+                    'info' => '',
+                    'address' => '',
+                    'status' => Legal::STATUS_ACTIVE,
+                ]);
+            }
+            
+            return $legal;
         }    
         
         return;        
@@ -163,7 +180,7 @@ class AplDocService {
         }
         
         $office = $this->officeFromAplId($data['parent']);
-        $legal = $this->legalFromSupplierAplId($data['name']);
+        $legal = $this->legalFromSupplierAplId($data['name'], $data['ds']);
         $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $cashless);
         
         $dataPtu['office_id'] = $office->getId();
@@ -180,6 +197,7 @@ class AplDocService {
         }    
         
         foreach ($data['tp'] as $tp){
+            var_dump($tp); exit;
             $this->ptuManager->addPtuGood($ptu->getId(), [
                 'quantity' => $tp['sort'],
                 'amount' => $tp['bag_total'],
