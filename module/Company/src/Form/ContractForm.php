@@ -76,9 +76,10 @@ class ContractForm extends Form
             'name' => 'act',
             'attributes' => [
                 'id' => 'act',
+                'value' => 'б/н',
             ],
             'options' => [
-                'label' => 'Номер',               
+                'label' => 'Номер',  
             ],
         ]);
                         
@@ -86,7 +87,8 @@ class ContractForm extends Form
             'type'  => 'date',
             'name' => 'dateStart',
             'attributes' => [
-                'id' => 'dateStart'
+                'id' => 'dateStart',
+                'value' => '2012-05-15',
             ],
             'options' => [
                 'label' => 'Дата',

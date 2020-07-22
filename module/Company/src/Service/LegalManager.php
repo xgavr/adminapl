@@ -6,6 +6,7 @@ use Company\Entity\BankAccount;
 use Company\Entity\Contract;
 use Company\Entity\Office;
 use Laminas\Json\Json;
+use Application\Entity\Contact;
 
 /**
  * This service legal.
@@ -26,10 +27,59 @@ class LegalManager
         $this->entityManager = $entityManager;
     }
  
-    public function addLegal($contact, $data, $flushnow = false)
+    /**
+     * Изменить юрлицо
+     * 
+     * @param Contact $contact
+     * @param Legal $legal
+     * @param array $data
+     * 
+     * @return Legal
+     */
+    public function updateLegal($contact, $legal, $data)
     {                
+
+        $legal->setName($data['name']);            
+        $legal->setInn($data['inn']);            
+        $legal->setKpp($data['kpp']);            
+        $legal->setOgrn($data['ogrn']);            
+        $legal->setOkpo($data['okpo']);            
+        $legal->setHead($data['head']);            
+        $legal->setChiefAccount($data['chiefAccount']);            
+        $legal->setInfo($data['info']);            
+        $legal->setAddress($data['address']);            
+        $legal->setStatus($data['status']);            
+        $legal->setDateStart($data['dateStart']);
+
+        $legal->addContact($contact);
+        $this->entityManager->persist($legal);        
+        $this->entityManager->flush();                
+        
+        return $legal;
+    }
+
+    /**
+     * Добавить/изменить юрлицо
+     * 
+     * @param Contact $contact
+     * @param array $data
+     * @param bool $flushnow
+     * @return Legal
+     */
+    public function addLegal($contact, $data)
+    {       
+        
         $legal = $this->entityManager->getRepository(Legal::class)
                 ->findOneByInnKpp($data['inn'], $data['kpp']);
+        
+        if (!$legal){            
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->findOneByName($data['name']);            
+        }
+        
+        if ($legal){
+            $this->updateLegal($contact, $legal, $data);
+        }
 
         if ($legal == null){
             $legal = new Legal();            
@@ -52,29 +102,10 @@ class LegalManager
             } else {
                 $legal->setDateStart($currentDate);
             }
-            
-        } else {
-            $legal->setName($data['name']);            
-            $legal->setInn($data['inn']);            
-            $legal->setKpp($data['kpp']);            
-            $legal->setOgrn($data['ogrn']);            
-            $legal->setOkpo($data['okpo']);            
-            $legal->setHead($data['head']);            
-            $legal->setChiefAccount($data['chiefAccount']);            
-            $legal->setInfo($data['info']);            
-            $legal->setAddress($data['address']);            
-            $legal->setStatus($data['status']);            
-            $legal->setDateStart($data['dateStart']);
-        }   
-
-        $this->entityManager->persist($legal);
-        
-        $contact->removeLegalAssociation($legal);
-        $legal->addContact($contact);
-            
-        if ($flushnow){
+            $legal->addContact($contact);
+            $this->entityManager->persist($legal);
             $this->entityManager->flush();                
-        }
+        }   
         
         return $legal;
     }

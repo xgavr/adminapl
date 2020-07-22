@@ -16,6 +16,7 @@ use Company\Entity\Office;
 use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
+use Stock\Entity\Ptu;
 
 
 /**
@@ -43,11 +44,19 @@ class AplDocService {
      */
     private $ptuManager;
 
-    public function __construct($entityManager, $adminManager, $ptuManager)
+    /**
+     * Legal manager.
+     * @var \Company\Service\LegalManager
+     */
+    private $legalManager;  
+        
+    
+    public function __construct($entityManager, $adminManager, $ptuManager, $legalManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->ptuManager = $ptuManager;
+        $this->legalManager = $legalManager;
     }
     
     protected function aplApi()
@@ -100,12 +109,31 @@ class AplDocService {
      * 
      * @param Office $office
      * @param Legal $legal
+     * @param date $dateStart
+     * @param string $act
+     * @param integer $pay
      * 
      * @return Contract
      */
-    private function findDefaultContract($office, $legal)
+    private function findDefaultContract($office, $legal, $dateStart, $act, $pay = Contract::PAY_CASH)
     {
+        $contract = $this->entityManager->getRepository(Office::class)
+                ->findDefaultContract($office, $legal, $dateStart, $pay);
         
+        if (!$contract){
+            $contract = $this->legalManager->addContract($legal, 
+                    [
+                        'office' => $office->getId(),
+                        'name' => '',
+                        'act' => trim($act),
+                        'dateStart' => $dateStart,
+                        'status' => Contract::STATUS_ACTIVE,
+                        'kind' => Contract::KIND_SUPPLIER,
+                        'pay' => $pay,
+                    ]);
+        }
+        
+        return $contract;
     }
     
     /**
@@ -115,21 +143,58 @@ class AplDocService {
      */
     public function unloadPtu($data)
     {
-        $ptu = [
+//        var_dump($data); exit;
+        
+        $dataPtu = [
+            'apl_id' => $data['id'],
             'doc_no' => $data['ns'],
             'doc_date' => $data['ds'],
             'comment' => $data['comment'],
         ];
         
+        $cashless = Contract::PAY_CASH;
         if (isset($data['desc'])){
-            $ptu['info'] = Encoder::encode($data['desc']);
+            if (isset($data['desc']['cashless'])){
+                if ($data['desc']['cashless'] == 1){
+                    $cashless = Contract::PAY_CASHLESS;
+                }
+            }
+            $dataPtu['info'] = Encoder::encode($data['desc']);
         }
         
         $office = $this->officeFromAplId($data['parent']);
         $legal = $this->legalFromSupplierAplId($data['name']);
-        $ptu['office_id'] = $office->getId();
-        $ptu['legal_id'] = $legal->getId();
-        $ptu['contract_id'] = ''; 
+        $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $cashless);
+        
+        $dataPtu['office_id'] = $office->getId();
+        $dataPtu['legal_id'] = $legal->getId();
+        $dataPtu['contract_id'] = $contract->getId(); 
+        
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->findOneByAplId($data['id']);
+        if ($ptu){
+            $this->ptuManager->updatePtu($ptu, $dataPtu);
+            $this->ptuManager->removePtuGood($ptu); 
+        } else {        
+            $ptu = $this->ptuManager->addPtu($dataPtu);
+        }    
+        
+        foreach ($data['tp'] as $tp){
+            $this->ptuManager->addPtuGood($ptu->getId(), [
+                'quantity' => $tp['sort'],
+                'amount' => $tp['bag_total'],
+                'good_id' => '',
+                'comment' => '',
+                'info' => '',
+                'countryName' => '',
+                'countryCode' => '',
+                'unitName' => '',
+                'unitCode' => '',
+                'ntd' => $tp['gtd'],
+            ]);
+        }
+        
+        $this->ptuManager->updatePtuAmount($ptu);
         
         return;
     }

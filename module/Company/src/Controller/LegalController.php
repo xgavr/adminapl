@@ -24,25 +24,25 @@ class LegalController extends AbstractActionController
     
     /**
      * Entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
 
     /**
      * Office manager.
-     * @var Company\Service\OfficeManager
+     * @var \Company\Service\OfficeManager
      */
     private $officeManager;
 
     /**
      * Contact manager.
-     * @var Application\Service\ContactManager
+     * @var \Application\Service\ContactManager
      */
     private $contactManager;
     
     /**
      * Legal manager.
-     * @var Company\Service\LegalManager
+     * @var \Company\Service\LegalManager
      */
     private $legalManager;
     
@@ -225,7 +225,7 @@ class LegalController extends AbstractActionController
 
             if ($legalform->isValid()) {
 
-                $this->legalManager->addLegal($contact, $data, true);
+                $this->legalManager->addLegal($contact, $data);
                 $this->flashMessenger()->addSuccessMessage('Юридическое лицо сохранено');
             
                 
@@ -269,7 +269,7 @@ class LegalController extends AbstractActionController
 
             if ($legalform->isValid()) {
 
-                $this->legalManager->addLegal($contact, $data, true);
+                $this->legalManager->addLegal($contact, $data);
                 
                 return new JsonModel(
                    ['ok']
@@ -570,6 +570,13 @@ class LegalController extends AbstractActionController
             
             $data = $this->params()->fromPost();
             $data['office'] = $office->getId();
+            if (empty($data['company'])){
+                $company = $this->entityManager->getRepository(Office::class)
+                        ->findDefaultCompany($office);
+                if ($company){
+                    $data['company'] = $company->getId();
+                }            
+            }
             $form->setData($data);
 
             if ($form->isValid()) {

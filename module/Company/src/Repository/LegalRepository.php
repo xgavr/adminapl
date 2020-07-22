@@ -28,32 +28,36 @@ class LegalRepository extends EntityRepository
      */
     public function findOneByInnKpp($inn, $kpp = null, $resultMode = null)
     {
-        $entityManager = $this->getEntityManager();
+        if ($inn){
+            $entityManager = $this->getEntityManager();
 
-        $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('r')
-            ->from(Legal::class, 'r')
-            ->where('r.inn = ?1')    
-            ->setParameter('1', $inn)
-//            ->orderBy(['id DESC'])    
-                ;
+            $queryBuilder->select('r')
+                ->from(Legal::class, 'r')
+                ->where('r.inn = ?1')    
+                ->setParameter('1', $inn)
+    //            ->orderBy(['id DESC'])    
+                    ;
 
-        if ($kpp){
-            $queryBuilder
-                ->andWhere('r.kpp = ?2')    
-                ->setParameter('2', $kpp)
-                ;
-            
-        }        
+            if ($kpp){
+                $queryBuilder
+                    ->andWhere('r.kpp = ?2')    
+                    ->setParameter('2', $kpp)
+                    ;
+
+            }        
+
+            $query = $queryBuilder->getQuery();
+
+            if ($resultMode){
+                return $queryBuilder->getQuery()->getResult($resultMode);        
+            } else {
+                return $queryBuilder->getQuery()->getOneOrNullResult();                    
+            }    
+        }
         
-        $query = $queryBuilder->getQuery();
-        
-        if ($resultMode){
-            return $queryBuilder->getQuery()->getResult($resultMode);        
-        } else {
-            return $queryBuilder->getQuery()->getOneOrNullResult();                    
-        }    
+        return;
     }
     
     /**

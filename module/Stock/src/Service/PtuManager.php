@@ -139,7 +139,7 @@ class PtuManager
                     ->findOneById($ptuId);
         }
         
-        return $ptuId;
+        return $ptu;
     }
     
     /**
@@ -280,7 +280,7 @@ class PtuManager
             'info' => $data['info'],
             'country_id' => $this->findCountry($data['countryName'], $data['countryCode']),
             'unit_id' => $this->findUnit($data['unitName'], $data['unitCode']),
-            'ntd_id' => $this->findNtd($data['unit']),
+            'ntd_id' => $this->findNtd($data['ntd']),
         ];
         
         $connection = $this->entityManager->getConnection(); 
@@ -305,9 +305,8 @@ class PtuManager
     /**
      * Обновить сумму ПТУ
      * @param Ptu $ptu
-     * @param integer $userId
      */
-    public function updatePtuAmount($ptu, $userId = 0)
+    public function updatePtuAmount($ptu)
     {
         $ptuAmountTotal = $this->entityManager->getRepository(Ptu::class)
                 ->ptuAmountTotal($ptu);
