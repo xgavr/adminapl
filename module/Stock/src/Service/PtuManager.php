@@ -20,13 +20,20 @@ class PtuManager
      * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;  
+    
+    /**
+     * Log manager
+     * @var \Admin\Service\LogManager
+     */
+    private $logManager;
         
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager) 
+    public function __construct($entityManager, $logManager) 
     {
         $this->entityManager = $entityManager;
+        $this->logManager = $logManager;
     }
     
     /**
@@ -52,15 +59,15 @@ class PtuManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($ptu->getLogKey());
         
-        if ($ptu->getStatus() === Ptu::STATUS_ACTIVE){
+        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){
             $data = [
                 'doc_key' => $ptu->getLogKey(),
-                'date_oper' => $ptu->getDateDoc(),
+                'date_oper' => $ptu->getDocDate(),
                 'status' => Mutual::STATUS_ACTIVE,
                 'revise' => Mutual::REVISE_NOT,
-                'amount' => $ptuGood->getAmount(),
-                'legal_id' => $ptuGood->getLegal()->getId(),
-                'contract_id' => $ptuGood->getContract()->getId(),
+                'amount' => $ptu->getAmount(),
+                'legal_id' => $ptu->getLegal()->getId(),
+                'contract_id' => $ptu->getContract()->getId(),
                 'office_id' => $ptu->getOffice()->getId(),
                 'company_id' => $ptu->getContract()->getLegal()->getId(),
             ];
@@ -83,14 +90,14 @@ class PtuManager
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ptu->getLogKey());
         
-        if ($ptu->getStatus() === Ptu::STATUS_ACTIVE){
+        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){
             $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
                     ->findByPtu($ptu->getId());
             foreach ($ptuGoods as $ptuGood){
                 $data = [
                     'doc_key' => $ptu->getLogKey(),
                     'doc_row_key' => $ptuGood->getDocRowKey(),
-                    'date_oper' => $ptu->getDateDoc(),
+                    'date_oper' => $ptu->getDocDate(),
                     'status' => Movement::STATUS_ACTIVE,
                     'quantity' => $ptuGood->getQuantity(),
                     'amount' => $ptuGood->getAmount(),
@@ -155,8 +162,6 @@ class PtuManager
         $connection = $this->entityManager->getConnection(); 
         $connection->update('ptu', $data, ['id' => $ptu->getId()]);
         
-        $this->entityManager->getRepository(Log::class)
-                ->infoPtu($ptu, Log::STATUS_UPDATE, $userId);
         return;
     }
     
@@ -167,12 +172,12 @@ class PtuManager
      */
     public function findNtd($strNtd)
     {
+        if (empty(trim($strNtd))){
+            $strNtd = '-';
+        }
         $ntd = $this->entityManager->getRepository(Ntd::class)
                 ->findOneByNtd(trim($strNtd));
         if ($ntd === NULL){
-            if (empty(trim($strNtd))){
-                $strNtd = '-';
-            }
             $connection = $this->entityManager->getConnection();
             $connection->insert('ntd', ['ntd' => trim($strNtd)]);
             return $connection->lastInsertId();
@@ -269,7 +274,7 @@ class PtuManager
      */
     public function addPtuGood($ptuId, $data)
     {
-        $ptu = [
+        $ptuGood = [
             'ptu_id' => $ptuId,
             'status' => Ptu::STATUS_ACTIVE,
             'status_doc' => Ptu::STATUS_DOC_NOT_RECD,
@@ -284,7 +289,7 @@ class PtuManager
         ];
         
         $connection = $this->entityManager->getConnection(); 
-        $connection->insert('ptu', $ptu);
+        $connection->insert('ptu_good', $ptuGood);
         return;
     }
     
@@ -310,7 +315,11 @@ class PtuManager
     {
         $ptuAmountTotal = $this->entityManager->getRepository(Ptu::class)
                 ->ptuAmountTotal($ptu);
-        $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal]);
+        $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal], ['id' => $ptu->getId()]);
+        
+        $this->updatePtuMovement($ptu);
+        $this->updatePtuMutuals($ptu);
+        $this->logManager->infoPtu($ptu, Log::STATUS_UPDATE);
         return;
     }
     
@@ -345,8 +354,6 @@ class PtuManager
         }
         
         $this->updatePtuAmount($ptu);
-        $this->updatePtuMovement($ptu);
-        $this->updatePtuMutuals($ptu);
         return;
     }    
 }

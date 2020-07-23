@@ -30,7 +30,8 @@ class MovementRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $qb = $entityManager->createQueryBuilder();
-        $qb->from(Movement::class, 'm')
+        $qb->select('m')
+                ->from(Movement::class, 'm')
                 ->where('m.docKey = ?1')
                 ->setParameter('1', $docKey)
                 ;

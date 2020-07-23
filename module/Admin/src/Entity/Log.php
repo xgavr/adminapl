@@ -23,7 +23,7 @@ class Log {
     const STATUS_NEW       = 1; // Добавление.
     const STATUS_UPDATE    = 2; // Изменение.
     const STATUS_DELETE    = 3; // Удаление.
-    const STATUS_INFO    = 4; // Информация.
+    const STATUS_INFO      = 4; // Информация.
     
     const PRIORITY_EMEGR    = 0; // Emergency: system is unusable
     const PRIORITY_ALERT    = 1; // Alert: action must be taken immediately

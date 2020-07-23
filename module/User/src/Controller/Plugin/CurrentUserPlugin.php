@@ -18,13 +18,13 @@ class CurrentUserPlugin extends AbstractPlugin
     
     /**
      * Authentication service.
-     * @var Laminas\Authentication\AuthenticationService 
+     * @var \Laminas\Authentication\AuthenticationService 
      */
     private $authService;
     
     /**
      * Logged in user.
-     * @var User\Entity\User
+     * @var \User\Entity\User
      */
     private $user = null;
     

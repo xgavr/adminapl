@@ -24,8 +24,10 @@ class LogManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
+
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new LogManager($entityManager);
+        return new LogManager($entityManager, $authService);
     }
 }

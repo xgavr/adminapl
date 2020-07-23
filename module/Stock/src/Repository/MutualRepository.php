@@ -30,7 +30,8 @@ class MutualRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $qb = $entityManager->createQueryBuilder();
-        $qb->from(Mutual::class, 'm')
+        $qb->select('m')
+                ->from(Mutual::class, 'm')
                 ->where('m.docKey = ?1')
                 ->setParameter('1', $docKey)
                 ;

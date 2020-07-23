@@ -115,9 +115,10 @@ class AssemblyManager
      * @param string $code
      * @param \Application\Entity\Producer $producer
      * @param \Application\Entity\GenericGroup $zeroGroup
+     * @param integer $aplId
      * @return Goods
      */
-    public function addNewGood($code, $producer, $zeroGroup = null) 
+    public function addNewGood($code, $producer, $zeroGroup = null, $aplId = 0) 
     {
         // Создаем новую сущность Goods.
         $data = [
@@ -136,7 +137,7 @@ class AssemblyManager
             'date_ex' => date('Y-m-d H:i:s'),
             'date_price' => date('Y-m-d H:i:s'),
             'car_count' => 0,
-            'apl_id' => 0,
+            'apl_id' => $aplId,
             'status_oem_ex' => Goods::OEM_EX_NEW,
             'status_attr_ex' => Goods::ATTR_EX_NEW,
             'status_car_ex' => Goods::CAR_EX_NEW,

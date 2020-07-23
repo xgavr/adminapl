@@ -125,11 +125,6 @@ final class Version20200630193856 extends AbstractMigration
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'legal_id_mutual_company_id_fk');
         $table->addOption('engine' , 'InnoDB');
         
-//        $table = $schema->getTable('contract');
-//        $table->addColumn('company_id', 'integer', ['notnull'=>true]);        
-//        $table->addForeignKeyConstraint('legal', ['company_id'], ['id'], 
-//                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'legal_id_contract_company_id_fk');
-
     }
 
     public function down(Schema $schema) : void

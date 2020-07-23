@@ -17,6 +17,11 @@ use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
 use Stock\Entity\Ptu;
+use Application\Entity\Producer;
+use Application\Filter\ProducerName;
+use Application\Entity\UnknownProducer;
+use Application\Entity\Goods;
+use Application\Filter\ArticleCode;
 
 
 /**
@@ -50,13 +55,27 @@ class AplDocService {
      */
     private $legalManager;  
         
+    /**
+     * Producer manager.
+     * @var \Application\Service\ProducerManager
+     */
+    private $producerManager;  
     
-    public function __construct($entityManager, $adminManager, $ptuManager, $legalManager)
+    /**
+     * Assembly manager.
+     * @var \Application\Service\AssemblyManager
+     */
+    private $assemblyManager;  
+    
+    public function __construct($entityManager, $adminManager, $ptuManager, 
+            $legalManager, $producerManager, $assemblyManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->ptuManager = $ptuManager;
         $this->legalManager = $legalManager;
+        $this->producerManager = $producerManager;
+        $this->assemblyManager = $assemblyManager;
     }
     
     protected function aplApi()
@@ -154,6 +173,80 @@ class AplDocService {
     }
     
     /**
+     * Получить производителя
+     * 
+     * @param array $data
+     * @return Producer
+     */
+    private function findProducer($data)
+    {
+        if (!empty($data['type'])){
+            if (is_numeric($data['type'])){
+                $producer = $this->entityManager->getRepository(Producer::class)
+                        ->findOneById($data['type']);
+                if ($producer){
+                    return $producer;
+                }
+            }
+        }
+        
+        $producerNameFilter = new ProducerName();
+        if (!empty($data['comment'])){
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneByName($producerNameFilter->filter($data['comment']));
+            if ($unknownProducer){
+                return $unknownProducer->getProducer();
+            }
+        }
+        if (!empty($data['name'])){
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneByName($producerNameFilter->filter($data['name']));
+            if ($unknownProducer){
+                return $unknownProducer->getProducer();
+            }
+        }
+                
+        return $this->producerManager->addNewProducer(['name' => $data['comment']]);
+    }
+    
+    
+    /**
+     * Получить товар
+     * 
+     * @param array $data
+     * @return Goods
+     */
+    private function findGood($data)
+    {
+        if (isset($data['id'])){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneByAplId($data['id']);
+            if ($good){
+                return $good;
+            }
+        }
+        if (isset($data['maker'])){
+            $producer = $this->findProducer($data['maker']);
+            if ($producer){
+                $codeFilter = new ArticleCode();
+                if (isset($data['name'])){
+                    $code = $codeFilter->filter($data['name']);
+                    if ($code){
+                        $good = $this->entityManager->getRepository(Goods::class)
+                                ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+                        if ($good){
+                            return $good;
+                        }
+
+                        return $this->assemblyManager->addNewGood($code, $producer, NULL, $data['id']);
+                    }    
+                }    
+            }    
+        }    
+        return;
+    }
+    
+    /**
      * Загрузить ПТУ
      * 
      * @param array $data
@@ -197,17 +290,23 @@ class AplDocService {
         }    
         
         foreach ($data['tp'] as $tp){
-            var_dump($tp); exit;
+            if (isset($tp['good'])){
+                $good = $this->findGood($tp['good']);   
+            }    
+            if (empty($good)){
+                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+            }
+            
             $this->ptuManager->addPtuGood($ptu->getId(), [
                 'quantity' => $tp['sort'],
                 'amount' => $tp['bag_total'],
-                'good_id' => '',
+                'good_id' => $good->getId(),
                 'comment' => '',
                 'info' => '',
-                'countryName' => '',
-                'countryCode' => '',
-                'unitName' => '',
-                'unitCode' => '',
+                'countryName' => $tp['country'],
+                'countryCode' => $tp['countrycode'],
+                'unitName' => $tp['pack'],
+                'unitCode' => $tp['packcode'],
                 'ntd' => $tp['gtd'],
             ]);
         }
@@ -242,7 +341,7 @@ class AplDocService {
         } catch (Exception $ex) {
             return;
         }
-        
+
         if (is_array($result)){
             if (isset($result['type'])){
                 switch ($result['type']){
