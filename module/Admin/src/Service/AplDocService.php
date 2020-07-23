@@ -195,14 +195,28 @@ class AplDocService {
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                     ->findOneByName($producerNameFilter->filter($data['comment']));
             if ($unknownProducer){
-                return $unknownProducer->getProducer();
+                if ($unknownProducer->getProducer()){
+                    return $unknownProducer->getProducer();
+                } else {
+                    $producer = $this->producerManager->addProducerFromUnknownProducer($unknownProducer);
+                    if ($producer){
+                        return $producer;
+                    }
+                }    
             }
         }
         if (!empty($data['name'])){
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                     ->findOneByName($producerNameFilter->filter($data['name']));
             if ($unknownProducer){
-                return $unknownProducer->getProducer();
+                if ($unknownProducer->getProducer()){
+                    return $unknownProducer->getProducer();
+                } else {    
+                    $producer = $this->producerManager->addProducerFromUnknownProducer($unknownProducer);
+                    if ($producer){
+                        return $producer;
+                    }
+                }    
             }
         }
                 

@@ -236,7 +236,13 @@ class PtuManager
                 ->findOneBy(['code' => $defaultCode, 'name' => $defaultName]);            
         if ($country === NULL){            
             $connection = $this->entityManager->getConnection();
-            $connection->insert('country', ['code' => $defaultCode, 'name' => $defaultName]);
+            $connection->insert('country', [
+                'code' => $defaultCode, 
+                'name' => $defaultName, 
+                'fullname' => $defaultName,
+                'alpha2' => '-',
+                'alpha3' => '-',
+                ]);
             return $connection->lastInsertId();
         }          
         return $country->getId();        
@@ -274,6 +280,7 @@ class PtuManager
      */
     public function addPtuGood($ptuId, $data)
     {
+//        var_dump($data); exit;
         $ptuGood = [
             'ptu_id' => $ptuId,
             'status' => Ptu::STATUS_ACTIVE,
@@ -282,7 +289,7 @@ class PtuManager
             'amount' => $data['amount'],
             'good_id' => $data['good_id'],
             'comment' => $data['comment'],
-            'info' => $data['info'],
+//            'info' => $data['info'],
             'country_id' => $this->findCountry($data['countryName'], $data['countryCode']),
             'unit_id' => $this->findUnit($data['unitName'], $data['unitCode']),
             'ntd_id' => $this->findNtd($data['ntd']),
