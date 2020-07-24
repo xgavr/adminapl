@@ -22,7 +22,7 @@ use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
-use Laminas\Escaper\Escaper;
+use Laminas\Validator\Date;
 
 
 /**
@@ -154,6 +154,11 @@ class AplDocService {
      */
     private function findDefaultContract($office, $legal, $dateStart, $act, $pay = Contract::PAY_CASH)
     {
+        $dateValidator = new Date();
+        if (!$dateValidator->isValid($dateStart)){
+            $dateStart = '2012-05-15';
+        }
+        
         $contract = $this->entityManager->getRepository(Office::class)
                 ->findDefaultContract($office, $legal, $dateStart, $pay);
         
@@ -240,6 +245,7 @@ class AplDocService {
                 return $good;
             }
         }
+//        var_dump($data); exit;
         if (isset($data['maker'])){
             $producer = $this->findProducer($data['maker']);
             if ($producer){
@@ -252,8 +258,15 @@ class AplDocService {
                         if ($good){
                             return $good;
                         }
-
-                        return $this->assemblyManager->addNewGood($code, $producer, NULL, $data['id']);
+                        $name = '';
+                        if (isset($data['g5']['bestname'])){
+                            $name = $data['g5']['bestname'];
+                        } elseif (isset($data['g5']['artname'])) {
+                            $name = $data['g5']['artname'];
+                        } elseif (isset($data['comment'])) {
+                            $name = $data['comment'];
+                        }
+                        return $this->assemblyManager->addNewGood($code, $producer, NULL, $data['id'], mb_substr($name, 0, 255));
                     }    
                 }    
             }    
@@ -269,11 +282,16 @@ class AplDocService {
     public function unloadPtu($data)
     {
 //        var_dump($data); exit;
+        $docDate = $data['ds'];
+        $dateValidator = new Date();
+        if (!$dateValidator->isValid($docDate)){
+            $docDate = $data['created'];
+        }
         
         $dataPtu = [
             'apl_id' => $data['id'],
             'doc_no' => $data['ns'],
-            'doc_date' => $data['ds'],
+            'doc_date' => $docDate,
             'comment' => $data['comment'],
             'status_ex' => Ptu::STATUS_EX_APL,
         ];
@@ -311,22 +329,23 @@ class AplDocService {
                 $good = $this->findGood($tp['good']);   
             }    
             if (empty($good)){
-                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
-            }
+//                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+            } else {
             
-            $this->ptuManager->addPtuGood($ptu->getId(), [
-                'quantity' => $tp['sort'],
-                'amount' => $tp['bag_total'],
-                'good_id' => $good->getId(),
-                'comment' => '',
-                'info' => '',
-                'countryName' => $tp['country'],
-                'countryCode' => $tp['countrycode'],
-                'unitName' => $tp['pack'],
-                'unitCode' => $tp['packcode'],
-                'ntd' => $tp['gtd'],
-            ], $rowNo);
-            $rowNo++;
+                $this->ptuManager->addPtuGood($ptu->getId(), [
+                    'quantity' => $tp['sort'],
+                    'amount' => $tp['bag_total'],
+                    'good_id' => $good->getId(),
+                    'comment' => '',
+                    'info' => '',
+                    'countryName' => $tp['country'],
+                    'countryCode' => $tp['countrycode'],
+                    'unitName' => $tp['pack'],
+                    'unitCode' => $tp['packcode'],
+                    'ntd' => $tp['gtd'],
+                ], $rowNo);
+                $rowNo++;
+            }    
         }
         
         $this->ptuManager->updatePtuAmount($ptu);
@@ -390,13 +409,13 @@ class AplDocService {
 
 //        var_dump($body); exit;
         try{
-            $result = Decoder::decode($body, \Laminas\Json\Json::TYPE_ARRAY);
+            $result = json_decode($body, true);
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
             var_dump($ex->getMessage());
             var_dump($body);
             exit;
         }
-        var_dump($result); exit;
+//        var_dump($result); exit;
 
         if (is_array($result)){
             if (isset($result['type'])){
@@ -412,4 +431,23 @@ class AplDocService {
         return;
     }
 
+    /**
+     * Загрузка документов
+     * 
+     * @return
+     */
+    public function unloadDocs()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        while (true){
+            $this->unloadDoc();
+            if (time() > $startTime + 840){
+                break;
+            }
+        }    
+        return;
+    }    
 }

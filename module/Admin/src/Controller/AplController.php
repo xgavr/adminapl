@@ -671,12 +671,20 @@ class AplController extends AbstractActionController
     }    
     
     public function unloadDocAction()
-    {
-                
+    {                
         $this->aplDocService->unloadDoc();
         
         return new JsonModel([
-            'result' => 'ok-reload',
+            'result' => 'ok',
+        ]);
+    }    
+    
+    public function unloadDocsAction()
+    {                
+        $this->aplDocService->unloadDocs();
+        
+        return new JsonModel([
+            'result' => 'ok',
         ]);
     }    
     

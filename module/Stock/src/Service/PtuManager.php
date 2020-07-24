@@ -241,8 +241,8 @@ class PtuManager
                 'code' => $defaultCode, 
                 'name' => $defaultName, 
                 'fullname' => $defaultName,
-                'alpha2' => '-',
-                'alpha3' => '-',
+                'alpha2' => '--',
+                'alpha3' => '---',
                 ]);
             return $connection->lastInsertId();
         }          
@@ -279,8 +279,8 @@ class PtuManager
                     'code' => $countryCode, 
                     'name' => $countryName, 
                     'fullname' => $countryName,
-                    'alpha2' => '-',
-                    'alpha3' => '-',
+                    'alpha2' => '--',
+                    'alpha3' => '---',
                     ]);
                 return $connection->lastInsertId();
             }    

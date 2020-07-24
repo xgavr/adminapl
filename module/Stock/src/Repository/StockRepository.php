@@ -40,7 +40,7 @@ class StockRepository extends EntityRepository{
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
         
-        if ($result){
+        if (!empty($result['total'])){
             return $result['total'];
         }
         

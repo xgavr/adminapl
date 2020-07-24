@@ -116,17 +116,18 @@ class AssemblyManager
      * @param \Application\Entity\Producer $producer
      * @param \Application\Entity\GenericGroup $zeroGroup
      * @param integer $aplId
+     * @param string $name
      * @return Goods
      */
-    public function addNewGood($code, $producer, $zeroGroup = null, $aplId = 0) 
+    public function addNewGood($code, $producer, $zeroGroup = null, $aplId = 0, $name = '') 
     {
         // Создаем новую сущность Goods.
         $data = [
             'code' => $code,
             'producer_id' => $producer->getId(),
-            'name' => '',
+            'name' => $name,
             'available' => Goods::AVAILABLE_TRUE,
-            'description' => '',
+            'description' => $name,
             'price' => 0,
             'status_car' => Goods::CAR_FOR_UPDATE,
             'status_description' => Goods::DESCRIPTION_FOR_UPDATE,

@@ -77,6 +77,7 @@ class OfficeRepository extends EntityRepository{
                 ->andWhere('c.dateStart <= ?3')
                 ->setParameter('3', $dateDoc)
                 ->orderBy('c.dateStart', 'DESC')
+                ->setMaxResults(1)
                 ;
         
         return $queryBuilder->getQuery()->getOneOrNullResult();

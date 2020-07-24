@@ -57,7 +57,7 @@
                      <th data-field="docDate" data-sortable="true">Дата</th>
                      <th data-field="docNo" data-sortable="false">Номер</th>
                      <th data-field='amount' data-sortable="false">Сумма</th>
-                     <th data-field='legal' data-sortable="false">Постащик</th>
+                     <th data-field='legal' data-sortable="false">Поставщик</th>
                      <th data-field='office' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
                      <th data-field='status' data-sortable="false">П</th>
@@ -81,12 +81,16 @@
                         </div>
                         <div class="pull-right">
                             <button value="/apl/unload-doc?doc=ptu" class="btn btn-default btn-xs refresh-table-button"
+                                    title="Импорт одного поступления из АПЛ">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                            <button value="/apl/unload-docs?doc=ptu" class="btn btn-default btn-xs refresh-table-button"
                                     title="Импорт поступлений из АПЛ">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button> 
                         </div>
                     </div>
-                    <div class="panel-body">
+<!--                    <div class="panel-body">
                         <div class="pull-left">
                             Обновление AplId
                         </div>
@@ -96,7 +100,7 @@
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button> 
                         </div>
-                    </div>
+                    </div>-->
                 </div>    
             </div>
         </div>
