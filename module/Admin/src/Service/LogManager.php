@@ -11,6 +11,7 @@ namespace Admin\Service;
 use Laminas\Json\Json;
 use User\Entity\User;
 use Stock\Entity\Ptu;
+use Stock\Entity\PtuGood;
 use Admin\Entity\Log;
 
 /**
@@ -73,17 +74,6 @@ class LogManager {
     }
     
     /**
-     * Сериализация документа
-     * 
-     * @param Ptu $obj
-     * @param array $childDoc
-     */
-    private function serializeDoc($obj, $childDocs = null)
-    {
-        
-    }
-    
-    /**
      * Добавить запись в лог ptu
      * @param Ptu $ptu
      * @param integer $status 
@@ -94,9 +84,16 @@ class LogManager {
         
         if ($currentUser){
             
+            $ptuLog = $ptu->toLog();
+            $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
+                    ->findByPtu($ptu->getId());
+            foreach ($ptuGoods as $ptuGood){
+                $ptuLog['goods'][$ptuGood->getRowNo()] = $ptuGood->toLog();
+            }
+            
             $data = [
                 'log_key' => $ptu->getLogKey(),
-                'message' => Json::encode($ptu),
+                'message' => Json::encode($ptuLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,

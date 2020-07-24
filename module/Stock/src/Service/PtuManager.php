@@ -37,18 +37,6 @@ class PtuManager
     }
     
     /**
-     * Лог пту
-     * 
-     * @param Ptu $ptu
-     */
-    public function addLog($ptu)
-    {
-        $this->entityManager->getRepository(Log::class)
-                ->infoPtu($ptu, Log::STATUS_NEW, $this->currentUser()->getId());
-        return;
-    }
-    
-    /**
      * Обновить взаиморасчеты документа
      * 
      * @param Ptu $ptu
@@ -97,6 +85,7 @@ class PtuManager
                 $data = [
                     'doc_key' => $ptu->getLogKey(),
                     'doc_row_key' => $ptuGood->getDocRowKey(),
+                    'doc_row_no' => $ptuGood->getRowNo(),
                     'date_oper' => $ptu->getDocDate(),
                     'status' => Movement::STATUS_ACTIVE,
                     'quantity' => $ptuGood->getQuantity(),
@@ -125,7 +114,7 @@ class PtuManager
             'date_created' => date('Y-m-d H:i:s'),
             'status' => Ptu::STATUS_ACTIVE,
             'status_doc' => Ptu::STATUS_DOC_NOT_RECD,
-            'status_ex' => Ptu::STATUS_EX_NEW,
+//            'status_ex' => Ptu::STATUS_EX_NEW,
             'amount' => 0,
 //            'doc_no' => $data['doc_no'],
 //            'doc_date' => $data['doc_date'],
@@ -140,7 +129,8 @@ class PtuManager
         }
         
         $connection = $this->entityManager->getConnection(); 
-        $ptuId = $connection->insert('ptu', $rec);
+        $connection->insert('ptu', $rec);
+        $ptuId = $connection->lastInsertId();
         if ($ptuId){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->findOneById($ptuId);
@@ -217,14 +207,25 @@ class PtuManager
                     ->findOneByName(trim($unitName));
             if ($unit == NULL){
                 return $this->findDefaultUnit();
-            }
-        } else {
-            $unit = $this->entityManager->getRepository(Unit::class)
-                    ->findOneByCode(trim($unitCode));            
-            if ($unit == NULL){
-                return $this->findDefaultUnit();
+            } else {
+                return $unit->getId();
             }
         }    
+        $unit = $this->entityManager->getRepository(Unit::class)
+                ->findOneByCode(trim($unitCode));            
+        if ($unit == NULL){
+            if (empty($unitName)){
+                return $this->findDefaultUnit();
+            } else {
+                $connection = $this->entityManager->getConnection();
+                $connection->insert('unit', ['code' => $unitCode, 'name' => $unitName]);
+                return $connection->lastInsertId();                
+            }    
+        } else {
+            return $unit->getId();            
+        }   
+        
+        return;
     }
     
     
@@ -261,14 +262,33 @@ class PtuManager
                     ->findOneByName(trim($countryName));
             if ($country == NULL){
                 return $this->findDefaultCountry();
+            } else {
+                return $country->getId();
             }
-        } else {
-            $country = $this->entityManager->getRepository(Country::class)
-                    ->findOneByCode(trim($countryCode));            
-            if ($country == NULL){
+        }
+        
+        $country = $this->entityManager->getRepository(Country::class)
+                ->findOneByCode(trim($countryCode));            
+        
+        if ($country == NULL){
+            if (empty($countryName)){
                 return $this->findDefaultCountry();
-            }
-        }    
+            } else {
+                $connection = $this->entityManager->getConnection();
+                $connection->insert('country', [
+                    'code' => $countryCode, 
+                    'name' => $countryName, 
+                    'fullname' => $countryName,
+                    'alpha2' => '-',
+                    'alpha3' => '-',
+                    ]);
+                return $connection->lastInsertId();
+            }    
+        } else {
+            return $country->getId();
+        }
+        
+        return;
     }
     
 
@@ -276,9 +296,11 @@ class PtuManager
      * Adds a new ptu-good.
      * @param integer $ptuId
      * @param array $data
+     * @param integer $rowNo
+     * 
      * @return integer
      */
-    public function addPtuGood($ptuId, $data)
+    public function addPtuGood($ptuId, $data, $rowNo)
     {
 //        var_dump($data); exit;
         $ptuGood = [
@@ -293,6 +315,7 @@ class PtuManager
             'country_id' => $this->findCountry($data['countryName'], $data['countryCode']),
             'unit_id' => $this->findUnit($data['unitName'], $data['unitCode']),
             'ntd_id' => $this->findNtd($data['ntd']),
+            'row_no' => $rowNo,
         ];
         
         $connection = $this->entityManager->getConnection(); 
@@ -356,8 +379,10 @@ class PtuManager
     {
         $this->removePtuGood($ptu);
         
+        $rowNo = 1;
         foreach ($data as $row){
-            $this->addPtuGood($ptu->getId(), $row);
+            $this->addPtuGood($ptu->getId(), $row, $rowNo);
+            $rowNo++;
         }
         
         $this->updatePtuAmount($ptu);

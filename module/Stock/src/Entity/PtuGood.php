@@ -42,6 +42,11 @@ class PtuGood {
     protected $id;
     
     /**
+     * @ORM\Column(name="row_no")   
+     */
+    protected $rowNo;
+
+    /**
      * @ORM\Column(name="comment")   
      */
     protected $comment;
@@ -124,14 +129,14 @@ class PtuGood {
         $this->id = $id;
     }     
 
-    public function getAplId() 
+    public function getRowNo() 
     {
-        return $this->aplId;
+        return $this->rowNo;
     }
 
-    public function setAplId($aplId) 
+    public function setRowNo($rowNo) 
     {
-        $this->aplId = $aplId;
+        $this->rowNo = $rowNo;
     }     
 
     public function getComment() 
@@ -255,95 +260,6 @@ class PtuGood {
     }   
 
     /**
-     * Returns status.
-     * @return int     
-     */
-    public function getStatusEx() 
-    {
-        return $this->statusEx;
-    }
-
-    /**
-     * Returns possible statuses as array.
-     * @return array
-     */
-    public static function getStatusExList() 
-    {
-        return [
-            self::STATUS_EX_NEW => 'Новый',
-            self::STATUS_EX_APL => 'Отправлен в АПЛ',
-            self::STATUS_EX_RECD => 'Получен из АПЛ',
-        ];
-    }    
-    
-    /**
-     * Returns user status as string.
-     * @return string
-     */
-    public function getStatusExAsString()
-    {
-        $list = self::getStatusList();
-        if (isset($list[$this->statusEx]))
-            return $list[$this->statusEx];
-        
-        return 'Unknown';
-    }    
-    
-    /**
-     * Sets status.
-     * @param int $statusEx     
-     */
-    public function setStatusEx($statusEx) 
-    {
-        $this->statusEx = $statusEx;
-    }   
-
-    /**
-     * Returns the date of user creation.
-     * @return string     
-     */
-    public function getDateCreated() 
-    {
-        return $this->dateCreated;
-    }
-    
-    /**
-     * Sets the date when this user was created.
-     * @param string $dateCreated     
-     */
-    public function setDateCreated($dateCreated) 
-    {
-        $this->dateCreated = $dateCreated;
-    }    
-        
-    /**
-     * Returns the date of doc.
-     * @return string     
-     */
-    public function getDateDoc() 
-    {
-        return $this->dateDoc;
-    }
-    
-    /**
-     * Sets the date when doc.
-     * @param string $dateStart     
-     */
-    public function setDateDoc($dateDoc) 
-    {
-        $this->dateDoc = $dateDoc;
-    }    
-        
-    /**
-     * Returns the number of doc.
-     * @return string     
-     */
-    public function getNumberDoc() 
-    {
-        return $this->numberDoc;
-    }
-    
-    /**
      * Sets  quantity.
      * @param float $quantity     
      */
@@ -351,6 +267,15 @@ class PtuGood {
     {
         $this->quantity = $quantity;
     }    
+    
+    /**
+     * Returns the quantity of doc.
+     * @return float     
+     */
+    public function getQuantity() 
+    {
+        return $this->quantity;
+    }
     
     /**
      * Sets  amount.
@@ -368,51 +293,6 @@ class PtuGood {
     public function getAmount() 
     {
         return $this->amount;
-    }
-    
-    /**
-     * Returns the quantity of doc.
-     * @return float     
-     */
-    public function getQuantity() 
-    {
-        return $this->quantity;
-    }
-    
-    /**
-     * Sets the number when doc.
-     * @param string $numberDoc     
-     */
-    public function setNumberDoc($numberDoc) 
-    {
-        $this->numberDoc = $numberDoc;
-    }    
-    
-    /**
-     * Returns the legal.
-     * @return Legal     
-     */
-    public function getLegal() 
-    {
-        return $this->legal;
-    }
-    
-    /**
-     * Returns the contract.
-     * @return Contract     
-     */
-    public function getContract() 
-    {
-        return $this->contract;
-    }
-    
-    /**
-     * Returns the office.
-     * @return Office     
-     */
-    public function getOffice() 
-    {
-        return $this->office;
     }
     
     /**
@@ -460,4 +340,24 @@ class PtuGood {
         return $this->ptu;
     }
     
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'amount' => $this->getAmount(),
+            'comment' => $this->getComment(),
+            'country' => $this->getCountry()->getId(),
+            'good' => $this->getGood()->getId(),
+            'info' => $this->getInfo(),
+            'ntd' => $this->getNtd()->getId(),
+            'quantity' => $this->getQuantity(),
+            'rowNo' => $this->getRowNo(),
+            'status' => $this->getStatus(),
+            'statusDoc' => $this->getStatusDoc(),
+            'unit' => $this->getUnit()->getId(),
+        ];
+    }    
 }

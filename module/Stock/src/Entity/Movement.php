@@ -42,6 +42,11 @@ class Movement {
      */
     protected $docRowKey;
     
+    /**
+     * @ORM\Column(name="doc_row_no")   
+     */
+    protected $docRowNo;
+
     /** 
      * @ORM\Column(name="date_oper")  
      */
@@ -87,9 +92,9 @@ class Movement {
         $this->id = $id;
     }     
 
-    public function getDocRowKey() 
+    public function getDocKey() 
     {
-        return $this->docRowKey;
+        return $this->docKey;
     }
 
     public function setDocKey($docKey) 
@@ -97,14 +102,24 @@ class Movement {
         $this->docKey = $docKey;
     }     
 
-    public function getDocKey() 
+    public function getDocRowKey() 
     {
-        return $this->docKey;
+        return $this->docRowKey;
     }
 
     public function setDocRowKey($docRowKey) 
     {
         $this->docRowKey = $docRowKey;
+    }     
+
+    public function getDocRowNo() 
+    {
+        return $this->docRowNo;
+    }
+
+    public function setDocRowNo($docRowNo) 
+    {
+        $this->docRowNo = $docRowNo;
     }     
 
     /**

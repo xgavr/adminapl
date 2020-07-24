@@ -22,6 +22,7 @@ use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
+use Laminas\Escaper\Escaper;
 
 
 /**
@@ -274,6 +275,7 @@ class AplDocService {
             'doc_no' => $data['ns'],
             'doc_date' => $data['ds'],
             'comment' => $data['comment'],
+            'status_ex' => Ptu::STATUS_EX_APL,
         ];
         
         $cashless = Contract::PAY_CASH;
@@ -303,6 +305,7 @@ class AplDocService {
             $ptu = $this->ptuManager->addPtu($dataPtu);
         }    
         
+        $rowNo = 1;
         foreach ($data['tp'] as $tp){
             if (isset($tp['good'])){
                 $good = $this->findGood($tp['good']);   
@@ -322,12 +325,47 @@ class AplDocService {
                 'unitName' => $tp['pack'],
                 'unitCode' => $tp['packcode'],
                 'ntd' => $tp['gtd'],
-            ]);
+            ], $rowNo);
+            $rowNo++;
         }
         
         $this->ptuManager->updatePtuAmount($ptu);
         
         return;
+    }
+    
+    public function unloadedDoc($aplDocId)
+    {
+        $result = true;
+        if (is_numeric($aplDocId)){
+            $url = $this->aplApi().'aa-doc?api='.$this->aplApiKey();
+
+            $post = [
+                'docId' => $aplDocId,
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $result = $ok = FALSE;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $result = $ok = TRUE;
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+            
+            if ($ok){
+            }
+
+            unset($post);
+        }    
+        return $result;        
     }
     
     /**
@@ -349,17 +387,24 @@ class AplDocService {
 
         $response = $client->send();
         $body = $response->getBody();
-        
+
+//        var_dump($body); exit;
         try{
             $result = Decoder::decode($body, \Laminas\Json\Json::TYPE_ARRAY);
-        } catch (Exception $ex) {
-            return;
+        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
+            var_dump($ex->getMessage());
+            var_dump($body);
+            exit;
         }
+        var_dump($result); exit;
 
         if (is_array($result)){
             if (isset($result['type'])){
                 switch ($result['type']){
-                    case 'Suppliersorders': $this->unloadPtu($result); break;                        
+                    case 'Suppliersorders': 
+                        $this->unloadPtu($result); 
+                        $this->unloadedDoc($result['id']);
+                        break;                        
                     default; break;    
                 }                
             }

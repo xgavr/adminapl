@@ -411,4 +411,26 @@ class Ptu {
         return $this->office;
     }
     
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'amount' => $this->getAmount(),
+            'aplId' => $this->getAplId(),
+            'comment' => $this->getComment(),
+            'contract' => $this->getContract()->getId(),
+            'docDate' => (string) $this->getDocDate(),
+            'docNo' => $this->getDocNo(),
+            'info' => $this->getInfo(),
+            'legal' => $this->getLegal()->getId(),
+            'office' => $this->getOffice()->getId(),
+            'status' => $this->getStatus(),
+            'statusDoc' => $this->getStatusDoc(),
+            'statusEx' => $this->getStatusEx(),
+            'goods' => [],
+        ];
+    }
 }
