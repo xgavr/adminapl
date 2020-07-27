@@ -47,22 +47,20 @@ class PtuManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($ptu->getLogKey());
         
-        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){
-            $data = [
-                'doc_key' => $ptu->getLogKey(),
-                'date_oper' => $ptu->getDocDate(),
-                'status' => Mutual::STATUS_ACTIVE,
-                'revise' => Mutual::REVISE_NOT,
-                'amount' => $ptu->getAmount(),
-                'legal_id' => $ptu->getLegal()->getId(),
-                'contract_id' => $ptu->getContract()->getId(),
-                'office_id' => $ptu->getOffice()->getId(),
-                'company_id' => $ptu->getContract()->getLegal()->getId(),
-            ];
+        $data = [
+            'doc_key' => $ptu->getLogKey(),
+            'date_oper' => $ptu->getDocDate(),
+            'status' => $ptu->getStatus(),
+            'revise' => Mutual::REVISE_NOT,
+            'amount' => $ptu->getAmount(),
+            'legal_id' => $ptu->getLegal()->getId(),
+            'contract_id' => $ptu->getContract()->getId(),
+            'office_id' => $ptu->getOffice()->getId(),
+            'company_id' => $ptu->getContract()->getCompany()->getId(),
+        ];
 
-            $this->entityManager->getRepository(Mutual::class)
-                    ->insertMutual($data);
-        }   
+        $this->entityManager->getRepository(Mutual::class)
+                ->insertMutual($data);
         
         return;
     }    
@@ -78,30 +76,58 @@ class PtuManager
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ptu->getLogKey());
         
-        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){
-            $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
-                    ->findByPtu($ptu->getId());
-            foreach ($ptuGoods as $ptuGood){
-                $data = [
-                    'doc_key' => $ptu->getLogKey(),
-                    'doc_row_key' => $ptuGood->getDocRowKey(),
-                    'doc_row_no' => $ptuGood->getRowNo(),
-                    'date_oper' => $ptu->getDocDate(),
-                    'status' => Movement::STATUS_ACTIVE,
-                    'quantity' => $ptuGood->getQuantity(),
-                    'amount' => $ptuGood->getAmount(),
-                    'good_id' => $ptuGood->getGood()->getId(),
-                    'office_id' => $ptu->getOffice()->getId(),
-                ];
+        $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
+                ->findByPtu($ptu->getId());
+        foreach ($ptuGoods as $ptuGood){
+            $data = [
+                'doc_key' => $ptu->getLogKey(),
+                'doc_row_key' => $ptuGood->getDocRowKey(),
+                'doc_row_no' => $ptuGood->getRowNo(),
+                'date_oper' => $ptu->getDocDate(),
+                'status' => $ptu->getStatus(),
+                'quantity' => $ptuGood->getQuantity(),
+                'amount' => $ptuGood->getAmount(),
+                'good_id' => $ptuGood->getGood()->getId(),
+                'office_id' => $ptu->getOffice()->getId(),
+                'company_id' => $ptu->getContract()->getCompany()->getId(),
+            ];
 
-                $this->entityManager->getRepository(Movement::class)
-                        ->insertMovement($data);
-            }
-        }   
+            $this->entityManager->getRepository(Movement::class)
+                    ->insertMovement($data);
+        }
         
         return;
     }    
     
+    
+    /**
+     * Перепроведение ПТУ
+     * @param Ptu $ptu
+     */
+    public function repostPtu($ptu)
+    {
+        $this->updatePtuMovement($ptu);
+        $this->updatePtuMutuals($ptu);
+        
+        return;
+    }
+
+    /**
+     * Перепроведение всех ПТУ
+     * @param Ptu $ptu
+     */
+    public function repostAllPtu()
+    {
+        $ptus = $this->entityManager->getRepository(Ptu::class)
+                ->findAll();
+        foreach ($ptus as $ptu){
+            $this->repostPtu($ptu);
+        }    
+        
+        return;
+    }
+
+
     /**
      * Adds a new ptu.
      * @param array $data
@@ -112,7 +138,7 @@ class PtuManager
     {
         $rec = [
             'date_created' => date('Y-m-d H:i:s'),
-            'status' => Ptu::STATUS_ACTIVE,
+//            'status' => Ptu::STATUS_ACTIVE,
             'status_doc' => Ptu::STATUS_DOC_NOT_RECD,
 //            'status_ex' => Ptu::STATUS_EX_NEW,
             'amount' => 0,
@@ -305,8 +331,8 @@ class PtuManager
 //        var_dump($data); exit;
         $ptuGood = [
             'ptu_id' => $ptuId,
-            'status' => Ptu::STATUS_ACTIVE,
-            'status_doc' => Ptu::STATUS_DOC_NOT_RECD,
+            'status' => $data['status'],
+            'status_doc' => $data['statusDoc'],
             'quantity' => $data['quantity'],
             'amount' => $data['amount'],
             'good_id' => $data['good_id'],
@@ -345,10 +371,12 @@ class PtuManager
     {
         $ptuAmountTotal = $this->entityManager->getRepository(Ptu::class)
                 ->ptuAmountTotal($ptu);
-        $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal], ['id' => $ptu->getId()]);
+//        $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal], ['id' => $ptu->getId()]);
+        $ptu->setAmount($ptuAmountTotal);
+        $this->entityManager->persist($ptu);
+        $this->entityManager->flush($ptu);
         
-        $this->updatePtuMovement($ptu);
-        $this->updatePtuMutuals($ptu);
+        $this->repostPtu($ptu);
         $this->logManager->infoPtu($ptu, Log::STATUS_UPDATE);
         return;
     }

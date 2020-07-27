@@ -275,6 +275,47 @@ class AplDocService {
     }
     
     /**
+     * Получить статус документа ПТУ
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getPtuStatus($data)
+    {
+        $ptuStatus = Ptu::STATUS_ACTIVE;
+        if ($data['publish'] == 0){
+            $ptuStatus = Ptu::STATUS_RETIRED;            
+        }
+        if (isset($data['desc'])){
+            if (isset($data['desc']['comiss']) == 1){
+                $ptuStatus = Ptu::STATUS_COMMISSION;
+            }
+        }                
+        
+        return $ptuStatus;
+    }
+    
+    /**
+     * Получить статус оплаты договора
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getCashContract($data)
+    {
+        $cashless = Contract::PAY_CASH;
+        if (isset($data['desc'])){
+            if (isset($data['desc']['cashless'])){
+                if ($data['desc']['cashless'] == 1){
+                    $cashless = Contract::PAY_CASHLESS;
+                }
+            }
+        }
+        
+        return $cashless;
+    }
+    
+    /**
      * Загрузить ПТУ
      * 
      * @param array $data
@@ -294,21 +335,16 @@ class AplDocService {
             'doc_date' => $docDate,
             'comment' => $data['comment'],
             'status_ex' => Ptu::STATUS_EX_APL,
+            'status' => $this->getPtuStatus($data),
         ];
         
-        $cashless = Contract::PAY_CASH;
         if (isset($data['desc'])){
-            if (isset($data['desc']['cashless'])){
-                if ($data['desc']['cashless'] == 1){
-                    $cashless = Contract::PAY_CASHLESS;
-                }
-            }
             $dataPtu['info'] = Encoder::encode($data['desc']);
         }
         
         $office = $this->officeFromAplId($data['parent']);
         $legal = $this->legalFromSupplierAplId($data['name'], $data['ds']);
-        $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $cashless);
+        $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $this->getCashContract($data));
         
         $dataPtu['office_id'] = $office->getId();
         $dataPtu['legal_id'] = $legal->getId();
@@ -333,7 +369,9 @@ class AplDocService {
             } else {
             
                 $this->ptuManager->addPtuGood($ptu->getId(), [
-                    'quantity' => $tp['sort'],
+                    'status' => $ptu->getStatus(),
+                    'statusDoc' => $ptu->getStatusDoc(),
+                    'quantity' => $tp['sort'],                    
                     'amount' => $tp['bag_total'],
                     'good_id' => $good->getId(),
                     'comment' => '',
@@ -353,6 +391,11 @@ class AplDocService {
         return;
     }
     
+    /**
+     * Обновить статус загруженного документа
+     * @param integer $aplDocId
+     * @return boolean
+     */
     public function unloadedDoc($aplDocId)
     {
         $result = true;
@@ -375,6 +418,8 @@ class AplDocService {
                 if ($response->isOk()) {
                     $result = $ok = TRUE;
                 }
+            } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+                $ok = true;
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
@@ -444,6 +489,7 @@ class AplDocService {
         
         while (true){
             $this->unloadDoc();
+            usleep(100);
             if (time() > $startTime + 840){
                 break;
             }

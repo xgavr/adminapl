@@ -24,6 +24,7 @@ class Mutual {
     
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_COMMISSION    = 3; // commission.
     
     const REVISE_OK       = 1; // Сверка ок.
     const REVISE_NOT      = 2; // Сверки нет.
@@ -161,7 +162,8 @@ class Mutual {
     {
         return [
             self::STATUS_ACTIVE => 'Активный',
-            self::STATUS_RETIRED => 'Удален'
+            self::STATUS_RETIRED => 'Удален',
+            self::STATUS_COMMISSION => 'На комиссии',
         ];
     }    
     

@@ -21,7 +21,7 @@ class AdminManager {
     const SETTINGS_FILE       = './data/settings/config.php'; // файл с настройками общими
     const PRICE_SETTINGS_FILE       = './data/settings/price_config.php'; // файл с настройками загрузки прайсов
     const BANK_SETTINGS_FILE       = './data/settings/bank_config.php'; // файл с настройками обмена с банком
-    const APL_EXCHANGE_SETTINGS_FILE       = './data/settings/apl_exchange_config.php'; // файл с настройками обмена с банком
+    const APL_EXCHANGE_SETTINGS_FILE       = './data/settings/apl_exchange_config.php'; // файл с настройками обмена
     const TD_EXCHANGE_SETTINGS_FILE       = './data/settings/td_exchange_config.php'; // файл с настройками обмена по апи текдока
     const TELEGRAM_SETTINGS_FILE       = './data/settings/telegram_config.php'; // файл с настройками telegram
     const ABCP_SETTINGS_FILE                    = './data/settings/abcp_config.php'; //файл с настройками abcp
@@ -265,11 +265,13 @@ class AdminManager {
         $config->apl_exchange->car = $data['car']; //обновлять машины
         $config->apl_exchange->good_name = $data['good_name']; //обновлять наименования
         $config->apl_exchange->good_price = $data['good_price']; //обновлять цены
+        $config->apl_exchange->ptu = $data['ptu']; //обновлять пту
         
         $writer = new PhpArray();
         
         $writer->toFile(self::APL_EXCHANGE_SETTINGS_FILE, $config);
     }
+    
     
     /**
      * Получить настройки обмена по апи баз тд

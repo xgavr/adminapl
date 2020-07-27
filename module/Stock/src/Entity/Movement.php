@@ -24,6 +24,7 @@ class Movement {
     
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_COMMISSION    = 3; // commission.
     
     /**
      * @ORM\Id
@@ -78,6 +79,12 @@ class Movement {
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
      */
     private $office;    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="movements") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;    
     
     public function __construct() {
     }
@@ -193,7 +200,8 @@ class Movement {
     {
         return [
             self::STATUS_ACTIVE => 'Активный',
-            self::STATUS_RETIRED => 'Удален'
+            self::STATUS_RETIRED => 'Удален',
+            self::STATUS_COMMISSION => 'На комиссии',
         ];
     }    
     
@@ -236,5 +244,20 @@ class Movement {
     {
         return $this->good;
     }
-        
+    
+    /*
+     * @return Legal
+     */    
+    public function getCompany() 
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param Legal $company
+     */    
+    public function setCompany($company) 
+    {
+        $this->company = $company;
+    }                         
 }

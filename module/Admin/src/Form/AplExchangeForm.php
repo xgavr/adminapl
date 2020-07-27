@@ -210,6 +210,18 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'ptu',
+            'options' => [
+                'label' => 'Обновлять ПТУ',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -380,6 +392,17 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'good_price',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'ptu',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

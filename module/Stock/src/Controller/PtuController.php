@@ -67,4 +67,13 @@ class PtuController extends AbstractActionController
         ]);          
     }        
     
+    public function repostAllPtuAction()
+    {                
+        $this->ptuManager->repostAllPtu();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }        
+    
 }

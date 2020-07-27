@@ -7,6 +7,7 @@ use Company\Entity\Contract;
 use Company\Entity\Office;
 use Laminas\Json\Json;
 use Application\Entity\Contact;
+use Stock\Entity\Mutual;
 
 /**
  * This service legal.
@@ -15,7 +16,7 @@ class LegalManager
 {
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;  
         
@@ -120,26 +121,51 @@ class LegalManager
         $this->entityManager->flush();
     }
     
+    /**
+     * Возможность удаления юр лица
+     * @param Legal $legal
+     * @return bool
+     */
+    public function allowRemoveLegal($legal)
+    {
+        $legalCount = $this->entityManager->getRepository(Mutual::class)
+                ->count(['legal' => $legal->getId()]);
+        $companyCount = $this->entityManager->getRepository(Mutual::class)
+                ->count(['company' => $legal->getId()]);
+        
+        return $legalCount == 0 && $companyCount == 0;
+    }
+    
+    /**
+     * Удаление юр лица
+     * 
+     * @param Legal $legal
+     */
     public function removeLegal($legal)
     {
-        $contacts = $legal->getContacts();
-        foreach ($contacts as $contact){
-            $contact->removeLegalAssociation($legal);
-        }
-        
-        $contracts = $legal->getContracts();
-        foreach ($contracts as $contract){
-            $this->entityManager->remove($contract);
-        }
-        
-        $bankAccounts = $legal->getBankAccounts();
-        foreach ($bankAccounts as $bankAccount){
-            $this->entityManager->remove($bankAccount);
-        }
-        
-        $this->entityManager->remove($legal);
+        if ($this->allowRemoveLegal($legal)){
+            
+            $contacts = $legal->getContacts();
+            foreach ($contacts as $contact){
+                $contact->removeLegalAssociation($legal);
+            }
 
-        $this->entityManager->flush();
+            $contracts = $legal->getContracts();
+            foreach ($contracts as $contract){
+                $this->entityManager->remove($contract);
+            }
+
+            $bankAccounts = $legal->getBankAccounts();
+            foreach ($bankAccounts as $bankAccount){
+                $this->entityManager->remove($bankAccount);
+            }
+
+            $this->entityManager->remove($legal);
+
+            $this->entityManager->flush();
+        }
+        
+        return;
     }    
        
     /**

@@ -74,6 +74,10 @@ $form->get('good_price')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('ptu')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -87,7 +91,7 @@ $form->prepare();
 
 <?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-3">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('apl_secret_key')); ?>
@@ -137,7 +141,7 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('oem')); ?>                  
         </div>
     </div>   
-    <div class="col-md-5">
+    <div class="col-md-3">
                         
         <div class="form-group">
             <?= $this->formLabel($form->get('image')); ?>
@@ -176,7 +180,15 @@ $form->prepare();
         </div>
 
     </div>
-    <div class="col-md-2" id="side-nav" >
+    <div class="col-md-3">
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ptu')); ?>
+            <?= $this->formElement($form->get('ptu')); ?>
+            <?= $this->formElementErrors($form->get('ptu')); ?>                  
+        </div>
+    </div>    
+    <div class="col-md-3" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
             <li class="active">
                 <?= $this->formElement($form->get('submit')); ?>

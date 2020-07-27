@@ -29,6 +29,7 @@ class PtuGood {
      // Ptu status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_COMMISSION    = 3; // commission.
    
      // Ptu status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
@@ -190,7 +191,8 @@ class PtuGood {
     {
         return [
             self::STATUS_ACTIVE => 'Активный',
-            self::STATUS_RETIRED => 'Удален'
+            self::STATUS_RETIRED => 'Удален',
+            self::STATUS_COMMISSION => 'На комиссии',            
         ];
     }    
     

@@ -21,6 +21,7 @@ use Phpml\Math\Statistic\Mean;
 use Phpml\Math\Statistic\StandardDeviation;
 use Application\Validator\Sigma3;
 use Application\Entity\Article;
+use Stock\Entity\Movement;
 
 /**
  * Description of GoodsService
@@ -149,7 +150,9 @@ class GoodsManager
      */
     public function allowRemove($good)
     {
-        return true;
+        $movementsCount = $this->entityManager->getRepository(Movement::class)
+                ->count(['good' => $good->getId()]);
+        return $movementsCount == 0;
     }
     
     /**
@@ -213,10 +216,12 @@ class GoodsManager
                 $articleCount = $this->entityManager->getRepository(Article::class)
                         ->count(['good' => $good->getId()]);
                 if ($articleCount == 0){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($good->getId(), ['available' => Goods::AVAILABLE_FALSE]);
                     $this->removeGood($good);
                 } else {
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), ['upd_week' => date('W')]);
+                            ->updateGoodId($good->getId(), ['upd_week' => date('W'), 'available' => Goods::AVAILABLE_TRUE]);
                 }    
                 $this->entityManager->detach($good);
             }    
