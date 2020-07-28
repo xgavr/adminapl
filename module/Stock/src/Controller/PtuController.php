@@ -76,4 +76,23 @@ class PtuController extends AbstractActionController
         ]);
     }        
     
+    public function deletePtuAction()
+    {
+        $ptuId = $this->params()->fromRoute('id', -1);
+        
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->findOneById($ptuId);        
+        if ($ptu == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->ptuManager->removePtu($ptu);
+        
+        // Перенаправляем пользователя на страницу "rb/tax".
+        return new JsonModel(
+           ['ok']
+        );           
+    }
+    
 }

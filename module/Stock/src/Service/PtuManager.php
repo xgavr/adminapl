@@ -415,6 +415,24 @@ class PtuManager
         
         $this->updatePtuAmount($ptu);
         return;
-    }    
+    }   
+    
+    
+    /**
+     * Ужаление ПТУ
+     * 
+     * @param Ptu $ptu
+     */
+    public function removePtu($ptu)
+    {
+        $this->entityManager->getRepository(Mutual::class)
+                ->removeDocMutuals($ptu->getLogKey());
+        $this->entityManager->getRepository(Movement::class)
+                ->removeDocMovements($ptu->getLogKey());
+        $this->removePtuGood($ptu);
+        $this->entityManager->remove($ptu);
+        $this->entityManager-flush();
+        return;
+    }
 }
 
