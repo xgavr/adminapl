@@ -50,7 +50,10 @@ class LegalManager
         $legal->setInfo($data['info']);            
         $legal->setAddress($data['address']);            
         $legal->setStatus($data['status']);            
-        $legal->setDateStart($data['dateStart']);
+        $legal->setDateStart($currentDate);
+        if (isset($data['dateStart'])){
+            $legal->setDateStart($data['dateStart']);
+        }
 
         $legal->addContact($contact);
         $this->entityManager->persist($legal);        
