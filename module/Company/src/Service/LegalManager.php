@@ -49,7 +49,9 @@ class LegalManager
         $legal->setChiefAccount($data['chiefAccount']);            
         $legal->setInfo($data['info']);            
         $legal->setAddress($data['address']);            
-        $legal->setStatus($data['status']);            
+        $legal->setStatus($data['status']);  
+        
+        $currentDate = date('Y-m-d H:i:s');
         $legal->setDateStart($currentDate);
         if (isset($data['dateStart'])){
             $legal->setDateStart($data['dateStart']);
