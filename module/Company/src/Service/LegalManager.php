@@ -98,11 +98,11 @@ class LegalManager
             $currentDate = date('Y-m-d H:i:s');
             $legal->setDateCreated($currentDate);
             
-            if ($data['dateStart']){
+            $legal->setDateStart($currentDate);
+            if (isset($data['dateStart'])){
                 $legal->setDateStart($data['dateStart']);
-            } else {
-                $legal->setDateStart($currentDate);
             }
+            
             $legal->addContact($contact);
             $this->entityManager->persist($legal);
             $this->entityManager->flush();                

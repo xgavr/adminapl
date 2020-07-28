@@ -376,11 +376,11 @@ class AplDocService {
                     'good_id' => $good->getId(),
                     'comment' => '',
                     'info' => '',
-                    'countryName' => $tp['country'],
-                    'countryCode' => $tp['countrycode'],
-                    'unitName' => $tp['pack'],
-                    'unitCode' => $tp['packcode'],
-                    'ntd' => $tp['gtd'],
+                    'countryName' => (isset($tp['country'])) ? $tp['country']:'',
+                    'countryCode' => (isset($tp['countrycode'])) ? $tp['countrycode']:'',
+                    'unitName' => (isset($tp['pack'])) ? $tp['pack']:'',
+                    'unitCode' => (isset($tp['packcode'])) ? $tp['packcode']:'',
+                    'ntd' => (isset($tp['gtd'])) ? $tp['gtd']:'',
                 ], $rowNo);
                 $rowNo++;
             }    
