@@ -330,12 +330,33 @@ class LegalManager
         }
     }
     
+    
+    /**
+     * Возможность удаления договора
+     * @param Contract $contract
+     * @return bool
+     */
+    public function allowRemoveContract($contract)
+    {
+        $contractCount = $this->entityManager->getRepository(Mutual::class)
+                ->count(['contract' => $contract->getId()]);
+        
+        return $contractCount == 0;
+    }
+    
+    /**
+     * Удаление договора
+     * @param Contract $contract
+     * @return type
+     */
     public function removeContract($contract)
     {
-        $this->entityManager->remove($contract);
+        if ($this->allowRemoveContract($contract)){
+            $this->entityManager->remove($contract);
 
-        $this->entityManager->flush();
-        
+            $this->entityManager->flush();
+        }
+        return;
     }
     
 }
