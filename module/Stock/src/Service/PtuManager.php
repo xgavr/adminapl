@@ -425,13 +425,15 @@ class PtuManager
      */
     public function removePtu($ptu)
     {
+        $this->logManager->infoPtu($ptu, Log::STATUS_DELETE);
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($ptu->getLogKey());
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ptu->getLogKey());
         $this->removePtuGood($ptu);
-        $this->entityManager->remove($ptu);
-        $this->entityManager-flush();
+        
+        $this->entityManager->getConnection()->delete('ptu', ['id' => $ptu->getId()]);
+        
         return;
     }
 }
