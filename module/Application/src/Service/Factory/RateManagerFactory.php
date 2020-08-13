@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\RateManager;
 use Application\Service\MlManager;
+use Admin\Service\LogManager;
 
 /**
  * Description of ShopManagerFactory
@@ -26,8 +27,9 @@ class RateManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $mlManager = $container->get(MlManager::class);
+        $logManager = $container->get(LogManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new RateManager($entityManager, $mlManager);
+        return new RateManager($entityManager, $mlManager, $logManager);
     }
 }

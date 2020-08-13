@@ -369,6 +369,12 @@ class PtuManager
      */
     public function updatePtuAmount($ptu)
     {
+        $preLog = $this->entityManager->getRepository(Log::class)
+                ->findOneByLogKey($ptu->getLogKey());
+        if (!$preLog){
+            $this->logManager->infoPtu($ptu, Log::STATUS_INFO);            
+        }
+        
         $ptuAmountTotal = $this->entityManager->getRepository(Ptu::class)
                 ->ptuAmountTotal($ptu);
 //        $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal], ['id' => $ptu->getId()]);

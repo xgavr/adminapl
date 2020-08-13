@@ -17,7 +17,7 @@ use Application\Entity\Supplier;
 use Application\Entity\GenericGroup;
 use Application\Entity\TokenGroup;
 use Application\Entity\Producer;
-use Application\Entity\Goods;
+use Admin\Entity\Log;
 
 
 class RateController extends AbstractActionController
@@ -51,8 +51,12 @@ class RateController extends AbstractActionController
         $rates = $this->entityManager->getRepository(Rate::class)
                 ->findBy([], []);
         
+        $logs = $this->entityManager->getRepository(Log::class)
+                ->findByDocType('rate', ['limit' => 10]);
+        
         return new ViewModel([
             'rates' => $rates,
+            'logs' => $logs,
         ]);
     }
     

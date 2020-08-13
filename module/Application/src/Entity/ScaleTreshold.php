@@ -203,4 +203,17 @@ class ScaleTreshold
         $scale->addTreshold($this);
     }     
         
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'treshold' => $this->getTreshold(),
+            'rate' => $this->getRate(),
+            'rounding' => $this->getRounding(),
+        ];
+    }    
+    
 }

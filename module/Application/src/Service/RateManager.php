@@ -13,6 +13,7 @@ use Application\Entity\Scale;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\Rate;
 use Company\Entity\Office;
+use Admin\Entity\Log;
 
 /**
  * Description of ShopService
@@ -33,12 +34,19 @@ class RateManager
      * @var \Application\Service\MlManager
      */
     private $mlManager;
+    
+    /**
+     * Log manager
+     * @var \Admin\Service\LogManager
+     */
+    private $logManager;    
 
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $mlManager)
+    public function __construct($entityManager, $mlManager, $logManager)
     {
         $this->entityManager = $entityManager;
         $this->mlManager = $mlManager;
+        $this->logManager = $logManager;
     }    
     
     /**
@@ -320,6 +328,9 @@ class RateManager
         
         $this->entityManager->persist($rate);
         $this->entityManager->flush($rate);
+        
+        $this->logManager->infoRate($rate, Log::STATUS_NEW);
+                
     }
     
     /**
@@ -359,6 +370,8 @@ class RateManager
         $rate->setMaxPrice($scale->getMaxPrice());
         $this->entityManager->persist($rate);
         $this->entityManager->flush($rate);
+        
+        $this->logManager->infoRate($rate, Log::STATUS_UPDATE);        
     }
     
     /**
@@ -394,6 +407,7 @@ class RateManager
         $rate->setStatus($status);
         $this->entityManager->persist($rate);
         $this->entityManager->flush($rate);
+        $this->logManager->infoRate($rate, Log::STATUS_UPDATE);
     }
     
     /**
@@ -416,6 +430,7 @@ class RateManager
      */
     public function removeRate($rate)
     {
+        $this->logManager->infoRate($rate, Log::STATUS_DELETE);
         $this->mlManager->removeModelRateScale($rate);
         $this->removeScale($rate->getScale());
         

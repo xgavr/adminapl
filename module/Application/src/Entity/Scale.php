@@ -128,4 +128,18 @@ class Scale {
         $this->rates[] = $rate;
     }     
         
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'name' => $this->getName(),
+            'minPrice' => $this->getMinPrice(),
+            'maxPrice' => $this->getMaxPrice(),
+            'tresholds' => [],
+        ];
+    }    
+    
 }

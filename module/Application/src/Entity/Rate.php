@@ -104,6 +104,11 @@ class Rate
         return $this->id;
     }
 
+    public function getLogKey() 
+    {
+        return 'rate:'.$this->id;
+    }
+
     public function getRateModelFileName() 
     {
         return "rate_scale_{$this->id}.dat";
@@ -382,4 +387,24 @@ class Rate
         return $this->tokenGroup;
     }
 
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'name' => $this->getName(),
+            'status' => $this->getStatus(),
+            'mode' => $this->getMode(),
+            'minPrice' => $this->getMinPrice(),
+            'maxPrice' => $this->getMaxPrice(),
+            'scale' => $this->getScale()->getId(),
+            'office' => $this->getOffice()->getId(),
+            'producer' => ($this->getProducer()) ? $this->getProducer()->getId():null,
+            'genericGroup' => ($this->getGenericGroup()) ? $this->getGenericGroup()->getId():null,
+            'tokenGroup' => ($this->getTokenGroup()) ? $this->getTokenGroup()->getId():null,
+            'tresholds' => [],
+        ];
+    }    
 }

@@ -13,6 +13,8 @@ use User\Entity\User;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Admin\Entity\Log;
+use Application\Entity\Rate;
+use Application\Entity\ScaleTreshold;
 
 /**
  * Description of LogManager
@@ -94,6 +96,39 @@ class LogManager {
             $data = [
                 'log_key' => $ptu->getLogKey(),
                 'message' => Json::encode($ptuLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }           
+
+    /**
+     * Добавить запись в лог rate
+     * @param Rate $rate
+     * @param integer $status 
+     */
+    public function infoRate($rate, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $rateLog = $rate->toLog();
+            $tresholds = $this->entityManager->getRepository(ScaleTreshold::class)
+                    ->findByScale($rate->getScale()->getId());
+            foreach ($tresholds as $treshold){
+                $rateLog['tresholds'][$treshold->getId()] = $treshold->toLog();
+            }
+            
+            $data = [
+                'log_key' => $rate->getLogKey(),
+                'message' => Json::encode($rateLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,
