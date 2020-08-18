@@ -10,6 +10,8 @@ namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use User\Entity\User;
+use Laminas\Json\Decoder;
+use Laminas\Json\Json;
 
 
 /**
@@ -90,6 +92,12 @@ class Log {
         return $this->logKey;
     }
 
+    public function getIdFromLogKey() 
+    {
+        $ek = explode(':', $this->logKey);
+        return $ek[1];
+    }
+
     public function setLogKey($logKey) 
     {
         $this->logKey = $logKey;
@@ -98,6 +106,11 @@ class Log {
     public function getMessage()
     {
         return $this->message;
+    }
+    
+    public function getMessageAsArray()
+    {
+        return Decoder::decode($this->message, Json::TYPE_ARRAY);
     }
     
     public function setMessage($message)

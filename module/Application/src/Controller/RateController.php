@@ -56,7 +56,7 @@ class RateController extends AbstractActionController
         
         return new ViewModel([
             'rates' => $rates,
-            'logs' => $logs->getResult(2),
+            'logs' => $logs,
         ]);
     }
     

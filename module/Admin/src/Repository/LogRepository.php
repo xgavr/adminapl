@@ -10,6 +10,7 @@ namespace Admin\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Admin\Entity\Log;
+//use User\Entity\User;
 
 
 /**
@@ -42,8 +43,21 @@ class LogRepository extends EntityRepository{
                 $queryBuilder->setMaxResults($options['limit']);
             }
         }
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        $result = [];
+        foreach ($data as $row){
+            $message = $row->getMessageAsArray();
+            $result[$row->getId()] = [
+                'id' => $row->getIdFromLogKey(),                
+                'priority' => $row->getPriorityAsString(),                
+                'status' => $row->getStatusAsString(),                
+                'dateCreated' => date('d-m-y H:i:s', strtotime($row->getDateCreated())),                
+                'user' => $row->getUser()->getFullName(),
+            ];
+        }
                 
-        return $queryBuilder->getQuery();
+        return $result;
         
     }
     

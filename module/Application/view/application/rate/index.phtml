@@ -58,43 +58,6 @@
 </a>
 
 
-<table class="table table-striped">
-
-   <tr>
-        <th>Дата</th>
-        <th>Расценка</th>
-        <th>Действие</th>
-        <th>Автор</th>        
-    </tr>
-    
-    <?php foreach ($logs as $log): ?>
-    
-    <tr>
-        <td><?= $this->escapeHtml($log->getDateCreated()); ?></td>
-        <td>
-            <a href="<?= $this->url('rate', ['action'=>'view', 'id'=>$rate->getId()]); ?>">
-                <?= $this->escapeHtml($rate->getName()); ?>
-            </a> 
-        </td>
-        <td>
-            <input type="checkbox" class="rateStatusCheckbox" value="<?= $rate->getId()?>" <?= $rate->getStatusCheckbox()?>/>
-        </td>
-        <td>
-            <nobr>
-<!--            <a class="btn btn-info" href="<?= $this->url('rate', 
-                    ['action'=>'edit', 'id'=>$rate->getId()]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-            </a>-->
-            <a class="btn btn-danger" href="<?= $this->url('rate',
-                    ['action'=>'delete', 'id'=>$rate->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
-            </nobr>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>       
-</table>
 
 <?= $this->partialLoop('\admin\log\partialLoop.phtml', $logs) ?>
 
