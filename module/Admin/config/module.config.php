@@ -37,6 +37,20 @@ return [
                     ],
                 ],
             ],
+            'log' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/log[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\LogController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
             'post' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -106,6 +120,10 @@ return [
                 ['actions' => '*', 'allow' => '+admin.manage'],
                 ['actions' => 'telegramm-hook', 'allow' => '*']
             ],
+            Controller\LogController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@'],
+            ],
             Controller\PostController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage']
@@ -125,6 +143,7 @@ return [
         'factories' => [
             Controller\AplController::class => Controller\Factory\AplControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\LogController::class => Controller\Factory\LogControllerFactory::class,
             Controller\PostController::class => Controller\Factory\PostControllerFactory::class,
             Controller\ProcessingController::class => Controller\Factory\ProcessingControllerFactory::class,
             Controller\TelegrammController::class => Controller\Factory\TelegrammControllerFactory::class,

@@ -33,9 +33,9 @@ class LogRepository extends EntityRepository{
 
         $queryBuilder->select('l')
                 ->from(Log::class, 'l')
-                ->where('l.logKey like "?1"')
-                ->setParameter(1, $docType.':%')
-                ->orderBy('id', 'DESC')
+                ->where("l.logKey like '$docType:%'")
+//                ->setParameter(1, $docType)
+                ->orderBy('l.id', 'DESC')
                 ;
         if (is_array($options)){
             if (isset($options['limit'])){
