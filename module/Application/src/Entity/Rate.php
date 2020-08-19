@@ -191,7 +191,7 @@ class Rate
         return 'Unknown';
     }    
     
-    public function getStatusName($status)
+    public static function getStatusName($status)
     {
         $list = self::getStatusList();
         if (isset($list[$status]))
@@ -239,7 +239,7 @@ class Rate
         return 'Unknown';
     }    
     
-    public function getModeName($mode)
+    public static function getModeName($mode)
     {
         $list = self::getModeList();
         if (isset($list[$mode]))

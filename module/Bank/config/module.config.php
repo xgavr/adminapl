@@ -37,7 +37,7 @@ return [
         'controllers' => [
             Controller\IndexController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@'],
+                ['actions' => '*', 'allow' => '+bank.manage'],
             ],
         ],
     ],    

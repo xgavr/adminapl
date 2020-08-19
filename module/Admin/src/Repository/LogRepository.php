@@ -10,6 +10,7 @@ namespace Admin\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Admin\Entity\Log;
+use Application\Entity\Rate;
 //use User\Entity\User;
 
 
@@ -19,6 +20,31 @@ use Admin\Entity\Log;
  * @author Daddy
  */
 class LogRepository extends EntityRepository{
+    
+    
+    /**
+     * Текст лога
+     * 
+     * @param string $ident
+     * @param array $message
+     * 
+     * @return string
+     */
+    private function messageText($ident, $message)
+    {
+        switch ($ident){
+            case 'rate':
+                $name = $message['name'];
+                $statusName = Rate::getStatusName($message['status']);
+                $modeName = Rate::getModeName($message['mode']);
+                $result = "$name";
+                if (isset($message['']))
+                break;
+            default: break;
+        }
+        
+        return;
+    }
     
     /**
      * Выбрать по типу документа
@@ -52,7 +78,7 @@ class LogRepository extends EntityRepository{
                 'id' => $row->getIdFromLogKey(),                
                 'priority' => $row->getPriorityAsString(),                
                 'status' => $row->getStatusAsString(),                
-                'dateCreated' => date('d-m-y H:i:s', strtotime($row->getDateCreated())),                
+                'dateCreated' => date('Y-m-d H:i:s', strtotime($row->getDateCreated())),                
                 'user' => $row->getUser()->getFullName(),
             ];
         }
