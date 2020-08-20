@@ -11,6 +11,10 @@ namespace Admin\Repository;
 use Doctrine\ORM\EntityRepository;
 use Admin\Entity\Log;
 use Application\Entity\Rate;
+use Application\Entity\Producer;
+use Application\Entity\GenericGroup;
+use Application\Entity\TokenGroup;
+use Company\Entity\Office;
 //use User\Entity\User;
 
 
@@ -32,13 +36,34 @@ class LogRepository extends EntityRepository{
      */
     private function messageText($ident, $message)
     {
+        $entityManager = $this->getEntityManager();
         switch ($ident){
             case 'rate':
                 $name = $message['name'];
                 $statusName = Rate::getStatusName($message['status']);
                 $modeName = Rate::getModeName($message['mode']);
-                $result = "$name";
-                if (isset($message['']))
+                $param = '';
+                if (!empty($message['producer'])){
+                    $producer = $entityManager->getRepository(Producer::class)
+                            ->findOneById($message['producer']);
+                    $param = $producer->getName();
+                }
+                if (!empty($message['genericGroup'])){
+                    $genericGroup = $entityManager->getRepository(GenericGroup::class)
+                            ->findOneById($message['genericGroup']);
+                    $param = $genericGroup->getName();
+                }
+                if (!empty($message['tokenGroup'])){
+                    $tokenGroup = $entityManager->getRepository(TokenGroup::class)
+                            ->findOneById($message['tokenGroup']);
+                    $param = $tokenGroup->getName();
+                }
+                if (!empty($message['office'])){
+                    $office = $entityManager->getRepository(Office::class)
+                            ->findOneById($message['office']);
+                    $officeName = $office->getName();
+                }
+                $result = trim("$name $officeName $param");
                 break;
             default: break;
         }
