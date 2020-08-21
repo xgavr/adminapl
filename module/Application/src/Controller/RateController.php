@@ -52,7 +52,7 @@ class RateController extends AbstractActionController
                 ->findBy([], []);
         
         $logs = $this->entityManager->getRepository(Log::class)
-                ->findByDocType('rate', ['limit' => 10]);
+                ->findByDocType('rate', ['limit' => 5]);
         
         return new ViewModel([
             'rates' => $rates,
@@ -125,9 +125,13 @@ class RateController extends AbstractActionController
         if ($rate->getProducer()){
             $params['producer'] = $rate->getProducer()->getId();
         }
+
+        $logs = $this->entityManager->getRepository(Log::class)
+                ->findByDocType('rate', ['id' => $rateId]);
         
         return new ViewModel([
             'rate' => $rate,
+            'logs' => $logs,
         ]);        
     }
 

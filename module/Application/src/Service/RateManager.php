@@ -337,8 +337,9 @@ class RateManager
      * Обновить шкалу расценки
      * 
      * @param Rate $rate
+     * @param float $change
      */
-    public function updateRateScale($rate)
+    public function updateRateScale($rate, $change = null)
     {
         
         $params = [
@@ -371,7 +372,7 @@ class RateManager
         $this->entityManager->persist($rate);
         $this->entityManager->flush($rate);
         
-        $this->logManager->infoRate($rate, Log::STATUS_UPDATE);        
+        $this->logManager->infoRate($rate, Log::STATUS_UPDATE, $change);        
     }
     
     /**
@@ -393,7 +394,7 @@ class RateManager
         } else {
             $this->mlManager->removeModelRateScale($rate);
         }   
-        $this->updateRateScale($rate);
+        $this->updateRateScale($rate, $change);
     }
     
     /**

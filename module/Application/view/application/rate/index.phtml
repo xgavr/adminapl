@@ -7,11 +7,17 @@
             'Расценки'=>$this->url('rate'),
             ]);
 ?>
+<p class="text-right">
+    <a href="
+        <?= $this->url('rate', ['action'=>'fix-price']); ?>">
+        <h4>Фиксированные цены &gt;&gt;</h4>
+    </a>    
+</p>
 <p>
     <button onclick="ratePromptDialog('/rate/add')" 
             class="btn btn-default btn-xs" 
             title="Новая расценка">
-        <span class="glyphicon glyphicon-plus"></span>
+        <span class="glyphicon glyphicon-plus"> Новая расценка</span>
     </button> 
 </p>
 
@@ -52,12 +58,11 @@
         
     <?php endforeach; ?>       
 </table>
-<a href="
-    <?= $this->url('rate', ['action'=>'fix-price']); ?>">
-    Фиксированные цены &gt;&gt;
-</a>
 
-<?= $this->partialLoop('\admin\log\partialLoop.phtml', $logs) ?>    
+<h4>Последние изменения:</h4>
+<p>
+    <?= $this->partialLoop('\admin\log\partialLoop.phtml', $logs) ?>        
+</p>
 
 <script type="text/javascript">
     

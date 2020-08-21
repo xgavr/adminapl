@@ -98,6 +98,12 @@ class Log {
         return $ek[1];
     }
 
+    public function getIdentFromLogKey() 
+    {
+        $ek = explode(':', $this->logKey);
+        return $ek[0];
+    }
+
     public function setLogKey($logKey) 
     {
         $this->logKey = $logKey;

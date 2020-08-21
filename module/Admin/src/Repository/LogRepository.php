@@ -29,41 +29,53 @@ class LogRepository extends EntityRepository{
     /**
      * Текст лога
      * 
-     * @param string $ident
-     * @param array $message
+     * @param Log $log
      * 
      * @return string
      */
-    private function messageText($ident, $message)
+    private function messageText($log)
     {
         $entityManager = $this->getEntityManager();
+        $ident = $log->getIdentFromLogKey();
+        $message = $log->getMessageAsArray();
         switch ($ident){
             case 'rate':
-                $name = $message['name'];
+                $name = "<a href='/rate/view/{$log->getIdFromLogKey()}'>{$message['name']}</a>";
+                if ($log->getStatus() == Log::STATUS_DELETE){
+                    $name = $message['name'];
+                }    
                 $statusName = Rate::getStatusName($message['status']);
                 $modeName = Rate::getModeName($message['mode']);
-                $param = '';
+                $change = '';
+                if (isset($message['change'])){
+                    $change = "{$message['change']}";                    
+                    if ($change > 0){
+                        $change = "+{$message['change']}";                    
+                    }    
+                }
+                $param = 'Для всех';
                 if (!empty($message['producer'])){
                     $producer = $entityManager->getRepository(Producer::class)
                             ->findOneById($message['producer']);
-                    $param = $producer->getName();
+                    $param = "ограничение <a href='/producer/view/{$message['producer']}'>{$producer->getName()}</a>";
                 }
                 if (!empty($message['genericGroup'])){
                     $genericGroup = $entityManager->getRepository(GenericGroup::class)
                             ->findOneById($message['genericGroup']);
-                    $param = $genericGroup->getName();
+                    $param = "ограничение <a href='/group/view/{$message['genericGroup']}'>{$genericGroup->getName()}</a>";
                 }
                 if (!empty($message['tokenGroup'])){
                     $tokenGroup = $entityManager->getRepository(TokenGroup::class)
                             ->findOneById($message['tokenGroup']);
-                    $param = $tokenGroup->getName();
+                    $param = "ограничение <a href='/name/view-token-group/{$message['tokenGroup']}'>{$tokenGroup->getName()}</a>";
                 }
                 if (!empty($message['office'])){
                     $office = $entityManager->getRepository(Office::class)
                             ->findOneById($message['office']);
                     $officeName = $office->getName();
                 }
-                $result = trim("$name $officeName $param");
+                $result = trim("$name $change");
+                return $result;
                 break;
             default: break;
         }
@@ -86,10 +98,13 @@ class LogRepository extends EntityRepository{
         $queryBuilder->select('l')
                 ->from(Log::class, 'l')
                 ->where("l.logKey like '$docType:%'")
-//                ->setParameter(1, $docType)
                 ->orderBy('l.id', 'DESC')
                 ;
         if (is_array($options)){
+            if (isset($options['id'])){
+                $queryBuilder->andWhere('l.logKey = ?1');
+                $queryBuilder->setParameter('1', "$docType:{$options['id']}");
+            }
             if (isset($options['limit'])){
                 $queryBuilder->setMaxResults($options['limit']);
             }
@@ -98,13 +113,13 @@ class LogRepository extends EntityRepository{
         $data = $queryBuilder->getQuery()->getResult();
         $result = [];
         foreach ($data as $row){
-            $message = $row->getMessageAsArray();
             $result[$row->getId()] = [
                 'id' => $row->getIdFromLogKey(),                
                 'priority' => $row->getPriorityAsString(),                
                 'status' => $row->getStatusAsString(),                
                 'dateCreated' => date('Y-m-d H:i:s', strtotime($row->getDateCreated())),                
                 'user' => $row->getUser()->getFullName(),
+                'message' => $this->messageText($row),
             ];
         }
                 

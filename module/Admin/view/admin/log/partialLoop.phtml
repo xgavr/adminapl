@@ -1,6 +1,7 @@
 <?php // partialLoop.phtml ?>
 <blockquote class="blockquote">
-    <small>
-        <?= $this->dateCreated ?> <?= $this->status ?> <?= $this->user ?>
-    </small>
-</blockquote>
+    <p><?= $this->message ?></p>
+    <footer>        
+        <?= $this->dateCreated ?> <?= $this->user ?> <?= $this->status ?>
+    </footer>
+</blockquote>    

@@ -112,14 +112,16 @@ class LogManager {
      * Добавить запись в лог rate
      * @param Rate $rate
      * @param integer $status 
+     * @param float $change
      */
-    public function infoRate($rate, $status)
+    public function infoRate($rate, $status, $change = null)
     {
         $currentUser = $this->currentUser();
         
         if ($currentUser){
             
             $rateLog = $rate->toLog();
+            $rateLog['change'] = $change;
             $tresholds = $this->entityManager->getRepository(ScaleTreshold::class)
                     ->findByScale($rate->getScale()->getId());
             foreach ($tresholds as $treshold){
