@@ -11,6 +11,7 @@ namespace Admin\Service;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
 use Laminas\Http\Client;
+use Bank\Entity\Statement;
 
 
 /**
@@ -53,7 +54,7 @@ class AplBankService {
     /**
      * Преобразовать в формат АПЛ
      * 
-     * @param Bank\Entity\Statement $statement
+     * @param Statement $statement
      * @return array
      */
     public function convertStatementToAplFormat($statement)
@@ -70,6 +71,7 @@ class AplBankService {
         $result['docDate']           = $statement->getPaymentDate();    //Дата
         $result['docSum']            = number_format(abs($statement->getАmount()), 2, '.', ''); //Сумма
         $result['purpose']           = $statement->getPaymentPurpose(); //НазначениеПлатежа
+        $result['bankSistemId']      = $statement->getBankSystemId(); //уникальный номер в банке
         
         if ($statement->getАmount() > 0){ //Поступление на счет
             
