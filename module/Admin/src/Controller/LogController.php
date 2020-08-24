@@ -10,7 +10,9 @@ namespace Admin\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Admin\Entity\Log;
-use Laminas\Paginator\Adapter;
+
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Laminas\Paginator\Paginator;
 
 class LogController extends AbstractActionController
@@ -40,15 +42,20 @@ class LogController extends AbstractActionController
         $ident = $this->params()->fromQuery('ident');
         $id = $this->params()->fromQuery('id');
                 
-        $logs = $this->entityManager->getRepository(Log::class)
-                ->findByDocType($ident, ['id' => $id]);
+        $query = $this->entityManager->getRepository(Log::class)
+                ->queryByDocType($ident, ['id' => $id]);
         
         $page = $this->params()->fromQuery('page', 1);
-        $adapter = new DoctrineAdapter(new Adapter\ArrayAdapter($logs));
+        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
         $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);                
+        $paginator->setCurrentPageNumber($page);        
         
-        return [];
+        return [
+            'rows' => $paginator,
+            'entityManager' => $this->entityManager,
+            'ident' => $ident,
+            'id' => $id,
+        ];
     }    
 }

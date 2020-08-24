@@ -110,7 +110,7 @@ class BankManager
     /**
      * Добавление или обновление строки выписки
      * @param array $data
-     * @return \Bank\Entity\Statement
+     * @return Statement
      */
     public function addNewOrUpdateStatement($data)
     {
@@ -120,6 +120,7 @@ class BankManager
                     'counterpartyInn' => $data['counterparty_inn'],
                     'counterpartyAccountNumber' => $data['counterparty_account_number'],
                     'paymentNumber' => $data['payment_number'],
+                    'bankSystemId' => $data['payment_bank_system_id'],
                     'paymentDate' => date('Y-m-d', strtotime($data['payment_date'])),
                     'chargeDate' => date('Y-m-d', strtotime($data['payment_charge_date'])),
                 ]);

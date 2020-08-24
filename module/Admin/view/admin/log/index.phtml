@@ -1,1 +1,18 @@
+<?php
+    use Admin\Entity\Log;
+
+    $this->headTitle('Лог записей');
+
+    $logs = $entityManager->getRepository(Log::class)
+            ->logDescription($rows);
+?>
+
+<p>
+    <?= $this->partialLoop('\admin\log\partialLoop.phtml', $logs) ?>        
+</p>
+
+<?= $this->paginationControl($rows,
+            'Sliding',
+            'application/partial/paginator', 
+            ['route' => ['route' => 'log', 'action' => 'index', 'query' => ['ident' => $ident, 'id' => $id]]]); ?>
 

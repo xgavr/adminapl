@@ -84,12 +84,12 @@ class LogRepository extends EntityRepository{
     }
     
     /**
-     * Выбрать по типу документа
+     * Запрос по типу документа
      * 
      * @param string $docType
      * @param array $options
      */
-    public function findByDocType($docType, $options = null)
+    public function queryByDocType($docType, $options = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -110,7 +110,19 @@ class LogRepository extends EntityRepository{
             }
         }
         
-        $data = $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery();
+    }    
+        
+    
+    /**
+     * Подготовить описание логов
+     * 
+     * @param array $data
+     * 
+     * @return array
+     */
+    public function logDescription($data)
+    {        
         $result = [];
         foreach ($data as $row){
             $result[$row->getId()] = [
@@ -124,6 +136,21 @@ class LogRepository extends EntityRepository{
         }
                 
         return $result;
+        
+    }
+
+    /**
+     * Выбрать по типу документа
+     * 
+     * @param string $docType
+     * @param array $options
+     */
+    public function findByDocType($docType, $options = null)
+    {
+        $query = $this->queryByDocType($docType, $options);
+        $data = $query->getResult();        
+        
+        return $this->logDescription($data);
         
     }
     
