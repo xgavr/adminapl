@@ -11,22 +11,35 @@ $this->pageBreadcrumbs()->setItems([
         
 $col = 1;
 ?>
-
-<h1>
-    <?= $this->escapeHtml($rate->getName()); ?>    
-    <button onclick="ratePromptDialog('/rate/update-rate-name/<?= $rate->getId()?>', '<?= $this->escapeHtml($rate->getName()); ?>')" 
-            class="btn btn-default btn-xs" 
-            title="Изменить наименование расценки">
-        <span class="glyphicon glyphicon-pencil" ></span>
-    </button> 
-</h1>
-<span>    
-    <div class="pull-left">
-        <input id="ck" type="checkbox" class="rateStatusCheckbox" value="<?= $rate->getId()?>" <?= $rate->getStatusCheckbox()?>/>
-        <label for="ck">Использовать</label>
-    </div>    
-
-    <div class="pull-right">
+<div class="row">
+    <div class="col-md-9">
+        <h1>
+            <?= $this->escapeHtml($rate->getName()); ?>    
+            <button onclick="ratePromptDialog('/rate/update-rate-name/<?= $rate->getId()?>', '<?= $this->escapeHtml($rate->getName()); ?>')" 
+                    class="btn btn-default btn-xs" 
+                    title="Изменить наименование расценки">
+                <span class="glyphicon glyphicon-pencil" ></span>
+            </button> 
+        </h1>        
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-info" href="<?= $this->url('rate',
+                ['action'=>'update-rate-scale', 'id'=>$rate->getId()]); ?>">
+            <span class="glyphicon glyphicon-refresh">Обновить шкалу</span> 
+        </a>    
+        <button class="btn btn-danger this-delete" onclick="tableRowDelete('/rate/delete-form/<?= $rate->getId() ?>')">
+            <span class="glyphicon glyphicon-remove"></span> Удалить
+        </button>                
+    </div>
+</div>    
+<div class="row">
+    <div class="col-md-2">
+        <div class="pull-left">
+            <input id="ck" type="checkbox" class="rateStatusCheckbox" value="<?= $rate->getId()?>" <?= $rate->getStatusCheckbox()?>/>
+            <label for="ck">Использовать</label>
+        </div>            
+    </div>
+    <div class="col-md-6">
         <?php if ($rate->getSupplier()):?>
             <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rate->getSupplier()->getId()])?>">
                 <?= $rate->getSupplier()->getName()?>                
@@ -47,97 +60,93 @@ $col = 1;
                 <?= $rate->getProducer()->getName()?>
             </a>
         <?php endif; ?> 
+    </div>
+    <div class="col-md-4">
         Закупочные цены от <?= round($rate->getMinPrice())?> до <?= round($rate->getMaxPrice())?>.
-        <a class="btn btn-info" href="<?= $this->url('rate',
-                ['action'=>'update-rate-scale', 'id'=>$rate->getId()]); ?>">
-            <span class="glyphicon glyphicon-refresh">Обновить шкалу</span> 
-        </a>    
-        <button class="btn btn-danger this-delete" onclick="tableRowDelete('/rate/delete-form/<?= $rate->getId() ?>')">
-            <span class="glyphicon glyphicon-remove"></span> Удалить
-        </button>
     </div>    
-</span>
-<table class="table table-striped">
-    <tr>
-        <th rowspan="2"  align="center">
-            Порог
-        </th>
-        <th colspan="12"  align="center">
-            Цены и %% 
-            <a class="btn btn-warning" title="Уменьшить наценку на 10%"
-               href="<?= $this->url('rate',['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -10]]); ?>">
-                <span class="glyphicon glyphicon-minus">10%</span> 
-            </a>    
-            <a class="btn btn-warning" title="Уменьшить наценку на 5%"
-               href="<?= $this->url('rate',['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -5]]); ?>">
-                <span class="glyphicon glyphicon-minus">5%</span> 
-            </a>    
-            <a class="btn btn-warning" title="Уменьшить наценку на 1%"
-               href="<?= $this->url('rate',['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -1]]); ?>">
-                <span class="glyphicon glyphicon-minus">1%</span> 
-            </a>    
-            <a class="btn btn-info" title="Сбросить изменения"
-               href="<?= $this->url('rate',['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 0]]); ?>">
-                <span class="glyphicon glyphicon-refresh">0</span> 
-            </a>    
-            <a class="btn btn-warning" title="Увеличить наценку на 1%"
-               href="<?= $this->url('rate', ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 1]]); ?>">
-                <span class="glyphicon glyphicon-plus">1%</span> 
-            </a>    
-            <a class="btn btn-warning" title="Увеличить наценку на 5%"
-               href="<?= $this->url('rate', ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 5]]); ?>">
-                <span class="glyphicon glyphicon-plus">5%</span> 
-            </a>    
-            <a class="btn btn-warning" title="Увеличить наценку на 10%"
-               href="<?= $this->url('rate', ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 10]]); ?>">
-                <span class="glyphicon glyphicon-plus">10%</span> 
-            </a>    
-        </th>
-        <th rowspan="2"  align="center">
-            Округление
-        </th>
-    </tr>
-    <tr>
-        <th  align="center">
-            Розница
-        </th>
-        <th  align="center">
-            %
-        </th>
-        <?php while ($col <= ScaleTreshold::PRICE_COL_COUNT):?>
-            <th align="center">Опт <?= $col?></th>
-            <th align="center">%</th>
-            <?php $col++ ?>
-        <?php endwhile;?>
-    </tr>
-    <?php foreach ($rate->getScale()->getTresholds() as $treshold):?>
-        <tr>
-            <td align="right">
-                <?= round($treshold->getTreshold()) ?>
-            </td>
-            <td align="right">
-                <?= $treshold->getRetail() ?>
-            </td>
-            <td>
-                <?= round($treshold->getFormatRate()) ?>
-            </td>
-            <?php $priceCols = $treshold->getPriceCols(); $col = 1;?>
-            <?php while ($col <= ScaleTreshold::PRICE_COL_COUNT):?>
-                <td align="right"><?= $priceCols[$col]['price']?></td`>
-                <td align="center"><?= round($priceCols[$col]['percent'])?></td`>
-                <?php $col++ ?>
-            <?php endwhile;?>
-            <td>
-                <?= $treshold->getRounding() ?>
-            </td>
-        </tr>
-    <?php endforeach;?>
-</table>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <tr>
+                <th rowspan="2"  align="center">
+                    Порог
+                </th>
+                <th colspan="12"  align="center">
+                    Цены и %% 
+                    <a class="btn btn-warning" title="Уменьшить наценку на 10%"
+                       href="<?= $this->url('rate',['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -10]]); ?>">
+                        <span class="glyphicon glyphicon-minus">10%</span> 
+                    </a>    
+                    <a class="btn btn-warning" title="Уменьшить наценку на 5%"
+                       href="<?= $this->url('rate',['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -5]]); ?>">
+                        <span class="glyphicon glyphicon-minus">5%</span> 
+                    </a>    
+                    <a class="btn btn-warning" title="Уменьшить наценку на 1%"
+                       href="<?= $this->url('rate',['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => -1]]); ?>">
+                        <span class="glyphicon glyphicon-minus">1%</span> 
+                    </a>    
+                    <a class="btn btn-info" title="Сбросить изменения"
+                       href="<?= $this->url('rate',['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 0]]); ?>">
+                        <span class="glyphicon glyphicon-refresh">0</span> 
+                    </a>    
+                    <a class="btn btn-warning" title="Увеличить наценку на 1%"
+                       href="<?= $this->url('rate', ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 1]]); ?>">
+                        <span class="glyphicon glyphicon-plus">1%</span> 
+                    </a>    
+                    <a class="btn btn-warning" title="Увеличить наценку на 5%"
+                       href="<?= $this->url('rate', ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 5]]); ?>">
+                        <span class="glyphicon glyphicon-plus">5%</span> 
+                    </a>    
+                    <a class="btn btn-warning" title="Увеличить наценку на 10%"
+                       href="<?= $this->url('rate', ['action'=>'change-rate-scale', 'id'=>$rate->getId()], ['query' => ['plus' => 10]]); ?>">
+                        <span class="glyphicon glyphicon-plus">10%</span> 
+                    </a>    
+                </th>
+                <th rowspan="2"  align="center">
+                    Округление
+                </th>
+            </tr>
+            <tr>
+                <th  align="center">
+                    Розница
+                </th>
+                <th  align="center">
+                    %
+                </th>
+                <?php while ($col <= ScaleTreshold::PRICE_COL_COUNT):?>
+                    <th align="center">Опт <?= $col?></th>
+                    <th align="center">%</th>
+                    <?php $col++ ?>
+                <?php endwhile;?>
+            </tr>
+            <?php foreach ($rate->getScale()->getTresholds() as $treshold):?>
+                <tr>
+                    <td align="right">
+                        <?= round($treshold->getTreshold()) ?>
+                    </td>
+                    <td align="right">
+                        <?= $treshold->getRetail() ?>
+                    </td>
+                    <td>
+                        <?= round($treshold->getFormatRate()) ?>
+                    </td>
+                    <?php $priceCols = $treshold->getPriceCols(); $col = 1;?>
+                    <?php while ($col <= ScaleTreshold::PRICE_COL_COUNT):?>
+                        <td align="right"><?= $priceCols[$col]['price']?></td`>
+                        <td align="center"><?= round($priceCols[$col]['percent'])?></td`>
+                        <?php $col++ ?>
+                    <?php endwhile;?>
+                    <td>
+                        <?= $treshold->getRounding() ?>
+                    </td>
+                </tr>
+            <?php endforeach;?>
+        </table>        
+    </div>    
+</div>
 
-<!--<h4>Последние изменения:</h4>
-<p>
-    <?//= $this->partialLoop('\admin\log\partialLoop.phtml', $logs) ?>        
-</p>-->
+<?= $this->partial('\admin\log\partial.phtml', ['logs' => $logs]) ?>        
 
 <script type="text/javascript">
     /**

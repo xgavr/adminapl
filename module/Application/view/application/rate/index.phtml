@@ -7,50 +7,54 @@
             'Расценки'=>$this->url('rate'),
             ]);
 ?>
-<p class="text-right">
-    <a href="
-        <?= $this->url('rate', ['action'=>'fix-price']); ?>">
-        <h4>Фиксированные цены &gt;&gt;</h4>
-    </a>    
-</p>
-<p>
-    <button onclick="ratePromptDialog('/rate/add')" 
-            class="btn btn-default btn-xs" 
-            title="Новая расценка">
-        <span class="glyphicon glyphicon-plus"> Новая расценка</span>
-    </button> 
-</p>
+<div class="row">
+    <div class="col-md-9">
+        <button class="btn btn-default" onclick="ratePromptDialog('/rate/add')" 
+                title="Новая расценка">
+            <span class="glyphicon glyphicon-plus"> Новая расценка</span>
+        </button>         
+    </div>
+    <div class="col-md-3">
+        <a href="
+            <?= $this->url('rate', ['action'=>'fix-price']); ?>">
+            <h4>Фиксированные цены &gt;&gt;</h4>
+        </a>            
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
 
-<table class="table table-striped">
+           <tr>
+                <th>ID</th>
+                <th>Наименование</th>
+                <th>Использовать</th>
+                <th>Действия</th>        
+            </tr>
 
-   <tr>
-        <th>ID</th>
-        <th>Наименование</th>
-        <th>Использовать</th>
-        <th>Действия</th>        
-    </tr>
-    
-    <?php foreach ($rates as $rate): ?>
-    
-    <tr>
-        <td><?= $this->escapeHtml($rate->getId()); ?></td>
-        <td>
-            <a href="<?= $this->url('rate', ['action'=>'view', 'id'=>$rate->getId()]); ?>">
-                <?= $this->escapeHtml($rate->getName()); ?>
-            </a> 
-        </td>
-        <td>
-            <input type="checkbox" class="rateStatusCheckbox" value="<?= $rate->getId()?>" <?= $rate->getStatusCheckbox()?>/>
-        </td>
-        <td>
-            <button class="btn btn-danger this-delete" onclick="tableRowDelete('/rate/delete-form/<?= $rate->getId() ?>')">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </button>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>       
-</table>
+            <?php foreach ($rates as $rate): ?>
+
+            <tr>
+                <td><?= $this->escapeHtml($rate->getId()); ?></td>
+                <td>
+                    <a href="<?= $this->url('rate', ['action'=>'view', 'id'=>$rate->getId()]); ?>">
+                        <?= $this->escapeHtml($rate->getName()); ?>
+                    </a> 
+                </td>
+                <td>
+                    <input type="checkbox" class="rateStatusCheckbox" value="<?= $rate->getId()?>" <?= $rate->getStatusCheckbox()?>/>
+                </td>
+                <td>
+                    <button class="btn btn-danger this-delete" onclick="tableRowDelete('/rate/delete-form/<?= $rate->getId() ?>')">
+                        <span class="glyphicon glyphicon-remove"></span> Удалить
+                    </button>
+                </td>    
+            </tr>
+
+            <?php endforeach; ?>       
+        </table>
+    </div>    
+</div>
 
 <?= $this->partial('\admin\log\partial.phtml', ['logs' => $logs]) ?>        
 
