@@ -1,0 +1,7 @@
+<?php // partial.phtml ?>
+<div class="row">
+    <div class="col-xs-12"><h4>История изменений:</h4></div>
+    <div class="col-xs-12">
+        <?= $this->partialLoop('\admin\log\partialLoop.phtml', $this->logs) ?>
+    </div>
+</div>

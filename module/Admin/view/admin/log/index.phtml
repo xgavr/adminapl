@@ -7,9 +7,8 @@
             ->logDescription($rows);
 ?>
 
-<p>
-    <?= $this->partialLoop('\admin\log\partialLoop.phtml', $logs) ?>        
-</p>
+
+<?= $this->partial('\admin\log\partial.phtml', ['logs' => $logs]) ?>        
 
 <?= $this->paginationControl($rows,
             'Sliding',

@@ -52,10 +52,9 @@ $col = 1;
                 ['action'=>'update-rate-scale', 'id'=>$rate->getId()]); ?>">
             <span class="glyphicon glyphicon-refresh">Обновить шкалу</span> 
         </a>    
-        <a class="btn btn-danger" href="<?= $this->url('rate',
-                ['action'=>'delete', 'id'=>$rate->getId()]); ?>">
+        <button class="btn btn-danger this-delete" onclick="tableRowDelete('/rate/delete-form/<?= $rate->getId() ?>')">
             <span class="glyphicon glyphicon-remove"></span> Удалить
-        </a>    
+        </button>
     </div>    
 </span>
 <table class="table table-striped">

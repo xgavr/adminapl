@@ -161,6 +161,8 @@
                                 if (data == 'ok'){
                                     dialog.modal('hide');
                                     table.bootstrapTable('refresh');
+                                } else if (data == 'ok-reload'){
+                                    window.location.reload();
                                 } else {
                                     alert("Не удалось удалить!");
                                 }    

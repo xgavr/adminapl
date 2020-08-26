@@ -107,7 +107,8 @@ class RateController extends AbstractActionController
             $rate = $this->entityManager->getRepository(Rate::class)
                     ->findOneById($rateId);
             if ($rate == null) {
-                $this->getResponse()->setStatusCode(404);
+                $this->redirect()->toRoute('rate');
+//                $this->getResponse()->setStatusCode(404);
                 return;                        
             }        
         }
@@ -229,6 +230,26 @@ class RateController extends AbstractActionController
         $this->rateManager->removeRate($rate);
         
         $this->redirect()->toRoute('rate');
+    }
+
+    public function deleteFormAction()
+    {
+        $rateId = $this->params()->fromRoute('id', -1);
+        
+        if ($rateId > 0) {
+            $rate = $this->entityManager->getRepository(Rate::class)
+                    ->findOneById($rateId);
+            if ($rate == null) {
+                $this->getResponse()->setStatusCode(404);
+                return;                        
+            }        
+        }
+        
+        $this->rateManager->removeRate($rate);
+        
+        return new JsonModel([
+            'ok-reload',
+        ]);                  
     }
 
     public function viewScaleAction()
