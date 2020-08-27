@@ -48,7 +48,7 @@ class LogController extends AbstractActionController
         $page = $this->params()->fromQuery('page', 1);
         $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
         $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setDefaultItemCountPerPage(20);        
         $paginator->setCurrentPageNumber($page);        
         
         return [

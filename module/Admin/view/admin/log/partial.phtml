@@ -1,7 +1,23 @@
-<?php // partial.phtml ?>
+<?php // partial.phtml 
+    $qstr = '';
+    if (isset($this->ident)){
+        $qstr = "?ident={$this->ident}";
+        if (isset($this->id)){
+            $qstr .= "&id={$this->id}";            
+        }
+    }
+?>
 <div class="row">
-    <div class="col-xs-12"><h4>История изменений:</h4></div>
     <div class="col-xs-12">
-        <?= $this->partialLoop('\admin\log\partialLoop.phtml', $this->logs) ?>
+        <h4>
+            <a class="btn btn-default btn-xs" href="/log<?= $qstr?>" 
+               title="Все записи в отдельном окне" target="_blank">
+                <span class="glyphicon glyphicon-list"></span>
+            </a>
+            История изменений:
+        </h4>
+    </div>
+    <div class="col-xs-12">
+        <?= $this->partialLoop('\Admin\log\partialLoop.phtml', $this->logs) ?>
     </div>
 </div>

@@ -128,7 +128,7 @@ class RateController extends AbstractActionController
         }
 
         $logs = $this->entityManager->getRepository(Log::class)
-                ->findByDocType('rate', ['id' => $rateId]);
+                ->findByDocType('rate', ['id' => $rateId, 'limit' => 5]);
         
         return new ViewModel([
             'rate' => $rate,
