@@ -265,7 +265,7 @@ class ArticleManager
      */
     public function removeEmptyArticles()
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(900);        
         $startTime = time();
         $finishTime = $startTime + 840;
