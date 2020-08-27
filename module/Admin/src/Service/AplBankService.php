@@ -11,7 +11,6 @@ namespace Admin\Service;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
 use Laminas\Http\Client;
-use Bank\Entity\Statement;
 
 
 /**
