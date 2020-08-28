@@ -61,6 +61,10 @@ class ParseRawpriceApl extends AbstractFilter
         $result .= '                    $result["presence"]  = (trim($desc["col5"]) && trim($desc["col5"]) != "-") ? 1:0;'.PHP_EOL;
         $result .= '                    $result["rest"] = trim($desc["col5"]);'.PHP_EOL;
         $result .= '                    $result["comp"] = trim($desc["col7"]);'.PHP_EOL;
+        $result .= '                    $result["order"] = trim($desc["col16"]);'.PHP_EOL;
+        $result .= '                    if ($result["order"]) { // есть резерв'.PHP_EOL;
+        $result .= '                        $result["reserve"] = trim($desc["col17"]);'.PHP_EOL;
+        $result .= '                    }'.PHP_EOL;
         $result .= ''.PHP_EOL;
         $result .= '                    return $result;'.PHP_EOL;
         $result .= '                }'.PHP_EOL;
@@ -108,6 +112,8 @@ class ParseRawpriceApl extends AbstractFilter
                     . 'col13='.$rawprice->getMarkdown().'|'
                     . 'col14='.$rawprice->getSale().'|'
                     . 'col15='.$rawprice->getPack().'|'
+                    . 'col16='.$rawprice->getComment().'|'
+                    . 'col17='.$rawprice->getSale().'|'
                 ];         
         }    
     }
