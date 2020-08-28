@@ -31,7 +31,7 @@ class ParseRawpriceApl extends AbstractFilter
     ];    
 
     // Конструктор.
-    public function __construct($options) 
+    public function __construct($options = null) 
     {     
         $this->codeFilter = new ArticleCode();
         $this->nameFilter = new ProducerName();
