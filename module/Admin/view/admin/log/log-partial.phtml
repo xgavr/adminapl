@@ -10,10 +10,12 @@
 <div class="row">
     <div class="col-xs-12">
         <h4>
-            <a class="btn btn-default btn-xs" href="/log<?= $qstr?>" 
-               title="Все записи в отдельном окне" target="_blank">
-                <span class="glyphicon glyphicon-list"></span>
-            </a>
+            <?php if($qstr):?>
+                <a class="btn btn-default btn-xs" href="/log<?= $qstr?>" 
+                   title="Все записи в отдельном окне" target="_blank">
+                    <span class="glyphicon glyphicon-new-window"></span>
+                </a>
+            <?php endif;?>
             История изменений:
         </h4>
     </div>

@@ -55,6 +55,7 @@ class ParseRawpriceApl extends AbstractFilter
         $result .= '                if ($desc["col0"] == "adm") { // для всех поставщиков'.PHP_EOL;
         $result .= '                    $result["art"] = trim($desc["col1"]);'.PHP_EOL;
         $result .= '                    $result["makername"] = trim($desc["col2"]);'.PHP_EOL;
+        $result .= '                    $result["brand"] = trim($desc["col2"]);'.PHP_EOL;
         $result .= '                    $result["artname"] = trim($desc["col3"]);'.PHP_EOL;
         $result .= '                    $result["price"] = $this->_getPrice($desc["col4"]);'.PHP_EOL;
         $result .= '                    $result["presence"]  = (trim($desc["col5"]) && trim($desc["col5"]) != "-") ? 1:0;'.PHP_EOL;
@@ -90,6 +91,7 @@ class ParseRawpriceApl extends AbstractFilter
                     'iid' => $rawprice->getIid(),
                     'art' => $this->codeFilter->filter($rawprice->getArticle()),
                     'price' => $rawprice->getRealPrice(),
+                    'rawdate' => $rawprice->getRaw()->getDateCreated(),
                     'desc' => 'col0=adm|'
                     . 'col1='.$rawprice->getArticle().'|'
                     . 'col2='.$rawprice->getProducer().'|'
