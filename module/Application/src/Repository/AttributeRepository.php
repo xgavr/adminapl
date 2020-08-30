@@ -103,7 +103,7 @@ class AttributeRepository  extends EntityRepository{
             $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           
 
             $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                    ->findOneBy(['tdId' => $attr['id'], 'value' => $value]);
+                    ->findOneBy(['tdId' => (int) $attr['id'], 'value' => $value]);
         }
         
         return $attributeValue;
