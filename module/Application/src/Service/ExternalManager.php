@@ -905,8 +905,7 @@ class ExternalManager
             }
         } catch (\Exception $ex){
             if ($good->getGenericGroup()){
-                if ($good->getGenericGroup()->getTdId()){
-                    var_dump($good->getGenericGroup()->getTdId());
+                if ($good->getGenericGroup()->getTdId()>0){
                     return;
                 }    
             }
