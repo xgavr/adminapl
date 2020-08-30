@@ -927,7 +927,7 @@ class ExternalManager
         }
         
         $statusData['status_group'] = Goods::GROUP_UPDATED;
-
+        var_dump($genericGroup);
         if (!$genericGroup){
             if ($good->getGenericGroup()){
                 $this->entityManager->getRepository(GenericGroup::class)
