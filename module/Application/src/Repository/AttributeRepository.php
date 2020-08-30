@@ -91,11 +91,11 @@ class AttributeRepository  extends EntityRepository{
     {
         $value = isset($attr['value']) ? $attr['value']:'';
         $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
-                ->findOneBy(['tdId' => $attr['id'], 'value' => $value]);
+                ->findOneBy(['tdId' => (int) $attr['id'], 'value' => $value]);
 
         if ($attributeValue == null){
             $data = [
-                'td_id' => $attr['id'],
+                'td_id' => (int) $attr['id'],
                 'value' => $value,
                 'status_ex' => AttributeValue::EX_TO_TRANSFER,
             ];
