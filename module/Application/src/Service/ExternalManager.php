@@ -890,18 +890,24 @@ class ExternalManager
         $statusData = ['td_direct' => Goods::TD_NO_DIRECT];
         $genericArticleId = null;
         
-        $tdData = $this->zetasoftManager->getBestArticle($good);
-        if (is_numeric($tdData['partGroupId'])){
-            $genericArticleId = $tdData['partGroupId'];
-            $statusData = ['td_direct' => Goods::TD_DIRECT];
-        }
-
-        if (!$genericArticleId){
-            $tdData = $this->zetasoftManager->getSimilarArticle($good, true);
+        try {
+            $tdData = $this->zetasoftManager->getBestArticle($good);
             if (is_numeric($tdData['partGroupId'])){
                 $genericArticleId = $tdData['partGroupId'];
-            }            
-        }
+                $statusData = ['td_direct' => Goods::TD_DIRECT];
+            }
+
+            if (!$genericArticleId){
+                $tdData = $this->zetasoftManager->getSimilarArticle($good, true);
+                if (is_numeric($tdData['partGroupId'])){
+                    $genericArticleId = $tdData['partGroupId'];
+                }            
+            }
+        } catch (\Exception $ex){
+            if ($good->getGenericGroup()){
+                return;
+            }
+        }    
 
         $genericGroup = null;
         if (is_numeric($genericArticleId)){
