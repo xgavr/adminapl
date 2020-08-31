@@ -906,7 +906,8 @@ class ExternalManager
         } catch (\Exception $ex){
             if ($good->getGenericGroup()){
                 if ($good->getGenericGroup()->getTdId()>0){
-                    return;
+                    $statusData['status_group'] = Goods::GROUP_UPDATED;
+                    goto upd; 
                 }    
             }
         }    
@@ -953,6 +954,7 @@ class ExternalManager
                     ->updateGoodId($good->getId(), $data);            
         }
         
+        upd:
         $this->entityManager->getConnection()->update('goods', $statusData, ['id' => $good->getId()]);
         return;
     }
