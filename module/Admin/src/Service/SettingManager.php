@@ -94,8 +94,9 @@ class SettingManager {
      * 
      * @param string $controller
      * @param string $action
+     * @param string $error
      */
-    public function errorProcess($controller, $action)
+    public function errorProcess($controller, $action, $error)
     {
         $proc = $this->entityManager->getRepository(Setting::class)
                 ->findOneBy(['controller' => $controller, 'action' => $action]);
@@ -105,6 +106,7 @@ class SettingManager {
                     [
                         'status' => Setting::STATUS_ERROR,
                         'last_mod' => date('Y-m-d H:i:s'),
+                        'err_text' => $error,
                     ], ['id' => $proc->getId()]);
         }
         return;

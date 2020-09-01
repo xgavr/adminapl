@@ -50,6 +50,16 @@ class Setting {
      */
     protected $lastMod;
 
+    /**
+     * @ORM\Column(name="err_code")   
+     */
+    protected $errorCode;
+
+    /**
+     * @ORM\Column(name="err_text")   
+     */
+    protected $errorText;
+
     public function __construct() {
     }
    
@@ -135,5 +145,25 @@ class Setting {
     {
         $this->status = $status;
     }   
+    
+    public function getErrorCode()
+    {
+        return $this->errorCode;
+    }
+    
+    public function setErrorCode($errorCode)
+    {
+        $this->errorCode = $errorCode;
+    }
+    
+    public function getErrorText()
+    {
+        return $this->errorText;
+    }
+    
+    public function setErrorText($errorText)
+    {
+        $this->errorText = $errorText;
+    }
     
 }
