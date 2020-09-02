@@ -16,6 +16,7 @@ final class Version20200901152040 extends AbstractMigration
         $table = $schema->getTable('Setting');
         $table->addColumn('err_code', 'integer', ['notnull' => false]);
         $table->addColumn('err_text', 'text', ['notnull' => false]);
+        $table->addColumn('name', 'string', ['notnull' => false, 'length' => 128]);
     }
 
     public function down(Schema $schema) : void
@@ -24,5 +25,6 @@ final class Version20200901152040 extends AbstractMigration
         $table = $schema->getTable('Setting');
         $table->dropColumn('err_code');
         $table->dropColumn('err_text');
+//        $table->dropColumn('name');
     }
 }

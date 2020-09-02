@@ -1,0 +1,283 @@
+<?php
+$this->headTitle('Регламентные процессы');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            ]);
+
+$this->headLink()
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
+        ;
+
+$this->headScript()
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
+            ; 
+
+?>
+
+<style>
+    .modal-body {
+        height: 400px;
+        overflow-y: scroll;
+    }    
+</style>
+
+
+<div class="row">
+    <div class="col-md-9">
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/log/setting-content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric">ID</th>
+                     <th data-field="oeNumber" data-type="numeric">Номер</th>
+                     <th data-field="brandName">Бренд</th>
+                     <th data-field="source" data-formatter="sourceFormatter">Источник</th>
+                     <th data-field="status" data-formatter="statusFormatter">Статус</th>
+                     <th data-field="status" data-formatter="oemActiveFormatter"></th>
+                </tr>                
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-3" id="side-nav">
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $("[data-toggle='tooltip']").tooltip();
+    });
+
+    $(window).on('load', function() {
+        $('.nav-tabs a:first').tab('show');
+        $('.editable').editable();
+    });
+    
+    function refreshOemTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+    
+    var table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+//            $('#badge').html($('#table').bootstrapTable('getOptions').totalRows)
+        }
+    });
+
+    var ok = $('#ok');
+
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+    });    
+    
+    function tabQueryParams(tab, params) {
+        $(tab +'Toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $(tab + ' .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $(tab + ' li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function queryParams(params) {
+        return tabQueryParams('#table', params);
+    }
+    
+    function responseHandler(res) {
+        return res;
+    }       
+    
+    function sourceFormatter(value){
+        switch(value){
+            <?php foreach ($oemSources as $key => $value):?>
+                case "<?= $key?>": result="<?= $value?>"; break;      
+            <?php endforeach;?>            
+            default: result = 'Неизвестно'; break;
+        }
+        
+        return result;
+    }    
+    
+    function statusFormatter(value){
+        switch(value){
+            <?php foreach ($oemStatuses as $key => $value):?>
+                case "<?= $key?>": result="<?= $value?>"; break;      
+            <?php endforeach;?>            
+            default: result = 'Неизвестно'; break;
+        }
+        
+        return result;
+    }    
+    
+    function oemActiveFormatter(value, row){
+        if (value == 1){
+            status = 2;
+        } else {
+            status = 1;
+        }            
+        var url = '/oem/oem-status-form/'+row.id+'?status='+status;
+        var btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Изменить доступность"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\', \'oemTable\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        
+        var editUrl = '/oem/oem-form/<?= $goods->getId() ?>?oem='+row.id;
+        var editBtn = '<button';
+        if (row.source != 3){
+            editBtn += ' disabled="disabled"';
+        }
+        editBtn += ' type="button" data-toggle="modal" data-target="#modal-dialog"';
+        editBtn += ' class="btn btn-default btn-xs"';
+        editBtn += ' aria-label="Left Align"'; 
+        editBtn += ' title="Изменить"'; 
+        editBtn += ' value="'+editUrl+'">';
+        editBtn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        editBtn += '</button>';
+        return '<nobr>'+editBtn+' '+btn+'</nobr>';
+    }    
+    
+    function carFormatter(value, row) {
+        return '<a href="/car/view/'+row.id+'" target="_blank">'+value+'</a>';
+    }    
+    
+    function goodnameFormatter(value, row) {
+        return '<a href="/rawprice/view/'+row.id+'" target="_blank">'+value+'</a>';
+    }    
+    
+    function producerFormatter(value, row) {
+        return '<a href="/producer/unknown-view/'+row.producerId+'" target="_blank">'+value+'</a>';
+    }    
+    
+    function codeFormatter(value, row) {
+        return '<a href="/producer/article-view/'+row.codeId+'" target="_blank">'+value+'</a> ' + producerFormatter(row.producer, row);
+    }    
+    
+    function statusExFormatter(value, row) {
+        return '<span></span>' ;
+    }  
+    
+    function cellStatusExStyle(value, row, index) {
+        var classes = [
+          'light',
+          'success',
+          'warning'
+        ]
+        return {
+          classes: classes[value-1]
+        }
+    }    
+    
+    function supplierFormatter(value, row) {
+        var priceDate = new Date(row.dateCreated);
+        var priceDateStr = priceDate.getDate()+'-'+ (priceDate.getMonth()+1) + ' ' + priceDate.getHours() + ':' + priceDate.getMinutes();
+        return '<a href="/supplier/view/'+row.supplierId+'" target="_blank">'+value+'</a>' + '<br/>' + priceDateStr ;
+    }    
+    
+    function inSigma(data){
+        if (data.inSigma == false){
+            $('#rawprice'+data.id).css('color', 'red');
+        }    
+    }
+    
+    function priceFormatter(value, row){
+        $.post(
+            '/goods/in-sigma-content/<?= $goods->getId()?>?rawprice='+row.id,
+            null,
+            inSigma                
+        );
+        return [
+            '<span id="rawprice'+row.id+'">'+Math.round(parseFloat(value.replace(/\s/g, '')))+'</span>',
+        ].join(''); 
+    }        
+    
+    $('.show-button').on('click', function(e) {
+        var url = e.currentTarget.value;
+
+        if (url){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    dialog.modal('hide');
+                    dialog = bootbox.dialog({
+                        message: '<div><i class="fa fa-spin fa-spinner"></i>'+objectToHtml(data.message)+'</div>',
+                        closeButton: true,
+                        size: 'large'
+                    });
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })        
+
+    $('.similarGoodCheckbox').on('change', function(e, node) {
+        var url = "/goods/attribute-similar-good-edit";
+
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: e.target.value, value: e.target.checked}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })        
+    
+    $('.toBestNameCheckbox').on('change', function(e, node) {
+        var url = "/goods/attribute-to-best-name";
+
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: e.target.value, value: e.target.checked}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })        
+    
+</script>

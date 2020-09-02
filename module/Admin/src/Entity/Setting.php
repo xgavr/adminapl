@@ -60,6 +60,11 @@ class Setting {
      */
     protected $errorText;
 
+    /**
+     * @ORM\Column(name="name")   
+     */
+    protected $name;
+
     public function __construct() {
     }
    
@@ -164,6 +169,16 @@ class Setting {
     public function setErrorText($errorText)
     {
         $this->errorText = $errorText;
+    }
+    
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    public function setName($name)
+    {
+        $this->name = $name;
     }
     
 }

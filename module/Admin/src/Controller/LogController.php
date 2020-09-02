@@ -20,7 +20,7 @@ class LogController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -30,11 +30,18 @@ class LogController extends AbstractActionController
      */
     private $logManager;    
     
+    /**
+     * Setting manager.
+     * @var \Admin\Service\SettingManager
+     */
+    private $settingManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $logManager) 
+    public function __construct($entityManager, $logManager, $settingManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;        
+        $this->settingManager = $settingManager;        
     }   
     
     public function indexAction()
@@ -57,5 +64,38 @@ class LogController extends AbstractActionController
             'ident' => $ident,
             'id' => $id,
         ];
-    }    
+    } 
+    
+    public function settingAction()
+    {
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+         ]);          
+    }
+
+    public function settingContentAction()
+    {
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $status = $this->params()->fromQuery('status');
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->findSettings(['status' => $status]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
 }
