@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Controller\LogController;
 use Admin\Service\LogManager;
+use Admin\Service\SettingManager;
 
 
 /**
@@ -25,8 +26,9 @@ class LogControllerFactory implements FactoryInterface {
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
+        $settingManager = $container->get(SettingManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new LogController($entityManager, $logManager);
+        return new LogController($entityManager, $logManager, $settingManager);
     }
 }

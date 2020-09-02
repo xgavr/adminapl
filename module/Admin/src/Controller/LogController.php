@@ -9,7 +9,9 @@ namespace Admin\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use Admin\Entity\Log;
+use Admin\Entity\Setting;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -79,7 +81,7 @@ class LogController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $status = $this->params()->fromQuery('status');
         
-        $query = $this->entityManager->getRepository(Goods::class)
+        $query = $this->entityManager->getRepository(Setting::class)
                         ->findSettings(['status' => $status]);
 
         $total = count($query->getResult(2));

@@ -385,6 +385,12 @@ class NavManager
                 ];
                 
                 $adminDropdownItems[] = [
+                    'id' => 'setting',
+                    'label' => 'Процессы',
+                    'link'  => $url('log', ['action' => 'setting'])
+                ];
+                
+                $adminDropdownItems[] = [
                     'id' => 'ml',
                     'label' => 'Машинное обучение',
                     'link'  => $url('ml')

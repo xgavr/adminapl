@@ -45,11 +45,11 @@ $this->headScript()
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric">ID</th>
-                     <th data-field="oeNumber" data-type="numeric">Номер</th>
-                     <th data-field="brandName">Бренд</th>
-                     <th data-field="source" data-formatter="sourceFormatter">Источник</th>
-                     <th data-field="status" data-formatter="statusFormatter">Статус</th>
-                     <th data-field="status" data-formatter="oemActiveFormatter"></th>
+                     <th data-field="lastMod">Дата</th>
+                     <th data-field="action">Процесс</th>
+                     <th data-field="name" >Наименование</th>
+                     <th data-field="status">Статус</th>
+                     <th data-field="errCodde">Код ошибки</th>
                 </tr>                
             </thead>
         </table>
@@ -112,56 +112,9 @@ $this->headScript()
     }       
     
     function sourceFormatter(value){
-        switch(value){
-            <?php foreach ($oemSources as $key => $value):?>
-                case "<?= $key?>": result="<?= $value?>"; break;      
-            <?php endforeach;?>            
-            default: result = 'Неизвестно'; break;
-        }
-        
-        return result;
     }    
     
     function statusFormatter(value){
-        switch(value){
-            <?php foreach ($oemStatuses as $key => $value):?>
-                case "<?= $key?>": result="<?= $value?>"; break;      
-            <?php endforeach;?>            
-            default: result = 'Неизвестно'; break;
-        }
-        
-        return result;
-    }    
-    
-    function oemActiveFormatter(value, row){
-        if (value == 1){
-            status = 2;
-        } else {
-            status = 1;
-        }            
-        var url = '/oem/oem-status-form/'+row.id+'?status='+status;
-        var btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' title="Изменить доступность"'; 
-        btn += ' onclick="tableRowDelete(\''+url+'\', \'oemTable\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btn += '</button>';
-        
-        var editUrl = '/oem/oem-form/<?= $goods->getId() ?>?oem='+row.id;
-        var editBtn = '<button';
-        if (row.source != 3){
-            editBtn += ' disabled="disabled"';
-        }
-        editBtn += ' type="button" data-toggle="modal" data-target="#modal-dialog"';
-        editBtn += ' class="btn btn-default btn-xs"';
-        editBtn += ' aria-label="Left Align"'; 
-        editBtn += ' title="Изменить"'; 
-        editBtn += ' value="'+editUrl+'">';
-        editBtn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-        editBtn += '</button>';
-        return '<nobr>'+editBtn+' '+btn+'</nobr>';
     }    
     
     function carFormatter(value, row) {
@@ -206,17 +159,6 @@ $this->headScript()
             $('#rawprice'+data.id).css('color', 'red');
         }    
     }
-    
-    function priceFormatter(value, row){
-        $.post(
-            '/goods/in-sigma-content/<?= $goods->getId()?>?rawprice='+row.id,
-            null,
-            inSigma                
-        );
-        return [
-            '<span id="rawprice'+row.id+'">'+Math.round(parseFloat(value.replace(/\s/g, '')))+'</span>',
-        ].join(''); 
-    }        
     
     $('.show-button').on('click', function(e) {
         var url = e.currentTarget.value;

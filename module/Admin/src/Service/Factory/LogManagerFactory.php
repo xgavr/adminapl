@@ -11,7 +11,6 @@ namespace Admin\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\LogManager;
-use Admin\Service\SettingManager;
 
 /**
  * Description of LogManagerFactory
@@ -26,10 +25,9 @@ class LogManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
-        $settingManager = $container->get(SettingManager::class);
 
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new LogManager($entityManager, $authService, $settingManager);
+        return new LogManager($entityManager, $authService);
     }
 }
