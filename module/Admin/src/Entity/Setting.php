@@ -124,8 +124,9 @@ class Setting {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Процесс запущен',
-            self::STATUS_RETIRED => 'Процесс не запущен'
+            self::STATUS_ACTIVE => 'Запущен',
+            self::STATUS_RETIRED => 'Завершен',
+            self::STATUS_ERROR => 'Ошибка'    
         ];
     }    
     

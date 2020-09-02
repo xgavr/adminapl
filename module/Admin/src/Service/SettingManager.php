@@ -178,4 +178,34 @@ class SettingManager {
         return;
     }
     
+    /**
+     * Изменить наименование процесса
+     * 
+     * @param Setting $process
+     * @param string $name
+     */
+    public function editProcessName($process, $name)
+    {
+        $process->setName($name);
+        $this->entityManager->persist($process);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Изменить статус процесса
+     * 
+     * @param Setting $process
+     * @param int $status
+     */
+    public function editProcessStatus($process, $status)
+    {
+        $process->setStatus($status);
+        $this->entityManager->persist($process);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
 }

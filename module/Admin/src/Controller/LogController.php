@@ -80,9 +80,15 @@ class LogController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $status = $this->params()->fromQuery('status');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
         
         $query = $this->entityManager->getRepository(Setting::class)
-                        ->findSettings(['status' => $status]);
+                        ->findSettings([
+                            'status' => $status, 
+                            'sort' => $sort,
+                            'order' => $order,
+                            ]);
 
         $total = count($query->getResult(2));
         
@@ -100,4 +106,39 @@ class LogController extends AbstractActionController
             'rows' => $result,
         ]);                  
     }
+    
+    public function editSettingNameAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $settingId = $data['pk'];
+            $setting = $this->entityManager->getRepository(Setting::class)
+                    ->findOneById($settingId);
+                    
+            if ($setting){
+                $this->settingManager->editProcessName($setting, $data['value']);
+            }    
+        }
+        
+        exit;
+    }
+    
+    public function editSettingStatusAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $settingId = $data['pk'];
+            $setting = $this->entityManager->getRepository(Setting::class)
+                    ->findOneById($settingId);
+                    
+            if ($setting){
+                $this->settingManager->editProcessStatus($setting, $data['value']);
+            }    
+        }
+        
+        exit;
+    }
+    
 }

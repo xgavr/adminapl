@@ -29,11 +29,15 @@ class SettingRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('s')
             ->from(Setting::class, 's')
+            ->orderBy('s.lastMod', 'DESC')
                 ;
         if (is_array($params)){
             if (isset($params['status'])){
                 $queryBuilder->andWhere('s.status = ?1')
                         ->setParameter('1', $params['status']);
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('s.'.$params['sort'], $params['order']);
             }
         }
         
