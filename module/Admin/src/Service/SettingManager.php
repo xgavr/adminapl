@@ -108,7 +108,7 @@ class SettingManager {
                         'status' => Setting::STATUS_ERROR,
                         'last_mod' => date('Y-m-d H:i:s'),
                         'err_code' => $response->getStatusCode(),
-                        'err_text' => $response->getHeaders(),
+                        'err_text' => $response->getContent(),
                     ], ['id' => $proc->getId()]);
         }
         return;
