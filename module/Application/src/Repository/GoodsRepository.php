@@ -884,7 +884,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusCar = ?1')
             ->setParameter('1', Goods::CAR_FOR_UPDATE)    
-            ->setMaxResults(100000) 
+            ->setMaxResults(1000) 
                 
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -948,7 +948,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusGroup = ?1')
             ->setParameter('1', Goods::GROUP_FOR_UPDATE)    
-            ->setMaxResults(100000)    
+            ->setMaxResults(10000)    
             //->orderBy('g.statusOem', 'DESC')
             //->addOrderBy('g.id')    
                 ;
@@ -970,7 +970,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusDescription = ?1')
             ->setParameter('1', Goods::DESCRIPTION_FOR_UPDATE)    
-            ->setMaxResults(100000)    
+            ->setMaxResults(1000)    
             //->orderBy('g.statusGroup', 'DESC')
             //->addOrderBy('g.id')    
                 ;
@@ -1013,7 +1013,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusImage = ?1')
             ->setParameter('1', Goods::IMAGE_FOR_UPDATE)    
-            ->setMaxResults(100000)    
+            ->setMaxResults(1000)    
 //            ->orderBy('g.statusDescription', 'DESC')
 //            ->addOrderBy('g.id')    
                 ;

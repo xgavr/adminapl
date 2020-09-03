@@ -1018,8 +1018,11 @@ class ExternalManager
         if (!$mathImages){
             $this->entityManager->getRepository(Images::class)
                     ->saveImageFromGoodRawprice($good);
-
-            $this->zetasoftManager->getImages($good);
+            try{
+                $this->zetasoftManager->getImages($good);
+            } catch (\Exception $ex){
+                
+            }    
 
             $this->entityManager->getConnection()->update('goods', ['status_image' => Goods::IMAGE_UPDATED], ['id' => $good->getId()]);
         }    
