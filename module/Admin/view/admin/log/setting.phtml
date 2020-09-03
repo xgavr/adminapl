@@ -190,7 +190,7 @@ $this->headScript()
     }    
     
     function errTextFormatter(value, row){
-        if (row.errText && row.status == <?= Setting::STATUS_ERROR?>){
+        if (row.errorText && row.status == <?= Setting::STATUS_ERROR?>){
             return [
                 '<button id="show-button" class="btn btn-default btn-xs"',
                 ' title="Описание ошибки" value="'+row.id+'">',
