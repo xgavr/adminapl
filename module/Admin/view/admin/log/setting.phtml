@@ -89,7 +89,7 @@ $this->headScript()
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
             $('.editable').editable();
-            $('#show-button').on('click', function(e) {
+            $('.show-button').on('click', function(e) {
                 var rowId = e.currentTarget.value;
                 if (rowId){
                     $.ajax({
@@ -192,7 +192,7 @@ $this->headScript()
     function errTextFormatter(value, row){
         if (row.errorText && row.status == <?= Setting::STATUS_ERROR?>){
             return [
-                '<button id="show-button" class="btn btn-default btn-xs"',
+                '<button class="btn btn-default btn-xs show-button"',
                 ' title="Описание ошибки" value="'+row.id+'">',
                 ' <span class="glyphicon glyphicon-menu-hamburger" ></span>',
                 '</button>',
