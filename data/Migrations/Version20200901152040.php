@@ -25,6 +25,6 @@ final class Version20200901152040 extends AbstractMigration
         $table = $schema->getTable('Setting');
         $table->dropColumn('err_code');
         $table->dropColumn('err_text');
-//        $table->dropColumn('name');
+        $table->dropColumn('name');
     }
 }

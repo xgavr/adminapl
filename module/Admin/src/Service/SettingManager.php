@@ -9,6 +9,7 @@
 namespace Admin\Service;
 
 use Admin\Entity\Setting;
+use Laminas\Http\Response;
 
 /**
  * Description of SettingManager
@@ -94,9 +95,9 @@ class SettingManager {
      * 
      * @param string $controller
      * @param string $action
-     * @param string $error
+     * @param Response $response
      */
-    public function errorProcess($controller, $action, $error)
+    public function errorProcess($controller, $action, $response)
     {
         $proc = $this->entityManager->getRepository(Setting::class)
                 ->findOneBy(['controller' => $controller, 'action' => $action]);
@@ -106,7 +107,8 @@ class SettingManager {
                     [
                         'status' => Setting::STATUS_ERROR,
                         'last_mod' => date('Y-m-d H:i:s'),
-                        'err_text' => $error,
+                        'err_code' => $response->getStatusCode(),
+                        'err_text' => $response->getHeaders(),
                     ], ['id' => $proc->getId()]);
         }
         return;

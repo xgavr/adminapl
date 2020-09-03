@@ -141,4 +141,24 @@ class LogController extends AbstractActionController
         exit;
     }
     
+    public function settingErrorTextAction()
+    {
+        $settingId = $this->params()->fromRoute('id', -1);
+            
+        if ($settingId > 0){
+            $setting = $this->entityManager->getRepository(Setting::class)
+                    ->findOneById($settingId);
+        }    
+        
+        $errorText = '';
+        if ($setting){
+            $errorText = $setting->getErrorText();
+        }    
+
+        $text = $errorText;
+        return new JsonModel(
+           ['text' => $text]
+        );           
+    }
+    
 }

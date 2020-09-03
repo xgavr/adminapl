@@ -66,8 +66,8 @@ $this->headScript()
                      <th data-field="action" data-sortable="true">Процесс</th>
                      <th data-field="name" data-formatter="nameFormatter" data-sortable="true">Наименование</th>
                      <th data-field="status" data-sortable="true" data-formatter="statusFormatter">Статус</th>
-                     <th data-field="errCode">Код ошибки</th>
-                     <th data-field="errText" data-formatter="errTextFormatter"></th>
+                     <th data-field="errorCode">Код ошибки</th>
+                     <th data-field="errorText" data-formatter="errTextFormatter"></th>
                 </tr>                
             </thead>
         </table>
@@ -90,17 +90,21 @@ $this->headScript()
         onLoadSuccess: function(res){
             $('.editable').editable();
             $('#show-button').on('click', function(e) {
-                var text = e.currentTarget.value;
-                if (text){
-                    dialog = bootbox.dialog({
-                        message: '<div><i class="fa fa-spin fa-spinner"></i>'+text+'</div>',
-                        closeButton: true,
-                        size: 'large'
-                    });
+                var rowId = e.currentTarget.value;
+                if (rowId){
+                    $.ajax({
+                        type: 'POST',
+                        url: '/log/setting-error-text/'+rowId
+                    })
+                    .done(function (data) {
+                        bootbox.alert(data.text);
+                    })
+                    .fail(function () {
+                        bootbox.alert("Произошла ошибка при выполнении операции.");
+                    }); 
                 }        
             })        
             $('.status').editable({
-//                value: $('#status').val(),
                 source: [
                     <?php foreach ($statuses as $key => $value):?>
                         {value:"<?= $key?>", text:"<?= $value?>"},      
@@ -186,14 +190,14 @@ $this->headScript()
     }    
     
     function errTextFormatter(value, row){
-        //if (row.errText && row.status == <?= Setting::STATUS_ERROR?>){
+        if (row.errText && row.status == <?= Setting::STATUS_ERROR?>){
             return [
                 '<button id="show-button" class="btn btn-default btn-xs"',
-                ' title="Описание ошибки" value="'+value+'">',
+                ' title="Описание ошибки" value="'+row.id+'">',
                 ' <span class="glyphicon glyphicon-menu-hamburger" ></span>',
                 '</button>',
             ].join(''); 
-        //}    
+        }    
         
         return;
     }    
