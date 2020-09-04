@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\GenericGroup;
+
 $this->headTitle('Группы товаров');
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -11,15 +13,17 @@ $this->pageBreadcrumbs()->setItems([
 $this->headLink()
 //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
     ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
         ;
 
 $this->headScript()
     ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
     ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
             ;    
 ?>
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-10">
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
@@ -49,12 +53,15 @@ $this->headScript()
                      <th data-field="assemblyGroup" data-sortable="true">Группа сборки</th>             
                      <th data-field="masterName" data-sortable="true">Основная группа</th>             
                      <th data-field="usageName" data-sortable="true">Использование</th>             
+                     <th data-field="carUpload" data-formatter="carUploadFormatter">
+                         <span data-toggle="tooltip" data-original-title="Загружать машины из ТД">М</span>
+                     </th>             
                      <th data-field="goodCount" data-sortable="true">Товаров</th>             
                  </tr>                
             </thead>
         </table>
     </div>
-    <div class="col-md-3" id="side-nav" >
+    <div class="col-md-2" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
                 <div class="panel panel-info">
@@ -107,7 +114,18 @@ $this->headScript()
 
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
-            $('#totalRow').html($('#table').bootstrapTable('getOptions').totalRows)
+            $('#totalRow').html($('#table').bootstrapTable('getOptions').totalRows);
+            $("[data-toggle='tooltip']").tooltip();
+            $('.editableCheckBox').change(function() {
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('data-url'),
+                    data: "pk="+$(this).attr('data-pk'),
+                    success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                    }
+                });
+            })        
         }
     });
     
@@ -139,6 +157,17 @@ $this->headScript()
     function linkFormatter(value, row){
         return [
             '<a href="/group/view/' + row.id + '" target="_blank">' + value + '</a>',
+        ].join(''); 
+    }    
+    
+    function carUploadFormatter(value, row){
+        var checked = 'checked';
+        if (value == <?= GenericGroup::CAR_RETIRED?>){
+            checked = '';
+        }
+        return [
+            '<input data-toggle="tooltip" class="editableCheckBox" \n\
+                data-pk="'+row.id+'" data-url="/group/car-upload-edit" type="checkbox" '+checked+'/>'
         ].join(''); 
     }    
     

@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\GenericGroup;
+
 $this->headTitle($group->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -12,11 +14,13 @@ $this->pageBreadcrumbs()->setItems([
     $this->headLink()
     //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
         ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+        ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
             ;
 
     $this->headScript()
         ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
         ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
 ?>
 
 <h1>
@@ -25,19 +29,29 @@ $this->pageBreadcrumbs()->setItems([
         <?= $group->getTdId();?>
     </sup>
 </h1>
-<p>
-    <?= $group->getAssemblyGroup()?> 
-    <?= $group->getMasterName()?> 
-    <?= $group->getUsageName()?> 
-</p>
-<p>
-    <?php if ($group->getTdId()):?>
-        <?php foreach ($aplGroups as $aplGroup):?>
-            <span><?= $aplGroup['groupApl']?></span> 
-            <span>(<?= $aplGroup['goodCount']?>)</span>
-        <?php endforeach;?> 
-    <?php endif;?>        
-</p>
+<div class="row">
+    <div class="col-md-6">
+        <?= $group->getAssemblyGroup()?> 
+        <?= $group->getMasterName()?> 
+        <?= $group->getUsageName()?>         
+    </div>
+    <div class="col-md-4">
+        <input id="editableCheckBox" data-pk="<?= $group->getId()?>" 
+               data-url="/group/car-upload-edit" type="checkbox"
+               <?= ($group->getCarUpload() == GenericGroup::CAR_ACTIVE) ? 'checked':''?>/>
+        <label for="editableCheckBox">Загружать Машины из ТД</label>            
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <?php if ($group->getTdId()):?>
+            <?php foreach ($aplGroups as $aplGroup):?>
+                <span><?= $aplGroup['groupApl']?></span> 
+                <span>(<?= $aplGroup['goodCount']?>)</span>
+            <?php endforeach;?> 
+        <?php endif;?>                
+    </div>
+</div>
 <div class="row">
     <div class="col-md-9">
         <table class="table table-striped">
@@ -250,6 +264,16 @@ $this->pageBreadcrumbs()->setItems([
 <script type="text/javascript">
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
+        $('#editableCheckBox').change(function() {
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('data-url'),
+                data: "pk="+$(this).attr('data-pk'),
+                success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                }
+            });
+        })        
     });
     
     $('#featureTab a').click(function (e) {

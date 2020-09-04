@@ -289,4 +289,26 @@ class GroupController extends AbstractActionController
         ]);                          
         
     }
+    
+    public function carUploadEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $groupId = $data['pk'];
+            $group = $this->entityManager->getRepository(GenericGroup::class)
+                    ->findOneById($groupId);
+                    
+            if ($group){
+                $carUpload = GenericGroup::CAR_RETIRED;
+                if ($group->getCarUpload() == GenericGroup::CAR_RETIRED){
+                    $carUpload = GenericGroup::CAR_ACTIVE;
+                }
+                $this->entityManager->getConnection()->update('generic_group', ['car_upload' => $carUpload], ['id' => $group->getId()]);
+            }    
+        }
+        
+        exit;
+    }
+    
 }
