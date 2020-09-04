@@ -781,39 +781,45 @@ class ExternalManager
      */
     public function addCarsToGood($good)
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '2048M');
         
         $this->entityManager->getConnection()->update('goods', ['status_car' => Goods::CAR_UPDATING], ['id' => $good->getId()]);
         $updateStatuses = ['status_car' => Goods::CAR_UPDATED];
     
-        $cars = $this->zetasoftManager->getGoodLinked($good);
-        if (is_array($cars)){
+        $cars = null;
+        $carUpload = $good->getGenericGroup()->getCarUpload();
+        if ($carUpload == GenericGroup::CAR_ACTIVE){
+            $cars = $this->zetasoftManager->getGoodLinked($good);
+        }    
+        if (is_array($cars) || $carUpload == GenericGroup::CAR_RETIRED){
             $this->entityManager->getRepository(Goods::class)
                     ->removeGoodCars($good);                
             $updateStatuses['status_car_ex'] = Goods::CAR_EX_NEW;
-                    
-            $makes = [];
-            $models = [];
-            foreach ($cars as $manufacturerId => $models){
-                foreach ($models as $modelId => $carData){
-                    if (isset($carData['data'])){
-                        foreach ($carData['data'] as $car){
-                            $make = $this->addMake([
-                                'tdId' => $car['manufacturerId'],
-                                'aplId' => 0,
-                                'name' => $car['manufacturerName'],
-                            ]);
-                            $model = $this->addModel($make, [
-                                'tdId' => $car['modelId'], 
-                                'aplId' => 0, 
-                                'name' => $car['modelName'],
-                                'constructioninterval' => '',
-                            ]);
-                            $this->updateGoodCar($good, $model, $car);
-                        }
-                    }                    
-                }    
-            }
+            
+            if (is_array($cars)){
+                $makes = [];
+                $models = [];
+                foreach ($cars as $manufacturerId => $models){
+                    foreach ($models as $modelId => $carData){
+                        if (isset($carData['data'])){
+                            foreach ($carData['data'] as $car){
+                                $make = $this->addMake([
+                                    'tdId' => $car['manufacturerId'],
+                                    'aplId' => 0,
+                                    'name' => $car['manufacturerName'],
+                                ]);
+                                $model = $this->addModel($make, [
+                                    'tdId' => $car['modelId'], 
+                                    'aplId' => 0, 
+                                    'name' => $car['modelName'],
+                                    'constructioninterval' => '',
+                                ]);
+                                $this->updateGoodCar($good, $model, $car);
+                            }
+                        }                    
+                    }    
+                }
+            }    
         }  
         
         $this->entityManager->getConnection()->update('goods', $updateStatuses, ['id' => $good->getId()]);        

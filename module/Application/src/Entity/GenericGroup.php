@@ -25,6 +25,10 @@ class GenericGroup {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
+     // Make car constants.
+    const CAR_ACTIVE       = 1; // Active. Загружать машины
+    const CAR_RETIRED      = 2; // Retired. Не загружать
+    
     const MIN_GOOD_COUNT      = 5; //минимально товаров в группе для подбора
         
     /**
@@ -67,6 +71,11 @@ class GenericGroup {
      * @ORM\Column(name="status")  
      */
     protected $status;    
+           
+    /**
+     * @ORM\Column(name="car_upload")  
+     */
+    protected $carUpload;    
            
     /**
      * @ORM\Column(name="good_count")  
@@ -217,6 +226,49 @@ class GenericGroup {
         $this->status = $status;
     }   
     
+    /**
+     * Returns carUpload.
+     * @return int     
+     */
+    public function getCarUpload() 
+    {
+        return $this->carUpload;
+    }
+
+    
+    /**
+     * Returns possible carUpload as array.
+     * @return array
+     */
+    public static function getCarUploadList() 
+    {
+        return [
+            self::CAR_ACTIVE => 'Машины загружать',
+            self::CAR_RETIRED => 'Машины не загружать'
+        ];
+    }    
+    
+    /**
+     * Returns make carUpload as string.
+     * @return string
+     */
+    public function getCarUploadAsString()
+    {
+        $list = self::getCarUploadList();
+        if (isset($list[$this->carUpload]))
+            return $list[$this->carUpload];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets carUpload.
+     * @param int $carUpload     
+     */
+    public function setCarUpload($carUpload) 
+    {
+        $this->carUpload = $carUpload;
+    }   
     
     public function getGoodCount() 
     {

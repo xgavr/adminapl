@@ -172,6 +172,8 @@ class SettingManager {
                         [
                             'status' => Setting::STATUS_RETIRED,
                             'last_mod' => date('Y-m-d H:i:s'),
+                            'err_code' => null,
+                            'err_text' => null,
                         ], ['id' => $proc->getId()]);
             } catch(\Doctrine\ORM\ORMException $e){
                 
