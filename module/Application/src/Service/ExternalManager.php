@@ -789,7 +789,11 @@ class ExternalManager
         $cars = null;
         $carUpload = $good->getGenericGroup()->getCarUpload();
         if ($carUpload == GenericGroup::CAR_ACTIVE){
-            $cars = $this->zetasoftManager->getGoodLinked($good);
+            try{
+                $cars = $this->zetasoftManager->getGoodLinked($good);
+            } catch (\Exception $ex){
+                $cars = null;
+            }    
         }    
         if (is_array($cars) || $carUpload == GenericGroup::CAR_RETIRED){
             $this->entityManager->getRepository(Goods::class)
@@ -972,17 +976,21 @@ class ExternalManager
      */
     public function addAttributesToGood($good)
     {
-        
-        $info = $this->zetasoftManager->getDirectInfo($good);
         $similarGood = false;
-        if (!is_array($info)){
-            $info = $this->zetasoftManager->getSimilarDirectInfo($good, null, 'attr');
-            $similarGood = true;
+        
+        try{
+            $info = $this->zetasoftManager->getDirectInfo($good);        
             if (!is_array($info)){
-                $this->entityManager->getRepository(Goods::class)
-                        ->removeGoodAttributeValues($good);                
+                $info = $this->zetasoftManager->getSimilarDirectInfo($good, null, 'attr');
+                $similarGood = true;
+                if (!is_array($info)){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->removeGoodAttributeValues($good);                
+                }
             }
-        }
+        } catch (\Exception $ex){
+            $info = null;
+        }    
         if (is_array($info)){
             $change = $info['change'];
             if (!$change){

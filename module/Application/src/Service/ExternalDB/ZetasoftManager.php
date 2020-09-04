@@ -30,6 +30,8 @@ class ZetasoftManager
     
     const HTTPS_ADAPTER = 'Laminas\Http\Client\Adapter\Curl';  
     
+    private $access;
+    
     /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
@@ -47,6 +49,28 @@ class ZetasoftManager
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        
+        $this->setAccess(TRUE);
+    }
+    
+    /**
+     * Получить доступ
+     * 
+     * @return bool
+     */
+    private function getAccess()
+    {
+        return $this->access;
+    }
+
+
+    /**
+     * Установить доступ
+     * @param bool $access
+     */
+    private function setAccess($access)
+    {
+        $this->access = $access;
     }
     
     /**
@@ -212,6 +236,10 @@ class ZetasoftManager
             if ($settings['max_query'] <= $this->getResponseTodayCount()){
                 throw new \Exception("Достигнут лимит запросов {$settings['max_query']}");
             }
+            
+            if (!$this->getAccess()){
+                return;
+            }
 //            var_dump($uri); exit;
             $client = new Client();
             $client->setUri($uri);
@@ -244,8 +272,10 @@ class ZetasoftManager
                    // var_dump($response->getBody()); exit;
                 }    
             } elseif ($response->getStatusCode() === 402){   
+                $this->setAccess(FALSE);
                 throw new \Exception("Оплаченный лимит исчерпан");
             } else {
+                $this->setAccess(FALSE);
                 throw new \Exception($response->getStatusCode()." Неизвестная ошибка");
             }
         }        
