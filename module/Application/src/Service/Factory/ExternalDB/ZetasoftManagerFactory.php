@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ExternalDB\ZetasoftManager;
 use Admin\Service\AdminManager;
+use Laminas\Session\Container;
 
 /**
  * Description of AbcpManagerFactory
@@ -26,8 +27,9 @@ class ZetasoftManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class);
+        $sessionContainer = new Container('zf_namespace');
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ZetasoftManager($entityManager, $adminManager);
+        return new ZetasoftManager($entityManager, $adminManager, $sessionContainer);
     }
 }

@@ -13,12 +13,10 @@ use Laminas\Json\Encoder;
 use Application\Filter\ProducerName;
 use Application\Entity\Images;
 use Application\Entity\AutoDbResponse;
-use Application\Entity\UnknownProducer;
-use Application\Entity\Producer;
 use Application\Entity\Goods;
-use Application\Entity\Make;
 use Application\Entity\GenericGroup;
 use Application\Entity\Oem;
+use Laminas\Session\Container;
 
 /**
  * Description of ZetasoftManager
@@ -29,8 +27,6 @@ class ZetasoftManager
 {
     
     const HTTPS_ADAPTER = 'Laminas\Http\Client\Adapter\Curl';  
-    
-    private $access;
     
     /**
      * Doctrine entity manager.
@@ -44,11 +40,18 @@ class ZetasoftManager
      */
     private $adminManager;
     
+    /**
+     * Container session.
+     * @var \Laminas\Session\Container
+     */
+    private $sessionContainer;
+
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $adminManager)
+    public function __construct($entityManager, $adminManager, $sessionContainer)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        $this->sessionContainer = $sessionContainer;
         
         $this->setAccess(TRUE);
     }
@@ -60,7 +63,7 @@ class ZetasoftManager
      */
     private function getAccess()
     {
-        return $this->access;
+        return $this->sessionContainer->access;
     }
 
 
@@ -70,7 +73,7 @@ class ZetasoftManager
      */
     private function setAccess($access)
     {
-        $this->access = $access;
+        $this->sessionContainer->access = $access;
     }
     
     /**
@@ -236,7 +239,7 @@ class ZetasoftManager
             if ($settings['max_query'] <= $this->getResponseTodayCount()){
                 throw new \Exception("Достигнут лимит запросов {$settings['max_query']}");
             }
-            
+                        
             if (!$this->getAccess()){
                 return;
             }
