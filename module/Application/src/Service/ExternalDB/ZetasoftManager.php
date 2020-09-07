@@ -676,7 +676,7 @@ class ZetasoftManager
             $models = [];
             if (is_array($manufacturers)){
                 if (isset($manufacturers['data'])){
-                    if (count($manufacturers['data']) < 25){
+                    if (count($manufacturers['data']) < 20){
                         foreach ($manufacturers['data'] as $manufacturer){
                             $models[$manufacturer['id']] = $this->getModels($article['vendorCode'], $article['vendorName'], $manufacturer['id']);
                         }
