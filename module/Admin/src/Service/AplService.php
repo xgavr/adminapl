@@ -1160,8 +1160,12 @@ class AplService {
     public function updateAcquiringPayments()
     {
         $url = $this->aplApi().'get-acquiring?api='.$this->aplApiKey();
-
-        $data = Json::decode(file_get_contents($url), Json::TYPE_ARRAY);
+        
+        try{
+            $data = Json::decode(file_get_contents($url), Json::TYPE_ARRAY);
+        } catch (\Laminas\Json\Exception\RuntimeException $ex){
+            $data = null;
+        }    
         if (is_array($data)){
             foreach ($data as $row){
                 $payment = $this->entityManager->getRepository(AplPayment::class)
