@@ -884,7 +884,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusCar = ?1')
             ->setParameter('1', Goods::CAR_FOR_UPDATE)
-            ->andWhere('g.genericGroup > &2')
+            ->andWhere('g.genericGroup > ?2')
             ->setParameter('2', 0)    
             ->setMaxResults(1000) 
                 
