@@ -598,9 +598,9 @@ class OemRepository  extends EntityRepository{
 
         foreach($iterable as $item){
             foreach ($item as $oe){
-                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);        
+                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);
+                $entityManager->detach($oe);
             }
-            unset($item);
         }        
         return;
     }

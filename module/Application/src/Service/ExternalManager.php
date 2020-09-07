@@ -1038,8 +1038,9 @@ class ExternalManager
                 
             }    
 
-            $this->entityManager->getConnection()->update('goods', ['status_image' => Goods::IMAGE_UPDATED], ['id' => $good->getId()]);
         }    
+
+        $this->entityManager->getConnection()->update('goods', ['status_image' => Goods::IMAGE_UPDATED], ['id' => $good->getId()]);
         return;
         
     }
