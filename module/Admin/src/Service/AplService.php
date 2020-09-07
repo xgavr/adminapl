@@ -940,7 +940,7 @@ class AplService {
     public function updateGoodNames()
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(1800);
+        set_time_limit(900);
         $startTime = time();
         
         $goodsQuery = $this->entityManager->getRepository(Goods::class)
@@ -958,7 +958,7 @@ class AplService {
                 }
             }    
             usleep(100);
-            if (time() > $startTime + 1740){
+            if (time() > $startTime + 840){
                 return;
             }
         }
