@@ -11,6 +11,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Images;
 use Application\Entity\Goods;
+use Laminas\Filter\UriNormalize;
 
 /**
  * Description of ImageRepository
@@ -282,17 +283,20 @@ class ImageRepository extends EntityRepository
      */
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
-        $headers = get_headers($uri, 1);
+        $uriNormalizeFilter = new UriNormalize(['enforcedScheme' => 'http']);
+        $uriNorm = $uriNormalizeFilter->filter($uri);
+        
+        $headers = get_headers($uriNorm, 1);
         if (preg_match("|301|", $headers[0])){
-            $uri = $headers['Location'];
-            $headers = get_headers($uri);
+            $url = $uriNormalizeFilter->filter($headers['Location']);
+            $headers = get_headers($url);
 //            var_dump($headers);
         }
         
         if(preg_match("|200|", $headers[0])) {
             $saveDocFileName = mb_ereg_replace("[\\\/\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`ÂÅÁÉËÖÜ]", '_',  $docFileName);
             $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
-            $image = file_get_contents($uri);
+            $image = file_get_contents($url);
             if ($image){
                 file_put_contents($path, $image);
                 if (file_exists($path)){
