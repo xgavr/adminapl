@@ -1350,9 +1350,13 @@ class GoodsRepository extends EntityRepository
      */
     public function addGoodOem($data, $statusOemEx = 0)
     {
-        $inserted = $this->getEntityManager()->getConnection()->insert('oem', $data);
-        if ($statusOemEx != Goods::ATTR_EX_NEW){
-            $this->updateGoodId($data['good_id'], ['status_oem_ex' => Goods::OEM_EX_NEW]);
+        try{
+            $inserted = $this->getEntityManager()->getConnection()->insert('oem', $data);
+            if ($statusOemEx != Goods::ATTR_EX_NEW){
+                $this->updateGoodId($data['good_id'], ['status_oem_ex' => Goods::OEM_EX_NEW]);
+            }    
+        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $exx){
+            $inserted = 0;
         }    
         return $inserted;        
     }
