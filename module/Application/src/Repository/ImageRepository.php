@@ -284,9 +284,9 @@ class ImageRepository extends EntityRepository
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
         $uriNormalizeFilter = new UriNormalize(['enforcedScheme' => 'http']);
-        $uriNorm = $uriNormalizeFilter->filter($uri);
+        $url = $uriNormalizeFilter->filter($uri);
         
-        $headers = get_headers($uriNorm, 1);
+        $headers = get_headers($url, 1);
         if (preg_match("|301|", $headers[0])){
             $url = $uriNormalizeFilter->filter($headers['Location']);
             $headers = get_headers($url);
