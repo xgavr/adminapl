@@ -100,7 +100,11 @@ class AttributeRepository  extends EntityRepository{
                 'status_ex' => AttributeValue::EX_TO_TRANSFER,
             ];
 
-            $this->getEntityManager()->getConnection()->insert('attribute_value', $data);           
+            try {
+                $this->getEntityManager()->getConnection()->insert('attribute_value', $data); 
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $ex){
+                usleep(100);
+            }    
 
             $attributeValue = $this->getEntityManager()->getRepository(AttributeValue::class)
                     ->findOneBy(['tdId' => (int) $attr['id'], 'value' => $value]);
