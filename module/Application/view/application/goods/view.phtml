@@ -399,16 +399,25 @@ $priceCols = $goodsManager->priceCols($goods);
             <div class="col-xs-12">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <span>
-                            <a href="/producer/article-view/?code=<?=$goods->getCode()?>">
-                                <?= $goods->getCode();?>
-                            </a>
-                        </span>
-                        <span>
-                            <a href="/producer/view/<?=$goods->getProducer()->getId()?>">
-                                <?= $goods->getProducer()->getName();?>
-                            </a>
-                        </span>    
+                        <div class="pull-left">
+                            <span>
+                                <a href="/producer/article-view/?code=<?=$goods->getCode()?>">
+                                    <?= $goods->getCode();?>
+                                </a>
+                            </span>
+                            <span>
+                                <a href="/producer/view/<?=$goods->getProducer()->getId()?>">
+                                    <?= $goods->getProducer()->getName();?>
+                                </a>
+                            </span>    
+                        </div>
+                        <div class="pull-right">
+                            <a href="/goods/delete/<?= $goods->getId()?>" class="btn btn-danger btn-xs show-button"
+                                    title="Удалить, если возможно">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </a>                                                         
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
                         <small>
@@ -451,7 +460,7 @@ $priceCols = $goodsManager->priceCols($goods);
                             </div>
                             <div class="pull-right">
                                 <button value="/goods/external-api-search/<?= $goods->getId()?>" class="btn btn-info btn-xs show-button"
-                                        title="Посик в TecDocId">
+                                        title="Поиск в TecDocId">
                                     <span class="glyphicon glyphicon-refresh" ></span>
                                 </button>                             
                             </div>

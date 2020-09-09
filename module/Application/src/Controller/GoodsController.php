@@ -396,10 +396,16 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
         
-        $this->goodsManager->removeGoods($goods);
+        $this->goodsManager->removeGood($goods);
         
-        // Перенаправляем пользователя на страницу "goods".
-        return $this->redirect()->toRoute('goods', []);
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);
+        if ($good){
+            return $this->redirect()->toRoute('goods', ['action' => 'view', 'id' => $good->getId()]);            
+        } else {        
+            // Перенаправляем пользователя на страницу "goods".
+            return $this->redirect()->toRoute('goods', []);
+        }    
     }    
 
     public function deleteFormAction()
