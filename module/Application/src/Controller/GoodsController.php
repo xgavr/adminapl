@@ -792,6 +792,8 @@ class GoodsController extends AbstractActionController
 
     public function goodOemAction()
     {
+        set_time_limit(90);
+        
         $goodsId = $this->params()->fromRoute('id', -1);
         
         $goods = $this->entityManager->getRepository(Goods::class)
