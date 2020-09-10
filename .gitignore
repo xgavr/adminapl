@@ -20,3 +20,4 @@ phpunit.xml
 /public/img/
 /data/dict/
 /data/cross/
+/data/session_09/
