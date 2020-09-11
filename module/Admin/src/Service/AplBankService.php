@@ -124,16 +124,20 @@ class AplBankService {
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
-            $client->setOptions(['timeout' => 60]);
+//            $client->setOptions(['timeout' => 60]);
             $client->setParameterPost($transferData);
 
-            $response = $client->send();
+            try{
+                $response = $client->send();
 
-            if ($response->isOk()){
-                $statement->setSwap1(Statement::SWAP1_TRANSFERED);
-                $this->entityManager->persist($statement);
-                $this->entityManager->flush($statement);
-            }
+                if ($response->isOk()){
+                    $statement->setSwap1(Statement::SWAP1_TRANSFERED);
+                    $this->entityManager->persist($statement);
+                    $this->entityManager->flush($statement);
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $ex){
+                
+            }    
         }    
         return;
     }

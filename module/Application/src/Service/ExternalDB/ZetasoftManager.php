@@ -53,7 +53,7 @@ class ZetasoftManager
         $this->adminManager = $adminManager;
         $this->sessionContainer = $sessionContainer;
         
-        $this->setAccess(TRUE);
+//        $this->setAccess(TRUE);
     }
     
     /**
@@ -240,9 +240,9 @@ class ZetasoftManager
                 throw new \Exception("Достигнут лимит запросов {$settings['max_query']}");
             }
                         
-            if (!$this->getAccess()){
-                return;
-            }
+//            if (!$this->getAccess()){
+//                return;
+//            }
 //            var_dump($uri); exit;
             $client = new Client();
             $client->setUri($uri);
@@ -275,10 +275,10 @@ class ZetasoftManager
                    // var_dump($response->getBody()); exit;
                 }    
             } elseif ($response->getStatusCode() === 402){   
-                $this->setAccess(FALSE);
+//                $this->setAccess(FALSE);
                 throw new \Exception("Оплаченный лимит исчерпан");
             } else {
-                $this->setAccess(FALSE);
+//                $this->setAccess(FALSE);
                 throw new \Exception($response->getStatusCode()." Неизвестная ошибка");
             }
         }        

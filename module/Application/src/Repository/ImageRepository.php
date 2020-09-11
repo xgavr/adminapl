@@ -288,7 +288,7 @@ class ImageRepository extends EntityRepository
         
         $headers = get_headers($url, 1);
         if (preg_match("|301|", $headers[0])){
-            $url = $uriNormalizeFilter->filter($headers['Location']);
+            $url = $headers['Location'];
             $headers = get_headers($url);
 //            var_dump($headers);
         }
