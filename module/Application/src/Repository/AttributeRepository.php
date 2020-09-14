@@ -145,17 +145,20 @@ class AttributeRepository  extends EntityRepository{
     {
 
 //        $attribute = $this->addAtribute($attr['property']);
-        $attribute = $this->addAtribute([
-            'id' => $attr['propertyId'],
-            'attrBlockNo' => 0,
-            'conditional' => $attr['valueCritical'],
-            'applicable' => $attr['valueApplicable'],
-            'interval' => $attr['valueInterval'],
-            'type' => $attr['propertyType'],
-            'unitName' => $attr['propertyUnitName'],
-            'nameAbbreviation' => $attr['propertyShortName'],
-        ]);
-        
+        $attribute = null;
+        if (isset($attr['propertyShortName']) || isset($attr['propertyName'])){
+            $attribute = $this->addAtribute([
+                'id' => $attr['propertyId'],
+                'attrBlockNo' => 0,
+                'conditional' => $attr['valueCritical'],
+                'applicable' => $attr['valueApplicable'],
+                'interval' => $attr['valueInterval'],
+                'type' => $attr['propertyType'],
+                'unitName' => $attr['propertyUnitName'],
+                'nameAbbreviation' => $attr['propertyShortName'],
+                'name' => $attr['propertyName'],
+            ]);
+        }            
         
         if ($attribute){            
             
