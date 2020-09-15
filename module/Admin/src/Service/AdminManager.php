@@ -98,6 +98,8 @@ class AdminManager {
         $config->admin->telefonistka_email = $data['telefonistka_email'];
         $config->admin->telefonistka_email_password = $data['telefonistka_email_password'];
         
+        $config->admin->allow_date = $data['allow_date'];
+        
         $writer = new PhpArray();
         
         $writer->toFile(self::SETTINGS_FILE, $config);

@@ -141,6 +141,19 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'date',
+            'name' => 'allow_date',
+            'attributes' => [
+                'id' => 'allow_date',
+                'step' => 1,
+            ],
+            'options' => [
+                'label' => 'Дата запрета изменения данных',
+                'format' => 'Y-m-d'
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -324,6 +337,25 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         $inputFilter->add([
                 'name'     => 'telefonistka_email_password',
                 'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'allow_date',
+                'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],

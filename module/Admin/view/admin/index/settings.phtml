@@ -54,6 +54,10 @@ $form->get('telefonistka_email_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('allow_date')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -130,6 +134,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('telefonistka_email_password')); ?>
             <?= $this->formElement($form->get('telefonistka_email_password')); ?>
             <?= $this->formElementErrors($form->get('telefonistka_email_password')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('allow_date')); ?>
+            <?= $this->formElement($form->get('allow_date')); ?>
+            <?= $this->formElementErrors($form->get('allow_date')); ?>                  
         </div>
     </div>    
     
