@@ -86,33 +86,16 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
-        // Добавляем поле "office"
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'office',
-            'attributes' => [                
-                'id' => 'office',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
-            ],
-            'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Company\Entity\Office',
-                'label' => 'офис',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете офис--',                 
-            ],
-        ]);
-
         $this->add([
             'type'  => 'date',
             'name' => 'docDate',
             'attributes' => [                
-                'id' => 'docDate'
+                'id' => 'docDate',
+                'step' => 1,
             ],
             'options' => [
                 'label' => 'Дата документа',
+                'format' => 'Y-m-d',
             ],
         ]);
         
@@ -167,7 +150,79 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'name',
+                'name'     => 'legal',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'contract',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'docDate',
+                'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 24
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'docNo',
+                'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'comment',
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -186,80 +241,16 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             ]);
         
         $inputFilter->add([
-                'name'     => 'code',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                'name'     => 'status',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Ptu::getStatusList())]]
                 ],
-            ]);          
+            ]); 
 
-        $inputFilter->add([
-                'name'     => 'producer',
-                'required' => true,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);
-        
-        $inputFilter->add([
-                'name'     => 'tax',
-                'required' => true,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'description',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);                  
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

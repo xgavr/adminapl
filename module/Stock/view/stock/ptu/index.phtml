@@ -149,8 +149,18 @@
     }    
     
     function activeFormatter(value, row){
-        var url = '/ptu/delete-ptu/'+row.id;
+        var url = '/ptu/edit-form/'+row.id;
         btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
+        btn += ' value="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        var url = '/ptu/delete-ptu/'+row.id;
+        btn += '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 

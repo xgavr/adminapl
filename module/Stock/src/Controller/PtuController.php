@@ -11,6 +11,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Stock\Entity\Ptu;
+use Stock\Form\PtuForm;
 
 class PtuController extends AbstractActionController
 {
@@ -75,6 +76,66 @@ class PtuController extends AbstractActionController
             'result' => 'ok-reload',
         ]);
     }        
+    
+    public function editFormAction()
+    {
+        $ptuId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($ptuId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->findOneById($ptuId);
+        
+        if ($ptu == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        
+        $officeId = (int)$this->params()->fromQuery('office', 1);
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($officeId);
+        
+        $form = new PtuForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                $this->ptuManager->updatePtu($ptu, $data);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($contract){
+                $data = [
+                    'legal' => $ptu->getLegal()->getId(),  
+                    'contract' => $ptu->getContract()->getId(),  
+                    'docDate' => $ptu->getDocDate(),  
+                    'docNo' => $ptu->getDocNo(),
+                    'comment' => $ptu->getComment(),
+                    'status' => $ptu->getStatus(),
+                ];
+                $form->setData($data);
+            }    
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'ptu' => $ptu,
+        ]);        
+    }
     
     public function deletePtuAction()
     {
