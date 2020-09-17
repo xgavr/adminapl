@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Stock\Entity\Ptu;
 use Stock\Form\PtuForm;
+use Company\Entity\Office;
 
 class PtuController extends AbstractActionController
 {
@@ -116,7 +117,7 @@ class PtuController extends AbstractActionController
                 );           
             }
         } else {
-            if ($contract){
+            if ($ptu){
                 $data = [
                     'legal' => $ptu->getLegal()->getId(),  
                     'contract' => $ptu->getContract()->getId(),  

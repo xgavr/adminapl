@@ -202,8 +202,9 @@ class AutoruManager {
                 if ($msg['subject'] == 'Заявка на новый товар с портала Авто.ру' && $msg['content']['HTML']){
                     $this->autoruMsg($msg);
                 }
-                if (isset($msg['content']['PLAIN'])){
-                    if (mb_strpos($msg['content']['PLAIN'], 'Турбо-страницы') !== false 
+//        var_dump($msg['content']); exit;
+                if (isset($msg['content']['HTML'])){
+                    if (mb_strpos($msg['content']['HTML'], 'Турбо-страницы') !== false 
                             && mb_strpos($msg['subject'], 'Новый заказ') !== false){
 //        var_dump($msg); exit;
                         $this->turboMsg($msg);

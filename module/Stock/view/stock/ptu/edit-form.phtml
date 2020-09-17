@@ -31,6 +31,11 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 
 $form->prepare();
 
+$docName = 'Новый';
+if ($ptu){
+    $docName = '№ '.$ptu->getDocNo().' от  '.date('d.m.Y', strtotime($ptu->getDocDate()));
+}
+
 ?>
 
 
@@ -38,7 +43,7 @@ $form->prepare();
             <?= $this->form()->openTag($form); ?>
             
             <div class="modal-header">
-                <h5 class="modal-title" id="ptuModalLabel">Поступление товаров</h5>
+                <h5 class="modal-title" id="ptuModalLabel">Поступление товаров <?= $docName?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

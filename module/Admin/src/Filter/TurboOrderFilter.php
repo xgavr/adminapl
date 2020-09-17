@@ -38,7 +38,9 @@ class TurboOrderFilter extends AbstractFilter
     {
 //        var_dump($html); exit;
         $dom = new \DOMDocument();
-        $dom->loadHTML($html);
+        libxml_use_internal_errors(TRUE);
+        $dom->loadHTML(trim($html));
+        libxml_use_internal_errors(FALSE);
         $xpath = new \DOMXPath($dom);
         
         $result = [];
@@ -62,7 +64,7 @@ class TurboOrderFilter extends AbstractFilter
         $bags = [];
         $info = [];
         $goodStr = false;
-//        var_dump($value); exit;
+//        var_dump($lines); exit;
         foreach ($lines as $key => $line){
             if ($line[0] == 'product id'){
                 $goodStr = true;
@@ -75,28 +77,45 @@ class TurboOrderFilter extends AbstractFilter
             if ($goodStr){
                 $bags[$line[0]] = [
                     'offerId' => $line[0],
-                    'count' => (float) $line[2],
-                    'price' => (float) $line[3],
+                    'count' => floatval(preg_replace('/[^0-9,]/', '', $line[2])),
+                    'price' => floatval(preg_replace('/[^0-9,]/', '', $line[3])),
                 ];
             }
-            if ($line[0] == 'Контакты'){
-                $contacts = trim($line[1]);
-                $dqs = explode(';', trim($contacts));
+//            if ($line[0] == 'Контакты'){
+//                $contacts = trim($line[1]);
+//                $dqs = explode(';', trim($contacts));
+//                $phoneFilter = new PhoneFilter();
+//                $emailValidator = new EmailAddress(['allow' => \Laminas\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
+//                $emails = []; $phones = [];
+//                foreach ($dqs as $dbStr){
+//                    if ($emailValidator->isValid(trim($dbStr))){
+//                        $emails[] = trim($dbStr);                        
+//                    } else {
+//                        $phones[] = $phoneFilter->filter(trim($dbStr));                                                
+//                    }
+//                }
+//                $result['email'] = implode(';', array_filter($emails));
+//                $result['phone'] = implode(';', array_filter($phones));
+//            }
+            if ($line[0] == 'Телефон'){
+                $phones = [];
                 $phoneFilter = new PhoneFilter();
-                $emailValidator = new EmailAddress(['allow' => \Laminas\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
-                $emails = []; $phones = [];
-                foreach ($dqs as $dbStr){
-                    if ($emailValidator->isValid(trim($dbStr))){
-                        $emails[] = trim($dbStr);                        
-                    } else {
-                        $phones[] = $phoneFilter->filter(trim($dbStr));                                                
-                    }
-                }
-                $result['email'] = implode(';', array_filter($emails));
+                $phones[] = $phoneFilter->filter(trim($line[1]));
                 $result['phone'] = implode(';', array_filter($phones));
             }
+            if ($line[0] == 'E-mail'){
+                $emails = [];
+                $emailValidator = new EmailAddress(['allow' => \Laminas\Validator\Hostname::ALLOW_DNS, 'useMxCheck' => false]);
+                if ($emailValidator->isValid(trim($line[1]))){
+                        $emails[] = trim($line[1]);
+                }        
+                $result['email'] = implode(';', array_filter($emails));
+            }
+            if ($line[0] == 'Способ оплаты'){
+                $info[1] = trim($line[1]);
+            }
             if ($line[0] == 'Комментарий'){
-                $info[] = trim($line[1]);
+                $info[2] = trim($line[1]);
             }
             if ($line[0] == 'Адрес доставки'){
                 $result['address'] = trim($line[1]);

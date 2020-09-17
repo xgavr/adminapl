@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Application\Form;
+namespace Stock\Form;
 
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
@@ -141,6 +141,18 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'ptu_submitbutton',
             ],
         ]);        
+
+        // Add the CSRF field
+        $this->add([
+            'type' => 'csrf',
+            'name' => 'csrf',
+            'options' => [
+                'csrf_options' => [
+                'timeout' => 600
+                ]
+            ],
+        ]);
+        
     }
     
     private function addInputFilter() 
