@@ -1111,7 +1111,7 @@ class NameController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(TokenGroup::class)
-                        ->findTokenGroupGoodName($tokenGroup);
+                        ->findTokenGroupGoodName($tokenGroup, ['group' => $group]);
 
         $total = count($query->getResult(2));
         
