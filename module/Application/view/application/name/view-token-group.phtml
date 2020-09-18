@@ -59,13 +59,21 @@ $this->headScript()
         </ul>
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="goods" aria-labelledby="goods-tab">
+                <div id="toolbar">
+                    <select style="" class="form-control" id='groupSelect'>
+                        <option value="0">Все группы ТД</option>
+                        <?php foreach ($tdGroups as $tdGroup):?>
+                            <option value="<?= $tdGroup[0]->getId()?>"><?= $tdGroup[0]->getName()?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>    
                 <table id="goodTable" 
                     data-toggle="table" 
                     data-url="/name/token-group-good-content/<?= $tokenGroup->getId()?>"
                     data-side-pagination="server"
                     data-pagination="true" 
                     data-page-list="[5, 10, 20, 50]"
-                    data-toolbar="#goodsToolbar"
+                    data-toolbar="#toolbar"
                     data-show-refresh="true"
                     data-show-toggle="true"
                     data-query-params="goodQueryParams"
@@ -219,6 +227,9 @@ $this->headScript()
         $('#bigramStatusSelect').change(function () {
             $('#bigramTable').bootstrapTable('refresh');
         });
+        $('#groupSelect').change(function (){
+            $('#goodTable').bootstrapTable('refresh');
+        })
     });
 
     var goodTable = $('#goodTable').bootstrapTable({
@@ -258,6 +269,7 @@ $this->headScript()
     }
     
     function goodQueryParams(params) {
+        params.group = $('#groupSelect').val();
         return tabQueryParams('#goods', params);
     }
 

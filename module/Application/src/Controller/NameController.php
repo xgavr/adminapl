@@ -1094,6 +1094,7 @@ class NameController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
+        $group = $this->params()->fromQuery('group');
         
         // Validate input parameter
         if ($tokenGroupId<0) {

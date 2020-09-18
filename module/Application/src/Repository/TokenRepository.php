@@ -886,10 +886,12 @@ class TokenRepository  extends EntityRepository
     }
     
     /**
+     * Выборка товаров группы наименований
      * 
      * @param TokenGroup $tokenGroup
+     * @param array $params
      */
-    public function findTokenGroupGoodName($tokenGroup)
+    public function findTokenGroupGoodName($tokenGroup, $params = null)
     {
 
         $entityManager = $this->getEntityManager();
@@ -905,6 +907,13 @@ class TokenRepository  extends EntityRepository
                 ->setParameter('1', $tokenGroup->getId())
                 ->groupBy('g.id')
                 ;
+        if (is_array($params)){
+            if (isset($params['group'])){
+                $queryBuilder->andWhere('g.genericGroup = ?2')
+                        ->setParameter('2', $params['group'])
+                        ;
+            }
+        }
         
         return $queryBuilder->getQuery();            
     }
