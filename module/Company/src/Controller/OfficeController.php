@@ -274,4 +274,35 @@ class OfficeController extends AbstractActionController
         // Redirect to "index" region
         return $this->redirect()->toRoute('offices', ['action'=>'index']); 
     } 
+    
+    public function legalsAction()
+    {
+        $officeId = (int)$this->params()->fromRoute('id', -1);
+        if ($officeId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $office = $this->entityManager->getRepository(Office::class)
+                ->find($officeId);
+        
+        if ($office == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $result = [];
+        $legalContact = $office->getLegalContact();
+        $legals = $legalContact->getLegals();
+        foreach ($legals as $legal){
+            $result[$legal->getId()] = [
+                'id' => $legal->getId(),
+                'name' => $legal->getName(),                
+            ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
 }

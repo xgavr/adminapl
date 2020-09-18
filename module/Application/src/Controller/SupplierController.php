@@ -1234,7 +1234,38 @@ class SupplierController extends AbstractActionController
         return new ViewModel([
             'supplier' => $supplier,
             'form' => $form,
-        ]);
-        
+        ]);        
     }
+    
+    public function legalsAction()
+    {
+        $supplierId = (int)$this->params()->fromRoute('id', -1);
+        if ($supplierId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->find($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $result = [];
+        $legalContact = $supplier->getLegalContact();
+        $legals = $legalContact->getLegals();
+        foreach ($legals as $legal){
+            $result[$legal->getId()] = [
+                'id' => $legal->getId(),
+                'name' => $legal->getName(),                
+            ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
+    
 }

@@ -14,6 +14,10 @@ $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('supplier')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('contract')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -70,6 +74,12 @@ if ($ptu){
                             <?= $this->formLabel($form->get('company')); ?>
                             <?= $this->formElement($form->get('company')); ?>
                             <?= $this->formElementErrors($form->get('company')); ?>                  
+                        </div>
+                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('supplier')); ?>
+                            <?= $this->formElement($form->get('supplier')); ?>
+                            <?= $this->formElementErrors($form->get('supplier')); ?>                  
                         </div>
                         
                         <div class="form-group">
@@ -139,5 +149,23 @@ if ($ptu){
                 alert("Ошибка при открытии формы.");
 
             });
-    })        
+    });
+    
+    $('#office').on('change', function(){
+        $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
+            $('#company').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
+    
+    $('#supplier').on('change', function(){
+        $.getJSON( '/supplier/legals/'+$('#supplier').val(), function( data ) {
+            $('#legal').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#legal').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
 </script>

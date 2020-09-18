@@ -121,6 +121,7 @@ class PtuController extends AbstractActionController
                 $data = [
                     'office' => $ptu->getContract()->getOffice()->getId(),
                     'company' => $ptu->getContract()->getCompany()->getId(),
+                    'supplier' => $ptu->getSupplier()->getId(),
                     'legal' => $ptu->getLegal()->getId(),  
                     'contract' => $ptu->getContract()->getId(),  
                     'docDate' => $ptu->getDocDate(),  

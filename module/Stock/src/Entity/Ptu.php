@@ -396,6 +396,23 @@ class Ptu {
     }
     
     /**
+     * Returns the supplier.
+     * @return Supplier     
+     */
+    public function getSupplier() 
+    {
+        $legal = $this->legal;
+        $contacts = $legal->getContacts();
+        foreach ($contacts as $contact){
+            $supplier = $contact->getSupplier();
+            if ($supplier){
+                return $supplier;
+            }
+        }
+        return;        
+    }
+    
+    /**
      * Returns the contract.
      * @return Contract     
      */

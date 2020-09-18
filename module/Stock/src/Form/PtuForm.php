@@ -85,6 +85,25 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        // Добавляем поле "supplier"
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'supplier',
+            'attributes' => [                
+                'id' => 'supplier',
+                'data-live-search'=> "true",
+                'class' => "selectpicker",
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Application\Entity\Supplier',
+                'label' => 'Поставщик',
+                'property'       => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--выберете поставщика--',                 
+            ],
+        ]);
+        
         // Добавляем поле "legal"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
@@ -217,6 +236,23 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'company',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'supplier',
                 'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
