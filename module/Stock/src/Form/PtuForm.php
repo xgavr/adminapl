@@ -48,6 +48,43 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
     protected function addElements() 
     {
                 
+        // Добавляем поле "office"
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'office',
+            'attributes' => [                
+                'id' => 'office',
+                'data-live-search'=> "true",
+                'class' => "selectpicker",
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Company\Entity\Office',
+                'label' => 'Офис',
+                'property'       => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--выберете офис--',                 
+            ],
+        ]);
+
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'company',
+            'attributes' => [                
+                'id' => 'company',
+                'data-live-search'=> "true",
+                'class' => "selectpicker",
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Company\Entity\Legal',
+                'label' => 'Компания',
+                'property'       => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--выберете компанию--',                 
+            ],
+        ]);
+
         // Добавляем поле "legal"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
@@ -160,6 +197,40 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter = new InputFilter();        
         $this->setInputFilter($inputFilter);
+        
+        $inputFilter->add([
+                'name'     => 'office',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'company',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);          
         
         $inputFilter->add([
                 'name'     => 'legal',

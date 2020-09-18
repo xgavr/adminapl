@@ -6,6 +6,14 @@ $form->get('legal')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('office')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('contract')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -52,6 +60,18 @@ if ($ptu){
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-8">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('office')); ?>
+                            <?= $this->formElement($form->get('office')); ?>
+                            <?= $this->formElementErrors($form->get('office')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('company')); ?>
+                            <?= $this->formElement($form->get('company')); ?>
+                            <?= $this->formElementErrors($form->get('company')); ?>                  
+                        </div>
+                        
                         <div class="form-group">
                             <?= $this->formLabel($form->get('legal')); ?>
                             <?= $this->formElement($form->get('legal')); ?>
