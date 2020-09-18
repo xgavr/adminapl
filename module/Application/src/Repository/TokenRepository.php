@@ -908,7 +908,7 @@ class TokenRepository  extends EntityRepository
                 ->groupBy('g.id')
                 ;
         if (is_array($params)){
-            if (isset($params['group'])){
+            if (!empty($params['group'])){
                 $queryBuilder->andWhere('g.genericGroup = ?2')
                         ->setParameter('2', $params['group'])
                         ;
