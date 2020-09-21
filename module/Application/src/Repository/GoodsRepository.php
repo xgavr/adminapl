@@ -39,7 +39,11 @@ class GoodsRepository extends EntityRepository
             return;
         }
         
-        $updated = $this->getEntityManager()->getConnection()->update('goods', $data, ['id' => $goodId]);
+        try {
+            $updated = $this->getEntityManager()->getConnection()->update('goods', $data, ['id' => $goodId]);
+        } catch (\Doctrine\DBAL\Exception\LockWaitTimeoutException $ex){
+            return;
+        }    
         return $updated;
     }    
 
@@ -67,7 +71,11 @@ class GoodsRepository extends EntityRepository
             $queryBuilder->set("g.$key", $value);
         }
         
-        return $queryBuilder->getQuery()->getResult();        
+        try {
+            return $queryBuilder->getQuery()->getResult();        
+        } catch (\Doctrine\DBAL\Exception\LockWaitTimeoutException $ex){
+            return;
+        }    
     }
     
     /**
