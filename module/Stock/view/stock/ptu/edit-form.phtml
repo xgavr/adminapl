@@ -160,6 +160,15 @@ if ($ptu){
         });    
     });
     
+    $('#company').on('change', function(){
+        $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val(), function( data ) {
+            $('#contract').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#contract').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
+    
     $('#supplier').on('change', function(){
         $.getJSON( '/supplier/legals/'+$('#supplier').val(), function( data ) {
             $('#legal').empty();
@@ -168,4 +177,14 @@ if ($ptu){
             });
         });    
     });
+    
+    $('#legal').on('change', function(){
+        $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val(), function( data ) {
+            $('#contract').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#contract').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
+    
 </script>

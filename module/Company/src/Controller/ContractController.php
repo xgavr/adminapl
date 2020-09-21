@@ -9,6 +9,7 @@ namespace Company\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use Company\Entity\Contract;
 use Company\Form\ContractForm;
 
@@ -190,6 +191,34 @@ class ContractController extends AbstractActionController
 
         // Redirect to "index" region
         return $this->redirect()->toRoute('regions', ['action'=>'index']); 
+    }
+    
+    public function selectAction()
+    {
+        $companyId = (int)$this->params()->fromQuery('company', -1);
+        $legalId = (int)$this->params()->fromQuery('legal', -1);
+
+        if ($companyId<1 || $legalId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+                        
+        $contracts = $this->entityManager->getRepository(Contract::class)
+                ->findBy(['company' => $companyId, 'legal' => $legalId]);
+
+        $result = [];
+        if ($contracts){
+            foreach ($contracts as $contract){
+                $result[$contract->getId()] = [
+                    'id' => $contract->getId(),
+                    'name' => $contract->getName(),                
+                ];
+            }
+        }    
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
     }
     
 }

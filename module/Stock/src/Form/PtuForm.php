@@ -27,16 +27,23 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
 
     protected $entityManager;
         
+    /**
+     *
+     * @var Company\Entity\Office 
+     */
+    protected $office;
     
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager)
+    public function __construct($entityManager, $office)
     {
         // Определяем имя формы.
         parent::__construct('ptu-form');
      
         $this->entityManager = $entityManager;
+        
+        $this->office = $office;
         
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -63,7 +70,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
                 'label' => 'Офис',
                 'property'       => 'name',
                 'display_empty_item' => true,
-                'empty_item_label'   => '--выберете офис--',                 
+                'empty_item_label'   => '--выберете офис--',
             ],
         ]);
 
@@ -82,6 +89,19 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
                 'property'       => 'name',
                 'display_empty_item' => true,
                 'empty_item_label'   => '--выберете компанию--',                 
+                'is_method' => true,
+                'find_method'    => [
+                    'name'   => 'findBy',
+                    'params' => [
+                        'criteria' => ['active' => 1],
+
+                        // Use key 'orderBy' if using ORM
+                        'orderBy'  => ['lastname' => 'ASC'],
+
+                        // Use key 'sort' if using ODM
+                        'sort'  => ['lastname' => 'ASC'],
+                    ],
+                ],                
             ],
         ]);
 
