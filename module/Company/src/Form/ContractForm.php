@@ -161,12 +161,12 @@ class ContractForm extends Form
                 'label' => 'Компания',
                 'property'       => 'name',
                 'is_method'      => true,
-                'find_method'    => array(
+                'find_method'    => [
                    'name'   => 'formOfficeLegals',
                    'params' => [
                        'params' => ['officeId' => $this->office->getId()],
                    ],
-               ),                
+                ],                
                 'display_empty_item' => true,
                 'empty_item_label'   => '--выберете компанию--',                 
             ],

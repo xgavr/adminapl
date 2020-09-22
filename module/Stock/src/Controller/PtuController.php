@@ -92,16 +92,19 @@ class PtuController extends AbstractActionController
                 ->findOneById($ptuId);
         
         if ($ptu == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
+            $supplier = $legal = $company = null;
+        } else {
+            $supplier = $ptu->getSupplier();
+            $company = $ptu->getContract()->getCompany();
+            $legal = $ptu->getLegal();
+        }       
 
         
         $officeId = (int)$this->params()->fromQuery('office', 1);
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($officeId);
         
-        $form = new PtuForm($this->entityManager);
+        $form = new PtuForm($this->entityManager, $office, $supplier, $company, $legal);
 
         if ($this->getRequest()->isPost()) {
             

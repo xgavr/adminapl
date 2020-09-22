@@ -29,21 +29,41 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         
     /**
      *
-     * @var Company\Entity\Office 
+     * @var \Company\Entity\Office 
      */
     protected $office;
     
     /**
+     *
+     * @var \Application\Entity\Supplier 
+     */
+    protected $supplier;
+    
+    /**
+     *
+     * @var \Company\Entity\Legal 
+     */
+    protected $company;
+
+    /**
+     *
+     * @var \Company\Entity\Legal 
+     */
+    protected $legal;
+    /**
      * Конструктор.     
      */
-    public function __construct($entityManager, $office)
+    public function __construct($entityManager, $office, $supplier = null, $company = null, $legal = null)
     {
         // Определяем имя формы.
         parent::__construct('ptu-form');
      
         $this->entityManager = $entityManager;
         
-        $this->office = $office;
+        $this->office = $office;        
+        $this->supplier = $supplier;
+        $this->company = $company;        
+        $this->legal = $legal;
         
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -91,16 +111,10 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
                 'empty_item_label'   => '--выберете компанию--',                 
                 'is_method' => true,
                 'find_method'    => [
-                    'name'   => 'findBy',
-                    'params' => [
-                        'criteria' => ['active' => 1],
-
-                        // Use key 'orderBy' if using ORM
-                        'orderBy'  => ['lastname' => 'ASC'],
-
-                        // Use key 'sort' if using ODM
-                        'sort'  => ['lastname' => 'ASC'],
-                    ],
+                   'name'   => 'formOfficeLegals',
+                   'params' => [
+                       'params' => ['officeId' => $this->office->getId()],
+                   ],
                 ],                
             ],
         ]);
@@ -136,10 +150,18 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             'options' => [
                 'object_manager' => $this->entityManager,
                 'target_class'   => 'Company\Entity\Legal',
-                'label' => 'Поставщик',
+                'label' => 'Поставщик (юр. лицо)',
                 'property'       => 'name',
                 'display_empty_item' => true,
-                'empty_item_label'   => '--выберете поставщика--',                 
+                'empty_item_label'   => '--выберете поставщика--',  
+                'is_method' => true,
+                'find_method'    => [
+                   'name'   => 'formSupplierLegals',
+                   'params' => [
+                       'params' => ['supplierId' => ($this->supplier) ? $this->supplier->getId():null],
+                   ],
+                ],                
+                
             ],
         ]);
         
@@ -158,7 +180,16 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
                 'label' => 'Договор',
                 'property'       => 'name',
                 'display_empty_item' => true,
-                'empty_item_label'   => '--выберете договор--',                 
+                'empty_item_label'   => '--выберете договор--',    
+                'find_method'    => [
+                   'name'   => 'formOfficeLegalContracts',
+                   'params' => [
+                       'params' => [
+                           'companyId' => ($this->company) ? $this->company->getId():null,
+                           'legalId' => ($this->legal) ? $this->legal->getId():null,
+                        ],
+                   ],
+                ],                                
             ],
         ]);
 
