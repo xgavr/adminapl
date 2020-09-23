@@ -65,19 +65,36 @@ class StockRepository extends EntityRepository{
         
         if (is_array($params)){
             if (isset($params['sort'])){
-//                if ($params['sort'] == 'unknownProducerCount'){
-//                    $queryBuilder->orderBy('unknownProducerCount', $params['order']);
-//                } elseif ($params['sort'] == 'supplierCount'){
-//                    $queryBuilder->orderBy('supplierCount', $params['order']);
-//                } elseif ($params['sort'] == 'rawpriceCount'){
-//                    $queryBuilder->orderBy('rawpriceCount', $params['order']);
-//                } else {
-//                    $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);                
-//                }    
             }            
         }
 
         return $queryBuilder->getQuery();
     }    
     
+    /**
+     * Запрос товаров по пту
+     * 
+     * @param integer $ptuId
+     * @param array $params
+     * @return query
+     */
+    public function findPtuGoods($ptuId, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('pg')
+            ->from(PtuGood::class, 'pg')
+            ->where('pg.ptu = ?1')
+            ->setParameter('1', $ptuId)    
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['sort'])){
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }    
 }

@@ -68,8 +68,9 @@ class LegalRepository extends EntityRepository
      */
     public function formOfficeLegals($params)
     {
+        $officeId = -1;
         if (isset($params['officeId'])){
-            
+           $officeId =  $params['officeId'];
         }
 
         $entityManager = $this->getEntityManager();
@@ -79,7 +80,7 @@ class LegalRepository extends EntityRepository
             ->from(Legal::class, 'l')
             ->join('l.contacts', 'c')
             ->where('c.office = ?1')    
-            ->setParameter('1', $params['officeId'])    
+            ->setParameter('1', $officeId)    
             ->andWhere('c.status = ?2')
             ->setParameter('2', Contact::STATUS_LEGAL)    
                 ;
@@ -94,8 +95,9 @@ class LegalRepository extends EntityRepository
      */
     public function formSupplierLegals($params)
     {
-        if (empty($params['supplierId'])){
-            return;
+        $supplierId = -1;
+        if (!empty($params['supplierId'])){
+            $supplierId = $params['supplierId'];
         }
 
         $entityManager = $this->getEntityManager();
@@ -105,7 +107,7 @@ class LegalRepository extends EntityRepository
             ->from(Legal::class, 'l')
             ->join('l.contacts', 'c')
             ->where('c.supplier = ?1')    
-            ->setParameter('1', $params['supplierId'])    
+            ->setParameter('1', $supplierId)    
             ->andWhere('c.status = ?2')
             ->setParameter('2', Contact::STATUS_LEGAL)    
                 ;
@@ -120,11 +122,12 @@ class LegalRepository extends EntityRepository
      */
     public function formOfficeLegalContracts($params)
     {
-        if (empty($params['companyId'])){
-            return;
+        $companyId = $legalId = -1;
+        if (!empty($params['companyId'])){
+            $companyId = $params['companyId'];
         }
-        if (empty($params['legalId'])){
-            return;
+        if (!empty($params['legalId'])){
+            $legalId = $params['legalId'];
         }
 
         $entityManager = $this->getEntityManager();
@@ -133,9 +136,9 @@ class LegalRepository extends EntityRepository
         $queryBuilder->select('c')
             ->from(Contract::class, 'c')
             ->where('c.company = ?1')    
-            ->setParameter('1', $params['companyId'])    
+            ->setParameter('1', $companyId)    
             ->andWhere('c.legal = ?2')
-            ->setParameter('2', $params['legalId'])    
+            ->setParameter('2', $legalId)    
                 ;
 
         return $queryBuilder->getQuery()->getResult();        

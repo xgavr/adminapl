@@ -10,11 +10,6 @@ namespace Stock\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
-use Company\Entity\Legal;
-use Company\Entity\Contract;
-use Company\Entity\Office;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 

@@ -21,17 +21,14 @@
 
 
 <h1>Поступление товаров</h1>
-<!--<p>
-<a class="btn btn-default" href="
-    <?= $this->url('ptu', ['action'=>'add']); ?>">
-    Новый производитель
-</a>
-</p>-->
 
 <div class="row">
     <div class="col-md-9">
         <div id="toolbar">
             <div class="form-inline" role="form">
+                <button class="btn btn-default" data-toggle="modal" data-target="#modal-dialog" value="/ptu/edit-form">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
                 <div class="form-group">
                     <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
                 </div>

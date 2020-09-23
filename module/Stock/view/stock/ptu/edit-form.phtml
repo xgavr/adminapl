@@ -49,6 +49,11 @@ if ($ptu){
 }
 
 ?>
+<style>
+.modal-dialog {
+          width: 1440px;
+        }
+</style>
 
 
             
@@ -63,60 +68,107 @@ if ($ptu){
             
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('office')); ?>
-                            <?= $this->formElement($form->get('office')); ?>
-                            <?= $this->formElementErrors($form->get('office')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('company')); ?>
-                            <?= $this->formElement($form->get('company')); ?>
-                            <?= $this->formElementErrors($form->get('company')); ?>                  
-                        </div>
-                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('supplier')); ?>
-                            <?= $this->formElement($form->get('supplier')); ?>
-                            <?= $this->formElementErrors($form->get('supplier')); ?>                  
-                        </div>
-                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('legal')); ?>
-                            <?= $this->formElement($form->get('legal')); ?>
-                            <?= $this->formElementErrors($form->get('legal')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('contract')); ?>
-                            <?= $this->formElement($form->get('contract')); ?>
-                            <?= $this->formElementErrors($form->get('contract')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('docDate')); ?>
-                            <?= $this->formElement($form->get('docDate')); ?>
-                            <?= $this->formElementErrors($form->get('docDate')); ?>                  
-                        </div>
-
+                    <div class="col-xs-3">                        
                         <div class="form-group">
                             <?= $this->formLabel($form->get('docNo')); ?>
                             <?= $this->formElement($form->get('docNo')); ?>
                             <?= $this->formElementErrors($form->get('docNo')); ?>                  
                         </div>
-
+                    </div>    
+                    <div class="col-xs-3">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('comment')); ?>
-                            <?= $this->formElement($form->get('comment')); ?>
-                            <?= $this->formElementErrors($form->get('comment')); ?>                  
+                            <?= $this->formLabel($form->get('docDate')); ?>
+                            <?= $this->formElement($form->get('docDate')); ?>
+                            <?= $this->formElementErrors($form->get('docDate')); ?>                  
                         </div>
-
+                    </div>    
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('office')); ?>
+                            <?= $this->formElement($form->get('office')); ?>
+                            <?= $this->formElementErrors($form->get('office')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('company')); ?>
+                            <?= $this->formElement($form->get('company')); ?>
+                            <?= $this->formElementErrors($form->get('company')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('supplier')); ?>
+                            <?= $this->formElement($form->get('supplier')); ?>
+                            <?= $this->formElementErrors($form->get('supplier')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('legal')); ?>
+                            <?= $this->formElement($form->get('legal')); ?>
+                            <?= $this->formElementErrors($form->get('legal')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('contract')); ?>
+                            <?= $this->formElement($form->get('contract')); ?>
+                            <?= $this->formElementErrors($form->get('contract')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-3">                        
                         <div class="form-group">
                             <?= $this->formLabel($form->get('status')); ?>
                             <?= $this->formElement($form->get('status')); ?>
                             <?= $this->formElementErrors($form->get('status')); ?>                  
                         </div>
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="ptugoodtoolbar">
+                            <div class="form-inline" role="form">
+                            </div>
+                        </div>
+                        <table id="ptugoodtable" 
+                            data-toggle="ptugoodtable" 
+                            data-url="/ptu/good-content/<?= ($ptu) ? $ptu->getId():"" ?>"
+                            data-side-pagination="server"
+                            data-pagination="true" 
+                            data-page-list="[5, 10, 20, 50]"
+                            data-toolbar="#ptugoodtoolbar"
+                            data-show-refresh="true"
+                            data-show-toggle="true"
+                            data-query-params="ptugoodQueryParams"
+                            data-response-handler="ptugoodResponseHandler"
+                            >
+                            <thead>
+                                <tr>
+                                     <th data-field="rowNo" data-type="numeric" data-sortable="true">N</th>
+                                     <th data-field="good" data-type="numeric" data-sortable="false">Товар</th>
+                                     <th data-field='quantity' data-sortable="false">Количество</th>
+                                     <th data-field='amount' data-sortable="false">Сумма</th>
+                                     <th data-field=""></th>
+                                 </tr>                
+                            </thead>
+                        </table>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('comment')); ?>
+                            <?= $this->formElement($form->get('comment')); ?>
+                            <?= $this->formElementErrors($form->get('comment')); ?>                  
+                        </div>                        
+                    </div>                                            
+                </div>        
+
+
+
 
                         <?= $this->formElement($form->get('csrf')); ?>
                     </div>
@@ -134,7 +186,7 @@ if ($ptu){
     $('#ptu-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/ptu/edit-form/<?= $ptu->getId() ?>',
+            url: '/ptu/edit-form/<?= ($ptu) ? $ptu->getId():"" ?>',
             data: $('#ptu-form').serialize()
         })
             .done(function (data) {
@@ -187,4 +239,27 @@ if ($ptu){
         });    
     });
     
+    function ptuGoodRefreshTable(){
+        $('#ptugoodtable').bootstrapTable('refresh');
+    }
+    
+    function ptugoodQueryParams(params) {
+        $('#ptugoodtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function ptugoodResponseHandler(res) {
+        return res;
+    }     
 </script>

@@ -69,6 +69,36 @@ class PtuController extends AbstractActionController
         ]);          
     }        
     
+    public function goodContentAction()
+    {
+        	        
+        $ptuId = $this->params()->fromRoute('id', -1);
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(Ptu::class)
+                        ->findPtuGoods($ptuId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }        
+    
     public function repostAllPtuAction()
     {                
         $this->ptuManager->repostAllPtu();
@@ -82,14 +112,12 @@ class PtuController extends AbstractActionController
     {
         $ptuId = (int)$this->params()->fromRoute('id', -1);
         
-        // Validate input parameter
-        if ($ptuId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
+        $ptu = $supplier = $legal = $company = null;
         
-        $ptu = $this->entityManager->getRepository(Ptu::class)
-                ->findOneById($ptuId);
+        if ($ptuId > 0){
+            $ptu = $this->entityManager->getRepository(Ptu::class)
+                    ->findOneById($ptuId);
+        }    
         
         if ($ptu == null) {
             $supplier = $legal = $company = null;

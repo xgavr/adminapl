@@ -83,6 +83,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'office',
                 'data-live-search'=> "true",
                 'class' => "selectpicker",
+                'value' => $this->office->getId(),
             ],
             'options' => [
                 'object_manager' => $this->entityManager,
