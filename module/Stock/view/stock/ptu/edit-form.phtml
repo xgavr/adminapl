@@ -137,7 +137,8 @@ if ($ptu){
                             data-toggle="ptugoodtable" 
                             data-url="/ptu/good-content/<?= ($ptu) ? $ptu->getId():"" ?>"
                             data-side-pagination="server"
-                            data-pagination="true" 
+                            data-pagination="true"
+                            data-page-size = "5"
                             data-page-list="[5, 10, 20, 50]"
                             data-toolbar="#ptugoodtoolbar"
                             data-show-refresh="true"
@@ -251,11 +252,11 @@ if ($ptu){
         $('#ptugoodtoolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('.page-size').html();
+        limit = $('#ptugoodtable .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('li.page-number.active a').html();
+        offset = $('#ptugoodtable li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    

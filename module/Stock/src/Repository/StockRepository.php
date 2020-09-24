@@ -94,7 +94,7 @@ class StockRepository extends EntityRepository{
             if (isset($params['sort'])){
             }            
         }
-
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }    
 }
