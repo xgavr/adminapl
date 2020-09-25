@@ -68,63 +68,69 @@ if ($ptu){
             
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-xs-3">                        
+                    <div class="col-xs-2">                        
                         <div class="form-group">
                             <?= $this->formLabel($form->get('docNo')); ?>
                             <?= $this->formElement($form->get('docNo')); ?>
                             <?= $this->formElementErrors($form->get('docNo')); ?>                  
                         </div>
                     </div>    
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('docDate')); ?>
-                            <?= $this->formElement($form->get('docDate')); ?>
-                            <?= $this->formElementErrors($form->get('docDate')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-3">                        
+                    <div class="col-xs-2">                        
                         <div class="form-group">
                             <?= $this->formLabel($form->get('office')); ?>
                             <?= $this->formElement($form->get('office')); ?>
                             <?= $this->formElementErrors($form->get('office')); ?>                  
                         </div>
                     </div>    
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('company')); ?>
-                            <?= $this->formElement($form->get('company')); ?>
-                            <?= $this->formElementErrors($form->get('company')); ?>                  
-                        </div>
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-xs-3">                        
+                    <div class="col-xs-2">                        
                         <div class="form-group">
                             <?= $this->formLabel($form->get('supplier')); ?>
                             <?= $this->formElement($form->get('supplier')); ?>
                             <?= $this->formElementErrors($form->get('supplier')); ?>                  
                         </div>
                     </div>    
-                    <div class="col-xs-3">                        
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <h1 class="display-4" id="ptuAmount"><?= ($ptu) ? round($ptu->getAmount(), 2):"" ?></h1>                        
+                    </div>    
+                </div>    
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('docDate')); ?>
+                            <?= $this->formElement($form->get('docDate')); ?>
+                            <?= $this->formElementErrors($form->get('docDate')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('company')); ?>
+                            <?= $this->formElement($form->get('company')); ?>
+                            <?= $this->formElementErrors($form->get('company')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
                         <div class="form-group">
                             <?= $this->formLabel($form->get('legal')); ?>
                             <?= $this->formElement($form->get('legal')); ?>
                             <?= $this->formElementErrors($form->get('legal')); ?>                  
                         </div>
                     </div>    
-                    <div class="col-xs-3">                        
+                    <div class="col-xs-2">                        
                         <div class="form-group">
                             <?= $this->formLabel($form->get('contract')); ?>
                             <?= $this->formElement($form->get('contract')); ?>
                             <?= $this->formElementErrors($form->get('contract')); ?>                  
                         </div>
                     </div>    
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>
+                    <div class="col-xs-4 text-right">
+                        <h1 class="display-4" id="ptuQuantity"></h1>
                     </div>    
                 </div>        
                 <div class="row">
@@ -136,7 +142,7 @@ if ($ptu){
                         <table id="ptugoodtable" 
                             data-toggle="ptugoodtable" 
                             data-url="/ptu/good-content/<?= ($ptu) ? $ptu->getId():"" ?>"
-                            data-side-pagination="server"
+                            data-side-pagination="client"
                             data-pagination="true"
                             data-page-size = "5"
                             data-page-list="[5, 10, 20, 50]"
