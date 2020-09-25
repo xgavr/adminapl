@@ -59,8 +59,10 @@ class StockRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('p')
+        $queryBuilder->select('p, l, o')
             ->from(Ptu::class, 'p')
+            ->join('p.legal', 'l')
+            ->join('p.office', 'o')    
                 ;
         
         if (is_array($params)){
@@ -84,8 +86,10 @@ class StockRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('pg')
+        $queryBuilder->select('pg, g, p')
             ->from(PtuGood::class, 'pg')
+            ->join('pg.good', 'g')    
+            ->join('g.producer', 'p')    
             ->where('pg.ptu = ?1')
             ->setParameter('1', $ptuId)    
                 ;

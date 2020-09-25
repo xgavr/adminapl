@@ -148,10 +148,13 @@ if ($ptu){
                             >
                             <thead>
                                 <tr>
-                                     <th data-field="rowNo" data-type="numeric" data-sortable="true">N</th>
-                                     <th data-field="good" data-type="numeric" data-sortable="false">Товар</th>
-                                     <th data-field='quantity' data-sortable="false">Количество</th>
-                                     <th data-field='amount' data-sortable="false">Сумма</th>
+                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                                     <th data-field="good.code" data-type="numeric">Артикул</th>
+                                     <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                                     <th data-field="good.name" data-type="numeric">Наименование</th>
+                                     <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                                     <th data-field='quantity' data-align="right">Количество</th>
+                                     <th data-field='amount' data-align="right">Сумма</th>
                                      <th data-field=""></th>
                                  </tr>                
                             </thead>
@@ -263,6 +266,10 @@ if ($ptu){
         
         return params;
     }
+    
+    function pgPriceFormatter(value, row){
+        return Math.round(value*100/row.quantity)/100;
+    }        
     
     function ptugoodResponseHandler(res) {
         return res;
