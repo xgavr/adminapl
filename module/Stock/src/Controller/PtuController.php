@@ -11,7 +11,9 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Stock\Entity\Ptu;
+use Stock\Entity\PtuGood;
 use Stock\Form\PtuForm;
+use Stock\Form\PtuGoodForm;
 use Company\Entity\Office;
 
 class PtuController extends AbstractActionController
@@ -159,13 +161,56 @@ class PtuController extends AbstractActionController
                 ];
                 $form->setData($data);
             }    
-        }        
-        
+        }
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
             'ptu' => $ptu,
+        ]);        
+    }    
+        
+    public function goodEditFormAction()
+    {
+        $ptuGoodId = (int)$this->params()->fromRoute('id', -1);
+        
+        $ptuGood = null;
+        
+        if ($ptuGoodId > 0){
+            $ptu = $this->entityManager->getRepository(PtuGood::class)
+                    ->findOneById($ptuGoodId);
+        }    
+        
+        
+        $form = new PtuGoodForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($ptuGood){
+                $data = [
+                    'good' => $ptuGood->getGood->getId(),
+                    'quantity' => $ptuGood->getQuantity(),
+                    'amount' => $ptuGood->getAmount(),
+                ];
+                $form->setData($data);
+            }    
+        }        
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'ptuGood' => $ptuGood,
         ]);        
     }
     

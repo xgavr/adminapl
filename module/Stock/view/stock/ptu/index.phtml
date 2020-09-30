@@ -8,15 +8,7 @@
                 'Поступление товаров'=>$this->url('ptu'),
                 ]);
 
-    $this->headLink()
-    //    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-        ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-            ;
 
-    $this->headScript()
-        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-        ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-                ;    
 ?>
 
 
@@ -29,6 +21,9 @@
                 <button class="btn btn-default" data-toggle="modal" data-target="#modal-dialog" value="/ptu/edit-form">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
+                <button class="btn btn-default ptu-modal-show" data-title="Новый документ">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>                
                 <div class="form-group">
                     <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
                 </div>
@@ -116,6 +111,13 @@
         ok.click(function () {
             table.bootstrapTable('refresh');
         });
+        $(document).on('click', '.ptu-modal-show', function () {
+            showModalDialog({
+                id: 'ptuModal',
+                title: 'Новый',
+                url: '/ptu/edit-form'
+            });
+        });  
     });
     
     function queryParams(params) {

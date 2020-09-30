@@ -13,17 +13,18 @@
         <!-- Le styles -->
         <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'])
             ->prependStylesheet($this->basePath('css/style.css'))
-//            ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
-//            ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
+            ->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
+            ->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
             ->prependStylesheet('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css')
             ->prependStylesheet('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
         ?>
 
         <!-- Scripts -->
         <?= $this->headScript()
-//            ->prependFile($this->basePath('js/bootstrap.min.js'))
-//            ->prependFile($this->basePath('js/jquery-3.1.0.min.js'))
-//            ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-confirmation/1.0.7/bootstrap-confirmation.min.js')
+            ->prependFile($this->basePath('js/control-modal.min.js'))
+            ->prependFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+            ->prependFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+            ->prependFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
             ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js')
             ->prependFile('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js')
             ->prependFile('https://yastatic.net/jquery/3.1.1/jquery.js')
@@ -94,6 +95,25 @@
             checkLogin();
         </script>    
         <script type="text/javascript">
+            function showModalDialog(params)
+            {
+                //https://itchief.ru/bootstrap/modal-dynamic-creation
+                
+                var modalDialog = new ModalApp.ModalProcess({id: params.id});
+                modalDialog.init();
+                
+                modalDialog.changeTitle(params.title);
+                
+                $.getJSON( params.url, function( data ) {
+                    modalDialog.changeBody(data);
+                });
+                modalDialog.showModal();
+
+                $('#' + modalDialog.id).on('hidden.bs.modal', function (e) {
+                    modalDialog.changeBody('');
+                });                
+            }
+            
             $('#modal-dialog').on('show.bs.modal', function (e) {        
                 var url = e.relatedTarget.value;
                 if (url){

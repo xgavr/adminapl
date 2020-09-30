@@ -1,0 +1,97 @@
+<?php
+
+$form = $this->form;
+
+$form->get('good')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('quantity')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('amount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'ptu-good-submit']);
+
+$form->prepare();
+
+$docName = 'Новый';
+if ($ptu){
+    $docName = '№ '.$ptu->getDocNo().' от  '.date('d.m.Y', strtotime($ptu->getDocDate()));
+}
+
+?>
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="ptuGoodModalLabel">Строка поступления товаров <?= $docName?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('good')); ?>
+                            <?= $this->formElement($form->get('good')); ?>
+                            <?= $this->formElementErrors($form->get('good')); ?>                  
+                        </div>
+                    </div>    
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                        </div>
+                    </div>    
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('quantity')); ?>
+                            <?= $this->formElement($form->get('quantity')); ?>
+                            <?= $this->formElementErrors($form->get('quantity')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('amount')); ?>
+                            <?= $this->formElement($form->get('amount')); ?>
+                            <?= $this->formElementErrors($form->get('amount')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+
+                <?= $this->formElement($form->get('csrf')); ?>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="ptu-good-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#ptu-good-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/ptu/edit-form/<?= ($ptu) ? $ptu->getId():"" ?>',
+            data: $('#ptu-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#ptu-good-modal').modal('hide');
+                } else {
+                    $('#ptu-good-modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    });    
+</script>

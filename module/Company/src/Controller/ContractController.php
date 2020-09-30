@@ -198,22 +198,20 @@ class ContractController extends AbstractActionController
         $companyId = (int)$this->params()->fromQuery('company', -1);
         $legalId = (int)$this->params()->fromQuery('legal', -1);
 
-        if ($companyId<1 || $legalId<1) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-                        
-        $contracts = $this->entityManager->getRepository(Contract::class)
-                ->findBy(['company' => $companyId, 'legal' => $legalId]);
-
         $result = [];
-        if ($contracts){
-            foreach ($contracts as $contract){
-                $result[$contract->getId()] = [
-                    'id' => $contract->getId(),
-                    'name' => $contract->getName(),                
-                ];
-            }
+        if ($companyId>0 && $legalId>0) {
+
+            $contracts = $this->entityManager->getRepository(Contract::class)
+                    ->findBy(['company' => $companyId, 'legal' => $legalId]);
+
+            if ($contracts){
+                foreach ($contracts as $contract){
+                    $result[$contract->getId()] = [
+                        'id' => $contract->getId(),
+                        'name' => $contract->getName(),                
+                    ];
+                }
+            }    
         }    
         
         return new JsonModel([
