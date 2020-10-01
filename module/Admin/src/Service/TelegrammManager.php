@@ -15,7 +15,7 @@ use Laminas\Log\Logger;
 use GuzzleHttp\Client;
 
 /**
- * Description of AutoruManager
+ * Description of TelegrammManager
  *
  * @author Daddy
  */
@@ -24,9 +24,11 @@ class TelegrammManager
 
     const COMMANDS_PATH = './vendor/longman/src/Commands/';
 
-    const LOG_FOLDER = './data/log/'; //папка логов
-    const LOG_FILE = './data/log/telegramm.log'; //лог 
-    const POSTPONE_MSG_FILE = './data/log/telegram_postpone_msg.log'; //сообщения для отправки
+    const LOG_FOLDER = './data/log/telegram/'; //папка логов
+    const POSTPONE_MSG_FILE = './data/log/telegram/telegram_postpone_msg.log'; //сообщения для отправки
+    const LOG_SUFFIX = '_tlg.log';
+    
+    private $logFilename;
     
     /**
      * Doctrine entity manager.
@@ -41,6 +43,24 @@ class TelegrammManager
      */
     private $adminManager;   
     
+    protected function removeOldLog()
+    {    
+        $check_time = 60*60*24*7; //Неделя
+        
+        $folderName = $this::LOG_FOLDER;
+        if (is_dir($folderName)){
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    if ((time() - $check_time) > $fileInfo->getMTime()){
+                        unlink(realpath($fileInfo->getPathname()));
+                    }    
+                }
+            }
+        }
+        return;
+    } 
+    
     public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
@@ -49,6 +69,9 @@ class TelegrammManager
         if (!is_dir($this::LOG_FOLDER)){
             mkdir($this::LOG_FOLDER);
         }
+        
+        $this->logFilename = $this::LOG_FOLDER.date('Ymd').$this::LOG_SUFFIX;
+        $this->removeOldLog();
     }
     
     public function hook()
@@ -57,7 +80,7 @@ class TelegrammManager
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name'] && $settings['telegram_admin_chat_id']){
         
-            $writer = new Stream($this::LOG_FILE);
+            $writer = new Stream($this->logFilename);
             $logger = new Logger();
             $logger->addWriter($writer);
             Logger::registerErrorHandler($logger);
@@ -101,7 +124,7 @@ class TelegrammManager
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name'] && $settings['telegram_hook_url']){
         
-            $writer = new Stream($this::LOG_FILE);
+            $writer = new Stream($this->logFilename);
             $logger = new Logger();
             $logger->addWriter($writer);
             Logger::registerErrorHandler($logger);
@@ -125,7 +148,7 @@ class TelegrammManager
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name']){
             
-            $writer = new Stream($this::LOG_FILE);
+            $writer = new Stream($this->logFilename);
             $logger = new Logger();
             $logger->addWriter($writer);
             Logger::registerErrorHandler($logger);
@@ -157,11 +180,11 @@ class TelegrammManager
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_api_key'] && $settings['telegram_bot_name']){
 
-            $writer = new Stream($this::LOG_FILE);
+            $writer = new Stream($this->logFilename);
             $logger = new Logger();
             $logger->addWriter($writer);
             Logger::registerErrorHandler($logger);           
-            \Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FILE);
+            \Longman\TelegramBot\TelegramLog::initDebugLog($this->logFilename);
 
             try {
                 $telegram = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
