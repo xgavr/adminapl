@@ -115,6 +115,13 @@
                     });
                     $('#' + modalDialog.id).attr('data-focus-on', "input:first");
                     
+                    if (params.zIndex){
+                        $('#' + modalDialog.id).css('z-index', params.zIndex);                        
+                    }
+                    if (params.width){
+                        $('#' + modalDialog.id + ' .modal-dialog').css('width', params.width);                        
+                    }
+                    
                     modalDialog.changeBody(data);
                     
                     modalDialog.showModal();

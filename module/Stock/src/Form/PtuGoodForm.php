@@ -35,7 +35,7 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
     public function __construct($entityManager, $ptuGood = null)
     {
         // Определяем имя формы.
-        parent::__construct('ptu-form');
+        parent::__construct('ptu-good-form');
      
         $this->entityManager = $entityManager;
         $this->ptuGood = $ptuGood;

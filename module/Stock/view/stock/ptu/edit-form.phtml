@@ -49,11 +49,7 @@ if ($ptu){
 }
 
 ?>
-<style>
-.modal-dialog {
-          width: 1440px;
-        }
-</style>
+
 
 
             
@@ -166,7 +162,7 @@ if ($ptu){
                                      <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                                      <th data-field='quantity' data-align="right">Количество</th>
                                      <th data-field='amount' data-align="right">Сумма</th>
-                                     <th data-field=""></th>
+                                     <th data-field="id" data-formatter="pgActiveFormatter"></th>
                                  </tr>                
                             </thead>
                         </table>
@@ -266,7 +262,8 @@ if ($ptu){
      var url = $(e.currentTarget).attr('modal-url');
         showFormDialog({
             id: 'ptuGoodModal',
-            url: url
+            url: url,
+            zIndex: 9999
         });
     });
      
@@ -297,6 +294,27 @@ if ($ptu){
         
         return params;
     }
+    function pgActiveFormatter(value, row){
+        var url = '/ptu/good-edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs ptu-good-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+//        var url = '/ptu/delete-ptu/'+row.id;
+//        btn += '<button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-danger btn-xs this-delete"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' title="Удалить"'; 
+//        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+//        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+//        btn += '</button>';
+        return btn;
+    }    
     
     function pgPriceFormatter(value, row){
         return Math.round(value*100/row.quantity)/100;

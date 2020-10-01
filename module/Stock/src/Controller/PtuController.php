@@ -198,7 +198,7 @@ class PtuController extends AbstractActionController
         } else {
             if ($ptuGood){
                 $data = [
-                    'good' => $ptuGood->getGood->getId(),
+                    'good' => $ptuGood->getGood()->getId(),
                     'quantity' => $ptuGood->getQuantity(),
                     'amount' => $ptuGood->getAmount(),
                 ];

@@ -19,8 +19,8 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 $form->prepare();
 
 $docName = 'Новый';
-if ($ptu){
-    $docName = '№ '.$ptu->getDocNo().' от  '.date('d.m.Y', strtotime($ptu->getDocDate()));
+if ($ptuGood){
+    $docName = $ptuGood->getRowNo().' № '.$ptuGood->getPtu()->getDocNo().' от  '.date('d.m.Y', strtotime($ptuGood->getPtu()->getDocDate()));
 }
 
 ?>
@@ -79,8 +79,8 @@ if ($ptu){
     $('#ptu-good-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/ptu/edit-form/<?= ($ptu) ? $ptu->getId():"" ?>',
-            data: $('#ptu-form').serialize()
+            url: '/ptu/good-edit-form/<?= ($ptuGood) ? $ptuGood->getId():"" ?>',
+            data: $('#ptu-good-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){

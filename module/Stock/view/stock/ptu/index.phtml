@@ -115,7 +115,8 @@
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
                 id: 'ptuModal',
-                url: url
+                url: url,
+                width: '1440px'
             });
         });  
     });
@@ -158,7 +159,7 @@
         btn += ' class="btn btn-default btn-xs ptu-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
-        btn += '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
 
 //        var url = '/ptu/delete-ptu/'+row.id;
