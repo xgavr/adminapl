@@ -95,23 +95,34 @@
             checkLogin();
         </script>    
         <script type="text/javascript">
-            function showModalDialog(params)
+            function showFormDialog(params)
             {
                 //https://itchief.ru/bootstrap/modal-dynamic-creation
                 
-                var modalDialog = new ModalApp.ModalProcess({id: params.id});
-                modalDialog.init();
-                
-                modalDialog.changeTitle(params.title);
-                
-                $.getJSON( params.url, function( data ) {
+                $.ajax({
+                    url: params.url,
+                }).done(function(data) {
+                    var modalDialog = new ModalApp.ModalProcess({
+                        id: params.id,
+                    });
+                    modalDialog.init();
+                    
+                    $('#' + modalDialog.id + ' .modal-header').remove();
+                    $('#' + modalDialog.id + ' .modal-footer').remove();
+                    $('#' + modalDialog.id).modal({
+                        backdrop: 'static',
+                        keyboard: false,
+                        focusOn: "input:first"
+                    });
+                    
                     modalDialog.changeBody(data);
-                });
-                modalDialog.showModal();
-
-                $('#' + modalDialog.id).on('hidden.bs.modal', function (e) {
-                    modalDialog.changeBody('');
-                });                
+                    
+                    modalDialog.showModal();
+                    
+                    $('#' + modalDialog.id).on('hidden.bs.modal', function (e) {
+                        modalDialog.changeBody('');
+                    });                                    
+                });                                                
             }
             
             $('#modal-dialog').on('show.bs.modal', function (e) {        

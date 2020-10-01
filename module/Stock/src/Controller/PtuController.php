@@ -174,15 +174,15 @@ class PtuController extends AbstractActionController
     {
         $ptuGoodId = (int)$this->params()->fromRoute('id', -1);
         
-        $ptuGood = null;
+        $ptuGood = $good = null;
         
         if ($ptuGoodId > 0){
-            $ptu = $this->entityManager->getRepository(PtuGood::class)
+            $ptuGood = $this->entityManager->getRepository(PtuGood::class)
                     ->findOneById($ptuGoodId);
         }    
         
         
-        $form = new PtuGoodForm($this->entityManager);
+        $form = new PtuGoodForm($this->entityManager, $ptuGood);
 
         if ($this->getRequest()->isPost()) {
             

@@ -18,10 +18,10 @@
     <div class="col-md-9">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default" data-toggle="modal" data-target="#modal-dialog" value="/ptu/edit-form">
+<!--                <button class="btn btn-default" data-toggle="modal" data-target="#modal-dialog" value="/ptu/edit-form">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
-                <button class="btn btn-default ptu-modal-show" data-title="Новый документ">
+                </button>-->
+                <button class="btn btn-default ptu-modal-show" type="button" modal-url="/ptu/edit-form">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
                 <div class="form-group">
@@ -111,11 +111,11 @@
         ok.click(function () {
             table.bootstrapTable('refresh');
         });
-        $(document).on('click', '.ptu-modal-show', function () {
-            showModalDialog({
+        $(document).on('click', '.ptu-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
                 id: 'ptuModal',
-                title: 'Новый',
-                url: '/ptu/edit-form'
+                url: url
             });
         });  
     });
@@ -155,22 +155,21 @@
         var url = '/ptu/edit-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs"';
+        btn += ' class="btn btn-default btn-xs ptu-modal-show"';
         btn += ' aria-label="Left Align"'; 
-        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
-        btn += ' value="'+url+'">';
+        btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>';
         btn += '</button>';
 
-        var url = '/ptu/delete-ptu/'+row.id;
-        btn += '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' title="Удалить"'; 
-        btn += ' onclick="tableRowDelete(\''+url+'\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btn += '</button>';
+//        var url = '/ptu/delete-ptu/'+row.id;
+//        btn += '<button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-danger btn-xs this-delete"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' title="Удалить"'; 
+//        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+//        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+//        btn += '</button>';
         return btn;
     }    
     

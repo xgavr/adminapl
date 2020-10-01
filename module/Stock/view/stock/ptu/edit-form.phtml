@@ -139,7 +139,7 @@ if ($ptu){
                     <div class="col-xs-12">
                         <div id="ptugoodtoolbar">
                             <div class="form-inline" role="form">
-                                <button class="btn btn-default" data-toggle="modal" data-target="#modal-dialog" value="/ptu/good-edit-form">
+                                <button type="button" class="btn btn-default ptu-good-modal-show" modal-url="/ptu/good-edit-form">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 </button>
                             </div>
@@ -262,6 +262,14 @@ if ($ptu){
         $('#ptuQuantity').html(Math.round(quantity*100)/100);
     }
     
+    $(document).on('click', '.ptu-good-modal-show', function (e) {
+     var url = $(e.currentTarget).attr('modal-url');
+        showFormDialog({
+            id: 'ptuGoodModal',
+            url: url
+        });
+    });
+     
     $( document ).ready(function() {
         $('#ptugoodtable').bootstrapTable({
             onLoadSuccess: function(res){

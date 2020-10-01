@@ -15,6 +15,7 @@ use Application\Entity\OemRaw;
 use Application\Filter\ArticleCode;
 use Application\Entity\ArticleTitle;
 use Application\Entity\TokenGroup;
+use Stock\Entity\PtuGood;
 
 
 
@@ -1732,5 +1733,32 @@ class GoodsRepository extends EntityRepository
             return $row['goodCount'];
         }
         return 0;        
+    }
+    
+    /**
+     * Выборка для формы
+     * 
+     * @param array params
+     */
+    public function formFind($params)
+    {
+        $ptuGood = null;
+        if (!empty($params['ptuGood'])){
+            $ptuGood = $params['ptuGood'];
+        }
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.id = ?1')    
+            ->setParameter('1', -1)    
+                ;
+        if ($ptuGood){
+            $queryBuilder->setParameter(1, $ptuGood->getGood()->getId());
+        }
+
+        return $queryBuilder->getQuery()->getResult();       
     }
 }

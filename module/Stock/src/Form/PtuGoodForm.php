@@ -26,16 +26,19 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
     protected $objectManager;
 
     protected $entityManager;
+    
+    protected $ptuGood; 
         
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager)
+    public function __construct($entityManager, $ptuGood = null)
     {
         // Определяем имя формы.
         parent::__construct('ptu-form');
      
         $this->entityManager = $entityManager;
+        $this->ptuGood = $ptuGood;
                 
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -62,6 +65,13 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
                 'property'       => 'name',
                 'display_empty_item' => true,
                 'empty_item_label'   => '--выберете товар--',                 
+                'is_method' => true,
+                'find_method'    => [
+                   'name'   => 'formFind',
+                   'params' => [
+                       'params' => ['ptuGood' => $this->ptuGood],
+                   ],
+                ],                
             ],
         ]);
 
