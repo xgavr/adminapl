@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Images;
 use Application\Entity\Goods;
 use Laminas\Filter\UriNormalize;
+use Application\Validator\UrlExists;
 
 /**
  * Description of ImageRepository
@@ -284,11 +285,18 @@ class ImageRepository extends EntityRepository
     public function saveImageGood($good, $uri, $docFileName, $status, $similar)
     {
         $uriNormalizeFilter = new UriNormalize(['enforcedScheme' => 'http']);
+        $urlExists = new UrlExists();
         $url = $uriNormalizeFilter->filter($uri);
         
+        if (!$urlExists->isValid($url)){
+            return;
+        }
         $headers = get_headers($url, 1);
         if (preg_match("|301|", $headers[0])){
             $url = $uriNormalizeFilter->filter($headers['Location']);
+            if (!$urlExists->isValid($url)){
+                return;
+            }
             $headers = get_headers($url);
 //            var_dump($headers);
         }
