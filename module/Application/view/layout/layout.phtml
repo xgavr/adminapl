@@ -111,9 +111,9 @@
                     $('#' + modalDialog.id + ' .modal-footer').remove();
                     $('#' + modalDialog.id).modal({
                         backdrop: 'static',
-                        keyboard: false,
-                        focusOn: "input:first"
+                        keyboard: true
                     });
+                    $('#' + modalDialog.id).attr('data-focus-on', "input:first");
                     
                     modalDialog.changeBody(data);
                     
