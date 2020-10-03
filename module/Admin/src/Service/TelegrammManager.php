@@ -131,7 +131,7 @@ class TelegrammManager
 
             try {
                 $telegram = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
-                $result = $telegram->setWebhook($settings['telegram_hook_url'], ['certificate' => '/var/www/apl/data/www/adminapl/adminapl.key']);
+                $result = $telegram->setWebhook($settings['telegram_hook_url'], ['certificate' => './adminapl.key']);
                 if ($result->isOk()) {
                     echo $result->getDescription();
                 }                    
