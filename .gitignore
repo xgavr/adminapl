@@ -21,3 +21,4 @@ phpunit.xml
 /data/dict/
 /data/cross/
 /data/session_09/
+/public/js/

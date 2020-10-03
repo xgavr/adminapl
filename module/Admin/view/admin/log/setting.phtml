@@ -13,14 +13,6 @@ $this->pageBreadcrumbs()->setItems([
 
 ?>
 
-<style>
-    .modal-body {
-        height: 400px;
-        overflow-y: scroll;
-    }    
-</style>
-
-
 <div class="row">
     <div class="col-md-9">
         <div id="toolbar">
@@ -112,6 +104,14 @@ $this->pageBreadcrumbs()->setItems([
         $('#statusSelect').change(function (){
             $('#table').bootstrapTable('refresh');
         })
+        $(document).on('click', '.error-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'errorModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
     });    
     
     function tabQueryParams(tab, params) {
@@ -181,8 +181,8 @@ $this->pageBreadcrumbs()->setItems([
     function errTextFormatter(value, row){
         if (row.errorText && row.status == <?= Setting::STATUS_ERROR?>){
             return [
-                '<button class="btn btn-default btn-xs show-button"',
-                ' title="Описание ошибки" value="'+row.id+'">',
+                '<button class="btn btn-default btn-xs error-modal-show"',
+                ' title="Описание ошибки" modal-url="/log/setting-error-text/'+row.id+'">',
                 ' <span class="glyphicon glyphicon-menu-hamburger" ></span>',
                 '</button>',
             ].join(''); 
