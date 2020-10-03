@@ -87,7 +87,7 @@ class TelegrammManager
 
             try {
                 $telegram = new Telegram($settings['telegram_api_key'], $settings['telegram_bot_name']);
-                $telegram->addCommandsPaths($this::COMMANDS_PATH);
+                $telegram->addCommandsPaths([$this::COMMANDS_PATH]);
                 $telegram->enableAdmins([$settings['telegram_admin_chat_id']]);
 
                 $mysql_credentials = [
