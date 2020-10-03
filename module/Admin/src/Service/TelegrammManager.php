@@ -96,7 +96,7 @@ class TelegrammManager
                     'password' => 'Ghjnt3t',
                     'database' => 'telegramm',
                  ];
-                $telegram->enableMySql($mysql_credentials, $settings['telegram_bot_name'] . '_');
+                $telegram->enableMySql($mysql_credentials);
 
     //            Logging (Error, Debug and Raw Updates)
                 \Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$settings['telegram_bot_name']."_error.log");
