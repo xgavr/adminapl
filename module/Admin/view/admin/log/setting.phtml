@@ -70,21 +70,6 @@ $this->pageBreadcrumbs()->setItems([
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
             $('.editable').editable();
-            $('.show-button').on('click', function(e) {
-                var rowId = e.currentTarget.value;
-                if (rowId){
-                    $.ajax({
-                        type: 'POST',
-                        url: '/log/setting-error-text/'+rowId
-                    })
-                    .done(function (data) {
-                        bootbox.alert(data.text);
-                    })
-                    .fail(function () {
-                        bootbox.alert("Произошла ошибка при выполнении операции.");
-                    }); 
-                }        
-            })        
             $('.status').editable({
                 source: [
                     <?php foreach ($statuses as $key => $value):?>

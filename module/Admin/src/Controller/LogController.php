@@ -156,9 +156,13 @@ class LogController extends AbstractActionController
         }    
 
         $text = $errorText;
-        return new JsonModel(
-           ['text' => $text]
-        );           
+//        return new JsonModel(
+//           ['text' => $text]
+//        );           
+        $this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
+            'text' => $text,
+        ]);
     }
     
 }
