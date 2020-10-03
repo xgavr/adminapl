@@ -108,7 +108,7 @@ class TelegrammManager
                 $telegram->handle();
 
             } catch (\Longman\TelegramBot\Exception\TelegramException $e){
-                \Longman\TelegramBot\TelegramLog::error($e);
+                $logger->err($e->getMessage());
             } catch (\Longman\TelegramBot\Exception\TelegramLogException $e){
                 $logger->err($e->getMessage());            
             }    
