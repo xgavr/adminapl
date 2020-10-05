@@ -92,8 +92,8 @@ class TelegrammManager
 
                 $mysql_credentials = [
                     'host'     => 'localhost',
-                    'user'     => 'telegramm',
-                    'password' => 'Ghjnt3t',
+                    'user'     => $settings['db_user'],
+                    'password' => $settings['db_pass'],
                     'database' => 'telegramm',
                  ];
                 $telegram->enableMySql($mysql_credentials);

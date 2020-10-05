@@ -60,6 +60,14 @@ $form->get('auto_check_proxy')->setAttributes([
     'placeholder'=>'Автопроверка прокси',
     ]);
 
+$form->get('db_user')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('db_pass')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
@@ -87,7 +95,7 @@ $form->prepare();
 
 <?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('telegram_bot_name')); ?>
@@ -119,7 +127,7 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('telegram_group_chat_id')); ?>                  
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="form-group">
             <?= $this->formLabel($form->get('send_pospone_msg')); ?>
             <?= $this->formElement($form->get('send_pospone_msg')); ?>
@@ -147,6 +155,19 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('auto_check_proxy')); ?>                  
         </div>
 
+    </div>   
+    <div class="col-md-3">
+        <div class="form-group">
+            <?= $this->formLabel($form->get('db_user')); ?>
+            <?= $this->formElement($form->get('db_user')); ?>
+            <?= $this->formElementErrors($form->get('db_user')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('db_pass')); ?>
+            <?= $this->formElement($form->get('db_pass')); ?>
+            <?= $this->formElementErrors($form->get('db_pass')); ?>                  
+        </div>
     </div>   
     <div class="col-sm-3" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">

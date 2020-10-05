@@ -367,6 +367,8 @@ class AdminManager {
         $config->telegram_settings->send_pospone_msg = $data['send_pospone_msg'];
         $config->telegram_settings->sending_pospone_msg = $data['sending_pospone_msg'];
         $config->telegram_settings->auto_check_proxy = $data['auto_check_proxy'];
+        $config->telegram_settings->db_user = $data['db_user'];
+        $config->telegram_settings->db_pass = $data['db_pass'];
         
         $writer = new PhpArray();
         

@@ -108,6 +108,28 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([           
+            'type'  => 'text',
+            'name' => 'db_user',
+            'attributes' => [
+                'id' => 'db_user'
+            ],
+            'options' => [
+                'label' => 'Логин к базе данных',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'db_pass',
+            'attributes' => [
+                'id' => 'db_pass'
+            ],
+            'options' => [
+                'label' => 'Пароль к базе данных',
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'select',
             'name' => 'send_pospone_msg',
             'attributes' => [
@@ -267,6 +289,44 @@ class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'telegram_proxy',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'db_user',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'db_pass',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
