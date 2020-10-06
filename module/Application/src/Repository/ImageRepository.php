@@ -183,7 +183,7 @@ class ImageRepository extends EntityRepository
         }
         
         $fileInfo = pathinfo($filename);
-        $code = $fileInfo['filename'];
+        $code = preg_replace("/\([^)]+\)/","", $fileInfo['filename']); // удалить круглые скобки
         
         $filter = new \Application\Filter\ArticleCode();
         

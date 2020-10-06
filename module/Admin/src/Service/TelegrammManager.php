@@ -101,7 +101,7 @@ class TelegrammManager
     //            Logging (Error, Debug and Raw Updates)
                 \Longman\TelegramBot\TelegramLog::initErrorLog($this::LOG_FOLDER . "/".$settings['telegram_bot_name']."_error.log");
                 \Longman\TelegramBot\TelegramLog::initDebugLog($this::LOG_FOLDER . "/".$settings['telegram_bot_name']."_debug.log");
-                \Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$settings['telegram_bot_name']."_update.log");
+//                \Longman\TelegramBot\TelegramLog::initUpdateLog($this::LOG_FOLDER . "/".$settings['telegram_bot_name']."_update.log");
 
                 $telegram->enableLimiter();
 
