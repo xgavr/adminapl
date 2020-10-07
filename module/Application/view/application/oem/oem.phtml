@@ -6,20 +6,11 @@ $this->mainMenu()->setActiveItemId('rb');
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Оригинальные номера'=>$this->url('oem', ['action' => 'oem'])
-            ]);
-
-$this->headLink()
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-            ;    
+            ]); 
 ?>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
@@ -42,19 +33,20 @@ $this->headScript()
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-type="numeric">ID</th>
-                     <th data-field="oe">Номер</th>
-                     <th data-field="oeNumber">Полный номер</th>             
-                     <th data-field="brandName">Бренд</th>
-                     <th data-field="good" data-formatter="linkFormatter">Товар</th>            
-                    <th data-field="source" data-formatter="sourceFormatter">Источник</th>
-                    <th data-field="status" data-formatter="statusFormatter">Статус</th>
-                    <th data-field="status" data-formatter="oemActiveFormatter"></th>
+                     <th data-field="oem.id" data-type="numeric">ID</th>
+                     <th data-field="oem.oe">Номер</th>
+                     <th data-field="oem.oeNumber">Полный номер</th>             
+                     <th data-field="oem.brandName">Бренд</th>
+                     <th data-field="goodId" data-formatter="linkFormatter">Товар</th>            
+                     <th data-field="oem.intersectGoodId" data-formatter="intersectFormatter">Товар кросс</th>            
+                    <th data-field="oem.source" data-formatter="sourceFormatter">Источник</th>
+                    <th data-field="oem.status" data-formatter="statusFormatter">Статус</th>
+                    <th data-field="oem.status" data-formatter="oemActiveFormatter"></th>
                  </tr>                
             </thead>
         </table>
     </div>
-    <div class="col-md-3" id="side-nav" >
+<!--    <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
                 <div class="panel panel-info">
@@ -70,16 +62,16 @@ $this->headScript()
                                     title="Обновление OEM">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
-<!--                            <button value="/oem/delete-empty/" class="btn btn-warning btn-xs refresh-button"
+                            <button value="/oem/delete-empty/" class="btn btn-warning btn-xs refresh-button"
                                     title="Удаление пустых">
                                 <span class="glyphicon glyphicon-remove" ></span>
-                            </button>                             -->
+                            </button>                             
                         </div>
                     </div>
                 </div>    
             </div>
         </div>
-    </div>
+    </div>-->
 </div>    
 
 <script type="text/javascript">
@@ -87,12 +79,12 @@ $this->headScript()
         $('#table').bootstrapTable('refresh');
     }
 
-    var $table = $('#table'),
-        $ok = $('#ok');
+    var table = $('#table'),
+        ok = $('#ok');
 
     $(function () {
-        $ok.click(function () {
-            $table.bootstrapTable('refresh');
+        ok.click(function () {
+            table.bootstrapTable('refresh');
         });
     });
     
@@ -115,17 +107,46 @@ $this->headScript()
     function oemFormatter(value, row){
         return [
             '<div class="pull-left">',
-            '<a href="/oem/oem-view/' + row.id + '" target="_blank">' + value + '</a>',
+            '<a href="/oem/oem-view/' + row.oem.id + '" target="_blank">' + value + '</a>',
             '</div>'
         ].join(''); 
     }    
     
     function linkFormatter(value, row){
+        $.post(
+            '/oem/display-good',
+            {goodId: value},
+            function(data){
+                if (data.code){
+                    $('#oem_good_'+row.oem.id).html(data.code);
+                }            
+            }
+        );
         return [
             '<div class="pull-left">',
-            '<a href="/goods/view/' + row.good.id + '" target="_blank">' + row.good.code + '</a>',
+            '<a id="oem_good_'+row.oem.id+'" href="/goods/view/' + value + '" target="_blank"></a>',
             '</div>'
         ].join(''); 
+    }    
+    
+    function intersectFormatter(value, row){
+        if (value){
+            $.post(
+                '/oem/display-good',
+                {goodId: value},
+                function(data){
+                    if (data.code){
+                        $('#intersect_good_'+row.oem.id).html(data.code);
+                    }            
+                }
+            );
+            return [
+                '<div class="pull-left">',
+                '<a id="intersect_good_'+row.oem.id+'" href="/goods/view/' + value + '" target="_blank"></a>',
+                '</div>'
+            ].join(''); 
+        }
+        return '';
     }    
     
     function sourceFormatter(value){
@@ -156,7 +177,7 @@ $this->headScript()
         } else {
             status = 1;
         }            
-        var url = '/oem/oem-status-form/'+row.id+'?status='+status;
+        var url = '/oem/oem-status-form/'+row.oem.id+'?status='+status;
         var btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs this-delete"';
@@ -166,9 +187,9 @@ $this->headScript()
         btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
         btn += '</button>';
         
-        var editUrl = '/oem/oem-form/'+row.good.id+'?oem='+row.id;
+        var editUrl = '/oem/oem-form/'+row.goodId+'?oem='+row.oem.id;
         var editBtn = '<button';
-        if (row.source != 3){
+        if (row.oem.source != 3){
             editBtn += ' disabled="disabled"';
         }
         editBtn += ' type="button" data-toggle="modal" data-target="#modal-dialog"';

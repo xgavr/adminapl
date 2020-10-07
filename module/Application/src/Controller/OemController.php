@@ -221,7 +221,7 @@ class OemController extends AbstractActionController
 //        $source = $this->params()->fromQuery('source', Oem::SOURCE_TD);
         
         $query = $this->entityManager->getRepository(Oem::class)
-                        ->findAllOem(['q' => $search]);
+                        ->findAllOem(['q' => $search, 'mycode' => false]);
 
         $total = count($query->getResult());
         
@@ -233,6 +233,23 @@ class OemController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
+        ]);          
+    }    
+    
+    public function displayGoodAction()
+    {
+        $displayBilemma = $id = null;
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+        
+            $goodId = $data['goodId'];
+            
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneById($goodId);            
+        }
+
+        return new JsonModel([
+            'code' => $good->getCode(),
         ]);          
     }    
     

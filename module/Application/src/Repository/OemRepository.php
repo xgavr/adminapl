@@ -380,7 +380,7 @@ class OemRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('o')
+        $queryBuilder->select('o as oem, identity(o.good) as goodId')
             ->from(Oem::class, 'o')
             ->orderBy('o.id', 'DESC')
             ->setMaxResults(100)                
@@ -411,6 +411,13 @@ class OemRepository  extends EntityRepository{
                     ->orderBy('o.oe', 'DESC')
                     ->setMaxResults(1)    
                  ;
+            }
+            if (isset($params['mycode'])){
+                if (!$params['mycode']){
+                    $queryBuilder->andWhere('o.source != ?4')
+                        ->setParameter('4', Oem::SOURCE_MY_CODE)
+                            ;
+                }    
             }
         }
 //var_dump($queryBuilder->getQuery()->getSQL()); exit;
