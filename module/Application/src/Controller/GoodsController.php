@@ -19,6 +19,7 @@ use Application\Entity\TitleToken;
 use Application\Form\GoodsForm;
 use Application\Form\GoodSettingsForm;
 use Application\Form\UploadForm;
+use Application\Entity\Oem;
 
 class GoodsController extends AbstractActionController
 {
@@ -528,6 +529,7 @@ class GoodsController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
+        $source = $this->params()->fromQuery('source', Oem::SOURCE_TD);
         
         // Validate input parameter
         if ($goodsId<0) {
@@ -544,7 +546,7 @@ class GoodsController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->findOems($goods, ['q' => $search]);
+                        ->findOems($goods, ['q' => $search, 'source' => $source]);
 
         $total = count($query->getResult(2));
         

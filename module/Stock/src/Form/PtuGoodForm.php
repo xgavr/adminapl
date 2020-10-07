@@ -76,10 +76,12 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([
-            'type'  => 'text',
+            'type'  => 'number',
             'name' => 'quantity',
             'attributes' => [                
-                'id' => 'quantity'
+                'id' => 'quantity',
+                'value' => 1,
+                'min' => 1
             ],
             'options' => [
                 'label' => 'Количество',
@@ -97,6 +99,17 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
             ],
        ]);
         
+        $this->add([
+            'type'  => 'text',
+            'name' => 'price',
+            'attributes' => [                
+                'id' => 'price'
+            ],
+            'options' => [
+                'label' => 'price',
+            ],
+       ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -159,6 +172,13 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
                             'max' => 64
                         ],
                     ],
+                    [    
+                        'name'    => 'GreaterThan',
+                        'options' => [
+                            'min' => 0,
+                            'inclusive' => false
+                        ],
+                    ],
                 ],
             ]);
         
@@ -176,6 +196,39 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
                         'options' => [
                             'min' => 1,
                             'max' => 64
+                        ],
+                    ],
+                    [    
+                        'name'    => 'GreaterThan',
+                        'options' => [
+                            'min' => 0,
+                            'inclusive' => false
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'price',
+                'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                    [    
+                        'name'    => 'GreaterThan',
+                        'options' => [
+                            'min' => 0,
+                            'inclusive' => false
                         ],
                     ],
                 ],

@@ -388,22 +388,27 @@ class OemRepository  extends EntityRepository{
                 ;   
         
         if (is_array($params)){
-            if ($params['q']){
+            if (isset($params['source'])){
+                $queryBuilder->andWhere('o.source = ?1')
+                    ->setParameter('1', $params['source'])
+                        ;
+            }
+            if (isset($params['q'])){
                 $filter = new \Application\Filter\ArticleCode();
-                $queryBuilder->where('o.oe like :search')
+                $queryBuilder->andWhere('o.oe like :search')
                     ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
                         ;
             }
             if (isset($params['next1'])){
-                $queryBuilder->where('o.oe > ?1')
-                    ->setParameter('1', $params['next1'])
+                $queryBuilder->where('o.oe > ?2')
+                    ->setParameter('2', $params['next1'])
                     ->orderBy('o.oe')
                     ->setMaxResults(1)    
                  ;
             }
             if (isset($params['prev1'])){
-                $queryBuilder->where('o.oe < ?2')
-                    ->setParameter('2', $params['prev1'])
+                $queryBuilder->where('o.oe < ?3')
+                    ->setParameter('3', $params['prev1'])
                     ->orderBy('o.oe', 'DESC')
                     ->setMaxResults(1)    
                  ;

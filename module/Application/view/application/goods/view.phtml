@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\Oem;
+
 $this->headTitle($goods->getCode().' '.$goods->getProducer()->getName().' '.$goods->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -194,6 +196,11 @@ $priceCols = $goodsManager->priceCols($goods);
                                     <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
                                 </div>
                                 <button id="oemOk" type="submit" class="btn btn-default">OK</button>
+                                <select style="width: 200px" class="form-control" id='oemSourceSelect'>
+                                    <?php foreach (Oem::getSourceList() as $key => $value):?>
+                                        <option value="<?= $key?>"><?= $value?></option>
+                                    <?php endforeach;?>
+                                </select>
                             </div>
                         </div>
                         <table id="oemTable" 
@@ -214,7 +221,7 @@ $priceCols = $goodsManager->priceCols($goods);
                                      <th data-field="oeNumber" data-type="numeric">Номер</th>
                                      <th data-field="brandName">Бренд</th>
                                      <th data-field="source" data-formatter="sourceFormatter">Источник</th>
-                                     <th data-field="status" data-formatter="statusFormatter">Статус</th>
+                                     <!--<th data-field="status" data-formatter="statusFormatter">Статус</th>-->
                                      <th data-field="status" data-formatter="oemActiveFormatter"></th>
                                 </tr>                
                             </thead>
@@ -726,6 +733,9 @@ $priceCols = $goodsManager->priceCols($goods);
         $('#priceStatusSelect').change(function (){
             $('#priceTable').bootstrapTable('refresh');
         })
+        $('#oemSourceSelect').change(function (){
+            $('#oemTable').bootstrapTable('refresh');
+        })
     });
     
     
@@ -747,6 +757,7 @@ $priceCols = $goodsManager->priceCols($goods);
     }
     
     function oemQueryParams(params) {
+        params.source = $('#oemSourceSelect').val();
         return tabQueryParams('#oem', params);
     }
     
