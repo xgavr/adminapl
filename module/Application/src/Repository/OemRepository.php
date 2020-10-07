@@ -395,7 +395,7 @@ class OemRepository  extends EntityRepository{
             if (!empty($params['q'])){                
                 $filter = new \Application\Filter\ArticleCode();
                 $queryBuilder->andWhere('o.oe like :search')
-                    ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
+                    ->setParameter('search', $filter->filter($params['q']))
                         ;
             }
             if (isset($params['next1'])){
