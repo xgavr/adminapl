@@ -200,11 +200,11 @@ class OemController extends AbstractActionController
     
     public function oemAction()
     {
-        $total = $this->entityManager->getRepository(Oem::class)
-                ->count([]);
+//        $total = $this->entityManager->getRepository(Oem::class)
+//                ->count([]);
                 
         return new ViewModel([
-            'total' => $total,
+//            'total' => $total,
             'oemStatuses' => Oem::getStatusList(),
             'oemSources' => Oem::getSourceList(),
         ]);  
