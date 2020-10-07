@@ -200,11 +200,11 @@ class OemController extends AbstractActionController
     
     public function oemAction()
     {
-//        $total = $this->entityManager->getRepository(Oem::class)
-//                ->count([]);
+        $total = $this->entityManager->getRepository(Oem::class)
+                ->count([]);
                 
         return new ViewModel([
-//            'total' => $total,
+            'total' => $total,
             'oemStatuses' => Oem::getStatusList(),
             'oemSources' => Oem::getSourceList(),
         ]);  
@@ -223,7 +223,7 @@ class OemController extends AbstractActionController
         $query = $this->entityManager->getRepository(Oem::class)
                         ->findAllOem(['q' => $search]);
 
-        $total = count($query->getResult(2));
+        $total = count($query->getResult());
         
         if ($offset) $query->setFirstResult( $offset );
         if ($limit) $query->setMaxResults( $limit );
