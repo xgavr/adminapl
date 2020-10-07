@@ -380,7 +380,7 @@ class OemRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('o, g')
+        $queryBuilder->select('o')
             ->from(Oem::class, 'o')
             ->orderBy('o.id', 'DESC')
             ->setMaxResults(100)                
