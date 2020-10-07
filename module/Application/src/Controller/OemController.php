@@ -221,7 +221,7 @@ class OemController extends AbstractActionController
 //        $source = $this->params()->fromQuery('source', Oem::SOURCE_TD);
         
         $query = $this->entityManager->getRepository(Oem::class)
-                        ->findAllOem(['q' => $search, 'source' => $source]);
+                        ->findAllOem(['q' => $search]);
 
         $total = count($query->getResult(2));
         
