@@ -388,9 +388,10 @@ class OemRepository  extends EntityRepository{
         
         if (is_array($params)){
             if (isset($params['source'])){
-                $queryBuilder->andWhere('o.source = ?1')
-                    ->setParameter('1', $params['source'])
-                        ;
+                if (is_numeric($params['source'])){
+                    $queryBuilder->andWhere('o.source = ?1')
+                            ->setParameter('1', $params['source']);
+                }    
             }
             if (!empty($params['q'])){                
                 $filter = new \Application\Filter\ArticleCode();

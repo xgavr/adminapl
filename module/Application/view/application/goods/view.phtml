@@ -197,6 +197,7 @@ $priceCols = $goodsManager->priceCols($goods);
                                 </div>
                                 <button id="oemOk" type="submit" class="btn btn-default">OK</button>
                                 <select style="width: 200px" class="form-control" id='oemSourceSelect'>
+                                    <option value="null" selected>все источники</option>
                                     <?php foreach (Oem::getSourceList() as $key => $value):?>
                                         <option value="<?= $key?>"><?= $value?></option>
                                     <?php endforeach;?>

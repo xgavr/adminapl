@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\Oem;
+
 $this->headTitle('Оригинальные номера');
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -17,6 +19,12 @@ $this->pageBreadcrumbs()->setItems([
                     <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск по номеру (не менее 3-х символов)">
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
+                <select style="width: 200px" class="form-control" id='oemSourceSelect'>
+                    <option value="null" selected>все источники</option>
+                    <?php foreach (Oem::getSourceList() as $key => $value):?>
+                        <option value="<?= $key?>"><?= $value?></option>
+                    <?php endforeach;?>
+                </select>
             </div>
         </div>
         <table id="table" 
@@ -86,6 +94,9 @@ $this->pageBreadcrumbs()->setItems([
         ok.click(function () {
             table.bootstrapTable('refresh');
         });
+        $('#oemSourceSelect').change(function (){
+            $('#table').bootstrapTable('refresh');
+        })
     });
     
     function queryParams(params) {
@@ -100,6 +111,8 @@ $this->pageBreadcrumbs()->setItems([
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
+
+        params.source = $('#oemSourceSelect').val();
         
         return params;
     }

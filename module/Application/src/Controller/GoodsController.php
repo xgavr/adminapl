@@ -529,7 +529,7 @@ class GoodsController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
-        $source = $this->params()->fromQuery('source', Oem::SOURCE_TD);
+        $source = $this->params()->fromQuery('source');
         
         // Validate input parameter
         if ($goodsId<0) {
