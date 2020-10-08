@@ -855,6 +855,7 @@ class ExternalManager
                         ->removeGoodSourceOem($good, Oem::SOURCE_TD);
                 $this->entityManager->getRepository(Oem::class)
                         ->removeIntersectOem($good);
+                exit;
             }
         } catch (\Exception $ex){
             $info = null;
