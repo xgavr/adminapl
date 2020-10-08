@@ -219,7 +219,7 @@ $priceCols = $goodsManager->priceCols($goods);
                             <thead>
                                 <tr>
                                      <th data-field="id" data-type="numeric">ID</th>
-                                     <th data-field="oeNumber" data-type="numeric">Номер</th>
+                                     <th data-field="oeNumber" data-formatter="oeNumberFormatter">Номер</th>
                                      <th data-field="brandName">Бренд</th>
                                      <th data-field="source" data-formatter="sourceFormatter">Источник</th>
                                      <!--<th data-field="status" data-formatter="statusFormatter">Статус</th>-->
@@ -796,6 +796,13 @@ $priceCols = $goodsManager->priceCols($goods);
         
         return result;
     }    
+    
+    function oeNumberFormatter(value, row){
+        if (row.source == <?= Oem::SOURCE_INTERSECT?>){
+            return '<a href="/goods/view/'+row.intersectGoodId+'" target="_blank">'+value+'</a>'
+        } 
+        return value;
+    }
     
     function oemActiveFormatter(value, row){
         if (value == 1){
