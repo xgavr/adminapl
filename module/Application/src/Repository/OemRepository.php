@@ -471,9 +471,11 @@ class OemRepository  extends EntityRepository{
                 ->where('g.genericGroup = ?1')
                 ->andWhere('g.id != ?2')
                 ->andWhere('o.oe = ?3')
+                ->andWhere('o.source = ?4')
                 ->setParameter('1', $good->getGenericGroup()->getId())
                 ->setParameter('2', $good->getId())
                 ->setParameter('3', $oe)
+                ->setParameter('4', Oem::SOURCE_TD)
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
@@ -482,6 +484,12 @@ class OemRepository  extends EntityRepository{
                 'oeNumber' => $good->getCode(), 
                 'brandName' => $good->getProducer()->getName(),
                 'intescetGoodId' => $good->getId(),
+              ], Oem::SOURCE_INTERSECT);
+            
+            $this->addOemToGood($good, [
+                'oeNumber' => $rowGood->getCode(), 
+                'brandName' => $rowGood->getProducer()->getName(),
+                'intescetGoodId' => $rowGood->getId(),
               ], Oem::SOURCE_INTERSECT);
         }
         
