@@ -616,12 +616,20 @@ class OemRepository  extends EntityRepository{
         
         $iterable = $oemsQuery->iterate();
 
+        $k = 0;
         foreach($iterable as $item){
             foreach ($item as $oe){
                 $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);
                 $entityManager->detach($oe);
+                $k++;
             }
         }        
+        if ($k){
+            if ($good->getStatusOemEx() != Goods::ATTR_EX_NEW){
+                $entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), ['status_oem_ex' => Goods::OEM_EX_NEW]);
+            }   
+        }    
         return;
     }
     
