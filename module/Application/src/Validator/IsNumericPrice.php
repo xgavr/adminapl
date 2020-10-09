@@ -39,7 +39,7 @@ class IsNumericPrice extends AbstractValidator
      */
     public function isValid($value)
     {
-        if (mb_strlen(trim($value)) > 25){
+        if (mb_strlen(trim($value)) > 9){
             return false;
         }
         
