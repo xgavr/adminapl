@@ -3,7 +3,7 @@
 $form = $this->form;
 
 $form->get('good')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control selectpicker', 
     ]);
 
 $form->get('quantity')->setAttributes([
@@ -18,14 +18,29 @@ $form->get('price')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('unit')->setAttributes([
+    'class'=>'form-control', 
+    'data-url' => '\ptu\autocompete-unit',
+    'autocomplete' => 'off',
+    ]);
+
+$form->get('country')->setAttributes([
+    'class'=>'form-control', 
+    'data-url' => '\ptu\autocompete-country',
+    'autocomplete' => 'off',
+    ]);
+
+$form->get('ntd')->setAttributes([
+    'class'=>'form-control', 
+    'data-url' => '\ptu\autocompete-ntd',
+    'autocomplete' => 'off',
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'ptu-good-submit']);
 
 $form->prepare();
 
 $docName = 'Новый';
-if ($ptuGood){
-    $docName = $ptuGood->getRowNo().' № '.$ptuGood->getPtu()->getDocNo().' от  '.date('d.m.Y', strtotime($ptuGood->getPtu()->getDocDate()));
-}
 
 ?>
             
@@ -51,10 +66,6 @@ if ($ptuGood){
                 <div class="row">
                     <div class="col-xs-3">                        
                         <div class="form-group">
-                        </div>
-                    </div>    
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
                             <?= $this->formLabel($form->get('quantity')); ?>
                             <?= $this->formElement($form->get('quantity')); ?>
                             <?= $this->formElementErrors($form->get('quantity')); ?>                  
@@ -65,6 +76,36 @@ if ($ptuGood){
                             <?= $this->formLabel($form->get('amount')); ?>
                             <?= $this->formElement($form->get('amount')); ?>
                             <?= $this->formElementErrors($form->get('amount')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('price')); ?>
+                            <?= $this->formElement($form->get('price')); ?>
+                            <?= $this->formElementErrors($form->get('price')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('unit')); ?>
+                            <?= $this->formElement($form->get('unit')); ?>
+                            <?= $this->formElementErrors($form->get('unit')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-xs-5">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('country')); ?>
+                            <?= $this->formElement($form->get('country')); ?>
+                            <?= $this->formElementErrors($form->get('country')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-7">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ntd')); ?>
+                            <?= $this->formElement($form->get('ntd')); ?>
+                            <?= $this->formElementErrors($form->get('ntd')); ?>                  
                         </div>
                     </div>
                 </div>    
@@ -79,23 +120,126 @@ if ($ptuGood){
             
             <?= $this->form()->closeTag(); ?>
             
-<script>
+<script  type="text/javascript">
     $('#ptu-good-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/ptu/good-edit-form/<?= ($ptuGood) ? $ptuGood->getId():"" ?>',
+            url: '/ptu/good-edit-form/',
             data: $('#ptu-good-form').serialize()
         })
-            .done(function (data) {
-                if (data == 'ok'){
-                    $('#ptu-good-modal').modal('hide');
+            .done(function (answer) {
+//                console.log(answer);
+                if (answer.result == 'ok'){
+                    var data = serializeForm('#ptu-good-form');
+                    var good = {
+                        id: answer.good.id,
+                        code: answer.good.code,
+                        name: answer.good.name,
+                        producer: {name: answer.good.producer},
+                    }
+                    var row = {
+                        good: good,
+                        amount: data.amount,
+                        quantity: data.quantity,
+                        price: Math.round(data.amount*100/data.quantity)/100,
+                        unit: data.unit,
+                        country: data.country,
+                        ntd: data.ntd
+                    };
+
+                    <?php if($rowNo): ?>
+                        $('#ptugoodtable').bootstrapTable('updateByUniqueId', {id: <?= $rowNo ?>, row: row});
+                    <?php else:?>
+                        var newRowNo = getNewTableUniqueId('ptugoodtable', 'rowNo');
+                        row.rowNo = newRowNo;
+                        var rows = [];
+                        rows.push(row);
+                        $('#ptugoodtable').bootstrapTable('prepend', rows);                        
+                    <?php endif; ?>        
+                    ptuUpdateTotal();    
+                    
+                    $('#ptuGoodModal').modal('hide');
                 } else {
-                    $('#ptu-good-modal-content').html(data);
+                    $('#ptuGoodModal .modal-content').html(answer);
                 }    
             })
             .fail(function () {
                 alert("Ошибка при открытии формы.");
 
             });
+    });    
+    
+    $( document ).ready(function() {
+        $('#good').selectpicker({
+                liveSearch: true,
+            })
+            .ajaxSelectPicker({
+                ajax: {
+                    url: '/goods/live-search',
+                    data: function () {
+                        var params = {
+                            search: '{{{q}}}',
+                            limit: 10
+                        };
+//                        if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
+//                            params.GroupID = gModel.selectedGroup().ContactGroupID;
+//                        }
+                        return params;
+                    }
+                },
+                locale: {
+                    emptyTitle: 'Поиск по артикулу...'
+                },
+                preprocessData: function(data){
+                    var goods = [];
+                    if(data.hasOwnProperty('rows')){
+                        var len = data.rows.length;
+                        for(var i = 0; i < len; i++){
+                            var curr = data.rows[i];
+                            goods.push(
+                                {
+                                    'value': curr.id,
+                                    'text': curr.code + ' ' + curr.producer.name + ' ' + curr.name,
+//                                    'data': {
+//                                        'icon': 'icon-person',
+//                                        'subtext': 'Internal'
+//                                    },
+                                    'disabled': false
+                                }
+                            );
+                        }
+                    }
+                    return goods;
+                },
+                preserveSelected: false
+            });  
+        
+        $("#price").on('input', function(){
+            var value = $(this).val();
+            $(this).val(value.replace(",","."));
+            $("#amount").val(Math.round($(this).val()*$("#quantity").val()*100)/100);
+        });
+        $("#amount").on('input', function(){
+            if ($("#quantity").val()){
+                var value = $(this).val();
+                $(this).val(value.replace(",","."));
+                $("#price").val(Math.round($(this).val()*100/$("#quantity").val())/100);
+            }    
+        });
+        $("#quantity").on('input', function(){
+            if ($("#price").val()){
+                $("#amount").val(Math.round($(this).val()*$("#price").val()*100)/100);
+            } else {
+                if ($("#amount").val()){
+                    $("#price").val(Math.round($("#amount").val()*100/$(this).val())/100);
+                }    
+            }    
+        });
+        
+        $('#unit').autoComplete({
+            minLength: 1
+        });
+        $('#country').autoComplete();
+        $('#ntd').autoComplete();
     });    
 </script>

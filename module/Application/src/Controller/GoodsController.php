@@ -297,6 +297,48 @@ class GoodsController extends AbstractActionController
         ]);          
     }    
     
+    public function liveSearchAction()
+    {
+        $total = 0;
+        $result = [];
+        if ($this->getRequest()->isPost()) {	   
+            $data = $this->params()->fromPost();
+
+            $query = $this->entityManager->getRepository(Goods::class)
+                            ->liveSearch($data);
+
+            $total = count($query->getResult(2));
+
+            $result = $query->getResult(2);
+        }    
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
+    public function autocompleteGoodAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(Goods::class)
+                            ->autocompleteGood(['search' => $q]);
+
+            $data = $query->getResult(2);
+            foreach ($data as $row){
+                $result[] = [
+                    'value' => $row['goods']['id'],
+                    'text' => $row['goods']['code'].' '.$row['producer']['name'].' '.$row['goods']['name'],
+                ];
+            }
+        }    
+        
+        return new JsonModel($result);
+    }    
+    
     
     public function addAction() 
     {     

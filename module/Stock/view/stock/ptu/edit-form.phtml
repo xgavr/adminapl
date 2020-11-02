@@ -1,12 +1,11 @@
 <?php
-
 $form = $this->form;
 
-$form->get('legal')->setAttributes([
+$form->get('legal_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('office')->setAttributes([
+$form->get('office_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -18,15 +17,15 @@ $form->get('supplier')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('contract')->setAttributes([
+$form->get('contract_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('docDate')->setAttributes([
+$form->get('doc_date')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('docNo')->setAttributes([
+$form->get('doc_no')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -66,16 +65,16 @@ if ($ptu){
                 <div class="row">
                     <div class="col-xs-2">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('docNo')); ?>
-                            <?= $this->formElement($form->get('docNo')); ?>
-                            <?= $this->formElementErrors($form->get('docNo')); ?>                  
+                            <?= $this->formLabel($form->get('doc_no')); ?>
+                            <?= $this->formElement($form->get('doc_no')); ?>
+                            <?= $this->formElementErrors($form->get('doc_no')); ?>                  
                         </div>
                     </div>    
                     <div class="col-xs-2">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('office')); ?>
-                            <?= $this->formElement($form->get('office')); ?>
-                            <?= $this->formElementErrors($form->get('office')); ?>                  
+                            <?= $this->formLabel($form->get('office_id')); ?>
+                            <?= $this->formElement($form->get('office_id')); ?>
+                            <?= $this->formElementErrors($form->get('office_id')); ?>                  
                         </div>
                     </div>    
                     <div class="col-xs-2">                        
@@ -102,9 +101,9 @@ if ($ptu){
                 <div class="row">
                     <div class="col-xs-2">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('docDate')); ?>
-                            <?= $this->formElement($form->get('docDate')); ?>
-                            <?= $this->formElementErrors($form->get('docDate')); ?>                  
+                            <?= $this->formLabel($form->get('doc_date')); ?>
+                            <?= $this->formElement($form->get('doc_date')); ?>
+                            <?= $this->formElementErrors($form->get('doc_date')); ?>                  
                         </div>
                     </div>    
                     <div class="col-xs-2">                        
@@ -116,16 +115,16 @@ if ($ptu){
                     </div>    
                     <div class="col-xs-2">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('legal')); ?>
-                            <?= $this->formElement($form->get('legal')); ?>
-                            <?= $this->formElementErrors($form->get('legal')); ?>                  
+                            <?= $this->formLabel($form->get('legal_id')); ?>
+                            <?= $this->formElement($form->get('legal_id')); ?>
+                            <?= $this->formElementErrors($form->get('legal_id')); ?>                  
                         </div>
                     </div>    
                     <div class="col-xs-2">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('contract')); ?>
-                            <?= $this->formElement($form->get('contract')); ?>
-                            <?= $this->formElementErrors($form->get('contract')); ?>                  
+                            <?= $this->formLabel($form->get('contract_id')); ?>
+                            <?= $this->formElement($form->get('contract_id')); ?>
+                            <?= $this->formElementErrors($form->get('contract_id')); ?>                  
                         </div>
                     </div>    
                     <div class="col-xs-4 text-right">
@@ -152,6 +151,7 @@ if ($ptu){
                             data-show-toggle="true"
                             data-query-params="ptugoodQueryParams"
                             data-response-handler="ptugoodResponseHandler"
+                            data-unique-id = "rowNo"
                             >
                             <thead>
                                 <tr>
@@ -162,7 +162,7 @@ if ($ptu){
                                      <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                                      <th data-field='quantity' data-align="right">Количество</th>
                                      <th data-field='amount' data-align="right">Сумма</th>
-                                     <th data-field="id" data-formatter="pgActiveFormatter"></th>
+                                     <th data-field="rowNo" data-formatter="pgActiveFormatter"></th>
                                  </tr>                
                             </thead>
                         </table>
@@ -188,31 +188,51 @@ if ($ptu){
                 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="ptu-submit">Сохранить</button>
+                <button type="submit" class="btn btn-primary" id="ptu-submit">Сохранить</button>
             </div>
             
             <?= $this->form()->closeTag(); ?>
             
 <script>
-    $('#ptu-submit').on('click', function() {
+    function submitForm(){
+        var data = serializeForm('#ptu-form');
+        data.ptuGood = getFormatedPtuGood();
         $.ajax({
             type: 'POST',
             url: '/ptu/edit-form/<?= ($ptu) ? $ptu->getId():"" ?>',
-            data: $('#ptu-form').serialize()
+            data: $.param(data)
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#ptu-modal').modal('hide');
-                    window.location.reload();
+                    $('#ptuModal').modal('hide');
+                    $('#table').bootstrapTable('refresh');
                 } else {
-                    $('#ptu-modal-content').html(data);
+                    $('#ptuModal .modal-content').html(data);                    
                 }    
             })
             .fail(function () {
                 alert("Ошибка при открытии формы.");
 
-            });
-    });
+            });    
+    };
+    
+    function getFormatedPtuGood(){
+        var data = $('#ptugoodtable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                good_id: row.good.id,
+                quantity: row.quantity,
+                amount: row.amount,
+                countryName: row.country.name || '',
+                unitName: row.unit.name || '',
+                unitCode: row.unit.code || '',
+                ntd: row.ntd.ntd || ""
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
     
     function contractList(){
         $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val(), function( data ) {
@@ -258,22 +278,34 @@ if ($ptu){
         $('#ptuQuantity').html(Math.round(quantity*100)/100);
     }
     
-    $(document).on('click', '.ptu-good-modal-show', function (e) {
-     var url = $(e.currentTarget).attr('modal-url');
-        showFormDialog({
-            id: 'ptuGoodModal',
-            url: url,
-            zIndex: 9999
-        });
-    });
-     
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#ptugoodtable').bootstrapTable('removeByUniqueId', index);
+        ptuUpdateTotal();
+    }
+    
     $( document ).ready(function() {
+        $('#ptu-form').submit(function() {
+            submitForm();
+        });
         $('#ptugoodtable').bootstrapTable({
             onLoadSuccess: function(res){
                 ptuUpdateTotal();
             }            
-        });        
-    });
+        }); 
+        
+        var forms = $('#ptu-form');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('ptu-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);    
+        });
+    });    
     
     function ptuGoodRefreshTable(){
         $('#ptugoodtable').bootstrapTable('refresh');
@@ -294,25 +326,26 @@ if ($ptu){
         
         return params;
     }
+    
     function pgActiveFormatter(value, row){
-        var url = '/ptu/good-edit-form/'+row.id;
+        var url = '/ptu/good-edit-form/';
         btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs ptu-good-modal-show"';
         btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+value+'"';
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
 
-//        var url = '/ptu/delete-ptu/'+row.id;
-//        btn += '<button';
-//        btn += ' type="button"';
-//        btn += ' class="btn btn-danger btn-xs this-delete"';
-//        btn += ' aria-label="Left Align"'; 
-//        btn += ' title="Удалить"'; 
-//        btn += ' onclick="tableRowDelete(\''+url+'\')">';
-//        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-//        btn += '</button>';
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
         return btn;
     }    
     

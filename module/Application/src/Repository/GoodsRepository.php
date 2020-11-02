@@ -163,6 +163,7 @@ class GoodsRepository extends EntityRepository
         
         return $queryBuilder->getQuery()->getOneOrNullResult();        
     }
+    
     /**
      * Запрос по товарам по разным параметрам
      * 
@@ -279,6 +280,86 @@ class GoodsRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }
     
+    /**
+     * Запрос по поиска
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function liveSearch($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g', 'p')
+            ->from(Goods::class, 'g')
+            ->join('g.producer', 'p', 'WITH')
+            ->where('g.id = 0')    
+                ;
+//        var_dump($params); exit;
+        if (is_array($params)){
+            if (isset($params['search'])){
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['search']);
+                if ($q){
+                    $queryBuilder
+                        ->where('g.code like :code')                           
+                        ->setParameter('code', $q.'%')    
+                            ;
+                }    
+            }
+            if (isset($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+
+    /**
+     * Запрос по поиска
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function autocompleteGood($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g', 'p')
+            ->from(Goods::class, 'g')
+            ->join('g.producer', 'p', 'WITH')
+            ->where('g.id = 0')    
+                ;
+//        var_dump($params); exit;
+        if (is_array($params)){
+            if (isset($params['search'])){
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['search']);
+                if ($q){
+                    $queryBuilder
+                        ->where('g.code like :code')                           
+                        ->setParameter('code', $q.'%')    
+                            ;
+                }    
+            }
+            if (isset($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+
     /**
      * Запрос на выборку товаров для экспорта строк прайса
      * 
@@ -1742,9 +1823,9 @@ class GoodsRepository extends EntityRepository
      */
     public function formFind($params)
     {
-        $ptuGood = null;
-        if (!empty($params['ptuGood'])){
-            $ptuGood = $params['ptuGood'];
+        $good = null;
+        if (!empty($params['good'])){
+            $good = $params['good'];
         }
 
         $entityManager = $this->getEntityManager();
@@ -1755,8 +1836,8 @@ class GoodsRepository extends EntityRepository
             ->where('g.id = ?1')    
             ->setParameter('1', -1)    
                 ;
-        if ($ptuGood){
-            $queryBuilder->setParameter(1, $ptuGood->getGood()->getId());
+        if ($good){
+            $queryBuilder->setParameter(1, $good->getId());
         }
 
         return $queryBuilder->getQuery()->getResult();       

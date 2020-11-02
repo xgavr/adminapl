@@ -119,17 +119,30 @@
                 width: '1440px'
             });
         });  
+        $(document).on('click', '.ptu-good-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            var uniqueId = $(e.currentTarget).attr('unique-id');
+            if (uniqueId){
+                var row = $('#ptugoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                url = url+'?'+$.param(row);
+            }    
+            showFormDialog({
+                id: 'ptuGoodModal',
+                url: url,
+                zIndex: 9999
+            });
+        });     
     });
     
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('.page-size').html();
+        limit = $('#table .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('li.page-number.active a').html();
+        offset = $('#table li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    

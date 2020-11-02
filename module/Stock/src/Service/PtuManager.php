@@ -331,12 +331,12 @@ class PtuManager
 //        var_dump($data); exit;
         $ptuGood = [
             'ptu_id' => $ptuId,
-            'status' => $data['status'],
-            'status_doc' => $data['statusDoc'],
+            'status' => (isset($data['status'])) ? $data['status']:PtuGood::STATUS_ACTIVE,
+            'status_doc' => (isset($data['statusDoc'])) ? $data['statusDoc']:PtuGood::STATUS_DOC_RECD,
             'quantity' => $data['quantity'],
             'amount' => $data['amount'],
             'good_id' => $data['good_id'],
-            'comment' => $data['comment'],
+            'comment' => (isset($data['comment'])) ? $data['comment']:'',
 //            'info' => $data['info'],
             'country_id' => $this->findCountry($data['countryName'], $data['countryCode']),
             'unit_id' => $this->findUnit($data['unitName'], $data['unitCode']),

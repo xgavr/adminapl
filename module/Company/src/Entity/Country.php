@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Country
- * @ORM\Entity(repositoryClass="\Application\Repository\RbRepository")
+ * @ORM\Entity(repositoryClass="\Company\Repository\CountryRepository")
  * @ORM\Table(name="country")
  *
  * @author Daddy

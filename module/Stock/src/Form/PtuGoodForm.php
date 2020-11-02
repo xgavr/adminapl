@@ -12,7 +12,7 @@ use Laminas\InputFilter\InputFilter;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Stock\Entity\PtuGood;
+use Application\Entity\Goods;
 
 /**
  * Description of PtuGood
@@ -27,18 +27,18 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
 
     protected $entityManager;
     
-    protected $ptuGood; 
+    protected $good; 
         
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager, $ptuGood = null)
+    public function __construct($entityManager, $good = null)
     {
         // Определяем имя формы.
         parent::__construct('ptu-good-form');
      
         $this->entityManager = $entityManager;
-        $this->ptuGood = $ptuGood;
+        $this->good = $good;
                 
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -55,23 +55,25 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
             'name' => 'good',
             'attributes' => [                
                 'id' => 'good',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
             ],
             'options' => [
+                'disable_inarray_validator' => true,
                 'object_manager' => $this->entityManager,
                 'target_class'   => 'Application\Entity\Goods',
                 'label' => 'Товар',
                 'property'       => 'name',
-                'display_empty_item' => true,
+                'display_empty_item' => false,
                 'empty_item_label'   => '--выберете товар--',                 
                 'is_method' => true,
                 'find_method'    => [
                    'name'   => 'formFind',
                    'params' => [
-                       'params' => ['ptuGood' => $this->ptuGood],
+                       'params' => ['good' => $this->good],
                    ],
                 ],                
+                'label_generator' => function ($targetEntity) {
+                    return $targetEntity->getCode() . ' ' . $targetEntity->getProducer()->getName() . ' ' . $targetEntity->getName();
+                },
             ],
         ]);
 
@@ -106,7 +108,40 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'price'
             ],
             'options' => [
-                'label' => 'price',
+                'label' => 'Цена',
+            ],
+       ]);
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'unit',
+            'attributes' => [                
+                'id' => 'unit'
+            ],
+            'options' => [
+                'label' => 'ЕИ',
+            ],
+       ]);
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'country',
+            'attributes' => [                
+                'id' => 'country'
+            ],
+            'options' => [
+                'label' => 'Страна',
+            ],
+       ]);
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'ntd',
+            'attributes' => [                
+                'id' => 'ntd'
+            ],
+            'options' => [
+                'label' => 'НТД',
             ],
        ]);
 
@@ -141,16 +176,16 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'good',
-                'required' => false,
+                'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    [
-                        'name'    => 'IsInt',
+                    [    
+                        'name'    => 'GreaterThan',
                         'options' => [
                             'min' => 0,
-                            'locale' => 'ru-Ru'
+                            'inclusive' => false
                         ],
                     ],
                 ],
@@ -229,6 +264,63 @@ class PtuGoodForm extends Form implements ObjectManagerAwareInterface
                         'options' => [
                             'min' => 0,
                             'inclusive' => false
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'unit',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'country',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'ntd',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
                         ],
                     ],
                 ],

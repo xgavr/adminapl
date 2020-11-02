@@ -12,9 +12,13 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
+use Application\Entity\Goods;
 use Stock\Form\PtuForm;
 use Stock\Form\PtuGoodForm;
 use Company\Entity\Office;
+use Stock\Entity\Unit;
+use Stock\Entity\Ntd;
+use Company\Entity\Country;
 
 class PtuController extends AbstractActionController
 {
@@ -139,8 +143,21 @@ class PtuController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-
-                $this->ptuManager->updatePtu($ptu, $data);
+                unset($data['supplier']);
+                unset($data['company']);
+                unset($data['csrf']);
+                $ptuGood = $data['ptuGood'];
+                unset($data['ptuGood']);
+                
+                if ($ptu){
+                    $this->ptuManager->updatePtu($ptu, $data);
+                } else {
+                    $ptu = $this->ptuManager->addPtu($data);
+                }    
+                
+                $this->ptuManager->updatePtuGoods($ptu, $ptuGood);
+                
+                $this->ptuManager->repostPtu($ptu);
                 
                 return new JsonModel(
                    ['ok']
@@ -149,13 +166,13 @@ class PtuController extends AbstractActionController
         } else {
             if ($ptu){
                 $data = [
-                    'office' => $ptu->getContract()->getOffice()->getId(),
+                    'office_id' => $ptu->getContract()->getOffice()->getId(),
                     'company' => $ptu->getContract()->getCompany()->getId(),
                     'supplier' => $ptu->getSupplier()->getId(),
-                    'legal' => $ptu->getLegal()->getId(),  
-                    'contract' => $ptu->getContract()->getId(),  
-                    'docDate' => $ptu->getDocDate(),  
-                    'docNo' => $ptu->getDocNo(),
+                    'legal_id' => $ptu->getLegal()->getId(),  
+                    'contract_id' => $ptu->getContract()->getId(),  
+                    'doc_date' => $ptu->getDocDate(),  
+                    'doc_no' => $ptu->getDocNo(),
                     'comment' => $ptu->getComment(),
                     'status' => $ptu->getStatus(),
                 ];
@@ -171,36 +188,51 @@ class PtuController extends AbstractActionController
     }    
         
     public function goodEditFormAction()
-    {
-        $ptuGoodId = (int)$this->params()->fromRoute('id', -1);
+    {        
+        $params = $this->params()->fromQuery();
+//        var_dump($params); exit;
+        $good = $rowNo = $result = null;        
+        if (isset($params['good'])){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneById($params['good']['id']);            
+        }
+        if (isset($params['rowNo'])){
+            $rowNo = $params['rowNo'];
+        }
         
-        $ptuGood = $good = null;
-        
-        if ($ptuGoodId > 0){
-            $ptuGood = $this->entityManager->getRepository(PtuGood::class)
-                    ->findOneById($ptuGoodId);
-        }    
-        
-        
-        $form = new PtuGoodForm($this->entityManager, $ptuGood);
+        $form = new PtuGoodForm($this->entityManager, $good);
 
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
             $form->setData($data);
+            if (isset($data['good'])){
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->findOneById($data['good']);            
+            }
 
             if ($form->isValid()) {
-
-                return new JsonModel(
-                   ['ok']
-                );           
+                $result = 'ok';
+                return new JsonModel([
+                    'result' => $result,
+                    'good' => [
+                        'id' => $good->getId(),
+                        'code' => $good->getCode(),
+                        'name' => $good->getName(),
+                        'producer' => $good->getProducer()->getName(),
+                    ],
+                ]);        
             }
         } else {
-            if ($ptuGood){
+            if ($good){
                 $data = [
-                    'good' => $ptuGood->getGood()->getId(),
-                    'quantity' => $ptuGood->getQuantity(),
-                    'amount' => $ptuGood->getAmount(),
+                    'good' => $params['good']['id'],
+                    'quantity' => $params['quantity'],
+                    'amount' => $params['amount'],
+                    'price' => $params['amount']/$params['quantity'],
+                    'unit' => (isset($params['unit']['name'])) ? $params['unit']['name']:null,
+                    'country' => (isset($params['country']['name'])) ? $params['country']['name']:null,
+                    'ntd' => (isset($params['ntd']['ntd'])) ? $params['ntd']['ntd']:null,
                 ];
                 $form->setData($data);
             }    
@@ -210,7 +242,8 @@ class PtuController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'ptuGood' => $ptuGood,
+            'rowNo' => $rowNo,
+            'good' => $good,
         ]);        
     }
     
@@ -232,5 +265,59 @@ class PtuController extends AbstractActionController
            ['ok']
         );           
     }
+    
+    public function autocompeteUnitAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(Unit::class)
+                            ->autocompeteUnit(['search' => $q]);
+
+            $data = $query->getResult();
+            foreach ($data as $row){
+                $result[] = $row->getName();
+            }
+        }    
+        
+        return new JsonModel($result);
+    }        
+    
+    public function autocompeteNtdAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(Ntd::class)
+                            ->autocompeteNtd(['search' => $q]);
+
+            $data = $query->getResult();
+            foreach ($data as $row){
+                $result[] = $row->getName();
+            }
+        }    
+        
+        return new JsonModel($result);
+    }        
+    
+    public function autocompeteCountryAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(Country::class)
+                            ->autocompeteCountry(['search' => $q]);
+
+            $data = $query->getResult();
+            foreach ($data as $row){
+                $result[] = $row->getName();
+            }
+        }    
+        
+        return new JsonModel($result);
+    }        
     
 }

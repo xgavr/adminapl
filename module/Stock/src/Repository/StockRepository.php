@@ -11,6 +11,8 @@ namespace Stock\Repository;
 use Doctrine\ORM\EntityRepository;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
+use Stock\Entity\Unit;
+use Stock\Entity\Ntd;
 
 /**
  * Description of StockRepository
@@ -86,10 +88,13 @@ class StockRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('pg, g, p')
+        $queryBuilder->select('pg, g, p, n, u, c')
             ->from(PtuGood::class, 'pg')
             ->join('pg.good', 'g')    
             ->join('g.producer', 'p')    
+            ->join('pg.ntd', 'n')    
+            ->join('pg.unit', 'u')    
+            ->join('pg.country', 'c')    
             ->where('pg.ptu = ?1')
             ->setParameter('1', $ptuId)    
                 ;
@@ -101,4 +106,62 @@ class StockRepository extends EntityRepository{
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }    
+    
+    /**
+     * Запрос ЕИ для автозаполения
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function autocompeteUnit($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('u')
+            ->from(Unit::class, 'u')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['search'])){
+                $queryBuilder
+                    ->where('u.name like ?1')                           
+                    ->setParameter('1', $params['search'].'%')    
+                        ;
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();
+    }    
+
+    /**
+     * Запрос Ntd для автозаполения
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function autocompeteNtd($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('n')
+            ->from(Ntd::class, 'n')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['search'])){
+                $queryBuilder
+                    ->where('n.ntd like ?1')                           
+                    ->setParameter('1', $params['search'].'%')    
+                        ;
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();
+    }    
+    
+    
 }

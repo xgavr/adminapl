@@ -78,7 +78,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         // Добавляем поле "office"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'office',
+            'name' => 'office_id',
             'attributes' => [                
                 'id' => 'office',
                 'data-live-search'=> "true",
@@ -142,11 +142,12 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         // Добавляем поле "legal"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'legal',
+            'name' => 'legal_id',
             'attributes' => [                
                 'id' => 'legal',
                 'data-live-search'=> "true",
                 'class' => "selectpicker",
+                'required' => 'required',
             ],
             'options' => [
                 'object_manager' => $this->entityManager,
@@ -169,12 +170,13 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         // Добавляем поле "contract"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'contract',
+            'name' => 'contract_id',
             'attributes' => [                
                 'id' => 'contract',
                 'data-live-search'=> "true",
                 'class' => "selectpicker",
-            ],
+                'required' => 'required',
+                ],
             'options' => [
                 'object_manager' => $this->entityManager,
                 'target_class'   => 'Company\Entity\Contract',
@@ -196,10 +198,11 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([
             'type'  => 'date',
-            'name' => 'docDate',
+            'name' => 'doc_date',
             'attributes' => [                
                 'id' => 'docDate',
                 'step' => 1,
+                'required' => 'required',                
             ],
             'options' => [
                 'label' => 'Дата документа',
@@ -209,9 +212,10 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         
         $this->add([
             'type'  => 'text',
-            'name' => 'docNo',
+            'name' => 'doc_no',
             'attributes' => [                
-                'id' => 'docNo'
+                'id' => 'docNo',
+                'required' => 'required',                
             ],
             'options' => [
                 'label' => 'Номер документа',
@@ -233,6 +237,9 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'select',
             'name' => 'status',
             'value' => Ptu::STATUS_ACTIVE,
+            'attributes' => [                
+                'required' => 'required',                
+            ],
             'options' => [
                 'label' => 'Статус',
                 'value_options' => Ptu::getStatusList(),
@@ -270,7 +277,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'office',
+                'name'     => 'office_id',
                 'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
@@ -321,7 +328,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             ]);          
         
         $inputFilter->add([
-                'name'     => 'legal',
+                'name'     => 'legal_id',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
@@ -338,7 +345,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             ]);          
         
         $inputFilter->add([
-                'name'     => 'contract',
+                'name'     => 'contract_id',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
@@ -355,7 +362,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             ]);          
         
         $inputFilter->add([
-                'name'     => 'docDate',
+                'name'     => 'doc_date',
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -374,7 +381,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             ]);
         
         $inputFilter->add([
-                'name'     => 'docNo',
+                'name'     => 'doc_no',
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],
@@ -394,7 +401,7 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'comment',
-                'required' => true,
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],
