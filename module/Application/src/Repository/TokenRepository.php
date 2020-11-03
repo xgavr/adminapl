@@ -257,7 +257,9 @@ class TokenRepository  extends EntityRepository
                  ;
             }
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('t.'.$params['sort'], $params['order']);                
+                $queryBuilder->orderBy('t.'.$params['sort'], $params['order'])
+                            ->addOrderBy('t.lemma')                
+                        ;                
             }            
             if (isset($params['status'])){
                 $queryBuilder->andWhere('t.status = ?3')
