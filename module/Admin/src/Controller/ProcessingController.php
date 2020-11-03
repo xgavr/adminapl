@@ -51,6 +51,12 @@ class ProcessingController extends AbstractActionController
     private $aplService;    
 
     /**
+     * AplDocService manager.
+     * @var \Admin\Service\AplDocService
+     */
+    private $aplDocService;    
+
+    /**
      * AplBankService manager.
      * @var \Admin\Service\AplBankService
      */
@@ -138,7 +144,8 @@ class ProcessingController extends AbstractActionController
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
-            $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager) 
+            $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
+            $aplDocService) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -146,6 +153,7 @@ class ProcessingController extends AbstractActionController
         $this->telegramManager = $telegramManager;
         $this->aplService = $aplService;
         $this->aplBankService = $aplBankService;
+        $this->aplDocService = $aplDocService;
         $this->priceManager = $priceManager;
         $this->rawManager = $rawManager;
         $this->supplierManager = $supplierManager;
@@ -1210,6 +1218,25 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['get_acquiring'] == 1){
             $this->aplService->updateAcquiringPayments();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
+     * Выгрузка поступлений из апл
+     * 
+     * @return JsonModel
+     */
+    public function updateAplPtuAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['ptu'] == 1){
+            $this->aplDocService->unloadDocs();
         }    
         
         return new JsonModel([

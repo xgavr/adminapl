@@ -69,6 +69,7 @@ class StockRepository extends EntityRepository{
         
         if (is_array($params)){
             if (isset($params['sort'])){
+                $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);
             }            
         }
 
