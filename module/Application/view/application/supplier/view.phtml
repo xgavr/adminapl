@@ -43,6 +43,17 @@ $this->headScript()
                     </button>                                                    
                 </div>
             </div>
+            <div class="panel-body">
+                <div class="pull-left">
+                    Сумма поставок: <?= $this->escapeHtml($supplier->getAmount()) ?>
+                </div>
+                <div class="pull-right">
+                    <a href="/supplier/update-amount/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
+                            title="Обновить сумму поставок">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </a>                                                    
+                </div>
+            </div>
         </div>
 
         <div class="panel panel-default" id="section2">

@@ -16,6 +16,7 @@ use Application\Entity\RequestSetting;
 use Application\Entity\SupplySetting;
 use Company\Entity\Office;
 use Laminas\File\ClassFileLocator;
+use Stock\Entity\Mutual;
 
 
 /**
@@ -619,5 +620,32 @@ class SupplierManager
     public function checkPriceFolder($supplier)
     {
         $this->rawManager->checkSupplierPrice($supplier);
+    }
+    
+    /**
+     * Обновить сумму поставок поставщика
+     * 
+     * @param Supplier $supplier
+     */
+    public function updateAmount($supplier)
+    {
+        $amount = $this->entityManager->getRepository(Mutual::class)
+                ->supplierAmount($supplier);
+        $this->entityManager->getConnection()->update('supplier', ['amount' => $amount], ['id' => $supplier->getId()]);
+    }
+
+    /**
+     * Обновить сумму поставок поставщиков
+     * 
+     */
+    public function updateAmounts()
+    {
+        ini_set('memory_limit', '512M');
+        
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findAll();
+        foreach ($suppliers as $supplier){
+            $this->updateAmount($supplier);
+        }
     }
 }

@@ -359,32 +359,34 @@ class AplDocService {
             $ptu = $this->ptuManager->addPtu($dataPtu);
         }    
         
-        $rowNo = 1;
-        foreach ($data['tp'] as $tp){
-            if (isset($tp['good'])){
-                $good = $this->findGood($tp['good']);   
-            }    
-            if (empty($good)){
-//                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
-            } else {
-            
-                $this->ptuManager->addPtuGood($ptu->getId(), [
-                    'status' => $ptu->getStatus(),
-                    'statusDoc' => $ptu->getStatusDoc(),
-                    'quantity' => $tp['sort'],                    
-                    'amount' => $tp['bag_total'],
-                    'good_id' => $good->getId(),
-                    'comment' => '',
-                    'info' => '',
-                    'countryName' => (isset($tp['country'])) ? $tp['country']:'',
-                    'countryCode' => (isset($tp['countrycode'])) ? $tp['countrycode']:'',
-                    'unitName' => (isset($tp['pack'])) ? $tp['pack']:'',
-                    'unitCode' => (isset($tp['packcode'])) ? $tp['packcode']:'',
-                    'ntd' => (isset($tp['gtd'])) ? $tp['gtd']:'',
-                ], $rowNo);
-                $rowNo++;
-            }    
-        }
+        if (is_array($data['tp'])){
+            $rowNo = 1;
+            foreach ($data['tp'] as $tp){
+                if (isset($tp['good'])){
+                    $good = $this->findGood($tp['good']);   
+                }    
+                if (empty($good)){
+    //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                } else {
+
+                    $this->ptuManager->addPtuGood($ptu->getId(), [
+                        'status' => $ptu->getStatus(),
+                        'statusDoc' => $ptu->getStatusDoc(),
+                        'quantity' => $tp['sort'],                    
+                        'amount' => $tp['bag_total'],
+                        'good_id' => $good->getId(),
+                        'comment' => '',
+                        'info' => '',
+                        'countryName' => (isset($tp['country'])) ? $tp['country']:'',
+                        'countryCode' => (isset($tp['countrycode'])) ? $tp['countrycode']:'',
+                        'unitName' => (isset($tp['pack'])) ? $tp['pack']:'',
+                        'unitCode' => (isset($tp['packcode'])) ? $tp['packcode']:'',
+                        'ntd' => (isset($tp['gtd'])) ? $tp['gtd']:'',
+                    ], $rowNo);
+                    $rowNo++;
+                }    
+            }
+        }    
         
         $this->ptuManager->updatePtuAmount($ptu);
         

@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityRepository;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Stock\Entity\Mutual;
+use Application\Entity\Supplier;
+use Company\Entity\Legal;
 
 /**
  * Description of MutualRepository
@@ -56,4 +58,42 @@ class MutualRepository extends EntityRepository{
         $connection->insert('mutual', $data);
         return;
     }
+    
+    /**
+     * Сумма поставок юрлица
+     * 
+     * @param Legal $legal
+     */
+    public function legalAmount($legal)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(m.amount) as amountSum')
+                ->from(Mutual::class, 'm')
+                ->where('m.legal = ?1')
+                ->setParameter('1', $legal->getId())
+                ;
+        $data = $qb->getQuery()->getResult();
+        foreach ($data as $row){
+            return $row['amountSum'];
+        }
+
+        return 0;
+    }
+    
+    /**
+     * Сумма поставок поставщика
+     * 
+     * @param Supplier $supplier
+     */
+    public function supplierAmount($supplier)
+    {
+        $result = 0;
+        $legalContact = $supplier->getLegalContact();        
+        foreach($legalContact->getLegals() as $legal){
+            $result += $this->legalAmount($legal);
+        }
+        return $result;
+    }
+    
 }

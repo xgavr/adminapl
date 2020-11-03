@@ -1268,4 +1268,31 @@ class SupplierController extends AbstractActionController
         ]);                  
     }
     
+    public function updateAmountAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+                
+        $this->supplierManager->updateAmount($supplier);
+        
+        // Перенаправляем пользователя на страницу "supplier/view".
+        return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplierId]);
+    }    
+    
+    public function updateAmountsAction()
+    {
+                
+        $this->supplierManager->updateAmounts();
+        
+        // Перенаправляем пользователя на страницу "supplier/view".
+        return $this->redirect()->toRoute('supplier');
+    }    
+    
 }

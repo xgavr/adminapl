@@ -298,6 +298,22 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * Обновить сумму поставок поставщиков
+     */
+    public function updateSupplierAmountAction()
+    {        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_raw'] == 1){
+            $this->supplierManager->updateAmounts();
+        }    
+        
+        return new JsonModel(
+            ['ok']
+        );
+    }
+
+    /**
      * Разборка прайсов
      */
     public function parseRawAction()

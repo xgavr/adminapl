@@ -64,6 +64,16 @@ class Supplier {
     protected $status;
 
     /** 
+     * @ORM\Column(name="amount")  
+     */
+    protected $amount;
+
+    /** 
+     * @ORM\Column(name="quantity")  
+     */
+    protected $quantity;
+
+    /** 
      * @ORM\Column(name="prepay")  
      */
     protected $prepayStatus;
@@ -212,6 +222,26 @@ class Supplier {
     public function setAddress($address) 
     {
         $this->address = $address;
+    }     
+
+    public function getAmount() 
+    {
+        return round($this->amount);
+    }
+
+    public function setAmount($amount) 
+    {
+        $this->amount = $amount;
+    }     
+
+    public function getQuantity() 
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity($quantity) 
+    {
+        $this->quantity = $quantity;
     }     
 
     /**
