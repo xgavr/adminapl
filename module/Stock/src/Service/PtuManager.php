@@ -338,7 +338,7 @@ class PtuManager
             'good_id' => $data['good_id'],
             'comment' => (isset($data['comment'])) ? $data['comment']:'',
 //            'info' => $data['info'],
-            'country_id' => $this->findCountry($data['countryName'], $data['countryCode']),
+            'country_id' => $this->findCountry($data['countryName'], (isset($data['countryCode'])) ? $data['countryCode']:null),
             'unit_id' => $this->findUnit($data['unitName'], $data['unitCode']),
             'ntd_id' => $this->findNtd($data['ntd']),
             'row_no' => $rowNo,
