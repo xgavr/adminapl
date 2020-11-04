@@ -165,7 +165,7 @@ $form->prepare();
                     $('#legal-modal').modal('hide');
                     window.location.reload();
                 } else {
-                    $('#legal-modal-content').html(data);
+                    $('#modal-dialog .modal-content').html(data);
                 }    
             })
             .fail(function () {
