@@ -93,6 +93,8 @@ class SupplierManager
         $supplier->setStatus($data['status']);
         $supplier->setPrepayStatus($data['prepayStatus']);
         $supplier->setPriceListStatus($data['priceListStatus']);
+        $supplier->setAmount(0);
+        $supplier->setQuantity(0);
         
         $currentDate = date('Y-m-d H:i:s');
         $supplier->setDateCreated($currentDate);        
