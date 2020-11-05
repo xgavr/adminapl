@@ -565,10 +565,11 @@ class GoodsManager
     /**
      * Расчитать среднюю закупочную цену
      * 
-     * @param type $prices
+     * @param array $prices
+     * @param float $defaultPrice;
      * @return float 
      */
-    public function meanPrice($prices)
+    public function meanPrice($prices, $defaultPrice = null)
     {
         if (count($prices)){
             $minPrice = min($prices);
@@ -587,7 +588,11 @@ class GoodsManager
             if (count($newPrices)){
                 return Mean::median($newPrices);
             } else {
-                return $minPrice;
+                if (empty($defaultPrice)){
+                    return $minPrice;
+                } else {
+                    return $defaultPrice;
+                }    
             }    
         }
         
@@ -629,6 +634,7 @@ class GoodsManager
         $articles = $this->entityManager->getRepository(Article::class)
                 ->findBy(['good' => $good->getId()]);
         $prices = [];
+        $bestSupplierPrice = $bestSupplierAmount = 0;
         foreach ($articles as $article){
                 $rawprices = $this->entityManager->getRepository(Rawprice::class)
                         ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED]);
@@ -636,6 +642,11 @@ class GoodsManager
                     if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
                         $rest = min(1000, $rawprice->getRealRest());
                         $prices = array_merge($prices, array_fill(0, $rest, $rawprice->getRealPrice()));
+                        
+                        if ($rawprice->getRaw()->getSupplier()->getAmount() > $bestSupplierAmount){
+                            $bestSupplierPrice = $rawprice->getRealPrice();
+                            $bestSupplierAmount = $rawprice->getRaw()->getSupplier()->getAmount();
+                        }
                     }
                 }    
         }
@@ -648,7 +659,7 @@ class GoodsManager
         if (count($prices)){
 
             $minPrice = $this->minPrice($prices);
-            $meanPrice = $this->meanPrice($prices);
+            $meanPrice = $this->meanPrice($prices, max($minPrice, $bestSupplierPrice));
             if ($fixPrice < $meanPrice){
                 $fixPrice = 0;
             }
