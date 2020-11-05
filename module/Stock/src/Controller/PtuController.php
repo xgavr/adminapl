@@ -58,7 +58,7 @@ class PtuController extends AbstractActionController
         $query = $this->entityManager->getRepository(Ptu::class)
                         ->findAllPtu(['q' => $q, 'sort' => $sort, 'order' => $order]);
         
-        $total = count($query->getResult(2));
+       // $total = count($query->getResult());
         
         if ($offset) {
             $query->setFirstResult($offset);

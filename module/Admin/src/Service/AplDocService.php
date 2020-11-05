@@ -359,7 +359,7 @@ class AplDocService {
             $ptu = $this->ptuManager->addPtu($dataPtu);
         }    
         
-        if (is_array($data['tp'])){
+        if (isset($data['tp'])){
             $rowNo = 1;
             foreach ($data['tp'] as $tp){
                 if (isset($tp['good'])){
