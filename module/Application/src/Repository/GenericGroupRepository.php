@@ -13,6 +13,10 @@ use Application\Entity\GenericGroup;
 use Application\Entity\Goods;
 use Application\Entity\TokenGroup;
 use Application\Entity\Token;
+use Phpml\Math\Statistic\Mean;
+use Phpml\Math\Statistic\StandardDeviation;
+use Application\Validator\Sigma3;
+
 
 /**
  * Description of GenericGroupRepository
@@ -193,10 +197,36 @@ class GenericGroupRepository extends EntityRepository{
     }
 
     /**
+     * Поиск лучшей группы
+     * 
+     * @param array $groups
+     * @return GenericGroup 
+     */
+    protected function findBestGenericGroup($groups)
+    {
+        $counts = [];
+        foreach ($groups as $group){
+            $counts[] = $group['goodCount'];
+        }
+        if (count($counts)){
+            $mean = Mean::arithmetic($counts);
+            $dispersion = StandardDeviation::population($counts, count($counts)>1);
+            $validator = new Sigma3();
+            if (!$validator->isValid($groups[0]['goodCount'], $mean, $dispersion)){
+                return $groups[0][0];
+            }
+        }
+        
+        return;
+    }
+    
+    /**
      * Выбор группы по группе наименований
      * 
      * @param TokenGroup $tokenGroup
      * @param Goods $good
+     * 
+     * @return GenericGroup
      */
     public function findGenericTokenGroup($tokenGroup, $good = null)
     {
@@ -207,6 +237,8 @@ class GenericGroupRepository extends EntityRepository{
                 foreach ($data as $row){
                     return $row[0];
                 }
+            } else {
+                return $this->findBestGenericGroup($data);
             }
         }
         
