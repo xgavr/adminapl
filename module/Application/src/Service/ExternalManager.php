@@ -840,9 +840,6 @@ class ExternalManager
         $notSimilar = true;
         $change = false;
         try{
-            $this->entityManager->getRepository(Oem::class)
-                    ->removeIntersectOem($good);
-            
             $info = $this->zetasoftManager->getDirectInfo($good);
             if (!is_array($info)){
                 $notSimilar = false;                
@@ -856,6 +853,8 @@ class ExternalManager
             if ($change || !$notSimilar){
                 $this->entityManager->getRepository(Goods::class)
                         ->removeGoodSourceOem($good, Oem::SOURCE_TD);
+                $this->entityManager->getRepository(Oem::class)
+                        ->removeIntersectOem($good);            
             }
         } catch (\Exception $ex){
             $info = null;
