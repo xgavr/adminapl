@@ -53,7 +53,7 @@ class PtuController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
-        $order = $this->params()->fromQuery('order');
+        $order = $this->params()->fromQuery('order', 'DESC');
         
         $query = $this->entityManager->getRepository(Ptu::class)
                         ->findAllPtu(['q' => $q, 'sort' => $sort, 'order' => $order]);

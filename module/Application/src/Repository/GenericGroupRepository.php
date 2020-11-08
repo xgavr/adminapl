@@ -210,7 +210,7 @@ class GenericGroupRepository extends EntityRepository{
         }
         if (count($counts)){
             $mean = Mean::arithmetic($counts);
-            var_dump($mean);
+            var_dump($mean); exit;
             $dispersion = StandardDeviation::population($counts, count($counts)>1);
             var_dump($dispersion);
             $validator = new Sigma3();
