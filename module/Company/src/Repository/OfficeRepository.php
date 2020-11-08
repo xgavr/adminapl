@@ -30,6 +30,7 @@ class OfficeRepository extends EntityRepository{
      */
     public function findDefaultCompany($office, $dateDoc = null)
     {
+        var_dump($office->getId()); exit;
         if (!$dateDoc){
             $dateDoc = date('Y-m-d');
         }
