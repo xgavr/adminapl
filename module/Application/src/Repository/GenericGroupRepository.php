@@ -210,7 +210,7 @@ class GenericGroupRepository extends EntityRepository{
         }
         if (count($counts)){
             $mean = Mean::arithmetic($counts);
-            var_dump($mean); exit;
+            var_dump($mean);
             $dispersion = StandardDeviation::population($counts, count($counts)>1);
             var_dump($dispersion);
             $validator = new Sigma3();
@@ -233,7 +233,7 @@ class GenericGroupRepository extends EntityRepository{
     public function findGenericTokenGroup($tokenGroup, $good = null)
     {
         $data = $this->genericTokenGroup($tokenGroup, $good);
-
+        var_dump(count($data)); exit;
         if ($data){
             if (count($data) == 1){
                 foreach ($data as $row){
