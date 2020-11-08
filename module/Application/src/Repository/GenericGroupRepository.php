@@ -210,14 +210,9 @@ class GenericGroupRepository extends EntityRepository{
         }
         if (count($counts)){
             $mean = Mean::median($counts);
-            var_dump($mean);
-            var_dump($mean*count($counts));
-            $dispersion = StandardDeviation::population($counts, count($counts)>1);
-            var_dump($dispersion); 
-            
-            $maxCount = $mean + 3*$dispersion;
-            $goodCount = $groups[0]['goodCount'];
-            if ($goodCount > $maxCount){
+//            var_dump($mean);
+//            var_dump($mean*count($counts));
+            if ($goodCount > $mean*count($counts)){
                 return $groups[0][0];
             }            
         }
