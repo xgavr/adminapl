@@ -239,7 +239,7 @@ class GenericGroupRepository extends EntityRepository{
                     return $row[0];
                 }
             } else {
-                return $this->findBestGenericGroup($data);
+                //return $this->findBestGenericGroup($data);
             }
         }
         
