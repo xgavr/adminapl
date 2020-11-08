@@ -31,13 +31,12 @@ class LegalManager
     /**
      * Изменить юрлицо
      * 
-     * @param Contact $contact
      * @param Legal $legal
      * @param array $data
      * 
      * @return Legal
      */
-    public function updateLegal($contact, $legal, $data)
+    public function updateLegal($legal, $data)
     {                
 
         $legal->setName($data['name']);            
@@ -57,7 +56,6 @@ class LegalManager
             $legal->setDateStart($data['dateStart']);
         }
 
-        $legal->addContact($contact);
         $this->entityManager->persist($legal);        
         $this->entityManager->flush();                
         
@@ -84,7 +82,7 @@ class LegalManager
         }
         
         if ($legal){
-            $this->updateLegal($contact, $legal, $data);
+            $this->updateLegal($legal, $data);
         }
 
         if ($legal == null){

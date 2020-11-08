@@ -118,7 +118,7 @@ class AplDocService {
         
         if ($supplier){
             $legal = $this->entityManager->getRepository(Supplier::class)
-                    ->fundDefaultSupplierLegal($supplier, $dateStart);
+                    ->findDefaultSupplierLegal($supplier, $dateStart);
             
             if (!$legal){
                 $legal = $this->legalManager->addLegal($supplier->getLegalContact(), [
@@ -132,6 +132,7 @@ class AplDocService {
                     'info' => '',
                     'address' => '',
                     'status' => Legal::STATUS_ACTIVE,
+                    'dateStart' => $dateStart,
                 ]);
             }
             

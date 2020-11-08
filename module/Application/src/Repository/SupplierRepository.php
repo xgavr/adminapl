@@ -139,7 +139,7 @@ class SupplierRepository extends EntityRepository{
      * 
      * @return Legal
      */
-    public function fundDefaultSupplierLegal($supplier, $dateDoc = null)
+    public function findDefaultSupplierLegal($supplier, $dateDoc = null)
     {
         if (!$dateDoc){
             $dateDoc = date();
