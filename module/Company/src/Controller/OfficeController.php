@@ -13,6 +13,7 @@ use Laminas\View\Model\JsonModel;
 use Company\Entity\Office;
 use Company\Form\OfficeForm;
 use Application\Entity\Contact;
+use Company\Entity\Legal;
 
 class OfficeController extends AbstractActionController
 {
@@ -291,9 +292,13 @@ class OfficeController extends AbstractActionController
             return;
         }
         
-        $result = [];
-        $legalContact = $office->getLegalContact();
-        $legals = $legalContact->getLegals();
+        $legals = $this->entityManager->getRepository(Legal::class)
+                ->formOfficeLegals(['officeId' => $office->getId()]);
+        
+//        $result = [];
+//        $legalContact = $office->getLegalContact();
+//        $legals = $legalContact->getLegals();
+        
         foreach ($legals as $legal){
             $result[$legal->getId()] = [
                 'id' => $legal->getId(),
