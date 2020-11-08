@@ -214,7 +214,7 @@ class GenericGroupRepository extends EntityRepository{
             $dispersion = StandardDeviation::population($counts, count($counts)>1);
             var_dump($dispersion); 
             
-            $maxCount = $mean + 1*$dispersion;
+            $maxCount = $mean + 3*$dispersion;
             $goodCount = $groups[0]['goodCount'];
             if ($goodCount > $maxCount){
                 return $groups[0][0];
