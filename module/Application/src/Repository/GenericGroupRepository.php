@@ -209,7 +209,7 @@ class GenericGroupRepository extends EntityRepository{
             $counts[] = $group['goodCount'];
         }
         if (count($counts)){
-            $mean = Mean::mode($counts);
+            $mean = Mean::arithmetic($counts);
             var_dump($mean);
             $dispersion = StandardDeviation::population($counts, count($counts)>1);
             var_dump($dispersion); 
