@@ -212,6 +212,8 @@ class GenericGroupRepository extends EntityRepository{
             $mean = Mean::median($counts);
 //            var_dump($mean);
 //            var_dump($mean*count($counts));
+
+            $goodCount = $groups[0]['goodCount'];
             if ($goodCount > $mean*count($counts)){
                 return $groups[0][0];
             }            
