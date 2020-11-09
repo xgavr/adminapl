@@ -125,17 +125,15 @@ class PtuController extends AbstractActionController
         }    
         
         if ($ptu == null) {
-            $supplier = $legal = $company = null;
+            $officeId = (int)$this->params()->fromQuery('office', 1);
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->findOneById($officeId);
         } else {
             $supplier = $ptu->getSupplier();
+            $office = $ptu->getOffice();
             $company = $ptu->getContract()->getCompany();
             $legal = $ptu->getLegal();
         }       
-
-        
-        $officeId = (int)$this->params()->fromQuery('office', 1);
-        $office = $this->entityManager->getRepository(Office::class)
-                ->findOneById($officeId);
         
         $form = new PtuForm($this->entityManager, $office, $supplier, $company, $legal);
 
