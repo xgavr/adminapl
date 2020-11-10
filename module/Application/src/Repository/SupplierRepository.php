@@ -141,6 +141,7 @@ class SupplierRepository extends EntityRepository{
      */
     public function findDefaultSupplierLegal($supplier, $dateDoc = null)
     {
+        var_dump($supplier->getId()); exit;
         if (!$dateDoc){
             $dateDoc = date();
         }
