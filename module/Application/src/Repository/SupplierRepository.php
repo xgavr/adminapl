@@ -141,7 +141,6 @@ class SupplierRepository extends EntityRepository{
      */
     public function findDefaultSupplierLegal($supplier, $dateDoc = null)
     {
-        var_dump($supplier->getId()); exit;
         if (!$dateDoc){
             $dateDoc = date();
         }
@@ -158,6 +157,7 @@ class SupplierRepository extends EntityRepository{
                 ->andWhere('l.dateStart <= ?3')
                 ->setParameter('3', $dateDoc)
                 ->orderBy('l.dateStart', 'DESC')
+                ->setMaxResults(1)
                 ;
         
         return $queryBuilder->getQuery()->getOneOrNullResult();
