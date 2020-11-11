@@ -109,9 +109,10 @@ class AplDocService {
      * 
      * @param integer $supplierAplId
      * @param date $dateStart
+     * @param array $legalInfo
      * @return Legal
      */
-    private function legalFromSupplierAplId($supplierAplId, $dateStart = null)
+    private function legalFromSupplierAplId($supplierAplId, $dateStart = null, $legalInfo = null)
     {
         $supplier = $this->entityManager->getRepository(Supplier::class)
                 ->findOneBy(['aplId' => $supplierAplId]);
@@ -137,8 +138,20 @@ class AplDocService {
             }
             
             return $legal;
+        }   
+        
+        if ($legalInfo){
+            if (isset($legalInfo['inn'])){
+                $legal = $this->entityManager->getRepository(Legal::class)
+                        ->findOneBy(['inn' => $legalInfo['inn'], 'kpp' => $legalInfo['kpp']]);
+                if ($legal){
+                    return $legal; 
+                }
+            }    
         }    
         
+        throw new \Exception("Не удалось найти поставщика ($supplierAplId) и организацию ($inn/$kpp)");
+           
         return;        
     }
     
@@ -323,7 +336,7 @@ class AplDocService {
      */
     public function unloadPtu($data)
     {
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $docDate = $data['ds'];
         $dateValidator = new Date();
         if (!$dateValidator->isValid($docDate)){
@@ -344,7 +357,7 @@ class AplDocService {
         }
         
         $office = $this->officeFromAplId($data['parent']);
-        $legal = $this->legalFromSupplierAplId($data['name'], $data['ds']);
+        $legal = $this->legalFromSupplierAplId($data['name'], $data['ds'], $data['supplier']);        
         $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $this->getCashContract($data));
         
         $dataPtu['office_id'] = $office->getId();
