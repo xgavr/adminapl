@@ -323,7 +323,7 @@ class AplDocService {
      */
     public function unloadPtu($data)
     {
-//        var_dump($data); exit;
+        var_dump($data); exit;
         $docDate = $data['ds'];
         $dateValidator = new Date();
         if (!$dateValidator->isValid($docDate)){
