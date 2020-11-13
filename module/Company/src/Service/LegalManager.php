@@ -82,6 +82,8 @@ class LegalManager
         }
         
         if ($legal){
+            $contact->removeLegalAssociation($legal);
+            $contact->addLegal($legal);
             $this->updateLegal($legal, $data);
         }
 
