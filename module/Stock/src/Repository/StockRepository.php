@@ -13,6 +13,7 @@ use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Stock\Entity\Unit;
 use Stock\Entity\Ntd;
+use Application\Entity\Supplier;
 
 /**
  * Description of StockRepository
@@ -70,6 +71,17 @@ class StockRepository extends EntityRepository{
         if (is_array($params)){
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);
+            }            
+            if (!empty($params['supplierId'])){
+                $supplier = $entityManager->getRepository(Supplier::class)
+                        ->findOneById($params['supplierId']);
+                if ($supplier){
+                    $orX = $queryBuilder->expr()->orX();
+                    foreach ($supplier->getLegalContact()->getLegals() as $legal){
+                        $orX->add($queryBuilder->expr()->eq('p.legal', $legal->getId()));
+                    }    
+                    $queryBuilder->andWhere($orX);
+                }    
             }            
         }
 

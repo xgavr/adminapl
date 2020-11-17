@@ -25,9 +25,18 @@
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
                 <div class="form-group">
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                    <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
+                    <button id="ok" type="submit" class="btn btn-default">OK</button>
                 </div>
-                <button id="ok" type="submit" class="btn btn-default">OK</button>
+                <div class="form-group">
+                    <select id="supplier" class="form-control">
+                        <option selected>--</option>
+                        <?php foreach ($suppliers as $supplier):?>
+                            <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
+                        <?php endforeach;?>
+                    </select>
+                    
+                </div>    
             </div>
         </div>
         <table id="table" 
@@ -108,7 +117,7 @@
 
     var table = $('#table'),
         ok = $('#ok');
-
+    
     $(function () {
         ok.click(function () {
             table.bootstrapTable('refresh');
@@ -133,7 +142,11 @@
                 url: url,
                 zIndex: 9999
             });
-        });     
+        });  
+        
+        $(document).on('change', '#supplier', function (e) {
+            refreshTable();
+        });
     });
     
     function queryParams(params) {
@@ -148,6 +161,7 @@
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
+        params.supplier = $('#supplier').val();
         
         return params;
     }

@@ -164,4 +164,26 @@ class SupplierRepository extends EntityRepository{
         
     }
     
+    /**
+     * Выборка для ПТУ
+     * 
+     * @return Legal
+     */
+    public function findForPtu()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('s')
+                ->from(Supplier::class, 's')
+                ->where('s.amount > ?1')
+                ->setParameter('1', 0)
+                ->orderBy('s.status')
+                ->addOrderBy('s.name')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
 }

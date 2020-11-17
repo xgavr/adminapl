@@ -19,6 +19,7 @@ use Company\Entity\Office;
 use Stock\Entity\Unit;
 use Stock\Entity\Ntd;
 use Company\Entity\Country;
+use Application\Entity\Supplier;
 
 class PtuController extends AbstractActionController
 {
@@ -43,7 +44,11 @@ class PtuController extends AbstractActionController
 
     public function indexAction()
     {
-        return [];
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findForPtu();
+        return new ViewModel([
+            'suppliers' => $suppliers,
+        ]);  
     }
         
     public function contentAction()
@@ -54,13 +59,16 @@ class PtuController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
+        $supplierId = $this->params()->fromQuery('supplier');
         
         $query = $this->entityManager->getRepository(Ptu::class)
-                        ->findAllPtu(['q' => $q, 'sort' => $sort, 'order' => $order]);
-        
-       // $total = count($query->getResult());
-        $total = $this->entityManager->getRepository(Ptu::class)
-                ->count([]);
+                        ->findAllPtu(['q' => $q, 'sort' => $sort, 'order' => $order, 'supplierId' => $supplierId]);
+        if (is_numeric($supplierId)){
+             $total = count($query->getResult());            
+        } else {
+            $total = $this->entityManager->getRepository(Ptu::class)
+                    ->count([]);
+        }    
         
         if ($offset) {
             $query->setFirstResult($offset);
