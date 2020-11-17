@@ -160,9 +160,10 @@ class PtuManager
         if ($ptuId){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->findOneById($ptuId);
+            return $ptu;
         }
         
-        return $ptu;
+        return;        
     }
     
     /**

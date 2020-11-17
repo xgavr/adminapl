@@ -373,7 +373,7 @@ class AplDocService {
             $ptu = $this->ptuManager->addPtu($dataPtu);
         }    
         
-        if (isset($data['tp'])){
+        if ($ptu && isset($data['tp'])){
             $rowNo = 1;
             foreach ($data['tp'] as $tp){
                 if (isset($tp['good'])){
@@ -400,11 +400,14 @@ class AplDocService {
                     $rowNo++;
                 }    
             }
-        }    
+        }  
         
-        $this->ptuManager->updatePtuAmount($ptu);
-        
-        return;
+        if ($ptu){
+            $this->ptuManager->updatePtuAmount($ptu);
+            return true;            
+        }
+                
+        return false;
     }
     
     /**
@@ -482,8 +485,9 @@ class AplDocService {
             if (isset($result['type'])){
                 switch ($result['type']){
                     case 'Suppliersorders': 
-                        $this->unloadPtu($result); 
-                        $this->unloadedDoc($result['id']);
+                        if ($this->unloadPtu($result)){ 
+                            $this->unloadedDoc($result['id']);
+                        }    
                         break;                        
                     default; break;    
                 }                
