@@ -669,4 +669,20 @@ class LegalController extends AbstractActionController
         exit;
     }
     
+    public function displayLegalAction()
+    {
+        $legalId = $this->params()->fromRoute('id', -1);
+        
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->findOneById($legalId);
+        
+        if ($legal == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        return new JsonModel([
+            'name' => $legal->getName(),
+        ]);                   
+    }
 }

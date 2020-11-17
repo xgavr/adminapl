@@ -55,18 +55,18 @@
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>
-                     <th data-field="aplId" data-type="numeric"data-align="right">AplId</th>
-                     <th data-field="docDate" data-sortable="true">Дата</th>
-                     <th data-field="docNo" data-sortable="false">Номер</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <th data-field='legal.name' data-sortable="false">Поставщик</th>
-                     <th data-field='office.name' data-sortable="false">Склад</th>
-                     <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field='status' data-sortable="false">П</th>
-                     <th data-field='statusDoc' data-sortable="false">Т</th>
-                     <th data-field='statusEx' data-sortable="false">О</th>
-                     <th data-field="" data-formatter="activeFormatter"></th>
+                     <th data-field="ptu.id" data-type="numeric" data-sortable="true" data-align="right">ID</th>
+                     <th data-field="ptu.aplId" data-type="numeric"data-align="right">AplId</th>
+                     <th data-field="ptu.docDate" data-sortable="true">Дата</th>
+                     <th data-field="ptu.docNo" data-sortable="false">Номер</th>
+                     <th data-field='ptu.amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field='legalId' data-sortable="false" data-formatter="supplierFormatter">Поставщик</th>
+                     <th data-field='officeId' data-sortable="false" data-formatter="officeFormatter">Склад</th>
+                     <th data-field='ptu.comment' data-sortable="false">Примечание</th>
+                     <th data-field='ptu.status' data-sortable="false">П</th>
+                     <th data-field='ptu.statusDoc' data-sortable="false">Т</th>
+                     <th data-field='ptu.statusEx' data-sortable="false">О</th>
+                     <th data-field="ptu.id" data-formatter="activeFormatter"></th>
                  </tr>                
             </thead>
         </table>
@@ -166,23 +166,50 @@
         return params;
     }
     
-    function linkFormatter(value, row){
-        if (!value){
-            value = '---';
+    function supplierFormatter(value, row){
+        if (value){
+            $.get(
+                '/legals/display-legal/'+value,
+                function(data){
+                    if (data.name){
+                        $('#legal'+row.ptu.id).html(data.name);
+                    }            
+                }
+            );
+            return [
+                '<div>',
+                '<span id="legal'+row.ptu.id+'"></span>',
+                '</div>'
+            ].join(''); 
         }
-        return [
-            '<div class="pull-left">',
-            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
-            '</div>'
-        ].join(''); 
-    }    
+        return '';        
+    }
+
+    function officeFormatter(value, row){
+        if (value){
+            $.get(
+                '/offices/display-office/'+value,
+                function(data){
+                    if (data.name){
+                        $('#office'+row.ptu.id).html(data.name);
+                    }            
+                }
+            );
+            return [
+                '<div>',
+                '<span id="office'+row.ptu.id+'"></span>',
+                '</div>'
+            ].join(''); 
+        }
+        return '';        
+    }
     
     function amountFormatter(value){
         return Math.round(value*100)/100;
     }    
     
     function activeFormatter(value, row){
-        var url = '/ptu/edit-form/'+row.id;
+        var url = '/ptu/edit-form/'+value;
         btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs ptu-modal-show"';

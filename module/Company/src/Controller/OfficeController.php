@@ -310,4 +310,22 @@ class OfficeController extends AbstractActionController
             'rows' => $result,
         ]);                  
     }
+    
+    public function displayOfficeAction()
+    {
+        $officeId = $this->params()->fromRoute('id', -1);
+        
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($officeId);
+        
+        if ($office == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        return new JsonModel([
+            'name' => $office->getName(),
+        ]);                   
+    }
+    
 }
