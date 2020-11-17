@@ -62,10 +62,10 @@ class StockRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('p as ptu, identity(p.legal) as legalId, identity(p.office) as officeId')
+        $queryBuilder->select('p, l, o')
             ->from(Ptu::class, 'p')
-//            ->join('p.legal', 'l')
-//            ->join('p.office', 'o')    
+            ->join('p.legal', 'l')
+            ->join('p.office', 'o')    
                 ;
         
         if (is_array($params)){
