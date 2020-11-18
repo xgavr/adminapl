@@ -29,7 +29,7 @@
                     <button id="ok" type="submit" class="btn btn-default">OK</button>
                 </div>
                 <div class="form-group">
-                    <select id="supplier" class="form-control">
+                    <select id="supplierSelect" class="form-control">
                         <option selected>--</option>
                         <?php foreach ($suppliers as $supplier):?>
                             <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
@@ -161,7 +161,7 @@
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        params.supplier = $('#supplier').val();
+        params.supplier = $('#supplierSelect').val();
         
         return params;
     }
