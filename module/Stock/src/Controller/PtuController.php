@@ -63,15 +63,14 @@ class PtuController extends AbstractActionController
         $order = $this->params()->fromQuery('order', 'DESC');
         $supplierId = $this->params()->fromQuery('supplier');
         
+        $params = [
+            'q' => $q, 'sort' => $sort, 'order' => $order, 'supplierId' => $supplierId,
+        ];
         $query = $this->entityManager->getRepository(Ptu::class)
-                        ->findAllPtu(['q' => $q, 'sort' => $sort, 'order' => $order, 'supplierId' => $supplierId]);
+                        ->findAllPtu($params);
         
-        if (is_numeric($supplierId)){
-             $total = count($query->getResult());            
-        } else {
-            $total = $this->entityManager->getRepository(Ptu::class)
-                    ->count([]);
-        }    
+        $total = $this->entityManager->getRepository(Ptu::class)
+                        ->findAllPtuTotal($params);
         
         if ($offset) {
             $query->setFirstResult($offset);

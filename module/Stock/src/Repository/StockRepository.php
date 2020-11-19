@@ -89,6 +89,41 @@ class StockRepository extends EntityRepository{
     }    
     
     /**
+     * Запрос по  количество пту
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findAllPtuTotal($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(p.id) as countPtu')
+            ->from(Ptu::class, 'p')
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['supplierId'])){
+                $supplier = $entityManager->getRepository(Supplier::class)
+                        ->findOneById($params['supplierId']);
+                if ($supplier){
+                    $orX = $queryBuilder->expr()->orX();
+                    foreach ($supplier->getLegalContact()->getLegals() as $legal){
+                        $orX->add($queryBuilder->expr()->eq('p.legal', $legal->getId()));
+                    }    
+                    $queryBuilder->andWhere($orX);
+                }    
+            }            
+        }
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['countPtu'];
+    }    
+    
+    /**
      * Запрос товаров по пту
      * 
      * @param integer $ptuId
