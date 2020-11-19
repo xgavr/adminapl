@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Laminas\Filter\Digits;
+use Stock\Entity\Ptu;
 
 /**
  * Description of Legal
@@ -109,6 +110,12 @@ class Legal {
      * @ORM\ManyToMany(targetEntity="\Application\Entity\Contact", mappedBy="legals")
      */
     private $contacts;
+    
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Ptu", mappedBy="legal")
+    * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
+   */
+   private $ptu;            
 
     /**
      * Constructor.
@@ -420,4 +427,13 @@ class Legal {
         
         return $result;
     }
+    
+    /*
+     * Возвращает связанный ptu.
+     * @return Ptu
+     */    
+    public function getPtu() 
+    {
+        return $this->ptu;
+    }    
 }

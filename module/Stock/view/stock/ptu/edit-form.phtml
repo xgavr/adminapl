@@ -285,9 +285,7 @@ if ($ptu){
     }
     
     $( document ).ready(function() {
-        $('#ptu-form').submit(function() {
-            submitForm();
-        });
+        
         $('#ptugoodtable').bootstrapTable({
             onLoadSuccess: function(res){
                 ptuUpdateTotal();
@@ -295,6 +293,11 @@ if ($ptu){
         }); 
         
         var forms = $('#ptu-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
         // Loop over them and prevent submission
         var validation = Array.prototype.filter.call(forms, function(form) {
             form.addEventListener('ptu-submit', function(event) {
@@ -303,6 +306,7 @@ if ($ptu){
                     event.stopPropagation();
                 }
                 form.classList.add('was-validated');
+                submitForm();
             }, false);    
         });
     });    

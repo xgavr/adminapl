@@ -13,6 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Contact;
 use Application\Entity\Rate;
 use Doctrine\Common\Collections\Criteria;
+use Stock\Entity\Ptu;
+
 /**
  * Description of Office
  * @ORM\Entity(repositoryClass="\Company\Repository\OfficeRepository")
@@ -83,6 +85,12 @@ class Office {
     * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
    */
    private $rates;    
+    
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Ptu", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+   */
+   private $ptu;    
     
     /**
      * Constructor.
@@ -294,4 +302,12 @@ class Office {
         $this->rates[] = $rate;
     }     
             
+    /*
+     * Возвращает связанный ptu.
+     * @return Ptu
+     */    
+    public function getPtu() 
+    {
+        return $this->ptu;
+    }
 }

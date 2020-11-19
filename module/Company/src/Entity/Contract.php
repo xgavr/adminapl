@@ -5,6 +5,7 @@ namespace Company\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Company\Entity\Legal;
 use Company\Entity\Office;
+use Stock\Entity\Ptu;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -93,6 +94,12 @@ class Contract {
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
     private $company;
+    
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Ptu", mappedBy="contract")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contract_id")
+   */
+   private $ptu;        
 
     /**
      * Constructor.
@@ -347,4 +354,12 @@ class Contract {
         $this->company = $company;
     }             
 
+    /*
+     * Возвращает связанный ptu.
+     * @return Ptu
+     */    
+    public function getPtu() 
+    {
+        return $this->ptu;
+    }    
 }

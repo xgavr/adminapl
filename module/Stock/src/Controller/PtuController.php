@@ -20,6 +20,8 @@ use Stock\Entity\Unit;
 use Stock\Entity\Ntd;
 use Company\Entity\Country;
 use Application\Entity\Supplier;
+use Company\Entity\Legal;
+use Company\Entity\Contract;
 
 class PtuController extends AbstractActionController
 {
@@ -142,6 +144,19 @@ class PtuController extends AbstractActionController
             $office = $ptu->getOffice();
             $company = $ptu->getContract()->getCompany();
             $legal = $ptu->getLegal();
+            
+            if ($this->getRequest()->isPost()){
+                $data = $this->params()->fromPost();
+                $supplier = $this->entityManager->getRepository(Supplier::class)
+                        ->findOneById($data['supplier']);
+                $office = $this->entityManager->getRepository(Office::class)
+                        ->findOneById($data['office_id']);
+                $contract = $this->entityManager->getRepository(Contract::class)
+                        ->findOneById($data['contract_id']);
+                $company = $contract->getCompany();
+                $legal = $this->entityManager->getRepository(Legal::class)
+                        ->findOneById($data['legal_id']);
+            }
         }       
         
         $form = new PtuForm($this->entityManager, $office, $supplier, $company, $legal);
