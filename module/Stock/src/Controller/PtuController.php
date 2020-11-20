@@ -173,7 +173,8 @@ class PtuController extends AbstractActionController
                 unset($data['ptuGood']);
                 
                 if ($ptu){
-                    $ptu = $this->ptuManager->updatePtu($ptu, $data);
+                    $this->ptuManager->updatePtu($ptu, $data);
+                    $this->entityManager->refresh($ptu);
                 } else {
                     $ptu = $this->ptuManager->addPtu($data);
                 }    
