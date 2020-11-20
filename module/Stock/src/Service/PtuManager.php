@@ -178,8 +178,10 @@ class PtuManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('ptu', $data, ['id' => $ptu->getId()]);
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                            ->findOneById($ptu->getId());
         
-        return;
+        return $ptu;
     }
     
     /**
