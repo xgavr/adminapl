@@ -118,10 +118,18 @@ class PtuManager
      */
     public function repostAllPtu()
     {
-        $ptus = $this->entityManager->getRepository(Ptu::class)
-                ->findAll();
-        foreach ($ptus as $ptu){
-            $this->repostPtu($ptu);
+//        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        
+        $ptuQuery = $this->entityManager->getRepository(Ptu::class)
+                ->queryAllPtu();
+        $iterable = $ptu->iterate();
+        
+        foreach ($iterable as $row){
+            foreach($row as $ptu){ 
+                $this->repostPtu($ptu);
+                $this->entityManager->detach($ptu);
+            }    
         }    
         
         return;

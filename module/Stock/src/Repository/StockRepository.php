@@ -88,6 +88,40 @@ class StockRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }    
     
+    
+    /**
+     * Запрос по все пту
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function queryAllPtu($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+            ->from(Ptu::class, 'p')
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['supplierId'])){
+                $supplier = $entityManager->getRepository(Supplier::class)
+                        ->findOneById($params['supplierId']);
+                if ($supplier){
+                    $orX = $queryBuilder->expr()->orX();
+                    foreach ($supplier->getLegalContact()->getLegals() as $legal){
+                        $orX->add($queryBuilder->expr()->eq('p.legal', $legal->getId()));
+                    }    
+                    $queryBuilder->andWhere($orX);
+                }    
+            }            
+        }
+        
+        return $queryBuilder->getQuery();
+    }    
+    
     /**
      * Запрос по  количество пту
      * 
