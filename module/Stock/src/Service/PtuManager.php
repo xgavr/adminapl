@@ -129,6 +129,7 @@ class PtuManager
             foreach($row as $ptu){ 
                 $this->repostPtu($ptu);
                 $this->entityManager->detach($ptu);
+                unset($ptu);
             }    
         }    
         
