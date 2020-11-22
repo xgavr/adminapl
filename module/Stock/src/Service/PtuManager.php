@@ -123,7 +123,7 @@ class PtuManager
         
         $ptuQuery = $this->entityManager->getRepository(Ptu::class)
                 ->queryAllPtu();
-        $iterable = $ptu->iterate();
+        $iterable = $ptuQuery->iterate();
         
         foreach ($iterable as $row){
             foreach($row as $ptu){ 
