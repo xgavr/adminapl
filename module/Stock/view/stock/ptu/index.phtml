@@ -50,7 +50,7 @@
                     <select id="yearSelect" style="width: 80px" class="form-control">
                         <option>год</option>
                         <?php foreach ($years as $year):?>
-                            <option value="<?= $year?>" <?= ($value == date('Y'))? 'selected':''?>><?= $year?></option>
+                            <option value="<?= $year?>" <?= ($year == date('Y'))? 'selected':''?>><?= $year?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -58,7 +58,7 @@
                     <select id="monthSelect" style="width: 70px" class="form-control">
                         <option>мес</option>
                         <?php foreach ($monthes as $month):?>
-                            <option value="<?= $month?>" <?= ($value == date('m'))? 'selected':''?>><?= $month?></option>
+                            <option value="<?= $month?>" <?= ($month == date('m'))? 'selected':''?>><?= $month?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
