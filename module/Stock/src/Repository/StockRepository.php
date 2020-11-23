@@ -14,6 +14,7 @@ use Stock\Entity\PtuGood;
 use Stock\Entity\Unit;
 use Stock\Entity\Ntd;
 use Application\Entity\Supplier;
+use Company\Entity\Office;
 
 /**
  * Description of StockRepository
@@ -72,6 +73,14 @@ class StockRepository extends EntityRepository{
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);
             }            
+            if (!empty($params['officeId'])){
+                $office = $entityManager->getRepository(Office::class)
+                        ->findOneById($params['officeId']);
+                if ($office){
+                    $queryBuilder->andWhere('p.office = ?1')
+                            ->setParameter('1', $office->getId());
+                }
+            }
             if (!empty($params['supplierId'])){
                 $supplier = $entityManager->getRepository(Supplier::class)
                         ->findOneById($params['supplierId']);
@@ -83,6 +92,18 @@ class StockRepository extends EntityRepository{
                     $queryBuilder->andWhere($orX);
                 }    
             }            
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(p.docDate) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(p.docDate) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
         }
 
         return $queryBuilder->getQuery();
@@ -106,6 +127,14 @@ class StockRepository extends EntityRepository{
                 ;
         
         if (is_array($params)){
+            if (!empty($params['officeId'])){
+                $office = $entityManager->getRepository(Office::class)
+                        ->findOneById($params['officeId']);
+                if ($office){
+                    $queryBuilder->andWhere('p.office = ?1')
+                            ->setParameter('1', $office->getId());
+                }
+            }
             if (!empty($params['supplierId'])){
                 $supplier = $entityManager->getRepository(Supplier::class)
                         ->findOneById($params['supplierId']);
@@ -116,7 +145,19 @@ class StockRepository extends EntityRepository{
                     }    
                     $queryBuilder->andWhere($orX);
                 }    
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(p.docDate) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
             }            
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(p.docDate) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
         }
         
         return $queryBuilder->getQuery();
@@ -139,6 +180,14 @@ class StockRepository extends EntityRepository{
                 ;
         
         if (is_array($params)){
+            if (!empty($params['officeId'])){
+                $office = $entityManager->getRepository(Office::class)
+                        ->findOneById($params['officeId']);
+                if ($office){
+                    $queryBuilder->andWhere('p.office = ?1')
+                            ->setParameter('1', $office->getId());
+                }
+            }
             if (!empty($params['supplierId'])){
                 $supplier = $entityManager->getRepository(Supplier::class)
                         ->findOneById($params['supplierId']);
@@ -150,6 +199,18 @@ class StockRepository extends EntityRepository{
                     $queryBuilder->andWhere($orX);
                 }    
             }            
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(p.docDate) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(p.docDate) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();

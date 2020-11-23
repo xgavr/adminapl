@@ -48,8 +48,13 @@ class PtuController extends AbstractActionController
     {
         $suppliers = $this->entityManager->getRepository(Supplier::class)
                 ->findForPtu();
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findAll();
         return new ViewModel([
             'suppliers' => $suppliers,
+            'offices' => $offices,
+            'years' => array_combine(range(date("Y"), 2014), range(date("Y"), 2014)),
+            'monthes' => array_combine(range(1, 12), range(1, 12)),
         ]);  
     }
         
@@ -62,9 +67,14 @@ class PtuController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         $supplierId = $this->params()->fromQuery('supplier');
+        $officeId = $this->params()->fromQuery('office');
+        $year = $this->params()->fromQuery('year');
+        $month = $this->params()->fromQuery('month');
         
         $params = [
-            'q' => $q, 'sort' => $sort, 'order' => $order, 'supplierId' => $supplierId,
+            'q' => $q, 'sort' => $sort, 'order' => $order, 
+            'supplierId' => $supplierId, 'officeId' => $officeId,
+            'year' => $year, 'month' => $month,
         ];
         $query = $this->entityManager->getRepository(Ptu::class)
                         ->findAllPtu($params);

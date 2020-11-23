@@ -124,6 +124,11 @@ return [
                     'rand' => 'DoctrineExtensions\Query\Mysql\Rand',
                     'round' => 'DoctrineExtensions\Query\Mysql\Round',
                 ],
+                'datetime_functions' => [
+                    'year' => 'DoctrineExtensions\Query\Mysql\Year',
+                    'month' => 'DoctrineExtensions\Query\Mysql\Month',
+                    'day' => 'DoctrineExtensions\Query\Mysql\Day',
+                ],
             ],
         ],
         // настройка миграций
