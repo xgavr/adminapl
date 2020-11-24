@@ -319,11 +319,9 @@ class AplDocService {
     private function getCashContract($data)
     {
         $cashless = Contract::PAY_CASH;
-        if (isset($data['desc'])){
-            if (isset($data['desc']['cashless'])){
-                if ($data['desc']['cashless'] == 1){
-                    $cashless = Contract::PAY_CASHLESS;
-                }
+        if (isset($data['cashless'])){
+            if ($data['cashless'] == 1){
+                $cashless = Contract::PAY_CASHLESS;
             }
         }
         
@@ -481,7 +479,7 @@ class AplDocService {
             var_dump($body);
             exit;
         }
-        var_dump($result); exit;
+//        var_dump($result); exit;
 
         if (is_array($result)){
             if (isset($result['type'])){
