@@ -481,7 +481,7 @@ class AplDocService {
             var_dump($body);
             exit;
         }
-//        var_dump($result); exit;
+        var_dump($result); exit;
 
         if (is_array($result)){
             if (isset($result['type'])){
