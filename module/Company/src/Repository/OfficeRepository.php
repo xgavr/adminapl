@@ -58,9 +58,11 @@ class OfficeRepository extends EntityRepository{
      * @param Office $office
      * @param Legal $legal
      * @param date $dateDoc
+     * @param integer $pay
+     * 
      * @return Contract
      */
-    public function findDefaultContract($office, $legal, $dateDoc = null)
+    public function findDefaultContract($office, $legal, $dateDoc = null, $pay = Contract::PAY_CASH)
     {
         if (!$dateDoc){
             $dateDoc = date('Y-m-d');
@@ -76,6 +78,8 @@ class OfficeRepository extends EntityRepository{
                 ->setParameter('2', $legal->getId())
                 ->andWhere('c.dateStart <= ?3')
                 ->setParameter('3', $dateDoc)
+                ->andWhere('c.pay = ?4')
+                ->setParameter('4', $pay)
                 ->orderBy('c.dateStart', 'DESC')
                 ->setMaxResults(1)
                 ;
