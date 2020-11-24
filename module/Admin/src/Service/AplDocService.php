@@ -181,7 +181,7 @@ class AplDocService {
             $contract = $this->legalManager->addContract($legal, 
                     [
                         'office' => $office->getId(),
-                        'name' => 'Поставка '.($pay == Contract::PAY_CASH) ? 'Н':'Б/Н',
+                        'name' => 'Поставка '.($pay == Contract::PAY_CASH) ? 'Н':'БН',
                         'act' => trim($act),
                         'dateStart' => $dateStart,
                         'status' => Contract::STATUS_ACTIVE,
