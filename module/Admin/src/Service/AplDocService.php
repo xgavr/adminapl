@@ -339,6 +339,7 @@ class AplDocService {
 //        var_dump($data); exit;
         $docDate = $data['ds'];
         $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
         if (!$dateValidator->isValid($docDate)){
             $docDate = $data['created'];
         }
@@ -368,7 +369,6 @@ class AplDocService {
                 ->findOneByAplId($data['id']);
         if ($ptu){
             $this->ptuManager->updatePtu($ptu, $dataPtu);
-            $this->entityManager->refresh($ptu);
             $this->ptuManager->removePtuGood($ptu); 
         } else {        
             $ptu = $this->ptuManager->addPtu($dataPtu);
