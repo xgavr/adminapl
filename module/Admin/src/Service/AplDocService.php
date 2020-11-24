@@ -169,6 +169,7 @@ class AplDocService {
     private function findDefaultContract($office, $legal, $dateStart, $act, $pay = Contract::PAY_CASH)
     {
         $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
         if (!$dateValidator->isValid($dateStart)){
             $dateStart = '2012-05-15';
         }
