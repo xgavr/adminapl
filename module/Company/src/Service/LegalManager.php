@@ -269,6 +269,7 @@ class LegalManager
      */
     public function addContract($legal, $data, $flushnow = false)
     {                
+        var_dump($data); exit;
         $contract = new Contract();            
         $contract->setName($data['name']);            
         $contract->setAct($data['act']);            
