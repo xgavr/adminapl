@@ -347,7 +347,7 @@ class Ptu {
      */
     public function setDocDate($docDate) 
     {
-        $this->docNo = $docDate;
+        $this->docDate = $docDate;
     }    
         
     /**
