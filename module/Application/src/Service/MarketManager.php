@@ -52,10 +52,10 @@ class MarketManager
                     ->findBy(['raw' => $currentRaw, 'status' => Rawprice::STATUS_PARSED]);
             
             $sheet->setCellValue("A1", 'Артикул');
-            $sheet->setCellValue("B2", 'Производитель');
-            $sheet->setCellValue("C3", 'Наименование');
-            $sheet->setCellValue("D4", 'Наличие');
-            $sheet->setCellValue("E5", 'Цена');
+            $sheet->setCellValue("B1", 'Производитель');
+            $sheet->setCellValue("C1", 'Наименование');
+            $sheet->setCellValue("D1", 'Наличие');
+            $sheet->setCellValue("E1", 'Цена');
 
             $k = 2;
             foreach ($rawprices as $rawprice){
