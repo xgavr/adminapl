@@ -144,4 +144,26 @@ class LegalRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();        
     }
     
+    /**
+     * Получить юрлица контакта
+     * 
+     * @param Contact $contact
+     */
+    public function formContactLegals($contact)
+    {
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('l')
+            ->from(Legal::class, 'l')
+            ->join('l.contacts', 'c')
+            ->where('c.id = ?1')    
+            ->setParameter('1', $contact->getId())    
+            ->orderBy('c.dateStart', 'DESC')    
+                ;
+
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
 }

@@ -462,12 +462,24 @@ class Contact {
     {
         $this->messengers[] = $messenger;
     }       
-    
-    
 
-    public function getLegals() {
+    public function getLegals() 
+    {
       return $this->legals;
-   }    
+    }    
+   
+    /**
+     * Юрлица с сортировкой
+     * @return ArrayCollection
+     */
+    public function getOrderLegals() 
+    {
+        $iterator = $this->legals->getIterator();
+        $iterator->uasort(function ($a, $b) {
+            return ($a->getDateStart() < $b->getDateStart()) ? 1 : -1;
+        });        
+        return new ArrayCollection(iterator_to_array($iterator));
+    }    
    
     /**
      * Добавляет новый email к этому contact.
