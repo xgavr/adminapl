@@ -327,6 +327,19 @@ class Legal {
         return $this->bankAccounts;
     }
     
+    /**
+     * Банковские счета с сортировкой
+     * @return ArrayCollection
+     */
+    public function getOrderBankAccounts() 
+    {
+        $iterator = $this->bankAccounts->getIterator();
+        $iterator->uasort(function ($a, $b) {
+            return ($a->getId() < $b->getId()) ? 1 : -1;
+        });        
+        return new ArrayCollection(iterator_to_array($iterator));
+    }    
+    
     public function getLastActiveBankAccount()
     {
         $criteria = Criteria::create()
@@ -350,6 +363,7 @@ class Legal {
         $this->bankAccounts[] = $bankAccount;
     }    
 
+    
     /**
      * @return array
      */
@@ -358,6 +372,20 @@ class Legal {
         return $this->contracts;
     }
         
+    /**
+     * Договора с сортировкой
+     * @return ArrayCollection
+     */
+    public function getOrderContracts() 
+    {
+        $iterator = $this->contracts->getIterator();
+        $iterator->uasort(function ($a, $b) {
+            return ($a->getDateStart() < $b->getDateStart()) ? 1 : -1;
+        });        
+        return new ArrayCollection(iterator_to_array($iterator));
+    }    
+    
+    
     /**
      * Assigns.
      */
