@@ -52,7 +52,7 @@
                         </button>                                                        
                     </div>                                
                 </div>
-                 <?php foreach ($legal->getBankAccounts() as $bankAccount): ?>
+                 <?php foreach ($legal->getOrderBankAccounts() as $bankAccount): ?>
                     <div class="panel-body">
                         <div class="pull-left">
                              Банк: <?= $bankAccount->getNameWithCity() ?><br/>
@@ -97,7 +97,7 @@
                             </button>                    
                         </div>                                
                     </div>
-                     <?php foreach ($legal->getContracts() as $contract): ?>
+                     <?php foreach ($legal->getOrderContracts() as $contract): ?>
                         <div class="panel-body">
                             <div class="pull-left">
                                 Наименование: <?= $contract->getName() ?><br/>  
