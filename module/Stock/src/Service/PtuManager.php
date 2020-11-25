@@ -184,7 +184,7 @@ class PtuManager
      */
     public function updatePtu($ptu, $data, $userId = 0)            
     {
-        
+        var_dump($data); exit;
         $connection = $this->entityManager->getConnection(); 
         $connection->update('ptu', $data, ['id' => $ptu->getId()]);
         
