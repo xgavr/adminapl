@@ -15,7 +15,7 @@
 <h1>Поступление товаров</h1>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
 <!--                <button class="btn btn-default" data-toggle="modal" data-target="#modal-dialog" value="/ptu/edit-form">
@@ -86,6 +86,7 @@
                      <th data-field="docNo" data-sortable="false">Номер</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='legal.name' data-sortable="false">Поставщик</th>
+                     <th data-field='contract.name' data-sortable="false">Договор</th>
                      <th data-field='office.name' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
                      <th data-field='status' data-sortable="false">П</th>
@@ -95,43 +96,6 @@
                  </tr>                
             </thead>
         </table>
-    </div>
-    <div class="col-md-3" id="side-nav" >
-        <div class="nav nav-stacked nav-list affix">
-            <div class="panel-group">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Обработка и обновления
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Импорт из АПЛ
-                        </div>
-                        <div class="pull-right">
-                            <button value="/apl/unload-doc?doc=ptu" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Импорт одного поступления из АПЛ">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button> 
-                            <button value="/apl/unload-docs?doc=ptu" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Импорт поступлений из АПЛ">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button> 
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                            Перепровести все
-                        </div>
-                        <div class="pull-right">
-                            <button value="/ptu/repost-all-ptu/" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Перепровести все ПТУ">
-                                <span class="glyphicon glyphicon-refresh" ></span>
-                            </button> 
-                        </div>
-                    </div>
-                </div>    
-            </div>
-        </div>
     </div>
 </div>    
 
