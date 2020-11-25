@@ -235,6 +235,7 @@ if ($ptu){
     }
     
     function contractList(){
+        //alert(11);
         $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val(), function( data ) {
             $('#contract').empty();
             $.each( data.rows, function( key, value ) {
@@ -253,7 +254,9 @@ if ($ptu){
         });    
     });
     
-    $('#company').on('change', contractList());
+    $('#company').on('change', function(){
+        contractList();
+    });    
     
     $('#supplier').on('change', function(){
         $.getJSON( '/supplier/legals/'+$('#supplier').val(), function( data ) {
@@ -265,7 +268,9 @@ if ($ptu){
         });    
     });
     
-    $('#legal').on('change', contractList());
+    $('#legal').on('change', function(){
+        contractList();
+    });
     
     function ptuUpdateTotal(){
         var data = $('#ptugoodtable').bootstrapTable('getData');
