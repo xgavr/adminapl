@@ -152,22 +152,22 @@ class PtuController extends AbstractActionController
             $supplier = $ptu->getSupplier();
             $office = $ptu->getOffice();
             $company = $ptu->getContract()->getCompany();
-            $legal = $ptu->getLegal();
-            
-            if ($this->getRequest()->isPost()){
-                $data = $this->params()->fromPost();
-                $supplier = $this->entityManager->getRepository(Supplier::class)
-                        ->findOneById($data['supplier']);
-                $office = $this->entityManager->getRepository(Office::class)
-                        ->findOneById($data['office_id']);
-                $contract = $this->entityManager->getRepository(Contract::class)
-                        ->findOneById($data['contract_id']);
-                $company = $contract->getCompany();
-                $legal = $this->entityManager->getRepository(Legal::class)
-                        ->findOneById($data['legal_id']);
-            }
+            $legal = $ptu->getLegal();            
         }       
         
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->findOneById($data['supplier']);
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->findOneById($data['office_id']);
+            $contract = $this->entityManager->getRepository(Contract::class)
+                    ->findOneById($data['contract_id']);
+            $company = $contract->getCompany();
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->findOneById($data['legal_id']);
+        }
+                
         $form = new PtuForm($this->entityManager, $office, $supplier, $company, $legal);
 
         if ($this->getRequest()->isPost()) {
@@ -181,8 +181,14 @@ class PtuController extends AbstractActionController
                 unset($data['csrf']);
                 $ptuGood = $data['ptuGood'];
                 unset($data['ptuGood']);
+                $data['status_ex'] = Ptu::STATUS_EX_NEW;
+                $data['contract'] = $contract;
+                $data['legal'] = $legal;
+                $data['office'] = $office;
+                $data['apl_id'] = 0;
                 
                 if ($ptu){
+                    $data['apl_id'] = $ptu->getAplId();
                     $this->ptuManager->updatePtu($ptu, $data);
                     $this->entityManager->refresh($ptu);
                 } else {

@@ -159,6 +159,9 @@ class PtuManager
         $ptu->setAmount(0);
         $ptu->setDateCreated(date('Y-m-d H:i:s'));
         
+        $this->entityManager->persist($ptu);
+        $this->entityManager->flush($ptu);
+        
         return $ptu;        
     }
     
@@ -173,6 +176,7 @@ class PtuManager
     {
 //        $connection = $this->entityManager->getConnection(); 
 //        $connection->update('ptu', $data, ['id' => $ptu->getId()]);
+//        var_dump($data); exit;
         $ptu->setAplId($data['apl_id']);
         $ptu->setDocNo($data['doc_no']);
         $ptu->setDocDate($data['doc_date']);
