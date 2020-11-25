@@ -371,6 +371,20 @@ return [
                     ],
                 ],
             ],    
+            'market' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/market[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\MarketController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],    
             'about' => [
                 'type' => Literal::class,
                 'options' => [
@@ -399,6 +413,7 @@ return [
             Controller\ImageController::class => Controller\Factory\ImageControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\MakeController::class => Controller\Factory\MakeControllerFactory::class,
+            Controller\MarketController::class => Controller\Factory\MarketControllerFactory::class,
             Controller\MlController::class => Controller\Factory\MlControllerFactory::class,
             Controller\NameController::class => Controller\Factory\NameControllerFactory::class,
             Controller\OemController::class => Controller\Factory\OemControllerFactory::class,
@@ -432,6 +447,7 @@ return [
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
             Service\ImageManager::class => Service\Factory\ImageManagerFactory::class,
             Service\MakeManager::class => Service\Factory\MakeManagerFactory::class,
+            Service\MarketManager::class => Service\Factory\MarketManagerFactory::class,
             Service\MlManager::class => Service\Factory\MlManagerFactory::class,
             Service\NameManager::class => Service\Factory\NameManagerFactory::class,
             Service\NavManager::class => Service\Factory\NavManagerFactory::class,
@@ -495,6 +511,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\MakeController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\MarketController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

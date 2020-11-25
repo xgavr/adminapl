@@ -1,0 +1,29 @@
+<?php
+$this->headTitle('Прайс листы для торговых площадок');
+
+$this->mainMenu()->setActiveItemId('apl');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Администрирование'=>$this->url('admin'),
+            'Прайс листы для торговых площадок' => $this->url('market')
+            ]);  
+
+?>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Наличие в ZZap</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <button class="btn btn-default refresh-button" value="/market/apl-to-zzap">
+                    <span class="glyphicon glyphicon-refresh" ></span>Выгрузить
+                </button>
+                
+            </div>
+        </div>
+    </div>    
+</div>

@@ -367,6 +367,12 @@ class NavManager
                 ];
                 
                 $adminDropdownItems[] = [
+                    'id' => 'apl',
+                    'label' => 'Прайс-листы для ТП',
+                    'link'  => $url('market')
+                ];
+                
+                $adminDropdownItems[] = [
                     'id' => 'phpinfo',
                     'label' => 'phpinfo()',
                     'link'  => $url('admin', ['action' => 'phpinfo'])
