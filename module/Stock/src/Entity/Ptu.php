@@ -387,6 +387,15 @@ class Ptu {
     }
     
     /**
+     * 
+     * @param Legal $legal
+     */
+    public function setLegal($legal)
+    {
+        $this->legal = $legal;
+    }
+    
+    /**
      * Returns the legal.
      * @return Legal     
      */
@@ -413,6 +422,15 @@ class Ptu {
     }
     
     /**
+     * 
+     * @param Contract $contract
+     */
+    public function setContract($contract)
+    {
+        $this->contract = $contract;
+    }
+    
+    /**
      * Returns the contract.
      * @return Contract     
      */
@@ -421,6 +439,16 @@ class Ptu {
         return $this->contract;
     }
     
+    
+    /**
+     * 
+     * @param Office $office
+     */
+    public function setOffice($office)
+    {
+        $this->office = $office;
+    }
+
     /**
      * Returns the office.
      * @return Office     

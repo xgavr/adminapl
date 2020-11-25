@@ -360,15 +360,14 @@ class AplDocService {
         $legal = $this->legalFromSupplierAplId($data['name'], $data['ds'], $data['supplier']);        
         $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $this->getCashContract($data));
         
-        $dataPtu['office_id'] = $office->getId();
-        $dataPtu['legal_id'] = $legal->getId();
-        $dataPtu['contract_id'] = $contract->getId(); 
+        $dataPtu['office'] = $office;
+        $dataPtu['legal'] = $legal;
+        $dataPtu['contract'] = $contract; 
         
         $ptu = $this->entityManager->getRepository(Ptu::class)
                 ->findOneByAplId($data['id']);
         if ($ptu){
             $this->ptuManager->updatePtu($ptu, $dataPtu);
-            $this->entityManager->clear();
             $this->ptuManager->removePtuGood($ptu); 
         } else {        
             $ptu = $this->ptuManager->addPtu($dataPtu);

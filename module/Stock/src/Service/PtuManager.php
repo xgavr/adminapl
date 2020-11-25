@@ -145,34 +145,21 @@ class PtuManager
      */
     public function addPtu($data, $userId = 0)
     {
-        $rec = [
-            'date_created' => date('Y-m-d H:i:s'),
-//            'status' => Ptu::STATUS_ACTIVE,
-            'status_doc' => Ptu::STATUS_DOC_NOT_RECD,
-//            'status_ex' => Ptu::STATUS_EX_NEW,
-            'amount' => 0,
-//            'doc_no' => $data['doc_no'],
-//            'doc_date' => $data['doc_date'],
-//            'legal_id' => $data['legal_id'],
-//            'contract_id' => $data['contract_id'],
-//            'office_id' => $data['office_id'],
-//            'comment' => $data['comment'],
-//            'info' => $data['info'],
-        ];
-        foreach ($data as $key => $value){
-            $rec[$key] = $value;
-        }
+        $ptu = new Ptu();        
+        $ptu->setAplId($data['apl_id']);
+        $ptu->setDocNo($data['doc_no']);
+        $ptu->setDocDate($data['doc_date']);
+        $ptu->setComment($data['comment']);
+        $ptu->setStatusEx($data['status_ex']);
+        $ptu->setStatus($data['status']);
+        $ptu->setOffice($data['office']);
+        $ptu->setLegal($data['legal']);
+        $ptu->setContract($data['contract']); 
+        $ptu->setStatusDoc(Ptu::STATUS_DOC_NOT_RECD);
+        $ptu->setAmount(0);
+        $ptu->setDateCreated(date('Y-m-d H:i:s'));
         
-        $connection = $this->entityManager->getConnection(); 
-        $connection->insert('ptu', $rec);
-        $ptuId = $connection->lastInsertId();
-        if ($ptuId){
-            $ptu = $this->entityManager->getRepository(Ptu::class)
-                    ->findOneById($ptuId);
-            return $ptu;
-        }
-        
-        return;        
+        return $ptu;        
     }
     
     /**
@@ -184,8 +171,20 @@ class PtuManager
      */
     public function updatePtu($ptu, $data, $userId = 0)            
     {
-        $connection = $this->entityManager->getConnection(); 
-        $connection->update('ptu', $data, ['id' => $ptu->getId()]);
+//        $connection = $this->entityManager->getConnection(); 
+//        $connection->update('ptu', $data, ['id' => $ptu->getId()]);
+        $ptu->setAplId($data['apl_id']);
+        $ptu->setDocNo($data['doc_no']);
+        $ptu->setDocDate($data['doc_date']);
+        $ptu->setComment($data['comment']);
+        $ptu->setStatusEx($data['status_ex']);
+        $ptu->setStatus($data['status']);
+        $ptu->setOffice($data['office']);
+        $ptu->setLegal($data['legal']);
+        $ptu->setContract($data['contract']);
+        
+        $this->entityManager->persist($ptu);
+        $this->entityManager->flush($ptu);
         
         return;
     }
