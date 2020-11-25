@@ -360,6 +360,8 @@ class AplDocService {
         $legal = $this->legalFromSupplierAplId($data['name'], $data['ds'], $data['supplier']);        
         $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $this->getCashContract($data));
         
+        var_dump($contract->getId()); exit;
+        
         $dataPtu['office_id'] = $office->getId();
         $dataPtu['legal_id'] = $legal->getId();
         $dataPtu['contract_id'] = $contract->getId(); 
