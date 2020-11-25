@@ -368,7 +368,7 @@ class AplDocService {
                 ->findOneByAplId($data['id']);
         if ($ptu){
             $this->ptuManager->updatePtu($ptu, $dataPtu);
-            $this->entityManager->refresh($ptu);
+            $this->entityManager->clear($ptu);
             $this->ptuManager->removePtuGood($ptu); 
         } else {        
             $ptu = $this->ptuManager->addPtu($dataPtu);
