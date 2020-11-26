@@ -792,7 +792,7 @@ class IndexController extends AbstractActionController
 
     public function testWammAction()
     {
-        $this->smsManager->wamm(['phone' => '79096319425', 'text' => 'тест']);
+        $this->smsManager->wamm(['phone' => '79096319425', 'text' => 'Мама мыла раму!']);
         
         return new JsonModel([
             'ok'
