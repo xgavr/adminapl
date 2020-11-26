@@ -27,11 +27,17 @@ class MarketManager
      * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
+    
+    /*
+     * @var \Admin\Service\FtpManager
+     */
+    private $ftpManager;    
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $ftpManager)
     {
         $this->entityManager = $entityManager;
+        $this->ftpManager = $ftpManager;
     }
     
     /**
@@ -73,9 +79,13 @@ class MarketManager
                 }    
             }
             
-            $filename = self::MARKET_FOLDER.'/apl2zzap.xlsx';
+            $filename = 'apl2zzap.xlsx';
+            $path = self::MARKET_FOLDER.'/'.$filename;
+            
             $writer = new Xlsx($spreadsheet);
-            $writer->save($filename);
+            $writer->save($path);
+            
+            $this->ftpManager->putMarketPriceToApl(['source_file' => $path, 'dest_file' => $filename]);            
         }
         
         return;

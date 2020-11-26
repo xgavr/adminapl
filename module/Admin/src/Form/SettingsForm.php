@@ -66,12 +66,34 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([           
             'type'  => 'text',
+            'name' => 'wamm_url',
+            'attributes' => [
+                'id' => 'wamm_url'
+            ],
+            'options' => [
+                'label' => 'WAMM url',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'wamm_api_id',
+            'attributes' => [
+                'id' => 'wamm_api_id'
+            ],
+            'options' => [
+                'label' => 'WAMM токен',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
             'name' => 'ftp_apl_suppliers_price',
             'attributes' => [
                 'id' => 'ftp_apl_suppliers_price'
             ],
             'options' => [
-                'label' => 'FTP АПЛ для прайсов поставщиков',
+                'label' => 'FTP АПЛ',
             ],
         ]);
                 
@@ -94,6 +116,28 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'Пароль на FTP АПЛ для прайсов поставщиков',
+            ],
+        ]);
+                
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'ftp_apl_market_price_login',
+            'attributes' => [
+                'id' => 'ftp_apl_market_price_login'
+            ],
+            'options' => [
+                'label' => 'Логин на FTP АПЛ для прайсов маркетов',
+            ],
+        ]);
+                
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'ftp_apl_market_price_password',
+            'attributes' => [
+                'id' => 'ftp_apl_market_price_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на FTP АПЛ для прайсов маркетов',
             ],
         ]);
                 
@@ -211,6 +255,44 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ]);          
         
         $inputFilter->add([
+                'name'     => 'wamm_api_id',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'wamm_url',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
                 'name'     => 'ftp_apl_suppliers_price',
                 'required' => false,
                 'filters'  => [
@@ -250,6 +332,44 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'ftp_apl_suppliers_price_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'ftp_apl_market_price_login',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'ftp_apl_market_price_password',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

@@ -87,10 +87,15 @@ class AdminManager {
         
         $config->admin->sms_ru_url = $data['sms_ru_url'];
         $config->admin->sms_ru_api_id = $data['sms_ru_api_id'];
+        $config->admin->wamm_url = $data['wamm_url'];
+        $config->admin->wamm_api_id = $data['wamm_api_id'];
                 
         $config->admin->ftp_apl_suppliers_price = $data['ftp_apl_suppliers_price'];
         $config->admin->ftp_apl_suppliers_price_login = $data['ftp_apl_suppliers_price_login'];
         $config->admin->ftp_apl_suppliers_price_password = $data['ftp_apl_suppliers_price_password'];
+
+        $config->admin->ftp_apl_market_price_login = $data['ftp_apl_market_price_login'];
+        $config->admin->ftp_apl_market_price_password = $data['ftp_apl_market_price_password'];
 
         $config->admin->autoru_email = $data['autoru_email'];
         $config->admin->autoru_email_password = $data['autoru_email_password'];

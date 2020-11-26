@@ -21,6 +21,14 @@ $form->get('sms_ru_api_id')->setAttributes([
     'placeholder'=>'СМС.РУ api_id',
     ]);
 
+$form->get('wamm_api_id')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('wamm_url')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('sms_ru_url')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'СМС.РУ url http://sms.ru/sms/send',
@@ -35,6 +43,14 @@ $form->get('ftp_apl_suppliers_price_login')->setAttributes([
     ]);
 
 $form->get('ftp_apl_suppliers_price_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ftp_apl_market_price_login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ftp_apl_market_price_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -63,15 +79,24 @@ $form->prepare();
 
 ?>
 
-<h1>Настройки</h1>
+<div class="row">
+    <div class="col-md-2">
+        <button class="btn btn-default test-button" value="/admin/test-sms">
+            <span class="glyphicon glyphicon-phone" ></span>Тестовая смс
+        </button>        
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-default test-button" value="/admin/test-wamm">
+            <span class="glyphicon glyphicon-phone" ></span>Wamm тест
+        </button>
+    </div>    
+</div>
 
-<p>
-    Заполните форму и нажмите <i>Сохранить</i>.
-</p>
+<h1>Настройки</h1>
 
 <?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('sms_ru_url')); ?>
@@ -86,11 +111,19 @@ $form->prepare();
         </div>
                 
         <div class="form-group">
-            <button class="btn btn-default test-button" value="/admin/test-sms">
-                <span class="glyphicon glyphicon-phone" ></span>Тестовая смс
-            </button>
-        </div>    
-                
+            <?= $this->formLabel($form->get('wamm_url')); ?>
+            <?= $this->formElement($form->get('wamm_url')); ?>
+            <?= $this->formElementErrors($form->get('wamm_url')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('wamm_api_id')); ?>
+            <?= $this->formElement($form->get('wamm_api_id')); ?>
+            <?= $this->formElementErrors($form->get('wamm_api_id')); ?>                  
+        </div>                
+    </div>   
+    <div class="col-md-3">
+        
         <div class="form-group">
             <?= $this->formLabel($form->get('ftp_apl_suppliers_price')); ?>
             <?= $this->formElement($form->get('ftp_apl_suppliers_price')); ?>
@@ -109,8 +142,20 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('ftp_apl_suppliers_price_password')); ?>                  
         </div>
         
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ftp_apl_market_price_login')); ?>
+            <?= $this->formElement($form->get('ftp_apl_market_price_login')); ?>
+            <?= $this->formElementErrors($form->get('ftp_apl_market_price_login')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ftp_apl_market_price_password')); ?>
+            <?= $this->formElement($form->get('ftp_apl_market_price_password')); ?>
+            <?= $this->formElementErrors($form->get('ftp_apl_market_price_password')); ?>                  
+        </div>
+        
     </div>   
-    <div class="col-md-4">
+    <div class="col-md-3">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('autoru_email')); ?>
@@ -136,14 +181,15 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('telefonistka_email_password')); ?>                  
         </div>
 
+    </div>    
+    
+    <div class="col-md-3" id="side-nav" >
         <div class="form-group">
             <?= $this->formLabel($form->get('allow_date')); ?>
             <?= $this->formElement($form->get('allow_date')); ?>
             <?= $this->formElementErrors($form->get('allow_date')); ?>                  
         </div>
-    </div>    
-    
-    <div class="col-md-4" id="side-nav" >
+
         <ul class="nav nav-stacked nav-list affix">
             <li class="active">
                 <?= $this->formElement($form->get('submit')); ?>

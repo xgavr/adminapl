@@ -77,4 +77,26 @@ class FtpManager {
         
         return;        
     }
+    
+    /*
+     * Перекинуть прайс в папку market на АПЛ
+     *  @var $params array
+     * $params['source_file'] - локальный файл
+     * $params['dest_file'] - файл на фтп
+     */
+    public function putMarketPriceToApl($params)
+    {
+        $settings = $this->adminManager->getSettings();
+        if ($settings['ftp_apl_suppliers_price']){
+            $params['host'] = $settings['ftp_apl_suppliers_price'];
+            $params['login'] = $settings['ftp_apl_market_price_login'];
+            $params['password'] = $settings['ftp_apl_market_price_password'];
+            
+            if (file_exists($params['source_file']) && $params['dest_file']){
+                return $this->put($params);
+            }
+        }
+        
+        return;        
+    }    
 }

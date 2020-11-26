@@ -783,7 +783,16 @@ class IndexController extends AbstractActionController
 
     public function testSmsAction()
     {
-        $this->smsManager->send(['phone' => '89096319425', 'text' => 'тест']);
+        $this->smsManager->send(['phone' => '79096319425', 'text' => 'тест']);
+        
+        return new JsonModel([
+            'ok'
+        ]);        
+    }
+
+    public function testWammAction()
+    {
+        $this->smsManager->wamm(['phone' => '79096319425', 'text' => 'тест']);
         
         return new JsonModel([
             'ok'
