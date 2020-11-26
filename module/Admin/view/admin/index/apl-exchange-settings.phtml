@@ -78,6 +78,10 @@ $form->get('ptu')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('market')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -177,6 +181,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('good_price')); ?>
             <?= $this->formElement($form->get('good_price')); ?>
             <?= $this->formElementErrors($form->get('good_price')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('market')); ?>
+            <?= $this->formElement($form->get('market')); ?>
+            <?= $this->formElementErrors($form->get('market')); ?>                  
         </div>
 
     </div>

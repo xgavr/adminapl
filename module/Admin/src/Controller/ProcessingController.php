@@ -140,12 +140,18 @@ class ProcessingController extends AbstractActionController
      */
     private $goodsManager;    
 
+    /**
+     * MarketManager manager.
+     * @var \Application\Service\MarketManager
+     */
+    private $marketManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
-            $aplDocService) 
+            $aplDocService, $marketManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -167,6 +173,7 @@ class ProcessingController extends AbstractActionController
         $this->assemblyManager = $assemblyManager;
         $this->goodsManager = $goodsManager;
         $this->settingManager = $settingManager;
+        $this->marketManager = $marketManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -1253,6 +1260,25 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['ptu'] == 1){
             $this->aplDocService->unloadDocs();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
+     * Выгрузка прайслистов для ТП
+     * 
+     * @return JsonModel
+     */
+    public function marketPricesAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['market'] == 1){
+            $this->marketManager->aplToZzap();
         }    
         
         return new JsonModel([
