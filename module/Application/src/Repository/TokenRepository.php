@@ -1223,6 +1223,8 @@ class TokenRepository  extends EntityRepository
             $result[] = $row['lemma'];
         }
         
+        sort($result);
+        
         return implode('_', $result);
     }   
     
