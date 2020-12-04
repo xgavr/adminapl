@@ -117,7 +117,7 @@ class PriceManager {
     
     /**
      * Проверка почты в ящике поставщика
-     * @param Application\Entity\PriceGettting $priceGetting
+     * @param PriceGettting $priceGetting
      */
     public function getPriceByMail($priceGetting)
     {
@@ -129,6 +129,8 @@ class PriceManager {
                 'password' => $priceGetting->getEmailPassword(),
                 'leave_message' => false,
             ];
+            
+            var_dump($box); exit;
 
             $mailList = $this->postManager->readImap($box);
 
