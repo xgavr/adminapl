@@ -130,9 +130,9 @@ class PriceManager {
                 'leave_message' => false,
             ];
             
-            var_dump($box); exit;
-
             $mailList = $this->postManager->readImap($box);
+            
+            var_dump(count($mailList)); exit;
 
             $priceNameValidator = new PriceNameValidator();
             
