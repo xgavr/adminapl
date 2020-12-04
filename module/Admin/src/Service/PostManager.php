@@ -421,6 +421,7 @@ class PostManager {
                         $params['password']
                 );
 
+                var_dump($connection); exit;
                 if ($connection){
                       //Просмотр названий папок
     //                $list = imap_list($connection, '{imap.yandex.ru:993/imap/ssl}', '*');
@@ -431,7 +432,6 @@ class PostManager {
     //    
     //                }            
 
-                    var_dump($connection);
                     
                     $imap_obj = imap_check($connection);
 
