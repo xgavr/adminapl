@@ -132,8 +132,6 @@ class PriceManager {
             
             $mailList = $this->postManager->readImap($box);
             
-            var_dump(count($mailList)); exit;
-
             $priceNameValidator = new PriceNameValidator();
             
             if (count($mailList)){

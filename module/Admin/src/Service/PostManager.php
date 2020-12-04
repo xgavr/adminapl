@@ -431,7 +431,7 @@ class PostManager {
     //    
     //                }            
 
-//                    var_dump($connection);
+                    var_dump($connection);
                     
                     $imap_obj = imap_check($connection);
 
