@@ -15,6 +15,7 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 use Application\Entity\GenericGroup;
+use Application\Entity\Oem;
 
 /**
  * Description of AssemblyManager
@@ -103,7 +104,7 @@ class AssemblyManager
         
         $this->entityManager->flush($good);
         
-        $this->entityManager->getRepository(\Application\Entity\Oem::class)
+        $this->entityManager->getRepository(Oem::class)
                 ->addMyCodeAsOe($good);
         
         return $good;
@@ -167,7 +168,7 @@ class AssemblyManager
                 ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
         
         if ($good){
-            $this->entityManager->getRepository(\Application\Entity\Oem::class)
+            $this->entityManager->getRepository(Oem::class)
                     ->addMyCodeAsOe($good);
         }    
         
@@ -738,6 +739,8 @@ class AssemblyManager
             if (!$good){
                 $good = $this->addNewGoodFromArticle($article, $producer, $zeroGroup);
             } else {
+                $this->entityManager->getRepository(Oem::class)
+                        ->addMyCodeAsOe($good);               
                 $this->entityManager->getRepository(Article::class)
                         ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
                 
