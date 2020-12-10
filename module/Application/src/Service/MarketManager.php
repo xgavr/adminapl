@@ -66,14 +66,15 @@ class MarketManager
             $k = 2;
             foreach ($rawprices as $rawprice){
                 if (!$rawprice->getComment() && $rawprice->getRealRest()){
-                    $good = $rawprice->getGood();
+                    $good = $rawprice->getCode()->getGood();
                     if ($good){
                         $opts = $good->getOpts();
                         $sheet->setCellValue("A$k", $good->getCode());
                         $sheet->setCellValue("B$k", $good->getProducer()->getName());
                         $sheet->setCellValue("C$k", $good->getName());
                         $sheet->setCellValue("D$k", $rawprice->getRealRest());
-                        $sheet->setCellValue("E$k", $opts[5]);
+//                        $sheet->setCellValue("E$k", $opts[5]);
+                        $sheet->setCellValue("E$k", $rawprice->getRealPrice());
                         $k++;
                     }    
                 }    
