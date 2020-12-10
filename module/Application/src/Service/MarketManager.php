@@ -65,7 +65,7 @@ class MarketManager
 
             $k = 2;
             foreach ($rawprices as $rawprice){
-                if (!$rawprice->getComment() && $rawprice->getRealRest()){
+                if (!$rawprice->getComment() && $rawprice->getRealRest() && $rawprice->getCode()){
                     $good = $rawprice->getCode()->getGood();
                     if ($good){
                         $opts = $good->getOpts();
