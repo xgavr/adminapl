@@ -67,7 +67,11 @@ class LogRepository extends EntityRepository{
                 if (!empty($message['tokenGroup'])){
                     $tokenGroup = $entityManager->getRepository(TokenGroup::class)
                             ->findOneById($message['tokenGroup']);
-                    $param = "ограничение <a href='/name/view-token-group/{$message['tokenGroup']}'>{$tokenGroup->getName()}</a>";
+                    if ($tokenGroup){
+                        $param = "ограничение <a href='/name/view-token-group/{$message['tokenGroup']}'>{$tokenGroup->getName()}</a>";
+                    } else {
+                        $param = "ограничение <a href='/name/view-token-group/{$message['tokenGroup']}'>{$message['tokenGroup']}</a>";                        
+                    }   
                 }
                 if (!empty($message['office'])){
                     $office = $entityManager->getRepository(Office::class)
