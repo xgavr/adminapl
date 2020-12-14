@@ -70,7 +70,7 @@ class LogRepository extends EntityRepository{
                     if ($tokenGroup){
                         $param = "ограничение <a href='/name/view-token-group/{$message['tokenGroup']}'>{$tokenGroup->getName()}</a>";
                     } else {
-                        $param = "ограничение <a href='/name/view-token-group/{$message['tokenGroup']}'>{$message['tokenGroup']}</a>";                        
+                        $param = "ограничение удаленная группа {$message['tokenGroup']}";                        
                     }   
                 }
                 if (!empty($message['office'])){
