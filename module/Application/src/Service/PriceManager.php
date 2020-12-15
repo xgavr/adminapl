@@ -114,6 +114,30 @@ class PriceManager {
         return;
     }
     
+    /**
+     * Закинуть прайс в папку поставщика с таким же прайсом
+     * 
+     * @param Supplier $supplier
+     * @param string $filename
+     * @return null
+     */
+    public function putPriceFileToPriceSupplier($supplier, $filename)
+    {
+        if (file_exists($filename)){
+            $filter = new Basename();
+            $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
+                    ->findBy(['priceSupplier' => $supplier->getId(), 'status' => PriceGetting::STATUS_ACTIVE]);
+            foreach ($priceGettings as $priceGetting){
+                $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$filter->filter($filename);
+                if (copy($filename, $target)){
+                    continue;
+                }
+            }    
+        }
+        
+        return;
+    }
+    
     
     /**
      * Проверка почты в ящике поставщика
@@ -146,7 +170,9 @@ class PriceManager {
                                 if (file_exists($attachment['temp_file'])){ 
                                     $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
                                     if (copy($attachment['temp_file'], $target)){
-
+                                        
+                                        $this->putPriceFileToPriceSupplier($priceGetting->getSupplier(), $target);
+                                        
                                         if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
                                             $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
                                             $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
@@ -244,6 +270,8 @@ class PriceManager {
                     if ($result === false){
 
                     } else {
+                        $this->putPriceFileToPriceSupplier($priceGetting->getSupplier(), $target);
+                        
                         if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
                             $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$filename;
                             $this->ftpManager->putPriceToApl(['source_file' => $target, 'dest_file' => $destfile]);
