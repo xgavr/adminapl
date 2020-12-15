@@ -119,26 +119,30 @@ $this->headScript()
                                 <div class="panel-body">
                                     <div class="pull-left">
                                         <?= $priceGetting->getName() ?><br/>
-                                        Email: <span><?= $priceGetting->getEmail() ?></span> 
-                                        <?php if ($priceGetting->getEmail()): ?>
-                                            <button value="/price/by-mail/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
-                                                    title="Проверить почту">
-                                                <span class="glyphicon glyphicon-envelope" ></span>
-                                            </button>
-                                        <?php endif; ?>
-                                        <br/>
-                                        Email пароль: <span><?= $priceGetting->getEmailPassword() ?></span><br/>
-                                        FTP сервер: <span><?= $priceGetting->getFtp() ?></span><br/>
-                                        FTP папка: <span><?= $priceGetting->getFtpDir() ?></span><br/>
-                                        FTP логин: <span><?= $priceGetting->getFtpLogin() ?></span><br/>
-                                        FTP пароль: <span><?= $priceGetting->getFtpPassword() ?></span><br/>
-                                        Ссылка на скачивание: <span><?= $priceGetting->getLink() ?></span>
-                                        <?php if ($priceGetting->getLink()): ?>
-                                            <button value="/price/by-link/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
-                                                    title="Скачать по ссылке">
-                                                <span class="glyphicon glyphicon-save-file" ></span>
-                                            </button>
-                                        <?php endif; ?>
+                                        <?php if ($priceGetting->getPriceSupplier()):?>
+                                        Использовать прайс <a href="/supplier/view/<?= $priceGetting->getPriceSupplier()->getId()?>" target="_blank"><?= $priceGetting->getPriceSupplier()->getName()?></a>
+                                        <?php else:?>
+                                            Email: <span><?= $priceGetting->getEmail() ?></span> 
+                                            <?php if ($priceGetting->getEmail()): ?>
+                                                <button value="/price/by-mail/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
+                                                        title="Проверить почту">
+                                                    <span class="glyphicon glyphicon-envelope" ></span>
+                                                </button>
+                                            <?php endif; ?>
+                                            <br/>
+                                            Email пароль: <span><?= $priceGetting->getEmailPassword() ?></span><br/>
+                                            FTP сервер: <span><?= $priceGetting->getFtp() ?></span><br/>
+                                            FTP папка: <span><?= $priceGetting->getFtpDir() ?></span><br/>
+                                            FTP логин: <span><?= $priceGetting->getFtpLogin() ?></span><br/>
+                                            FTP пароль: <span><?= $priceGetting->getFtpPassword() ?></span><br/>
+                                            Ссылка на скачивание: <span><?= $priceGetting->getLink() ?></span>
+                                            <?php if ($priceGetting->getLink()): ?>
+                                                <button value="/price/by-link/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
+                                                        title="Скачать по ссылке">
+                                                    <span class="glyphicon glyphicon-save-file" ></span>
+                                                </button>
+                                            <?php endif; ?>
+                                        <?php endif;?>    
                                         <br/>
                                         <?= $priceGetting->getStatusFilenameRuleAsString() ?><br/>
                                         Обмен с АПЛ: <span><?= $priceGetting->getOrderToAplAsString() ?></span><br/>

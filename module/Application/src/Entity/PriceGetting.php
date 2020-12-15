@@ -115,6 +115,12 @@ class PriceGetting {
      */
     private $supplier;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="priceGettingSupplier") 
+     * @ORM\JoinColumn(name="price_supplier", referencedColumnName="id")
+     */
+    private $priceSupplier;    
+
     public function getId() 
     {
         return $this->id;
@@ -226,6 +232,15 @@ class PriceGetting {
         $this->dateCreated = $dateCreated;
     }     
     
+    public function getPriceSupplier() 
+    {
+        return $this->priceSupplier;
+    }
+
+    public function setPriceSupplier($priceSupplier) 
+    {
+        $this->priceSupplier = $priceSupplier;
+    }         
     
     /**
      * Returns status.

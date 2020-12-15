@@ -34,6 +34,10 @@ $form->get('link')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('priceSupplier')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('filename')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -136,6 +140,16 @@ $form->prepare();
                     </div>
                 </div>    
                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('priceSupplier')); ?>
+                            <?= $this->formElement($form->get('priceSupplier')); ?>
+                            <?= $this->formElementErrors($form->get('priceSupplier')); ?>                  
+                        </div>
+
+                    </div>
+                </div>    
+                <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
                             <?= $this->formLabel($form->get('statusFilename')); ?>
@@ -182,7 +196,7 @@ $form->prepare();
                     $('#price-getting-modal').modal('hide');
                     window.location.reload();
                 } else {
-                    $('#price-getting-modal-content').html(data);
+                    $('#modal-content').html(data);
                 }    
             })
             .fail(function (e) {

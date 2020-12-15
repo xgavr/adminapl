@@ -443,6 +443,14 @@ class SupplierManager
         $priceGetting->setFilename($data['filename']);
         $priceGetting->setOrderToApl($data['orderToApl']);
         
+        $priceSupplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($data['priceSupplier']);
+        if ($priceSupplier){
+            $priceGetting->setPriceSupplier($priceSupplier);
+        } else{
+            $priceGetting->setPriceSupplier(NULL);
+        }    
+        
         $currentDate = date('Y-m-d H:i:s');
         $priceGetting->setDateCreated($currentDate);        
         
@@ -469,6 +477,13 @@ class SupplierManager
         $priceGetting->setStatusFilename($data['statusFilename']);
         $priceGetting->setFilename($data['filename']);
         $priceGetting->setOrderToApl($data['orderToApl']);
+        $priceSupplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($data['priceSupplier']);
+        if ($priceSupplier){
+            $priceGetting->setPriceSupplier($priceSupplier);
+        } else{
+            $priceGetting->setPriceSupplier(NULL);
+        }    
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($priceGetting);

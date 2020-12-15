@@ -398,7 +398,7 @@ class SupplierController extends AbstractActionController
             $priceGetting = null;
         }
         
-        $form = new PriceGettingForm();
+        $form = new PriceGettingForm($this->entityManager);
 
         if ($this->getRequest()->isPost()) {
             
@@ -432,6 +432,7 @@ class SupplierController extends AbstractActionController
                     'filename' => $priceGetting->getFilename(),  
                     'statusFilename' => $priceGetting->getStatusFilename(),  
                     'orderToApl' => $priceGetting->getOrderToApl(),  
+                    'priceSupplier' => $priceGetting->getPriceSupplier(),  
                 ];
                 $form->setData($data);
             }    

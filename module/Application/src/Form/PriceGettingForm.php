@@ -8,6 +8,9 @@
 namespace Application\Form;
 
 use Laminas\Form\Form;
+use DoctrineModule\Persistence\ObjectManagerAwareInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+
 use Laminas\InputFilter\InputFilter;
 use Application\Entity\PriceGetting;
 
@@ -18,13 +21,20 @@ use Application\Entity\PriceGetting;
  */
 class PriceGettingForm extends Form
 {
+    
+    protected $objectManager;
+
+    protected $entityManager;
+    
     /**
      * Конструктор.     
      */
-    public function __construct()
+    public function __construct($entityManager)
     {
         // Определяем имя формы.
         parent::__construct('price-getting-form');
+
+        $this->entityManager = $entityManager;
      
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -129,6 +139,24 @@ class PriceGettingForm extends Form
                 'label' => 'Ссылка на файл прайса',
             ],
         ]);
+        
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'priceSupplier',
+            'attributes' => [                
+                'id' => 'supplier',
+                'data-live-search'=> true,
+                'class' => "selectpicker",
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Application\Entity\Supplier',
+                'label' => 'Использовать прайс:',
+                'property'       => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--использовать свой прайс--',                 
+            ],
+        ]);        
         
         // Добавляем поле "filename"
         $this->add([           
@@ -373,6 +401,14 @@ class PriceGettingForm extends Form
             ]);
         
         $inputFilter->add([
+                'name'     => 'priceSupplier',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]);          
+        
+        
+        $inputFilter->add([
                 'name'     => 'filename',
                 'required' => false,
                 'filters'  => [
@@ -426,5 +462,16 @@ class PriceGettingForm extends Form
             ]); 
         
         
-    }    
+    }   
+    
+    public function setObjectManager(ObjectManager $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
+
+    public function getObjectManager()
+    {
+        return $this->objectManager;
+    }        
+        
 }
