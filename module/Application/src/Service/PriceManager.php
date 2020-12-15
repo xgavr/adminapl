@@ -235,8 +235,13 @@ class PriceManager {
             $client = new Client($priceGetting->getLink());
             $client->setMethod('GET');
             $client->setOptions(['timeout' => 60]);
-            
-            $response = $client->send();
+            try{
+                $response = $client->send();
+            } catch(\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+                return false;
+            } catch(\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                return false;
+            }    
             
             $filename = '';
             if ($response->isSuccess()){
@@ -281,7 +286,7 @@ class PriceManager {
             }            
         }
         
-        return;
+        return true;
     }
     
     /**
@@ -297,7 +302,10 @@ class PriceManager {
                 ->findBy(['status' => PriceGetting::STATUS_ACTIVE]);
 
         foreach ($priceGettings as $priceGetting){
-            $this->getPriceByLink($priceGetting);
+            if (!$this->getPriceByLink($priceGetting)){
+                sleep(10);
+                $this->getPriceByLink($priceGetting);
+            }
             if (time() > $startTime + 840){
                 return;
             }            
