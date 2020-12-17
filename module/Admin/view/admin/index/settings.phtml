@@ -29,6 +29,14 @@ $form->get('wamm_url')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('dadata_api_key')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('dadata_standart_key')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('sms_ru_url')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'СМС.РУ url http://sms.ru/sms/send',
@@ -120,6 +128,18 @@ $form->prepare();
             <?= $this->formLabel($form->get('wamm_api_id')); ?>
             <?= $this->formElement($form->get('wamm_api_id')); ?>
             <?= $this->formElementErrors($form->get('wamm_api_id')); ?>                  
+        </div>                
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('dadata_api_key')); ?>
+            <?= $this->formElement($form->get('dadata_api_key')); ?>
+            <?= $this->formElementErrors($form->get('dadata_api_key')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('dadata_standart_key')); ?>
+            <?= $this->formElement($form->get('dadata_standart_key')); ?>
+            <?= $this->formElementErrors($form->get('dadata_standart_key')); ?>                  
         </div>                
     </div>   
     <div class="col-md-3">

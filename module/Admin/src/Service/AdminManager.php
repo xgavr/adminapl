@@ -90,6 +90,9 @@ class AdminManager {
         $config->admin->wamm_url = $data['wamm_url'];
         $config->admin->wamm_api_id = $data['wamm_api_id'];
                 
+        $config->admin->dadata_api_key = $data['dadata_api_key'];
+        $config->admin->dadata_standart_key = $data['dadata_standart_key'];
+
         $config->admin->ftp_apl_suppliers_price = $data['ftp_apl_suppliers_price'];
         $config->admin->ftp_apl_suppliers_price_login = $data['ftp_apl_suppliers_price_login'];
         $config->admin->ftp_apl_suppliers_price_password = $data['ftp_apl_suppliers_price_password'];

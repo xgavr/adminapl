@@ -19,13 +19,20 @@ class LegalManager
      * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;  
+    
+    /**
+     * Doctrine entity manager.
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;  
         
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager) 
+    public function __construct($entityManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
+        $this->adminManager = $adminManager;
     }
  
     /**
@@ -260,6 +267,28 @@ class LegalManager
         return;
     }
    
+    /*
+     * Получение информации о предприятии по ИНН
+     * @var $inn string
+     * return json 
+     */
+    public function innInfo($inn)
+    {
+        $inn = preg_replace('/[^0-9]/', '', $inn);
+        if (strlen($inn) >= 10){
+            $setting = $this->adminManager->getSettings();
+            $token = $setting['dadata_api_key'];
+            $secret = $setting['dadata_standart_key'];
+            $dadata = new \Dadata\DadataClient($token, $secret);
+
+            $data = $dadata->findById("party", $inn);
+//            var_dump($data); exit;
+            return $data;
+        }    
+        
+        return;
+    }
+
     /**
      * Добавить договор
      * 

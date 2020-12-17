@@ -532,6 +532,24 @@ class LegalController extends AbstractActionController
         );           
     }
     
+    public function innInfoAction()
+    {
+        $inn = $this->params()->fromQuery('inn', '');
+        
+        if ($inn){
+            $data = $this->legalManager->innInfo($inn);
+        } else {
+            $data = [];
+        }    
+        
+        if (!is_array($data)){
+            $data = [];
+        }
+        return new JsonModel(
+           $data
+        );           
+    }
+    
     public function contractFormAction()
     {
         $legalId = (int)$this->params()->fromRoute('id', -1);

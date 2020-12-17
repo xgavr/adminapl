@@ -88,6 +88,28 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([           
             'type'  => 'text',
+            'name' => 'dadata_api_key',
+            'attributes' => [
+                'id' => 'dadata_api_key'
+            ],
+            'options' => [
+                'label' => 'Дадата API-ключ',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'dadata_standart_key',
+            'attributes' => [
+                'id' => 'dadata_standart_key'
+            ],
+            'options' => [
+                'label' => 'Дадата Секретный ключ',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
             'name' => 'ftp_apl_suppliers_price',
             'attributes' => [
                 'id' => 'ftp_apl_suppliers_price'
@@ -275,6 +297,44 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'wamm_url',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'dadata_api_key',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'dadata_standart_key',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
