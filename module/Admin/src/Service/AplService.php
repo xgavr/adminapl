@@ -2204,7 +2204,7 @@ class AplService {
             $result = $ok = false;
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
                     $result = $ok = true;
                 }
