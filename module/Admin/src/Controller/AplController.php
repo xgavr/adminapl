@@ -688,4 +688,33 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function sendFillVolumesAction()
+    {
+        $carId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $car = $this->entityManager->getRepository(\Application\Entity\Car::class)
+                ->findOneById($carId);  
+        	
+        if ($car == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+                
+        $this->aplService->sendFillVolumes($car);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }    
+
+    public function updateFillVolumesAction()
+    {                
+        $this->aplService->updateFillVolumes();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+    
 }

@@ -340,6 +340,13 @@ class NavManager
                     'label' => 'Настройи ZetaSoft',
                     'link'  => $url('admin', ['action' => 'zetasoft-settings'])                    
                 ];
+                
+                $settingsDropDownItems[] = [
+                    'id' => 'partsapi',
+                    'label' => 'Настройи PartsApi',
+                    'link'  => $url('admin', ['action' => 'parts-api-settings'])                    
+                ];
+
                 $settingsDropDownItems[] = [
                     'id' => 'tdExchange',
                     'label' => 'Настройи обмена по апи текдока',

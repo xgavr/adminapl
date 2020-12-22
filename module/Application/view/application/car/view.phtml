@@ -30,7 +30,7 @@ $this->headScript()
 </p>
 <div class="row">
     <div class="col-md-9">
-
+        <h3>Характеристики</h3>
         <table class="table table-striped">
             <tr>
                 <td colspan="3">            
@@ -68,6 +68,29 @@ $this->headScript()
                     <?php else: ?>
                         <?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl()?>
                     <?php endif; ?>
+                </td>
+            </tr>
+            <?php endforeach;?>
+        </table>
+
+        <h3>Автонормы</h3>
+        <table class="table table-striped">
+            <?php foreach($car->getCarFillVolumes() as $fillVoume):?>
+            <tr>
+                <td>
+                    <?= $fillVoume->getCarFillTitle()->getTitle()?>
+                </td>
+                <td>
+                    <?= $fillVoume->getCarFillType()->getTitle()?>
+                </td>
+                <td>
+                    <?= $fillVoume->getVolume()?>
+                </td>
+                <td>
+                    <?= $fillVoume->getCarFillUnit()->getTitle()?>
+                </td>
+                <td>
+                    <?= $fillVoume->getInfo()?>
                 </td>
             </tr>
             <?php endforeach;?>
@@ -132,6 +155,21 @@ $this->headScript()
                         <div class="pull-right">
                             <button value="/car/fix-model/<?= $car->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
                                     title="Исправить модель">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Автонормы
+                        </div>
+                        <div class="pull-right">
+                            <button value="/car/fill-volumes/<?= $car->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Обновить автонормы">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                            <button value="/apl/send-fill-volumes/<?= $car->getId()?>" class="btn btn-download btn-xs refresh-table-button"
+                                    title="Обновить автонормы в АПЛ">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>

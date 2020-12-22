@@ -170,6 +170,7 @@ class ExternalManager
             case 'makes': $result = $this->partsApiManager->getMakes($params['group']); break;
             case 'models': $result = $this->partsApiManager->getModels($params['makeId'], $params['group']); break;
             case 'cars': $result = $this->partsApiManager->getCars($params['makeId'], $params['modelId'], $params['group']); break;
+            case 'fillVolumes': $result = $this->partsApiManager->getFillVolumes($params['carId']);
             default: break;
         }
         
@@ -1044,4 +1045,17 @@ class ExternalManager
         return;
         
     }
+    
+    /**
+     * Обновить автонормы
+     * 
+     * @param Car $car
+     * @return type
+     */
+    public function updateFillVolumes($car)
+    {
+        return $this->partsApi('fillVolumes', ['carId' => $car->getTdId()]);
+        
+    }
+        
 }

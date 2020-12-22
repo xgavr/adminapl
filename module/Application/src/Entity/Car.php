@@ -36,6 +36,12 @@ class Car {
     const TRANSFER_YES       = 1; // обмен с апл выполнен
     const TRANSFER_NO       = 2; //
         
+    const FILL_VOLUMES_YES       = 1; // автонормы обновлены
+    const FILL_VOLUMES_NO       = 2; //
+
+    const FILL_VOLUMES_TRANSFER_YES       = 1; // обмен с апл выполнен
+    const FILL_VOLUMES_TRANSFER_NO       = 2; //
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -94,6 +100,16 @@ class Car {
     protected $transferFlag;
         
     /**
+     * @ORM\Column(name="fill_volumes_flag")  
+     */
+    protected $fillVolumesFlag;
+
+    /**
+     * @ORM\Column(name="transfer_fill_volumes_flag")  
+     */
+    protected $transferFillVolumesFlag;
+
+    /**
      * @ORM\Column(name="good_count")  
      */
     protected $goodCount;
@@ -112,6 +128,12 @@ class Car {
     protected $carAttributeValues;    
     
     /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\CarFillVolume", mappedBy="car")
+    * @ORM\JoinColumn(name="id", referencedColumnName="car_id")
+     */
+    protected $carFillVolumes;    
+    
+    /**
     * @ORM\OneToMany(targetEntity="\Application\Entity\VehicleDetailCar", mappedBy="car")
     * @ORM\JoinColumn(name="id", referencedColumnName="car_id")
      */
@@ -124,6 +146,7 @@ class Car {
 
     public function __construct() {
        $this->carAttributeValues = new ArrayCollection();
+       $this->carFillVolumes = new ArrayCollection();
        $this->vehicleDetailsCar = new ArrayCollection();
        $this->goods = new ArrayCollection();
     }    
@@ -241,6 +264,26 @@ class Car {
         $this->transferFlag = $transferFlag;
     }     
     
+    public function getFillVolumesFlag() 
+    {
+        return $this->fillVolumesFlag;
+    }
+
+    public function setFillVolumesFlag($fillVolumesFlag) 
+    {
+        $this->fillVolumesFlag = $fillVolumesFlag;
+    }     
+    
+    public function getTransferFillVolumesFlag() 
+    {
+        return $this->transferFillVolumesFlag;
+    }
+
+    public function setTransferFillVolumesFlag($transferFillVolumesFlag) 
+    {
+        $this->transferFillVolumesFlag = $transferFillVolumesFlag;
+    }     
+    
     public function getGoodCount() 
     {
         return $this->goodCount;
@@ -326,6 +369,20 @@ class Car {
     public function addCarAttributeValue($carAttributeValue)
     {
         $this->carAttributeValues[] = $carAttributeValue;
+    }
+    
+    /*
+     * Возвращает volumes.
+     * @return array
+     */    
+    public function getCarFillVolumes() 
+    {
+        return $this->carFillVolumes;
+    }
+    
+    public function addCarFillVolume($carFillVolume)
+    {
+        $this->carFillVolumes[] = $carFillVolume;
     }
     
     /*

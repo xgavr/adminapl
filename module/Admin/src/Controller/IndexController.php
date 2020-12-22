@@ -14,6 +14,7 @@ use Admin\Form\AplExchangeForm;
 use Admin\Form\TdExchangeForm;
 use Admin\Form\TelegramSettingsForm;
 use Admin\Form\AbcpSettings;
+use Admin\Form\PartsApiSettings;
 use Admin\Form\ZetasoftSettings;
 
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -742,7 +743,7 @@ class IndexController extends AbstractActionController
      */
     public function partsApiSettingsAction()
     {
-        $form = new AbcpSettings();
+        $form = new PartsApiSettings();
     
         $settings = $this->adminManager->getPartsApiSettings();
         

@@ -8,17 +8,6 @@ $this->pageBreadcrumbs()->setItems([
             'Машины'=>$this->url('make'),
             ]);
 
-$this->headLink()
-//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
-            ;    
 ?>
 <!--<button value="/make/make-form" class="btn btn-default btn-xs"
         data-toggle="modal" data-target="#modal-dialog" title="Добавить">
@@ -121,6 +110,17 @@ $this->headScript()
                         </div>
                         <div class="panel-body">
                             <div class="pull-left">
+                                Обновить автонормы
+                            </div>
+                            <div class="pull-right">
+                                <button value="/car/car-fill-volumes/" class="btn btn-warning btn-xs refresh-table-button"
+                                        title="Исправить модели">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+<!--                        <div class="panel-body">
+                            <div class="pull-left">
                                 Исправить модели
                             </div>
                             <div class="pull-right">
@@ -129,7 +129,7 @@ $this->headScript()
                                     <span class="glyphicon glyphicon-refresh" ></span>
                                 </button>                             
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
@@ -168,6 +168,17 @@ $this->headScript()
                             <div class="pull-right">
                                 <button value="/apl/update-car-apl-id" class="btn btn-default btn-xs refresh-table-button"
                                         title="Заполнить AplId машин">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                               Автонормы
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-fill-volumes" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить автонормы в АПЛ">
                                     <span class="glyphicon glyphicon-refresh" ></span>
                                 </button>                             
                             </div>

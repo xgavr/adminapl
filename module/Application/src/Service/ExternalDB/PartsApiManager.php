@@ -149,7 +149,7 @@ class PartsApiManager
             
             $settings = $this->adminManager->getPartsApiSettings();
             
-            $uri = $settings['host'].'/'.$action.'?';
+            $uri = $settings['host'].'?act='.$action;
 
 //            $params['userlogin'] = $settings['login'];
 //            $params['userpsw'] = $settings['md5_key'];
@@ -163,7 +163,7 @@ class PartsApiManager
                 return $result;
             }
             
-    //        var_dump($uri); exit;
+//            var_dump($uri); exit;
             $client = new Client();
             $client->setUri($uri);
             $client->setAdapter($this::HTTPS_ADAPTER);
@@ -243,6 +243,18 @@ class PartsApiManager
     public function getCars($makeId, $modelId, $group)
     {
         return $this->getAction('getCars', ['make' => $makeId, 'model' => $modelId, 'group' => $group]);
+    }
+
+    /**
+     * КАТАЛОГ: 
+     * АВТОНОРМЫ
+     * 
+     * @param integer $carId
+     * @return array|Esception
+     */
+    public function getFillVolumes($carId)
+    {
+        return $this->getAction('GetFillVolumes', ['carid' => $carId]);
     }
 
 }

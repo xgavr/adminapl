@@ -30,6 +30,7 @@ use Application\Entity\PriceGetting;
 use Laminas\Http\Client;
 use Application\Filter\ParseRawpriceApl;
 use Application\Entity\Article;
+use Application\Entity\CarFillVolume;
 
 /**
  * Description of AplService
@@ -2157,6 +2158,87 @@ class AplService {
                 $goods = [];
             }
             $k++;
+            if (time() > $startTime + 840){
+                break;
+            }
+        }    
+        return;
+    }    
+    
+    /**
+     * Обновить автонормы машины
+     * 
+     * @param Car $car
+     */
+    public function sendFillVolumes($car)
+    {
+        $result = true;
+        if ($car->getAplId()){
+            $url = $this->aplApi().'update-fill-volumes?api='.$this->aplApiKey();
+
+            $post = [
+                'car' => $car->getAplId(),
+                'volumes' => [],
+            ];
+
+            $fillVolumes = $this->entityManager->getRepository(CarFillVolume::class)
+                    ->findBy(['car' => $car->getId(), 'lang' => CarFillVolume::LANG_RU, 'status' => CarFillVolume::STATUS_ACTIVE]);
+            
+            foreach ($fillVolumes as $fillVolume){
+                $post['volumes'][$fillVolume->getId()] = [                
+                    'parent'  => $car->getAplId(),
+                    'title'   => $fillVolume->getCarFillTitle()->getTitle(),
+                    'unit'    => $fillVolume->getCarFillUnit()->getTitle(),
+                    'volume'  => $fillVolume->getVolume(),
+                    'info'    => $fillVolume->getInfo(),
+                ]; 
+            }
+            
+            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 30]);
+            $client->setParameterPost($post);
+
+            $result = $ok = false;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $result = $ok = true;
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $result = false;
+            }    
+            
+            if ($ok){
+                $car->setTransferFillVolumesFlag(Car::FILL_VOLUMES_TRANSFER_YES);
+                $this->entityManager->persist($car);
+                $this->entityManager->flush($car);
+            }
+
+            unset($post);
+        }    
+        return $result;
+    }
+    
+    /**
+     * Обновление автонорм
+     * 
+     * @return type
+     */
+    public function updateFillVolumes()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $cars = $this->entityManager->getRepository(Car::class)
+                ->findBy(['status' => Car::STATUS_ACTIVE, 'transferFillVolumesFlag' => Car::FILL_VOLUMES_TRANSFER_NO]);
+        
+        foreach ($cars as $car){
+            $this->sendFillVolumes($car);
             if (time() > $startTime + 840){
                 break;
             }

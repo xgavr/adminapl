@@ -423,4 +423,39 @@ class CarController extends AbstractActionController
         ]);                  
     }
 
+    public function fillVolumesAction()
+    {
+        $carId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($carId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $car = $this->entityManager->getRepository(Car::class)
+                ->findOneById($carId);
+        
+        if ($car == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->carManager->addCarFillVolume($car);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+
+    public function carFillVolumesAction()
+    {
+       
+        $this->carManager->carFillVolumes($car);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+
 }

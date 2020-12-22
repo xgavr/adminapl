@@ -130,6 +130,18 @@ class Supplier {
     private $billGettings;    
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\BillSetting", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $billSettings;    
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Idoc", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $idocs;    
+    
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\RequestSetting", mappedBy="supplier")
     * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
      */
@@ -158,6 +170,8 @@ class Supplier {
         $this->priceDescriptions = new ArrayCollection();
         $this->priceGettings = new ArrayCollection();
         $this->billGettings = new ArrayCollection();
+        $this->billSettings = new ArrayCollection();
+        $this->idocs = new ArrayCollection();
         $this->requestSettings = new ArrayCollection();
         $this->supplySettings = new ArrayCollection();
         $this->rates = new ArrayCollection();
@@ -586,6 +600,40 @@ class Supplier {
     public function addBillGettings($billGetting)
     {
         $this->billGettings[] = $billGetting;
+    }
+    
+    /**
+     * Returns the array of bills assigned to this.
+     * @return array
+     */
+    public function getBillSettings()
+    {
+        return $this->billSettings;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addBillSettings($billSetting)
+    {
+        $this->billSettings[] = $billSetting;
+    }
+    
+    /**
+     * Returns the array of idoc to this.
+     * @return array
+     */
+    public function getIdocs()
+    {
+        return $this->idocs;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addIdoc($idoc)
+    {
+        $this->idocs[] = $idoc;
     }
     
     /**
