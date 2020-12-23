@@ -279,7 +279,7 @@ class PostManager {
             foreach ($data['content'] as $content){
                 if (is_string($content)){
                     if (strlen($content) < 1024){
-                        $postLog->setBody($filter->filter($content));
+                        $postLog->setBody($content);
                         break;
                     }    
                 }    
@@ -288,11 +288,12 @@ class PostManager {
         
         $fileNames = [];
         if (isset($data['attachment'])){
-            foreach ($data['attachment'] as $attachment){
-                $fileNames[] = $attachment['filename'];
-            }
+            $postLog->setAttachment(\Laminas\Json\Json::encode($data['attachment']));
+//            foreach ($data['attachment'] as $attachment){
+//                $fileNames[] = $attachment['filename'];
+//            }
         }
-        $postLog->setAttachment(implode(self::CONTENT_SEPARATOR, $fileNames));
+//        $postLog->setAttachment(implode(self::CONTENT_SEPARATOR, $fileNames));
         
         $this->entityManager->persist($postLog);
         $this->entityManager->flush($postLog);

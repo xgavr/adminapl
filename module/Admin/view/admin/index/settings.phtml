@@ -70,6 +70,14 @@ $form->get('autoru_email_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('hello_email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('hello_email_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('telefonistka_email')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -187,6 +195,18 @@ $form->prepare();
             <?= $this->formLabel($form->get('autoru_email_password')); ?>
             <?= $this->formElement($form->get('autoru_email_password')); ?>
             <?= $this->formElementErrors($form->get('autoru_email_password')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('hello_email')); ?>
+            <?= $this->formElement($form->get('hello_email')); ?>
+            <?= $this->formElementErrors($form->get('hello_email')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('hello_email_password')); ?>
+            <?= $this->formElement($form->get('hello_email_password')); ?>
+            <?= $this->formElementErrors($form->get('hello_email_password')); ?>                  
         </div>
 
         <div class="form-group">

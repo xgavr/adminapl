@@ -281,14 +281,15 @@ class CarManager
             $fillVolume->setInfo($data['fillInfo']);
 
             $this->entityManager->persist($fillVolume);
-            
-            $car->setFillVolumesFlag(Car::FILL_VOLUMES_YES);
-            $car->setTransferFillVolumesFlag(Car::FILL_VOLUMES_TRANSFER_NO);
-            
-            $this->entityManager->persist($car);
-            
-            $this->entityManager->flush();                        
+                        
         }
+        
+        $car->setFillVolumesFlag(Car::FILL_VOLUMES_YES);
+        $car->setTransferFillVolumesFlag(Car::FILL_VOLUMES_TRANSFER_NO);
+        
+        $this->entityManager->persist($car);
+        $this->entityManager->flush();                        
+        
         
         return;
     }

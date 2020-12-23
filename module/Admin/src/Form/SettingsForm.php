@@ -187,6 +187,28 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 
         $this->add([            
             'type'  => 'email',
+            'name' => 'hello_email',
+            'attributes' => [
+                'id' => 'hello_email'
+            ],
+            'options' => [
+                'label' => 'Email автосекретаря',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'hello_email_password',
+            'attributes' => [
+                'id' => 'hello_email_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на email автосекретаря',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'email',
             'name' => 'telefonistka_email',
             'attributes' => [
                 'id' => 'telefonistka_email'
@@ -490,6 +512,50 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]);          
         
+        $inputFilter->add([
+                'name'     => 'hello_email',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Laminas\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'hello_email_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
+        
+
         $inputFilter->add([
                 'name'     => 'telefonistka_email',
                 'required' => false,

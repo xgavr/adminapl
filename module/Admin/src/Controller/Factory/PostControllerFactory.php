@@ -12,6 +12,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Controller\PostController;
 use Admin\Service\PostManager;
 use Admin\Service\AutoruManager;
+use Admin\Service\HelloManager;
 
 
 /**
@@ -26,8 +27,9 @@ class PostControllerFactory implements FactoryInterface {
     {
         $postManager = $container->get(PostManager::class);
         $autoruManager = $container->get(AutoruManager::class);
+        $helloManager = $container->get(HelloManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new PostController($postManager, $autoruManager);
+        return new PostController($postManager, $autoruManager, $helloManager);
     }
 }

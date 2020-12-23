@@ -102,6 +102,8 @@ class AdminManager {
 
         $config->admin->autoru_email = $data['autoru_email'];
         $config->admin->autoru_email_password = $data['autoru_email_password'];
+        $config->admin->hello_email = $data['hello_email'];
+        $config->admin->hello_email_password = $data['hello_email_password'];
         
         $config->admin->telefonistka_email = $data['telefonistka_email'];
         $config->admin->telefonistka_email_password = $data['telefonistka_email_password'];

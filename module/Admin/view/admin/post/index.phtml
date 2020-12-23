@@ -1,3 +1,43 @@
-<strong>Module:</strong>        Admin &raquo;
-<strong>Controller:</strong>    Post &raquo;
-<strong>Action:</strong>        index
+<?php
+$this->headTitle('Проверка почты');
+
+$this->mainMenu()->setActiveItemId('post');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Администрирование'=>$this->url('admin'),
+            'Проверка почты' => $this->url('post')
+            ]);  
+
+?>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Ящики</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="pull-left">
+                    Autoru
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-xs btn-default refresh-button" value="/post/autoru">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button>                    
+                </div>                
+            </div>
+            <div class="panel-body">
+                <div class="pull-left">
+                    Hello
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-xs btn-default refresh-button" value="/post/hello">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button>                    
+                </div>                
+            </div>
+        </div>
+    </div>    
+</div>
