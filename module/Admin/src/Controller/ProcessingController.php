@@ -1176,6 +1176,24 @@ class ProcessingController extends AbstractActionController
     }    
 
     /**
+     * Обновление car fillVolumes
+     * 
+     * @return JsonModel
+     */
+    public function updateFillVolumesAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['get_car_id'] == 1){            
+            $this->aplService->updateFillVolumes();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
+    /**
      * Обновление aplId атрибутов
      * 
      * @return JsonModel
