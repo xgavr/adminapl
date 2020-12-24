@@ -146,12 +146,18 @@ class ProcessingController extends AbstractActionController
      */
     private $marketManager;    
 
+    /**
+     * CarManager manager.
+     * @var \Application\Service\CarManager
+     */
+    private $carManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
-            $aplDocService, $marketManager) 
+            $aplDocService, $marketManager, $carManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -174,6 +180,7 @@ class ProcessingController extends AbstractActionController
         $this->goodsManager = $goodsManager;
         $this->settingManager = $settingManager;
         $this->marketManager = $marketManager;
+        $this->carManager = $carManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -1185,7 +1192,25 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
         
         if ($settings['get_car_id'] == 1){            
-            $this->aplService->updateFillVolumes();            
+            //$this->aplService->updateFillVolumes();            
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+
+    /**
+     * Загрузка car fillVolumes
+     * 
+     * @return JsonModel
+     */
+    public function downloadFillVolumesAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['get_car_id'] == 1){            
+            $this->carManager->carFillVolumes();            
         }    
         
         return new JsonModel([
