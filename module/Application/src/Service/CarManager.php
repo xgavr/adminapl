@@ -260,6 +260,10 @@ class CarManager
 //        var_dump($volumes); exit;
         $enValidator = new IsEN();
         
+        if (!is_array($volumes)){
+            throw new Exception('Не удалось получить данные');
+        }
+        
         foreach ($volumes as $data){
             $fillTitle = $this->addCarFillTitle($data);
             $fillType = $this->addCarFillType($data);

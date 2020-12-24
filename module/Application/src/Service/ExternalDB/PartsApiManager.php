@@ -183,7 +183,7 @@ class PartsApiManager
                 try {
                     $body = $response->getBody();
                     $result = Decoder::decode($body, \Laminas\Json\Json::TYPE_ARRAY);
-                    //$result['change'] = $this->updateAutoDbResponse($uri, $body);
+                    $result['change'] = $this->updateAutoDbResponse($uri, $body);
                     return $result;            
                 } catch (\Laminas\Json\Exception\RuntimeException $ex){
                    // var_dump($response->getBody()); exit;
