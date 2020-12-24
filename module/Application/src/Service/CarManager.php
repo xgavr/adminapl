@@ -272,7 +272,7 @@ class CarManager
         
         if (count($volumes)){
             foreach ($volumes as $data){
-                if (count($data)){
+                if (is_array($data)){
                     $fillTitle = $this->addCarFillTitle($data);
                     $fillType = $this->addCarFillType($data);
                     $fillUnit = $this->addCarFillUnit($data);
