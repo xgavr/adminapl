@@ -257,7 +257,7 @@ class CarManager
         $this->removeCarFillVolume($car);
         
         $volumes = $this->externalManager->updateFillVolumes($car);
-        var_dump($volumes); exit;
+//        var_dump($volumes); exit;
         $enValidator = new IsEN();
         
         if (!is_array($volumes)){
