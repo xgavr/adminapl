@@ -270,31 +270,34 @@ class CarManager
             throw new Exception('Не удалось получить данные');
         }
         
-        foreach ($volumes as $data){
-            $fillTitle = $this->addCarFillTitle($data);
-            $fillType = $this->addCarFillType($data);
-            $fillUnit = $this->addCarFillUnit($data);
-            
-            $lang = CarFillVolume::LANG_RU;
-            if ($enValidator->isValid(mb_strtoupper($data['fillUnit']))){
-                if ($data['fillUnit'] != 'cm³'){
-                    $lang = CarFillVolume::LANG_EN;                        
-                }
-            }
-            
-            $fillVolume = new CarFillVolume();
-            $fillVolume->setCar($car);
-            $fillVolume->setCarFillTitle($fillTitle);
-            $fillVolume->setCarFillType($fillType);
-            $fillVolume->setCarFillUnit($fillUnit);
-            $fillVolume->setLang($lang);
-            $fillVolume->setStatus(CarFillVolume::STATUS_ACTIVE);
-            $fillVolume->setVolume($data['fillVolume']);
-            $fillVolume->setInfo($data['fillInfo']);
+        if (count($volumes)){
+            foreach ($volumes as $data){
+                if (count($data)){
+                    $fillTitle = $this->addCarFillTitle($data);
+                    $fillType = $this->addCarFillType($data);
+                    $fillUnit = $this->addCarFillUnit($data);
 
-            $this->entityManager->persist($fillVolume);
-                        
-        }
+                    $lang = CarFillVolume::LANG_RU;
+                    if ($enValidator->isValid(mb_strtoupper($data['fillUnit']))){
+                        if ($data['fillUnit'] != 'cm³'){
+                            $lang = CarFillVolume::LANG_EN;                        
+                        }
+                    }
+
+                    $fillVolume = new CarFillVolume();
+                    $fillVolume->setCar($car);
+                    $fillVolume->setCarFillTitle($fillTitle);
+                    $fillVolume->setCarFillType($fillType);
+                    $fillVolume->setCarFillUnit($fillUnit);
+                    $fillVolume->setLang($lang);
+                    $fillVolume->setStatus(CarFillVolume::STATUS_ACTIVE);
+                    $fillVolume->setVolume($data['fillVolume']);
+                    $fillVolume->setInfo($data['fillInfo']);
+
+                    $this->entityManager->persist($fillVolume);
+                }    
+            }
+        }    
         
         $car->setFillVolumesFlag(Car::FILL_VOLUMES_YES);
         $car->setTransferFillVolumesFlag(Car::FILL_VOLUMES_TRANSFER_NO);
