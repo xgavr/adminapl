@@ -166,6 +166,12 @@ class CarManager
     public function addCarFillTitle($data)
     {
         $name = $data['fillTitle'];
+        
+        if (!$name){
+            var_dump($data);
+            exit;
+        }
+        
         $fillTitle = $this->entityManager->getRepository(CarFillTitle::class)
                 ->findOneByName(mb_strtoupper($name));
         if (!$fillTitle){
