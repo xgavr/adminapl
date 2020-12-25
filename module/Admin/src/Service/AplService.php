@@ -2188,6 +2188,7 @@ class AplService {
                 $post['volumes'][$fillVolume->getId()] = [                
                     'parent'  => $car->getAplId(),
                     'title'   => $fillVolume->getCarFillTitle()->getTitle(),
+                    'titleId'   => $fillVolume->getCarFillTitle()->getId(),
                     'unit'    => $fillVolume->getCarFillUnit()->getTitle(),
                     'volume'  => $fillVolume->getVolume(),
                     'info'    => $fillVolume->getInfo(),
