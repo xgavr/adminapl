@@ -1192,7 +1192,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
         
         if ($settings['get_car_id'] == 1){            
-            //$this->aplService->updateFillVolumes();            
+            $this->aplService->updateFillVolumes();            
         }    
         
         return new JsonModel([
