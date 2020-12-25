@@ -67,6 +67,9 @@ class CarFillUnit {
 
     public function getTitle() 
     {
+        if ($this->title == 'cm³'){
+            return 'см3';
+        }
         return $this->title;
     }
 
