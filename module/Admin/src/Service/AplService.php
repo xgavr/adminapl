@@ -1286,7 +1286,9 @@ class AplService {
                                 'status' => Rawprice::STATUS_PARSED,
                             ]);        
                     foreach ($rawprices as $rawprice){
-                        $rp[] = $filter->filter($rawprice);
+                        if ($rawprice->getRealRest()){
+                            $rp[] = $filter->filter($rawprice);
+                        }    
                     }
                 }
                 
