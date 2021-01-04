@@ -152,12 +152,18 @@ class ProcessingController extends AbstractActionController
      */
     private $carManager;    
 
+    /**
+     * Hello manager.
+     * @var \Admin\Service\HelloManager
+     */
+    private $helloManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
-            $aplDocService, $marketManager, $carManager) 
+            $aplDocService, $marketManager, $carManager, $helloManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -181,6 +187,7 @@ class ProcessingController extends AbstractActionController
         $this->settingManager = $settingManager;
         $this->marketManager = $marketManager;
         $this->carManager = $carManager;
+        $this->helloManager = $helloManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -200,6 +207,14 @@ class ProcessingController extends AbstractActionController
     {       
         $this->autoruManager->postOrder();
         
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    public function helloAction()
+    {       
+        $this->helloManager->checkingMail();
         return new JsonModel(
             ['ok']
         );        
