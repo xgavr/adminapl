@@ -72,7 +72,7 @@ class HelloManager {
             'server' => '{imap.yandex.ru:993/imap/ssl}',
             'user' => $settings['hello_email'],
             'password' => $settings['hello_email_password'],
-            'leave_message' => true,
+            'leave_message' => false,
         ];
         
         $mail = $this->postManager->readImap($box);
