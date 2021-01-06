@@ -295,9 +295,9 @@ class ImageRepository extends EntityRepository
         if (preg_match("|301|", $headers[0])){
             $uriNormalizeFilterS = new UriNormalize(['enforcedScheme' => 'https']);
             $url = $uriNormalizeFilterS->filter($headers['Location']);
-            if (!$urlExists->isValid($url)){
+            if (!$fp = curl_init($url)) {
                 return;
-            }
+            } 
             $headers = get_headers($url);
 //            var_dump($headers);
         }
