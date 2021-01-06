@@ -278,7 +278,7 @@ class PostManager {
         if (isset($data['content'])){
             foreach ($data['content'] as $content){
                 if (is_string($content)){
-                    if (strlen($content) < 1024){
+                    if ($content && strlen($content) < 1024){
                         $postLog->setBody($content);
                         break;
                     }    
