@@ -275,18 +275,20 @@ class PostManager {
              $postLog->setSubject($data['subject']);
         }
         
+        $body = [];
         if (isset($data['content'])){
-            $postLog->setBody(\Laminas\Json\Json::encode($data['content']));
+            if (is_array($data['content'])){
+                foreach ($data['content'] as $key => $value){
+                    $body[$key] = strip_tags($value);
+                }
+            }    
+            $postLog->setBody(\Laminas\Json\Json::encode($body));
         }    
         
         $fileNames = [];
         if (isset($data['attachment'])){
             $postLog->setAttachment(\Laminas\Json\Json::encode($data['attachment']));
-//            foreach ($data['attachment'] as $attachment){
-//                $fileNames[] = $attachment['filename'];
-//            }
         }
-//        $postLog->setAttachment(implode(self::CONTENT_SEPARATOR, $fileNames));
         
         $this->entityManager->persist($postLog);
         $this->entityManager->flush($postLog);

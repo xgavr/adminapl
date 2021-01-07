@@ -22,6 +22,8 @@ class PostLog {
     const STATUS_ACTIVE       = 1; // Active user.
     const STATUS_RETIRED      = 2; // Retired user.
     
+    const ACT_NO       = 1; // no action.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -68,6 +70,11 @@ class PostLog {
      * @ORM\Column(name="status")   
      */
     protected $status;
+
+    /**
+     * @ORM\Column(name="act")   
+     */
+    protected $act;
 
     public function __construct() {
     }
@@ -201,6 +208,48 @@ class PostLog {
     public function setStatus($status) 
     {
         $this->status = $status;
+    }   
+    
+    /**
+     * Returns act.
+     * @return int     
+     */
+    public function getAct() 
+    {
+        return $this->act;
+    }
+
+    /**
+     * Returns possible acts as array.
+     * @return array
+     */
+    public static function getActList() 
+    {
+        return [
+            self::ACT_NO => 'Нет действий',
+        ];
+    }    
+    
+    /**
+     * Returns act as string.
+     * @return string
+     */
+    public function getActAsString()
+    {
+        $list = self::getActList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets act.
+     * @param int $act     
+     */
+    public function setAct($act) 
+    {
+        $this->act = $act;
     }   
     
 }
