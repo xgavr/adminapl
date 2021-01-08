@@ -270,6 +270,7 @@ class PostManager {
        
         $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
         $postLog->setStatus(PostLog::STATUS_ACTIVE);
+        $postLog->setAct(PostLog::ACT_NO);
         
         if (isset($data['subject'])){
              $postLog->setSubject($data['subject']);
