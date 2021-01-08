@@ -15,6 +15,24 @@ use Admin\Entity\PostLog;
  *
  * @author Daddy
  */
-class PostLogRepository extends EntityRepository{
+class PostLogRepository extends EntityRepository
+{
+    /**
+     * Запрос все записи
+     * 
+     * @return object
+     */
+    public function findLogs()
+    {
+        $entityManager = $this->getEntityManager();
 
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('p')
+                ->from(PostLog::class, 'p')
+                ->orderBy('p.id', 'DESC')
+                ;
+        return $queryBuilder->getQuery();            
+        
+    }
+    
 }

@@ -201,4 +201,25 @@ class MlController extends AbstractActionController
         ]);          
     }
     
+    public function postLogAction()
+    {
+        $page = $this->params()->fromQuery('page', 1);
+        
+        $query = $this->entityManager->getRepository(\Admin\Entity\PostLog::class)
+                    ->findLogs();
+                
+        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(10);        
+        $paginator->setCurrentPageNumber($page);
+
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'logs' => $paginator,
+            'mlManager' => $this->mlManager,            
+        ]);  
+        
+    }                
+    
 }

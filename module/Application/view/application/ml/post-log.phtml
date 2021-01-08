@@ -1,0 +1,105 @@
+<?php
+$this->headTitle('Обучающая выборка для обработки почты');
+
+$this->mainMenu()->setActiveItemId('ml');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Машинное обучение'=>$this->url('ml'),
+            'Обучающая выборка для обработки почты'=>$this->url('ml', ['action'=>'post-log'])
+            ]);
+
+$preGood = null;
+?>
+
+<div class="row">
+    <div class="col-md-9">
+
+        <table class="table table-striped">
+            <tr>
+                <td colspan="6">
+                    <?= $this->paginationControl($logs,
+                                'Sliding',
+                                'application/partial/paginator', 
+                                ['route' => array('route' => 'ml', 'action' => 'post-log')]); ?>
+
+                </td>
+            </tr>
+            <?php foreach ($logs as $log):?>
+                <tr>
+                    <td>
+                        <?= $log->getDateCreated();?>
+                    </td>
+                    <td>
+                        <?= $log->getTo();?><br/>
+                        <?= $log->getFrom();?><br/>
+                        <?= $log->getFromStr();?>
+                    </td>
+                    <td>
+                        <?= $log->getSubject();?>
+                    </td>
+                    <td>
+                        <?= $log->getAllowedBody();?>
+                        <br/>
+                        <?= $log->getAttachmentFileName();?><br/>
+                        <?= $log->getAttachmentTmpName();?><br/>
+                    </td>
+                    <td>
+                        <?= $log->getStatusAsString();?>
+                    </td>
+                    <td>
+                        <?= $log->getActAsString();?>
+                    </td>
+                </tr>
+            <?php endforeach;?>        
+            <tr>
+                <td colspan="6">
+                    <?= $this->paginationControl($logs,
+                                'Sliding',
+                                'application/partial/paginator', 
+                                ['route' => array('route' => 'ml', 'action' => 'post-log')]); ?>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                        </div>
+                        <div class="pull-right">
+                            <button value="/ml/fill-ml-titles" class="btn btn-info btn-xs refresh-button">
+                                Обновить
+                            </button> 
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.statusMlTitle').on('change', function(e, node) {
+        var url = "/ml/update-ml-title-status/";
+
+        if (url){
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {pk: e.target.name, value: e.target.value}
+            })
+                .done(function (data) {
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })            
+</script>
+

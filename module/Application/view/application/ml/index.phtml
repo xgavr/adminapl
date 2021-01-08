@@ -10,7 +10,7 @@ $this->pageBreadcrumbs()->setItems([
 ?>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-4">
         <div class="panel panel-info">
             <div class="panel-heading">
                 Наименования товаров
@@ -38,6 +38,16 @@ $this->pageBreadcrumbs()->setItems([
             </div>
             <div class="panel-body">
                 <a href='<?= $this->url('ml', ['action' => 'primary-scale'])?>'>Инициализация начальной шкалы</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Почта
+            </div>
+            <div class="panel-body">
+                <a href='<?= $this->url('ml', ['action' => 'post-log'])?>'>Обработка почты</a>
             </div>
         </div>
     </div>

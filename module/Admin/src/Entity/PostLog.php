@@ -9,6 +9,7 @@
 namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Laminas\Json\Json;
 
 
 /**
@@ -152,6 +153,20 @@ class PostLog {
         return $this->body;
     }
     
+    public function getAllowedBody()
+    {
+        try{
+            $bodies = Json::decode($this->body);
+            foreach($bodies as $body){
+                return $body;
+            }
+        } catch (\Laminas\Json\Exception\RuntimeException $ex){
+            return $this->body;
+        }    
+        
+        return;
+    }
+    
     public function setBody($body)
     {
         $this->body = $body;
@@ -160,6 +175,30 @@ class PostLog {
     public function getAttachment()
     {
         return $this->attachment;
+    }
+    
+    public function getAttachmentFileName()
+    {
+        try{
+            $attachments = Json::decode($this->attachment);
+            foreach ($attachments as $part){
+                return $part->filename;
+            }    
+        } catch (\Laminas\Json\Exception\RuntimeException $ex){
+            return;
+        }    
+    }
+    
+    public function getAttachmentTmpName()
+    {
+        try{
+            $attachments = Json::decode($this->attachment); 
+            foreach ($attachments as $part){
+                return $part->temp_file;
+            }    
+        } catch (\Laminas\Json\Exception\RuntimeException $ex){
+            return;
+        }    
     }
     
     public function setAttachment($attachment)
