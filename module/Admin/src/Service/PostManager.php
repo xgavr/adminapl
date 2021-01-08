@@ -280,7 +280,10 @@ class PostManager {
         if (isset($data['content'])){
             if (is_array($data['content'])){
                 foreach ($data['content'] as $key => $value){
-                    $body[$key] = strip_tags($value);
+                    $txt = strip_tags($value);
+                    if (strlen($txt) < 2048){
+                        $body[$key] = $txt;
+                    }            
                 }
             }    
             $postLog->setBody(\Laminas\Json\Json::encode($body));
