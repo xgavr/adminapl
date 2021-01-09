@@ -24,24 +24,25 @@ class ContactRepository extends EntityRepository
 {
     /**
      * Получить тип адреса
-     * @param string $mail
+     * @param string $emailStr
      * @return int
      */
-    public function emailType($email)
+    public function emailType($emailStr)
     {
+        $emailFilter = new EmailFromStr();
+        $email = $emailFilter->filter($emailStr);
+
         $emailValidator = new EmailAddress();
         if ($emailValidator->isValid($email)){
             
-            $emailFilter = new EmailFromStr();
-
             $mail = $this->getEntityManager()->getRepository(Email::class)
-                    ->findOneByName($emailFilter->filter($email));
+                    ->findOneByName($email);
 
             if ($mail){
                 return $mail->getType();
             }
         
-            $parts = explode("@", $emailFilter->filter($email)); 
+            $parts = explode("@", $email); 
             $domain = $parts[1];
 
             $entityManager = $this->getEntityManager();
