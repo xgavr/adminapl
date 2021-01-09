@@ -217,7 +217,8 @@ class MlController extends AbstractActionController
         // Визуализируем шаблон представления.
         return new ViewModel([
             'logs' => $paginator,
-            'mlManager' => $this->mlManager,            
+            'mlManager' => $this->mlManager, 
+            'emailRepository' => $this->entityManager->getRepository(\Application\Entity\Email::class),
         ]);  
         
     }                

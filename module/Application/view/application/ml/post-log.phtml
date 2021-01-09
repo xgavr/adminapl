@@ -32,8 +32,10 @@ $preGood = null;
                     </td>
                     <td>
                         <?= $log->getTo();?><br/>
+                        <?= $emailRepository->emailType($log->getTo())?><br/>
                         <?= $log->getFrom();?><br/>
-                        <?= $log->getFromStr();?>
+                        <?= $log->getFromStr();?><br/>
+                        <?= $emailRepository->emailType($log->getFrom())?>
                     </td>
                     <td>
                         <?= $log->getSubject();?>

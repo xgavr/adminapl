@@ -250,8 +250,9 @@ class Contact {
     public function getStatusAsString()
     {
         $list = self::getStatusList();
-        if (isset($list[$this->status]))
+        if (isset($list[$this->status])){
             return $list[$this->status];
+        }    
         
         return 'Unknown';
     }    

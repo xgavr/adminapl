@@ -11,11 +11,33 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Conatact;
+use Application\Entity\Email;
+use Admin\Filter\EmailFromStr;
+
 /**
  * Description of SupplierRepository
  *
  * @author Daddy
  */
-class ContactRepository extends EntityRepository{
+class ContactRepository extends EntityRepository
+{
+    /**
+     * Получить тип адреса
+     * @param string $mail
+     * @return int
+     */
+    public function emailType($email)
+    {
+        $emailFilter = new EmailFromStr();
+        
+        $mail = $this->getEntityManager()->getRepository(Email::class)
+                ->findOneByName($emailFilter->filter($email));
+        
+        if ($mail){
+            return $mail->getTypeAsString();
+        }
+        
+        return 'Неизвестно';
+    }
 
 }

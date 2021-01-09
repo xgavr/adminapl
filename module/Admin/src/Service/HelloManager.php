@@ -18,7 +18,7 @@ use Admin\Filter\TurboOrderFilter;
  * @author Daddy
  */
 class HelloManager {
-
+    
     /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
@@ -79,4 +79,5 @@ class HelloManager {
         
         return;
     }
+        
 }
