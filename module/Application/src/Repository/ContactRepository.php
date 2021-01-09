@@ -37,7 +37,7 @@ class ContactRepository extends EntityRepository
             return $mail->getType();
         }
         
-        $parts = explode("@",$mail); 
+        $parts = explode("@", $emailFilter->filter($email)); 
         $domain = $parts[1];
         
         $entityManager = $this->getEntityManager();
@@ -48,6 +48,7 @@ class ContactRepository extends EntityRepository
                 ->setParameter('1', "*@$domain")
                 ;
         
+//        var_dump($domain);
         $data = $queryBuilder->getQuery()->getResult();
         if (count($data)){
             $types = [];
