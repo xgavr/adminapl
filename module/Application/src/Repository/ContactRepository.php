@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Conatact;
 use Application\Entity\Email;
 use Admin\Filter\EmailFromStr;
+use Laminas\Validator\EmailAddress;
 
 /**
  * Description of SupplierRepository
@@ -28,39 +29,42 @@ class ContactRepository extends EntityRepository
      */
     public function emailType($email)
     {
-        $emailFilter = new EmailFromStr();
-        
-        $mail = $this->getEntityManager()->getRepository(Email::class)
-                ->findOneByName($emailFilter->filter($email));
-        
-        if ($mail){
-            return $mail->getType();
-        }
-        
-        $parts = explode("@", $emailFilter->filter($email)); 
-        $domain = $parts[1];
-        
-        $entityManager = $this->getEntityManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('e')
-                ->from(Email::class, 'e')
-                ->where('e.name like ?1')
-                ->setParameter('1', "%@$domain")
-                ;
-        
-        $data = $queryBuilder->getQuery()->getResult();
-        if (count($data)){
-            $types = [];
-            foreach ($data as $mail){
-                $types[$mail->getType()] = $mail->getType();
-            }
-//            var_dump(count($types));
+        $emailValidator = new EmailAddress();
+        if ($emailValidator->isValid($email)){
             
-            if (count($types) == 1){
+            $emailFilter = new EmailFromStr();
+
+            $mail = $this->getEntityManager()->getRepository(Email::class)
+                    ->findOneByName($emailFilter->filter($email));
+
+            if ($mail){
                 return $mail->getType();
             }
-        }   
         
+            $parts = explode("@", $emailFilter->filter($email)); 
+            $domain = $parts[1];
+
+            $entityManager = $this->getEntityManager();
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('e')
+                    ->from(Email::class, 'e')
+                    ->where('e.name like ?1')
+                    ->setParameter('1', "%@$domain")
+                    ;
+
+            $data = $queryBuilder->getQuery()->getResult();
+            if (count($data)){
+                $types = [];
+                foreach ($data as $mail){
+                    $types[$mail->getType()] = $mail->getType();
+                }
+    //            var_dump(count($types));
+
+                if (count($types) == 1){
+                    return $mail->getType();
+                }
+            }   
+        }    
         
         return Email::EMAIL_UNKNOWN;
     }
