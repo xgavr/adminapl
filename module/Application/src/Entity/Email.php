@@ -158,4 +158,19 @@ class Email {
         return 'Unknown';
     }    
 
+    /**
+     * Returns email types as string.
+     * @param int $type
+     * @return string
+     */
+    public static function typeAsString($type)
+    {
+        $list = self::getTypeList();
+        if (isset($list[$type])){
+            return $list[$type];
+        }    
+        
+        return 'Unknown';
+    }    
+
 }

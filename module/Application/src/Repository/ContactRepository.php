@@ -34,10 +34,34 @@ class ContactRepository extends EntityRepository
                 ->findOneByName($emailFilter->filter($email));
         
         if ($mail){
-            return $mail->getTypeAsString();
+            return $mail->getType();
         }
         
-        return 'Неизвестно';
+        $parts = explode("@",$mail); 
+        $domain = $parts[1];
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('e')
+                ->from(Email::class, 'e')
+                ->where('e.name like ?1')
+                ->setParameter('1', "*@$domain")
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        if (count($data)){
+            $types = [];
+            foreach ($data as $mail){
+                $types[$mail->getType()] = $mail->getType();
+            }
+            
+            if (count($types) == 1){
+                return $types[0];
+            }
+        }   
+        
+        
+        return Email::EMAIL_UNKNOWN;
     }
 
 }
