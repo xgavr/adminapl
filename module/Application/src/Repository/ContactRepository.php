@@ -45,10 +45,10 @@ class ContactRepository extends EntityRepository
         $queryBuilder->select('e')
                 ->from(Email::class, 'e')
                 ->where('e.name like ?1')
-                ->setParameter('1', "*@$domain")
+                ->setParameter('1', "%@$domain")
                 ;
         
-//        var_dump($domain);
+//        var_dump($queryBuilder->getQuery()->getSql()); exit;
         $data = $queryBuilder->getQuery()->getResult();
         if (count($data)){
             $types = [];
