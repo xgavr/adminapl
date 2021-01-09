@@ -54,10 +54,10 @@ class ContactRepository extends EntityRepository
             foreach ($data as $mail){
                 $types[$mail->getType()] = $mail->getType();
             }
-            var_dump(count($types));
+//            var_dump(count($types));
             
             if (count($types) == 1){
-                return $types[0];
+                return $mail->getType();
             }
         }   
         
