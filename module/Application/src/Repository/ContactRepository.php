@@ -48,13 +48,13 @@ class ContactRepository extends EntityRepository
                 ->setParameter('1', "%@$domain")
                 ;
         
-//        var_dump($queryBuilder->getQuery()->getSql()); exit;
         $data = $queryBuilder->getQuery()->getResult();
         if (count($data)){
             $types = [];
             foreach ($data as $mail){
                 $types[$mail->getType()] = $mail->getType();
             }
+            var_dump(count($types));
             
             if (count($types) == 1){
                 return $types[0];

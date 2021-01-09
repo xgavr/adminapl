@@ -34,10 +34,10 @@ $preGood = null;
                     </td>
                     <td>
                         <?= $log->getTo();?><br/>
-                        <?= Email::typeAsString($emailRepository->emailType($log->getTo()))?><br/>
+                        <?= $emailRepository->emailType($log->getTo())?><br/>
                         <?= $log->getFrom();?><br/>
                         <?= $log->getFromStr();?><br/>
-                        <?= Email::typeAsString($emailRepository->emailType($log->getFrom()))?>
+                        <?= $emailRepository->emailType($log->getFrom())?>
                     </td>
                     <td>
                         <?= $log->getSubject();?>
