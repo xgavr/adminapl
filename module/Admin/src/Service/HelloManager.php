@@ -95,7 +95,7 @@ class HelloManager {
         $bodies['subject'] = $log->getSubject(); 
         $bodies['from'] = $log->getFromStrName();
         $text = implode(' ', $bodies);
-        var_dump($bodies); exit;
+//        var_dump($bodies); exit;
         $tokens = $tokenizer->filter($text);
         
         return $tokens;
