@@ -25,11 +25,12 @@ class PostControllerFactory implements FactoryInterface {
     public function __invoke(ContainerInterface $container, 
                      $requestedName, array $options = null)
     {
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');        
         $postManager = $container->get(PostManager::class);
         $autoruManager = $container->get(AutoruManager::class);
         $helloManager = $container->get(HelloManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new PostController($postManager, $autoruManager, $helloManager);
+        return new PostController($entityManager, $postManager, $autoruManager, $helloManager);
     }
 }

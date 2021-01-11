@@ -11,6 +11,8 @@ namespace Admin\Service;
 use Admin\Filter\AutoruOrderFilter;
 use Admin\Filter\HtmlFilter;
 use Admin\Filter\TurboOrderFilter;
+use Admin\Entity\PostLog;
+use Application\Filter\Tokenizer;
 
 /**
  * Description of HelloManager
@@ -78,6 +80,25 @@ class HelloManager {
         $mail = $this->postManager->readImap($box);
         
         return;
+    }
+    
+    
+    /**
+     * Разобрать письмо на токены
+     * 
+     * @param PostLog $log
+     */
+    public function toTokens($log)
+    {
+        $tokenizer = new Tokenizer();
+        $bodies = $log->getBodyAsArray();
+        $bodies['subject'] = $log->getSubject(); 
+        $bodies['from'] = $log->getFromStrName();
+        $text = implode(' ', $bodies);
+        var_dump($bodies); exit;
+        $tokens = $tokenizer->filter($text);
+        
+        return $tokens;
     }
         
 }

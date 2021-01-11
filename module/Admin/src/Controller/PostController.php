@@ -10,10 +10,17 @@ namespace Admin\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
+use Admin\Entity\PostLog;
 
 
 class PostController extends AbstractActionController
 {
+    
+    /**
+     * Doctrine entity manager.
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $entityManager;    
     
     /**
      * AplService manager.
@@ -35,11 +42,12 @@ class PostController extends AbstractActionController
     
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($postManager, $autoruManager, $helloManager) 
+    public function __construct($entityManager, $postManager, $autoruManager, $helloManager) 
     {
         $this->postManager = $postManager;        
         $this->autoruManager = $autoruManager;
         $this->helloManager = $helloManager;
+        $this->entityManager = $entityManager;
     }   
 
     
@@ -65,5 +73,23 @@ class PostController extends AbstractActionController
             'ok'
         ]);
     }    
+    
+    public function logToTokensAction()
+    {
+        $logId = $this->params()->fromRoute('id', -1);
+            
+        if ($logId > 0){
+            $log = $this->entityManager->getRepository(PostLog::class)
+                    ->findOneById($logId);
+        }    
+        
+
+        $tokens = $this->helloManager->toTokens($log);
+        var_dump($tokens);
+
+        return new JsonModel([
+            'ok'
+        ]);
+    }
     
 }

@@ -19,7 +19,7 @@ $preGood = null;
 
         <table class="table table-striped">
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     <?= $this->paginationControl($logs,
                                 'Sliding',
                                 'application/partial/paginator', 
@@ -33,11 +33,12 @@ $preGood = null;
                         <?= $log->getDateCreated();?>
                     </td>
                     <td>
-                        <?= $log->getTo();?><br/>
-                        <?= Email::typeAsString($emailRepository->emailType($log->getTo()))?><br/>
-                        <?= $log->getFrom();?><br/>
-                        <?= $log->getFromStr();?><br/>
-                        <?= Email::typeAsString($emailRepository->emailType($log->getFrom()))?>
+                        <?= $log->getToEmail();?><br/>
+                        <?= $log->getToName();?><br/>
+                        <?= Email::typeAsString($emailRepository->emailType($log->getToEmail()))?><br/>
+                        <?= $log->getFromEmail();?><br/>
+                        <?= $log->getFromStrName();?><br/>
+                        <?= Email::typeAsString($emailRepository->emailType($log->getFromEmail()))?>
                     </td>
                     <td>
                         <?= $log->getSubject();?>
@@ -54,10 +55,16 @@ $preGood = null;
                     <td>
                         <?= $log->getActAsString();?>
                     </td>
+                    <td>
+                        <button value="/post/log-to-tokens/<?= $log->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                title="Токены">
+                            <span class="glyphicon glyphicon-tags" ></span>
+                        </button>                                                     
+                    </td>
                 </tr>
             <?php endforeach;?>        
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     <?= $this->paginationControl($logs,
                                 'Sliding',
                                 'application/partial/paginator', 

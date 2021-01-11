@@ -10,6 +10,8 @@ namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Laminas\Json\Json;
+use Admin\Filter\EmailFromStr;
+use Admin\Filter\NameFromEmailStr;
 
 
 /**
@@ -24,7 +26,8 @@ class PostLog {
     const STATUS_RETIRED      = 2; // Retired user.
     
     const ACT_NO       = 1; // no action.
-
+    
+    const MAIL_DICT = './data/dict/mail_token.php';
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -95,6 +98,18 @@ class PostLog {
         return $this->to;
     }
 
+    public function getToName() 
+    {
+        $filter = new NameFromEmailStr();
+        return $filter->filter($this->to);
+    }
+
+    public function getToEmail() 
+    {
+        $filter = new EmailFromStr();
+        return $filter->filter($this->to);
+    }
+
     public function setTo($to) 
     {
         $this->to = $to;
@@ -104,7 +119,12 @@ class PostLog {
     {
         return $this->from;
     }
-    
+
+    public function getFromEmail()
+    {
+        return $this->from;
+    }
+
     public function setFrom($from)
     {
         $this->from = $from;
@@ -113,6 +133,12 @@ class PostLog {
     public function getFromStr()
     {
         return $this->fromStr;
+    }
+    
+    public function getFromStrName() 
+    {
+        $filter = new NameFromEmailStr();
+        return $filter->filter($this->fromStr);
     }
     
     public function setFromStr($fromStr)
@@ -165,6 +191,18 @@ class PostLog {
         }    
         
         return;
+    }
+    
+    public function getBodyAsArray()
+    {
+        try{
+            $bodies = Json::decode($this->body);
+            return $bodies;
+        } catch (\Laminas\Json\Exception\RuntimeException $ex){
+            return ['text' => $this->body];
+        }    
+        
+        return [];
     }
     
     public function setBody($body)
