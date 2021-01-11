@@ -196,7 +196,7 @@ class PostLog {
     public function getBodyAsArray()
     {
         try{
-            $bodies = Json::decode($this->body);
+            $bodies = Json::decode($this->body, Json::TYPE_ARRAY);
             return $bodies;
         } catch (\Laminas\Json\Exception\RuntimeException $ex){
             return ['text' => $this->body];
