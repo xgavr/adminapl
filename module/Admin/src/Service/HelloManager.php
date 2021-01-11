@@ -94,6 +94,8 @@ class HelloManager {
         $bodies = $log->getBodyAsArray();
         $bodies['subject'] = $log->getSubject(); 
         $bodies['from'] = $log->getFromStrName();
+        $fileNames = $log->getAttachmentFileNames();
+        $bodies['filename'] = implode(' ', $fileNames);
         $text = implode(' ', $bodies);
 //        var_dump($bodies); exit;
         $tokens = $tokenizer->filter($text);

@@ -227,6 +227,21 @@ class PostLog {
         }    
     }
     
+    public function getAttachmentFileNames()
+    {
+        $result = [];
+        try{
+            $attachments = Json::decode($this->attachment);
+            foreach ($attachments as $part){
+                $result[] = $part->filename;
+            }    
+        } catch (\Laminas\Json\Exception\RuntimeException $ex){
+            return $result;
+        } 
+        
+        return $result;
+    }
+    
     public function getAttachmentTmpName()
     {
         try{
