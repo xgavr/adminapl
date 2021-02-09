@@ -13,6 +13,8 @@ use Admin\Filter\HtmlFilter;
 use Admin\Filter\TurboOrderFilter;
 use Admin\Entity\PostLog;
 use Application\Filter\Tokenizer;
+use Admin\Entity\MailToken;
+use Admin\Entity\MailPostToken;
 
 /**
  * Description of HelloManager
@@ -82,6 +84,47 @@ class HelloManager {
         return;
     }
     
+    /**
+     * Удалить токен письма
+     * 
+     * @param MailToken $token
+     */
+    public function removeToken($token)
+    {
+        $this->entityManager->remove($token);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Удалить связь токена и письма
+     * 
+     * @param MailPostToken $postToken
+     */
+    public function removeMailPostToken($postToken)
+    {
+        $this->entityManager->remove($postToken);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Удалить токены письма
+     * 
+     * @param PostLog $log
+     */
+    public function removeLogPostTokens($log)
+    {
+        $postTokens = $this->entityManager->getRepository(MailPostToken::class)
+                ->findBy(['postLog' => $log->getId()]);
+        foreach ($postTokens as $postToken){
+            $this->removeMailPostToken($postToken);
+        }
+        
+        return;
+    }
     
     /**
      * Разобрать письмо на токены

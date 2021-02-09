@@ -450,12 +450,12 @@ class PostManager {
                             
                             if (isset($headers[0])){
                                 if (isset($headers[0]->to)){
-                                    $result[$messageNumber]['to'] = iconv_mime_decode($headers[0]->to);
+                                    $result[$messageNumber]['to'] = iconv_mime_decode($headers[0]->to, ICONV_MIME_DECODE_CONTINUE_ON_ERROR);
                                 }    
-                                $result[$messageNumber]['from'] = iconv_mime_decode($headers[0]->from);
+                                $result[$messageNumber]['from'] = iconv_mime_decode($headers[0]->from, ICONV_MIME_DECODE_CONTINUE_ON_ERROR);
                                 $result[$messageNumber]['date'] = $headers[0]->date;
                                 if (isset($headers[0]->subject)){
-                                    $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject);                                    
+                                    $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject, ICONV_MIME_DECODE_CONTINUE_ON_ERROR);                                    
                                 }
                             }    
 
