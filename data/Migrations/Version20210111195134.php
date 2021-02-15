@@ -73,6 +73,7 @@ final class Version20210111195134 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('mail_token_group_token');        
         $schema->dropTable('mail_token_group');        
-        $schema->dropTable('token');
+        $schema->dropTable('mail_post_token');
+        $schema->dropTable('mail_token');
     }
 }

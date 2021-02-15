@@ -15,6 +15,7 @@ use Admin\Entity\PostLog;
 use Application\Filter\Tokenizer;
 use Admin\Entity\MailToken;
 use Admin\Entity\MailPostToken;
+use Application\Filter\Lemma;
 
 /**
  * Description of HelloManager
@@ -143,7 +144,10 @@ class HelloManager {
 //        var_dump($bodies); exit;
         $tokens = $tokenizer->filter($text);
         
-        return $tokens;
+        $lemmaFilter = new Lemma($this->entityManager, ['useMailToken' => 1]);
+        $lemms = $lemmaFilter->filter($tokens);
+        
+        return $lemms;
     }
         
 }

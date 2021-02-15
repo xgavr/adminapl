@@ -10,6 +10,7 @@ namespace Application\Filter;
 
 use Laminas\Filter\AbstractFilter;
 use Application\Entity\Token;
+use Admin\Entity\MailToken;
 use Application\Entity\Bigram;
 use Application\Validator\IsRU;
 use Application\Validator\IsEN;
@@ -44,7 +45,7 @@ class Lemma extends AbstractFilter
 {
     
     // Доступные опции фильтра.
-    protected $options = [
+    protected $morphOptions = [
         // storage type, follow types supported
         // PHPMORPHY_STORAGE_FILE - use file operations(fread, fseek) for dictionary access, this is very slow...
         // PHPMORPHY_STORAGE_SHM - load dictionary in shared memory(using shmop php extension), this is preferred mode
@@ -57,6 +58,8 @@ class Lemma extends AbstractFilter
         // TODO: comment this
         'graminfo_as_text' => false,
     ];
+    
+    protected $options = [];
 
     protected $dictsPath = 'vendor/cijic/phpmorphy/libs/phpmorphy/dicts';
     
@@ -87,8 +90,13 @@ class Lemma extends AbstractFilter
      */
     protected function correctWord($word)
     {
-        $token = $this->entityManager->getRepository(Token::class)
-                ->findOneByLemma($word);
+        if (!empty($this->options['useMailToken'])){
+            $token = $this->entityManager->getRepository(MailToken::class)
+                    ->findOneByLemma($word);            
+        } else {
+            $token = $this->entityManager->getRepository(Token::class)
+                    ->findOneByLemma($word);
+        }    
         if ($token){
             if ($token->getCorrect()){
                 $result = [];
@@ -207,8 +215,8 @@ class Lemma extends AbstractFilter
         $result = [];
         
         
-        $morphyRU = new phpMorphy($this->dictsPath, 'ru_RU', $this->options);
-        $morphyEN = new phpMorphy($this->dictsPath, 'en_EN', $this->options);
+        $morphyRU = new phpMorphy($this->dictsPath, 'ru_RU', $this->morphOptions);
+        $morphyEN = new phpMorphy($this->dictsPath, 'en_EN', $this->morphOptions);
         $i = 0;
         
         foreach ($value as $word){
@@ -268,7 +276,9 @@ class Lemma extends AbstractFilter
             }             
         }    
         ksort($result);
-        $result = $this->_correctBigram($result);
+        if (empty($this->options['useMailToken'])){
+            $result = $this->_correctBigram($result);
+        }    
         return $result;
     }
     
