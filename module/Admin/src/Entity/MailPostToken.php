@@ -37,7 +37,7 @@ class MailPostToken {
     /**
      * @ORM\Column(name="display_lemma")  
      */
-    protected $displayLemma;        
+    protected $displayLemma = '';        
 
     /**
      * @ORM\Column(name="status")  
@@ -47,12 +47,12 @@ class MailPostToken {
     /**
      * @ORM\Column(name="mail_part")  
      */
-    protected $mailPart;        
+    protected $mailPart = self::PART_UNKNOWN;        
 
     /**
      * @ORM\Column(name="frequency_part")  
      */
-    protected $frequencyPart;        
+    protected $frequencyPart = 0;        
 
     /**
      * @ORM\ManyToOne(targetEntity="Admin\Entity\MailToken", inversedBy="mailPostTokens") 

@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Laminas\Json\Json;
 use Admin\Filter\EmailFromStr;
 use Admin\Filter\NameFromEmailStr;
+use Admin\Entity\MailPostToken;
 
 
 /**
@@ -199,7 +200,7 @@ class PostLog {
             $bodies = Json::decode($this->body, Json::TYPE_ARRAY);
             return $bodies;
         } catch (\Laminas\Json\Exception\RuntimeException $ex){
-            return ['text' => $this->body];
+            return [MailPostToken::PART_BODY => $this->body];
         }    
         
         return [];

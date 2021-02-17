@@ -136,18 +136,58 @@ class HelloManager {
     {
         $tokenizer = new Tokenizer();
         $bodies = $log->getBodyAsArray();
-        $bodies['subject'] = $log->getSubject(); 
-        $bodies['from'] = $log->getFromStrName();
+        $bodies[MailPostToken::PART_SUBLECT] = $log->getSubject(); 
+        $bodies[MailPostToken::PART_FROM] = $log->getFromStrName();
         $fileNames = $log->getAttachmentFileNames();
-        $bodies['filename'] = implode(' ', $fileNames);
-        $text = implode(' ', $bodies);
+        $bodies[MailPostToken::PART_FILENAME] = implode(' ', $fileNames);
+        //$text = implode(' ', $bodies);
 //        var_dump($bodies); exit;
-        $tokens = $tokenizer->filter($text);
+        foreach ($bodies as $part => $text){
+            $tokens = $tokenizer->filter($text);
         
-        $lemmaFilter = new Lemma($this->entityManager, ['useMailToken' => 1]);
-        $lemms = $lemmaFilter->filter($tokens);
-        
-        return $lemms;
+            $lemmaFilter = new Lemma($this->entityManager, ['useMailToken' => 1]);
+            $lemms = $lemmaFilter->filter($tokens);
+            foreach ($lemms as $k => $words){
+                foreach ($words as $key => $word){
+                    if (mb_strlen($word) < 64){
+                        $mailToken = $this->entityManager->getRepository(MailToken::class)
+                                ->findOneByLemma($word);
+                        if (!$mailToken){
+                            $mailToken = new MailToken();
+                            $mailToken->setLemma($word);
+                            $mailToken->setStatus($key);
+                            $this->entityManager->persist($mailToken);
+                            $this->entityManager->flush($mailToken);
+                        }    
+
+                        if ($mailToken){
+                            $mailPostToken = $this->entityManager->getRepository(MailPostToken::class)
+                                        ->findOneBy([
+                                            'postLog' => $log->getId(), 
+                                            'mailToken' => $mailToken->getId(),
+                                            'mailPart' => $part,
+                                                ]);
+
+                            if (!$mailPostToken){
+                                $mailPostToken = new MailPostToken();
+                                $mailPostToken->setPostLog($log);
+                                $mailPostToken->setMailToken($mailToken);
+                                $mailPostToken->setStatus($key);
+                                $mailPostToken->setMailPart($part);
+                                $this->entityManager->persist($mailPostToken);
+                                $this->entityManager->flush($mailPostToken);
+                            }   
+                        }    
+                    }    
+                }    
+            }    
+        }            
+            
+        $log->setStatus(PostLog::STATUS_RETIRED);
+        $this->entityManager->persist($log);
+        $this->entityManager->flush($log);
+            
+        return;
     }
         
 }

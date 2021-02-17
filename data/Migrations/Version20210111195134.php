@@ -28,10 +28,21 @@ final class Version20210111195134 extends AbstractMigration
         $table->addUniqueIndex(['lemma'], 'lemma_uindx');
         $table->addOption('engine' , 'InnoDB');
 
+        $table = $schema->createTable('mail_token_group');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);
+        $table->addColumn('name', 'string', ['notnull'=>true, 'length' => 128]);        
+        $table->addColumn('lemms', 'string', ['notnull'=>true, 'length' => 512]);        
+        $table->addColumn('ids', 'string', ['notnull'=>true, 'length' => 512]);        
+        $table->addColumn('post_count', 'integer', ['notnull'=>true, 'default' => 0]);        
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['ids'], 'ids_indx');
+        $table->addOption('engine' , 'InnoDB');
+        
         $table = $schema->createTable('mail_post_token');
         $table->addColumn('id', 'bigint', ['autoincrement'=>true]);
         $table->addColumn('post_log_id', 'integer', ['notnull'=>true]);
         $table->addColumn('mail_token_id', 'integer', ['notnull'=>true]);
+        $table->addColumn('mail_token_group_id', 'integer', ['notnull'=>false]);
         $table->addColumn('display_lemma', 'string', ['notnull'=>true, 'length' => 64]);        
         $table->addColumn('mail_part', 'integer', ['notnull'=>true, 'default' => MailPostToken::PART_UNKNOWN]);        
         $table->addColumn('frequency_part', 'integer', ['notnull'=>true, 'default' => 0]);        
@@ -44,16 +55,6 @@ final class Version20210111195134 extends AbstractMigration
         $table->addForeignKeyConstraint('post_log', ['post_log_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'm_p_t_m_p_t_id_m_p_t_id_fk');
         $table->addOption('engine' , 'InnoDB'); 
-        
-        $table = $schema->createTable('mail_token_group');
-        $table->addColumn('id', 'integer', ['autoincrement'=>true]);
-        $table->addColumn('name', 'string', ['notnull'=>true, 'length' => 128]);        
-        $table->addColumn('lemms', 'string', ['notnull'=>true, 'length' => 512]);        
-        $table->addColumn('ids', 'string', ['notnull'=>true, 'length' => 512]);        
-        $table->addColumn('post_count', 'integer', ['notnull'=>true, 'default' => 0]);        
-        $table->setPrimaryKey(['id']);
-        $table->addIndex(['ids'], 'ids_indx');
-        $table->addOption('engine' , 'InnoDB');
         
         $table = $schema->createTable('mail_token_group_token');
         $table->addColumn('id', 'bigint', ['autoincrement'=>true]);
@@ -72,8 +73,8 @@ final class Version20210111195134 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('mail_token_group_token');        
-        $schema->dropTable('mail_token_group');        
         $schema->dropTable('mail_post_token');
+        $schema->dropTable('mail_token_group');        
         $schema->dropTable('mail_token');
     }
 }

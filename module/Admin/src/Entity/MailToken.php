@@ -76,12 +76,12 @@ class MailToken {
     /**
      * @ORM\Column(name="idf")   
      */
-    protected $idf;
+    protected $idf = 0;
 
     /**
      * @ORM\Column(name="gf")   
      */
-    protected $gf;
+    protected $gf = 0;
 
     /**
      * @ORM\Column(name="correct")   
