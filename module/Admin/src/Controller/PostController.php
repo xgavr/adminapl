@@ -84,8 +84,7 @@ class PostController extends AbstractActionController
         }    
         
 
-        $tokens = $this->helloManager->toTokens($log);
-        var_dump($tokens);
+        $this->helloManager->toTokens($log);
 
         return new JsonModel([
             'ok'
