@@ -10,6 +10,8 @@ namespace Admin\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Admin\Entity\PostLog;
+use Admin\Entity\MailPostToken;
+
 /**
  * Description of PostLogRepository
  *
@@ -33,6 +35,16 @@ class PostLogRepository extends EntityRepository
                 ;
         return $queryBuilder->getQuery();            
         
+    }
+    
+    /**
+     * Удалить записи связи письма и токенов
+     * @param PostLog $log
+     */
+    public function removeMailPostTokens($log)
+    {
+        $this->getEntityManager()->getConnection()->delete('mail_post_token', ['post_log_id' => $log->getId()]);
+        return;
     }
     
 }

@@ -140,8 +140,10 @@ class HelloManager {
         $bodies[MailPostToken::PART_FROM] = $log->getFromStrName();
         $fileNames = $log->getAttachmentFileNames();
         $bodies[MailPostToken::PART_FILENAME] = implode(' ', $fileNames);
-        //$text = implode(' ', $bodies);
-//        var_dump($bodies); exit;
+
+        $this->entityManager->getRepository(MailPostToken::class)
+                ->removeMailPostTokens($log);
+        
         foreach ($bodies as $part => $text){
             $tokens = $tokenizer->filter($text);
         
