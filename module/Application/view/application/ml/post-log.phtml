@@ -30,6 +30,7 @@ $preGood = null;
             <?php foreach ($logs as $log):?>
                 <tr>
                     <td>
+                        <?= $log->getId();?><br/>
                         <?= $log->getDateCreated();?>
                     </td>
                     <td>
