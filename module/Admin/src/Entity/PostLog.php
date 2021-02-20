@@ -198,6 +198,7 @@ class PostLog {
     {
         try{
             $bodies = Json::decode($this->body, Json::TYPE_ARRAY);
+            var_dump($bodies); exit;
             return $bodies;
         } catch (\Laminas\Json\Exception\RuntimeException $ex){
             return [MailPostToken::PART_BODY => $this->body];
