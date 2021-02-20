@@ -198,8 +198,13 @@ class PostLog {
     {
         try{
             $bodies = Json::decode($this->body, Json::TYPE_ARRAY);
-            var_dump($bodies); exit;
-            return $bodies;
+            if (isset($bodies['PLAIN'])){
+                return [MailPostToken::PART_BODY, $bodies['PLAIN']];                
+            }
+            if (isset($bodies['HTML'])){
+                return [MailPostToken::PART_BODY, strip_tags($bodies['HTML'])];                
+            }
+            return [MailPostToken::PART_BODY, implode(' ', $bodies)];
         } catch (\Laminas\Json\Exception\RuntimeException $ex){
             return [MailPostToken::PART_BODY => $this->body];
         }    
