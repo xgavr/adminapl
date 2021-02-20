@@ -136,11 +136,11 @@ class HelloManager {
     {
         $tokenizer = new Tokenizer();
         $bodies = $log->getBodyAsArray();
-        var_dump($bodies); exit;
         $bodies[MailPostToken::PART_SUBLECT] = $log->getSubject(); 
         $bodies[MailPostToken::PART_FROM] = $log->getFromStrName();
         $fileNames = $log->getAttachmentFileNames();
         $bodies[MailPostToken::PART_FILENAME] = implode(' ', $fileNames);
+        var_dump($bodies); exit;
 
         $this->entityManager->getRepository(MailPostToken::class)
                 ->removeMailPostTokens($log);
