@@ -136,6 +136,7 @@ class HelloManager {
     {
         $tokenizer = new Tokenizer();
         $bodies = $log->getBodyAsArray();
+        var_dump($bodies); exit;
         $bodies[MailPostToken::PART_SUBLECT] = $log->getSubject(); 
         $bodies[MailPostToken::PART_FROM] = $log->getFromStrName();
         $fileNames = $log->getAttachmentFileNames();
