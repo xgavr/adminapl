@@ -191,5 +191,27 @@ class HelloManager {
             
         return;
     }
+    
+    /**
+     * Разбор писем на токены
+     */
+    public function logsToTokens()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $logs = $this->entityManager->getRepository(PostLog::class)
+                ->findBy(['status' => PostLog::STATUS_ACTIVE]);
+
+        foreach ($logs as $log){
+            $this->toTokens($log);
+            if (time() > $startTime + 840){
+                return;
+            }
+        }
+        
+        return;
+    }           
         
 }

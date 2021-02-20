@@ -91,4 +91,13 @@ class PostController extends AbstractActionController
         ]);
     }
     
+    public function logsToTokensAction()
+    {
+        $this->helloManager->logsToTokens();
+
+        return new JsonModel([
+            'ok-reload'
+        ]);
+    }
+    
 }
