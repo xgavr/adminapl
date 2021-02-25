@@ -497,6 +497,7 @@ class ExternalManager
             $car->setTransferFlag(Car::TRANSFER_NO);
             $car->setGoodCount(0);
             $car->setFillVolumesFlag(Car::FILL_VOLUMES_NO);
+            $car->setTransferFillVolumesFlag(Car::FILL_VOLUMES_TRANSFER_NO);
             
             $car->setModel($model);
 
