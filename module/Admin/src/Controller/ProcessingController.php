@@ -1645,4 +1645,23 @@ class ProcessingController extends AbstractActionController
         
     }
     
+    /**
+     * Обновление токено из писем
+     * @return JsonModel
+     */
+    public function updateMailTokensAction()
+    {
+        $settings = $this->adminManager->getSettings();
+
+        if ($settings['mail_token'] == 1){
+
+            $this->helloManager->logsToTokens();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+    
 }

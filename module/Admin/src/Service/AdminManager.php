@@ -110,6 +110,8 @@ class AdminManager {
         
         $config->admin->allow_date = $data['allow_date'];
         
+        $config->admin->mail_token = $data['mail_token'];
+        
         $writer = new PhpArray();
         
         $writer->toFile(self::SETTINGS_FILE, $config);

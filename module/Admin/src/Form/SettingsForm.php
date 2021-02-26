@@ -241,6 +241,19 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 'format' => 'Y-m-d'
             ],
         ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'mail_token',
+            'options' => [
+                'label' => 'Обрабатка токенов писем',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
                 
         // Добавляем кнопку отправки формы
         $this->add([
@@ -617,6 +630,17 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                     ],
                 ],
             ]);          
+        
+        $inputFilter->add([
+                'name'     => 'mail_token',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
         
     }    
     
