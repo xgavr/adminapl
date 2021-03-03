@@ -700,8 +700,9 @@ class NameManager
      */
     public function updateAllBigramArticleCount()
     {
-        set_time_limit(0);        
+        set_time_limit(1800);        
         ini_set('memory_limit', '2048M');
+        $startTime = time();
         
         $goods = $this->entityManager->getRepository(Goods::class)
                 ->count([]);
@@ -716,8 +717,11 @@ class NameManager
                 $this->updateBigramArticleCount($bigram, null, $goods, null, $tokenGroups);
                 $this->entityManager->detach($bigram);
             }   
+            if (time() > $startTime + 1740){
+                return false;
+            }
         }    
-        return;
+        return true;
     }
     
     /**
@@ -1070,7 +1074,7 @@ class NameManager
      */
     public function removeEmptyBigram()
     {
-        set_time_limit(0);        
+        set_time_limit(1800);        
         ini_set('memory_limit', '2048M');
         $startTime = time();
         
@@ -1081,6 +1085,9 @@ class NameManager
             foreach($row as $bigram){
                 $this->removeBigram($bigram);
             }                
+            if (time() > $startTime + 1740){
+                return;
+            }
         }
         
         return;

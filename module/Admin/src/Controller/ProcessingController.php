@@ -704,8 +704,9 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_name'] == 1){
-            $this->nameManager->updateAllBigramArticleCount();
-            $this->nameManager->removeEmptyBigram();
+            if ($this->nameManager->updateAllBigramArticleCount()){
+                $this->nameManager->removeEmptyBigram();
+            }    
         }    
                 
         return new JsonModel(
