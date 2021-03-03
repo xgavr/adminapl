@@ -202,7 +202,7 @@ class HelloManager {
         $startTime = time();
         
         $logs = $this->entityManager->getRepository(PostLog::class)
-                ->findBy(['status' => PostLog::STATUS_ACTIVE]);
+                ->findBy(['status' => PostLog::STATUS_ACTIVE], [], 10000);
 
         foreach ($logs as $log){
             $this->toTokens($log);
