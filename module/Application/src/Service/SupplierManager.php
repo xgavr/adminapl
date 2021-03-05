@@ -18,6 +18,7 @@ use Application\Entity\SupplySetting;
 use Company\Entity\Office;
 use Laminas\File\ClassFileLocator;
 use Stock\Entity\Mutual;
+use Application\Entity\SupplierApiSetting;
 
 
 /**
@@ -698,6 +699,64 @@ class SupplierManager
         $this->entityManager->remove($supplySetting);
         $this->entityManager->flush();
     }
+    
+    /**
+     * Создать новый SupplierApiSetting
+     * 
+     * @param Supplier $supplier
+     * @param array $data
+     */
+    public function addNewSupplierApiSetting($supplier, $data)
+    {
+        $supplierApiSetting = new SupplierApiSetting();
+        $supplierApiSetting->setName($data['name']);
+        $supplierApiSetting->setLogin($data['login']);
+        $supplierApiSetting->setPassword($data['password']);
+        $supplierApiSetting->setUserId($data['userId']);
+        $supplierApiSetting->setStatus($data['status']);
+        
+        $currentDate = date('Y-m-d H:i:s');
+        $supplierApiSetting->setDateCreated($currentDate); 
+        
+        $supplierApiSetting->setSupplier($supplier);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($supplierApiSetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * Обновить SupplierApiSetting
+     * 
+     * @param SupplierApiSetting $supplierApiSetting
+     * @param array $data
+     */    
+    public function updateSupplierApiSetting($supplierApiSetting, $data)
+    {
+        $supplierApiSetting->setName($data['name']);
+        $supplierApiSetting->setLogin($data['login']);
+        $supplierApiSetting->setPassword($data['password']);
+        $supplierApiSetting->setUserId($data['userId']);
+        $supplierApiSetting->setStatus($data['status']);
+
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($supplierApiSetting);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->flush();
+    }    
+    
+    /**
+     * Удалить SupplierApiSetting
+     * @param SupplierApiSetting $supplierApiSetting
+     */
+    public function removeSupplierApiSetting($supplierApiSetting)
+    {
+        $this->entityManager->remove($supplierApiSetting);
+        $this->entityManager->flush();
+    }    
     
     public function checkPriceFolder($supplier)
     {

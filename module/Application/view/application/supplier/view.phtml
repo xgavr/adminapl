@@ -193,6 +193,74 @@ $this->headScript()
         
         <div class="panel panel-default" id="section6">
             <div class="panel-heading">
+                <h3 class="panel-title pull-left">Настройки Апи</h3>
+                <div class="pull-right">
+                    <button value="/supplier/supplier-api-setting-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Добавить">
+                        <span class="glyphicon glyphicon-plus" ></span>
+                    </button>                                                                        
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <?php if ($supplier->getSupplierApiSettings()): ?>                    
+                    <div class="panel-group">
+                        <?php foreach ($supplier->getSupplierApiSettings() as $supplierApiSetting): ?>                
+                            <div class="panel panel-info">
+                                <div class="panel-body">
+                                    <div class="pull-left">
+                                        <?= $supplierApiSetting->getName() ?><br/>
+                                        Логин: <span><?= $supplierApiSetting->getLogin() ?></span><br/>
+                                        Пароль: <span><?= $supplierApiSetting->getPassword() ?></span><br/>
+                                        Ключ: <span><?= $supplierApiSetting->getUserId() ?></span><br/>
+                                        <br/>
+                                        Статус: <span><?= $supplierApiSetting->getStatusAsString() ?></span><br/>
+                                    </div>        
+                                    <div class="pull-right">                                
+                                        <button value="/supplier/supplier-api-setting-form/<?= $supplier->getId() ?>?supplierApiSetting=<?= $supplierApiSetting->getId() ?>" class="btn btn-default btn-xs"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                            <span class="glyphicon glyphicon-edit" ></span>
+                                        </button>                                                    
+                                        <button value="/supplier/delete-supplier-api-setting-form/<?= $supplierApiSetting->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                title="Удалить">
+                                            <span class="glyphicon glyphicon-remove" ></span>
+                                        </button>                                                           
+                                    </div>                                                                        
+                                </div>
+                                <?php foreach($lastPrice as $filename => $value):?>
+                                    <div class="panel-body">
+                                        <div class="pull-left">
+                                            <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
+                                        </div>
+                                        <div class="pull-right">       
+                                            <button value="/raw/upload-raw-form/<?= $supplier->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
+                                                    title="Загрузить файл в базу">
+                                                <span class="glyphicon glyphicon-import" ></span>
+                                            </button>                                                           
+                                            <button value="/price/upload-price-file-to-apl-form/<?= $supplier->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
+                                                    title="Закачать прайс на сервер АПЛ">
+                                                <span class="glyphicon glyphicon-upload" ></span>
+                                            </button>                                                           
+                                            <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('price',
+                                                    ['action'=>'download-price-file-form'], ['query' => ['filename' => $value['path']]]); ?>">
+                                                <span class="glyphicon glyphicon-download"></span>
+                                            </a>
+                                            <button value="/price/delete-price-file-form?filename=<?= $value['path']?>" class="btn btn-default btn-xs this-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                           
+                                        </div>                                                                        
+                                    </div>    
+                               <? endforeach;?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="panel panel-default" id="section7">
+            <div class="panel-heading">
                 Загруженные прайсы
                 <div class="clearfix"></div>
             </div>
@@ -252,7 +320,7 @@ $this->headScript()
             <? endforeach;?>
         </div>
         
-        <div class="panel panel-default" id="section7">
+        <div class="panel panel-default" id="section8">
             <div class="panel-heading">
                 <h3 class="panel-title pull-left">Подвоз</h3>
                 <div class="pull-right">
@@ -297,7 +365,7 @@ $this->headScript()
                 <?php endif; ?>
             </div>
         </div>
-        <div class="panel panel-default" id="section8">
+        <div class="panel panel-default" id="section9">
             <div class="panel-heading">
                 <h3 class="panel-title pull-left">Получение электронных накладных</h3>
                 <div class="pull-right">
@@ -348,9 +416,10 @@ $this->headScript()
                             <li><a href="#section3">Контакты</a></li>
                             <li><a href="#section4">Юридические лица</a></li>
                             <li><a href="#section5">Настройки получения прайса</a></li>
-                            <li><a href="#section6">Загруженные прайсы</a></li>
-                            <li><a href="#section7">Подвоз</a></li>
-                            <li><a href="#section8">Получение электронных накладных</a></li>
+                            <li><a href="#section6">Настройки Api</a></li>
+                            <li><a href="#section7">Загруженные прайсы</a></li>
+                            <li><a href="#section8">Подвоз</a></li>
+                            <li><a href="#section9">Получение электронных накладных</a></li>
                         </ul>
                     </div>
                 </div>

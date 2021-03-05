@@ -1,0 +1,106 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('userId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'supplier-api-setting-submit']);
+
+$form->prepare();
+
+?>
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Настройка АПИ поставщика</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('name')); ?>
+                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('login')); ?>
+                            <?= $this->formElement($form->get('login')); ?>
+                            <?= $this->formElementErrors($form->get('login')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('password')); ?>
+                            <?= $this->formElement($form->get('password')); ?>
+                            <?= $this->formElementErrors($form->get('password')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('userId')); ?>
+                            <?= $this->formElement($form->get('userId')); ?>
+                            <?= $this->formElementErrors($form->get('userId')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+
+                    </div>        
+                </div>
+                <?= $this->formElement($form->get('csrf')); ?>
+            </div>    
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="supplier-api-setting-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#supplier-api-setting-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/supplier/supplier-api-setting-form/<?= $supplier->getId() ?>?supplierApiSetting=<?= ($supplierApiSetting ? $supplierApiSetting->getId():'') ?>',
+            data: $('#supplier-api-setting-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    window.location.reload();
+                } else {
+                    $('#modal-content').html(data);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при открытии формы.");
+
+            });
+    });   
+</script>

@@ -147,6 +147,20 @@ return [
                     ],
                 ],
             ],        
+            'sapi' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/sapi[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\SapiController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'supplier' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -425,6 +439,7 @@ return [
             Controller\RawController::class => Controller\Factory\RawControllerFactory::class,
             Controller\RawpriceController::class => Controller\Factory\RawpriceControllerFactory::class,
             Controller\RbController::class => Controller\Factory\RbControllerFactory::class,
+            Controller\SapiController::class => Controller\Factory\SapiControllerFactory::class,
             Controller\SupplierController::class => Controller\Factory\SupplierControllerFactory::class,
             Controller\ShopController::class => Controller\Factory\ShopControllerFactory::class,
         ],
@@ -461,6 +476,7 @@ return [
             Service\RbacAssertionManager::class => Service\Factory\RbacAssertionManagerFactory::class,  
             Service\RbManager::class => Service\Factory\RbManagerFactory::class,
             Service\ShopManager::class => Service\Factory\ShopManagerFactory::class,
+            Service\SupplierApi\AutoEuroManager::class => Service\Factory\SupplierApi\AutoEuroManagerFactory::class,
             Service\SupplierManager::class => Service\Factory\SupplierManagerFactory::class,
             'doctrine.cache.doctrine_cache' => Service\Factory\DoctrineCacheFactory::class,
         ],
@@ -561,6 +577,10 @@ return [
             Controller\RbController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\SapiController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '*']
             ],
             Controller\SupplierController::class => [
                 // Allow access to authenticated users.

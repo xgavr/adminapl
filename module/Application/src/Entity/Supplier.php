@@ -153,6 +153,12 @@ class Supplier {
      */
     private $supplySettings;    
     
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\SupplierApiSetting", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+     */
+    private $supplierApiSettings;    
+    
    /**
     * @ORM\OneToMany(targetEntity="Rate", mappedBy="supplier")
     * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
@@ -174,6 +180,7 @@ class Supplier {
         $this->idocs = new ArrayCollection();
         $this->requestSettings = new ArrayCollection();
         $this->supplySettings = new ArrayCollection();
+        $this->supplierApiSettings = new ArrayCollection();
         $this->rates = new ArrayCollection();
     }
     
@@ -679,6 +686,23 @@ class Supplier {
     public function addSupplySetting($supplySetting)
     {
         $this->supplySettings[] = $supplySetting;
+    }
+    
+    /**
+     * Returns the array of supplierApiSetting assigned to this.
+     * @return array
+     */
+    public function getSupplierApiSettings()
+    {
+        return $this->supplierApiSettings;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addSupplierApiSetting($supplierApiSetting)
+    {
+        $this->supplierApiSettings[] = $supplierApiSetting;
     }
     
     /*

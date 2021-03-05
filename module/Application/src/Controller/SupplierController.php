@@ -27,6 +27,8 @@ use Application\Form\ContactForm;
 use Application\Form\SupplySettingForm;
 use Application\Form\UploadForm;
 use Laminas\View\Model\JsonModel;
+use Application\Entity\SupplierApiSetting;
+use Application\Form\SupplierApiSettingForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -957,7 +959,94 @@ class SupplierController extends AbstractActionController
         exit;
     }    
     
+    public function supplierApiSettingFormAction()
+    {
+        $supplierId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($supplierId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneById($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
 
+        $supplierApiSettingId = (int)$this->params()->fromQuery('supplierApiSetting', -1);
+        
+        // Validate input parameter
+        if ($supplierApiSettingId>0) {
+            $supplierApiSetting = $this->entityManager->getRepository(SupplierApiSetting::class)
+                    ->findOneById($supplierApiSettingId);
+        } else {
+            $supplierApiSetting = null;
+        }
+        
+        $form = new SupplierApiSettingForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+            if ($form->isValid()) {
+                if ($supplierApiSetting){
+                    $this->supplierManager->updateSupplierApiSetting($supplierApiSetting, $data);                    
+                } else{
+                    $this->supplierManager->addNewSupplierApiSetting($supplier, $data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+//                var_dump($form->getMessages());
+            }
+        } else {
+            if ($supplierApiSetting){
+                $data = [
+                    'name' => $supplierApiSetting->getName(),  
+                    'login' => $supplierApiSetting->getLogin(),  
+                    'password' => $supplierApiSetting->getPassword(),  
+                    'userId' => $supplierApiSetting->getUserId(),  
+                    'status' => $supplierApiSetting->getStatus(),  
+                ];
+                $form->setData($data);
+            }    
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'supplierApiSetting' => $supplierApiSetting,
+            'supplier' => $supplier,
+        ]);                
+    }
+    
+    public function deleteSupplierApiSettingFormAction()
+    {
+        $supplierApiSettingId = $this->params()->fromRoute('id', -1);
+        
+        $supplierApiSetting = $this->entityManager->getRepository(SupplierApiSetting::class)
+                ->findOneById($supplierApiSettingId);
+        
+        if ($supplierApiSetting == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->supplierManager->removeSupplierApiSetting($supplierApiSetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }    
+    
     public function priceDescriptionFormAction()
     {
         $supplierId = (int)$this->params()->fromRoute('id', -1);
