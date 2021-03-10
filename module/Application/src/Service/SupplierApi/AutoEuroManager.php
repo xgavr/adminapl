@@ -123,13 +123,13 @@ class AutoEuroManager
             $userId = $this->apiUserId();
             $apiUrl = $this->apiUrl();
             
-            $uri = $apiUrl.'/current/shop/'.$action.'/'.$userId.'/?';
+            $uri = $apiUrl.'/api/current/shop/'.$action.'/'.$userId.'/?';
 
             foreach ($params as $key => $value){
                 $uri .= "$key=$value&";
             }    
             
-            var_dump($uri); exit;
+//            var_dump($uri); exit;
             $client = new Client();
             $client->setUri(trim($uri, '&'));
             $client->setAdapter($this::HTTPS_ADAPTER);
