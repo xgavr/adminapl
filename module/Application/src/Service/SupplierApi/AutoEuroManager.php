@@ -56,6 +56,20 @@ class AutoEuroManager
     }
     
     /**
+     * Получить apiUrl из настроек апи
+     * @return string
+     */
+    private function apiUrl()
+    {
+        $apiSetting = $this->entityManager->getRepository(SupplierApiSetting::class)
+                ->findOneBy(['status' => SupplierApiSetting::STATUS_ACTIVE, 'supplier' => 20]);
+        if ($apiSetting){
+            return $apiSetting->getBaseUri();
+        }
+        return;
+    }
+    
+    /**
      * Обработка ошибок
      * @param \Laminas\Http\Response $response
      */
@@ -107,8 +121,9 @@ class AutoEuroManager
             }
             
             $userId = $this->apiUserId();
+            $apiUrl = $this->apiUrl();
             
-            $uri = 'https://api.autoeuro.ru/api/current/shop/'.$action.'/'.$userId.'/?';
+            $uri = $apiUrl.'/current/shop/'.$action.'/'.$userId.'/?';
 
             foreach ($params as $key => $value){
                 $uri .= "$key=$value&";

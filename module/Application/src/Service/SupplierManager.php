@@ -713,6 +713,8 @@ class SupplierManager
         $supplierApiSetting->setLogin($data['login']);
         $supplierApiSetting->setPassword($data['password']);
         $supplierApiSetting->setUserId($data['userId']);
+        $supplierApiSetting->setBaseUri($data['baseUri']);
+        $supplierApiSetting->setTestUri($data['testUri']);
         $supplierApiSetting->setStatus($data['status']);
         
         $currentDate = date('Y-m-d H:i:s');
@@ -739,6 +741,8 @@ class SupplierManager
         $supplierApiSetting->setLogin($data['login']);
         $supplierApiSetting->setPassword($data['password']);
         $supplierApiSetting->setUserId($data['userId']);
+        $supplierApiSetting->setBaseUri($data['baseUri']);
+        $supplierApiSetting->setTestUri($data['testUri']);
         $supplierApiSetting->setStatus($data['status']);
 
         // Добавляем сущность в менеджер сущностей.

@@ -46,6 +46,16 @@ class SupplierApiSetting {
     protected $password;
     
     /**
+     * @ORM\Column(name="base_uri")   
+     */
+    protected $baseUri;
+        
+    /**
+     * @ORM\Column(name="test_uri")   
+     */
+    protected $testUri;
+        
+    /**
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;    
@@ -115,6 +125,26 @@ class SupplierApiSetting {
     public function setUserId($userId) 
     {
         $this->userId = $userId;
+    }
+
+    public function getBaseUri() 
+    {
+        return $this->baseUri;
+    }
+
+    public function setBaseUri($baseUri) 
+    {
+        $this->baseUri = $baseUri;
+    }
+
+    public function getTestUri() 
+    {
+        return $this->testUri;
+    }
+
+    public function setTestUri($testUri) 
+    {
+        $this->testUri = $testUri;
     }
 
     public function getDateCreated() 

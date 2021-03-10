@@ -8,6 +8,7 @@
 namespace Application\Form;
 
 use Laminas\Form\Form;
+use Laminas\Form\Element;
 use Laminas\InputFilter\InputFilter;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
@@ -58,6 +59,28 @@ class SupplierApiSettingForm extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'Наименование',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => Element\Url::class,
+            'name' => 'baseUri',
+            'attributes' => [
+                'id' => 'baseUri'
+            ],
+            'options' => [
+                'label' => 'Сайт',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => Element\Url::class,
+            'name' => 'testUri',
+            'attributes' => [
+                'id' => 'testUri'
+            ],
+            'options' => [
+                'label' => 'Тестовая ссылка',
             ],
         ]);
         
@@ -157,6 +180,22 @@ class SupplierApiSettingForm extends Form implements ObjectManagerAwareInterface
                     ],
                 ],
             ]);
+        
+        $inputFilter->add([
+            'name' => 'baseUri',
+            'required' => true,
+            'validators' => [
+                ['name' => 'uri'],
+            ],
+        ]);
+        
+        $inputFilter->add([
+            'name' => 'testUri',
+            'required' => false,
+            'validators' => [
+                ['name' => 'uri'],
+            ],
+        ]);
         
         $inputFilter->add([
                 'name'     => 'login',

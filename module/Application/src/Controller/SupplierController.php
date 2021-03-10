@@ -1011,6 +1011,8 @@ class SupplierController extends AbstractActionController
                     'login' => $supplierApiSetting->getLogin(),  
                     'password' => $supplierApiSetting->getPassword(),  
                     'userId' => $supplierApiSetting->getUserId(),  
+                    'baseUri' => $supplierApiSetting->getBaseUri(),
+                    'testUri' => $supplierApiSetting->getTestUri(),
                     'status' => $supplierApiSetting->getStatus(),  
                 ];
                 $form->setData($data);

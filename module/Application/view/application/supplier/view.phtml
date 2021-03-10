@@ -210,6 +210,7 @@ $this->headScript()
                                 <div class="panel-body">
                                     <div class="pull-left">
                                         <?= $supplierApiSetting->getName() ?><br/>
+                                        <a href="<?= $supplierApiSetting->getBaseUri() ?>" target="_blank"><?= $supplierApiSetting->getBaseUri() ?></a><br/>
                                         Логин: <span><?= $supplierApiSetting->getLogin() ?></span><br/>
                                         Пароль: <span><?= $supplierApiSetting->getPassword() ?></span><br/>
                                         Ключ: <span><?= $supplierApiSetting->getUserId() ?></span><br/>
