@@ -214,6 +214,7 @@ $this->headScript()
                                         Логин: <span><?= $supplierApiSetting->getLogin() ?></span><br/>
                                         Пароль: <span><?= $supplierApiSetting->getPassword() ?></span><br/>
                                         Ключ: <span><?= $supplierApiSetting->getUserId() ?></span><br/>
+                                        <a href="<?= $supplierApiSetting->getTestUri() ?>" target="_blank"><?= $supplierApiSetting->getTestUri() ?></a><br/>
                                         <br/>
                                         Статус: <span><?= $supplierApiSetting->getStatusAsString() ?></span><br/>
                                     </div>        

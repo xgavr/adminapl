@@ -58,7 +58,11 @@ class SapiController extends AbstractActionController
     
     public function autoEuroTestAction()
     {
-        $data = $this->autoEuroManager->stockItems('1417901100');
+        $q = $this->params()->fromQuery('q');
+        $data = [];
+        if ($q){
+            $data = $this->autoEuroManager->stockItems($q);
+        }    
         
         return new JsonModel(
             $data

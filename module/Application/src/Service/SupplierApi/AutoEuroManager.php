@@ -42,13 +42,27 @@ class AutoEuroManager
     }
     
     /**
+     * Получить настройки
+     * 
+     * @return SupplierApiSetting
+     */
+    private function apiSetting()
+    {
+        $apiSetting = $this->entityManager->getRepository(SupplierApiSetting::class)
+                ->findOneBy(['status' => SupplierApiSetting::STATUS_ACTIVE, 'supplier' => 20]); 
+        if ($apiSetting){
+            return $apiSetting;
+        }        
+        return;
+    }
+    
+    /**
      * Получить userId из настроек апи
      * @return string
      */
     private function apiUserId()
     {
-        $apiSetting = $this->entityManager->getRepository(SupplierApiSetting::class)
-                ->findOneBy(['status' => SupplierApiSetting::STATUS_ACTIVE, 'supplier' => 20]);
+        $apiSetting = $this->apiSetting();
         if ($apiSetting){
             return $apiSetting->getUserId();
         }
@@ -61,8 +75,7 @@ class AutoEuroManager
      */
     private function apiUrl()
     {
-        $apiSetting = $this->entityManager->getRepository(SupplierApiSetting::class)
-                ->findOneBy(['status' => SupplierApiSetting::STATUS_ACTIVE, 'supplier' => 20]);
+        $apiSetting = $this->apiSetting();
         if ($apiSetting){
             return $apiSetting->getBaseUri();
         }
@@ -120,40 +133,43 @@ class AutoEuroManager
                 $params = [];
             }
             
-            $userId = $this->apiUserId();
-            $apiUrl = $this->apiUrl();
-            
-            $uri = $apiUrl.'/api/current/shop/'.$action.'/'.$userId.'/?';
+            $apiSetting = $this->apiSetting();
+            if ($apiSetting){
+                $userId = $apiSetting->getUserId();
+                $apiUrl = $apiSetting->getBaseUri();
 
-            foreach ($params as $key => $value){
-                $uri .= "$key=$value&";
-            }    
-            
-//            var_dump($uri); exit;
-            $client = new Client();
-            $client->setUri(trim($uri, '&'));
-            $client->setAdapter($this::HTTPS_ADAPTER);
-            $client->setMethod('GET');
+                $uri = $apiUrl.'/api/current/shop/'.$action.'/'.$userId.'/?';
 
-            $headers = $client->getRequest()->getHeaders();
-    //        $headers->addHeaders([
-    //            'Content-Type: application/json',
-    //        ]);
-
-            $client->setHeaders($headers);
-
-            $response = $client->send();
-
-            if ($response->isOk()){
-                try {
-                    $body = $response->getBody();
-                    $result = Decoder::decode($body, \Laminas\Json\Json::TYPE_ARRAY);
-                    //$result['change'] = $this->updateAutoDbResponse($uri, $body);
-                    return $result;            
-                } catch (\Laminas\Json\Exception\RuntimeException $e){
-                   // var_dump($response->getBody()); exit;
+                foreach ($params as $key => $value){
+                    $uri .= "$key=$value&";
                 }    
-            }
+
+    //            var_dump($uri); exit;
+                $client = new Client();
+                $client->setUri(trim($uri, '&'));
+                $client->setAdapter($this::HTTPS_ADAPTER);
+                $client->setMethod('GET');
+
+                $headers = $client->getRequest()->getHeaders();
+        //        $headers->addHeaders([
+        //            'Content-Type: application/json',
+        //        ]);
+
+                $client->setHeaders($headers);
+
+                $response = $client->send();
+
+                if ($response->isOk()){
+                    try {
+                        $body = $response->getBody();
+                        $result = Decoder::decode($body, \Laminas\Json\Json::TYPE_ARRAY);
+                        //$result['change'] = $this->updateAutoDbResponse($uri, $body);
+                        return $result;            
+                    } catch (\Laminas\Json\Exception\RuntimeException $e){
+                       // var_dump($response->getBody()); exit;
+                    }    
+                }
+            }    
         }        
 
         return; // $this->exception($response);
