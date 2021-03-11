@@ -138,13 +138,13 @@ class AutoEuroManager
                 $userId = $apiSetting->getUserId();
                 $apiUrl = $apiSetting->getBaseUri();
 
-                $uri = $apiUrl.'/api/current/shop/'.$action.'/'.$userId.'/?';
+                $uri = $apiUrl.'/api/v-1.0/shop/'.$action.'/json/'.$userId.'?';
 
                 foreach ($params as $key => $value){
                     $uri .= "$key=$value&";
                 }    
 
-    //            var_dump($uri); exit;
+                var_dump($uri); exit;
                 $client = new Client();
                 $client->setUri(trim($uri, '&'));
                 $client->setAdapter($this::HTTPS_ADAPTER);
@@ -174,6 +174,12 @@ class AutoEuroManager
 
         return; // $this->exception($response);
         
+    }
+    
+    public function balance()
+    {
+        $result = $this->getAction('balance');
+        return $result;                        
     }
     
     /**

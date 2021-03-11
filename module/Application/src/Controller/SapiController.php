@@ -69,6 +69,15 @@ class SapiController extends AbstractActionController
         );        
     }
             
+    public function autoEuroBalanceAction()
+    {
+        $data = $this->autoEuroManager->balance();
+        
+        return new JsonModel(
+            $data
+        );        
+    }
+            
     /*
      * АвтоЕвро
      * $post api_key, action, params
