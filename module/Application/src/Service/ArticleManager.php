@@ -304,7 +304,7 @@ class ArticleManager
     public function articleRawprices($article, $limit = null)
     {
         return $this->entityManager->getRepository(Rawprice::class)
-                ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED], null, $limit);
+                ->findBy(['code' => $article->getId()], null, $limit);
     }
     
     /**
