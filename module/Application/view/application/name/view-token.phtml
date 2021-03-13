@@ -167,9 +167,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php    foreach ($rawprices as $rawprice):?>
                         <tr>
                             <td>
-                                <a href="<?= $this->url('producer', ['action' => 'article-view', 'id' => $article->getId()]);?>" target="_blank">
-                                    <?= $article->getCode();?>
-                                </a>   
+                                <?= $article->getCode();?>
                             </td>
                             <td>
                                 <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $rawprice->getUnknownProducer()->getId()]);?>" target="_blank">
