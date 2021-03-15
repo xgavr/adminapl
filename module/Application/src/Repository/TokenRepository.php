@@ -1098,6 +1098,7 @@ class TokenRepository  extends EntityRepository
                 ->from(ArticleToken::class, 'at')
                 ->join('at.article', 'a')
                 ->where('at.lemma = ?1')
+                ->where('a.good is not null')
                 ->setParameter('1', $lemma)
                 ;
         
