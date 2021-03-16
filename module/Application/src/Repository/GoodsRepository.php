@@ -820,7 +820,7 @@ class GoodsRepository extends EntityRepository
             ->setParameter('1', Goods::PRICE_EX_NEW)
             ->setMaxResults(100000)    
                 ;
-        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
     }
     
