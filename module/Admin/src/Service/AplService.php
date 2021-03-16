@@ -2099,7 +2099,7 @@ class AplService {
                 }    
             }    
             
-            var_dump($post); exit;
+//            var_dump($post); exit;
             if (count($post['package'])){
             
                 $client = new Client();
