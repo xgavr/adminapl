@@ -2172,7 +2172,7 @@ class AplService {
             }
         }
         
-        var_dump($rows);
+//        var_dump($rows);
         return;
     }    
     
