@@ -2165,7 +2165,7 @@ class AplService {
                 break;
             }
         }    
-        var_dump(count($goods));exit;
+        var_dump($k);exit;
         return;
     }    
     
