@@ -2116,7 +2116,7 @@ class AplService {
                         $ok = $result = true;
                     }
                 } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
-                    $ok = true;
+                    $ok = false;
 //                    var_dump($e->getMessage()); exit;
                 }    
 
