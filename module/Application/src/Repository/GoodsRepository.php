@@ -816,8 +816,10 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusPriceEx = ?1')
+            ->andWhere('g.statusNameEx = ?2')
             ->andWhere('g.price > 0')
             ->setParameter('1', Goods::PRICE_EX_NEW)
+            ->setParameter('2', Goods::NAME_EX_TRANSFERRED)
             ->setMaxResults(100000)    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;

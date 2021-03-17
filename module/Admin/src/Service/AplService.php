@@ -921,7 +921,7 @@ class AplService {
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
-                $ok = true;
+                $ok = false;
             }    
 
             if ($ok){
