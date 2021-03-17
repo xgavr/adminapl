@@ -2099,7 +2099,7 @@ class AplService {
                 }    
             }    
             
-            var_dump($post);
+//            var_dump($post);
             if (count($post['package'])){
             
                 $client = new Client();
@@ -2111,13 +2111,13 @@ class AplService {
                 $ok = $result = false;
                 try{
                     $response = $client->send();
-                    var_dump($response->getStatusCode()); exit;
+//                    var_dump($response->getStatusCode()); exit;
                     if ($response->isOk()) {
                         $ok = $result = true;
                     }
                 } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                     $ok = true;
-                    var_dump($e->getMessage()); exit;
+//                    var_dump($e->getMessage()); exit;
                 }    
 
                 if ($ok){
