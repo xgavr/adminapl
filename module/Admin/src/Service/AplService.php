@@ -2147,7 +2147,7 @@ class AplService {
                 ->findGoodsForUpdatePrice();
         
         $iterable = $goodsQuery->iterate();
-        $k = 1; $border = 200;
+        $k = 1; $border = 200; $rows = 0;
         $goods = [];        
         foreach ($iterable as $row){
             foreach ($row as $good){
@@ -2160,12 +2160,19 @@ class AplService {
                 }
                 $goods = [];
             }
-            $k++;
+            $k++; $rows++;
             if (time() > $startTime + 840){
                 break;
             }
         }    
-        var_dump($k);exit;
+       
+        if ($k < $border && count($goods)){
+            if (!$this->updateGoodPrice($goods)){
+                return;
+            }
+        }
+        
+        var_dump($rows);
         return;
     }    
     
