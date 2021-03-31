@@ -37,6 +37,11 @@ class Producer {
      * @ORM\Column(name="name")   
      */
     protected $name;
+    
+    /**
+     * @ORM\Column(name="good_count")   
+     */
+    protected $goodCount = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Country", inversedBy="producer") 
@@ -97,6 +102,16 @@ class Producer {
     {
         $this->name = trim($name);
     }     
+    
+    public function getGoodCount() 
+    {
+        return $this->goodCount;
+    }
+
+    public function setGoodCount($goodCount) 
+    {
+        $this->goodCount = $goodCount;
+    }      
 
     /*
      * Возвращает связанный country.

@@ -108,6 +108,44 @@ class ProducerManager
     }    
     
     /**
+     * Обновить количество товаров производителя
+     * @param Producer $producer
+     * @return null
+     */
+    public function updateProducerGoodCount($producer)
+    {
+        $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                ->count(['producer' => $producer->getId()]);
+        
+        $this->entityManager->getConnection()->update('producer', ['good_count' => $goodCount], ['producer_id' => $producer->getId()]);
+        
+        return;
+    }
+    
+    /**
+     * Обновить количество товаров у поставщиков
+     * @return null
+     */
+    public function updateProducersGoodCount()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);        
+        $startTime = time();
+        $finishTime = $startTime + 840;
+        
+        $producers = $this->entityManager->getRpository(Producer::class)
+                ->findBy([]);
+        foreach ($producers as $producer){
+            $this->updateProducerGoodCount($producer);
+            if (time() >= $finishTime){
+                return;
+            }
+        }
+        
+        return;
+    }
+    
+    /**
      * Поиск и удаление производителей не привязаных к товарам и неизвестным производителям
      */
     public function removeEmptyProducer()

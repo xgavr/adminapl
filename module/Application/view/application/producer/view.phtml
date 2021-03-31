@@ -9,16 +9,6 @@ $this->pageBreadcrumbs()->setItems([
             $producer->getName()=>$this->url('producer', ['action'=>'view', 'id'=>$producer->getId()])
             ]);
 
-$this->headLink()
-//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-            ; 
-
 $unknownProducerQueryId = null;
 if (isset($unknownProducerQuery)){
     $unknownProducerQueryId = $unknownProducerQuery->getId();
@@ -114,6 +104,17 @@ if (isset($unknownProducerQuery)){
                         <div class="pull-right">
                             <button value="/apl/producer-apl-id/<?= $producer->getId()?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Обновить АПЛ Ид">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Товаров: <?= $producer->getGoodCount()?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/update-producer-good-count/<?= $producer->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить количество товаров">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button> 
                         </div>
