@@ -117,7 +117,7 @@ class ProducerManager
         $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
                 ->count(['producer' => $producer->getId()]);
         
-        $this->entityManager->getConnection()->update('producer', ['good_count' => $goodCount], ['producer_id' => $producer->getId()]);
+        $this->entityManager->getConnection()->update('producer', ['good_count' => $goodCount], ['id' => $producer->getId()]);
         
         return;
     }
