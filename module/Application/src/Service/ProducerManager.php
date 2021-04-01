@@ -133,7 +133,7 @@ class ProducerManager
         $startTime = time();
         $finishTime = $startTime + 840;
         
-        $producers = $this->entityManager->getRpository(Producer::class)
+        $producers = $this->entityManager->getRepository(Producer::class)
                 ->findBy([]);
         foreach ($producers as $producer){
             $this->updateProducerGoodCount($producer);
