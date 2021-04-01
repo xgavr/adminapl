@@ -783,6 +783,23 @@ class ProcessingController extends AbstractActionController
     /**
      * Удаление пустых производителей
      */
+    public function updateProducersGoogCountAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_producer'] == 1){
+            $this->producerManager->updateProducersGoodCount();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
+     * Удаление пустых производителей
+     */
     public function deleteProducerAction()
     {
         $settings = $this->adminManager->getPriceSettings();
