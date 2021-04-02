@@ -783,7 +783,7 @@ class ProcessingController extends AbstractActionController
     /**
      * Удаление пустых производителей
      */
-    public function updateProducersGoogCountAction()
+    public function updateProducersGoodCountAction()
     {
         $settings = $this->adminManager->getPriceSettings();
 
