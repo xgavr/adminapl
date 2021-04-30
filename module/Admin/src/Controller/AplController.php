@@ -717,4 +717,24 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function showRefAction()
+    {
+        echo 'ref: '.$_SERVER['HTTP_REFERER'];
+        exit;
+    }
+    
+    public function rdctAction()
+    {
+        $redirectUrl = $this->params()->fromQuery('u');
+//        var_dump($redirectUrl); exit;
+        if ($redirectUrl){
+            $response = $this->getResponse();
+            $response->getHeaders()->addHeaderLine('Referer', 'ya.ru');
+            $response->getHeaders()->addHeaderLine('Location', $redirectUrl);
+            $response->setStatusCode(302);
+            return $response;
+        }
+        
+        exit;
+    }
 }

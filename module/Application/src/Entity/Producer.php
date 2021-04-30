@@ -21,6 +21,9 @@ use Application\Entity\Rate;
  */
 class Producer {
     
+    const STATUS_ACTIVE       = 1; // Active producer.
+    const STATUS_RETIRED      = 2; // Retired producer.   
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -37,6 +40,11 @@ class Producer {
      * @ORM\Column(name="name")   
      */
     protected $name;
+    
+    /** 
+     * @ORM\Column(name="status")  
+     */
+    protected $status = self::STATUS_ACTIVE;
     
     /**
      * @ORM\Column(name="good_count")   
@@ -102,6 +110,62 @@ class Producer {
     {
         $this->name = trim($name);
     }     
+    
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    public function getStatusCheckbox() 
+    {
+        if ($this->status == self::STATUS_ACTIVE){
+            return 'checked';
+        }
+        return '';
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 'Действующий',
+            self::STATUS_RETIRED => 'Отключен'
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    public static function getStatusName($status)
+    {
+        $list = self::getStatusList();
+        if (isset($list[$status]))
+            return $list[$status];
+        
+        return 'Unknown';        
+    }
+    
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
     
     public function getGoodCount() 
     {
