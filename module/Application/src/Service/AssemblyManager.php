@@ -720,6 +720,10 @@ class AssemblyManager
             return $this->missingData($rawprice);
         }
         
+        if ($producer->getStatus() == Producer::STATUS_RETIRED){
+            return $this->missingData($rawprice);
+        }
+        
         if (!$this->checkRawprice($rawprice)){
             return $this->missingData($rawprice);            
         }

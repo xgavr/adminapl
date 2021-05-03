@@ -39,6 +39,7 @@ class Rawprice {
     const GOOD_OK         = 2; //товар создан
     const GOOD_MISSING_DATA = 3; //не все данные
     const GOOD_NO_MATCH   = 4; //не совпадает по наименованию или цене
+    const GOOD_PRODUCER_RETIRED   = 5; //производитель заблокирован
     
     const PRICE_NEW       = 1; // только что загрузили
     const PRICE_PARSED    = 2; // прошел расчет цен.
@@ -461,6 +462,7 @@ class Rawprice {
             self::GOOD_OK => 'Карточка создана',
             self::GOOD_MISSING_DATA => 'Не все данные',
             self::GOOD_NO_MATCH => 'Выпадает по наименованию или цене',
+            self::GOOD_PRODUCER_RETIRED => 'Производитель заблокирован',
         ];
     }    
     

@@ -380,7 +380,7 @@ class ProducerManager
     public function updateUnknownProducerRawpriceCount($unknownProducer)
     {
         $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
-                ->count(['unknownProducer' => $unknownProducer->getId(), 'status' => Rawprice::STATUS_PARSED]);
+                ->count(['unknownProducer' => $unknownProducer->getId()]);
         
         $this->entityManager->getRepository(UnknownProducer::class)
                 ->updateUnknownProducer($unknownProducer, ['rawprice_count' => $rawpriceCount]);

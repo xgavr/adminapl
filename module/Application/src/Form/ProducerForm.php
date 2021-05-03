@@ -60,6 +60,19 @@ class ProducerForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
+        // Add "status" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'status',
+            'options' => [
+                'label' => 'Статус',
+                'value_options' => [
+                    1 => 'Действующий',
+                    2 => 'В отключке',                    
+                ]
+            ],
+        ]);        
+        
         // Добавляем поле "country"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
@@ -117,6 +130,18 @@ class ProducerForm extends Form implements ObjectManagerAwareInterface
                     ],
                 ],
             ]);
+        
+        // Add input for "status" field
+        $inputFilter->add([
+                'name'     => 'status',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]);         
         
         $inputFilter->add([
                 'name'     => 'country',
