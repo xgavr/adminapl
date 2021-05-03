@@ -95,6 +95,10 @@ class ProducerManager
         if ($goodCount > 0){
             return false;
         }
+
+        if ($producer->getStatus() == Producer::STATUS_RETIRED){
+            return false;
+        }
         
         $this->entityManager->getConnection()->delete('rate', ['producer_id' => $producer->getId()]);
         
