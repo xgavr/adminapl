@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\Producer;
+
 $this->headTitle($producer->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -43,6 +45,10 @@ if (isset($unknownProducerQuery)){
                         неуказана
                     <?php endif;?>
                 </p>-->
+                    <input id="editableCheckBox" data-pk="<?= $producer->getId()?>" 
+                           data-url="/producer/producer-status-edit" type="checkbox"
+                           <?= ($producer->getStatus() == Producer::STATUS_ACTIVE) ? 'checked':''?>/>
+                    <label for="editableCheckBox">Загружать товары производителя</label>            
                 <table class="table table-striped">
                     <tr>
                         <td colspan="2">            
@@ -167,6 +173,19 @@ if (isset($unknownProducerQuery)){
 </div>
 
 <script type="text/javascript">
+    $(window).on('load', function() {
+        $('#editableCheckBox').change(function() {
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('data-url'),
+                data: "pk="+$(this).attr('data-pk'),
+                success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                }
+            });
+        })        
+    });
+
     function refreshTable(){
         $('#goods').bootstrapTable('refresh');
     }

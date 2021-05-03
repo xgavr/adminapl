@@ -1,4 +1,6 @@
 <?php
+    use Application\Entity\Producer;
+
     $this->headTitle('Производители');
 
     $this->mainMenu()->setActiveItemId('rb');
@@ -50,6 +52,9 @@
                      <th data-field='unknownProducerCount' data-sortable="true">НП</th>
                      <th data-field='supplierCount' data-sortable="true">Постащиков</th>
                      <th data-field='rawpriceCount' data-sortable="true">Строк прайсов</th>
+                     <th data-field="status" data-formatter="statusFormatter">
+                         <span data-toggle="tooltip" data-original-title="Загружать товары производителя">Б</span>
+                     </th>             
                      <th data-field="" data-formatter="activeFormatter"></th>
                  </tr>                
             </thead>
@@ -126,8 +131,24 @@
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table'),
-        ok = $('#ok');
+    var table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+//            $('#totalRow').html($('#table').bootstrapTable('getOptions').totalRows);
+            $("[data-toggle='tooltip']").tooltip();
+            $('.editableCheckBox').change(function() {
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('data-url'),
+                    data: "pk="+$(this).attr('data-pk'),
+                    success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                    }
+                });
+            })        
+        }
+    });
+
+    ok = $('#ok');
 
     $(function () {
         ok.click(function () {
@@ -175,6 +196,16 @@
         return btn;
     }    
     
+    function statusFormatter(value, row){
+        var checked = 'checked';
+        if (value == <?= Producer::STATUS_RETIRED?>){
+            checked = '';
+        }
+        return [
+            '<input data-toggle="tooltip" class="editableCheckBox" \n\
+                data-pk="'+row.id+'" data-url="/producer/producer-status-edit" type="checkbox" '+checked+'/>'
+        ].join(''); 
+    }     
     function responseHandler(res) {
         return res;
     }    

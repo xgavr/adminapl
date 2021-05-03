@@ -162,6 +162,21 @@ class ProducerManager
     
     
     /**
+     * Обновить статус производителя
+     * @param Producer $producer
+     * @param integer $status
+     * @return null
+     */
+    public function updateProducerStatus($producer, $status)
+    {
+        $producer->setStatus($status);
+        $this->entityManager->persist($producer);
+        $this->entityManager->flush($producer);
+        
+        return;
+    }
+    
+    /**
      * Создать производителя из неизвестного производителя
      *@param UnknownProducer $unknownProducer
      *  

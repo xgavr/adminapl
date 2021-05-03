@@ -309,6 +309,53 @@ class ProducerController extends AbstractActionController
         ]);          
     }
     
+    public function updateProducerStatusAction()
+    {
+        $producerId = (int)$this->params()->fromRoute('id', -1);
+        $status = (int) $this->params()->fromQuery('status', Producer::STATUS_ACTIVE);
+        
+        // Validate input parameter
+        if ($producerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find the producer by ID
+        $producer = $this->entityManager->getRepository(Producer::class)
+                ->findOneById($producerId);
+        
+        if ($producer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->producerManager->updateProducerStatus($producer, $status);
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }    
+    
+    public function producerStatusEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $producerId = $data['pk'];
+            $producer = $this->entityManager->getRepository(Producer::class)
+                    ->findOneById($producerId);
+                    
+            if ($producer){
+                $status = Producer::STATUS_RETIRED;
+                if ($producer->getStatus() == Producer::STATUS_RETIRED){
+                    $status = Producer::STATUS_ACTIVE;
+                }
+                $this->producerManager->updateProducerStatus($producer, $status);
+            }    
+        }
+        
+        exit;
+    }    
     
     public function unknownAction()
     {
