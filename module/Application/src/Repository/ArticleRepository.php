@@ -502,8 +502,8 @@ class ArticleRepository  extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('a')
             ->from(Article::class, 'a')
-            ->where('a.updWeek != ?1')
-            ->setParameter('1', date('W'))    
+            ->where('a.updWeek < ?1')
+            ->setParameter('1', date('YW'))    
                 ;
         return $queryBuilder->getQuery();            
     }
