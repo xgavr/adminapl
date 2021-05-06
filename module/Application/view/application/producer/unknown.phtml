@@ -7,22 +7,11 @@ $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Неизвестные производители'=>$this->url('producer', ['action'=>'unknown'])
             ]);
-
-$this->headLink()
-//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
-            ;    
+  
 ?>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-10">
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
@@ -57,7 +46,7 @@ $this->headScript()
             </thead>
         </table>
     </div>
-    <div class="col-md-3" id="side-nav" >
+    <div class="col-md-2" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
                 <div class="panel panel-info">

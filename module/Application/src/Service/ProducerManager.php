@@ -509,9 +509,11 @@ class ProducerManager
             $this->entityManager->remove($unknownProducer);
 
             $this->entityManager->flush($unknownProducer);
+            
+            return true;
         }
         
-        return;
+        return false;
     }    
     
     /**

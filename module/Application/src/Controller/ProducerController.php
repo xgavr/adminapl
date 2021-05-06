@@ -902,8 +902,6 @@ class ProducerController extends AbstractActionController
     
     public function deleteUnknownAction()
     {
-        $page = $this->params()->fromQuery('page', 1);
-
         $unknownProducerId = $this->params()->fromRoute('id', -1);
         
         $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
@@ -913,10 +911,14 @@ class ProducerController extends AbstractActionController
             return;                        
         }        
         
-        $this->producerManager->removeUnknownProducer($unknownProducer);
+        $result = $this->producerManager->removeUnknownProducer($unknownProducer);
         
-        // Перенаправляем пользователя на страницу "producer".
-        return $this->redirect()->toRoute('producer', ['action' => 'unknown'], ['query' => ['page' => $page]]);
+        if ($result){
+            // Перенаправляем пользователя на страницу "producer".
+            return $this->redirect()->toRoute('producer', ['action' => 'unknown']);
+        } else {
+            return $this->redirect()->toRoute('producer', ['action' => 'unknown-view', 'id' => $unknownProducerId]);            
+        }     
     }    
 
     public function bestNameAction()
