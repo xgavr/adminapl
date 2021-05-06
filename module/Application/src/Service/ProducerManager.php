@@ -503,8 +503,8 @@ class ProducerManager
                 ->count(['unknownProducer' => $unknownProducer->getId()]);
         $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
                 ->count(['unknownProducer' => $unknownProducer->getId()]);
-        var_dump($rawpriceCount);
-        var_dump($codeCount); exit;
+//        var_dump($rawpriceCount);
+//        var_dump($codeCount); exit;
         if ($codeCount == 0 && $rawpriceCount == 0){
 
             $this->entityManager->remove($unknownProducer);
