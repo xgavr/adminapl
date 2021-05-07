@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\UnknownProducer;
+
 $this->headTitle('Неизвестные производители');
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -42,6 +44,9 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="rawpriceCount" data-align='right' data-sortable="true">Строк в прайсах</th>             
                      <th data-field="supplierCount" data-align='right' data-sortable="true">Поставщиков</th>             
                      <th data-field="id" data-formatter="intersectFormatter" data-align='right' data-sortable="false">Пересечений</th>             
+                     <th data-field="status" data-formatter="statusFormatter">
+                         <span data-toggle="tooltip" data-original-title="Загружать товары производителя">Б</span>
+                     </th>             
                  </tr>                
             </thead>
         </table>
@@ -137,6 +142,16 @@ $this->pageBreadcrumbs()->setItems([
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
             $('.bootstrapEdit').editable();
+            $('.editableCheckBox').change(function() {
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('data-url'),
+                    data: "pk="+$(this).attr('data-pk'),
+                    success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                    }
+                });
+            })        
         }
     });
 
@@ -219,6 +234,17 @@ $this->pageBreadcrumbs()->setItems([
             '<span id="unknownProducer'+value+'"></span>',
         ].join(''); 
     }    
+    
+    function statusFormatter(value, row){
+        var checked = 'checked';
+        if (value == <?= UnknownProducer::STATUS_RETIRED?>){
+            checked = '';
+        }
+        return [
+            '<input data-toggle="tooltip" class="editableCheckBox" \n\
+                data-pk="'+row.id+'" data-url="/producer/unknown-producer-status-edit" type="checkbox" '+checked+'/>'
+        ].join(''); 
+    }        
     
     function responseHandler(res) {
         return res;

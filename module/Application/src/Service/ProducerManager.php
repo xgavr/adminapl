@@ -164,7 +164,21 @@ class ProducerManager
         return count($producersForDelete);
     }
     
-    
+    /**
+     * Обновить статус неизвестного производителя
+     * @param UnknownProducer $unknownProducer
+     * @param integer $status
+     * @return null
+     */
+    public function updateUnknownProducerStatus($unknownProducer, $status)
+    {
+        $unknownProducer->setStatus($status);
+        $this->entityManager->persist($unknownProducer);
+        $this->entityManager->flush($unknownProducer);
+        
+        return;
+    }
+        
     /**
      * Обновить статус производителя
      * @param Producer $producer
@@ -173,9 +187,13 @@ class ProducerManager
      */
     public function updateProducerStatus($producer, $status)
     {
-        $producer->setStatus($status);
+        $producer->setStatus($status);        
         $this->entityManager->persist($producer);
         $this->entityManager->flush($producer);
+        
+        foreach ($producer->getUnknownProducer() as $unknownProducer){
+            $this->updateUnknownProducerStatus($unknownProducer, $status);
+        }
         
         return;
     }

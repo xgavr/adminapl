@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\UnknownProducer;
+
 $this->headTitle($unknownProducer->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -29,6 +31,10 @@ $this->pageBreadcrumbs()->setItems([
                         </a>
                     </p>
                 <?php endif; ?>    
+                <input id="editableCheckBox" data-pk="<?= $unknownProducer->getId()?>" 
+                       data-url="/producer/unknown-producer-status-edit" type="checkbox"
+                       <?= ($unknownProducer->getStatus() == UnknownProducer::STATUS_ACTIVE) ? 'checked':''?>/>
+                <label for="editableCheckBox">Загружать товары производителя</label>            
             </div>    
             <div class="col-md-2">
                 <?php if ($unknownProducer->getRawpriceCount() == 0 && $unknownProducer->getSupplierCount() == 0):?>
@@ -197,6 +203,16 @@ $this->pageBreadcrumbs()->setItems([
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
         $('.bootstrapEdit').editable();
+        $('#editableCheckBox').change(function() {
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('data-url'),
+                data: "pk="+$(this).attr('data-pk'),
+                success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                }
+            });
+        })        
     });
     
     $(function () {

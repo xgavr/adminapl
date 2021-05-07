@@ -282,7 +282,7 @@ class ArticleManager
                     $this->removeArticle($article);
                 } else {
                     $this->entityManager->getRepository(Article::class)
-                            ->updateArticle($article->getId(), ['upd_week' => date('YW')]);
+                            ->updateArticle($article->getId(), ['upd_week' => date('Ymd')]);
                 }    
                 $this->entityManager->detach($article);
             }    

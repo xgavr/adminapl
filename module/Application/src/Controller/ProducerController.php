@@ -357,6 +357,27 @@ class ProducerController extends AbstractActionController
         exit;
     }    
     
+    public function unknownProducerStatusEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $unknownProducerId = $data['pk'];
+            $unknowPproducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneById($unknownProducerId);
+                    
+            if ($unknowPproducer){
+                $status = UnknownProducer::STATUS_RETIRED;
+                if ($unknowPproducer->getStatus() == UnknownProducer::STATUS_RETIRED){
+                    $status = UnknownProducer::STATUS_ACTIVE;
+                }
+                $this->producerManager->updateProducerStatus($unknowPproducer, $status);
+            }    
+        }
+        
+        exit;
+    }    
+    
     public function unknownAction()
     {
         $stages = $this->entityManager->getRepository(Article::class)
