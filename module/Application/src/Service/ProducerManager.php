@@ -378,6 +378,7 @@ class ProducerManager
      */
     public function updateUnknownProducer($unknownProducer, $data) 
     {
+        $producer = null;
         if ($data['producer']){    
             $producer = $this->entityManager->getRepository(Producer::class)
                         ->findOneById($data['producer']);
@@ -387,6 +388,9 @@ class ProducerManager
         }    
         
         $unknownProducer->setProducer($producer);
+        if ($producer){
+            $unknownProducer->setStatus($producer->getStatus());
+        }
                
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
