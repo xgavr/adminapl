@@ -11,6 +11,8 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
+use Application\Entity\UnknownProducer;
+
 /**
  * Description of SupplierRepository
  *
@@ -103,7 +105,7 @@ class RawRepository extends EntityRepository
     /**
      * Найти прайсы неизветсного производителя
      * 
-     * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @param UnknownProducer $unknownProducer
      * @param array $params
      * @return object
      */
@@ -209,15 +211,19 @@ class RawRepository extends EntityRepository
     
     /**
      * Быстрая привязка неизвестного производителя
-     * @param \Application\Entity\Rawprice $rawprice
-     * @param \Application\Entity\UnknownProducer $unknownProducer 
+     * @param Rawprice $rawprice
+     * @param UnknownProducer $unknownProducer 
      * @return integer
      */
     public function updateRawpriceUnknownProducer($rawprice, $unknownProducer)
     {
         $entityManager = $this->getEntityManager();
         
-        $data = ['unknown_producer_id' => $unknownProducer->getId()];
+        if ($unknownProducer->getStatus() == UnknownProducer::STATUS_ACTIVE){
+            $data = ['unknown_producer_id' => $unknownProducer->getId()];
+        } else {
+            $data = ['status' => Rawprice::STATUS_BLACK_LIST];            
+        }  
         return $this->getEntityManager()->getConnection()->update('rawprice', $data, [
             'id' => $rawprice->getId(), 
            ]);
@@ -226,7 +232,7 @@ class RawRepository extends EntityRepository
     /**
      * Быстрая установка статуса сборки производителя
      * 
-     * @param Application\Entity\Rawprice $rawprice
+     * @param Rawprice $rawprice
      * @return integer
      */
     public function updateRawpriceAssemblyProducerStatus($rawprice)

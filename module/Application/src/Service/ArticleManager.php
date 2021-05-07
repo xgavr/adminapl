@@ -188,7 +188,7 @@ class ArticleManager
                                 'fullcode' => mb_substr($rawprice->getArticle(), 0, 36),
                                 'unknown_producer_id' => $rawprice->getUnknownProducer()->getId(),
                                 'description' => Encoder::encode(['name' => $rawprice->getTitle(), 'car' => $rawprice->getCar(), 'fullName' => $rawprice->getFullTitle()]),
-                                'upd_week' => date('W'),
+                                'upd_week' => date('Ymd'),
                             ]);
                     
                     $article = $this->entityManager->getRepository(Article::class)

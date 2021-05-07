@@ -215,7 +215,7 @@ class Article {
 
     public function setUpdWeek() 
     {
-        $this->updWeek = date('W');
+        $this->updWeek = date('Ymd');
     }     
 
     public function getDescriptionAsArray() 

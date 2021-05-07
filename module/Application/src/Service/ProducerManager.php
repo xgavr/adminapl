@@ -300,8 +300,12 @@ class ProducerManager
             $this->entityManager->persist($unknownProducer);
 
         }    
-
-        $rawprice->setUnknownProducer($unknownProducer);
+        
+        if ($unknownProducer->getStatus() == UnknownProducer::STATUS_ACTIVE){
+            $rawprice->setUnknownProducer($unknownProducer);
+        } else {
+            $rawprice->setStatus(Rawprice::STATUS_BLACK_LIST);            
+        }    
         $this->entityManager->persist($rawprice);
 
         $this->entityManager->flush();
@@ -390,6 +394,7 @@ class ProducerManager
         $unknownProducer->setProducer($producer);
         if ($producer){
             $unknownProducer->setStatus($producer->getStatus());
+            $this->entityManager->persist($unknownProducer);
         }
                
         // Применяем изменения к базе данных.
@@ -507,8 +512,6 @@ class ProducerManager
      */
     public function updateUnknownProducerIntersect()
     {
-        set_time_limit(900);
-        
         $this->entityManager->getRepository(Producer::class)
                 ->articleUnknownProducerIntersect();
         return;
@@ -527,7 +530,7 @@ class ProducerManager
                 ->count(['unknownProducer' => $unknownProducer->getId()]);
 //        var_dump($rawpriceCount);
 //        var_dump($codeCount); exit;
-        if ($codeCount == 0 && $rawpriceCount == 0){
+        if ($codeCount == 0 && $rawpriceCount == 0 && $unknownProducer->getStatus() == UnknownProducer::STATUS_ACTIVE){
 
             $this->entityManager->remove($unknownProducer);
 

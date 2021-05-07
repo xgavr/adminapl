@@ -444,6 +444,8 @@ class ProducerRepository  extends EntityRepository{
      */
     public function articleUnknownProducerIntersect()
     {
+        set_time_limit(0);
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
