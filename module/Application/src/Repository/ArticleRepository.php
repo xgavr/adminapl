@@ -503,7 +503,8 @@ class ArticleRepository  extends EntityRepository
         $queryBuilder->select('a')
             ->from(Article::class, 'a')
             ->where('a.updWeek < ?1')
-            ->setParameter('1', date('Ymd'))    
+            ->setParameter('1', date('Ymd'))
+            ->orderBy('a.updWeek')    
                 ;
         return $queryBuilder->getQuery();            
     }
