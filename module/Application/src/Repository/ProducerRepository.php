@@ -516,7 +516,7 @@ class ProducerRepository  extends EntityRepository{
     //        $query = $entityManager->createNativeQuery($sql, $rsm);
     //        $query->setParameter(1, $unknownProducer->getId());
 
-            var_dump($sql); exit;
+//            var_dump($sql); exit;
 
             $stmt = $entityManager->getConnection()->prepare($sql);
             $stmt->execute([
