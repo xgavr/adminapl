@@ -230,11 +230,33 @@ class AplPayment {
     
     /**
      * 
-     * @param \Bank\Entity\AplPayment $aplPayment
+     * @param \Bank\Entity\Asquiring $asquiring
      */
-    public function addAcquiring($aplPayment) 
+    public function addAcquiring($asquiring) 
     {
-        $this->acquirings[] = $aplPayment;        
+        $this->acquirings[] = $asquiring;        
     }         
+    
+    /**
+     * 
+     * @param \Bank\Entity\Asquiring $asquiring
+     */
+    public function removeAcquiringAssociation($asquiring) 
+    {
+        $this->acquirings->removeElement($asquiring);
+    }        
             
+    /**
+     * Получить RRN
+     * @return array
+     */
+    public function getAsquiringsRrn()
+    {
+        $result = [];
+        foreach ($this->acquirings as $acquiring){
+            $result[] = $acquiring->getRrn();
+        }
+        
+        return $result;
+    }
 }

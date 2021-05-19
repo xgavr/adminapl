@@ -9,6 +9,7 @@ namespace Admin\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
+use Bank\Entity\AplPayment;
 
 
 class AplController extends AbstractActionController
@@ -736,5 +737,32 @@ class AplController extends AbstractActionController
         }
         
         exit;
+    }
+    
+    public function asquiringRrnAction()
+    {
+        $aplPaymentId = $this->params()->fromRoute('id', -1);
+        
+        if ($aplPaymentId <= 0){
+            $this->getResponse()->setStatusCode(401);
+            return;                                    
+        }
+    
+        $aplPayments = $this->entityManager->getRepository(AplPayment::class)
+                ->findBy(['$aplPaymentId' => $aplPaymentId]);
+        	
+        if ($aplPayments == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $result = [];
+        foreach ($aplPayments as $aplPayment){
+            $asquirings = $aplPayment->getAcquirings();
+            foreach ($asquirings as $asquiring){
+                $result[] = $asquiring->getRrrn();
+            }
+        }
+        return new JsonModel($result);
     }
 }
