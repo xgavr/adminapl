@@ -749,7 +749,7 @@ class AplController extends AbstractActionController
         }
     
         $aplPayments = $this->entityManager->getRepository(AplPayment::class)
-                ->findBy(['$aplPaymentId' => $aplPaymentId]);
+                ->findBy(['aplPaymentId' => $aplPaymentId]);
         	
         if ($aplPayments == null) {
             $this->getResponse()->setStatusCode(401);
