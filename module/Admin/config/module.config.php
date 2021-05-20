@@ -113,7 +113,8 @@ return [
         'controllers' => [
             Controller\AplController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+apl.exchange.manage']
+                ['actions' => '*', 'allow' => '+apl.exchange.manage'],
+                ['actions' => 'asquiring-rrn', 'allow' => '*']
             ],
             Controller\IndexController::class => [
                 // Allow access to authenticated users.
