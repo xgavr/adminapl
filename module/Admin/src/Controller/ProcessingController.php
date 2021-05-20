@@ -1681,5 +1681,46 @@ class ProcessingController extends AbstractActionController
         );
         
     }
+
+    /**
+     * 
+     * Запрос чека эквайринга
+     */
+    public function asqrrnAction()
+    {
+        $aplPaymentId = $this->params()->fromRoute('id', -1);
+        
+        if ($aplPaymentId <= 0){
+            $this->getResponse()->setStatusCode(401);
+            goto r;                                    
+        }
+    
+        $aplPayments = $this->entityManager->getRepository(\Bank\Entity\AplPayment::class)
+                ->findBy(['aplPaymentId' => $aplPaymentId]);
+        	
+        if ($aplPayments == null) {
+            $this->getResponse()->setStatusCode(401);
+            goto r;                        
+        } 
+        
+        $result = [];
+        foreach ($aplPayments as $aplPayment){
+            $asquirings = $aplPayment->getAcquirings();
+            foreach ($asquirings as $asquiring){
+                if ($asquiring->getAmount() > 0){
+                    $result[] = [
+                        'cart' => $asquiring->getCart(),
+                        'cartType' => $asquiring->getСartType(),
+                        'amount' => $asquiring->getAmount(),
+                        'transDate' => $asquiring->getTransDate(),
+                        'rrn' => $asquiring->getRrn(),
+                    ];
+                }    
+            }
+        }
+        
+        r:
+        return new JsonModel($result);
+    }
     
 }
