@@ -745,7 +745,7 @@ class AplController extends AbstractActionController
         
         if ($aplPaymentId <= 0){
             $this->getResponse()->setStatusCode(401);
-            return;                                    
+            goto r;                                    
         }
     
         $aplPayments = $this->entityManager->getRepository(AplPayment::class)
@@ -753,7 +753,7 @@ class AplController extends AbstractActionController
         	
         if ($aplPayments == null) {
             $this->getResponse()->setStatusCode(401);
-            return;                        
+            goto r;                        
         } 
         
         $result = [];
@@ -771,6 +771,8 @@ class AplController extends AbstractActionController
                 }    
             }
         }
+        
+        r:
         return new JsonModel($result);
     }
     
