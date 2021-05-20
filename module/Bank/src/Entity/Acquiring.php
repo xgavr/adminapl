@@ -226,7 +226,7 @@ class Acquiring {
      * СУММА_ТРАНЗАКЦИИ
      * @return string
      */
-    public function geAmount() 
+    public function getAmount() 
     {
         return $this->amount;
     }
