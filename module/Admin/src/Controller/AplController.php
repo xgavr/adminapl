@@ -765,4 +765,40 @@ class AplController extends AbstractActionController
         }
         return new JsonModel($result);
     }
+    
+    public function orderAsquiringAction()
+    {
+        $aplOrderId = $this->params()->fromRoute('id', -1);
+        
+        if ($aplOrderId <= 0){
+            $this->getResponse()->setStatusCode(401);
+            return;                                    
+        }
+    
+        $aplPayments = $this->entityManager->getRepository(AplPayment::class)
+                ->findBy(['aplPaymentTypeId' => $aplOrderId, 'aplPaymentType' => 'Orders']);
+        	
+        if ($aplPayments == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $result = [];
+        foreach ($aplPayments as $aplPayment){
+            $asquirings = $aplPayment->getAcquirings();
+            foreach ($asquirings as $asquiring){
+                if ($asquiring->getAmount() > 0){
+                    $result[] = [
+                        'cart' => $asquiring->getCart(),
+                        'cartType' => $asquiring->getCartType(),
+                        'amount' => $asquiring->getAmount(),
+                        'transDate' => $asquiring->getTransDate(),
+                        'rrn' => $asquiring->getRrn(),
+                    ];
+                }    
+            }
+        }
+        return new JsonModel($result);
+    }
+    
 }
