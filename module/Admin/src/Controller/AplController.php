@@ -739,7 +739,7 @@ class AplController extends AbstractActionController
         exit;
     }
     
-    public function asquiringRrnAction()
+    public function asqrrnAction()
     {
         $aplPaymentId = $this->params()->fromRoute('id', -1);
         
