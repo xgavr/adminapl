@@ -760,7 +760,15 @@ class AplController extends AbstractActionController
         foreach ($aplPayments as $aplPayment){
             $asquirings = $aplPayment->getAcquirings();
             foreach ($asquirings as $asquiring){
-                $result[] = $asquiring->getRrn();
+                if ($asquiring->getAmount() > 0){
+                    $result[] = [
+                        'cart' => $asquiring->getCart(),
+                        'cartType' => $asquiring->getСartType(),
+                        'amount' => $asquiring->getAmount(),
+                        'transDate' => $asquiring->getTransDate(),
+                        'rrn' => $asquiring->getRrn(),
+                    ];
+                }    
             }
         }
         return new JsonModel($result);
