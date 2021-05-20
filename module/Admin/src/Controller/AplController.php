@@ -790,7 +790,7 @@ class AplController extends AbstractActionController
                 if ($asquiring->getAmount() > 0){
                     $result[] = [
                         'cart' => $asquiring->getCart(),
-                        'cartType' => $asquiring->getCartType(),
+                        'cartType' => $asquiring->getСartType(),
                         'amount' => $asquiring->getAmount(),
                         'transDate' => $asquiring->getTransDate(),
                         'rrn' => $asquiring->getRrn(),
