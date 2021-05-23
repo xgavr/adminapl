@@ -431,7 +431,7 @@ class AplDocService {
             $vtpStatus = Vtp::STATUS_RETIRED;            
         }
         
-        return $ptuStatus;
+        return $vtpStatus;
     }
     
     
