@@ -453,13 +453,13 @@ class AplDocService {
         $dataVtp = [
             'apl_id' => $data['id'],
             'doc_date' => $docDate,
-            //'comment' => $data['comment'],
+            'comment' => '',
             'status_ex' => Vtp::STATUS_EX_APL,
             'status' => $this->getVtpStatus($data),
         ];
         
         if (isset($data['desc'])){
-            $dataFtp['info'] = Encoder::encode($data['desc']);
+            $data['info'] = Encoder::encode($data['desc']);
         }
         $ptuAplId = $data['ns'];
         $ptu = $this->entityManager->getRepository(Ptu::class)
