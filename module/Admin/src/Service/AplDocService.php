@@ -459,7 +459,9 @@ class AplDocService {
         ];
         
         if (isset($data['desc'])){
-            $data['info'] = Encoder::encode($data['desc']);
+            $data['info'] = $data['desc'];
+            $desc = Decoder::decode($data['desc'], \Laminas\Json\Json::TYPE_ARRAY);
+            $data['comment'] = $desc['info00'];
         }
         $ptuAplId = $data['ns'];
         $ptu = $this->entityManager->getRepository(Ptu::class)
