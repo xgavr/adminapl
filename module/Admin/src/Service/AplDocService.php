@@ -453,7 +453,7 @@ class AplDocService {
         $dataVtp = [
             'apl_id' => $data['id'],
             'doc_date' => $docDate,
-            'comment' => $data['comment'],
+            //'comment' => $data['comment'],
             'status_ex' => Vtp::STATUS_EX_APL,
             'status' => $this->getVtpStatus($data),
         ];
