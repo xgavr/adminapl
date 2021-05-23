@@ -17,6 +17,7 @@ use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
 use Stock\Entity\Ptu;
+use Stock\Entity\Vtp;
 use Application\Entity\Producer;
 use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
@@ -51,6 +52,12 @@ class AplDocService {
     private $ptuManager;
 
     /**
+     * Vtp manager
+     * @var \Stock\Service\VtpManager
+     */
+    private $vtpManager;
+
+    /**
      * Legal manager.
      * @var \Company\Service\LegalManager
      */
@@ -69,11 +76,12 @@ class AplDocService {
     private $assemblyManager;  
     
     public function __construct($entityManager, $adminManager, $ptuManager, 
-            $legalManager, $producerManager, $assemblyManager)
+            $legalManager, $producerManager, $assemblyManager, $vtpManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->ptuManager = $ptuManager;
+        $this->vtpManager = $vtpManager;
         $this->legalManager = $legalManager;
         $this->producerManager = $producerManager;
         $this->assemblyManager = $assemblyManager;
@@ -411,6 +419,98 @@ class AplDocService {
     }
     
     /**
+     * Получить статус документа ВТП
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getVtpStatus($data)
+    {
+        $vtpStatus = Vtp::STATUS_ACTIVE;
+        if ($data['publish'] == 0){
+            $vtpStatus = Vtp::STATUS_RETIRED;            
+        }
+        
+        return $ptuStatus;
+    }
+    
+    
+    /**
+     * Загрузить ВТП
+     * 
+     * @param array $data
+     */
+    public function unloadVtp($data)
+    {
+//        var_dump($data); exit;
+        $docDate = $data['ds'];
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        if (!$dateValidator->isValid($docDate)){
+            $docDate = $data['created'];
+        }
+        
+        $dataVtp = [
+            'apl_id' => $data['id'],
+            'doc_date' => $docDate,
+            'comment' => $data['comment'],
+            'status_ex' => Vtp::STATUS_EX_APL,
+            'status' => $this->getVtpStatus($data),
+        ];
+        
+        if (isset($data['desc'])){
+            $dataFtp['info'] = Encoder::encode($data['desc']);
+        }
+        $ptuAplId = $data['ns'];
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->findOneByAplId(['aplId' => $ptuAplId]);
+        
+        if ($ptu){        
+//        var_dump($data); exit;
+            $vtp = $this->entityManager->getRepository(Vtp::class)
+                    ->findOneByAplId($data['id']);
+
+            if ($vtp){
+                $this->vtpManager->updateVtp($vtp, $dataVtp);
+                $this->vtpManager->removeVtpGood($vtp); 
+            } else {        
+                $vtp = $this->vtpManager->addVtp($ptu, $dataVtp);
+            }    
+
+            if ($vtp && isset($data['tp'])){
+                $rowNo = 1;
+                foreach ($data['tp'] as $tp){
+                    if (isset($tp['good'])){
+                        $good = $this->findGood($tp['good']);   
+                    }    
+                    if (empty($good)){
+        //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                    } else {
+
+                        $this->vtpManager->addVtpGood($vtp->getId(), [
+                            'status' => $vtp->getStatus(),
+                            'statusDoc' => $vtp->getStatusDoc(),
+                            'quantity' => $tp['sort'],                    
+                            'amount' => $tp['bag_total'],
+                            'good_id' => $good->getId(),
+                            'comment' => '',
+                            'info' => '',
+                        ], $rowNo);
+                        $rowNo++;
+                    }    
+                }
+            }  
+
+            if ($vtp){
+                $this->vtpManager->updateVtpAmount($vtp);
+                return true;            
+            }
+        }    
+                
+        return false;
+    }
+
+    /**
      * Обновить статус загруженного документа
      * @param integer $aplDocId
      * @return boolean
@@ -486,6 +586,11 @@ class AplDocService {
                 switch ($result['type']){
                     case 'Suppliersorders': 
                         if ($this->unloadPtu($result)){ 
+                            $this->unloadedDoc($result['id']);
+                        }    
+                        break;                        
+                    case 'Resup': 
+                        if ($this->unloadVtp($result)){ 
                             $this->unloadedDoc($result['id']);
                         }    
                         break;                        

@@ -13,6 +13,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\AplDocService;
 use Admin\Service\AdminManager;
 use Stock\Service\PtuManager;
+use Stock\Service\VtpManager;
 use Company\Service\LegalManager;
 use Application\Service\ProducerManager;
 use Application\Service\AssemblyManager;
@@ -31,12 +32,13 @@ class AplDocServiceFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class); 
         $ptuManager = $container->get(PtuManager::class);
+        $vtpManager = $container->get(VtpManager::class);
         $legalManager = $container->get(LegalManager::class);
         $producerManager = $container->get(ProducerManager::class);
         $assemblyManager = $container->get(AssemblyManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new AplDocService($entityManager, $adminManager, $ptuManager,
-                $legalManager, $producerManager, $assemblyManager);
+                $legalManager, $producerManager, $assemblyManager, $vtpManager);
     }
 }

@@ -10,16 +10,18 @@ namespace Stock\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Stock\Entity\Vtp;
+use Application\Entity\Goods;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 
 /**
- * Description of Ptu
- * @ORM\Entity(repositoryClass="\Stock\Repository\PtuRepository")
- * @ORM\Table(name="ptu_good")
+ * Description of VtpGood
+ * @ORM\Entity(repositoryClass="\Stock\Repository\VtpRepository")
+ * @ORM\Table(name="vtp_good")
  * @author Daddy
  */
-class PtuGood {
+class VtpGood {
         
      // Ptu status constants.
     const STATUS_ACTIVE       = 1; // Active.
@@ -73,35 +75,17 @@ class PtuGood {
     protected $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ptu", inversedBy="ptuGoods") 
-     * @ORM\JoinColumn(name="ptu_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ptu", inversedBy="vtpGoods") 
+     * @ORM\JoinColumn(name="vtp_id", referencedColumnName="id")
      */
-    private $ptu;
+    private $vtp;
         
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="ptuGoods") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="vtpGoods") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     private $good;
         
-    /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Country", inversedBy="ptuGoods") 
-     * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
-     */
-    private $country;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Stock\Entity\Unit", inversedBy="ptuGoods") 
-     * @ORM\JoinColumn(name="unit_id", referencedColumnName="id")
-     */
-    private $unit;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ntd", inversedBy="ptuGoods") 
-     * @ORM\JoinColumn(name="ntd_id", referencedColumnName="id")
-     */
-    private $ntd;
-
     /**
      * Constructor.
      */
@@ -117,7 +101,7 @@ class PtuGood {
     
     public function getDocRowKey() 
     {
-        return 'ptu_good:'.$this->id;
+        return 'vtp_good:'.$this->id;
     }    
 
     public function setId($id) 
@@ -293,21 +277,12 @@ class PtuGood {
     }
     
     /**
-     * Returns the country.
-     * @return Country     
+     * Returns the vtp.
+     * @return Vtp     
      */
-    public function getCountry() 
+    public function getVtp() 
     {
-        return $this->country;
-    }
-    
-    /**
-     * Returns the unit.
-     * @return Unit     
-     */
-    public function getUnit() 
-    {
-        return $this->unit;
+        return $this->vtp;
     }
     
     /**
@@ -318,25 +293,7 @@ class PtuGood {
     {
         return $this->good;
     }
-    
-    /**
-     * Returns the ntd.
-     * @return Ntd     
-     */
-    public function getNtd() 
-    {
-        return $this->ntd;
-    }
-    
-    /**
-     * Returns the ptu.
-     * @return Ptu     
-     */
-    public function getPtu() 
-    {
-        return $this->ptu;
-    }
-    
+        
     /**
      * Лог
      * @return array
@@ -346,15 +303,12 @@ class PtuGood {
         return [
             'amount' => $this->getAmount(),
             'comment' => $this->getComment(),
-            'country' => $this->getCountry()->getId(),
             'good' => $this->getGood()->getId(),
             'info' => $this->getInfo(),
-            'ntd' => $this->getNtd()->getId(),
             'quantity' => $this->getQuantity(),
             'rowNo' => $this->getRowNo(),
             'status' => $this->getStatus(),
             'statusDoc' => $this->getStatusDoc(),
-            'unit' => $this->getUnit()->getId(),
         ];
     }    
 }

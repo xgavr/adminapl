@@ -10,12 +10,12 @@ namespace Stock\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
-use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
-use Stock\Entity\PtuGood;
+use Stock\Entity\VtpGood;
+use Stock\Entity\Ptu;
 use Application\Entity\Goods;
-use Stock\Form\PtuForm;
-use Stock\Form\PtuGoodForm;
+use Stock\Form\VtpForm;
+use Stock\Form\VtpGoodForm;
 use Company\Entity\Office;
 use Stock\Entity\Unit;
 use Stock\Entity\Ntd;
@@ -24,7 +24,7 @@ use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
 
-class PtuController extends AbstractActionController
+class VtpController extends AbstractActionController
 {
 
     /**
@@ -35,14 +35,14 @@ class PtuController extends AbstractActionController
 
     /**
      * Менеджер пту.
-     * @var \Stock\Service\PtuManager
+     * @var \Stock\Service\VtpManager
      */
-    private $ptuManager;
+    private $vtpManager;
 
-    public function __construct($entityManager, $ptuManager) 
+    public function __construct($entityManager, $vtpManager) 
     {
         $this->entityManager = $entityManager;
-        $this->ptuManager = $ptuManager;
+        $this->vtpManager = $vtpManager;
     }   
 
     public function indexAction()
@@ -62,6 +62,13 @@ class PtuController extends AbstractActionController
     public function contentAction()
     {
         	        
+        $ptuId = (int)$this->params()->fromRoute('id', -1);
+        $ptu = null;
+        if ($ptuId > 0){
+            $ptu = $this->entityManager->getRepository(Ptu::class)
+                    ->findOneById($ptuId);
+        }    
+        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
@@ -77,11 +84,16 @@ class PtuController extends AbstractActionController
             'supplierId' => $supplierId, 'officeId' => $officeId,
             'year' => $year, 'month' => $month,
         ];
-        $query = $this->entityManager->getRepository(Ptu::class)
-                        ->findAllPtu($params);
         
-        $total = $this->entityManager->getRepository(Ptu::class)
-                        ->findAllPtuTotal($params);
+        if ($ptu){
+            $params['ptu'] = $ptu->getId();
+        }
+        
+        $query = $this->entityManager->getRepository(Vtp::class)
+                        ->findAllVtp($params);
+        
+        $total = $this->entityManager->getRepository(Vtp::class)
+                        ->findAllVtpTotal($params);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -101,75 +113,83 @@ class PtuController extends AbstractActionController
     public function goodContentAction()
     {
         	        
-        $ptuId = $this->params()->fromRoute('id', -1);
+        $vtpId = $this->params()->fromRoute('id', -1);
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         
-        $query = $this->entityManager->getRepository(Ptu::class)
-                        ->findPtuGoods($ptuId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
+        $query = $this->entityManager->getRepository(Vtp::class)
+                        ->findVtpGoods($vtpId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
         
         $total = count($query->getResult(2));
         
-//        if ($offset) {
-//            $query->setFirstResult($offset);
-//        }
-//        if ($limit) {
-//            $query->setMaxResults($limit);
-//        }
-
         $result = $query->getResult(2);
         
         return new JsonModel($result);          
     }        
     
-    public function repostAllPtuAction()
+    public function repostAllVtpAction()
     {                
-        $this->ptuManager->repostAllPtu();
+        $this->vtpManager->repostAllVtp();
         
         return new JsonModel([
             'result' => 'ok-reload',
         ]);
-    }        
+    }   
     
-    public function editFormAction()
+    public function ptuFormAction()
     {
         $ptuId = (int)$this->params()->fromRoute('id', -1);
         
-        $ptu = $supplier = $legal = $company = null;
+        if ($ptuId <= 0){
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }    
         
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->findOneById($ptuId);
+        
+        if ($ptu == null){
+            $this->getResponse()->setStatusCode(404);
+            return;            
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
+            'ptu' => $ptu,
+        ]);                
+    }
+    
+    public function editFormAction()
+    {
+        $vtpId = (int)$this->params()->fromRoute('id', -1);
+        $ptuId = (int)$this->params()->fromQuery('ptu', -1);
+        
+        $ptu = $vtp = $supplier = $legal = $company = null;
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->findOneById($ptuId);
         }    
-        
-        if ($ptu == null) {
-            $officeId = (int)$this->params()->fromQuery('office', 1);
-            $office = $this->entityManager->getRepository(Office::class)
-                    ->findOneById($officeId);
-        } else {
+        if ($vtpId > 0){
+            $vtp = $this->entityManager->getRepository(Vtp::class)
+                    ->findOneById($vtpId);
+            $ptu = $vtp->getPtu();
+        }    
+        if ($ptu){
             $supplier = $ptu->getSupplier();
             $office = $ptu->getOffice();
-            $company = $ptu->getContract()->getCompany();
+            $contract = $ptu->getContract();
+            $company = $contract->getCompany();
             $legal = $ptu->getLegal();            
-        }       
+        }    
         
         if ($this->getRequest()->isPost()){
             $data = $this->params()->fromPost();
-            $supplier = $this->entityManager->getRepository(Supplier::class)
-                    ->findOneById($data['supplier']);
-            $office = $this->entityManager->getRepository(Office::class)
-                    ->findOneById($data['office_id']);
-            $contract = $this->entityManager->getRepository(Contract::class)
-                    ->findOneById($data['contract_id']);
-            $company = $contract->getCompany();
-            $legal = $this->entityManager->getRepository(Legal::class)
-                    ->findOneById($data['legal_id']);
         }
                 
-        $form = new PtuForm($this->entityManager, $office, $supplier, $company, $legal);
+        $form = new VtpForm($this->entityManager, $office, $supplier, $company, $legal);
 
         if ($this->getRequest()->isPost()) {
             
@@ -180,50 +200,52 @@ class PtuController extends AbstractActionController
                 unset($data['supplier']);
                 unset($data['company']);
                 unset($data['csrf']);
-                $ptuGood = $data['ptuGood'];
-                unset($data['ptuGood']);
-                $data['status_ex'] = Ptu::STATUS_EX_NEW;
+                $vtpGood = $data['vtpGood'];
+                unset($data['vtpGood']);
+                $data['status_ex'] = Vtp::STATUS_EX_NEW;
                 $data['contract'] = $contract;
                 $data['legal'] = $legal;
                 $data['office'] = $office;
                 $data['apl_id'] = 0;
                 
-                if ($ptu){
-                    $data['apl_id'] = $ptu->getAplId();
-                    $this->ptuManager->updatePtu($ptu, $data);
-                    $this->entityManager->refresh($ptu);
+                if ($vtp){
+                    $data['apl_id'] = $vtp->getAplId();
+                    $this->vtpManager->updateVtp($vtp, $data);
+                    $this->entityManager->refresh($vtp);
                 } else {
-                    $ptu = $this->ptuManager->addPtu($data);
+                    $vtp = $this->vtpManager->addVtp($ptu, $data);
                 }    
                 
-                $this->ptuManager->updatePtuGoods($ptu, $ptuGood);
+                $this->vtpManager->updateVtpGoods($vtp, $vtpGood);
                 
-                $this->ptuManager->repostPtu($ptu);
+                $this->vtpManager->repostVtp($vtp);
                 
                 return new JsonModel(
                    ['ok']
                 );           
             }
         } else {
-            if ($ptu){
-                $data = [
-                    'office_id' => $ptu->getContract()->getOffice()->getId(),
-                    'company' => $ptu->getContract()->getCompany()->getId(),
-                    'supplier' => $ptu->getSupplier()->getId(),
-                    'legal_id' => $ptu->getLegal()->getId(),  
-                    'contract_id' => $ptu->getContract()->getId(),  
-                    'doc_date' => $ptu->getDocDate(),  
-                    'doc_no' => $ptu->getDocNo(),
-                    'comment' => $ptu->getComment(),
-                    'status' => $ptu->getStatus(),
-                ];
-                $form->setData($data);
+            $data = [
+                'office_id' => $office->getId(),
+                'company' => $company->getId(),
+                'supplier' => $supplier->getId(),
+                'legal_id' => $legal->getId(),  
+                'contract_id' => $contract->getId(),  
+            ];
+            if ($vtp){
+                $data['doc_date'] = $vtp->getDocDate();
+                $data['doc_no'] = $vtp->getDocNo();
+                $data['comment'] = $vtp->getComment();
+                $data['status'] = $vtp->getStatus();
             }    
+            $form->setData($data);
         }
+        
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
+            'vtp' => $vtp,
             'ptu' => $ptu,
         ]);        
     }    
@@ -241,7 +263,7 @@ class PtuController extends AbstractActionController
             $rowNo = $params['rowNo'];
         }
         
-        $form = new PtuGoodForm($this->entityManager, $good);
+        $form = new VtpGoodForm($this->entityManager, $good);
 
         if ($this->getRequest()->isPost()) {
             
@@ -271,9 +293,6 @@ class PtuController extends AbstractActionController
                     'quantity' => $params['quantity'],
                     'amount' => $params['amount'],
                     'price' => $params['amount']/$params['quantity'],
-                    'unit' => (isset($params['unit']['name'])) ? $params['unit']['name']:null,
-                    'country' => (isset($params['country']['name'])) ? $params['country']['name']:null,
-                    'ntd' => (isset($params['ntd']['ntd'])) ? $params['ntd']['ntd']:null,
                 ];
                 $form->setData($data);
             }    
@@ -288,103 +307,21 @@ class PtuController extends AbstractActionController
         ]);        
     }
     
-    public function deletePtuAction()
+    public function deleteVtpAction()
     {
-        $ptuId = $this->params()->fromRoute('id', -1);
-        $ptu = $this->entityManager->getRepository(Ptu::class)
-                ->findOneById($ptuId);        
+        $vtpId = $this->params()->fromRoute('id', -1);
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->findOneById($vtpId);        
 
-        if ($ptu == null) {
+        if ($vtp == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $this->ptuManager->removePtu($ptu);
+        $this->vtpManager->removeVtp($vtp);
         
-        // Перенаправляем пользователя на страницу "rb/tax".
         return new JsonModel(
            ['ok']
         );           
-    }
-    
-    public function autocompeteUnitAction()
-    {
-        $result = [];
-        $q = $this->params()->fromQuery('q');
-        
-        if ($q){
-            $query = $this->entityManager->getRepository(Unit::class)
-                            ->autocompeteUnit(['search' => $q]);
-
-            $data = $query->getResult();
-            foreach ($data as $row){
-                $result[] = $row->getName();
-            }
-        }    
-        
-        return new JsonModel($result);
-    }        
-    
-    public function autocompeteNtdAction()
-    {
-        $result = [];
-        $q = $this->params()->fromQuery('q');
-        
-        if ($q){
-            $query = $this->entityManager->getRepository(Ntd::class)
-                            ->autocompeteNtd(['search' => $q]);
-
-            $data = $query->getResult();
-            foreach ($data as $row){
-                $result[] = $row->getName();
-            }
-        }    
-        
-        return new JsonModel($result);
-    }        
-    
-    public function autocompeteCountryAction()
-    {
-        $result = [];
-        $q = $this->params()->fromQuery('q');
-        
-        if ($q){
-            $query = $this->entityManager->getRepository(Country::class)
-                            ->autocompeteCountry(['search' => $q]);
-
-            $data = $query->getResult();
-            foreach ($data as $row){
-                $result[] = $row->getName();
-            }
-        }    
-        
-        return new JsonModel($result);
-    }        
-    
-    public function vtpCountAction()
-    {
-        $ptuId = (int)$this->params()->fromRoute('id', -1);
-        $vtpCount = 0;
-
-        if ($ptuId<0) {
-            goto e;
-        }
-        
-        $ptu = $this->entityManager->getRepository(Ptu::class)
-                ->findOneById($ptuId);
-        
-        if ($ptu == null) {
-            goto e;
-        }        
-
-        $vtpCount = $this->entityManager->getRepository(Vtp::class)
-                ->count(['ptu' => $ptu->getId()]);
-        
-        e:        
-        return new JsonModel([
-            'id' => $ptuId,
-            'vtpCount' => $vtpCount,
-        ]);          
-    }
-    
+    }    
 }

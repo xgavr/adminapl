@@ -13,23 +13,24 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Company\Entity\Legal;
+use Stock\Entity\Ptu;
 use Company\Entity\Contract;
 use Company\Entity\Office;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 
 /**
- * Description of Ptu
- * @ORM\Entity(repositoryClass="\Stock\Repository\PtuRepository")
- * @ORM\Table(name="ptu")
+ * Description of Vtp
+ * @ORM\Entity(repositoryClass="\Stock\Repository\VtpRepository")
+ * @ORM\Table(name="vtp")
  * @author Daddy
  */
-class Ptu {
+class Vtp {
         
      // Ptu status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
-    const STATUS_COMMISSION    = 3; // commission.
+    //const STATUS_COMMISSION    = 3; // commission.
    
      // Ptu status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
@@ -98,43 +99,23 @@ class Ptu {
     protected $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="ptu") 
-     * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ptu", inversedBy="vtp") 
+     * @ORM\JoinColumn(name="ptu_id", referencedColumnName="id")
      */
-    private $legal;
+    private $ptu;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Contract", inversedBy="ptu") 
-     * @ORM\JoinColumn(name="contract_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Stock\Entity\VtpGood", mappedBy="vtp") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="vtp_id")
      */
-    private $contract;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="ptu") 
-     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
-     */
-    private $office;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Stock\Entity\PtuGood", mappedBy="ptu") 
-     * @ORM\JoinColumn(name="id", referencedColumnName="ptu_id")
-     */
-    private $ptuGoods;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Stock\Entity\Vtp", mappedBy="ptu") 
-     * @ORM\JoinColumn(name="id", referencedColumnName="ptu_id")
-     */
-    private $vtp;
-    
+    private $vtpGoods;    
     
     /**
      * Constructor.
      */
     public function __construct() 
     {
-       $this->vtp = new ArrayCollection();
-       $this->ptuGoods = new ArrayCollection();
+       $this->vtpGoods = new ArrayCollection();
     }
     
     
@@ -145,7 +126,7 @@ class Ptu {
 
     public function getLogKey() 
     {
-        return 'ptu:'.$this->id;
+        return 'vtp:'.$this->id;
     }
 
     public function setId($id) 
@@ -215,7 +196,7 @@ class Ptu {
         return [
             self::STATUS_ACTIVE => 'Активный',
             self::STATUS_RETIRED => 'Удален',
-            self::STATUS_COMMISSION => 'На комиссии',
+            //self::STATUS_COMMISSION => 'На комиссии',
         ];
     }    
     
@@ -401,86 +382,28 @@ class Ptu {
     }
     
     /**
-     * 
-     * @param Legal $legal
+     * Sets  ptu.
+     * @param Ptu $ptu     
      */
-    public function setLegal($legal)
+    public function setPtu($ptu) 
     {
-        $this->legal = $legal;
-    }
-    
-    /**
-     * Returns the legal.
-     * @return Legal     
-     */
-    public function getLegal() 
-    {
-        return $this->legal;
-    }
-    
-    /**
-     * Returns the supplier.
-     * @return Supplier     
-     */
-    public function getSupplier() 
-    {
-        $legal = $this->legal;
-        $contacts = $legal->getContacts();
-        foreach ($contacts as $contact){
-            $supplier = $contact->getSupplier();
-            if ($supplier){
-                return $supplier;
-            }
-        }
-        return;        
-    }
-    
-    /**
-     * 
-     * @param Contract $contract
-     */
-    public function setContract($contract)
-    {
-        $this->contract = $contract;
-    }
-    
-    /**
-     * Returns the contract.
-     * @return Contract     
-     */
-    public function getContract() 
-    {
-        return $this->contract;
-    }
-    
-    
-    /**
-     * 
-     * @param Office $office
-     */
-    public function setOffice($office)
-    {
-        $this->office = $office;
-    }
+        $this->ptu = $ptu;
+        $ptu->addVtp($this);
+    }    
 
     /**
-     * Returns the office.
-     * @return Office     
+     * Returns the ptu.
+     * @return Ptu     
      */
-    public function getOffice() 
+    public function getPtu() 
     {
-        return $this->office;
+        return $this->ptu;
     }
     
-    public function addPtuGoods($ptuGood)
+    public function addVtpGoods($vtpGood)
     {
-        $this->ptuGoods[] = $ptuGood;
-    }
-    
-    public function addVtp($vtp)
-    {
-        $this->vtp[] = $vtp;
-    }
+        $this->vtpGoods[] = $vtpGood;
+    }    
     
     /**
      * Лог
@@ -492,12 +415,12 @@ class Ptu {
             'amount' => $this->getAmount(),
             'aplId' => $this->getAplId(),
             'comment' => $this->getComment(),
-            'contract' => $this->getContract()->getId(),
+            'contract' => $this->getPtu()->getContract()->getId(),
             'docDate' => (string) $this->getDocDate(),
             'docNo' => $this->getDocNo(),
             'info' => $this->getInfo(),
-            'legal' => $this->getLegal()->getId(),
-            'office' => $this->getOffice()->getId(),
+            'legal' => $this->getPtu()->getLegal()->getId(),
+            'office' => $this->getPtu()->getOffice()->getId(),
             'status' => $this->getStatus(),
             'statusDoc' => $this->getStatusDoc(),
             'statusEx' => $this->getStatusEx(),

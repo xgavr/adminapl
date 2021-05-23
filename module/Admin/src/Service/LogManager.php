@@ -12,6 +12,8 @@ use Laminas\Json\Json;
 use User\Entity\User;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
+use Stock\Entity\Vtp;
+use Stock\Entity\VtpGood;
 use Admin\Entity\Log;
 use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
@@ -96,6 +98,39 @@ class LogManager {
             $data = [
                 'log_key' => $ptu->getLogKey(),
                 'message' => Json::encode($ptuLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }           
+
+    /**
+     * Добавить запись в лог vtp
+     * @param Vtp $vtp
+     * @param integer $status 
+     */
+    public function infoVtp($vtp, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $vtpLog = $vtp->toLog();
+            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+                    ->findByVtp($vtp->getId());
+            foreach ($vtpGoods as $vtpGood){
+                $vtpLog['goods'][$vtpGood->getRowNo()] = $vtpGood->toLog();
+            }
+            
+            $data = [
+                'log_key' => $vtp->getLogKey(),
+                'message' => Json::encode($vtpLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,

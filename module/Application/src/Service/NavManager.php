@@ -92,6 +92,12 @@ class NavManager
                 ];
 
                 $priceDropdownItems[] = [
+                    'id' => 'vtp',
+                    'label' => 'Возврат товаров поставщику',
+                    'link'  => $url('vtp')
+                ];
+
+                $priceDropdownItems[] = [
                     'id' => 'supplier',
                     'label' => 'Поставщики',
                     'link'  => $url('supplier')
