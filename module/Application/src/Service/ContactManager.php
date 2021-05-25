@@ -182,7 +182,7 @@ class ContactManager
             $this->addEmail($contact, $data['email']);
         }    
         
-       if ($data['email'] && $data['password']){
+       if ($data['email'] && !empty($data['password'])){
             $user = $this->entityManager->getRepository(User::class)
                     ->findOneByEmail($data['email']);
             if ($user == null){
@@ -205,8 +205,11 @@ class ContactManager
     public function updateContact($contact, $data) 
     {
         $contact->setName($data['name']);
-        $contact->setDescription($data['description']);
         $contact->setStatus($data['status']);
+        $contact->setDescription(null);
+        if (!empty($data['description'])){
+            $contact->setDescription($data['description']);
+        }    
         
         if (isset($data['phone'])){
             $this->addPhone($contact, ['phone' => $data['phone']]);

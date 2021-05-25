@@ -217,7 +217,7 @@ class Client {
     }
 
     /**
-     * Задает связанный mdndger.
+     * Задает связанный manager.
      * @param \User\Entity\User $user
      */    
     public function setManager($user) 

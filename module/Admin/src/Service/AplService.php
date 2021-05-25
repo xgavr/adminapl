@@ -583,8 +583,10 @@ class AplService {
                         'status' => ($row['publish'] == 1 ? 1:2),
                         'roles' => $user->getRolesAsArray(),
                         'aplId' => $row['id'],
-                        'birthday' => date_format(date_create($desc['dob']), 'Y-m-d'),
                     ];    
+                    if (!empty($desc['dob'])){
+                       $user_data['birthday'] = date_format(date_create($desc['dob']), 'Y-m-d'); 
+                    }
 
                     $this->userManager->updateUser($user, $user_data);
                     
@@ -610,19 +612,23 @@ class AplService {
                     if ($contact){
                         $contact_data = [
                             'name' => $row['name'],
-                            'phone' => $row['phone'],
                             'email' => $row['email'],
                             'status' => Contact::STATUS_LEGAL,
                         ];
+                        if (!empty($row['phone'])){
+                           $contact_data['phone'] = $row['phone']; 
+                        }
 
                         $this->contactManager->updateContact($contact, $contact_data);                                                
                     } else {
                         $contact_data = [
                             'name' => $row['name'],
-                            'phone' => $row['phone'],
                             'email' => $row['email'],
                             'status' => Contact::STATUS_LEGAL,
                         ];
+                        if (!empty($row['phone'])){
+                           $contact_data['phone'] = $row['phone']; 
+                        }
 
                         $contact = $this->contactManager->addNewContact($user, $contact_data);                        
                     }   
