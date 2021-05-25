@@ -1,0 +1,376 @@
+<?php
+use Stock\Entity\Ot;
+
+$form = $this->form;
+
+$form->get('office_id')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comiss')->setAttributes([
+    'class'=>'form-control selectpicker', 
+    ]);
+
+$form->get('doc_date')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('doc_no')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'ot-submit']);
+
+$form->prepare();
+
+$docName = 'Новый';
+if ($ot){
+    $docName = '№ '.$ot->getDocNo().' от  '.date('d.m.Y', strtotime($ot->getDocDate()));
+}
+
+?>
+
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="otModalLabel">Оприходование товаров <?= $docName?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('doc_no')); ?>
+                            <?= $this->formElement($form->get('doc_no')); ?>
+                            <?= $this->formElementErrors($form->get('doc_no')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('office_id')); ?>
+                            <?= $this->formElement($form->get('office_id')); ?>
+                            <?= $this->formElementErrors($form->get('office_id')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2 text-right">
+                    </div>    
+                    <div class="col-xs-2 text-right">
+                        <h1 class="display-4" id="otQuantity"></h1>
+                    </div>    
+                    <div class="col-xs-1 text-right">
+                        <h1 class="display-4" id="otAmount"><?= ($ot) ? round($ot->getAmount(), 2):"" ?></h1>                        
+                    </div>    
+                </div>    
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('doc_date')); ?>
+                            <?= $this->formElement($form->get('doc_date')); ?>
+                            <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('company')); ?>
+                            <?= $this->formElement($form->get('company')); ?>
+                            <?= $this->formElementErrors($form->get('company')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-3">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('comiss')); ?>
+                            <?= $this->formElement($form->get('comiss')); ?>
+                            <?= $this->formElementErrors($form->get('comiss')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-5 text-right">
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="otgoodtoolbar">
+                            <div class="form-inline" role="form">
+                                <button type="button" class="btn btn-default ot-good-modal-show" modal-url="/ot/good-edit-form">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <table id="otgoodtable" 
+                            data-toggle="otgoodtable" 
+                            data-url="/ot/good-content/<?= ($ot) ? $ot->getId():"" ?>"
+                            data-side-pagination="client"
+                            data-pagination="true"
+                            data-page-size = "5"
+                            data-page-list="[5, 10, 20, 50]"
+                            data-toolbar="#otgoodtoolbar"
+                            data-show-refresh="true"
+                            data-show-toggle="true"
+                            data-query-params="otgoodQueryParams"
+                            data-response-handler="otgoodResponseHandler"
+                            data-unique-id = "rowNo"
+                            >
+                            <thead>
+                                <tr>
+                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                                     <th data-field="good.code" data-type="numeric">Артикул</th>
+                                     <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                                     <th data-field="good.name" data-type="numeric">Наименование</th>
+                                     <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                                     <th data-field='quantity' data-align="right">Количество</th>
+                                     <th data-field='amount' data-align="right">Сумма</th>
+                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                                 </tr>                
+                            </thead>
+                        </table>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('comment')); ?>
+                            <?= $this->formElement($form->get('comment')); ?>
+                            <?= $this->formElementErrors($form->get('comment')); ?>                  
+                        </div>                        
+                    </div>                                            
+                </div>        
+
+
+
+
+                        <?= $this->formElement($form->get('csrf')); ?>
+                    </div>
+                </div>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" id="ot-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    function submitForm(){
+        var data = serializeForm('#ot-form');
+        data.otGood = getFormatedOtGood();
+        $.ajax({
+            type: 'POST',
+            url: '/ot/edit-form/<?= ($ot) ? $ot->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#otModal').modal('hide');
+                    $('#table').bootstrapTable('refresh');
+                } else {
+                    $('#otModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    function getFormatedOtGood(){
+        var data = $('#otgoodtable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                good_id: row.good.id,
+                quantity: row.quantity,
+                amount: row.amount,
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
+    
+    
+    $('#office').on('change', function(){
+        $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
+            $('#company').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
+        
+    function otUpdateTotal(){
+        var data = $('#otgoodtable').bootstrapTable('getData');
+        var amount = 0; var quantity = 0;
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.amount*100)/100;
+            quantity += Math.round(value.quantity*100)/100; 
+        });
+        $('#otAmount').html(Math.round(amount*100)/100);
+        $('#otQuantity').html(Math.round(quantity*100)/100);
+    }
+    
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#otgoodtable').bootstrapTable('removeByUniqueId', index);
+        otUpdateTotal();
+    }
+    
+    function hideComissGroup()
+    {
+        $('#comissGroup').hide();
+        if ($("#status").val() == <?= Ot::STATUS_COMMISSION?>){
+            $('#comissGroup').show();
+        }
+    }
+    
+    $( document ).ready(function() {
+        
+        hideComissGroup();
+        
+        $('#otgoodtable').bootstrapTable({
+            onLoadSuccess: function(res){
+                otUpdateTotal();
+            }            
+        }); 
+        
+        var forms = $('#ot-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('ot-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+        
+        $('#status').on('change', function(){
+            hideComissGroup();
+        });
+
+        $('#comiss').selectpicker({
+                liveSearch: true,
+            })
+            .ajaxSelectPicker({
+                ajax: {
+                    url: '/users/live-search',
+                    data: function () {
+                        var params = {
+                            search: '{{{q}}}',
+                            limit: 10
+                        };
+//                        if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
+//                            params.GroupID = gModel.selectedGroup().ContactGroupID;
+//                        }
+                        return params;
+                    }
+                },
+                locale: {
+                    emptyTitle: 'Поиск по телефону...'
+                },
+                preprocessData: function(data){
+                    var users = [];
+                    if(data.hasOwnProperty('rows')){
+                        var len = data.rows.length;
+                        for(var i = 0; i < len; i++){
+                            var curr = data.rows[i];
+                            users.push(
+                                {
+                                    'value': curr.id,
+                                    'text': '('+ curr.name+ ') ' + curr.fullName,
+//                                    'data': {
+//                                        'icon': 'icon-person',
+//                                        'subtext': 'Internal'
+//                                    },
+                                    'disabled': false
+                                }
+                            );
+                        }
+                    }
+                    return users;
+                },
+                preserveSelected: false
+            });  
+    });    
+    
+    function otGoodRefreshTable(){
+        $('#otgoodtable').bootstrapTable('refresh');
+    }
+    
+    function otgoodQueryParams(params) {
+        $('#otgoodtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#otgoodtable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#otgoodtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function pgActiveFormatter(value, row){
+        var url = '/ot/good-edit-form/';
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs ot-good-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+value+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function pgPriceFormatter(value, row){
+        return Math.round(value*100/row.quantity)/100;
+    }        
+    
+    function otgoodResponseHandler(res) {
+        return res;
+    }     
+</script>

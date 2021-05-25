@@ -10,18 +10,18 @@ namespace Stock\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Stock\Entity\Vtp;
+use Stock\Entity\Ot;
 use Application\Entity\Goods;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 
 /**
- * Description of VtpGood
- * @ORM\Entity(repositoryClass="\Stock\Repository\VtpRepository")
- * @ORM\Table(name="vtp_good")
+ * Description of OtGood
+ * @ORM\Entity(repositoryClass="\Stock\Repository\OtRepository")
+ * @ORM\Table(name="ot_good")
  * @author Daddy
  */
-class VtpGood {
+class OtGood {
         
      // Ptu status constants.
     const STATUS_ACTIVE       = 1; // Active.
@@ -75,13 +75,13 @@ class VtpGood {
     protected $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Stock\Entity\Vtp", inversedBy="vtpGoods") 
-     * @ORM\JoinColumn(name="vtp_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ot", inversedBy="otGoods") 
+     * @ORM\JoinColumn(name="ot_id", referencedColumnName="id")
      */
-    private $vtp;
+    private $ot;
         
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="vtpGoods") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="otGoods") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     private $good;
@@ -101,7 +101,7 @@ class VtpGood {
     
     public function getDocRowKey() 
     {
-        return 'vtp_good:'.$this->id;
+        return 'ot_good:'.$this->id;
     }    
 
     public function setId($id) 
@@ -277,12 +277,12 @@ class VtpGood {
     }
     
     /**
-     * Returns the vtp.
-     * @return Vtp     
+     * Returns the ot.
+     * @return Ot     
      */
-    public function getVtp() 
+    public function getOt() 
     {
-        return $this->vtp;
+        return $this->ot;
     }
     
     /**

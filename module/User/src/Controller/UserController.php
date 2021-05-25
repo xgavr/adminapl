@@ -453,6 +453,28 @@ class UserController extends AbstractActionController
             'form' => $form
         ]);
     }
+    
+    public function liveSearchAction()
+    {
+        $total = 0;
+        $result = [];
+        if ($this->getRequest()->isPost()) {	   
+            $data = $this->params()->fromPost();
+
+            $query = $this->entityManager->getRepository(User::class)
+                            ->liveSearch($data);
+
+            $total = count($query->getResult(2));
+
+            $result = $query->getResult(2);
+        }    
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
 }
 
 

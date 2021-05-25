@@ -1,0 +1,184 @@
+<?php
+    $this->headTitle('Оприходование товаров');
+
+    $this->mainMenu()->setActiveItemId('supplier');
+
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Склад'=>$this->url('stock'),
+                'Оприходование товаров'=>$this->url('ot'),
+                ]);
+
+
+?>
+
+
+<h1>Оприходование товаров</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <button class="btn btn-default ot-modal-show" type="button" modal-url="/ot/edit-form">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>                
+                <div class="form-group">
+                    <input name="search" style="width: 150px" class="form-control" type="text" placeholder="Поиск">
+                    <button id="ok" type="submit" class="btn btn-default">OK</button>
+                </div>
+                <div class="form-group">
+                    <select id="officeSelect" style="width: 100px" class="form-control">
+                        <option selected>офис</option>
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>
+                    
+                </div>    
+                <div class="form-group">
+                    <select id="yearSelect" style="width: 80px" class="form-control">
+                        <option>год</option>
+                        <?php foreach ($years as $year):?>
+                            <option value="<?= $year?>" <?= ($year == date('Y'))? 'selected':''?>><?= $year?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="monthSelect" style="width: 70px" class="form-control">
+                        <option>мес</option>
+                        <?php foreach ($monthes as $month):?>
+                            <option value="<?= $month?>" <?= ($month == date('m'))? 'selected':''?>><?= $month?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/ot/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-sort-name="id"
+            data-sort-order="desc"            
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="docDate" data-sortable="true">Дата</th>
+                     <th data-field="id" data-sortable="false">Номер</th>
+                     <th data-field="aplId" data-type="numeric"data-align="right">AplId</th>
+                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field='office.name' data-sortable="false">Склад</th>
+                     <th data-field='comment' data-sortable="false">Примечание</th>
+                     <th data-field='comiss.fullName' data-sortable="false">Комитент</th>
+                     <th data-field='status' data-sortable="false">П</th>
+                     <th data-field='statusDoc' data-sortable="false">Т</th>
+                     <th data-field='statusEx' data-sortable="false">О</th>
+                     <th data-field="" data-formatter="activeFormatter"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table'),
+        ok = $('#ok');
+    
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+        $(document).on('click', '.ot-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'otModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        $(document).on('click', '.ot-good-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            var uniqueId = $(e.currentTarget).attr('unique-id');
+            if (uniqueId){
+                var row = $('#otgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                url = url+'?'+$.param(row);
+            }    
+            showFormDialog({
+                id: 'otGoodModal',
+                url: url,
+                zIndex: 9999
+            });
+        });  
+        
+        $(document).on('change', '#officeSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#yearSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#monthSelect', function (e) {
+            refreshTable();
+        });
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        params.office = $('#officeSelect').val();
+        params.year = $('#yearSelect').val();
+        params.month = $('#monthSelect').val();
+        
+        return params;
+    }
+    
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function amountFormatter(value){
+        return Math.round(value*100)/100;
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/ot/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs ot-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
+

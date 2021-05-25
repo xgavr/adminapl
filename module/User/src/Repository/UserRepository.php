@@ -11,6 +11,7 @@ namespace User\Repository;
 use Doctrine\ORM\EntityRepository;
 use User\Entity\User;
 use User\Entity\Role;
+use User\Filter\PhoneFilter;
 
 class UserRepository  extends EntityRepository
 {
@@ -47,5 +48,70 @@ class UserRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }    
     
+    /**
+     * Выборка для формы
+     * 
+     * @param array params
+     */
+    public function formFind($params)
+    {
+        $user = null;
+        if (!empty($params['user'])){
+            $user = $params['user'];
+        }
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = ?1')    
+            ->setParameter('1', -1)    
+                ;
+        if ($user){
+            $queryBuilder->setParameter(1, $user->getId());
+        }
+
+        return $queryBuilder->getQuery()->getResult();       
+    }
     
+    /**
+     * Запрос по поиска
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function liveSearch($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('u.id, u.fullName, p.name')
+            ->from(User::class, 'u')
+            ->join('u.contacts', 'c')
+            ->join('c.phones', 'p')
+            ->where('u.id = 0')    
+                ;
+//        var_dump($params); exit;
+        if (is_array($params)){
+            if (isset($params['search'])){
+                $q = preg_replace('#[^0-9]#', '', $params['search']);
+                if ($q){
+                    $queryBuilder
+                        ->where('p.name like :code')                           
+                        ->setParameter('code', '%'.$q.'%')    
+                            ;
+                }    
+            }
+            if (isset($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('u.'.$params['sort'], $params['order']);                
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }    
 }

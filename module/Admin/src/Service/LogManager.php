@@ -14,6 +14,8 @@ use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Stock\Entity\Vtp;
 use Stock\Entity\VtpGood;
+use Stock\Entity\Ot;
+use Stock\Entity\OtGood;
 use Admin\Entity\Log;
 use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
@@ -131,6 +133,39 @@ class LogManager {
             $data = [
                 'log_key' => $vtp->getLogKey(),
                 'message' => Json::encode($vtpLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }           
+
+    /**
+     * Добавить запись в лог ot
+     * @param Ot $ot
+     * @param integer $status 
+     */
+    public function infoOt($ot, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $otLog = $ot->toLog();
+            $otGoods = $this->entityManager->getRepository(OtGood::class)
+                    ->findByOt($ot->getId());
+            foreach ($otGoods as $otGood){
+                $vtpLog['goods'][$otGood->getRowNo()] = $otGood->toLog();
+            }
+            
+            $data = [
+                'log_key' => $ot->getLogKey(),
+                'message' => Json::encode($otLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,

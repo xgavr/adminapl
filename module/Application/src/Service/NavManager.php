@@ -138,7 +138,23 @@ class NavManager
                     ];
                 }                
             }
-            
+            //Склад
+            $stockDropdownItems = [];
+            if ($this->rbacManager->isGranted(null, 'stock.manage')) {
+                $stockDropdownItems[] = [
+                    'id' => 'ot',
+                    'label' => 'Оприходования',
+                    'link'  => $url('ot')
+                ];
+            }    
+            if (count($stockDropdownItems)!=0) {
+                $items[] = [
+                    'id' => 'stock',
+                    'label' => 'Склад',
+                    'dropdown' => $stockDropdownItems
+                ];
+            }
+
             //Справочники
             $rbDropdownItems = [];
             if ($this->rbacManager->isGranted(null, 'rb.manage')) {

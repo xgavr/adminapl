@@ -92,7 +92,13 @@ class Office {
    */
    private $ptu;    
     
-    /**
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Ot", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+   */
+   private $ot;    
+
+   /**
      * Constructor.
      */
     public function __construct() 
@@ -304,10 +310,19 @@ class Office {
             
     /*
      * Возвращает связанный ptu.
-     * @return Ptu
+     * @return array
      */    
     public function getPtu() 
     {
         return $this->ptu;
+    }
+
+    /*
+     * Возвращает связанный ot.
+     * @return array
+     */    
+    public function getOt() 
+    {
+        return $this->ot;
     }
 }

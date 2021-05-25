@@ -18,6 +18,8 @@ use Company\Entity\Legal;
 use Company\Entity\Contract;
 use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
+use Stock\Entity\Ot;
+use User\Entity\User;
 use Application\Entity\Producer;
 use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
@@ -58,6 +60,12 @@ class AplDocService {
     private $vtpManager;
 
     /**
+     * Ot manager
+     * @var \Stock\Service\OtManager
+     */
+    private $otManager;
+
+    /**
      * Legal manager.
      * @var \Company\Service\LegalManager
      */
@@ -76,12 +84,13 @@ class AplDocService {
     private $assemblyManager;  
     
     public function __construct($entityManager, $adminManager, $ptuManager, 
-            $legalManager, $producerManager, $assemblyManager, $vtpManager)
+            $legalManager, $producerManager, $assemblyManager, $vtpManager, $otManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->ptuManager = $ptuManager;
         $this->vtpManager = $vtpManager;
+        $this->otManager = $otManager;
         $this->legalManager = $legalManager;
         $this->producerManager = $producerManager;
         $this->assemblyManager = $assemblyManager;
@@ -508,6 +517,107 @@ class AplDocService {
     }
 
     /**
+     * Получить статус документа ОТ
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getOtStatus($data)
+    {
+        $otStatus = Ot::STATUS_ACTIVE;
+        if ($data['publish'] == 0){
+            $otStatus = Ot::STATUS_RETIRED;            
+        }
+        
+        return $otStatus;
+    }
+    
+    /**
+     * Загрузить ОТ
+     * 
+     * @param array $data
+     */
+    public function unloadOt($data)
+    {
+//        var_dump($data); exit;
+        $docDate = $data['ds'];
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        if (!$dateValidator->isValid($docDate)){
+            $docDate = $data['created'];
+        }
+        
+        $dataOt = [
+            'apl_id' => $data['id'],
+            'doc_no' => $data['ns'],
+            'doc_date' => $docDate,
+            'comment' => $data['info'],
+            'status_ex' => Ot::STATUS_EX_APL,
+            'status' => $this->getOtStatus($data),
+        ];
+        
+        if (!empty($data['comiss'])){
+            if ($data['comiss'] == 1){
+                if (!empty($data['comitent'])){
+                    $comiss = $this->entityManager->getRepository(User::class)
+                            ->findOneBy(['aplId' => $data['comitent']]);
+                    if ($comiss){
+                        $dataOt['status'] = Ot::STATUS_COMMISSION;
+                        $dataOt['comiss'] = $comiss;
+                    }
+                }    
+            }
+        }    
+
+        $office = $this->officeFromAplId($data['name']);
+        $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office);
+        
+        $dataOt['office'] = $office;
+        $dataOt['company'] = $company;
+        
+        $ot = $this->entityManager->getRepository(Ot::class)
+                ->findOneByAplId($data['id']);
+        if ($ot){
+            $this->otManager->updateOt($ot, $dataOt);
+            $this->otManager->removeOtGood($ot); 
+        } else {        
+            $ot = $this->otManager->addOt($dataOt);
+        }    
+        
+        if ($ot && isset($data['tp'])){
+            $rowNo = 1;
+            foreach ($data['tp'] as $tp){
+                if (isset($tp['good'])){
+                    $good = $this->findGood($tp['good']);   
+                }    
+                if (empty($good)){
+    //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                } else {
+
+                    $this->otManager->addOtGood($ot->getId(), [
+                        'status' => $ot->getStatus(),
+                        'statusDoc' => $ot->getStatusDoc(),
+                        'quantity' => $tp['sort'],                    
+                        'amount' => $tp['bag_total'],
+                        'good_id' => $good->getId(),
+                        'comment' => '',
+                        'info' => '',
+                    ], $rowNo);
+                    $rowNo++;
+                }    
+            }
+        }  
+        
+        if ($ot){
+            $this->otManager->updateOtAmount($ot);
+            return true;            
+        }
+                
+        return false;
+    }
+
+    /**
      * Обновить статус загруженного документа
      * @param integer $aplDocId
      * @return boolean
@@ -588,6 +698,11 @@ class AplDocService {
                         break;                        
                     case 'Resup': 
                         if ($this->unloadVtp($result)){ 
+                            $this->unloadedDoc($result['id']);
+                        }    
+                        break;                        
+                    case 'Postings': 
+                        if ($this->unloadOt($result)){ 
                             $this->unloadedDoc($result['id']);
                         }    
                         break;                        

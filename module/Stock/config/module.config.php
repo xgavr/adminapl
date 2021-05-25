@@ -26,6 +26,25 @@ return [
                     // route defined above here.
                 ],
             ],    
+            'ot' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/ot[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\OtController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
             'ptu' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -71,6 +90,9 @@ return [
             Controller\IndexController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
+            Controller\OtController::class => [
+                ['actions' => '*', 'allow' => '@'],
+            ],
             Controller\PtuController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
@@ -82,12 +104,14 @@ return [
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\OtController::class => Controller\Factory\OtControllerFactory::class,
             Controller\PtuController::class => Controller\Factory\PtuControllerFactory::class,
             Controller\VtpController::class => Controller\Factory\VtpControllerFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
+            Service\OtManager::class => Service\Factory\OtManagerFactory::class,
             Service\PtuManager::class => Service\Factory\PtuManagerFactory::class,
             Service\VtpManager::class => Service\Factory\VtpManagerFactory::class,
         ],

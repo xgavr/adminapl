@@ -124,7 +124,7 @@ class VtpManager
         
         $vtpQuery = $this->entityManager->getRepository(Vtp::class)
                 ->queryAllVtp();
-        $iterable = $ptuQuery->iterate();
+        $iterable = $vtpQuery->iterate();
         
         foreach ($iterable as $row){
             foreach($row as $vtp){ 
