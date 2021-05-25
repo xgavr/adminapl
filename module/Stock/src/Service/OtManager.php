@@ -124,7 +124,6 @@ class OtManager
     {
         $ot = new Ot();        
         $ot->setAplId($data['apl_id']);
-        //$vtp->setDocNo($data['doc_no']);
         $ot->setDocDate($data['doc_date']);
         $ot->setComment($data['comment']);
         $ot->setStatusEx($data['status_ex']);
@@ -136,6 +135,9 @@ class OtManager
         $ot->setDateCreated(date('Y-m-d H:i:s'));
         if (!empty($data['comiss'])){
             $ot->setComiss($data['comiss']);
+        }
+        if (!empty($data['doc_no'])){
+            $vtp->setDocNo($data['doc_no']);
         }
         
         $this->entityManager->persist($ot);        
@@ -153,7 +155,6 @@ class OtManager
     public function updateOt($ot, $data)            
     {
         $ot->setAplId($data['apl_id']);
-        $ot->setDocNo($data['doc_no']);
         $ot->setDocDate($data['doc_date']);
         $ot->setComment($data['comment']);
         $ot->setStatusEx($data['status_ex']);
@@ -163,6 +164,9 @@ class OtManager
         $ot->setComiss(null);
         if (!empty($data['comiss'])){
             $ot->setComiss($data['comiss']);
+        }
+        if (!empty($data['doc_no'])){
+            $vtp->setDocNo($data['doc_no']);
         }
         
         $this->entityManager->persist($ot);
