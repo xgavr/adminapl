@@ -789,7 +789,11 @@ class AplService {
         if (count($items)){
             foreach ($items as $item){
                 $row = (array) $item;
-                $data = $row + Json::decode($row['desc'], Json::TYPE_ARRAY);
+                if (!empty($row['desc'])){
+                    $data = $row + Json::decode($row['desc'], Json::TYPE_ARRAY);
+                } else {
+                    $data = $row;
+                }    
                 unset($data['desc']);
 //                var_dump($data); exit;
                 if ($data['parent'] > 0){
