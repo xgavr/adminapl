@@ -613,7 +613,7 @@ class AplService {
                    $contact_data['phone'] = $row['phone']; 
                 }
 
-                $this->contactManager->updateContact($contact, $contact_data);                                                
+                $this->contactManager->updateContact($contact, $contact_data, $user);                                                
             } else {
                 $contact_data = [
                     'name' => $row['name'],

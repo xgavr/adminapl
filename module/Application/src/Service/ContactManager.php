@@ -241,6 +241,8 @@ class ContactManager
                 $contact->setClient($parent);
             } elseif ($parent instanceof \Company\Entity\Office){
                 $contact->setOffice($parent);
+            } elseif ($parent instanceof \User\Entity\User) {
+                $contact->setUser($parent); 
             }            
         }
         
