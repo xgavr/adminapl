@@ -100,7 +100,10 @@ class ContactManager
                     if ($phone == null){
                         $phone = new Phone();            
                         $phone->setName($data['phone']);
-                        $phone->setComment($data['comment']);
+                        $phone->setComment('');
+                        if (!empty($data['comment'])){
+                            $phone->setComment($data['comment']);                            
+                        }
 
                         $currentDate = date('Y-m-d H:i:s');
                         $phone->setDateCreated($currentDate);
@@ -150,8 +153,10 @@ class ContactManager
         $contact = new Contact();
         $contact->setName($data['name']);
         
-        $description = $data['description'];
-        if (!$description) $description = "";
+        $description = "";
+        if (!empty($data['description'])){
+            $description = $data['description'];
+        }    
         $contact->setDescription($description);
         
         $contact->setStatus($data['status']);

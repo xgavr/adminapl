@@ -63,18 +63,9 @@ class AplController extends AbstractActionController
         ]);
     }
 
-    public function getStaffsAction()
-    {
-        $this->aplService->getStaffs();
-        
-        return new JsonModel([
-            'ok'
-        ]);
-    }
-    
     public function getClientsAction()
     {
-        $this->aplService->getClients();
+        $this->aplService->uploadUsers();
         
         return new JsonModel([
             'ok'

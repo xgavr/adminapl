@@ -535,135 +535,108 @@ class AplService {
         }    
     }
    
-    //** 
-    //put your code here
-    public function getStaffs()
+    /**
+     * Загрузить сотрудника
+     * @param array $row
+     */
+    public function getStaff($row)
     {
-        $url = $this->aplApi().'get-staffs?api='.$this->aplApiKey();
-        
-        $data = file_get_contents($url);
-        if ($data){
-            $data = (array) Json::decode($data);
-        } else {
-            $data = [];
+        $user = $contact = null;
+        if ($row['email']){
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneByName($row['email']);
+
+            if ($email){
+               $contact = $email->getContact();
+               if ($contact){
+                   $user = $contact->getUser();
+               }
+            }
+
+            if (!$user){
+                $user = $this->entityManager->getRepository(User::class)
+                        ->findOneByEmail($row['email']);
+            }
+        } elseif ($row['phone']){
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneByName($row['phone']);
+
+            if ($phone){
+               $contact = $phone->getContact();
+               if ($contact){
+                   $user = $contact->getUser();
+               }
+            }                    
         }
-        
-        $items = $data['items'];
-        if (count($items)){
-            foreach ($items as $item){
-                $row = (array) $item;
-                $desc = (array) Json::decode($row['desc']);
 
-                $user = $contact = null;
-                if ($row['email']){
-                    $email = $this->entityManager->getRepository(Email::class)
-                            ->findOneByName($row['email']);
-                    
-                    if ($email){
-                       $contact = $email->getContact();
-                       if ($contact){
-                           $user = $contact->getUser();
-                       }
-                    }
-                    
-                    if (!$user){
-                        $user = $this->entityManager->getRepository(User::class)
-                                ->findOneByEmail($row['email']);
-                    }
-                } elseif ($row['phone']){
-                    $phone = $this->entityManager->getRepository(Phone::class)
-                            ->findOneByName($row['phone']);
-                    
-                    if ($phone){
-                       $contact = $phone->getContact();
-                       if ($contact){
-                           $user = $contact->getUser();
-                       }
-                    }                    
+        if ($user){
+
+            $user_data = [
+                'email' => $row['email'],
+                'full_name' => $row['name'],
+                'status' => ($row['publish'] == 1 ? 1:2),
+                'roles' => $user->getRolesAsArray(),
+                'aplId' => $row['id'],
+            ];    
+            if (!empty($desc['dob'])){
+               $user_data['birthday'] = date_format(date_create($row['dob']), 'Y-m-d'); 
+            }
+
+            $this->userManager->updateUser($user, $user_data);
+
+        } else {
+            if ($row['email']){
+
+                $roles = [3]; //сотрудник
+                $user_data = [
+                    'email' => $row['email'],
+                    'full_name' => $row['name'],
+                    'password' => $row['password_salt'],
+                    'status' => ($row['publish'] == 1 ? 1:2),
+                    'roles' => $roles,
+                    'aplId' => $row['id'],
+                    'birthday' => date_format(date_create($row['dob']), 'Y-m-d'),
+                ];    
+
+                $user = $this->userManager->addUser($user_data);                        
+            }
+        }
+
+        if ($user){
+            if ($contact){
+                $contact_data = [
+                    'name' => $row['name'],
+                    'email' => $row['email'],
+                    'status' => Contact::STATUS_LEGAL,
+                ];
+                if (!empty($row['phone'])){
+                   $contact_data['phone'] = $row['phone']; 
                 }
 
-                if ($user){
-                    
-//                    var_dump($desc['dob']);
-//                    var_dump(date_format(date_create($desc['dob']), 'Y-m-d'));
-                    
-                    $user_data = [
-                        'email' => $row['email'],
-                        'full_name' => $row['name'],
-                        'status' => ($row['publish'] == 1 ? 1:2),
-                        'roles' => $user->getRolesAsArray(),
-                        'aplId' => $row['id'],
-                    ];    
-                    if (!empty($desc['dob'])){
-                       $user_data['birthday'] = date_format(date_create($desc['dob']), 'Y-m-d'); 
-                    }
-
-                    $this->userManager->updateUser($user, $user_data);
-                    
-                } else {
-                    if ($row['email']){
-                        
-                        $roles = [3]; //сотрудник
-                        $user_data = [
-                            'email' => $row['email'],
-                            'full_name' => $row['name'],
-                            'password' => $row['password_salt'],
-                            'status' => ($row['publish'] == 1 ? 1:2),
-                            'roles' => $roles,
-                            'aplId' => $row['id'],
-                            'birthday' => date_format(date_create($desc['dob']), 'Y-m-d'),
-                        ];    
-                            
-                        $user = $this->userManager->addUser($user_data);                        
-                    }
+                $this->contactManager->updateContact($contact, $contact_data);                                                
+            } else {
+                $contact_data = [
+                    'name' => $row['name'],
+                    'email' => $row['email'],
+                    'status' => Contact::STATUS_LEGAL,
+                ];
+                if (!empty($row['phone'])){
+                   $contact_data['phone'] = $row['phone']; 
                 }
-                
-                if ($user){
-                    if ($contact){
-                        $contact_data = [
-                            'name' => $row['name'],
-                            'email' => $row['email'],
-                            'status' => Contact::STATUS_LEGAL,
-                        ];
-                        if (!empty($row['phone'])){
-                           $contact_data['phone'] = $row['phone']; 
-                        }
 
-                        $this->contactManager->updateContact($contact, $contact_data);                                                
-                    } else {
-                        $contact_data = [
-                            'name' => $row['name'],
-                            'email' => $row['email'],
-                            'status' => Contact::STATUS_LEGAL,
-                        ];
-                        if (!empty($row['phone'])){
-                           $contact_data['phone'] = $row['phone']; 
-                        }
+                $contact = $this->contactManager->addNewContact($user, $contact_data);                        
+            }   
 
-                        $contact = $this->contactManager->addNewContact($user, $contact_data);                        
-                    }   
-
-                    //$desc = (array) Json::decode($row['desc']);
+            //$desc = (array) Json::decode($row['desc']);
 //                    var_dump($desc['icq']);
-                    if ($contact){
-                        //$this->contactManager->updateMessengers($contact, ['icq' => $desc['icq']]);
-                        $messenger = $this->entityManager->getRepository(Messenger::class)
-                                ->findOneBy(['type' => Messenger::TYPE_ICQ, 'ident' => $desc['icq']]);
-                        
-                        if ($messenger == null){
-                            $this->contactManager->addNewMessenger($contact, ['type' => Messenger::TYPE_ICQ, 'ident' => $desc['icq'], 'status' => Messenger::STATUS_ACTIVE]);
-                        }
-                        
-                        
-                        
-                        $this->contactManager->updateSignature($contact, ['signature' => $desc['signature']]);
-                        $this->contactManager->updateUserOffice($contact, ['office' => $this->getOffice($row['parent'])]);
-                    }
-                    
-                    $this->getStaffPhone($contact);
-                }                
-            }          
+            if ($contact){
+                $this->contactManager->updateSignature($contact, ['signature' => $row['signature']]);
+                $this->contactManager->updateUserOffice($contact, ['office' => $this->getOffice($row['parent'])]);
+            }
+
+            $this->getStaffPhone($contact);
         }        
+        return;
     }
 
     /**
@@ -728,13 +701,81 @@ class AplService {
     }
 
     /*
-     * Получить клиентов
+     * Получить клиента
+     * @param array $row;
      */
-    public function getClients()
+    public function getClient($row)
+    {
+        $client = $contact = null;
+        if (!empty($row['email'])){
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneByName($row['email']);
+
+            if ($email){
+               $contact = $email->getContact();
+               if ($contact){
+                   $client = $contact->getClient();
+               }
+            }                    
+        } elseif (!empty($row['phone'])){
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneByName($row['phone']);
+
+            if ($phone){
+               $contact = $phone->getContact();
+               if ($contact){
+                   $client = $contact->getClient();
+               }
+            }                    
+        }
+
+        $client_data = [
+            'name' => $row['name'],
+            'status' => ($row['publish'] == 1 ? AplClient::STATUS_ACTIVE:AplClient::STATUS_RETIRED),
+            'aplId' => $row['id'],
+        ];    
+
+        if ($client){                    
+            $this->clientManager->updateClient($client, $client_data);                    
+        } else {                            
+            $client = $this->clientManager->addNewClient($client_data);                        
+        }
+
+        if ($client){
+            if ($contact){
+                $contact_data = [
+                    'name' => $row['name'],
+                    'email' => $row['email'],
+                    'status' => Contact::STATUS_LEGAL,
+                ];
+                if (!empty($row['phone'])){
+                   $contact_data['phone'] = $row['phone']; 
+                }
+
+                $this->contactManager->updateContact($contact, $contact_data);                                                
+            } else {
+                $contact_data = [
+                    'name' => $row['name'],
+                    'email' => $row['email'],
+                    'status' => Contact::STATUS_LEGAL,
+                ];
+                if (!empty($row['phone'])){
+                   $contact_data['phone'] = $row['phone']; 
+                }
+
+                $contact = $this->contactManager->addNewContact($client, $contact_data);                        
+            }   
+
+            $this->getClientPhone($contact);
+        }    
+        
+        return;
+    }
+
+    public function uploadUsers()
     {
         set_time_limit(1800);
         $startTime = time();
-        
         $url = $this->aplApi().'get-clients?api='.$this->aplApiKey();
         
         $data = file_get_contents($url);
@@ -748,80 +789,25 @@ class AplService {
         if (count($items)){
             foreach ($items as $item){
                 $row = (array) $item;
-                $desc = (array) Json::decode($row['desc']);
-
-                $client = $contact = null;
-                if (!empty($row['email'])){
-                    $email = $this->entityManager->getRepository(Email::class)
-                            ->findOneByName($row['email']);
-                    
-                    if ($email){
-                       $contact = $email->getContact();
-                       if ($contact){
-                           $client = $contact->getClient();
-                       }
-                    }                    
-                } elseif (!empty($row['phone'])){
-                    $phone = $this->entityManager->getRepository(Phone::class)
-                            ->findOneByName($row['phone']);
-                    
-                    if ($phone){
-                       $contact = $phone->getContact();
-                       if ($contact){
-                           $client = $contact->getClient();
-                       }
-                    }                    
-                }
-
-                $client_data = [
-                    'name' => $row['name'],
-                    'status' => ($row['publish'] == 1 ? AplClient::STATUS_ACTIVE:AplClient::STATUS_RETIRED),
-                    'aplId' => $row['id'],
-                ];    
-                    
-                if ($client){                    
-                    $this->clientManager->updateClient($client, $client_data);                    
-                } else {                            
-                    $client = $this->clientManager->addNewClient($client_data);                        
-                }
-                
-                if ($client){
-                    if ($contact){
-                        $contact_data = [
-                            'name' => $row['name'],
-                            'email' => $row['email'],
-                            'status' => Contact::STATUS_LEGAL,
-                        ];
-                        if (!empty($row['phone'])){
-                           $contact_data['phone'] = $row['phone']; 
-                        }
-
-                        $this->contactManager->updateContact($contact, $contact_data);                                                
-                    } else {
-                        $contact_data = [
-                            'name' => $row['name'],
-                            'email' => $row['email'],
-                            'status' => Contact::STATUS_LEGAL,
-                        ];
-                        if (!empty($row['phone'])){
-                           $contact_data['phone'] = $row['phone']; 
-                        }
-
-                        $contact = $this->contactManager->addNewContact($client, $contact_data);                        
-                    }   
-
-                    $this->getClientPhone($contact);
+                $data = $row + Json::decode($row['desc'], Json::TYPE_ARRAY);
+                unset($data['desc']);
+//                var_dump($data); exit;
+                if ($data['parent'] > 0){
+                    $this->getStaff($data);
+                } else {
+                    $this->getClient($data);
                 }                
-                $this->unloadedClient($row['id']);
-                
+
+                $this->unloadedClient($data['id']);
                 usleep(100);
                 if (time() > $startTime + 1740){
                     return;
                 }
-            }          
-        }        
+            }    
+        }
+        
+        return;
     }
-
     /**
      * Сообщить в телеграм
      * 
