@@ -49,20 +49,26 @@ class ClientManager
         $this->authService = $authService;
     }
     
+    /**
+     * Добавить клиента
+     * @param array $data
+     * @return Client
+     */
     public function addNewClient($data) 
     {
         // Создаем новую сущность.
         $client = new Client();
+        $client->setAplId($data['aplId']);
         $client->setName($data['name']);
         $client->setStatus($data['status']);
         
         $currentDate = date('Y-m-d H:i:s');
         $client->setDateCreated($currentDate);        
         
-        $currentUser = $this->entityManager->getRepository(User::class)
-                ->findOneByEmail($this->authService->getIdentity());
-        
-        $client->setManager($currentUser);
+//        $currentUser = $this->entityManager->getRepository(User::class)
+//                ->findOneByEmail($this->authService->getIdentity());
+//        
+//        $client->setManager($currentUser);
         
         
         // Добавляем сущность в менеджер сущностей.
@@ -74,8 +80,14 @@ class ClientManager
         return $client;
     }   
     
+    /**
+     * Обновить клиента
+     * @param Client $client
+     * @param arrray $data
+     */
     public function updateClient($client, $data) 
     {
+        $client->setAplId($data['aplId']);
         $client->setName($data['name']);
         $client->setStatus($data['status']);
 

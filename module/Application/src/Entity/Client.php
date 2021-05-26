@@ -32,6 +32,11 @@ class Client {
     protected $id;
     
     /** 
+     * @ORM\Column(name="apl_id")  
+     */
+    protected $aplId;
+    
+    /** 
      * @ORM\Column(name="status")  
      */
     protected $status;
@@ -91,6 +96,24 @@ class Client {
     {
         $this->id = $id;
     }     
+
+    /**
+     * Returns user apl ID.
+     * @return integer
+     */
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    /**
+     * Sets user apl ID. 
+     * @param int $aplId    
+     */
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
+    }
 
     public function getName() 
     {

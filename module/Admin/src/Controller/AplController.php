@@ -72,6 +72,15 @@ class AplController extends AbstractActionController
         ]);
     }
     
+    public function getClientsAction()
+    {
+        $this->aplService->getClients();
+        
+        return new JsonModel([
+            'ok'
+        ]);
+    }
+    
     /*
      * Копирование прайсов с autopartslist.ru
      */

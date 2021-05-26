@@ -14,6 +14,7 @@ use Application\Entity\Email;
 use Application\Entity\Phone;
 use Application\Entity\Messenger;
 use User\Entity\User;
+use Application\Entity\Client as AplClient;
 use Company\Entity\Office;
 use Application\Entity\Contact;
 use Application\Entity\Supplier;
@@ -52,6 +53,12 @@ class AplService {
     private $userManager;
 
     /**
+     * Client manager
+     * @var \Application\Service\ClientManager
+     */
+    private $clientManager;
+
+    /**
      * User manager
      * @var \Application\Service\ContactManager
      */
@@ -81,10 +88,13 @@ class AplService {
      */
     private $adminManager;
     
-    public function __construct($entityManager, $userManager, $contactManager, $supplierManager, $legalManager, $telegramManager, $adminManager)
+    public function __construct($entityManager, $userManager, $contactManager, 
+            $supplierManager, $legalManager, $telegramManager, $adminManager,
+            $clientManager)
     {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
+        $this->clientManager = $clientManager;
         $this->contactManager = $contactManager;
         $this->supplierManager = $supplierManager;
         $this->legalManager = $legalManager;
@@ -655,7 +665,156 @@ class AplService {
             }          
         }        
     }
+
+    /**
+     * Получить телефоны клента
+     * 
+     * @param Contact $contact
+     */
+    public function getClientPhone($contact)
+    {
+        $aplId = $contact->getClient()->getAplId();
+        if ($aplId){
+            $url = $this->aplApi().'get-staff-phone/id/'.$aplId.'?api='.$this->aplApiKey();
+
+            $data = file_get_contents($url);
+            if ($data){
+                $phone = (array) Json::decode($data);
+//                var_dump($phone);
+                $this->contactManager->addPhone($contact, ['phone' => $phone['phone']], true);
+            }
+        }    
+    }
     
+    /**
+     * Обновить статус загруженного клнта
+     * @param integer $userId
+     * @return boolean
+     */
+    public function unloadedClient($userId)
+    {
+        $result = true;
+        if (is_numeric($userId)){
+            $url = $this->aplApi().'aa-user?api='.$this->aplApiKey();
+
+            $post = [
+                'userId' => $userId,
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $result = $ok = FALSE;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $result = $ok = TRUE;
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+                $ok = true;
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+            
+            if ($ok){
+            }
+
+            unset($post);
+        }    
+        return $result;        
+    }
+
+    /*
+     * Получить клиентов
+     */
+    public function getClients()
+    {
+        set_time_limit(1800);
+        $url = $this->aplApi().'get-clients?api='.$this->aplApiKey();
+        
+        $data = file_get_contents($url);
+        if ($data){
+            $data = (array) Json::decode($data);
+        } else {
+            $data = [];
+        }
+        
+        $items = $data['items'];
+        if (count($items)){
+            foreach ($items as $item){
+                $row = (array) $item;
+                $desc = (array) Json::decode($row['desc']);
+
+                $client = $contact = null;
+                if (!empty($row['email'])){
+                    $email = $this->entityManager->getRepository(Email::class)
+                            ->findOneByName($row['email']);
+                    
+                    if ($email){
+                       $contact = $email->getContact();
+                       if ($contact){
+                           $client = $contact->getClient();
+                       }
+                    }                    
+                } elseif (!empty($row['phone'])){
+                    $phone = $this->entityManager->getRepository(Phone::class)
+                            ->findOneByName($row['phone']);
+                    
+                    if ($phone){
+                       $contact = $phone->getContact();
+                       if ($contact){
+                           $client = $contact->getClient();
+                       }
+                    }                    
+                }
+
+                $client_data = [
+                    'name' => $row['name'],
+                    'status' => ($row['publish'] == 1 ? AplClient::STATUS_ACTIVE:AplClient::STATUS_RETIRED),
+                    'aplId' => $row['id'],
+                ];    
+                    
+                if ($client){                    
+                    $this->clientManager->updateClient($client, $client_data);                    
+                } else {                            
+                    $client = $this->clientManager->addNewClient($client_data);                        
+                }
+                
+                if ($client){
+                    if ($contact){
+                        $contact_data = [
+                            'name' => $row['name'],
+                            'email' => $row['email'],
+                            'status' => Contact::STATUS_LEGAL,
+                        ];
+                        if (!empty($row['phone'])){
+                           $contact_data['phone'] = $row['phone']; 
+                        }
+
+                        $this->contactManager->updateContact($contact, $contact_data);                                                
+                    } else {
+                        $contact_data = [
+                            'name' => $row['name'],
+                            'email' => $row['email'],
+                            'status' => Contact::STATUS_LEGAL,
+                        ];
+                        if (!empty($row['phone'])){
+                           $contact_data['phone'] = $row['phone']; 
+                        }
+
+                        $contact = $this->contactManager->addNewContact($client, $contact_data);                        
+                    }   
+
+                    $this->getClientPhone($contact);
+                }                
+                $this->unloadedClient($row['id']);
+            }          
+        }        
+    }
+
     /**
      * Сообщить в телеграм
      * 
