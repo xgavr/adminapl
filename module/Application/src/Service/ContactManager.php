@@ -207,7 +207,7 @@ class ContactManager
         return $contact;
     }   
     
-    public function updateContact($contact, $data) 
+    public function updateContact($contact, $data, $parent = null) 
     {
         $contact->setName($data['name']);
         $contact->setStatus($data['status']);
@@ -234,6 +234,15 @@ class ContactManager
                 $contact->setUser($user);
            }
         }   
+        if ($parent){
+            if ($parent instanceof \Application\Entity\Supplier ){
+                $contact->setSupplier($parent);
+            } elseif ($parent instanceof \Application\Entity\Client){
+                $contact->setClient($parent);
+            } elseif ($parent instanceof \Company\Entity\Office){
+                $contact->setOffice($parent);
+            }            
+        }
         
         $this->entityManager->persist($contact);
         // Применяем изменения к базе данных.

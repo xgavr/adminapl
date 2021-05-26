@@ -726,7 +726,7 @@ class AplService {
                if ($contact){
                    $client = $contact->getClient();
                }
-            }                    
+            }
         }
 
         $client_data = [
@@ -752,7 +752,7 @@ class AplService {
                    $contact_data['phone'] = $row['phone']; 
                 }
 
-                $this->contactManager->updateContact($contact, $contact_data);                                                
+                $this->contactManager->updateContact($contact, $contact_data, $client);
             } else {
                 $contact_data = [
                     'name' => $row['name'],
