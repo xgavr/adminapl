@@ -1344,6 +1344,25 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Выгрузка клентов из апл
+     * 
+     * @return JsonModel
+     */
+    public function updateAplUsersAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['ptu'] == 1){
+            $this->aplService->uploadUsers();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Выгрузка прайслистов для ТП
      * 
      * @return JsonModel

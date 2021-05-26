@@ -214,7 +214,7 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'select',
             'name' => 'ptu',
             'options' => [
-                'label' => 'Обновлять ПТУ',
+                'label' => 'Загружать документы',
                 'value_options' => [
                     1 => 'Делать',
                     2 => 'Не делать',                    
