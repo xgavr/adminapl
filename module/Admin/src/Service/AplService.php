@@ -733,6 +733,8 @@ class AplService {
     public function getClients()
     {
         set_time_limit(1800);
+        $startTime = time();
+        
         $url = $this->aplApi().'get-clients?api='.$this->aplApiKey();
         
         $data = file_get_contents($url);
@@ -811,6 +813,11 @@ class AplService {
                     $this->getClientPhone($contact);
                 }                
                 $this->unloadedClient($row['id']);
+                
+                usleep(100);
+                if (time() > $startTime + 1740){
+                    return;
+                }
             }          
         }        
     }
