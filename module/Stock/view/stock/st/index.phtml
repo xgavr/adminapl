@@ -185,6 +185,9 @@
                 return row.user.fullName
             }    
         }
+        if (row.writeOff == <?= St::WRITE_INVENTORY?>){
+            return 'Инв';
+        }
         return value;
     }    
 
