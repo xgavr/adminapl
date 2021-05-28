@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Company\Entity\Legal;
 use Company\Entity\Office;
 use Application\Entity\Goods;
-use User\Entity\User;
+use Application\Entity\Contact;
 
 
 /**
@@ -87,10 +87,10 @@ class Comiss {
     private $company;    
     
     /**
-     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="comiss") 
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="comiss") 
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
      */
-    private $user;    
+    private $contact;    
     
     public function __construct() {
     }
@@ -267,18 +267,18 @@ class Comiss {
     }                         
 
     /*
-     * @return User
+     * @return Contact
      */    
-    public function getUser() 
+    public function getContact() 
     {
-        return $this->user;
+        return $this->contact;
     }
 
     /**
-     * @param User $user
+     * @param Contact $contact
      */    
-    public function setUser($user) 
+    public function setContact($contact) 
     {
-        $this->user = $user;
+        $this->contact = $contact;
     }                         
 }

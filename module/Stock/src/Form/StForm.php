@@ -12,14 +12,14 @@ use Laminas\InputFilter\InputFilter;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Stock\Entity\Ot;
+use Stock\Entity\St;
 
 /**
- * Description of Ot
+ * Description of St
  *
  * @author Daddy
  */
-class OtForm extends Form implements ObjectManagerAwareInterface
+class StForm extends Form implements ObjectManagerAwareInterface
 {
     
     
@@ -41,23 +41,31 @@ class OtForm extends Form implements ObjectManagerAwareInterface
 
     /**
      *
-     * @var \Application\Entity\Contact 
+     * @var \User\Entity\User 
      */
-    protected $comiss;
+    protected $user;
+
+    /**
+     *
+     * @var \Company\Entity\Cost 
+     */
+    protected $cost;
 
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager, $office, $company = null, $comiss = null)
+    public function __construct($entityManager, $office, $company = null, 
+            $user = null, $cost = null)
     {
         // Определяем имя формы.
-        parent::__construct('ot-form');
+        parent::__construct('st-form');
      
         $this->entityManager = $entityManager;
         
         $this->office = $office;        
         $this->company = $company;        
-        $this->comiss = $comiss;
+        $this->user = $user;
+        $this->cost = $cost;
         
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -116,28 +124,55 @@ class OtForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'comiss',
+            'name' => 'user',
             'attributes' => [                
-                'id' => 'comiss',
+                'id' => 'user',
             ],
             'options' => [
                 'disable_inarray_validator' => true,
                 'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Contact',
-                'label' => 'Комитент',
-                'property'       => 'name',
+                'target_class'   => 'User\Entity\User',
+                'label' => 'Сотрудник',
+                'property'       => 'fullName',
                 'display_empty_item' => false,
                 'empty_item_label'   => '---',                 
                 'is_method' => false,
                 'find_method'    => [
                    'name'   => 'formFind',
                    'params' => [
-                       'params' => ['contact' => $this->comiss],
+                       'params' => ['user' => $this->user],
                    ],
                 ],                
-//                'label_generator' => function ($targetEntity) {
-//                    return $targetEntity->getFullName();
-//                },
+                'label_generator' => function ($targetEntity) {
+                    return $targetEntity->getFullName();
+                },
+            ],
+        ]);
+
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'cost',
+            'attributes' => [                
+                'id' => 'cost',
+            ],
+            'options' => [
+                'disable_inarray_validator' => true,
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Company\Entity\Cost',
+                'label' => 'Статья затрат',
+                'property'       => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => null,                 
+                'is_method' => true,
+                'find_method'    => [
+                   'name'   => 'formFind',
+                   'params' => [
+                       'params' => ['cost' => $this->cost],
+                   ],
+                ],                
+                'label_generator' => function ($targetEntity) {
+                    return $targetEntity->getName();
+                },
             ],
         ]);
 
@@ -182,14 +217,28 @@ class OtForm extends Form implements ObjectManagerAwareInterface
         $this->add([            
             'type'  => 'select',
             'name' => 'status',
-            'value' => Ot::STATUS_ACTIVE,
+            'value' => St::STATUS_ACTIVE,
             'attributes' => [                
                 'required' => 'required',
                 'id' => 'status',
             ],
             'options' => [
                 'label' => 'Статус',
-                'value_options' => Ot::getStatusList(),
+                'value_options' => St::getStatusList(),
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'writeOff',
+            'value' => St::WRITE_PAY,
+            'attributes' => [                
+                'required' => 'required',
+                'id' => 'writeOff',
+            ],
+            'options' => [
+                'label' => 'Вид затрат',
+                'value_options' => St::getWriteOffList(),
             ],
         ]);
         
@@ -200,7 +249,7 @@ class OtForm extends Form implements ObjectManagerAwareInterface
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Сохранить',
-                'id' => 'ot_submitbutton',
+                'id' => 'st_submitbutton',
             ],
         ]);        
 
@@ -258,7 +307,24 @@ class OtForm extends Form implements ObjectManagerAwareInterface
             ]);          
         
         $inputFilter->add([
-                'name'     => 'comiss',
+                'name'     => 'user',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+//                'validators' => [
+//                    [    
+//                        'name'    => 'GreaterThan',
+//                        'options' => [
+//                            'min' => 0,
+//                            'inclusive' => false
+//                        ],
+//                    ],
+//                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'cost',
                 'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
@@ -338,7 +404,18 @@ class OtForm extends Form implements ObjectManagerAwareInterface
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Ot::getStatusList())]]
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(St::getStatusList())]]
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'writeOff',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(St::getWriteOffList())]]
                 ],
             ]); 
 

@@ -10,13 +10,13 @@
 namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\Conatact;
+use Application\Entity\Contact;
 use Application\Entity\Email;
 use Admin\Filter\EmailFromStr;
 use Laminas\Validator\EmailAddress;
 
 /**
- * Description of SupplierRepository
+ * Description of ContactRepository
  *
  * @author Daddy
  */
@@ -70,4 +70,70 @@ class ContactRepository extends EntityRepository
         return Email::EMAIL_UNKNOWN;
     }
 
+    /**
+     * Выборка для формы
+     * 
+     * @param array params
+     */
+    public function formFind($params)
+    {
+        $contact = null;
+        if (!empty($params['contact'])){
+            $contact = $params['contact'];
+        }
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(Contact::class, 'u')
+            ->where('u.id = ?1')    
+            ->setParameter('1', -1)    
+                ;
+        if ($contact){
+            $queryBuilder->setParameter(1, $contact->getId());
+        }
+
+        return $queryBuilder->getQuery()->getResult();       
+    }
+    
+    /**
+     * Запрос по поиска
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function liveSearch($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c.id, c.name, p.name as phone')
+            ->from(Contact::class, 'c')
+            ->join('c.phones', 'p')
+            ->where('u.id = 0')    
+                ;
+//        var_dump($params); exit;
+        if (is_array($params)){
+            if (isset($params['search'])){
+                $q = preg_replace('#[^0-9]#', '', $params['search']);
+                if ($q){
+                    $queryBuilder
+                        ->where('p.name like :code')                           
+                        ->setParameter('code', '%'.$q.'%')    
+                            ;
+                }    
+            }
+            if (isset($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);                
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }    
+    
 }

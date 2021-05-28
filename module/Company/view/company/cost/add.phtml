@@ -1,0 +1,66 @@
+<?php
+$this->headTitle('Добавить статью');
+
+$this->mainMenu()->setActiveItemId('cost');
+
+$this->pageBreadcrumbs()->setItems([
+            'Home'=>$this->url('home'),
+            'Статьи'=>$this->url('cost'),
+            'Добавить статью'=>$this->url('cost', ['action'=>'add'])
+            ]);
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование'
+    ]);
+
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Код Апл'
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+
+$form->prepare();
+?>
+
+<h1>Добавить статью</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('status')); ?>
+            <?= $this->formElement($form->get('status')); ?>
+            <?= $this->formElementErrors($form->get('status')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('aplId')); ?>
+            <?= $this->formElement($form->get('aplId')); ?>
+            <?= $this->formElementErrors($form->get('aplId')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('csrf')); ?>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   
+
+
+
+

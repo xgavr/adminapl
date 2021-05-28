@@ -1,5 +1,5 @@
 <?php
-use Stock\Entity\Ot;
+use Stock\Entity\St;
 
 $form = $this->form;
 
@@ -11,8 +11,12 @@ $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('comiss')->setAttributes([
+$form->get('user')->setAttributes([
     'class'=>'form-control selectpicker', 
+    ]);
+
+$form->get('cost')->setAttributes([
+    'class'=>'form-control', 
     ]);
 
 $form->get('doc_date')->setAttributes([
@@ -31,14 +35,17 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('writeOff')->setAttributes([
+    'class'=>'form-control', 
+    ]);
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'ot-submit']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'st-submit']);
 
 $form->prepare();
 
 $docName = 'Новый';
-if ($ot){
-    $docName = '№ '.$ot->getDocNo().' от  '.date('d.m.Y', strtotime($ot->getDocDate()));
+if ($st){
+    $docName = '№ '.$st->getDocNo().' от  '.date('d.m.Y', strtotime($st->getDocDate()));
 }
 
 ?>
@@ -49,7 +56,7 @@ if ($ot){
             <?= $this->form()->openTag($form); ?>
             
             <div class="modal-header">
-                <h5 class="modal-title" id="otModalLabel">Оприходование товаров <?= $docName?></h5>
+                <h5 class="modal-title" id="stModalLabel">Списание товаров <?= $docName?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -81,10 +88,10 @@ if ($ot){
                     <div class="col-xs-2 text-right">
                     </div>    
                     <div class="col-xs-2 text-right">
-                        <h1 class="display-4" id="otQuantity"></h1>
+                        <h1 class="display-4" id="stQuantity"></h1>
                     </div>    
                     <div class="col-xs-1 text-right">
-                        <h1 class="display-4" id="otAmount"><?= ($ot) ? round($ot->getAmount(), 2):"" ?></h1>                        
+                        <h1 class="display-4" id="stAmount"><?= ($st) ? round($st->getAmount(), 2):"" ?></h1>                        
                     </div>    
                 </div>    
                 <div class="row">
@@ -102,37 +109,49 @@ if ($ot){
                             <?= $this->formElementErrors($form->get('company')); ?>                  
                         </div>
                     </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('writeOff')); ?>
+                            <?= $this->formElement($form->get('writeOff')); ?>
+                            <?= $this->formElementErrors($form->get('writeOff')); ?>                  
+                        </div>
+                    </div>
                     <div class="col-xs-3">                        
-                        <div class="form-group" id="comissGroup">
-                            <?= $this->formLabel($form->get('comiss')); ?>
-                            <?= $this->formElement($form->get('comiss')); ?>
-                            <?= $this->formElementErrors($form->get('comiss')); ?>                  
+                        <div class="form-group" id="userGroup">
+                            <?= $this->formLabel($form->get('user')); ?>
+                            <?= $this->formElement($form->get('user')); ?>
+                            <?= $this->formElementErrors($form->get('user')); ?>                  
+                        </div>
+                        <div class="form-group" id="costGroup">
+                            <?= $this->formLabel($form->get('cost')); ?>
+                            <?= $this->formElement($form->get('cost')); ?>
+                            <?= $this->formElementErrors($form->get('cost')); ?>                  
                         </div>
                     </div>    
-                    <div class="col-xs-5 text-right">
+                    <div class="col-xs-3">                        
                     </div>    
                 </div>        
                 <div class="row">
                     <div class="col-xs-12">
-                        <div id="otgoodtoolbar">
+                        <div id="stgoodtoolbar">
                             <div class="form-inline" role="form">
-                                <button type="button" class="btn btn-default ot-good-modal-show" modal-url="/ot/good-edit-form">
+                                <button type="button" class="btn btn-default st-good-modal-show" modal-url="/st/good-edit-form">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 </button>
                             </div>
                         </div>
-                        <table id="otgoodtable" 
-                            data-toggle="otgoodtable" 
-                            data-url="/ot/good-content/<?= ($ot) ? $ot->getId():"" ?>"
+                        <table id="stgoodtable" 
+                            data-toggle="stgoodtable" 
+                            data-url="/st/good-content/<?= ($st) ? $st->getId():"" ?>"
                             data-side-pagination="client"
                             data-pagination="true"
                             data-page-size = "5"
                             data-page-list="[5, 10, 20, 50]"
-                            data-toolbar="#otgoodtoolbar"
+                            data-toolbar="#stgoodtoolbar"
                             data-show-refresh="true"
                             data-show-toggle="true"
-                            data-query-params="otgoodQueryParams"
-                            data-response-handler="otgoodResponseHandler"
+                            data-query-params="stgoodQueryParams"
+                            data-response-handler="stgoodResponseHandler"
                             data-unique-id = "rowNo"
                             >
                             <thead>
@@ -163,33 +182,31 @@ if ($ot){
 
 
 
-                        <?= $this->formElement($form->get('csrf')); ?>
-                    </div>
-                </div>
-            </div>    
-                
+                <?= $this->formElement($form->get('csrf')); ?>
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="ot-submit">Сохранить</button>
+                <button type="submit" class="btn btn-primary" id="st-submit">Сохранить</button>
             </div>
-            
+
             <?= $this->form()->closeTag(); ?>
             
 <script>
     function submitForm(){
-        var data = serializeForm('#ot-form');
-        data.otGood = getFormatedOtGood();
+        var data = serializeForm('#st-form');
+        data.stGood = getFormatedStGood();
         $.ajax({
             type: 'POST',
-            url: '/ot/edit-form/<?= ($ot) ? $ot->getId():"" ?>',
+            url: '/st/edit-form/<?= ($st) ? $st->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#otModal').modal('hide');
+                    $('#stModal').modal('hide');
                     $('#table').bootstrapTable('refresh');
                 } else {
-                    $('#otModal .modal-content').html(data);                    
+                    $('#stModal .modal-content').html(data);                    
                 }    
             })
             .fail(function () {
@@ -198,8 +215,8 @@ if ($ot){
             });    
     };
     
-    function getFormatedOtGood(){
-        var data = $('#otgoodtable').bootstrapTable('getData');
+    function getFormatedStGood(){
+        var data = $('#stgoodtable').bootstrapTable('getData');
         var result = [];
         $.each( data, function( index, row ) {
             var newRow = {
@@ -222,42 +239,51 @@ if ($ot){
         });    
     });
         
-    function otUpdateTotal(){
-        var data = $('#otgoodtable').bootstrapTable('getData');
+    function stUpdateTotal(){
+        var data = $('#stgoodtable').bootstrapTable('getData');
         var amount = 0; var quantity = 0;
         $.each(data, function( index, value ) {
             amount += Math.round(value.amount*100)/100;
             quantity += Math.round(value.quantity*100)/100; 
         });
-        $('#otAmount').html(Math.round(amount*100)/100);
-        $('#otQuantity').html(Math.round(quantity*100)/100);
+        $('#stAmount').html(Math.round(amount*100)/100);
+        $('#stQuantity').html(Math.round(quantity*100)/100);
     }
     
     //удаление строки из таблицы
     function removeTableRowByUniqueId(index){
-        $('#otgoodtable').bootstrapTable('removeByUniqueId', index);
-        otUpdateTotal();
+        $('#stgoodtable').bootstrapTable('removeByUniqueId', index);
+        stUpdateTotal();
     }
     
-    function hideComissGroup()
+    function hideUserGroup()
     {
-        $('#comissGroup').hide();
-        if ($("#status").val() == <?= Ot::STATUS_COMMISSION?>){
-            $('#comissGroup').show();
+        $('#userGroup').hide();
+        $('#user').attr('required', false);
+        if ($("#writeOff").val() == <?= St::WRITE_PAY?>){
+            $('#userGroup').show();
+            $('#user').attr('required', true);
+        }
+        
+        $('#costGroup').hide();
+        $('#cost').attr('required', false);
+        if ($("#writeOff").val() == <?= St::WRITE_COST?>){
+            $('#costGroup').show();
+            $('#cost').attr('required', true);
         }
     }
     
     $( document ).ready(function() {
         
-        hideComissGroup();
+        hideUserGroup();
         
-        $('#otgoodtable').bootstrapTable({
+        $('#stgoodtable').bootstrapTable({
             onLoadSuccess: function(res){
-                otUpdateTotal();
+                stUpdateTotal();
             }            
         }); 
         
-        var forms = $('#ot-form');
+        var forms = $('#st-form');
         
         forms.submit(function() {
             submitForm();
@@ -265,7 +291,7 @@ if ($ot){
         });
         // Loop over them and prevent submission
         var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('ot-submit', function(event) {
+            form.addEventListener('st-submit', function(event) {
                 if (form.checkValidity() === false) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -275,16 +301,16 @@ if ($ot){
             }, false);    
         });
         
-        $('#status').on('change', function(){
-            hideComissGroup();
+        $('#writeOff').on('change', function(){
+            hideUserGroup();
         });
 
-        $('#comiss').selectpicker({
+        $('#user').selectpicker({
                 liveSearch: true,
             })
             .ajaxSelectPicker({
                 ajax: {
-                    url: '/contact/live-search',
+                    url: '/users/live-search',
                     data: function () {
                         var params = {
                             search: '{{{q}}}',
@@ -300,15 +326,15 @@ if ($ot){
                     emptyTitle: 'Поиск по телефону...'
                 },
                 preprocessData: function(data){
-                    var contacts = [];
+                    var users = [];
                     if(data.hasOwnProperty('rows')){
                         var len = data.rows.length;
                         for(var i = 0; i < len; i++){
                             var curr = data.rows[i];
-                            contacts.push(
+                            users.push(
                                 {
                                     'value': curr.id,
-                                    'text': '('+ curr.phone+ ') ' + curr.name,
+                                    'text': '('+ curr.phone+ ') ' + curr.fullName,
 //                                    'data': {
 //                                        'icon': 'icon-person',
 //                                        'subtext': 'Internal'
@@ -318,25 +344,25 @@ if ($ot){
                             );
                         }
                     }
-                    return contacts;
+                    return users;
                 },
                 preserveSelected: false
             });  
     });    
     
-    function otGoodRefreshTable(){
-        $('#otgoodtable').bootstrapTable('refresh');
+    function stGoodRefreshTable(){
+        $('#stgoodtable').bootstrapTable('refresh');
     }
     
-    function otgoodQueryParams(params) {
-        $('#otgoodtoolbar').find('input[name]').each(function () {
+    function stgoodQueryParams(params) {
+        $('#stgoodtoolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('#otgoodtable .page-size').html();
+        limit = $('#stgoodtable .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('#otgoodtable li.page-number.active a').html();
+        offset = $('#stgoodtable li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
@@ -345,10 +371,10 @@ if ($ot){
     }
     
     function pgActiveFormatter(value, row){
-        var url = '/ot/good-edit-form/';
+        var url = '/st/good-edit-form/';
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs ot-good-modal-show"';
+        btn += ' class="btn btn-default btn-xs st-good-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' unique-id="'+value+'"';
         btn += ' modal-url="'+url+'">';
@@ -370,7 +396,7 @@ if ($ot){
         return Math.round(value*100/row.quantity)/100;
     }        
     
-    function otgoodResponseHandler(res) {
+    function stgoodResponseHandler(res) {
         return res;
     }     
 </script>

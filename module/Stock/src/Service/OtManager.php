@@ -70,7 +70,7 @@ class OtManager
                     ->insertMovement($data);
             
             if ($ot->getStatus() == Ot::STATUS_COMMISSION){
-                $data['user_id'] = $ot->getComiss()->getId();
+                $data['contact_id'] = $ot->getComiss()->getId();
                 $this->entityManager->getRepository(Comiss::class)
                         ->insertComiss($data);
             }

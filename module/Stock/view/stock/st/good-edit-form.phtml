@@ -1,0 +1,198 @@
+<?php
+
+$form = $this->form;
+
+$form->get('good')->setAttributes([
+    'class'=>'form-control selectpicker', 
+    ]);
+
+$form->get('quantity')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('amount')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('price')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'st-good-submit']);
+
+$form->prepare();
+
+$docName = 'Новый';
+
+?>
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="stGoodModalLabel">Строка списания товаров <?= $docName?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('good')); ?>
+                            <?= $this->formElement($form->get('good')); ?>
+                            <?= $this->formElementErrors($form->get('good')); ?>                  
+                        </div>
+                    </div>    
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('quantity')); ?>
+                            <?= $this->formElement($form->get('quantity')); ?>
+                            <?= $this->formElementErrors($form->get('quantity')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('amount')); ?>
+                            <?= $this->formElement($form->get('amount')); ?>
+                            <?= $this->formElementErrors($form->get('amount')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('price')); ?>
+                            <?= $this->formElement($form->get('price')); ?>
+                            <?= $this->formElementErrors($form->get('price')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+
+                <?= $this->formElement($form->get('csrf')); ?>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="st-good-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script  type="text/javascript">
+    $('#st-good-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/st/good-edit-form/',
+            data: $('#st-good-form').serialize()
+        })
+            .done(function (answer) {
+//                console.log(answer);
+                if (answer.result == 'ok'){
+                    var data = serializeForm('#st-good-form');
+                    var good = {
+                        id: answer.good.id,
+                        code: answer.good.code,
+                        name: answer.good.name,
+                        producer: {name: answer.good.producer}
+                    }
+                    var row = {
+                        good: good,
+                        amount: data.amount,
+                        quantity: data.quantity,
+                        price: Math.round(data.amount*100/data.quantity)/100
+                    };
+
+                    <?php if($rowNo): ?>
+                        $('#stgoodtable').bootstrapTable('updateByUniqueId', {id: <?= $rowNo ?>, row: row});
+                    <?php else:?>
+                        var newRowNo = getNewTableUniqueId('stgoodtable', 'rowNo');
+                        row.rowNo = newRowNo;
+                        var rows = [];
+                        rows.push(row);
+                        $('#stgoodtable').bootstrapTable('prepend', rows);                        
+                    <?php endif; ?>        
+                    stUpdateTotal();    
+                    
+                    $('#stGoodModal').modal('hide');
+                } else {
+                    $('#stGoodModal .modal-content').html(answer);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    });    
+    
+    $( document ).ready(function() {
+        $('#good').selectpicker({
+                liveSearch: true,
+            })
+            .ajaxSelectPicker({
+                ajax: {
+                    url: '/goods/live-search',
+                    data: function () {
+                        var params = {
+                            search: '{{{q}}}',
+                            limit: 10
+                        };
+//                        if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
+//                            params.GroupID = gModel.selectedGroup().ContactGroupID;
+//                        }
+                        return params;
+                    }
+                },
+                locale: {
+                    emptyTitle: 'Поиск по артикулу...'
+                },
+                preprocessData: function(data){
+                    var goods = [];
+                    if(data.hasOwnProperty('rows')){
+                        var len = data.rows.length;
+                        for(var i = 0; i < len; i++){
+                            var curr = data.rows[i];
+                            goods.push(
+                                {
+                                    'value': curr.id,
+                                    'text': curr.code + ' ' + curr.producer.name + ' ' + curr.name,
+//                                    'data': {
+//                                        'icon': 'icon-person',
+//                                        'subtext': 'Internal'
+//                                    },
+                                    'disabled': false
+                                }
+                            );
+                        }
+                    }
+                    return goods;
+                },
+                preserveSelected: false
+            });  
+        
+        $("#price").on('input', function(){
+            var value = $(this).val();
+            $(this).val(value.replace(",","."));
+            $("#amount").val(Math.round($(this).val()*$("#quantity").val()*100)/100);
+        });
+        $("#amount").on('input', function(){
+            if ($("#quantity").val()){
+                var value = $(this).val();
+                $(this).val(value.replace(",","."));
+                $("#price").val(Math.round($(this).val()*100/$("#quantity").val())/100);
+            }    
+        });
+        $("#quantity").on('input', function(){
+            if ($("#price").val()){
+                $("#amount").val(Math.round($(this).val()*$("#price").val()*100)/100);
+            } else {
+                if ($("#amount").val()){
+                    $("#price").val(Math.round($("#amount").val()*100/$(this).val())/100);
+                }    
+            }    
+        });
+        
+    });    
+</script>

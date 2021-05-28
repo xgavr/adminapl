@@ -42,6 +42,20 @@ return [
                     ],
                 ],
             ],
+            'cost' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/cost[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\CostController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
             'regions' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -104,6 +118,10 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],
+            Controller\CostController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+company.manage']
+            ],
             Controller\RegionController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
@@ -113,6 +131,7 @@ return [
     'controllers' => [
         'factories' => [
             Controller\ContractController::class => Controller\Factory\ContractControllerFactory::class,
+            Controller\CostController::class => Controller\Factory\CostControllerFactory::class,
             Controller\LegalController::class => Controller\Factory\LegalControllerFactory::class,
             Controller\OfficeController::class => Controller\Factory\OfficeControllerFactory::class,
             Controller\RegionController::class => Controller\Factory\RegionControllerFactory::class,
@@ -121,6 +140,7 @@ return [
     'service_manager' => [
         'factories' => [
             Service\ContractManager::class => Service\Factory\ContractManagerFactory::class,
+            Service\CostManager::class => Service\Factory\CostManagerFactory::class,
             Service\LegalManager::class => Service\Factory\LegalManagerFactory::class,
             Service\OfficeManager::class => Service\Factory\OfficeManagerFactory::class,
             Service\RegionManager::class => Service\Factory\RegionManagerFactory::class,

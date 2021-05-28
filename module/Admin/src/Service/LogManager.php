@@ -16,6 +16,8 @@ use Stock\Entity\Vtp;
 use Stock\Entity\VtpGood;
 use Stock\Entity\Ot;
 use Stock\Entity\OtGood;
+use Stock\Entity\St;
+use Stock\Entity\StGood;
 use Admin\Entity\Log;
 use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
@@ -160,12 +162,45 @@ class LogManager {
             $otGoods = $this->entityManager->getRepository(OtGood::class)
                     ->findByOt($ot->getId());
             foreach ($otGoods as $otGood){
-                $vtpLog['goods'][$otGood->getRowNo()] = $otGood->toLog();
+                $otLog['goods'][$otGood->getRowNo()] = $otGood->toLog();
             }
             
             $data = [
                 'log_key' => $ot->getLogKey(),
                 'message' => Json::encode($otLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }           
+
+    /**
+     * Добавить запись в лог st
+     * @param St $st
+     * @param integer $status 
+     */
+    public function infoSt($st, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $stLog = $st->toLog();
+            $stGoods = $this->entityManager->getRepository(StGood::class)
+                    ->findBySt($st->getId());
+            foreach ($stGoods as $stGood){
+                $stLog['goods'][$stGood->getRowNo()] = $stGood->toLog();
+            }
+            
+            $data = [
+                'log_key' => $st->getLogKey(),
+                'message' => Json::encode($stLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,

@@ -527,6 +527,9 @@ class AplService {
             $url = $this->aplApi().'get-staff-phone/id/'.$aplId.'?api='.$this->aplApiKey();
 
             $data = file_get_contents($url);
+            if ($data === false){
+                exit;
+            }
             if ($data){
                 $phone = (array) Json::decode($data);
 //                var_dump($phone);
@@ -651,6 +654,9 @@ class AplService {
             $url = $this->aplApi().'get-staff-phone/id/'.$aplId.'?api='.$this->aplApiKey();
 
             $data = file_get_contents($url);
+            if ($data === false){
+                exit;
+            }
             if ($data){
                 $phone = (array) Json::decode($data);
 //                var_dump($phone);

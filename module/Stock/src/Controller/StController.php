@@ -10,15 +10,16 @@ namespace Stock\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
-use Stock\Entity\Ot;
-use Stock\Form\OtForm;
-use Stock\Form\OtGoodForm;
+use Stock\Entity\St;
+use Stock\Form\StForm;
+use Stock\Form\StGoodForm;
 use Application\Entity\Goods;
 use Company\Entity\Office;
 use Company\Entity\Legal;
-use Application\Entity\Contact;
+use User\Entity\User;
+use Company\Entity\Cost;
 
-class OtController extends AbstractActionController
+class StController extends AbstractActionController
 {
 
     /**
@@ -29,14 +30,14 @@ class OtController extends AbstractActionController
 
     /**
      * Менеджер пту.
-     * @var \Stock\Service\OtManager
+     * @var \Stock\Service\StManager
      */
-    private $otManager;
+    private $stManager;
 
-    public function __construct($entityManager, $otManager) 
+    public function __construct($entityManager, $stManager) 
     {
         $this->entityManager = $entityManager;
-        $this->otManager = $otManager;
+        $this->stManager = $stManager;
     }   
 
     public function indexAction()
@@ -67,11 +68,11 @@ class OtController extends AbstractActionController
             'officeId' => $officeId,
             'year' => $year, 'month' => $month,
         ];
-        $query = $this->entityManager->getRepository(Ot::class)
-                        ->findAllOt($params);
+        $query = $this->entityManager->getRepository(St::class)
+                        ->findAllSt($params);
         
-        $total = $this->entityManager->getRepository(Ot::class)
-                        ->findAllOtTotal($params);
+        $total = $this->entityManager->getRepository(St::class)
+                        ->findAllStTotal($params);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -91,15 +92,15 @@ class OtController extends AbstractActionController
     public function goodContentAction()
     {
         	        
-        $otId = $this->params()->fromRoute('id', -1);
+        $stId = $this->params()->fromRoute('id', -1);
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         
-        $query = $this->entityManager->getRepository(Ot::class)
-                        ->findOtGoods($otId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
+        $query = $this->entityManager->getRepository(St::class)
+                        ->findStGoods($stId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
         
         $total = count($query->getResult(2));
         
@@ -108,9 +109,9 @@ class OtController extends AbstractActionController
         return new JsonModel($result);          
     }        
     
-    public function repostAllOtAction()
+    public function repostAllStAction()
     {                
-        $this->otManager->repostAllOt();
+        $this->stManager->repostAllSt();
         
         return new JsonModel([
             'result' => 'ok-reload',
@@ -119,23 +120,24 @@ class OtController extends AbstractActionController
     
     public function editFormAction()
     {
-        $otId = (int)$this->params()->fromRoute('id', -1);
+        $stId = (int)$this->params()->fromRoute('id', -1);
         
-        $ot = $office = $company = $comiss = null;
+        $st = $office = $company = $user = $cost = null;
         
-        if ($otId > 0){
-            $ot = $this->entityManager->getRepository(Ot::class)
-                    ->findOneById($otId);
+        if ($stId > 0){
+            $st = $this->entityManager->getRepository(St::class)
+                    ->findOneById($stId);
         }    
         
-        if ($ot == null) {
+        if ($st == null) {
             $officeId = (int)$this->params()->fromQuery('office', 1);
             $office = $this->entityManager->getRepository(Office::class)
                     ->findOneById($officeId);
         } else {
-            $office = $ot->getOffice();
-            $company = $ot->getCompany();
-            $comiss = $ot->getComiss();
+            $office = $st->getOffice();
+            $company = $st->getCompany();
+            $user = $st->getUser();
+            $cost = $st->getCost();
         }       
         
         if ($this->getRequest()->isPost()){
@@ -144,11 +146,13 @@ class OtController extends AbstractActionController
                     ->findOneById($data['office_id']);
             $company = $this->entityManager->getRepository(Legal::class)
                     ->findOneById($data['company']);
-            $comiss = $this->entityManager->getRepository(Contact::class)
-                    ->findOneById($data['comiss']);
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneById($data['user']);
+            $cost = $this->entityManager->getRepository(Cost::class)
+                    ->findOneById($data['cost']);
         }
                 
-        $form = new OtForm($this->entityManager, $office, $company, $comiss);
+        $form = new StForm($this->entityManager, $office, $company, $user, $cost);
 
         if ($this->getRequest()->isPost()) {
             
@@ -157,45 +161,53 @@ class OtController extends AbstractActionController
 
             if ($form->isValid()) {
                 unset($data['csrf']);
-                $otGood = $data['otGood'];
-                unset($data['otGood']);
-                $data['status_ex'] = Ot::STATUS_EX_NEW;
+                $stGood = $data['stGood'];
+                unset($data['stGood']);
+                $data['status_ex'] = St::STATUS_EX_NEW;
                 $data['office'] = $office;
                 $data['company'] = $company;
-                $data['comiss'] = $comiss;
-                if ($data['status'] != Ot::STATUS_COMMISSION){
-                    $data['comiss'] = null;
+                $data['user'] = $user;
+                $data['cost'] = $cost;
+                if ($data['writeOff'] != St::WRITE_COST){
+                    $data['cost'] = null;
+                }
+                if ($data['writeOff'] != St::WRITE_PAY){
+                    $data['user'] = null;
                 }
                 $data['apl_id'] = 0;
 
-                if ($ot){
-                    $data['apl_id'] = $ot->getAplId();
-                    $this->otManager->updateOt($ot, $data);
-                    $this->entityManager->refresh($ot);
+                if ($st){
+                    $data['apl_id'] = $st->getAplId();
+                    $this->stManager->updateSt($st, $data);
+                    $this->entityManager->refresh($st);
                 } else {
-                    $ot = $this->otManager->addOt($data);
+                    $st = $this->stManager->addSt($data);
                 }    
                 
-                $this->otManager->updateOtGoods($ot, $otGood);
+                $this->stManager->updateStGoods($st, $stGood);
                 
-                $this->otManager->repostOt($ot);
+                $this->stManager->repostSt($st);
                 
                 return new JsonModel(
                    ['ok']
                 );           
             }
         } else {
-            if ($ot){
+            if ($st){
                 $data = [
-                    'office_id' => $ot->getOffice()->getId(),
-                    'company' => $ot->getCompany()->getId(),
-                    'doc_date' => $ot->getDocDate(),  
-                    'doc_no' => $ot->getDocNo(),
-                    'comment' => $ot->getComment(),
-                    'status' => $ot->getStatus(),
+                    'office_id' => $st->getOffice()->getId(),
+                    'company' => $st->getCompany()->getId(),
+                    'doc_date' => $st->getDocDate(),  
+                    'doc_no' => $st->getDocNo(),
+                    'comment' => $st->getComment(),
+                    'status' => $st->getStatus(),
+                    'writeOff' => $st->getWriteOff(),
                 ];
-                if ($ot->getComiss()){
-                    $data['comiss'] = $ot->getComiss()->getId();
+                if ($st->getUser()){
+                    $data['user'] = $st->getUser()->getId();
+                }
+                if ($st->getCost()){
+                    $data['cost'] = $st->getCost()->getId();
                 }
                 $form->setData($data);
             }    
@@ -204,7 +216,7 @@ class OtController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'ot' => $ot,
+            'st' => $st,
         ]);        
     }    
         
@@ -221,7 +233,7 @@ class OtController extends AbstractActionController
             $rowNo = $params['rowNo'];
         }
         
-        $form = new OtGoodForm($this->entityManager, $good);
+        $form = new StGoodForm($this->entityManager, $good);
 
         if ($this->getRequest()->isPost()) {
             
@@ -229,7 +241,11 @@ class OtController extends AbstractActionController
             $form->setData($data);
             if (isset($data['good'])){
                 $good = $this->entityManager->getRepository(Goods::class)
-                        ->findOneById($data['good']);            
+                        ->findOneById($data['good']);  
+                if ($good){
+                    $data['price'] = $good->getMeanPrice();
+                    $data['amount'] = $good->getMeanPrice()*$data['quantity'];
+                }
             }
 
             if ($form->isValid()) {
@@ -265,18 +281,18 @@ class OtController extends AbstractActionController
         ]);        
     }
     
-    public function deleteOtAction()
+    public function deleteStAction()
     {
-        $otId = $this->params()->fromRoute('id', -1);
-        $ot = $this->entityManager->getRepository(Ot::class)
-                ->findOneById($otId);        
+        $stId = $this->params()->fromRoute('id', -1);
+        $st = $this->entityManager->getRepository(St::class)
+                ->findOneById($stId);        
 
-        if ($ot == null) {
+        if ($st == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $this->otManager->removeOt($ot);
+        $this->stManager->removeSt($st);
         
         return new JsonModel(
            ['ok']

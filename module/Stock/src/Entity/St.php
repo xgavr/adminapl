@@ -15,20 +15,19 @@ use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 use Company\Entity\Office;
 use Company\Entity\Legal;
-use Application\Entity\Contact;
+use Company\Entity\Cost;
 
 /**
- * Description of Ot
- * @ORM\Entity(repositoryClass="\Stock\Repository\OtRepository")
- * @ORM\Table(name="ot")
+ * Description of St
+ * @ORM\Entity(repositoryClass="\Stock\Repository\StRepository")
+ * @ORM\Table(name="st")
  * @author Daddy
  */
-class Ot {
+class St {
         
-     // Ptu status constants.
+     // St status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
-    const STATUS_COMMISSION    = 3; // commission.
    
      // Ptu status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
@@ -39,6 +38,10 @@ class Ot {
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
 
+      // St write constants.
+    const WRITE_COST       = 1; // Списать в зп.
+    const WRITE_PAY        = 2; // Списать на расходы.
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -82,6 +85,11 @@ class Ot {
     protected $statusEx;
 
     /** 
+     * @ORM\Column(name="write_off")  
+     */
+    protected $writeOff;
+
+    /** 
      * @ORM\Column(name="doc_no")  
      */
     protected $docNo;
@@ -97,28 +105,34 @@ class Ot {
     protected $amount;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="ot") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="st") 
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
      */
     private $office;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="ot") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="st") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
     private $company;    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="st") 
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;        
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="ot") 
-     * @ORM\JoinColumn(name="comiss_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Cost", inversedBy="st") 
+     * @ORM\JoinColumn(name="cost_id", referencedColumnName="id")
      */
-    private $comiss;    
+    private $cost;        
 
     /**
-     * @ORM\OneToMany(targetEntity="Stock\Entity\OtGood", mappedBy="ot") 
-     * @ORM\JoinColumn(name="id", referencedColumnName="ot_id")
+     * @ORM\OneToMany(targetEntity="Stock\Entity\StGood", mappedBy="st") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="st_id")
      */
-    private $otGoods;    
+    private $stGoods;    
     
     /**
      * Constructor.
@@ -136,7 +150,7 @@ class Ot {
 
     public function getLogKey() 
     {
-        return 'ot:'.$this->id;
+        return 'st:'.$this->id;
     }
 
     public function setId($id) 
@@ -206,7 +220,6 @@ class Ot {
         return [
             self::STATUS_ACTIVE => 'Активный',
             self::STATUS_RETIRED => 'Удален',
-            self::STATUS_COMMISSION => 'На комиссии',
         ];
     }    
     
@@ -319,6 +332,50 @@ class Ot {
         $this->statusEx = $statusEx;
     }   
 
+
+    /**
+     * Returns writeOff.
+     * @return int     
+     */
+    public function getWriteOff() 
+    {
+        return $this->writeOff;
+    }
+
+    /**
+     * Returns possible writeOff as array.
+     * @return array
+     */
+    public static function getWriteOffList() 
+    {
+        return [
+            self::WRITE_COST => 'Списать на расходы',
+            self::WRITE_PAY => 'Списать в зп'
+        ];
+    }    
+    
+    /**
+     * Returns writeOff as string.
+     * @return string
+     */
+    public function getWriteOffAsString()
+    {
+        $list = self::getWriteOffList();
+        if (isset($list[$this->writeOff]))
+            return $list[$this->writeOff];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets writeOff.
+     * @param int $writeOff     
+     */
+    public function setWriteOff($writeOff) 
+    {
+        $this->writeOff = $writeOff;
+    }   
+    
     /**
      * Returns the date of user creation.
      * @return string     
@@ -429,25 +486,43 @@ class Ot {
 
     /**
      * Sets comiss.
-     * @param Contact $comiss    
+     * @param User $user    
      */
-    public function setComiss($comiss) 
+    public function setUser($user) 
     {
-        $this->comiss = $comiss;
+        $this->user = $user;
     }    
 
     /**
-     * Returns the comiss.
-     * @return Contact     
+     * Returns the user.
+     * @return User     
      */
-    public function getComiss() 
+    public function getUser() 
     {
-        return $this->comiss;
+        return $this->user;
     }
 
-    public function addOtGoods($otGood)
+    /**
+     * Sets cost.
+     * @param Cost $cost    
+     */
+    public function setCost($cost) 
     {
-        $this->otGoods[] = $otGood;
+        $this->cost = $cost;
+    }    
+
+    /**
+     * Returns the cost.
+     * @return Cost     
+     */
+    public function getCost() 
+    {
+        return $this->cost;
+    }
+
+    public function addStGoods($stGood)
+    {
+        $this->stGoods[] = $stGood;
     }    
     
     /**

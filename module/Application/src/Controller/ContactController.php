@@ -823,4 +823,26 @@ class ContactController extends AbstractActionController
         exit;
     }
     
+    public function liveSearchAction()
+    {
+        $total = 0;
+        $result = [];
+        if ($this->getRequest()->isPost()) {	   
+            $data = $this->params()->fromPost();
+
+            $query = $this->entityManager->getRepository(Contact::class)
+                            ->liveSearch($data);
+
+            $total = count($query->getResult(2));
+
+            $result = $query->getResult(2);
+        }    
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
+    
 }

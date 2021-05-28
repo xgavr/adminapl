@@ -142,6 +142,11 @@ class NavManager
             $stockDropdownItems = [];
             if ($this->rbacManager->isGranted(null, 'stock.manage')) {
                 $stockDropdownItems[] = [
+                    'id' => 'st',
+                    'label' => 'Списания',
+                    'link'  => $url('st')
+                ];
+                $stockDropdownItems[] = [
                     'id' => 'ot',
                     'label' => 'Оприходования',
                     'link'  => $url('ot')
@@ -240,6 +245,11 @@ class NavManager
                             'id' => 'tax',
                             'label' => 'Налоги',
                             'link' => $url('rb', ['action'=>'tax'])
+                        ];
+                $rbDropdownItems[] = [
+                            'id' => 'cost',
+                            'label' => 'Статьи затрат',
+                            'link' => $url('cost')
                         ];
             }
             

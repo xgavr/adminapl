@@ -1,25 +1,27 @@
 <?php
-    $this->headTitle('Оприходование товаров');
+    use Stock\Entity\St;
+    
+    $this->headTitle('Списание товаров');
 
     $this->mainMenu()->setActiveItemId('supplier');
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
                 'Склад'=>$this->url('stock'),
-                'Оприходование товаров'=>$this->url('ot'),
+                'Списание товаров'=>$this->url('st'),
                 ]);
 
 
 ?>
 
 
-<h1>Оприходование товаров</h1>
+<h1>Списание товаров</h1>
 
 <div class="row">
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default ot-modal-show" type="button" modal-url="/ot/edit-form">
+                <button class="btn btn-default st-modal-show" type="button" modal-url="/st/edit-form">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
                 <div class="form-group">
@@ -55,7 +57,7 @@
         </div>
         <table id="table" 
             data-toggle="table" 
-            data-url="/ot/content"
+            data-url="/st/content"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -75,7 +77,7 @@
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='office.name' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field='comiss.name' data-sortable="false">Комитент</th>
+                     <th data-field='cost.name' data-sortable="false" data-formatter="writeOffFormatter">Списано</th>
                      <th data-field='status' data-sortable="false">П</th>
                      <th data-field='statusDoc' data-sortable="false">Т</th>
                      <th data-field='statusEx' data-sortable="false">О</th>
@@ -98,23 +100,23 @@
         ok.click(function () {
             table.bootstrapTable('refresh');
         });
-        $(document).on('click', '.ot-modal-show', function (e) {
+        $(document).on('click', '.st-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
-                id: 'otModal',
+                id: 'stModal',
                 url: url,
                 width: '1440px'
             });
         });  
-        $(document).on('click', '.ot-good-modal-show', function (e) {
+        $(document).on('click', '.st-good-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             var uniqueId = $(e.currentTarget).attr('unique-id');
             if (uniqueId){
-                var row = $('#otgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                var row = $('#stgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
                 url = url+'?'+$.param(row);
             }    
             showFormDialog({
-                id: 'otGoodModal',
+                id: 'stGoodModal',
                 url: url,
                 zIndex: 9999
             });
@@ -166,10 +168,10 @@
     }    
     
     function activeFormatter(value, row){
-        var url = '/ot/edit-form/'+row.id;
+        var url = '/st/edit-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs ot-modal-show"';
+        btn += ' class="btn btn-default btn-xs st-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
@@ -177,6 +179,15 @@
         return btn;
     }    
     
+    function writeOffFormatter(value, row){
+        if (row.writeOff == <?= St::WRITE_PAY?>){
+            if (row.user){
+                return row.user.fullName
+            }    
+        }
+        return value;
+    }    
+
     function responseHandler(res) {
         return res;
     }    

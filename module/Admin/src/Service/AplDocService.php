@@ -19,7 +19,11 @@ use Company\Entity\Contract;
 use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
 use Stock\Entity\Ot;
+use Application\Entity\Contact;
+use Application\Entity\Client as AplClient;
+use Stock\Entity\St;
 use User\Entity\User;
+use Company\Entity\Cost;
 use Application\Entity\Producer;
 use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
@@ -66,6 +70,12 @@ class AplDocService {
     private $otManager;
 
     /**
+     * St manager
+     * @var \Stock\Service\StManager
+     */
+    private $stManager;
+
+    /**
      * Legal manager.
      * @var \Company\Service\LegalManager
      */
@@ -84,13 +94,15 @@ class AplDocService {
     private $assemblyManager;  
     
     public function __construct($entityManager, $adminManager, $ptuManager, 
-            $legalManager, $producerManager, $assemblyManager, $vtpManager, $otManager)
+            $legalManager, $producerManager, $assemblyManager, $vtpManager, 
+            $otManager, $stManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->ptuManager = $ptuManager;
         $this->vtpManager = $vtpManager;
         $this->otManager = $otManager;
+        $this->stManager = $stManager;
         $this->legalManager = $legalManager;
         $this->producerManager = $producerManager;
         $this->assemblyManager = $assemblyManager;
@@ -559,12 +571,28 @@ class AplDocService {
         if (!empty($data['comiss'])){
             if ($data['comiss'] == 1){
                 if (!empty($data['comitent'])){
-                    $comiss = $this->entityManager->getRepository(User::class)
+                    $contact = null;
+                    $user = $this->entityManager->getRepository(User::class)
                             ->findOneBy(['aplId' => $data['comitent']]);
-                    if ($comiss){
-                        $dataOt['status'] = Ot::STATUS_COMMISSION;
-                        $dataOt['comiss'] = $comiss;
+                    if ($user){
+                        $contact = $this->entityManager->getRepository(Contact::class)
+                                ->findOneBy(['user' => $user->getId()]);
+                    }    
+                    if (!$contact){
+                        $client = $this->entityManager->getRepository(AplClient::class)
+                                ->findOneBy(['aplId' => $data['comitent']]);
+                        if ($client){
+                            $contact = $this->entityManager->getRepository(Contact::class)
+                                    ->findOneBy(['client' => $client->getId()]);
+                        }    
                     }
+                    if ($contact){
+                        $dataOt['status'] = Ot::STATUS_COMMISSION;
+                        $dataOt['comiss'] = $contact;
+                    } else {
+                        var_dump($data);
+                        exit;
+                    }                         
                 }    
             }
         }    
@@ -611,6 +639,125 @@ class AplDocService {
         
         if ($ot){
             $this->otManager->updateOtAmount($ot);
+            return true;            
+        }
+                
+        return false;
+    }
+
+    /**
+     * Получить статус документа СТ
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getStStatus($data)
+    {
+        $stStatus = St::STATUS_ACTIVE;
+        if ($data['publish'] == 0){
+            $stStatus = St::STATUS_RETIRED;            
+        }
+        
+        return $stStatus;
+    }
+    
+    /**
+     * Загрузить СТ
+     * 
+     * @param array $data
+     */
+    public function unloadSt($data)
+    {
+//        var_dump($data); exit;
+        $docDate = $data['ds'];
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        if (!$dateValidator->isValid($docDate)){
+            $docDate = $data['created'];
+        }
+        
+        $dataSt = [
+            'apl_id' => $data['id'],
+            'doc_no' => $data['ns'],
+            'doc_date' => $docDate,
+            'comment' => $data['info'],
+            'status_ex' => St::STATUS_EX_APL,
+            'status' => $this->getStStatus($data),
+        ];
+        
+        $result = false;
+        if (!empty($data['kind'])){
+            if ($data['kind'] == 'out6'){
+                if (!empty($data['parentout6'])){
+                    $user = $this->entityManager->getRepository(User::class)
+                            ->findOneBy(['aplId' => $data['parentout6']]);
+                    if ($user){
+                        $dataSt['writeOff'] = St::WRITE_PAY;
+                        $dataSt['user'] = $user;
+                        $result = true;
+                    }
+                }    
+            }
+            if ($data['kind'] == 'out5'){
+                if (!empty($data['parentout5'])){
+                    $cost = $this->entityManager->getRepository(Cost::class)
+                            ->findOneBy(['aplId' => $data['parentout5']]);
+                    if ($cost){
+                        $dataSt['writeOff'] = St::WRITE_COST;
+                        $dataSt['cost'] = $cost;
+                        $result = true;
+                    }
+                }    
+            }
+        }    
+        if (!$result){
+            var_dump($data);
+            exit;
+        }
+
+        $office = $this->officeFromAplId($data['parent']);
+        $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office);
+        
+        $dataSt['office'] = $office;
+        $dataSt['company'] = $company;
+        
+        $st = $this->entityManager->getRepository(St::class)
+                ->findOneByAplId($data['id']);
+
+        if ($st){
+            $this->stManager->updateSt($st, $dataSt);
+            $this->stManager->removeStGood($st); 
+        } else {        
+            $st = $this->stManager->addSt($dataSt);
+        }    
+        
+        if ($st && isset($data['tp'])){
+            $rowNo = 1;
+            foreach ($data['tp'] as $tp){
+                if (isset($tp['good'])){
+                    $good = $this->findGood($tp['good']);   
+                }    
+                if (empty($good)){
+    //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                } else {
+
+                    $this->stManager->addStGood($st->getId(), [
+                        'status' => $st->getStatus(),
+                        'statusDoc' => $st->getStatusDoc(),
+                        'quantity' => $tp['sort'],                    
+                        'amount' => $tp['bag_total'],
+                        'good_id' => $good->getId(),
+                        'comment' => '',
+                        'info' => '',
+                    ], $rowNo);
+                    $rowNo++;
+                }    
+            }
+        }  
+        
+        if ($st){
+            $this->stManager->updateStAmount($st);
             return true;            
         }
                 
@@ -703,6 +850,11 @@ class AplDocService {
                         break;                        
                     case 'Postings': 
                         if ($this->unloadOt($result)){ 
+                            $this->unloadedDoc($result['id']);
+                        }    
+                        break;                        
+                    case 'Writings': 
+                        if ($this->unloadSt($result)){ 
                             $this->unloadedDoc($result['id']);
                         }    
                         break;                        
