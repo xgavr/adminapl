@@ -709,6 +709,12 @@ class AplDocService {
                     }
                 }    
             }
+            if ($data['ns'] == '!ИНВ'){
+                $dataSt['writeOff'] = St::WRITE_INVENTORY;
+                $dataSt['user'] = null;
+                $dataSt['cost'] = null;
+                $result = true;
+            }
         }    
         if (!$result){
             var_dump($data);

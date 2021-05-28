@@ -41,7 +41,9 @@ class St {
       // St write constants.
     const WRITE_COST       = 1; // Списать в зп.
     const WRITE_PAY        = 2; // Списать на расходы.
-    
+    const WRITE_INVENTORY  = 3; // инвентаризация
+
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -350,7 +352,8 @@ class St {
     {
         return [
             self::WRITE_COST => 'Списать на расходы',
-            self::WRITE_PAY => 'Списать в зп'
+            self::WRITE_PAY => 'Списать в зп',
+            self::WRITE_INVENTORY => 'Инвентаризация',
         ];
     }    
     
