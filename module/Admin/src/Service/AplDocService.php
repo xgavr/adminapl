@@ -894,7 +894,7 @@ class AplDocService {
                     break;
                 }
             } else {
-                return;
+                break;
             }    
         }    
         return;
