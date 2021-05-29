@@ -871,7 +871,7 @@ class AplDocService {
                 }                
             }
         }
-        return;
+        exit;
     }
 
     /**
