@@ -870,8 +870,10 @@ class AplDocService {
                     default; break;    
                 }                
             }
+        } else {
+            return false;
         }
-        exit;
+        return true;
     }
 
     /**
@@ -886,11 +888,14 @@ class AplDocService {
         $startTime = time();
         
         while (true){
-            $this->unloadDoc();
-            usleep(100);
-            if (time() > $startTime + 840){
-                break;
-            }
+            if ($this->unloadDoc()) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                return;
+            }    
         }    
         return;
     }    
