@@ -528,6 +528,7 @@ class AplService {
 
             $data = file_get_contents($url);
             if ($data === false){
+                echo 'Потерян доступ к Апл!';
                 exit;
             }
             if ($data){
@@ -655,6 +656,7 @@ class AplService {
 
             $data = file_get_contents($url);
             if ($data === false){
+                echo 'Потерян доступ к Апл!';
                 exit;
             }
             if ($data){

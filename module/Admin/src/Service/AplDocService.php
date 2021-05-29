@@ -537,6 +537,9 @@ class AplDocService {
     private function getOtStatus($data)
     {
         $otStatus = Ot::STATUS_ACTIVE;
+        if ($data['ns'] == '!ИНВ'){
+            $otStatus = Ot::STATUS_INVENTORY;
+        }
         if ($data['publish'] == 0){
             $otStatus = Ot::STATUS_RETIRED;            
         }
