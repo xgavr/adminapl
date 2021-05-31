@@ -16,6 +16,8 @@ use Stock\Entity\Vtp;
 use Stock\Entity\VtpGood;
 use Stock\Entity\Ot;
 use Stock\Entity\OtGood;
+use Stock\Entity\Pt;
+use Stock\Entity\PtGood;
 use Stock\Entity\St;
 use Stock\Entity\StGood;
 use Admin\Entity\Log;
@@ -168,6 +170,39 @@ class LogManager {
             $data = [
                 'log_key' => $ot->getLogKey(),
                 'message' => Json::encode($otLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }           
+
+    /**
+     * Добавить запись в лог pt
+     * @param Pt $pt
+     * @param integer $status 
+     */
+    public function infoPt($pt, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $ptLog = $pt->toLog();
+            $ptGoods = $this->entityManager->getRepository(PtGood::class)
+                    ->findByPt($pt->getId());
+            foreach ($ptGoods as $ptGood){
+                $ptLog['goods'][$ptGood->getRowNo()] = $ptGood->toLog();
+            }
+            
+            $data = [
+                'log_key' => $pt->getLogKey(),
+                'message' => Json::encode($ptLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,

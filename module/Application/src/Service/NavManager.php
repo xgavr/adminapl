@@ -151,6 +151,11 @@ class NavManager
                     'label' => 'Оприходования',
                     'link'  => $url('ot')
                 ];
+                $stockDropdownItems[] = [
+                    'id' => 'pt',
+                    'label' => 'Перемещения',
+                    'link'  => $url('pt')
+                ];
             }    
             if (count($stockDropdownItems)!=0) {
                 $items[] = [

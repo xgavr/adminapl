@@ -45,6 +45,25 @@ return [
                     // route defined above here.
                 ],
             ],    
+            'pt' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/pt[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\PtController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
             'ptu' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -112,6 +131,9 @@ return [
             Controller\OtController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
+            Controller\PtController::class => [
+                ['actions' => '*', 'allow' => '@'],
+            ],
             Controller\PtuController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
@@ -127,6 +149,7 @@ return [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\OtController::class => Controller\Factory\OtControllerFactory::class,
+            Controller\PtController::class => Controller\Factory\PtControllerFactory::class,
             Controller\PtuController::class => Controller\Factory\PtuControllerFactory::class,
             Controller\StController::class => Controller\Factory\StControllerFactory::class,
             Controller\VtpController::class => Controller\Factory\VtpControllerFactory::class,
@@ -135,6 +158,7 @@ return [
     'service_manager' => [
         'factories' => [
             Service\OtManager::class => Service\Factory\OtManagerFactory::class,
+            Service\PtManager::class => Service\Factory\PtManagerFactory::class,
             Service\PtuManager::class => Service\Factory\PtuManagerFactory::class,
             Service\StManager::class => Service\Factory\StManagerFactory::class,
             Service\VtpManager::class => Service\Factory\VtpManagerFactory::class,

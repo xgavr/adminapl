@@ -22,6 +22,7 @@ use Stock\Entity\Ot;
 use Application\Entity\Contact;
 use Application\Entity\Client as AplClient;
 use Stock\Entity\St;
+use Stock\Entity\Pt;
 use User\Entity\User;
 use Company\Entity\Cost;
 use Application\Entity\Producer;
@@ -70,6 +71,12 @@ class AplDocService {
     private $otManager;
 
     /**
+     * Pt manager
+     * @var \Stock\Service\PtManager
+     */
+    private $ptManager;
+
+    /**
      * St manager
      * @var \Stock\Service\StManager
      */
@@ -95,7 +102,7 @@ class AplDocService {
     
     public function __construct($entityManager, $adminManager, $ptuManager, 
             $legalManager, $producerManager, $assemblyManager, $vtpManager, 
-            $otManager, $stManager)
+            $otManager, $stManager, $ptManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
@@ -103,6 +110,7 @@ class AplDocService {
         $this->vtpManager = $vtpManager;
         $this->otManager = $otManager;
         $this->stManager = $stManager;
+        $this->ptManager = $ptManager;
         $this->legalManager = $legalManager;
         $this->producerManager = $producerManager;
         $this->assemblyManager = $assemblyManager;
@@ -774,6 +782,101 @@ class AplDocService {
     }
 
     /**
+     * Получить статус документа ПТ
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getPtStatus($data)
+    {
+        $ptStatus = Pt::STATUS_ACTIVE;
+        if ($data['publish'] == 0){
+            $ptStatus = Pt::STATUS_RETIRED;            
+        }
+        
+        return $ptStatus;
+    }
+
+    /**
+     * Загрузить ПТ
+     * 
+     * @param array $data
+     */
+    public function unloadPt($data)
+    {
+//        var_dump($data); exit;
+        $docDate = $data['ds'];
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        if (!$dateValidator->isValid($docDate)){
+            $docDate = $data['created'];
+        }
+        
+        $dataPt = [
+            'apl_id' => $data['id'],
+            'doc_no' => $data['ns'],
+            'doc_date' => $docDate,
+            'comment' => $data['info'],
+            'status_ex' => Pt::STATUS_EX_APL,
+            'status' => $this->getPtStatus($data),
+        ];
+        
+        $office = $this->officeFromAplId($data['parent']);
+        $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office);
+        
+        $dataPt['office'] = $office;
+        $dataPt['company'] = $company;
+        
+        $office2 = $this->officeFromAplId($data['name']);
+        $company2 = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office2);
+        
+        $dataPt['office2'] = $office2;
+        $dataPt['company2'] = $company2;
+
+        $pt = $this->entityManager->getRepository(Pt::class)
+                ->findOneByAplId($data['id']);
+        if ($pt){
+            $this->ptManager->updatePt($pt, $dataPt);
+            $this->ptManager->removePtGood($pt); 
+        } else {        
+            $pt = $this->ptManager->addPt($dataPt);
+        }    
+        
+        if ($pt && isset($data['tp'])){
+            $rowNo = 1;
+            foreach ($data['tp'] as $tp){
+                if (isset($tp['good'])){
+                    $good = $this->findGood($tp['good']);   
+                }    
+                if (empty($good)){
+    //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                } else {
+
+                    $this->ptManager->addPtGood($pt->getId(), [
+                        'status' => $pt->getStatus(),
+                        'statusDoc' => $pt->getStatusDoc(),
+                        'quantity' => $tp['sort'],                    
+                        'amount' => $tp['bag_total'],
+                        'good_id' => $good->getId(),
+                        'comment' => '',
+                        'info' => '',
+                    ], $rowNo);
+                    $rowNo++;
+                }    
+            }
+        }  
+        
+        if ($pt){
+            $this->ptManager->updatePtAmount($pt);
+            return true;            
+        }
+                
+        return false;
+    }
+
+    /**
      * Обновить статус загруженного документа
      * @param integer $aplDocId
      * @return boolean
@@ -864,6 +967,11 @@ class AplDocService {
                         break;                        
                     case 'Writings': 
                         if ($this->unloadSt($result)){ 
+                            $this->unloadedDoc($result['id']);
+                        }    
+                        break;                        
+                    case 'Relocations': 
+                        if ($this->unloadPt($result)){ 
                             $this->unloadedDoc($result['id']);
                         }    
                         break;                        

@@ -247,13 +247,8 @@ class OtManager
      */
     public function removeOtGood($ot)
     {
-        $otGoods = $this->entityManager->getRepository(OtGood::class)
-                ->findByOt($ot->getId());
-        foreach ($otGoods as $otGood){
-            $this->entityManager->getConnection()
-                    ->delete('ot_good', ['ot_id' => $ot->getId()]);
-        }
-        
+        $this->entityManager->getConnection()
+                ->delete('ot_good', ['ot_id' => $ot->getId()]);
         return;
     }
     

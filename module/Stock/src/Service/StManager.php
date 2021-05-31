@@ -240,13 +240,8 @@ class StManager
      */
     public function removeStGood($st)
     {
-        $stGoods = $this->entityManager->getRepository(StGood::class)
-                ->findBySt($st->getId());
-        foreach ($stGoods as $stGood){
-            $this->entityManager->getConnection()
-                    ->delete('st_good', ['st_id' => $st->getId()]);
-        }
-        
+        $this->entityManager->getConnection()
+                ->delete('st_good', ['st_id' => $st->getId()]);
         return;
     }
     

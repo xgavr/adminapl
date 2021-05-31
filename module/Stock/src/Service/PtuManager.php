@@ -405,13 +405,8 @@ class PtuManager
      */
     public function removePtuGood($ptu)
     {
-        $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
-                ->findByPtu($ptu->getId());
-        foreach ($ptuGoods as $ptuGood){
-            $this->entityManager->getConnection()
-                    ->delete('ptu_good', ['ptu_id' => $ptu->getId()]);
-        }
-        
+        $this->entityManager->getConnection()
+                ->delete('ptu_good', ['ptu_id' => $ptu->getId()]);
         return;
     }
     

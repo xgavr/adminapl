@@ -260,13 +260,8 @@ class VtpManager
      */
     public function removeVtpGood($vtp)
     {
-        $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
-                ->findByVtp($vtp->getId());
-        foreach ($vtpGoods as $vtpGood){
-            $this->entityManager->getConnection()
-                    ->delete('vtp_good', ['vtp_id' => $vtp->getId()]);
-        }
-        
+        $this->entityManager->getConnection()
+                ->delete('vtp_good', ['vtp_id' => $vtp->getId()]);
         return;
     }
     
