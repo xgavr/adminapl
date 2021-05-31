@@ -608,7 +608,7 @@ class AplDocService {
             }
         }    
 
-        $office = $this->officeFromAplId($data['name']);
+        $office = $this->officeFromAplId($data['parent']);
         $company = $this->entityManager->getRepository(Office::class)
                     ->findDefaultCompany($office);
         
