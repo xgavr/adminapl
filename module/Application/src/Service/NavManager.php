@@ -62,24 +62,33 @@ class NavManager
             ];
         } else {
             
-            if ($this->rbacManager->isGranted(null, 'client.any.manage') || $this->rbacManager->isGranted(null, 'client.own.manage')) {
-                $items[] = [
-                    'id' => 'shop',
-                    'label' => 'Каталог',
-                    'link'  => $url('shop')
-                ];
-
-                $items[] = [
-                    'id' => 'order',
-                    'label' => 'Заказы',
-                    'link'  => $url('order')
-                ];
+            if ($this->rbacManager->isGranted(null, 'client.manage')) {
+                $clientDropdownItems = [];
+//                $clientDropdownItems = [
+//                    'id' => 'shop',
+//                    'label' => 'Каталог',
+//                    'link'  => $url('shop')
+//                ];
+//
+//                $clientDropdownItems = [
+//                    'id' => 'order',
+//                    'label' => 'Заказы',
+//                    'link'  => $url('order')
+//                ];
             
-                $items[] = [
+                $clientDropdownItems[] = [
                     'id' => 'client',
                     'label' => 'Покупатели',
                     'link'  => $url('client')
                 ];
+                
+                if (count($clientDropdownItems)!=0) {
+                    $items[] = [
+                        'id' => 'orders',
+                        'label' => 'Продажи',
+                        'dropdown' => $clientDropdownItems
+                    ];
+                }                
             }
             
             if ($this->rbacManager->isGranted(null, 'supplier.manage')) {

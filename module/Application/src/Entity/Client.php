@@ -66,12 +66,6 @@ class Client {
     private $cart;
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Order", mappedBy="client")
-    * @ORM\JoinColumn(name="id", referencedColumnName="client_id")
-     */
-    private $order;
-    
-    /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="client") 
      * @ORM\JoinColumn(name="manager_id", referencedColumnName="id")
      */
@@ -84,7 +78,6 @@ class Client {
     {
         $this->contacts = new ArrayCollection();
         $this->cart = new ArrayCollection();
-        $this->order = new ArrayCollection();
     }
     
     public function getId() 
@@ -98,7 +91,7 @@ class Client {
     }     
 
     /**
-     * Returns user apl ID.
+     * Returns client apl ID.
      * @return integer
      */
     public function getAplId() 
@@ -107,7 +100,7 @@ class Client {
     }
 
     /**
-     * Sets user apl ID. 
+     * Sets client apl ID. 
      * @param int $aplId    
      */
     public function setAplId($aplId) 
@@ -220,15 +213,6 @@ class Client {
         $this->cart[] = $cart;
     }
         
-    /**
-     * Returns the array of order assigned to this.
-     * @return array
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
-        
     /*
      * Возвращает связанный manager.
      * @return \User\Entity\User
@@ -248,13 +232,5 @@ class Client {
         $this->manager = $user;
         $user->addClient($this);
     }     
-        
-    /**
-     * Assigns.
-     */
-    public function addOrder($order)
-    {
-        $this->order[] = $order;
-    }
         
 }

@@ -136,6 +136,18 @@ class Contact {
      *      )
      */
    private $legals;
+   
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Order", mappedBy="contact")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
+     */
+    private $orders;   
+
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\ContactCar", mappedBy="contact")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
+     */
+    private $contactCars;   
 
    public function __construct() {
       $this->phones = new ArrayCollection();
@@ -143,6 +155,8 @@ class Contact {
       $this->legals = new ArrayCollection();
       $this->addresses = new ArrayCollection();
       $this->messengers = new ArrayCollection();
+      $this->orders = new ArrayCollection();
+      $this->contactCars = new ArrayCollection();
       
    }
    
@@ -497,6 +511,41 @@ class Contact {
         $this->legals->removeElement($legal);
     }    
     
+    
+    /**
+     * Returns the array of order assigned to this.
+     * @return array
+     */
+    public function getOrder()
+    {
+        return $this->orders;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addContactCar($contactCar)
+    {
+        $this->contactCars[] = $contactCar;
+    }
+            
+    /**
+     * Returns the array of cars assigned to this.
+     * @return array
+     */
+    public function getContactCar()
+    {
+        return $this->contactCars;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addOrder($order)
+    {
+        $this->orders[] = $order;
+    }
+            
     /**
      * Контакт представление
      * @return string

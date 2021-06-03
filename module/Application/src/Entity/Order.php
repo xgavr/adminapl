@@ -10,6 +10,10 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Application\Entity\Contact;
+use Application\Entity\Make;
+use Application\Entity\Model;
+use Application\Entity\Car;
 
 
 /**
@@ -22,9 +26,10 @@ class Order {
     
     // Константы.
     const STATUS_NEW    = 10; // Новый.
-    const STATUS_CONFIRMED   = 20; // Подтвержден.
-    const STATUS_PAID   = 30; // Оплачен.
-    const STATUS_SHIPPED   = 40; // Отгружен.
+    const STATUS_PROCESSED   = 20; // Обработан.
+    const STATUS_CONFIRMED   = 30; // Подтвержден.
+    const STATUS_DELIVERY   = 40; // Доставка.
+    const STATUS_SHIPPED   = 50; // Отгружен.
     const STATUS_CANCELED  = -10; // Отменен.
         
     /**
@@ -35,6 +40,30 @@ class Order {
     protected $id;
     
     /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId;
+
+    /**
+     * Дата заказа
+     * @ORM\Column(name="date_oper")  
+     */
+    protected $dateOper;    
+
+    /**
+     * Дата доставки/отгрузки
+     * @ORM\Column(name="date_shipment")  
+     */
+    protected $dateShipment;    
+
+    /**
+     * Дата модификации
+     * @ORM\Column(name="date_mod")  
+     */
+    protected $dateMod;    
+    
+    /**
+     * Дата создания
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;    
@@ -55,10 +84,28 @@ class Order {
     protected $status;    
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Client", inversedBy="orders") 
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Make", inversedBy="orders") 
+     * @ORM\JoinColumn(name="make_id", referencedColumnName="id")
      */
-    protected $client;
+    protected $make;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Model", inversedBy="orders") 
+     * @ORM\JoinColumn(name="model_id", referencedColumnName="id")
+     */
+    protected $model;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Car", inversedBy="orders") 
+     * @ORM\JoinColumn(name="car_id", referencedColumnName="id")
+     */
+    protected $car;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="orders") 
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
+     */
+    protected $contact;
     
     /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="orders") 
@@ -88,6 +135,46 @@ class Order {
     public function setId($id) 
     {
         $this->id = $id;
+    }     
+
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
+    }     
+    
+    public function getDateOper() 
+    {
+        return $this->dateOper;
+    }
+
+    public function setDateOper($dateOper) 
+    {
+        $this->dateOper = $dateOper;
+    }     
+
+    public function getDateShipment() 
+    {
+        return $this->dateShipment;
+    }
+
+    public function setDateShipment($dateShipment) 
+    {
+        $this->dateShipment = $dateShipment;
+    }     
+
+    public function getDateMod() 
+    {
+        return $this->dateMod;
+    }
+
+    public function setDateMod($dateMod) 
+    {
+        $this->dateMod = $dateMod;
     }     
 
     public function getDateCreated() 
@@ -137,10 +224,11 @@ class Order {
     {
         return [
             self::STATUS_NEW => 'Новый',
-            self::STATUS_CANCELED => 'Отменен',
+            self::STATUS_PROCESSED => 'Обработан',
             self::STATUS_CONFIRMED => 'Подтвержден',
-            self::STATUS_PAID => 'Оплачен',
+            self::STATUS_DELIVERY => 'Доставка',
             self::STATUS_SHIPPED => 'Отгружен',
+            self::STATUS_CANCELED => 'Отменен',
         ];
     }    
     
@@ -167,23 +255,23 @@ class Order {
     }   
         
     /*
-     * Возвращает связанный client.
-     * @return \Application\Entity\Client
+     * Возвращает связанный contact.
+     * @return Contact
      */
     
-    public function getClient() 
+    public function getContact() 
     {
-        return $this->client;
+        return $this->contact;
     }
 
     /**
-     * Задает связанный client.
-     * @param \Application\Entity\Client $client
+     * Задает связанный contact.
+     * @param Contact $contact
      */    
-    public function setClient($client) 
+    public function setContact($contact) 
     {
-        $this->client = $client;
-        $client->addOrder($this);
+        $this->contact = $contact;
+        $contact->addOrder($this);
     }     
     
     /*
@@ -203,6 +291,63 @@ class Order {
     public function setUser($user) 
     {
         $this->user = $user;
+    }         
+ 
+    /*
+     * Возвращает связанный make.
+     * @return Make
+     */
+    
+    public function getMake() 
+    {
+        return $this->make;
+    }
+
+    /**
+     * Задает связанный make.
+     * @param Make $make
+     */    
+    public function setMake($make) 
+    {
+        $this->make = $make;
+    }         
+ 
+    /*
+     * Возвращает связанный model.
+     * @return Model
+     */    
+    
+    public function getModel() 
+    {
+        return $this->model;
+    }
+
+    /**
+     * Задает связанный model.
+     * @param Model $model
+     */    
+    public function setModel($model) 
+    {
+        $this->model = $model;
+    }         
+ 
+    /*
+     * Возвращает связанный car.
+     * @return Car
+     */    
+    
+    public function getCar() 
+    {
+        return $this->car;
+    }
+
+    /**
+     * Задает связанный car.
+     * @param Car $car
+     */    
+    public function setCar($car) 
+    {
+        $this->car = $car;
     }         
  
     /**
