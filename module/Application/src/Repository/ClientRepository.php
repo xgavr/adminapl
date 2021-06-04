@@ -10,6 +10,9 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Client;
+use User\Filter\PhoneFilter;
+use Laminas\Validator\EmailAddress;
+
 /**
  * Description of ClientRepository
  *
@@ -17,7 +20,16 @@ use Application\Entity\Client;
  */
 class ClientRepository extends EntityRepository{
 
-    public function findAllClient($user = null)
+    
+    public function clientByPhone($phone)
+    {
+        
+    }
+    
+    /**
+     * @param array $params
+     */
+    public function findAllClient($params)
     {
         $entityManager = $this->getEntityManager();
 
@@ -25,15 +37,39 @@ class ClientRepository extends EntityRepository{
 
         $queryBuilder->select('c')
             ->from(Client::class, 'c')
-            ->orderBy('c.id')
+            ->orderBy('c.id', 'DESC')
                 ;
         
-        if ($user){
-            $queryBuilder->where('c.manager = ?1')
-                    ->setParameter('1', $user)
-                    ;
+        if (isset($params['sort'])){
+            $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);
         }
-
+        if (!empty($params['search'])){
+            $orX = $queryBuilder->expr()->orX();
+            $search = trim($params['search']);
+            if (is_numeric($search)){//aplId
+                $orX->add($queryBuilder->expr()->eq('c.aplId', $search));
+            }            
+            $emailValidator = new EmailAddress();
+            if ($emailValidator->isValid($search)){
+                $queryBuilder->join('c.contacts', 'cs')
+                        ->join('cs.emails', 'es');
+                $orX->add($queryBuilder->expr()->eq('es.name', ':search'));
+                $queryBuilder->setParameter(':search', $search);
+            } else {    
+                if (strlen($search) > 9){
+                    $phoneFilter = new PhoneFilter();
+                    $phone = $phoneFilter->filter($params['search']);
+    //                var_dump($phone); exit;
+                    if ($phone){
+                        $queryBuilder->join('c.contacts', 'cs')
+                                ->join('cs.phones', 'ps');
+                        $orX->add($queryBuilder->expr()->eq('ps.name', $phone));                        
+                    }
+                }
+            }    
+            $queryBuilder->where($orX);
+        }
+        
         return $queryBuilder->getQuery();
     }        
     

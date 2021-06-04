@@ -14,10 +14,7 @@ use Application\Entity\Contact;
 use User\Entity\User;
 use Application\Form\ClientForm;
 use Application\Form\ContactForm;
-
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Laminas\Paginator\Paginator;
+use Laminas\View\Model\JsonModel;
 
 class ClientController extends AbstractActionController
 {
@@ -72,36 +69,45 @@ class ClientController extends AbstractActionController
     
     public function indexAction()
     {
+        $total = $this->entityManager->getRepository(Client::class)
+                ->count([]);
         
-        $currentClientId = $this->sessionContainer->currentClient;
-        if ($currentClientId){
-            $currentClient = $this->entityManager->getRepository(Client::class)
-                    ->findOneById($currentClientId);  
-        } else {
-            $currentClient = null;
-        }   
-        	        
-        $page = $this->params()->fromQuery('page', 1);
-        
-        if (!$this->rbacManager->isGranted(null, 'client.any.manage')) {
-            $query = $this->entityManager->getRepository(Client::class)
-                        ->findAllClient($this->currentUser());
-        } else {
-            $query = $this->entityManager->getRepository(Client::class)
-                        ->findAllClient();            
-        }    
-                
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
         // Визуализируем шаблон представления.
         return new ViewModel([
-            'client' => $paginator,
-            'clientManager' => $this->clientManager,
-            'currentClient' => $currentClient 
+            'total' => $total,
         ]);  
     }
+    
+    public function contentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'ASC');
+        
+        $query = $this->entityManager->getRepository(Client::class)
+                        ->findAllClient(['search' => $q, 'sort' => $sort, 'order' => $order]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
+
     
     public function addAction() 
     {     

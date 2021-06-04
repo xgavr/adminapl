@@ -1,86 +1,169 @@
 <?php
+use Application\Entity\Client;
+
 $this->headTitle('Покупатели');
 
 $this->mainMenu()->setActiveItemId('client');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
+            'Продажи'=>$this->url('order'),
             'Покупатели'=>$this->url('client'),
             ]);
 ?>
 <h1>Покупатели</h1>
-<p>
-    <?php if ($this->access('client.any.manage') || $this->access('client.own.manage')): ?>
-        <a class="btn btn-default" href="
-            <?= $this->url('client', ['action'=>'add']); ?>">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Новый покупатель
-        </a>      
-    <?php endif; ?>
-    <?php if ($currentClient): ?>
-       <span class="alert alert-success">
-            Текущий клиент для работы в каталоге: <?= $currentClient->getName(); ?>
-       </span>    
-    <?php else: ?>
-       <span class="alert alert-warning">
-            Текущий клиент для работы в каталоге не установлен
-       </span>    
-    <?php endif; ?>    
-</p>
 
-<table class="table table-striped">
+<div class="row">
+    <div class="col-md-9">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск по телефону, email, aplId">
+                </div>
+                <button id="ok" type="submit" class="btn btn-default">OK</button>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/client/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                     <th data-field="aplId" data-formatter="aplFormatter" data-type="numeric" data-sortable="true">AplId</th>
+                     <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
+                     <th data-field="" data-formatter="activeFormatter"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-3" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Всего клиентов
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <?= $total?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/client/delete-empty-client/" class="btn btn-danger btn-xs refresh-table-button"
+                                    title="Удаление пустых">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>    
 
-   <tr>
-        <th>ID</th>
-        <th>Наименование</th>
-        <th>Статус</th>
-        <th>Ответственный</th>
-        <th>Действие</th>
-    </tr>
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+//            $('#totalRow').html($('#table').bootstrapTable('getOptions').totalRows);
+            $("[data-toggle='tooltip']").tooltip();
+            $('.editableCheckBox').change(function() {
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('data-url'),
+                    data: "pk="+$(this).attr('data-pk'),
+                    success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                    }
+                });
+            })        
+        }
+    });
+
+    ok = $('#ok');
+
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+    });
     
-    <?php foreach ($client as $row): ?>
-    
-    <tr>
-        <td><?= $this->escapeHtml($row->getId()); ?></td>
-        <td>
-            <a href="<?= $this->url('client', ['action'=>'view', 'id'=>$row->getId()]); ?>">
-                <?= $this->escapeHtml($row->getName()); ?>
-            </a> 
-        </td>
-        <td>
-            <?= $this->escapeHtml($row->getStatusAsString()); ?>
-        </td>
-        <td>
-            <a href="<?= $this->url('members', ['action'=>'view', 'id'=>$row->getManager()->getId()]); ?>">
-                <?= $this->escapeHtml($row->getManager()->getFullName()); ?>
-            </a> 
-        </td>
-        <td>
-            <a class="btn btn-info" href="<?= $this->url('client',
-                    ['action'=>'set-current-client', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-set"></span> Текущий
-            </a>
-            <?php if($this->access('member.transfer.manage')): ?>
-                <a class="btn btn-info" href="<?= $this->url('members',
-                        ['action'=>'client-manager-transfer', 'id'=>$row->getId()]); ?>">
-                    <span class="glyphicon glyphicon-set"></span> Передать
-                </a>
-            <?php endif ?>
-            <a class="btn btn-info" href="<?= $this->url('client', 
-                    ['action'=>'edit', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-            </a>
-            <a class="btn btn-danger" href="<?= $this->url('client',
-                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
-        </td>    
-    </tr>
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
         
-    <?php endforeach; ?>   
+        return params;
+    }
     
-</table>
-<?= $this->paginationControl($client,
-            'Sliding',
-            'application/partial/paginator', 
-            ['route' => array('route' => 'client')]); ?>
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/client/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function aplFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="https://autopartslist.ru/admin/users/users-view/id/' + value + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/client/delete-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function statusFormatter(value, row){
+        var checked = 'checked';
+        if (value == <?= Client::STATUS_RETIRED?>){
+            checked = '';
+        }
+        return [
+            '<input data-toggle="tooltip" class="editableCheckBox" \n\
+                data-pk="'+row.id+'" data-url="/client/producer-status-edit" type="checkbox" '+checked+'/>'
+        ].join(''); 
+    }     
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
+
 
