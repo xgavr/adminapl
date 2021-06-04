@@ -3,13 +3,16 @@ $this->headTitle($client->getName());
 
 $this->mainMenu()->setActiveItemId('client');
 
-$breadcrumbs_items = ['Главная' => $this->url('home')];
-if ($this->access('client.any.manage') || $this->access('client.own.manage')){
-    $breadcrumbs_items['Покупатели'] = $this->url('client'); 
-}
-$breadcrumbs_items[$client->getName()] = $this->url('client', ['action'=>'view', 'id'=>$client->getId()]); 
+$this->mainMenu()->setActiveItemId('client');
 
-$this->pageBreadcrumbs()->setItems($breadcrumbs_items);
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Покупатели'=>$this->url('client'),
+            $client->getName()=>$this->url('client', ['action'=>'view', 'id'=>$client->getId()]),
+            ]);
+
+$legalContact = $client->getLegalContact();
+
 ?>
 
 <?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
@@ -17,139 +20,81 @@ $this->pageBreadcrumbs()->setItems($breadcrumbs_items);
 <?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
 
 <?php
-$this->headTitle($client->getName());
-        
-$form = $this->form;
-
-$form->get('name')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'Имя'
-    ]);
-
-$form->get('description')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'Должность и т.п.'
-    ]);
-
-$form->get('phone')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'Телефон'
-    ]);
-
-$form->get('email')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'Email'
-    ]);
-
-$form->get('password')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'Пароль'
-    ]);
-
-$form->get('status')->setAttributes([
-    'class'=>'form-control'
-    ]);
-
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
-$form->prepare();
-
+$this->headTitle($client->getName());        
 ?>
 
 <h1>
     <?= $this->escapeHtml($client->getName()); ?>    
 </h1>
 
-
-<p>    
-    <?= $this->escapeHtml($client->getStatusAsString()); ?>
-</p>
-
-<h3 class="contact-header">Контакты</h3>
-<table class="table table-striped">
-
-   <tr>
-        <th>ID</th>
-        <th>Имя</th>
-        <th>Телефон</th>
-        <th>Описание</th>
-        <th>Доступ</th>
-        <th>Действие</th>
-    </tr>
-    
-    <?php foreach ($client->getContacts() as $row): ?>
-    
-    <tr>
-        <td><?= $this->escapeHtml($row->getId()); ?></td>
-        <td>
-                <?= $this->escapeHtml($row->getName()); ?>
-        </td>
-        <td><?= $this->escapeHtml($row->getPhonesAsString()); ?></td>
-        <td>
-                <?= $this->escapeHtml($row->getDescription()); ?>
-        </td>
-        <td>
-                <?= ($row->getUser() ? 'есть':'нет') ?>
-        </td>
-        <td>
-            <a class="btn btn-info" href="<?= $this->url('contact', 
-                    ['action'=>'edit', 'id'=>$row->getId()],['query' => ['client' => $client->getId()]]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-            </a>
-            <a class="btn btn-danger" href="<?= $this->url('client',
-                    ['action'=>'delete-contact', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>   
-    
-</table>
-
-<h3 class="contact-header">Добавить контакт</h3>
-
-<div class="row">
-    <div class="col-md-8">
-        <?= $this->form()->openTag($form); ?>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('name')); ?>
-            <?= $this->formElement($form->get('name')); ?>
-            <?= $this->formElementErrors($form->get('name')); ?>                  
+<div class="panel panel-success">
+    <div class="panel-heading">Контакты</div>
+    <div class="panel-body">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Телефон</h3>
+                    </div>                                
+                    <div class="pull-right">
+                        <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                            <span class="glyphicon glyphicon-plus" ></span>
+                        </button>                                        
+                    </div>                                
+                    <div class="clearfix"></div>
+                </div>
+                <?php foreach ($client->getContacts() as $contact): ?>
+                    <?php foreach ($contact->getPhones() as $phone): ?>
+                        <div class="panel-body">
+                            <div class="pull-left"><?= $phone->getName()?> <span><?= $phone->getComment()?></span></div>
+                            <div class="pull-right">
+                                <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                            </div>
+                        </div>
+                    <?php endforeach?>    
+                <?php endforeach;?>
+            </div>
         </div>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('description')); ?>
-            <?= $this->formElement($form->get('description')); ?>
-            <?= $this->formElementErrors($form->get('description')); ?>                  
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Почта</h3>
+                    </div>                                
+                    <div class="pull-right">
+                        <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                            <span class="glyphicon glyphicon-plus" ></span>
+                        </button>                                        
+                    </div>                                
+                    <div class="clearfix"></div>
+                </div>
+                <?php foreach ($client->getContacts() as $contact): ?>
+                    <?php foreach ($contact->getEmails() as $email): ?>
+                        <div class="panel-body">
+                            <div class="pull-left"><?= $email->getName()?></div>
+                            <div class="pull-right">
+                                <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                            </div>
+                        </div>
+                    <?php endforeach?>    
+                <?php endforeach;?>
+            </div>
         </div>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('phone')); ?>
-            <?= $this->formElement($form->get('phone')); ?>
-            <?= $this->formElementErrors($form->get('phone')); ?>                  
-        </div>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('email')); ?>
-            <?= $this->formElement($form->get('email')); ?>
-            <?= $this->formElementErrors($form->get('email')); ?>                  
-        </div>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('password')); ?>
-            <?= $this->formElement($form->get('password')); ?>
-            <?= $this->formElementErrors($form->get('password')); ?>                  
-        </div>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('status')); ?>
-            <?= $this->formElement($form->get('status')); ?>
-            <?= $this->formElementErrors($form->get('status')); ?>                  
-        </div>
-        
-        <?= $this->formElement($form->get('submit')); ?>
-        
-        <?= $this->form()->closeTag(); ?>
-    </div>    
+    </div>
 </div>

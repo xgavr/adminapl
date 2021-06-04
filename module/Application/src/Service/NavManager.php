@@ -84,7 +84,7 @@ class NavManager
                 
                 if (count($clientDropdownItems)!=0) {
                     $items[] = [
-                        'id' => 'orders',
+                        'id' => 'client',
                         'label' => 'Продажи',
                         'dropdown' => $clientDropdownItems
                     ];

@@ -9,10 +9,6 @@ $this->pageBreadcrumbs()->setItems([
             $supplier->getName() => $this->url('supplier', ['action'=>'view', 'id' => $supplier->getId()])
             ]);  
 
-$this->headScript()
-            ->appendFile($this->basePath('js/jquery.mask.min.js'))
-        ;
-
 ?>
 <div class="row">
     <div class="col-sm-9">
