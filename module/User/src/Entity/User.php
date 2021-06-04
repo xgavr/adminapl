@@ -3,6 +3,8 @@ namespace User\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
+use Application\Entity\Contact;
 
 /**
  * This class represents a registered user.
@@ -365,6 +367,36 @@ class User
     public function addContact($contact)
     {
         $this->contacts[] = $contact;
+    }
+        
+    /**
+     * Returns the array of for legal contacts assigned to this.
+     * @return array
+     */
+    public function getLegalContacts()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Contact::STATUS_LEGAL));
+        return $this->getContacts()->matching($criteria);
+    }
+        
+    /**
+     * Returns the array of for first legal contact assigned to this.
+     * @return array
+     */
+    public function getLegalContact()
+    {
+        $contacts = $this->getLegalContacts();
+        return $contacts[0];
+    }
+        
+    /**
+     * Returns the array of for other contacts assigned to this.
+     * @return array
+     */
+    public function getOtherContacts()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->neq("status", Contact::STATUS_LEGAL));
+        return $this->getContacts()->matching($criteria);
     }
         
     /**

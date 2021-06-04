@@ -20,38 +20,39 @@ class UserManager
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;  
     
     /**
      * Role manager.
-     * @var User\Service\RoleManager
+     * @var \User\Service\RoleManager
      */
     private $roleManager;
     
     /**
      * Permission manager.
-     * @var User\Service\PermissionManager
+     * @var \User\Service\PermissionManager
      */
     private $permissionManager;
     
     /**
      * Post manager.
-     * @var Admin\Service\PostManager
+     * @var \Admin\Service\PostManager
      */
     private $postManager;
     
     /**
      * Sms manager.
-     * @var Admin\Service\SmsManager
+     * @var \Admin\Service\SmsManager
      */
     private $smsManager;
     
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $roleManager, $permissionManager, $postManager, $smsManager) 
+    public function __construct($entityManager, $roleManager, $permissionManager,
+            $postManager, $smsManager) 
     {
         $this->entityManager = $entityManager;
         $this->roleManager = $roleManager;
@@ -112,6 +113,10 @@ class UserManager
     
     /**
      * This method updates data of an existing user.
+     * @param User $user
+     * @param array $data
+     * 
+     * @return User 
      */
     public function updateUser($user, $data) 
     {
@@ -139,9 +144,21 @@ class UserManager
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);
         
+        $legalContact = $user->getLegalContact();
+        if (!$legalContact){
+            $contact = new Contact();
+            $contact->setName($data['full_name']);        
+            $contact->setStatus(Contact::STATUS_LEGAL);
+
+            $currentDate = date('Y-m-d H:i:s');
+            $contact->setDateCreated($currentDate);
+            $contact->setUser($user);         
+            // Добавляем сущность в менеджер сущностей.
+            $this->entityManager->persist($contact);
+        }
         // Apply changes to database.
         $this->entityManager->flush();
-
+        
         return $flag;
     }
     

@@ -8,6 +8,8 @@ $this->pageBreadcrumbs()->setItems([
             'Manage Users'=>$this->url('users'),
             'View User'=>$this->url('users', ['action'=>'view', 'id'=>$user->getId()])
             ]);
+
+$legalContact = $user->getLegalContact();
 ?>
 
 <?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
@@ -57,3 +59,78 @@ $this->pageBreadcrumbs()->setItems([
         </table>
     </div>
 </div>
+
+<div class="panel panel-success">
+    <div class="panel-heading">Контакты</div>
+    <div class="panel-body">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Телефон</h3>
+                    </div>                                
+                    <div class="pull-right">
+                        <?php if ($legalContact):?>
+                            <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>
+                        <?php endif?>
+                    </div>                                
+                    <div class="clearfix"></div>
+                </div>
+                <?php foreach ($user->getContacts() as $contact): ?>
+                    <?php foreach ($contact->getPhones() as $phone): ?>
+                        <div class="panel-body">
+                            <div class="pull-left"><?= $phone->getName()?> <span><?= $phone->getComment()?></span></div>
+                            <div class="pull-right">
+                                <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                            </div>
+                        </div>
+                    <?php endforeach?>    
+                <?php endforeach;?>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Почта</h3>
+                    </div>                                
+                    <div class="pull-right">
+                        <?php if ($legalContact):?>
+                            <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>
+                        <?php endif;?>
+                    </div>                                
+                    <div class="clearfix"></div>
+                </div>
+                <?php foreach ($user->getContacts() as $contact): ?>
+                    <?php foreach ($contact->getEmails() as $email): ?>
+                        <div class="panel-body">
+                            <div class="pull-left"><?= $email->getName()?></div>
+                            <div class="pull-right">
+                                <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                            </div>
+                        </div>
+                    <?php endforeach?>    
+                <?php endforeach;?>
+            </div>
+        </div>
+    </div>

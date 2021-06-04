@@ -25,6 +25,7 @@ class UserManagerFactory
         $postManager = $container->get(PostManager::class);
         $smsManager = $container->get(SmsManager::class);
         
-        return new UserManager($entityManager, $roleManager, $permissionManager, $postManager, $smsManager);
+        return new UserManager($entityManager, $roleManager, $permissionManager, 
+                $postManager, $smsManager);
     }
 }
