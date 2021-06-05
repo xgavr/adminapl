@@ -27,13 +27,13 @@ class ClientController extends AbstractActionController
     
     /**
      * Менеджер товаров.
-     * @var Application\Service\ClientManager 
+     * @var \Application\Service\ClientManager 
      */
     private $clientManager;    
     
     /**
      * Менеджер.
-     * @var Application\Service\ContactManager 
+     * @var \Application\Service\ContactManager 
      */
     private $contactManager;    
     
@@ -45,7 +45,7 @@ class ClientController extends AbstractActionController
     
     /**
      * RBAC manager.
-     * @var User\Service\RbacManager
+     * @var \User\Service\RbacManager
      */
     private $rbacManager;    
     
@@ -324,4 +324,15 @@ class ClientController extends AbstractActionController
         return new ViewModel([]);
                 
     }
+    
+    public function deleteEmptyClientsAction()
+    {
+        $deleted = $this->clientManager->cleanClients();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }
+    
 }

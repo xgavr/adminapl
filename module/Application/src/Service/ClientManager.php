@@ -96,6 +96,22 @@ class ClientManager
         $this->entityManager->flush();
     }    
     
+    /**
+     * Возможность удаления
+     * @param Client $client
+     * @return boolean
+     */
+    public function isRemoveClient($client)
+    {
+        $rows = $this->entityManager->getRepository(Contact::class)
+                ->count(['client' => $client->getId()]);
+        if ($rows){
+            return false;
+        }
+        
+        return true;
+    }
+    
     public function removeClient($client) 
     {   
         
@@ -107,18 +123,46 @@ class ClientManager
         $carts = $client->getCart();
         foreach ($carts as $cart) {
             $this->entityManager->remove($cart);
-        }        
-        
-        $orders = $client->getOrder();
-        foreach ($orders as $order) {
-            $this->entityManager->remove($order);
-        }        
+        }               
         
         $this->entityManager->remove($client);
         
         $this->entityManager->flush();
     }    
 
+    /**
+     * Очистка клиентов
+     * @return null
+     */
+    public function cleanClients()
+    {        
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        $finishTime = $startTime + 1740;
+        
+        $clientsForCleaninig = $this->entityManager->getRepository(Client::class)
+                ->findAllClient([]);
+        
+        $iterable = $clientsForCleaninig->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $client){
+                if ($this->isRemoveClient($client)){
+                    $this->removeClient($client);
+                }   
+                $this->entityManager->detach($client);
+            }    
+            if (time() >= $finishTime){
+                break;
+            }
+        }
+                
+//        $this->entityManager->getConnection()->delete('contact', ['status' => Contact::STATUS_RETIRED]);
+        
+        return;
+    }    
+    
      // Этот метод добавляет новый контакт.
     public function addContactToClient($client, $data) 
     {

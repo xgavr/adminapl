@@ -429,7 +429,7 @@ class ContactManager
             }
         }
                 
-        $this->entityManager->getConnection()->delete('contact', ['status' => Contact::STATUS_RETIRED]);
+//        $this->entityManager->getConnection()->delete('contact', ['status' => Contact::STATUS_RETIRED]);
         
         return;
     }    
