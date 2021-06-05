@@ -149,6 +149,7 @@ class UserManager
             $contact = new Contact();
             $contact->setName($data['full_name']);        
             $contact->setStatus(Contact::STATUS_LEGAL);
+            $contact->setDescription('');
 
             $currentDate = date('Y-m-d H:i:s');
             $contact->setDateCreated($currentDate);
