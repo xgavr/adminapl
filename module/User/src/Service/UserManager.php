@@ -135,7 +135,9 @@ class UserManager
         $user->setEmail($data['email']);
         $user->setFullName($data['full_name']);        
         $user->setStatus($data['status']);
-        $user->setAplId($data['aplId']);
+        if (isset($data['aplId'])){
+            $user->setAplId($data['aplId']);
+        }    
         $user->setBirthday(null);
         if (!empty($data['birthday'])){
             $user->setBirthday($data['birthday']);

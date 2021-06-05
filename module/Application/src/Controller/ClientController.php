@@ -83,14 +83,14 @@ class ClientController extends AbstractActionController
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
-        $limit = $this->params()->fromQuery('limit');
+        $limit = $this->params()->fromQuery('limit', 10);
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'ASC');
         
         $query = $this->entityManager->getRepository(Client::class)
                         ->findAllClient(['search' => $q, 'sort' => $sort, 'order' => $order]);
         
-        $total = count($query->getResult(2));
+        $total = $limit;
         
         if ($offset) {
             $query->setFirstResult($offset);
