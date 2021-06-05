@@ -412,8 +412,9 @@ class ContactManager
             foreach ($row as $contact){
                 if ($this->isRemoveContact($contact)){
                     if ($contact->getStatus() != Contact::STATUS_RETIRED){
-                        $this->entityManager->getConnection()
-                                ->update('contact', ['status' => Contact::STATUS_RETIRED], ['id' => $contact->getId()]);
+//                        $this->entityManager->getConnection()
+//                                ->update('contact', ['status' => Contact::STATUS_RETIRED], ['id' => $contact->getId()]);
+                        $this->removeContact($contact);
                     }                    
                 } else {
                     if ($contact->getStatus() == Contact::STATUS_RETIRED){
@@ -428,6 +429,8 @@ class ContactManager
             }
         }
                 
+        $this->entityManager->getConnection()->delete('contact', ['status' => Contact::STATUS_RETIRED]);
+        
         return;
     }    
     
