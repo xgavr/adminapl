@@ -135,5 +135,23 @@ class ContactRepository extends EntityRepository
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }    
+ 
+    /**
+     * Выборка контактов 
+     * @return type
+     */
+    public function findAllContact()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select("c")
+            ->from(Contact::class, 'c')
+                ;
+                
+//var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }        
     
 }

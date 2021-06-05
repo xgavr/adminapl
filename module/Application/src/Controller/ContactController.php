@@ -34,13 +34,13 @@ class ContactController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Менеджер товаров.
-     * @var Application\Service\ContactManager 
+     * @var \Application\Service\ContactManager 
      */
     private $contactManager;    
     
@@ -843,6 +843,16 @@ class ContactController extends AbstractActionController
             'rows' => $result,
         ]);          
     }    
+    
+    public function deleteEmptyContactsAction()
+    {
+        $deleted = $this->contactManager->cleanContacts();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }
     
     
 }

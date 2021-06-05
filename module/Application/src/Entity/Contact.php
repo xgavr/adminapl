@@ -23,8 +23,8 @@ use Doctrine\Common\Collections\Criteria;
 class Contact {
     
     // Константы доступности.
-    const STATUS_ACTIVE       = 1; // Active user.
-    const STATUS_RETIRED      = 2; // Retired user.
+    const STATUS_ACTIVE       = 1; // Active contact.
+    const STATUS_RETIRED      = 2; // Retired contact.
     const STATUS_LEGAL      = 3; // legal record.
 
     
@@ -144,6 +144,12 @@ class Contact {
     private $orders;   
 
     /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Ot", mappedBy="comiss")
+    * @ORM\JoinColumn(name="id", referencedColumnName="comiss_id")
+     */
+    private $ot;   
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\ContactCar", mappedBy="contact")
     * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
      */
@@ -156,6 +162,7 @@ class Contact {
       $this->addresses = new ArrayCollection();
       $this->messengers = new ArrayCollection();
       $this->orders = new ArrayCollection();
+      $this->ot = new ArrayCollection();
       $this->contactCars = new ArrayCollection();
       
    }
@@ -510,17 +517,7 @@ class Contact {
     {
         $this->legals->removeElement($legal);
     }    
-    
-    
-    /**
-     * Returns the array of order assigned to this.
-     * @return array
-     */
-    public function getOrder()
-    {
-        return $this->orders;
-    }
-        
+       
     /**
      * Assigns.
      */
@@ -536,6 +533,32 @@ class Contact {
     public function getContactCar()
     {
         return $this->contactCars;
+    }
+        
+    /**
+     * Returns the array of order assigned to this.
+     * @return array
+     */
+    public function getOrder()
+    {
+        return $this->orders;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addOt($ot)
+    {
+        $this->ot[] = $ot;
+    }
+            
+    /**
+     * Returns the array of ot assigned to this.
+     * @return array
+     */
+    public function getOt()
+    {
+        return $this->ot;
     }
         
     /**

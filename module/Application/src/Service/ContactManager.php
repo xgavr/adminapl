@@ -33,13 +33,13 @@ class ContactManager
    
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
   
     /**
      * User manager.
-     * @var User\Service\User
+     * @var \User\Service\User
      */
     private $userManager;
   
@@ -316,6 +316,48 @@ class ContactManager
         
     }
     
+    /**
+     * Можно ли удалить
+     * @param Contact $contact
+     * @return boolean
+     */
+    public function isRemoveContact($contact)
+    {
+        if ($contact->getSupplier()){
+            return false;
+        }
+        if ($contact->getOffice()){
+            return false;
+        }
+        if ($contact->getUser()){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Phone::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Email::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(\Stock\Entity\Ot::class)
+                ->count(['comiss' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(\Application\Entity\Order::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        if (!$contact->getLegals()->isEmpty()){
+            return false;
+        }
+        return true;
+    }
+    
     public function removeContact($contact) 
     {   
         
@@ -347,6 +389,46 @@ class ContactManager
         $this->entityManager->remove($contact);
         
         $this->entityManager->flush();
+    }    
+    
+    
+    /**
+     * Очистка контактов
+     * @return null
+     */
+    public function cleanContacts()
+    {        
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        $finishTime = $startTime + 1740;
+        
+        $contactsForCleaninig = $this->entityManager->getRepository(Contact::class)
+                ->findAllContact();
+        
+        $iterable = $contactsForCleaninig->iterate();
+        
+        foreach ($iterable as $row){
+            foreach ($row as $contact){
+                if ($this->isRemoveContact($contact)){
+                    if ($contact->getStatus() != Contact::STATUS_RETIRED){
+                        $this->entityManager->getConnection()
+                                ->update('contact', ['status' => Contact::STATUS_RETIRED], ['id' => $contact->getId()]);
+                    }                    
+                } else {
+                    if ($contact->getStatus() == Contact::STATUS_RETIRED){
+                        $this->entityManager->getConnection()
+                                ->update('contact', ['status' => Contact::STATUS_ACTIVE], ['id' => $contact->getId()]);
+                    }                                        
+                }   
+                $this->entityManager->detach($contact);
+            }    
+            if (time() >= $finishTime){
+                break;
+            }
+        }
+                
+        return;
     }    
     
     public function addNewAddress($contact, $data, $flushnow = false)
