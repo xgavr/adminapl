@@ -546,7 +546,9 @@ class AplService {
     public function getStaff($row)
     {
         $user = $contact = null;
-        if ($row['email']){
+        $user = $this->entityManager->getRepository(User::class)
+                ->findOneBy(['aplId' => $row['id']]);
+        if (!$user && $row['email']){
             $email = $this->entityManager->getRepository(Email::class)
                     ->findOneByName($row['email']);
 
@@ -561,7 +563,8 @@ class AplService {
                 $user = $this->entityManager->getRepository(User::class)
                         ->findOneByEmail($row['email']);
             }
-        } elseif ($row['phone']){
+        } 
+        if (!$user && !empty($row['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
                     ->findOneByName($row['phone']);
 
@@ -607,6 +610,7 @@ class AplService {
         }
 
         if ($user){
+            $contact = $user->getLegalContact();
             if ($contact){
                 $contact_data = [
                     'name' => $row['name'],
@@ -668,7 +672,7 @@ class AplService {
     }
     
     /**
-     * Обновить статус загруженного клнта
+     * Обновить статус загруженного клиента
      * @param integer $userId
      * @return boolean
      */
@@ -715,7 +719,11 @@ class AplService {
     public function getClient($row)
     {
         $client = $contact = null;
-        if (!empty($row['email'])){
+        
+        $client = $this->entityManager->getRepository(AplClient::class)
+                ->findOneBy(['aplId' => $row['id']]);
+        
+        if (!$client && !empty($row['email'])){
             $email = $this->entityManager->getRepository(Email::class)
                     ->findOneByName($row['email']);
 
@@ -724,8 +732,9 @@ class AplService {
                if ($contact){
                    $client = $contact->getClient();
                }
-            }                    
-        } elseif (!empty($row['phone'])){
+            } 
+        }    
+        if (!$client && !empty($row['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
                     ->findOneByName($row['phone']);
 
@@ -750,6 +759,7 @@ class AplService {
         }
 
         if ($client){
+            $contact = $client->getLegalContact();
             if ($contact){
                 $contact_data = [
                     'name' => $row['name'],
