@@ -217,8 +217,9 @@ class ClientManager
                                     $this->contactManager->removeContact($oldContact);
                                 }
                             }
+                            $this->entityManager->refresh($oldClient);
                             if ($this->isRemoveClient($oldClient)){
-                               // $this->removeClient($oldClient);
+                               $this->removeClient($oldClient);
                             }            
                         }
                     }
