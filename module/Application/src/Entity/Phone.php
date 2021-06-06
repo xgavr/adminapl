@@ -9,6 +9,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Application\Entity\Contact;
 use User\Filter\PhoneFilter;
 
 /**
@@ -105,7 +106,7 @@ class Phone {
 
     /*
      * Возвращает связанный contact.
-     * @return \Application\Entity\Contact
+     * @return Contact
      */    
     public function getContact() 
     {
@@ -114,7 +115,7 @@ class Phone {
 
     /**
      * Задает связанный contact.
-     * @param \Application\Entity\Supplier $contact
+     * @param Contact $contact
      */    
     public function setContact($contact) 
     {

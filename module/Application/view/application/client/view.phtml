@@ -96,5 +96,26 @@ $this->headTitle($client->getName());
                 <?php endforeach;?>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">AplId</h3>
+                    </div>                                
+                    <div class="pull-right">
+                    </div>                                
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="pull-left"><?= $client->getAplId()?></div>
+                    <div class="pull-right">
+                        <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                                title="Объеденить по коду Апл">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button> 
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

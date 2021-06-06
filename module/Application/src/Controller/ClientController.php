@@ -335,4 +335,28 @@ class ClientController extends AbstractActionController
         ]);          
     }
     
+    public function aplUnionAction()
+    {
+        $clientId = (int) $this->params()->fromRoute('id', -1);
+        
+        if ($clientId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $client = $this->entityManager->getRepository(Client::class)
+                ->findOneById($clientId);
+        if (!$client) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $this->clientManager->aplUnion($client);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'message' => $deleted.' удалено!',
+        ]);          
+    }
+    
 }

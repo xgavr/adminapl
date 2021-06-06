@@ -22,13 +22,13 @@ class ClientManager
         
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Contact manager
-     * @var Application\Service\ContactManager
+     * @var \Application\Service\ContactManager
      */
     private $contactManager;
 
@@ -117,7 +117,7 @@ class ClientManager
         
         $contacts = $client->getContacts();
         foreach ($contacts as $contact) {
-            $this->entityManager->remove($contact);
+            $this->contactManager->removeContact($contact);
         }        
         
         $carts = $client->getCart();
@@ -185,5 +185,42 @@ class ClientManager
             $this->entityManager->flush();
         }
         
+    }
+    
+    /**
+     * Объеденить с одинаковым aplId
+     * @param Client $client
+     * @return 
+     */
+    public function aplUnion($client)
+    {
+        if ($client->getAplId()){
+            $clients = $this->entityManager->getRepository(Client::class)
+                    ->findBy(['aplId' => $client->getAplId()]);
+            if (count($clients) > 1){
+                foreach ($clients as $oldClient){                    
+                    if ($oldClient->getId() != $client->getId()){
+                        $contact = $client->getLegalContact();
+                        if ($contact){
+                            foreach ($oldClient->getContacts() as $oldContact){
+                                foreach ($oldContact->getPhones() as $phone){
+                                    $phone->setContact($contact);
+                                }
+                                foreach ($oldContact->getEmails() as $email){
+                                    $email->setContact($contact);
+                                }
+                                if ($this->contactManager->isRemoveContact($oldContact)){
+                                    $this->contactManager->removeContact($oldContact);
+                                }
+                            }
+                            if ($this->isRemoveClient($oldClient)){
+                                $this->removeClient($oldClient);
+                            }            
+                        }
+                    }
+                }
+            }
+        }
+        return;
     }
 }

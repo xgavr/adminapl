@@ -9,6 +9,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Application\Entity\Contact;
 
 /**
  * Description of Email
@@ -98,7 +99,7 @@ class Email {
 
     /**
      * Задает связанный contact.
-     * @param \Application\Entity\Supplier $contact
+     * @param Contact $contact
      */    
     public function setContact($contact) 
     {
