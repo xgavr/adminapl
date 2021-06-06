@@ -209,6 +209,8 @@ class ClientManager
                                 foreach ($oldContact->getEmails() as $email){
                                     $email->setContact($contact);
                                 }
+                                $this->entityManager->flush();
+                                
                                 if ($this->contactManager->isRemoveContact($oldContact)){
                                     $this->contactManager->removeContact($oldContact);
                                 }
