@@ -205,9 +205,11 @@ class ClientManager
                             foreach ($oldClient->getContacts() as $oldContact){
                                 foreach ($oldContact->getPhones() as $phone){
                                     $phone->setContact($contact);
+                                    $this->entityManager->persist($phone);
                                 }
                                 foreach ($oldContact->getEmails() as $email){
                                     $email->setContact($contact);
+                                    $this->entityManager->persist($email);
                                 }
                                 $this->entityManager->flush();
                                 
