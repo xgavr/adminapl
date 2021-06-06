@@ -204,14 +204,13 @@ class ClientManager
                         if ($contact){
                             foreach ($oldClient->getContacts() as $oldContact){
                                 foreach ($oldContact->getPhones() as $phone){
-                                    $phone->setContact($contact);
-                                    $this->entityManager->persist($phone);
+                                    $this->entityManager->getConnection()
+                                            ->update('phone', ['contact_id' => $contact->getId()], ['id' => $phone->getId()]);
                                 }
                                 foreach ($oldContact->getEmails() as $email){
-                                    $email->setContact($contact);
-                                    $this->entityManager->persist($email);
+                                    $this->entityManager->getConnection()
+                                            ->update('email', ['contact_id' => $contact->getId()], ['id' => $email->getId()]);
                                 }
-                                $this->entityManager->flush();
                                 
                                 if ($this->contactManager->isRemoveContact($oldContact)){
                                     $this->contactManager->removeContact($oldContact);
