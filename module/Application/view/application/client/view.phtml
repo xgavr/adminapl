@@ -107,7 +107,7 @@ $this->headTitle($client->getName());
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
-                    <div class="pull-left"><?= $client->getAplId()?></div>
+                    <div class="pull-left"><a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a></div>
                     <div class="pull-right">
                         <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
                                 title="Объеденить по коду Апл">
