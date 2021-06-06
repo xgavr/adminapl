@@ -213,7 +213,7 @@ class ClientManager
                                 }
                                 
                                 if ($this->contactManager->isRemoveContact($oldContact)){
-                                    $this->contactManager->removeContact($oldContact);
+                                    //$this->contactManager->removeContact($oldContact);
                                 }
                             }
                             if ($this->isRemoveClient($oldClient)){
