@@ -212,8 +212,9 @@ class ClientManager
                                             ->update('email', ['contact_id' => $contact->getId()], ['id' => $email->getId()]);
                                 }
                                 
+                                $this->entityManager->refresh($oldContact);
                                 if ($this->contactManager->isRemoveContact($oldContact)){
-                                    //$this->contactManager->removeContact($oldContact);
+                                    $this->contactManager->removeContact($oldContact);
                                 }
                             }
                             if ($this->isRemoveClient($oldClient)){
