@@ -217,7 +217,7 @@ class ClientManager
                                 }
                             }
                             if ($this->isRemoveClient($oldClient)){
-                                $this->removeClient($oldClient);
+                               // $this->removeClient($oldClient);
                             }            
                         }
                     }
