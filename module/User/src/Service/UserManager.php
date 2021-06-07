@@ -282,8 +282,8 @@ class UserManager
         $this->postManager->send($post);             
     }
     
-    /*
-     * @var $phone Application\Entity\Phone
+    /**
+     * @param \Application\Entity\Phone $phone
      */
     public function generatePasswordSMSResetToken($phone)
     {
@@ -300,7 +300,7 @@ class UserManager
         $this->entityManager->flush();
         
         $sms = [
-            'phone' => $phone->getName(),
+            'phone' => $phone->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_LOCAL),
             'text' => $token,
         ];
         
