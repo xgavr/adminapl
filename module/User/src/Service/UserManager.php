@@ -268,7 +268,7 @@ class UserManager
         $passwordResetUrl = 'http://' . $httpHost . '/set-password?token=' . $token;
         
         $body = 'Перейдите по приведенной ниже ссылке, чтобы сбросить пароль:<br/>';
-        $body .= "$passwordResetUrl<br/>";
+        $body .= "<a href='$passwordResetUrl'>$passwordResetUrl</a><br/>";
         $body .= "Если вы не попросили сбросить пароль, пожалуйста, проигнорируйте это сообщение.<br/>";
         
         // Send email to user.
