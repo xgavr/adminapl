@@ -75,6 +75,12 @@ class LoginForm extends Form
             'name' => 'remember_me',
             'options' => [
                 'label' => 'Запомнить меня',
+                'use_hidden_element' => false,
+                'checked_value' => 1,
+                'unchecked_value' => 0,
+            ],
+            'attributes' => [
+                 'value' => 0,
             ],
         ]);
         

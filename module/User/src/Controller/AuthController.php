@@ -85,10 +85,13 @@ class AuthController extends AbstractActionController
 
                 // Get filtered and validated data
                 $data = $form->getData();
-
+                $remember = 0;
+                if (isset($data['remember_me'])){
+                    $remember = $data['remember_me'];
+                }
                 // Perform login attempt.
                 $result = $this->authManager->login($data['ident'],
-                        $data['password'], $data['remember_me']);
+                        $data['password'], $remember);
 
                 // Check result.
                 if ($result->getCode() == Result::SUCCESS) {
