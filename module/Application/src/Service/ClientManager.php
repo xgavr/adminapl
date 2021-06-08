@@ -233,4 +233,32 @@ class ClientManager
         }
         return;
     }
+    
+    /**
+     * Очистка дублей Апл
+     */
+    public function clearDoubleApl()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        $startTime = time();
+        $finishTime = $startTime + 1740;
+
+        $doubles = $this->entityManager->getRepository(Client::class)
+                ->findDoubleApl();
+        
+        foreach ($doubles as $row){
+            $client = $this->entityManager->getRepository(Client::class)
+                    ->findOneBy(['aplId' => $row['aplId']], ['id' => 'ASC']);
+            if ($client){
+                $this->aplUnion($client);
+            }
+            
+            if (time() >= $finishTime){
+                break;
+            }
+        }
+        
+        return;
+    }
 }

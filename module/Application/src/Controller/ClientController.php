@@ -359,4 +359,14 @@ class ClientController extends AbstractActionController
         ]);          
     }
     
+    public function clearDoubleAplAction()
+    {
+        
+        $this->clientManager->clearDoubleApl();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
 }

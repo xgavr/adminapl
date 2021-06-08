@@ -73,4 +73,22 @@ class ClientRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }        
     
+    /**
+     * Поиск дублей Апл
+     * @return type
+     */
+    public function findDoubleApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c.aplId, count(c.id) as countApl')
+            ->from(Client::class, 'c')
+            ->groupBy('c.aplId')
+            ->having('countApl > 1')    
+                ;
+        return $queryBuilder->getQuery()->getResult();        
+        
+    }
 }
