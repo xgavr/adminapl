@@ -16,19 +16,19 @@ class AuthController extends AbstractActionController
 {
     /**
      * Entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
 
     /**
      * Auth manager.
-     * @var User\Service\AuthManager
+     * @var \User\Service\AuthManager
      */
     private $authManager;
 
     /**
      * User manager.
-     * @var User\Service\UserManager
+     * @var \User\Service\UserManager
      */
     private $userManager;
 
@@ -63,7 +63,7 @@ class AuthController extends AbstractActionController
 
         // Check if we do not have users in database at all. If so, create
         // the 'Admin' user.
-        $this->userManager->createAdminUserIfNotExists();
+        //$this->userManager->createAdminUserIfNotExists();
 
         // Create login form
         $form = new LoginForm();
@@ -113,6 +113,7 @@ class AuthController extends AbstractActionController
                     }
                 } else {
                     $isLoginError = true;
+                    var_dump($result->getCode());
                 }
             } else {
                 $isLoginError = true;

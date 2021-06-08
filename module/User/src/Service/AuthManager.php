@@ -35,7 +35,7 @@ class AuthManager
     
     /**
      * RBAC manager.
-     * @var \sUser\Service\RbacManager
+     * @var \User\Service\RbacManager
      */
     private $rbacManager;
     
