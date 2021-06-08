@@ -113,7 +113,7 @@ class AuthController extends AbstractActionController
                     }
                 } else {
                     $isLoginError = true;
-                    var_dump($result->getCode());
+                    //var_dump($result->getCode());
                 }
             } else {
                 $isLoginError = true;

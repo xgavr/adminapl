@@ -34,10 +34,17 @@ $form->get('password')->setAttributes([
                     <a href="<?= $this->url('reset-password') ?>">Забыли пароль?</a>
                 </div>
                 <?php endif; ?>
-                <?= $this->formLabel($form->get('ident')); ?>
-                <?= $this->formElement($form->get('ident')); ?>
-                <?= $this->formLabel($form->get('password')); ?>
-                <?= $this->formElement($form->get('password')); ?>
+                
+                <div class="form-group">
+                    <?= $this->formLabel($form->get('ident')); ?>
+                    <?= $this->formElement($form->get('ident')); ?>
+                    <?= $this->formElementErrors($form->get('ident')); ?>                  
+                </div>    
+                <div class="form-group">
+                    <?= $this->formLabel($form->get('password')); ?>
+                    <?= $this->formElement($form->get('password')); ?>
+                    <?= $this->formElementErrors($form->get('password')); ?>                  
+                </div>    
                 <div class="checkbox">
                     <label>
                         <?= $this->formElement($form->get('remember_me')); ?> Запомнить
