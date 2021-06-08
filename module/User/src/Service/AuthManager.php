@@ -69,7 +69,7 @@ class AuthManager
         $authAdapter->setPhone($ident);
         $authAdapter->setPassword($password);
         $result = $this->authService->authenticate();
-        var_dump($result); 
+        var_dump($result); exit;
         // If user wants to "remember him", we will make session to expire in 
         // one month. By default session expires in 1 hour (as specified in our 
         // config/global.php file).
