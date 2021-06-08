@@ -37,10 +37,12 @@ $this->headTitle($client->getName());
                         <h3 class="panel-title">Телефон</h3>
                     </div>                                
                     <div class="pull-right">
-                        <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
-                                data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
-                            <span class="glyphicon glyphicon-plus" ></span>
-                        </button>                                        
+                        <?php if ($legalContact):?>
+                            <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>
+                        <?php endif; ?>
                     </div>                                
                     <div class="clearfix"></div>
                 </div>
@@ -70,10 +72,12 @@ $this->headTitle($client->getName());
                         <h3 class="panel-title">Почта</h3>
                     </div>                                
                     <div class="pull-right">
-                        <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
-                                data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
-                            <span class="glyphicon glyphicon-plus" ></span>
-                        </button>                                        
+                        <?php if ($legalContact):?>
+                            <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>                                        
+                        <?php endif; ?>
                     </div>                                
                     <div class="clearfix"></div>
                 </div>

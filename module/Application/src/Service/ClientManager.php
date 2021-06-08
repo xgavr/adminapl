@@ -249,7 +249,7 @@ class ClientManager
         
         foreach ($doubles as $row){
             $client = $this->entityManager->getRepository(Client::class)
-                    ->findOneBy(['aplId' => $row['aplId']], ['id' => 'ASC']);
+                    ->findOneBy(['aplId' => $row['aplId']], ['id' => 'DESC']);
             if ($client){
                 $this->aplUnion($client);
             }
