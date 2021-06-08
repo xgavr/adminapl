@@ -56,7 +56,7 @@ class TokenNoExistsValidator extends AbstractValidator
     {
         if(!is_numeric($value)) {
             $this->error(self::NOT_DIGIT);
-            return $false; 
+            return false; 
         }
         
         // Get Doctrine entity manager.
