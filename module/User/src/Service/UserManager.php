@@ -300,7 +300,7 @@ class UserManager
         $this->entityManager->flush();
         
         $sms = [
-            'phone' => $phone->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_LOCAL),
+            'phone' => '7'.$phone->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_DB),
             'text' => $token,
         ];
         

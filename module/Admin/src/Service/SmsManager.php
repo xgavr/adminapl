@@ -32,10 +32,11 @@ class SmsManager {
         $this->adminManager = $adminManager;
     }
     
-    /*
-     * @var $options array
+    /**
+     * @param array $options
      * phone string
      * text string
+     * 
      */
     public function send($options)
     {
