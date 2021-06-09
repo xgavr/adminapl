@@ -225,31 +225,6 @@ $this->pageBreadcrumbs()->setItems([
                                         </button>                                                           
                                     </div>                                                                        
                                 </div>
-                                <?php foreach($lastPrice as $filename => $value):?>
-                                    <div class="panel-body">
-                                        <div class="pull-left">
-                                            <i><?= date('d-m-Y H:i:s', $value['date'])?></i> (<?= $value['size'] ?>) <?= $filename ?>
-                                        </div>
-                                        <div class="pull-right">       
-                                            <button value="/raw/upload-raw-form/<?= $supplier->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
-                                                    title="Загрузить файл в базу">
-                                                <span class="glyphicon glyphicon-import" ></span>
-                                            </button>                                                           
-                                            <button value="/price/upload-price-file-to-apl-form/<?= $supplier->getId() ?>?filename=<?= $value['path']?>" class="btn btn-default btn-xs refresh-button"
-                                                    title="Закачать прайс на сервер АПЛ">
-                                                <span class="glyphicon glyphicon-upload" ></span>
-                                            </button>                                                           
-                                            <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('price',
-                                                    ['action'=>'download-price-file-form'], ['query' => ['filename' => $value['path']]]); ?>">
-                                                <span class="glyphicon glyphicon-download"></span>
-                                            </a>
-                                            <button value="/price/delete-price-file-form?filename=<?= $value['path']?>" class="btn btn-default btn-xs this-delete"
-                                                    title="Удалить">
-                                                <span class="glyphicon glyphicon-remove" ></span>
-                                            </button>                                                           
-                                        </div>                                                                        
-                                    </div>    
-                               <? endforeach;?>
                             </div>
                         <?php endforeach; ?>
                     </div>
