@@ -375,6 +375,7 @@ class PostManager {
 		}
 	}
         
+        $filename = urldecode($filename);
         if (substr($filename, 0, 2) == '=?'){
             $result = iconv_mime_decode($filename, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'utf-8');
         } else {    
