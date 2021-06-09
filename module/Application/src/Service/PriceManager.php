@@ -151,7 +151,7 @@ class PriceManager {
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $priceGetting->getEmail(),
                 'password' => $priceGetting->getEmailPassword(),
-                'leave_message' => false,
+                'leave_message' => true,
             ];
             
             $mailList = $this->postManager->readImap($box);
