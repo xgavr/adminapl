@@ -275,7 +275,7 @@ class ContactCarForm extends Form
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Сохранить',
-                'id' => 'contact_submitbutton',
+                'id' => 'contact_car_submitbutton',
             ],
         ]);        
     }

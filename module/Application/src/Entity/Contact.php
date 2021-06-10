@@ -530,7 +530,7 @@ class Contact {
      * Returns the array of cars assigned to this.
      * @return array
      */
-    public function getContactCar()
+    public function getContactCars()
     {
         return $this->contactCars;
     }

@@ -123,3 +123,69 @@ $this->headTitle($client->getName());
         </div>
     </div>
 </div>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="pull-left">Машины
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-default ptu-modal-show" type="button" modal-url="/garage/edit-form">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>                
+        </div>
+        <div class="clearfix"></div>
+    </div>    
+    <div class="panel-body">
+        <?php foreach ($client->getContacts() as $contact):?> 
+            <?php if ($contact->getContactCars()->count()):?>
+                <table>
+                    <?php foreach ($contact->getContactCars() as $contactCar):?>
+                        <tr>
+                            <td>
+                                <?php if ($contactCar->getMake()):?>
+                                    <?= $contactCar->getMake()->getName() ?>
+                                <?php endif;?>
+                            </td>
+                            <td>
+                                <?php if ($contactCar->getModel()):?>
+                                    <?= $contactCar->getModel()->getName() ?>
+                                <?php endif;?>
+                            </td>
+                            <td>
+                                <?php if ($contactCar->getCar()):?>
+                                    <?= $contactCar->getCar()->getName() ?>
+                                <?php endif;?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getVin() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getVin2() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getYocm() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getWheelAsString() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getTmAsString() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getAcAsString() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getMd() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getEd() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getEp() ?>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>
+                </table>    
+            <?php endif; ?>    
+        <?php endforeach;?>
+    </div>
+</div>
