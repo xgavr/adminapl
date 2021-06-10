@@ -133,6 +133,34 @@ return [
                     ],
                 ],
             ],        
+            'contact' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/contact[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ContactController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
+            'garage' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/garage[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ContactCarController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'currency' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -343,20 +371,6 @@ return [
                     ],
                 ],
             ],        
-            'contact' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/contact[/:action[/:id]]',
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]*'
-                    ],
-                    'defaults' => [
-                        'controller'    => Controller\ContactController::class,
-                        'action'        => 'index',
-                    ],
-                ],
-            ],        
             'ext' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -418,6 +432,7 @@ return [
         'factories' => [
             Controller\CarController::class => Controller\Factory\CarControllerFactory::class,
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
+            Controller\ContactCarController::class => Controller\Factory\ContactCarControllerFactory::class,
             Controller\ContactController::class => Controller\Factory\ContactControllerFactory::class,
             Controller\CrossController::class => Controller\Factory\CrossControllerFactory::class,
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
@@ -450,6 +465,7 @@ return [
             Service\AssemblyManager::class => Service\Factory\AssemblyManagerFactory::class,
             Service\CarManager::class => Service\Factory\CarManagerFactory::class,
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
+            Service\ContactCarManager::class => Service\Factory\ContactCarManagerFactory::class,
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
             Service\CrossManager::class => Service\Factory\CrossManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
@@ -491,6 +507,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\ClientController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\ContactCarController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

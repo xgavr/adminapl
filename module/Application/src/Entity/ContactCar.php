@@ -547,5 +547,24 @@ class ContactCar {
     {
         $this->bid[] = $bid;
     }
-            
+    
+    public function exchangeArray(array $data)
+    {
+        $this->id      = !empty($data['id']) ? $data['id'] : null;
+        $this->aplId   = !empty($data['aplId']) ? $data['aplId'] : null;
+        $this->comment = !empty($data['comment']) ? $data['comment'] : null;
+        $this->vin     = !empty($data['vin']) ? $data['vin'] : null;
+        $this->vin2    = !empty($data['vin2']) ? $data['vin2'] : null;
+        $this->status  = !empty($data['status']) ? $data['status'] : $this::STATUS_ACTIVE;
+        $this->yocm    = !empty($data['yocm']) ? $data['yocm'] : null;
+        $this->wheel   = !empty($data['wheel']) ? $data['wheel'] : $this::WHEEL_LEFT;
+        $this->tm      = !empty($data['tm']) ? $data['tm'] : $this::TM_UNKNOWN;
+        $this->ac      = !empty($data['ac']) ? $data['ac'] : $this::AC_UNKNOWN;
+        $this->md      = !empty($data['md']) ? $data['md'] : null;
+        $this->ed      = !empty($data['ed']) ? $data['ed'] : null;
+        $this->ep      = !empty($data['ep']) ? $data['ep'] : null;
+        $this->make    = !empty($data['make']) ? $data['make'] : null;
+        $this->model   = !empty($data['model']) ? $data['model'] : null;
+        $this->car     = !empty($data['car']) ? $data['car'] : null;
+    }    
 }
