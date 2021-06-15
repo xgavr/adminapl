@@ -1,0 +1,61 @@
+<?php
+$this->headTitle('Офис '.$office->getName().' '.$shipping->getName());
+
+$this->mainMenu()->setActiveItemId('company');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Офисы'=>$this->url('offices'),
+            $office->getName()=>$this->url('offices', ['action'=>'view', 'id'=>$office->getId()]),
+            $shipping->getName()=>$this->url('courier', ['action'=>'edit-shipping', 'id'=>$shipping->getId()]),
+            ]);
+?>
+
+
+<h1><?=$shipping->getName()?></h1>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<p>
+<a class="btn btn-default" href="<?= $this->url('courier', 
+                    ['action'=>'edit-shipping', 'id'=>$shipping->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+</a>
+</p>
+    
+<div class="row">
+    <div class="col-md-8">
+        <table class="table table-striped table-bordered">
+             <tr>
+                <th>ID:</th>
+                <td><?= $this->escapeHtml($shipping->getId()) ?></th>
+            </tr>
+            <tr>
+                <th>Апл Id</th>
+                <td><?= $this->escapeHtml($shipping->getAplId()) ?></th>
+            </tr>
+            <tr>
+                <th>Статус:</th>
+                <td><?= $this->escapeHtml($shipping->getStatusAsString()) ?></th>
+            </tr>
+            <tr>
+                <th>Описание:</th>
+                <td><?= $this->escapeHtml($shipping->getComment()) ?></th>
+            </tr>
+            <tr>
+                <th>Расчет:</th>
+                <td><?= $this->escapeHtml($shipping->getRateAsString()) ?></th>
+            </tr>
+            <tr>
+                <th>Тариф за поездку:</th>
+                <td><?= $this->escapeHtml($shipping->getRateTrip()) ?></th>
+            </tr>
+            <tr>
+                <th>Тариф за км:</th>
+                <td><?= $this->escapeHtml($shipping->getRateDistance()) ?></th>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+<?php
+$this->headTitle('Офис '.$office->getName().' '.$shipping->getName());
+
+$this->mainMenu()->setActiveItemId('company');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Офисы'=>$this->url('offices'),
+            $office->getName()=>$this->url('offices', ['action'=>'view', 'id'=>$office->getId()]),
+            $shipping->getName()=>$this->url('courier', ['action'=>'edit-shipping', 'id'=>$shipping->getId()]),
+            ]);
+
+$form = $this->form;
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Апл Id'
+    ]);
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control'
+    ]);
+
+$form->get('rate')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('rateTrip')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('rateDistance')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('sorting')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1><?= $shipping->getName() ?></h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('aplId')); ?>
+            <?= $this->formElement($form->get('aplId')); ?>
+            <?= $this->formElementErrors($form->get('aplId')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('status')); ?>
+            <?= $this->formElement($form->get('status')); ?>
+            <?= $this->formElementErrors($form->get('status')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('comment')); ?>
+            <?= $this->formElement($form->get('comment')); ?>
+            <?= $this->formElementErrors($form->get('comment')); ?>                  
+        </div>                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rate')); ?>
+            <?= $this->formElement($form->get('rate')); ?>
+            <?= $this->formElementErrors($form->get('rate')); ?>                  
+        </div>                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rateTrip')); ?>
+            <?= $this->formElement($form->get('rateTrip')); ?>
+            <?= $this->formElementErrors($form->get('rateTrip')); ?>                  
+        </div>                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rateDistance')); ?>
+            <?= $this->formElement($form->get('rateDistance')); ?>
+            <?= $this->formElementErrors($form->get('rateDistance')); ?>                  
+        </div>                        
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('sorting')); ?>
+            <?= $this->formElement($form->get('sorting')); ?>
+            <?= $this->formElementErrors($form->get('sorting')); ?>                  
+        </div>                        
+
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   

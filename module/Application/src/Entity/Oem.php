@@ -70,11 +70,29 @@ class Oem {
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     protected $good;    
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Selection", mappedBy="oem")
+    * @ORM\JoinColumn(name="id", referencedColumnName="oem_id")
+     */
+    private $selections;    
+        
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Bid", mappedBy="oem")
+    * @ORM\JoinColumn(name="id", referencedColumnName="oem_id")
+     */
+    private $bids;    
         
     /**
      * @ORM\Column(name="intersect_good_id")  
      */
     protected $intersectGoodId;        
+    
+    public function __construct() 
+    {
+        $this->selections = new ArrayCollection();
+        $this->bids = new ArrayCollection();
+    }    
 
     public function getId() 
     {
@@ -270,5 +288,41 @@ class Oem {
     {
         $this->source = $source;
     }   
+    
+    /**
+     * Returns the array of selection assigned to this.
+     * @return array
+     */
+    public function getSelections()
+    {
+        return $this->selections;
+    }
+        
+    /**
+     * Assigns.
+     * @param \Application\Entity\Selection $selection
+     */
+    public function addSelection($selection)
+    {
+        $this->selections[] = $selection;
+    }
+    
+    /**
+     * Returns the array of bid assigned to this.
+     * @return array
+     */
+    public function getBids()
+    {
+        return $this->bids;
+    }
+        
+    /**
+     * Assigns.
+     * @param \Application\Entity\Bid $bid
+     */
+    public function addBid($bid)
+    {
+        $this->bids[] = $bid;
+    }
     
 }

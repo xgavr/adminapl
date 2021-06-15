@@ -2,7 +2,7 @@
 
 $form = $this->form;
 
-$form->get('name')->setAttributes([
+$form->get('email')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -27,14 +27,14 @@ $form->prepare();
                 <div class="row">
                     <div class="col-md-10">
                         <div class="input-group">
-                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElement($form->get('email')); ?>
                             <div class="input-group-btn">
                                 <button type="button" class="btn btn-primary" id="email-submit">Сохранить</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                             </div>    
                         </div>    
                         <div class="input-group">
-                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                            <?= $this->formElementErrors($form->get('email')); ?>                  
                         </div>    
                     </div>        
                 </div>

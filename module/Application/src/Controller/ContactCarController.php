@@ -11,6 +11,9 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Application\Entity\ContactCar;
 use Application\Entity\Contact;
+use Application\Entity\Make;
+use Application\Entity\Model;
+use Application\Entity\Car;
 use Application\Form\ContactCarForm;
 use Laminas\View\Model\JsonModel;
 
@@ -138,6 +141,76 @@ class ContactCarController extends AbstractActionController
             'form' => $form,
             'contactCar' => $contactCar,
         ]);  
+    }    
+    
+    public function editFormAction()
+    {
+        $contactCarId = (int) $this->params()->fromRoute('id', -1);
+        $contactId = (int)$this->params()->fromQuery('contact', -1);
+        
+        $contactCar = null;
+        if ($contactCarId > 0){
+            $contactCar = $this->entityManager->getRepository(ContactCar::class)
+                    ->find($contactCarId);
+            if ($contactCar){
+                $contactId = $contactCar->getContact()->getId();
+            }            
+        }    
+        
+        if ($contactId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->find($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        // Create form
+        $form = new ContactCarForm($this->entityManager);
+        
+        // Check if user has submitted the form
+        if ($this->getRequest()->isPost()) {
+            // Fill in the form with POST data
+            $data = $this->params()->fromPost();            
+            
+            $form->setData($data);
+            // Validate form
+            if($form->isValid()) {
+                
+                // Get filtered and validated data
+                $data = $form->getData();
+                
+                // Update contact car.
+                if ($contactCar){
+                    $this->contactCarManager->update($contactCar, $data);
+                } else {
+                    $this->contactCarManager->add($contact, $data);
+                }    
+                
+//                $this->entityManager->refresh($contact);
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                //var_dump($form->getMessages());
+            }             
+        } else {
+            if ($contactCar){
+                $form->setData($contactCar->formArray());
+            }    
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+                'form' => $form,
+                'contact' => $contact,
+                'contactCar' => $contactCar,
+            ]);
     }    
     
     public function deleteAction()

@@ -21,7 +21,7 @@ class ClientController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -250,32 +250,19 @@ class ClientController extends AbstractActionController
             return;                        
         }      
         
-        $form = new ContactForm($this->entityManager);
-        // Проверяем, является ли пост POST-запросом.
-        if($this->getRequest()->isPost()) {
-            
-            // Получаем POST-данные.
-            $data = $this->params()->fromPost();
-            
-            // Заполняем форму данными.
-            $form->setData($data);
-            if($form->isValid()) {
-                                
-                // Получаем валадированные данные формы.
-                $data = $form->getData();
-              
-                // Используем менеджер постов для добавления нового комментарий к посту.
-                $this->clientManager->addContactToClient($client, $data);
-                
-                // Снова перенаправляем пользователя на страницу "view".
-                return $this->redirect()->toRoute('client', ['action'=>'view', 'id'=>$clientId]);
-            }
+        if (!$client->getLegalContact()){
+            $data = [
+                'name' => $client->getFullName(),
+                'status' => Contact::STATUS_LEGAL,
+            ];
+            $this->contactManager->addNewContact($client, $data);
+            $this->entityManager->refresh($client);
         }
-        
+                
+//        var_dump($client->getLegalContact()->getId());
         // Render the view template.
         return new ViewModel([
             'client' => $client,
-            'form' => $form,
         ]);
     }      
     

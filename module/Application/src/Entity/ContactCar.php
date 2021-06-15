@@ -458,8 +458,7 @@ class ContactCar {
     /*
      * Возвращает связанный order.
      * @return Order
-     */
-    
+     */    
     public function getOrders() 
     {
         return $this->orders;
@@ -548,6 +547,29 @@ class ContactCar {
         $this->bid[] = $bid;
     }
     
+    public function formArray()
+    {
+        
+        return [
+            'id'      => $this->getId(),
+            'aplId'   => $this->getAplId(),
+            'comment' => $this->getComment(),
+            'vin'     => $this->getVin(),
+            'vin2'    => $this->getVin2(),
+            'status'  => $this->getStatus(),
+            'yocm'    => $this->getYocm(),
+            'wheel'   => $this->getWheel(),
+            'tm'      => $this->getTm(),
+            'ac'      => $this->getAc(),
+            'md'      => $this->getMd(),
+            'ed'      => $this->getEd(),
+            'ep'      => $this->getEp(),
+            'make'    => $this->getMake(),
+            'model'   => $this->getModel(),
+            'car'     => $this->getCar(),
+        ];    
+    }    
+
     public function exchangeArray(array $data)
     {
         $this->id      = !empty($data['id']) ? $data['id'] : null;

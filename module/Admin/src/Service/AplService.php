@@ -102,13 +102,13 @@ class AplService {
         $this->adminManager = $adminManager;
     }
     
-    protected function aplApi()
+    public function aplApi()
     {
         return 'https://autopartslist.ru/api/';
         
     }
     
-    protected function aplApiKey()
+    public function aplApiKey()
     {
         $settings = $this->adminManager->getAplExchangeSettings();
         return md5(date('Y-m-d').'#'.$settings['apl_secret_key']);
@@ -718,7 +718,7 @@ class AplService {
      */
     public function getClient($row)
     {
-        $client = $contact = null;
+        $contact = null;
         
         $client = $this->entityManager->getRepository(AplClient::class)
                 ->findOneBy(['aplId' => $row['id']]);
@@ -2452,7 +2452,7 @@ class AplService {
         $headers[] = 'Content-type: application/x-www-form-urlencoded;charset=UTF-8'; 
         $useragent = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0)'; 
 
-        $process = curl_init($url); 
+        $process = curl_init($uri); 
         curl_setopt($process, CURLOPT_HTTPHEADER, $headers); 
         curl_setopt($process, CURLOPT_HEADER, 0); 
         curl_setopt($process, CURLOPT_USERAGENT, $useragent);

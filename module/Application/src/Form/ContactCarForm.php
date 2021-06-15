@@ -25,37 +25,13 @@ class ContactCarForm extends Form
      * Entity manager.
      * @var \Doctrine\ORM\EntityManager 
      */
-    private $entityManager = null;    
-        
-    /**
-     * Current contact.
-     * @var \Aplication\Entity\Contact 
-     */
-    private $contact = null;
-    
-    /**
-     * Current car.
-     * @var \Aplication\Entity\Car 
-     */
-    private $car = null;
-    
-    /**
-     * Current model.
-     * @var \Aplication\Entity\Model
-     */
-    private $model = null;
-    
-    /**
-     * Current make.
-     * @var \Aplication\Entity\Make 
-     */
-    private $make = null;
+    private $entityManager;    
+            
     
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager = null, $contact = null, 
-            $make = null, $model = null, $car = null)
+    public function __construct($entityManager)
     {
         // Определяем имя формы.
         parent::__construct('contact-car-form');
@@ -64,10 +40,6 @@ class ContactCarForm extends Form
         $this->setAttribute('method', 'post');
         
         $this->entityManager = $entityManager;    
-        $this->contact = $contact;
-        $this->make = $make;
-        $this->model = $model;
-        $this->car = $car;
                 
         $this->addElements();
         $this->addInputFilter();         
@@ -96,6 +68,7 @@ class ContactCarForm extends Form
                 'property'       => 'name',
                 'display_empty_item' => true,
                 'empty_item_label'   => '--выберете марку--',
+                'disable_inarray_validator' => true,
             ],
         ]);
 
@@ -116,6 +89,7 @@ class ContactCarForm extends Form
                 'property'       => 'name',
                 'display_empty_item' => true,
                 'empty_item_label'   => '--выберете модель--',
+                'disable_inarray_validator' => true,
             ],
         ]);
 
@@ -136,6 +110,7 @@ class ContactCarForm extends Form
                 'property'       => 'name',
                 'display_empty_item' => true,
                 'empty_item_label'   => '--выберете модификацию--',
+                'disable_inarray_validator' => true,
             ],
         ]);
 
@@ -184,7 +159,7 @@ class ContactCarForm extends Form
                 'id' => 'yocm'
             ],
             'options' => [
-                'label' => 'Год выпуска',
+                'label' => 'Год',
             ],
             'attributes' => [
                 'min' => '0',
@@ -207,6 +182,9 @@ class ContactCarForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'wheel',
+            'attributes' => [
+                'value' => ContactCar::WHEEL_LEFT,
+            ],
             'options' => [
                 'label' => 'Руль',
                 'value_options' => ContactCar::getWheelList(),
@@ -217,6 +195,9 @@ class ContactCarForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'tm',
+            'attributes' => [
+                'value' => ContactCar::TM_UNKNOWN,
+            ],
             'options' => [
                 'label' => 'Коробка',
                 'value_options' => ContactCar::getTmList(),
@@ -227,6 +208,9 @@ class ContactCarForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'ac',
+            'attributes' => [
+                'value' => ContactCar::AC_UNKNOWN,
+            ],
             'options' => [
                 'label' => 'Кондиционер',
                 'value_options' => ContactCar::getAcList(),
@@ -241,7 +225,7 @@ class ContactCarForm extends Form
                 'id' => 'md'
             ],
             'options' => [
-                'label' => 'Модель двигателя',
+                'label' => 'Двигатель',
             ],
         ]);
                 
@@ -253,7 +237,7 @@ class ContactCarForm extends Form
                 'id' => 'ed'
             ],
             'options' => [
-                'label' => 'Рабочий объем двигателя',
+                'label' => 'Объем',
             ],
         ]);
 
@@ -265,7 +249,7 @@ class ContactCarForm extends Form
                 'id' => 'ep'
             ],
             'options' => [
-                'label' => 'Мощность двигателя',
+                'label' => 'Мощность',
             ],
         ]);
                 

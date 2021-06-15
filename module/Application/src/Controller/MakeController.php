@@ -12,18 +12,15 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Make;
 use Application\Entity\Model;
+use Application\Entity\Car;
 use Application\Form\MakeForm;
-
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Laminas\Paginator\Paginator;
 
 class MakeController extends AbstractActionController
 {
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -416,4 +413,65 @@ class MakeController extends AbstractActionController
         exit;
     }
     
+    public function modelsAction()
+    {
+        $makeId = (int)$this->params()->fromRoute('id', -1);
+        if ($makeId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $make = $this->entityManager->getRepository(Make::class)
+                ->find($makeId);
+        
+        if ($make == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $models = $this->entityManager->getRepository(Model::class)
+                ->findBy(['make' => $make->getId(), 'status' => Model::STATUS_ACTIVE]);
+        
+        foreach ($models as $model){
+            $result[$model->getId()] = [
+                'id' => $model->getId(),
+                'name' => $model->getName(),                
+            ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
+
+    public function carsAction()
+    {
+        $modelId = (int)$this->params()->fromRoute('id', -1);
+        if ($modelId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $model = $this->entityManager->getRepository(Model::class)
+                ->find($modelId);
+        
+        if ($model == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $cars = $this->entityManager->getRepository(Car::class)
+                ->findBy(['model' => $model->getId(), 'status' => Model::STATUS_ACTIVE]);
+        
+        foreach ($cars as $car){
+            $result[$car->getId()] = [
+                'id' => $car->getId(),
+                'name' => $car->getName(),                
+            ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
 }

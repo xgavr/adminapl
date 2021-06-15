@@ -11,9 +11,9 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Contact;
-use Application\Entity\Make;
-use Application\Entity\Model;
-use Application\Entity\Car;
+use Application\Entity\ContactCar;
+use Application\Entity\Courier;
+use Application\Entity\Shipping;
 
 
 /**
@@ -84,22 +84,22 @@ class Order {
     protected $status;    
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Make", inversedBy="orders") 
-     * @ORM\JoinColumn(name="make_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\ContactCar", inversedBy="orders") 
+     * @ORM\JoinColumn(name="contact_car_id", referencedColumnName="id")
      */
-    protected $make;
+    protected $contactCar;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Model", inversedBy="orders") 
-     * @ORM\JoinColumn(name="model_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Courier", inversedBy="orders") 
+     * @ORM\JoinColumn(name="courier_id", referencedColumnName="id")
      */
-    protected $model;
+    protected $courier;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Car", inversedBy="orders") 
-     * @ORM\JoinColumn(name="car_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Shipping", inversedBy="orders") 
+     * @ORM\JoinColumn(name="shipping_id", referencedColumnName="id")
      */
-    protected $car;
+    protected $shipping;
     
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="orders") 
@@ -114,17 +114,24 @@ class Order {
     private $user;
         
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Bid", mappedBy="orders")
+    * @ORM\OneToMany(targetEntity="Application\Entity\Bid", mappedBy="order")
     * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
      */
-    private $bid;
+    private $bids;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Selection", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+     */
+    private $selections;
     
     /**
      * Constructor.
      */
     public function __construct() 
     {
-        $this->bid = new ArrayCollection();
+        $this->bids = new ArrayCollection();
+        $this->selections = new ArrayCollection();
     }
     
     public function getId() 
@@ -294,69 +301,69 @@ class Order {
     }         
  
     /*
-     * Возвращает связанный make.
-     * @return Make
+     * Возвращает связанный contactCar.
+     * @return ContactCar
      */
     
-    public function getMake() 
+    public function getContactCar() 
     {
-        return $this->make;
+        return $this->contactCar;
     }
 
     /**
-     * Задает связанный make.
-     * @param Make $make
+     * Задает связанный contactCar.
+     * @param ContactCar $contactCar
      */    
-    public function setMake($make) 
+    public function setContactCar($contactCar) 
     {
-        $this->make = $make;
+        $this->contactCar = $contactCar;
     }         
  
     /*
-     * Возвращает связанный model.
-     * @return Model
+     * Возвращает связанный courier.
+     * @return Courier
      */    
     
-    public function getModel() 
+    public function getCounrier() 
     {
-        return $this->model;
+        return $this->courier;
     }
 
     /**
-     * Задает связанный model.
-     * @param Model $model
+     * Задает связанный counrier.
+     * @param Courier $courier
      */    
-    public function setModel($model) 
+    public function setCourier($courier) 
     {
-        $this->model = $model;
+        $this->courier = $courier;
     }         
  
     /*
-     * Возвращает связанный car.
-     * @return Car
+     * Возвращает связанный shipping.
+     * @return Shipping
      */    
     
-    public function getCar() 
+    public function getShipping() 
     {
-        return $this->car;
+        return $this->shipping;
     }
 
     /**
-     * Задает связанный car.
-     * @param Car $car
+     * Задает связанный shipping.
+     * @param Shipping $shipping
      */    
-    public function setCar($car) 
+    public function setShipping($shipping) 
     {
-        $this->car = $car;
+        $this->shipping = $shipping;
     }         
  
     /**
      * Returns the array of bid assigned to this.
      * @return array
      */
-    public function getBid()
+    public function getBids()
     {
-        return $this->bid;
+        return $this->bids;
     }
         
     /**
@@ -365,7 +372,25 @@ class Order {
      */
     public function addBid($bid)
     {
-        $this->bid[] = $bid;
+        $this->bids[] = $bid;
+    }
+            
+    /**
+     * Returns the array of selection assigned to this.
+     * @return array
+     */
+    public function getSelection()
+    {
+        return $this->selection;
+    }
+        
+    /**
+     * Assigns.
+     * @param \Application\Entity\Selection $selection
+     */
+    public function addSelection($selection)
+    {
+        $this->selections[] = $selection;
     }
             
 }

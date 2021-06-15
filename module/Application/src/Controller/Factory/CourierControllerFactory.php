@@ -9,26 +9,24 @@ namespace Application\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Application\Controller\ContactController;
-use Application\Service\ContactManager;
-use Application\Service\ContactCarManager;
+use Application\Controller\CourierController;
+use Application\Service\CourierManager;
 
 
 /**
- * Description of ContactControllerFactory
+ * Description of CourierControllerFactory
  *
  * @author Daddy
  */
-class ContactControllerFactory implements FactoryInterface {
+class CourierControllerFactory implements FactoryInterface {
     
     public function __invoke(ContainerInterface $container, 
                      $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $contactManager = $container->get(ContactManager::class);
-        $contactCarManager = $container->get(ContactCarManager::class);
+        $courierManager = $container->get(CourierManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ContactController($entityManager, $contactManager, $contactCarManager);
+        return new CourierController($entityManager, $courierManager);
     }
 }

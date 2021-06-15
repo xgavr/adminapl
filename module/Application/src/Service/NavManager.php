@@ -82,6 +82,12 @@ class NavManager
                     'link'  => $url('client')
                 ];
                 
+                $clientDropdownItems[] = [
+                    'id' => 'courier',
+                    'label' => 'Транспортные компании',
+                    'link'  => $url('courier')
+                ];
+
                 if (count($clientDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'client',
@@ -299,7 +305,7 @@ class NavManager
                 
                 if (count($companyDropdownItems)!=0) {
                     $items[] = [
-                        'id' => 'users',
+                        'id' => 'company',
                         'label' => 'Предприятие',
                         'dropdown' => $companyDropdownItems
                     ];

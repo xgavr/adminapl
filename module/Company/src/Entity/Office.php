@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Contact;
 use Application\Entity\Rate;
+use Application\Entity\Shipping;
 use Doctrine\Common\Collections\Criteria;
 use Stock\Entity\Ptu;
 
@@ -87,6 +88,12 @@ class Office {
    private $rates;    
     
    /**
+    * @ORM\OneToMany(targetEntity="\Application\Entity\Shipping", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+   */
+   private $shippings;    
+    
+   /**
     * @ORM\OneToMany(targetEntity="Stock\Entity\Ptu", mappedBy="office")
     * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
    */
@@ -106,6 +113,7 @@ class Office {
         $this->contacts = new ArrayCollection();
         $this->contracts = new ArrayCollection();
         $this->rates = new ArrayCollection();      
+        $this->shippings = new ArrayCollection();      
     }
     
     public function getId() 
@@ -308,6 +316,24 @@ class Office {
         $this->rates[] = $rate;
     }     
             
+    /*
+     * Возвращает связанный shippngs.
+     * @return Shippng
+     */    
+    public function getShippings() 
+    {
+        return $this->shippings;
+    }
+
+    /**
+     * Add shipping
+     * @param Shipping $shipping
+     */
+    public function addShippng($shipping) 
+    {
+        $this->shippings[] = $shipping;
+    }     
+
     /*
      * Возвращает связанный ptu.
      * @return array

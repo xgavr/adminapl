@@ -40,22 +40,28 @@ class Bid {
     protected $dateCreated;    
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="bid") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="bids") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     private $good;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="bid") 
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="bids") 
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="bid") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="bids") 
      * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
     private $order;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Oem", inversedBy="bids") 
+     * @ORM\JoinColumn(name="oem_id", referencedColumnName="id")
+     */
+    private $oem;
     
     
     public function getId() 
@@ -162,6 +168,26 @@ class Bid {
     {
         $this->order = $order;
         $order->addBid($this);
+    }     
+        
+    /*
+     * Возвращает связанный oem.
+     * @return \Application\Entity\Oem
+     */
+    
+    public function getOem() 
+    {
+        return $this->oem;
+    }
+
+    /**
+     * Задает связанный oem.
+     * @param \Application\Entity\Oem $oem
+     */    
+    public function setOem($oem) 
+    {
+        $this->oem = $oem;
+        $oem->addBid($this);
     }     
         
 }

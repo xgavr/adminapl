@@ -49,6 +49,20 @@ return [
                     ],
                 ],
             ],        
+            'courier' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/courier[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\CourierController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'cross' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -432,6 +446,7 @@ return [
         'factories' => [
             Controller\CarController::class => Controller\Factory\CarControllerFactory::class,
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
+            Controller\CourierController::class => Controller\Factory\CourierControllerFactory::class,
             Controller\ContactCarController::class => Controller\Factory\ContactCarControllerFactory::class,
             Controller\ContactController::class => Controller\Factory\ContactControllerFactory::class,
             Controller\CrossController::class => Controller\Factory\CrossControllerFactory::class,
@@ -467,6 +482,7 @@ return [
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
             Service\ContactCarManager::class => Service\Factory\ContactCarManagerFactory::class,
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
+            Service\CourierManager::class => Service\Factory\CourierManagerFactory::class,
             Service\CrossManager::class => Service\Factory\CrossManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
             Service\ExternalManager::class => Service\Factory\ExternalManagerFactory::class,
@@ -507,6 +523,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\ClientController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\CourierController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

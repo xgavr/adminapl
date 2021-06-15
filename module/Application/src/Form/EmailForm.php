@@ -50,7 +50,7 @@ class EmailForm extends Form
         // Добавляем поле "name"
         $this->add([           
             'type'  => 'text',
-            'name' => 'name',
+            'name' => 'email',
             'attributes' => [
                 'id' => 'email_name'
             ],
@@ -80,7 +80,7 @@ class EmailForm extends Form
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'name',
+                'name'     => 'email',
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    

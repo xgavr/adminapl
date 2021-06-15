@@ -51,7 +51,7 @@ class PhoneForm extends Form
         // Добавляем поле "name"
         $this->add([           
             'type'  => 'text',
-            'name' => 'name',
+            'name' => 'phone',
             'attributes' => [
                 'id' => 'phone_name'
             ],
@@ -93,7 +93,7 @@ class PhoneForm extends Form
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'name',
+                'name'     => 'phone',
                 'required' => true,
                 'filters'  => [
                     [

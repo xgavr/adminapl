@@ -1,7 +1,9 @@
 <?php
+use Application\Entity\Shipping;
+
 $this->headTitle('Офис '.$office->getName());
 
-$this->mainMenu()->setActiveItemId('offices');
+$this->mainMenu()->setActiveItemId('company');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
@@ -9,8 +11,8 @@ $this->pageBreadcrumbs()->setItems([
             $office->getName()=>$this->url('offices', ['action'=>'view', 'id'=>$office->getId()])
             ]);
 
-$this->headScript()
-            ->appendFile($this->basePath('js/jquery.mask.min.js'))
+//$this->headScript()
+//            ->appendFile($this->basePath('js/jquery.mask.min.js'))
         ;      
 
 $legalContact = $office->getLegalContact();
@@ -197,6 +199,69 @@ $legalContact = $office->getLegalContact();
         <div class="panel panel-default" id="section6">
             <?php echo $this->partial('/company/legal/partial-view', ['legalContact' => $legalContact, 'notContract' => true]); ?>
         </div>
+        <div class="panel panel-default" id="section7">
+            <div class="panel-body">
+                <div class="pull-left">
+                    <div class="panel-title">Варианты доставок</div>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-default" href="
+                        <?= $this->url('courier', ['action'=>'add-shipping', 'id' => $office->getId()]); ?>">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Новая запись
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+
+                   <tr>
+                        <th>ID</th>
+                        <th>Апл Id</th>
+                        <th>Наименование</th>
+                        <th>За поездку</th>
+                        <th>За км</th>
+                        <th>Статус</th>
+                        <th>Действие</th>        
+                    </tr>
+
+                    <?php foreach ($office->getShippings() as $shipping): ?>
+
+                    <tr>
+                        <td><?= $this->escapeHtml($shipping->getId()); ?></td>
+                        <td><?= $this->escapeHtml($shipping->getAplId()); ?>
+                        </td>
+                        <td>
+                            <a href="<?= $this->url('courier', ['action'=>'view-shipping', 'id'=>$shipping->getId()]); ?>">
+                                <?= $this->escapeHtml($shipping->getName()); ?>
+                            </a> 
+                        </td>
+                        <td>
+                            <?= $shipping->getRateTrip()?>
+                        </td>
+                        <td>
+                            <?= $shipping->getRateDistance()?>
+                        </td>
+                        <td><?= $this->escapeHtml($shipping->getStatusAsString()); ?> 
+                        </td>
+                        <td>
+                            </nobr>
+                            <a class="btn btn-info" href="<?= $this->url('courier', 
+                                    ['action'=>'edit-shipping', 'id'=>$shipping->getId()]); ?>">
+                                <span class="glyphicon glyphicon-pencil" ></span>
+                            </a>
+                            <a class="btn btn-danger" href="<?= $this->url('courier',
+                                    ['action'=>'delete-shipping', 'id'=>$shipping->getId()]); ?>">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                            </nobr>
+                        </td>    
+                    </tr>
+
+                    <?php endforeach; ?>   
+
+                </table>
+            </div>
+        </div>
     </div>
     <div class="col-sm-3" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
@@ -206,6 +271,7 @@ $legalContact = $office->getLegalContact();
             <li><a href="#section4">Мессенджеры</a></li>
             <li><a href="#section5">Адреса</a></li>
             <li><a href="#section6">Юридические лица</a></li>
+            <li><a href="#section7">Варианты доставок</a></li>
         </ul>
     </div>
 </div>
@@ -218,21 +284,21 @@ $legalContact = $office->getLegalContact();
 </div>
 
 <script>
-    $('#modal-dialog').on('show.bs.modal', function (e) {        
-        var url = e.relatedTarget.value;
-        if (url){
-            $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (data) {
-                   $('#modal-content').html(data);
-                })
-                .fail(function () {
-                    alert("Ошибка открытия формы.");
-                }); 
-        }
-    })    
+//    $('#modal-dialog').on('show.bs.modal', function (e) {        
+//        var url = e.relatedTarget.value;
+//        if (url){
+//            $.ajax({
+//                type: 'GET',
+//                url: url
+//            })
+//                .done(function (data) {
+//                   $('#modal-content').html(data);
+//                })
+//                .fail(function () {
+//                    alert("Ошибка открытия формы.");
+//                }); 
+//        }
+//    })    
         
     $('.this-delete').on('click', function(e) {
         var url = e.currentTarget.value;

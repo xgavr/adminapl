@@ -19,10 +19,6 @@ $legalContact = $client->getLegalContact();
 <?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
 <?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
 
-<?php
-$this->headTitle($client->getName());        
-?>
-
 <h1>
     <?= $this->escapeHtml($client->getName()); ?>    
 </h1>
@@ -128,31 +124,31 @@ $this->headTitle($client->getName());
         <div class="pull-left">Машины
         </div>
         <div class="pull-right">
-            <button class="btn btn-default ptu-modal-show" type="button" modal-url="/garage/edit-form">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </button>                
+            <?php if ($legalContact):?>
+                <button value="/garage/edit-form/?contact=<?= $legalContact->getId()?>" class="btn btn-default btn-xs"
+                        data-toggle="modal" data-target="#modal-dialog" title="Добавить машину">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                </button>                                        
+             <?php endif;?>
         </div>
         <div class="clearfix"></div>
     </div>    
     <div class="panel-body">
         <?php foreach ($client->getContacts() as $contact):?> 
             <?php if ($contact->getContactCars()->count()):?>
-                <table>
+        <table class="table table-striped">
                     <?php foreach ($contact->getContactCars() as $contactCar):?>
                         <tr>
                             <td>
-                                <?php if ($contactCar->getMake()):?>
-                                    <?= $contactCar->getMake()->getName() ?>
-                                <?php endif;?>
-                            </td>
-                            <td>
-                                <?php if ($contactCar->getModel()):?>
-                                    <?= $contactCar->getModel()->getName() ?>
-                                <?php endif;?>
-                            </td>
-                            <td>
                                 <?php if ($contactCar->getCar()):?>
                                     <?= $contactCar->getCar()->getName() ?>
+                                <?php else:?>
+                                    <?php if ($contactCar->getMake()):?>
+                                        <?= $contactCar->getMake()->getName() ?>
+                                    <?php endif;?>
+                                    <?php if ($contactCar->getModel()):?>
+                                        <?= $contactCar->getModel()->getName() ?>
+                                    <?php endif;?>
                                 <?php endif;?>
                             </td>
                             <td>
@@ -182,6 +178,13 @@ $this->headTitle($client->getName());
                             <td>
                                 <?= $contactCar->getEp() ?>
                             </td>
+                            <td>
+                                <button value="/garage/edit-form/<?= $contactCar->getId()?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить машину">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                        
+                                
+                            </td>
                         </tr>
                     <?php endforeach;?>
                 </table>    
@@ -189,3 +192,6 @@ $this->headTitle($client->getName());
         <?php endforeach;?>
     </div>
 </div>
+
+<script type="text/javascript">
+</script>

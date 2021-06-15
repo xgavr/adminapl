@@ -1,0 +1,72 @@
+<?php
+use Application\Entity\Courier;
+
+$this->headTitle('Транспортные компании');
+
+$this->mainMenu()->setActiveItemId('client');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Продажи'=>$this->url('client'),
+            'Транспортные компании'=>$this->url('courier'),
+            ]);
+?>
+<h1>Транспортные компании</h1>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('courier', ['action'=>'add']); ?>">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Новая запись
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Апл Id</th>
+        <th>Наименование</th>
+        <th>Ссылки</th>
+        <th>Статус</th>
+        <th>Действие</th>        
+    </tr>
+    
+    <?php foreach ($couriers as $courier): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($courier->getId()); ?></td>
+        <td><?= $this->escapeHtml($courier->getAplId()); ?>
+        </td>
+        <td>
+            <a href="<?= $this->url('courier', ['action'=>'view', 'id'=>$courier->getId()]); ?>">
+                <?= $this->escapeHtml($courier->getName()); ?>
+            </a> 
+        </td>
+        <td>
+           <a href="<?= $this->escapeHtml($courier->getSite())?>" target="_blank">Сайт</a><br/>
+           <a href="<?= $this->escapeHtml($courier->getTrack())?>" target="_blank">Отслеживание</a><br/>
+           <a href="<?= $this->escapeHtml($courier->getCalculator())?>" target="_blank">Калькулятор</a> <br/>
+        </td>
+        <td><?= $this->escapeHtml($courier->getStatusAsString()); ?> 
+        </td>
+        <td>
+            </nobr>
+            <a class="btn btn-info" href="<?= $this->url('courier', 
+                    ['action'=>'edit', 'id'=>$courier->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span>
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('courier',
+                    ['action'=>'delete', 'id'=>$courier->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+            </nobr>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>

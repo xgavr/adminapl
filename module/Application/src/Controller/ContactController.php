@@ -10,6 +10,7 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Application\Entity\Contact;
+use Application\Entity\ContactCar;
 use Application\Entity\Client;
 use Application\Entity\Supplier;
 use User\Entity\User;
@@ -18,6 +19,7 @@ use Application\Entity\Email;
 use Application\Entity\Messenger;
 use Application\Entity\Address;
 use Application\Form\ContactForm;
+use Application\Form\ContactCarForm;
 use Application\Form\PhoneForm;
 use Application\Form\EmailForm;
 use Application\Form\AddressForm;
@@ -44,11 +46,18 @@ class ContactController extends AbstractActionController
      */
     private $contactManager;    
     
+    /**
+     * Менеджер contactCar.
+     * @var \Application\Service\ContactCarManager 
+     */
+    private $contactCarManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $contactManager) 
+    public function __construct($entityManager, $contactManager, $contactCarMaanger) 
     {
         $this->entityManager = $entityManager;
         $this->contactManager = $contactManager;
+        $this->contactCarManager = $contactCarMaanger;
     }    
     
     public function indexAction()
@@ -305,9 +314,9 @@ class ContactController extends AbstractActionController
             if ($form->isValid()) {
 
                 if ($phone){
-                    $this->contactManager->updatePhone($phone, ['phone' => $data['name'], 'comment' => $data['comment']]);                    
+                    $this->contactManager->updatePhone($phone, ['phone' => $data['phone'], 'comment' => $data['comment']]);                    
                 } else {
-                    $this->contactManager->addPhone($contact, ['phone' => $data['name'], 'comment' => $data['comment']], true);
+                    $this->contactManager->addPhone($contact, ['phone' => $data['phone'], 'comment' => $data['comment']], true);
                 }    
                 
                 return new JsonModel(
@@ -317,7 +326,7 @@ class ContactController extends AbstractActionController
         } else {
             if ($phone){
                 $data = [
-                    'name' => $phone->getName(),  
+                    'phone' => $phone->getName(),  
                     'comment' => $phone->getComment(),  
                 ];
                 $form->setData($data);
@@ -461,9 +470,9 @@ class ContactController extends AbstractActionController
             if ($form->isValid()) {
 
                 if ($email){
-                    $this->contactManager->updateEmail($email, ['email' => $data['name']]);                    
+                    $this->contactManager->updateEmail($email, ['email' => $data['email']]);                    
                 } else {
-                    $this->contactManager->addEmail($contact, $data['name'], true);
+                    $this->contactManager->addEmail($contact, $data['email'], true);
                 }    
                 
                 return new JsonModel(
@@ -473,7 +482,7 @@ class ContactController extends AbstractActionController
         } else {
             if ($email){
                 $data = [
-                    'name' => $email->getName(),  
+                    'email' => $email->getName(),  
                 ];
                 $form->setData($data);
             }  
@@ -854,5 +863,68 @@ class ContactController extends AbstractActionController
         ]);          
     }
     
-    
+    public function carEditFormAction()
+    {
+        $contactCarId = (int) $this->params()->fromRoute('id', -1);
+        
+        $contactCar = null;
+        if ($contactCarId > 0){
+            $contactCar = $this->entityManager->getRepository(ContactCar::class)
+                    ->find($contactCarId);
+        }    
+        
+        $contactId = (int)$this->params()->fromQuery('contact', -1);
+        if ($contactId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->find($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        // Create form
+        $form = new ContactCarForm($this->entityManager);
+        
+        // Check if user has submitted the form
+        if ($this->getRequest()->isPost()) {
+            // Fill in the form with POST data
+            $data = $this->params()->fromPost();            
+            
+            $form->setData($data);
+            // Validate form
+            if($form->isValid()) {
+                
+                // Get filtered and validated data
+                $data = $form->getData();
+                
+                // Update permission.
+                if ($contactCar){
+                    $this->contactCarManager->update($contactCar, $data);
+                } else {
+                    $this->contactCarManager->add($contact, $data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }              
+        } else {
+            if ($contactCar){
+                //$form->setData($contactCar->formArray());
+            }    
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+                'form' => $form,
+                'contact' => $contact,
+                'contactCar' => $contactCar,
+            ]);
+    }    
+
 }

@@ -10,6 +10,9 @@ namespace Application\Service;
 use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\ContactCar;
 use Application\Entity\Contact;
+use Application\Entity\Make;
+use Application\Entity\Model;
+use Application\Entity\Car;
 
 /**
  * Description of ContactCarService
@@ -26,7 +29,7 @@ class ContactCarManager
     
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $ftpManager)
+    public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -37,7 +40,7 @@ class ContactCarManager
      * @param array $data
      * @return ContactCar
      */
-    public function Add($contact, $data)
+    public function add($contact, $data)
     {
         $contactCar = new ContactCar();
         $contactCar->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
@@ -52,9 +55,32 @@ class ContactCarManager
         $contactCar->setMd(!empty($data['md']) ? $data['md'] : null);
         $contactCar->setEd(!empty($data['ed']) ? $data['ed'] : null);
         $contactCar->setEp(!empty($data['ep']) ? $data['ep'] : null);
-        $contactCar->setMake(!empty($data['make']) ? $data['make'] : null);
-        $contactCar->setModel(!empty($data['model']) ? $data['model'] : null);
-        $contactCar->setCar(!empty($data['car']) ? $data['car'] : null);
+        
+        $contactCar->setMake(null);
+        if (isset($data['make'])){
+            if (is_integer($data['make'])){
+                $make = $this->entityManager->getRepository(Make::class)
+                        ->find($data['make']);
+                $contactCar->setMake($make);
+            }
+        }    
+        $contactCar->setModel(null);
+        if (isset($data['model'])){
+            if (is_integer($data['model'])){
+                $model = $this->entityManager->getRepository(Model::class)
+                        ->find($data['model']);
+                $contactCar->setModel($model);
+            }
+        }    
+        $contactCar->setCar(null);
+        if (isset($data['car'])){
+            if (is_integer($data['car'])){
+                $car = $this->entityManager->getRepository(Car::class)
+                        ->find($data['car']);
+                $contactCar->setCar($car);
+            }
+        }    
+
         $currentDate = date('Y-m-d H:i:s');
         $contactCar->setDateCreated($currentDate);        
         
@@ -86,9 +112,31 @@ class ContactCarManager
         $contactCar->setMd(!empty($data['md']) ? $data['md'] : null);
         $contactCar->setEd(!empty($data['ed']) ? $data['ed'] : null);
         $contactCar->setEp(!empty($data['ep']) ? $data['ep'] : null);
-        $contactCar->setMake(!empty($data['make']) ? $data['make'] : null);
-        $contactCar->setModel(!empty($data['model']) ? $data['model'] : null);
-        $contactCar->setCar(!empty($data['car']) ? $data['car'] : null);
+
+        $contactCar->setMake(null);
+        if (isset($data['make'])){
+            if (is_integer($data['make'])){
+                $make = $this->entityManager->getRepository(Make::class)
+                        ->find($data['make']);
+                $contactCar->setMake($make);
+            }
+        }    
+        $contactCar->setModel(null);
+        if (isset($data['model'])){
+            if (is_integer($data['model'])){
+                $model = $this->entityManager->getRepository(Model::class)
+                        ->find($data['model']);
+                $contactCar->setModel($model);
+            }
+        }    
+        $contactCar->setCar(null);
+        if (isset($data['car'])){
+            if (is_integer($data['car'])){
+                $car = $this->entityManager->getRepository(Car::class)
+                        ->find($data['car']);
+                $contactCar->setCar($car);
+            }
+        }    
         
         $this->entityManager->persist($contactCar);
         $this->entityManager->flush($contactCar);
