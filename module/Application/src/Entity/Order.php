@@ -32,6 +32,10 @@ class Order {
     const STATUS_SHIPPED   = 50; // Отгружен.
     const STATUS_CANCELED  = -10; // Отменен.
         
+    const MODE_MAN    = 1; // Звонок
+    const MODE_VIN    = 2; // Запрос по вин
+    const MODE_ORDER  = 3; // Заказ с сайта
+        
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -84,6 +88,11 @@ class Order {
     protected $status;    
 
     /**
+     * @ORM\Column(name="mode")  
+     */
+    protected $mode;    
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\ContactCar", inversedBy="orders") 
      * @ORM\JoinColumn(name="contact_car_id", referencedColumnName="id")
      */
@@ -108,10 +117,41 @@ class Order {
     protected $contact;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="orders") 
+     * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
+     */
+    protected $legal;
+    
+    /**
+     * Грузополучатель
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="orders") 
+     * @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")
+     */
+    protected $recipient;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="orders") 
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+        
+    /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="orders") 
+     * @ORM\JoinColumn(name="skiper_id", referencedColumnName="id")
+     */
+    private $skiper;
+        
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="orders") 
+     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     */
+    private $office;
+        
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="orders") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;
         
     /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Bid", mappedBy="order")
@@ -221,7 +261,7 @@ class Order {
         $this->comment = $comment;
     }     
     
-        /**
+    /**
      * Returns status.
      * @return int     
      */
@@ -268,6 +308,50 @@ class Order {
         $this->status = $status;
     }   
         
+    /**
+     * Returns mode.
+     * @return int     
+     */
+    public function getMode() 
+    {
+        return $this->mode;
+    }
+
+    /**
+     * Returns possible modes as array.
+     * @return array
+     */
+    public static function getModesList() 
+    {
+        return [
+            self::MODE_MAN => 'Звонок',
+            self::MODE_ORDER => 'Заказ с сайта',
+            self::MODE_VIN => 'Запрос по VIN',
+        ];
+    }    
+    
+    /**
+     * Returns user mode as string.
+     * @return string
+     */
+    public function getModeAsString()
+    {
+        $list = self::getModesList();
+        if (isset($list[$this->mode]))
+            return $list[$this->mode];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets mode.
+     * @param int $mode     
+     */
+    public function setMode($mode) 
+    {
+        $this->mode = $mode;
+    }   
+
     /*
      * Возвращает связанный contact.
      * @return Contact
@@ -289,6 +373,42 @@ class Order {
     }     
     
     /*
+     * Возвращает связанный legal.
+     * @return \Company\Entity\Legal
+     */    
+    public function getLegal() 
+    {
+        return $this->legal;
+    }
+
+    /**
+     * Задает связанный legal.
+     * @param \Company\Entity\Legal $legal
+     */    
+    public function setLegal($legal) 
+    {
+        $this->legal = $legal;
+    }         
+ 
+    /*
+     * Возвращает связанный recipient.
+     * @return \Company\Entity\Legal
+     */    
+    public function getRecipient() 
+    {
+        return $this->recipient;
+    }
+
+    /**
+     * Задает связанный recipient.
+     * @param \Company\Entity\Legal $recipient
+     */    
+    public function setrecipient($recipient) 
+    {
+        $this->recipient = $recipient;
+    }         
+     
+    /*
      * Возвращает связанный user.
      * @return \User\Entity\User
      */
@@ -305,6 +425,61 @@ class Order {
     public function setUser($user) 
     {
         $this->user = $user;
+    }         
+ 
+    /*
+     * Возвращает связанный skiper.
+     * @return \User\Entity\User
+     */
+    
+    public function getSkiper() 
+    {
+        return $this->skiper;
+    }
+
+    /**
+     * Задает связанный skiper.
+     * @param \User\Entity\User $skiper
+     */    
+    public function setSkiper($skiper) 
+    {
+        $this->skiper = $skiper;
+    }         
+ 
+    /*
+     * Возвращает связанный office.
+     * @return \Company\Entity\Office
+     */    
+    public function getOffice() 
+    {
+        return $this->office;
+    }
+
+    /**
+     * Задает связанный user.
+     * @param \Company\Entity\Office $office
+     */    
+    public function setOffice($office) 
+    {
+        $this->office = $office;
+    }         
+ 
+    /*
+     * Возвращает связанный company.
+     * @return \Company\Entity\Legal
+     */    
+    public function getCompany() 
+    {
+        return $this->company;
+    }
+
+    /**
+     * Задает связанный company.
+     * @param \Company\Entity\Legal $company
+     */    
+    public function setCompany($company) 
+    {
+        $this->company = $company;
     }         
  
     /*
