@@ -13,10 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description of Bid
  * @ORM\Entity(repositoryClass="\Application\Repository\OrderRepository")
- * @ORM\Table(name="selection")
+ * @ORM\Table(name="comment")
  * @author Daddy
  */
-class Selection {
+class Comment {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,13 +31,13 @@ class Selection {
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Oem", inversedBy="selections") 
-     * @ORM\JoinColumn(name="oem_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="comments") 
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $oem;
+    private $user;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="selections") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="comments") 
      * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
     private $order;
@@ -80,27 +80,27 @@ class Selection {
     public function setOrder($order) 
     {
         $this->order = $order;
-        $order->addSelection($this);
+        $order->addComment($this);
     }     
         
     /*
-     * Возвращает связанный order.
-     * @return \Application\Entity\Oem
+     * Возвращает связанный user.
+     * @return \User\Entity\User
      */
     
-    public function getOem() 
+    public function getUser() 
     {
-        return $this->oem;
+        return $this->user;
     }
 
     /**
-     * Задает связанный oem.
-     * @param \Application\Entity\Oem $oem
+     * Задает связанный user.
+     * @param \User\Entity\User $user
      */    
-    public function setOem($oem) 
+    public function setUser($user) 
     {
-        $this->oem = $oem;
-        $oem->addSelection($this);
+        $this->user = $user;
+        //$oem->addComment($this);
     }     
         
 }

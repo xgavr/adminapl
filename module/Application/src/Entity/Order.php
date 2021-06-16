@@ -126,12 +126,19 @@ class Order {
     private $selections;
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Comment", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+     */
+    private $comments;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->bids = new ArrayCollection();
         $this->selections = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
     
     public function getId() 
@@ -379,9 +386,9 @@ class Order {
      * Returns the array of selection assigned to this.
      * @return array
      */
-    public function getSelection()
+    public function getSelections()
     {
-        return $this->selection;
+        return $this->selections;
     }
         
     /**
@@ -393,4 +400,21 @@ class Order {
         $this->selections[] = $selection;
     }
             
+    /**
+     * Returns the array of comments assigned to this.
+     * @return array
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+        
+    /**
+     * Assigns.
+     * @param \Application\Entity\Comment $comment
+     */
+    public function addComment($comment)
+    {
+        $this->comments[] = $comment;
+    }
 }

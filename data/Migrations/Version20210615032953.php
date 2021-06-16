@@ -23,9 +23,21 @@ final class Version20210615032953 extends AbstractMigration
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'oem_id_selection_oem_id_fk');
         $table->addForeignKeyConstraint('orders', ['order_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'order_id_selection_order_id_fk');
-        $table->setPrimaryKey(['id']);
         $table->addOption('engine' , 'InnoDB');
                 
+        $table = $schema->createTable('comment');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('comment', 'text', ['notnull'=>false]);
+        $table->addColumn('order_id', 'integer', ['notnull'=>true]);
+        $table->addColumn('user_id', 'integer', ['notnull'=>true]);
+        $table->setPrimaryKey(['id']);
+        $table->addForeignKeyConstraint('user', ['user_id'], ['id'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'user_id_comment_user_id_fk');
+        $table->addForeignKeyConstraint('orders', ['order_id'], ['id'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'order_id_comment_order_id_fk');
+        $table->addOption('engine' , 'InnoDB');
+                
+
         $table = $schema->getTable('bid');
         $table->addColumn('oem_id', 'integer', ['notnull'=>false]);
         $table->addForeignKeyConstraint('oem', ['oem_id'], ['id'], 
@@ -40,6 +52,7 @@ final class Version20210615032953 extends AbstractMigration
         $table->removeForeignKey('oem_id_bid_oem_id_fk');
         $table->dropColumn('oem_id');
         
+        $schema->dropTable('comment');
         $schema->dropTable('selection');
     }
 }
