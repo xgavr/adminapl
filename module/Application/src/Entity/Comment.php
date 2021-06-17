@@ -25,6 +25,11 @@ class Comment {
     protected $id;
     
     /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId;
+    
+    /**
      * @ORM\Column(name="comment")   
      */
     protected $comment;
@@ -53,6 +58,16 @@ class Comment {
         $this->id = $id;
     }     
 
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
+    }     
+    
     public function getComment() 
     {
         return $this->comment;

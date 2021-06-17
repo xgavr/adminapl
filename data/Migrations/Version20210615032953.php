@@ -27,6 +27,7 @@ final class Version20210615032953 extends AbstractMigration
                 
         $table = $schema->createTable('comment');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('apl_id', 'integer', ['notnull'=>false]);
         $table->addColumn('comment', 'text', ['notnull'=>false]);
         $table->addColumn('order_id', 'integer', ['notnull'=>true]);
         $table->addColumn('user_id', 'integer', ['notnull'=>true]);

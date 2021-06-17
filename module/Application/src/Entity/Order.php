@@ -49,6 +49,59 @@ class Order {
     protected $aplId;
 
     /**
+     * @ORM\Column(name="geo")   
+     */
+    protected $geo;
+
+    /**
+     * Для печати
+     * @ORM\Column(name="invoice_info")  
+     */
+    protected $invoiceInfo;    
+
+    /**
+     * 
+     * @ORM\Column(name="info")  
+     */
+    protected $info;    
+
+    /**
+     * 
+     * @ORM\Column(name="address")  
+     */
+    protected $address;    
+
+    /**
+     * Тариф
+     * @ORM\Column(name="shipment_rate")  
+     */
+    protected $shipmentRate;    
+
+    /**
+     * Км
+     * @ORM\Column(name="shipment_distance")  
+     */
+    protected $shipmentDistance;    
+
+    /**
+     * Доп тариф
+     * @ORM\Column(name="shipment_add_rate")  
+     */
+    protected $shipmentAddRate;    
+
+    /**
+     * Всего за доставку
+     * @ORM\Column(name="shipment_total")  
+     */
+    protected $shipmentTotal;    
+
+    /**
+     * Накладная ТК
+     * @ORM\Column(name="courier_invoice")  
+     */
+    protected $courierInvoice;    
+
+    /**
      * Дата заказа
      * @ORM\Column(name="date_oper")  
      */
@@ -199,6 +252,36 @@ class Order {
     public function setAplId($aplId) 
     {
         $this->aplId = $aplId;
+    }     
+    
+    public function getGeo() 
+    {
+        return $this->geo;
+    }
+
+    public function setGeo($geo) 
+    {
+        $this->geo = $geo;
+    }     
+    
+    public function getInvoiceInfo() 
+    {
+        return $this->invoiceInfo;
+    }
+
+    public function setInvoiceInfo($invoiceInfo) 
+    {
+        $this->invoiceInfo = $invoiceInfo;
+    }     
+    
+    public function getInfo() 
+    {
+        return $this->info;
+    }
+
+    public function setInfo($info) 
+    {
+        $this->info = $info;
     }     
     
     public function getDateOper() 
@@ -403,7 +486,7 @@ class Order {
      * Задает связанный recipient.
      * @param \Company\Entity\Legal $recipient
      */    
-    public function setrecipient($recipient) 
+    public function setRecipient($recipient) 
     {
         $this->recipient = $recipient;
     }         
