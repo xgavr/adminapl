@@ -24,6 +24,12 @@ class Client {
     const STATUS_ACTIVE       = 1; // Active user.
     const STATUS_RETIRED      = 2; // Retired user.
    
+    const PRICE_0   = 0; // Розница
+    const PRICE_1   = 1; // ВИП
+    const PRICE_2   = 2; // опт2
+    const PRICE_3   = 3; // опт3
+    const PRICE_4   = 4; // опт4
+    const PRICE_5   = 5; // опт5
     
     /**
      * @ORM\Id
@@ -53,6 +59,25 @@ class Client {
      */
     protected $name;
 
+    /**
+     * @ORM\Column(name="sales_total")   
+     */
+    protected $salesTotal = 0;
+
+    /**
+     * @ORM\Column(name="sales_order")   
+     */
+    protected $salesOrder = 0;
+
+    /**
+     * @ORM\Column(name="sales_good")   
+     */
+    protected $salesGood = 0;
+
+    /**
+     * @ORM\Column(name="pricecol")   
+     */
+    protected $pricecol = self::PRICE_0;
     
     /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Contact", mappedBy="client")
@@ -119,7 +144,37 @@ class Client {
         $this->name = $name;
     }     
 
-        /**
+    public function getSalesTotal() 
+    {
+        return $this->salesTotal;
+    }
+
+    public function setSalesTotal($salesTotal) 
+    {
+        $this->salesTotal = $salesTotal;
+    }     
+
+    public function getSalesOrder() 
+    {
+        return $this->salesOrder;
+    }
+
+    public function setSalesOrder($salesOrder) 
+    {
+        $this->salesOrder = $salesOrder;
+    }     
+
+    public function getSalesGood() 
+    {
+        return $this->salesGood;
+    }
+
+    public function setSalesGood($salesGood) 
+    {
+        $this->salesGood = $salesGood;
+    }     
+    
+    /**
      * Returns status.
      * @return int     
      */
@@ -160,6 +215,53 @@ class Client {
     public function setStatus($status) 
     {
         $this->status = $status;
+    }   
+    
+    /**
+     * Returns pricecol.
+     * @return int     
+     */
+    public function getPricecol() 
+    {
+        return $this->pricecol;
+    }
+
+    /**
+     * Returns possible pricecols as array.
+     * @return array
+     */
+    public static function getPricecilList() 
+    {
+        return [
+            self::PRICE_0 => 'Розница',
+            self::PRICE_1 => 'VIP',
+            self::PRICE_2 => 'Опт2',
+            self::PRICE_3 => 'Опт3',
+            self::PRICE_4 => 'Опт4',
+            self::PRICE_5 => 'Опт5',
+        ];
+    }    
+    
+    /**
+     * Returns pricecol as string.
+     * @return string
+     */
+    public function getPriceColAsString()
+    {
+        $list = self::getPricecolList();
+        if (isset($list[$this->pricecol]))
+            return $list[$this->pricecol];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets pricecol.
+     * @param int $pricecol 
+     */
+    public function setPricecol($pricecol) 
+    {
+        $this->pricecol = $pricecol;
     }   
     
     /**

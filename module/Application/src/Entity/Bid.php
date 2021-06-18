@@ -35,6 +35,16 @@ class Bid {
     protected $num;
 
     /**
+     * @ORM\Column(name="display_name")   
+     */
+    protected $displayName;
+
+    /**
+     * @ORM\Column(name="opts")   
+     */
+    protected $opts;
+
+    /**
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;    
@@ -92,6 +102,26 @@ class Bid {
     public function setNum($num) 
     {
         $this->num = $num;
+    }     
+    
+    public function getOpts() 
+    {
+        return $this->opts;
+    }
+
+    public function setOpts($opts) 
+    {
+        $this->opts = $opts;
+    }     
+    
+    public function getDisplayName() 
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName($displayName) 
+    {
+        $this->displayName = $displayName;
     }     
     
     /**

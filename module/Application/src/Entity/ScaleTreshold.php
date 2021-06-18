@@ -133,8 +133,8 @@ class ScaleTreshold
     /**
      * Получить колонки цен
      * 
-     * @param float $retailPrice
-     * @param float $price
+     * @param float $retailPrice Продажа
+     * @param float $price Закупка
      * 
      * @return array
      */
