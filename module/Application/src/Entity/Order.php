@@ -97,9 +97,9 @@ class Order {
 
     /**
      * Накладная ТК
-     * @ORM\Column(name="courier_invoice")  
+     * @ORM\Column(name="track_number")  
      */
-    protected $courierInvoice;    
+    protected $trackNumber;    
 
     /**
      * Дата заказа
@@ -129,12 +129,7 @@ class Order {
      * @ORM\Column(name="total")  
      */
     protected $total;    
-    
-    /**
-     * @ORM\Column(name="comment")  
-     */
-    protected $comment;    
-    
+        
     /**
      * @ORM\Column(name="status")  
      */
@@ -284,6 +279,66 @@ class Order {
         $this->info = $info;
     }     
     
+    public function getAddress() 
+    {
+        return $this->address;
+    }
+
+    public function setAddress($address) 
+    {
+        $this->address = $address;
+    }     
+    
+    public function getShipmentRate() 
+    {
+        return $this->shipmentRate;
+    }
+
+    public function setShipmentRate($shipmentRate) 
+    {
+        $this->shipmentRate = $shipmentRate;
+    }     
+    
+    public function getShipmentDistance() 
+    {
+        return $this->shipmentDistance;
+    }
+
+    public function setShipmentDistance($shipmentDistance) 
+    {
+        $this->shipmentDistance = $shipmentDistance;
+    }     
+    
+    public function getShipmentAddRate() 
+    {
+        return $this->shipmentAddRate;
+    }
+
+    public function setShipmetAddRate($shipmentAddRate) 
+    {
+        $this->shipmentAddRate = $shipmentAddRate;
+    }     
+    
+    public function getShipmentTotal() 
+    {
+        return $this->shipmentTotal;
+    }
+
+    public function setShipmetTotal($shipmentTotal) 
+    {
+        $this->shipmentTotal = $shipmentTotal;
+    }     
+    
+    public function getTrackNumber() 
+    {
+        return $this->trackNumber;
+    }
+
+    public function setTrackNumber($trackNumber) 
+    {
+        $this->trackNumber = $trackNumber;
+    }     
+    
     public function getDateOper() 
     {
         return $this->dateOper;
@@ -332,16 +387,6 @@ class Order {
     public function setTotal($total) 
     {
         $this->total = $total;
-    }     
-    
-    public function getComment() 
-    {
-        return $this->comment;
-    }
-
-    public function setComment($comment) 
-    {
-        $this->comment = $comment;
     }     
     
     /**
