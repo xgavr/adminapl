@@ -134,7 +134,7 @@ class AplDocService {
      * @param integer $officeAplId
      * @return Office
      */
-    private function officeFromAplId($officeAplId)
+    public function officeFromAplId($officeAplId)
     {
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneBy(['aplId' => $officeAplId]);

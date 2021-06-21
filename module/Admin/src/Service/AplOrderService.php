@@ -16,6 +16,7 @@ use Company\Entity\Office;
 use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
+use Application\Entity\ContactCar;
 use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
 use Stock\Entity\Ot;
@@ -30,6 +31,7 @@ use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
+use Application\Entity\Order;
 use Laminas\Validator\Date;
 
 
@@ -64,14 +66,28 @@ class AplOrderService {
      */
     private $aplDocService;
 
+    /**
+     * Order manager
+     * @var \Application\Service\OrderManager
+     */
+    private $orderManager;
+
+    /**
+     * ContactCar manager
+     * @var \Application\Service\ContactCarManager
+     */
+    private $contactCarManager;
+
     
     public function __construct($entityManager, $adminManager, $aplSevice,
-            $aplDocService)
+            $aplDocService, $orderManager, $contactCarManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->aplService = $aplSevice;
         $this->aplDocService = $aplDocService;
+        $this->orderManager = $orderManager;
+        $this->contactCarManager = $contactCarManager;
     }
     
     private function aplApi() 
@@ -84,6 +100,250 @@ class AplOrderService {
         return $this->aplService->aplApiKey();
     }
 
+    /**
+     * Обновить клиента
+     * @param array $data
+     * @return boolean
+     */
+    protected function getClient($data)
+    {
+        if (empty($data['client'])){
+            return;
+        }
+        $this->aplService->getClient([
+            'id' => $data['client'],
+            'email' => (empty($data['email'])) ? null:$data['email'],
+            'phone' => (empty($data['phone'])) ? null:$data['phone'],
+            'name' => (empty($data['name'])) ? null:$data['name'],
+            'publish' => 1,
+        ]);
+        
+        $client = $this->entityManager->getRepository(AplClient::class)
+                ->find($data['client']);
+        return $client;
+    }
+
+    private function orderStatus($data)
+    {
+        if (!empty($data['parent'])){
+            switch ((int) $data['parent']){
+                case -1: return Order::STATUS_CANCELED;
+                case 50: return Order::STATUS_PROCESSED;
+                case 100: return Order::STATUS_CONFIRMED;
+                case 150: return Order::STATUS_DELIVERY;
+                case 210: return Order::STATUS_SHIPPED;
+                default : return Order::STATUS_UNKNOWN;    
+            }
+        }
+        
+        return Order::STATUS_NEW;
+    }
+    
+    private function orderMode($data)
+    {
+        if (!empty($data['mode'])){
+            switch ((int) $data['mode']){
+                case 'vin': return Order::MODE_VIN;
+                case 'order': return Order::MODE_ORDER;
+                case 'inner': return Order::MODE_INNER;
+                case 'fast': return Order::MODE_FAST;
+                default : return Order::MODE_MAN;    
+            }
+        }
+        
+        return Order::MODE_MAN;
+    }
+    
+    /**
+     * Загрузить заказ
+     * 
+     * @param array $data
+     */
+    public function getOrder($data)
+    {
+//        var_dump($data); exit;
+        $client = $this->getClient($data);
+        if (!$client){
+            return false;
+        }
+        $contact = $this->getLegalContact();
+        if (!$contact){
+            return false;
+        }
+        
+        $office = $this->aplDocService->officeFromAplId($data['publish']);
+        
+        $orderData = [
+            'status' => $this->orderStatus($data),
+            'mode' => $this->orderMode($data),
+            'dateMod' => $data['lastmod'],
+            'info' => (empty($data['info21'])) ? null:$data['info21'],
+        ];
+
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        $dateMod = $data['lastmod'];
+        if (!$dateValidator->isValid($dateMod)){
+            $dateMod = $data['created'];
+        }
+        
+        $legal = $this->legalFromSupplierAplId($data['name'], $data['ds'], $data['supplier']);        
+        $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $this->getCashContract($data));
+        
+        $dataPtu['office'] = $office;
+        $dataPtu['legal'] = $legal;
+        $dataPtu['contract'] = $contract; 
+
+        $order = $this->entityManager->getRepository(Order::class)
+                ->findBy(['aplId' => $data['id']]);        
+        
+        if ($order){
+            $this->orderManager->updateOrder($order, $orderData);
+            $this->orderManager->removeOrderBids($order); 
+        } else {        
+            $order = $this->orderManager->addNewOrder($office, $contact, $orderData);
+        }    
+        
+        if ($order && isset($data['tp'])){
+            $rowNo = 1;
+            foreach ($data['tp'] as $tp){
+                if (isset($tp['good'])){
+                    $good = $this->findGood($tp['good']);   
+                }    
+                if (empty($good)){
+    //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                } else {
+
+                    $this->ptuManager->addPtuGood($ptu->getId(), [
+                        'status' => $ptu->getStatus(),
+                        'statusDoc' => $ptu->getStatusDoc(),
+                        'quantity' => $tp['sort'],                    
+                        'amount' => $tp['bag_total'],
+                        'good_id' => $good->getId(),
+                        'comment' => '',
+                        'info' => '',
+                        'countryName' => (isset($tp['country'])) ? $tp['country']:'',
+                        'countryCode' => (isset($tp['countrycode'])) ? $tp['countrycode']:'',
+                        'unitName' => (isset($tp['pack'])) ? $tp['pack']:'',
+                        'unitCode' => (isset($tp['packcode'])) ? $tp['packcode']:'',
+                        'ntd' => (isset($tp['gtd'])) ? $tp['gtd']:'',
+                    ], $rowNo);
+                    $rowNo++;
+                }    
+            }
+        }  
+        
+        if ($order){
+            $this->orderManager->updateOrderTotal($order);
+            return true;            
+        }
+                
+        return false;
+    }
+    
+    /**
+     * Обновить статус загруженного заказа
+     * @param integer $aplId
+     * @return boolean
+     */
+    public function unloadedOrder($aplId)
+    {
+        $result = true;
+        if (is_numeric($aplId)){
+            $url = $this->aplApi().'aa-order?api='.$this->aplApiKey();
+
+            $post = [
+                'orderId' => $aplId,
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $result = $ok = FALSE;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $result = $ok = TRUE;
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+                $ok = true;
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+            
+            if ($ok){
+            }
+
+            unset($post);
+        }    
+        return $result;        
+    }
+    
+    /**
+     * Загрузить заказ из Апл
+     * 
+     * @return 
+     */
+    public function unloadOrder()
+    {
+        $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
+        
+        $post = [
+        ];
+
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setParameterPost($post);
+
+        $response = $client->send();
+        $body = $response->getBody();
+
+//        var_dump($body); exit;
+        try{
+            $result = json_decode($body, true);
+        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
+            var_dump($ex->getMessage());
+            var_dump($body);
+            exit;
+        }
+        var_dump($result); exit;
+
+        if (is_array($result)){
+            if ($this->getOrder($result)){ 
+                //$this->unloadedOrder($result['id']);
+            }    
+        } else {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Получить заказы
+     */
+    public function uploadOrders()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        while (true){
+            if ($this->unloadOrder()) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }    
+        }    
+        return;        
+    }
+    
     /**
      * Обновить статус загруженной машины клиента
      * @param integer $userId

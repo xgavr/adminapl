@@ -31,10 +31,13 @@ class Order {
     const STATUS_DELIVERY   = 40; // Доставка.
     const STATUS_SHIPPED   = 50; // Отгружен.
     const STATUS_CANCELED  = -10; // Отменен.
+    const STATUS_UNKNOWN  = -100; // Неизвестно.
         
     const MODE_MAN    = 1; // Звонок
     const MODE_VIN    = 2; // Запрос по вин
     const MODE_ORDER  = 3; // Заказ с сайта
+    const MODE_FAST  = 4; // Быстрый заказ
+    const MODE_INNER  = 5; // Внутренний заказ
         
     /**
      * @ORM\Id
@@ -455,6 +458,8 @@ class Order {
             self::MODE_MAN => 'Звонок',
             self::MODE_ORDER => 'Заказ с сайта',
             self::MODE_VIN => 'Запрос по VIN',
+            self::MODE_FAST => 'Быстрый заказ',
+            self::MODE_INNER => 'Внутренний заказ',
         ];
     }    
     

@@ -156,7 +156,7 @@ return [
             Service\AnnManager::class => Service\Factory\AnnManagerFactory::class,
             Service\AplBankService::class => Service\Factory\AplBankServiceFactory::class,
             Service\AplDocService::class => Service\Factory\AplDocServiceFactory::class,
-            Service\AplOrdrService::class => Service\Factory\AplOrderServiceFactory::class,
+            Service\AplOrderService::class => Service\Factory\AplOrderServiceFactory::class,
             Service\AplService::class => Service\Factory\AplServiceFactory::class,
             Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
             Service\FtpManager::class => Service\Factory\FtpManagerFactory::class,

@@ -13,6 +13,7 @@ use Application\Entity\Contact;
 use Application\Entity\Make;
 use Application\Entity\Model;
 use Application\Entity\Car;
+use Application\Entity\Order;
 
 /**
  * Description of ContactCarService
@@ -157,4 +158,5 @@ class ContactCarManager
         $this->entityManager->flush();
         return true;
     }
+    
 }

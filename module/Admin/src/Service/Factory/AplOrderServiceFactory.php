@@ -13,7 +13,9 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\AplDocService;
 use Admin\Service\AdminManager;
 use Admin\Service\AplService;
-use Admin\Service\AplDocService;
+use Admin\Service\AplOrderService;
+use Application\Service\OrderManager;
+use Application\Service\ContactCarManager;
 
 /**
  * Description of AplOrderService
@@ -30,9 +32,11 @@ class AplOrderServiceFactory  implements FactoryInterface
         $adminManager = $container->get(AdminManager::class); 
         $aplService = $container->get(AplService::class);
         $aplDocService = $container->get(AplDocService::class);
+        $orderManager = $container->get(OrderManager::class);
+        $contactCarManager = $container->get(ContactCarManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new AplOrderService($entityManager, $adminManager, $aplService,
-                $aplDocService);
+                $aplDocService, $orderManager, $contactCarManager);
     }
 }

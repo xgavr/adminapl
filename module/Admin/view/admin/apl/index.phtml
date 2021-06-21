@@ -66,17 +66,57 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-4">
         <div class="panel panel-success">
             <div class="panel-heading">
+                <h3 class="panel-title">Заказы</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="pull-left">
+                    Импорт из АПЛ
+                </div>
+                <div class="pull-right">
+                    <button value="/apl/unload-order" class="btn btn-default btn-xs refresh-button"
+                            title="Импорт одного заказа из АПЛ">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                    <button value="/apl/unload-orders" class="btn btn-default btn-xs refresh-button"
+                            title="Импорт заказов из АПЛ">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                </div>
+            </div>
+<!--            <div class="panel-body">
+                <div class="pull-left">
+                    Перепровести все
+                </div>
+                <div class="pull-right">
+                    <button value="/ptu/repost-all-ptu/" class="btn btn-default btn-xs refresh-button"
+                            title="Поступления товаров">ПТУ
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                    <button value="/st/repost-all-st/" class="btn btn-default btn-xs refresh-button"
+                            title="Списания товаров">СТ
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                </div>
+            </div>-->
+        </div>
+    </div>    
+
+    <div class="col-md-4">
+        <div class="panel panel-success">
+            <div class="panel-heading">
                 <h3 class="panel-title">Поставщики</h3>
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-                <p>
+                <div class="pull-left">
                     Обновление списка <a href="/supplier">поставщиков</a>
-                </p>
-                <button class="btn btn-default refresh-button" value="/apl/get-suppliers">
-                    <span class="glyphicon glyphicon-refresh" ></span>Обновить
-                </button>
-                
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs refresh-button" value="/apl/get-suppliers">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button>
+                </div>    
             </div>
             <div class="panel-body">
                 <div class="pull-left">
@@ -110,6 +150,7 @@ $this->pageBreadcrumbs()->setItems([
             </div>
         </div>
     </div>    
+
 </div>
 
 <div class="row">

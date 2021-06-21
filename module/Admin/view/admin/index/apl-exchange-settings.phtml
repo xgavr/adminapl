@@ -78,6 +78,10 @@ $form->get('ptu')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('order')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('market')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -196,6 +200,11 @@ $form->prepare();
             <?= $this->formLabel($form->get('ptu')); ?>
             <?= $this->formElement($form->get('ptu')); ?>
             <?= $this->formElementErrors($form->get('ptu')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('order')); ?>
+            <?= $this->formElement($form->get('order')); ?>
+            <?= $this->formElementErrors($form->get('order')); ?>                  
         </div>
     </div>    
     <div class="col-md-3" id="side-nav" >

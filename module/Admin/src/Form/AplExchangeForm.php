@@ -224,6 +224,18 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                 
         $this->add([            
             'type'  => 'select',
+            'name' => 'order',
+            'options' => [
+                'label' => 'Загружать заказы',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
             'name' => 'market',
             'options' => [
                 'label' => 'Выгружать парйс листы в ТП',
@@ -415,6 +427,17 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'ptu',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'order',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
