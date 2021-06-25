@@ -16,6 +16,7 @@ use Admin\Service\AplService;
 use Admin\Service\AplOrderService;
 use Application\Service\OrderManager;
 use Application\Service\ContactCarManager;
+use Company\Service\LegalManager;
 
 /**
  * Description of AplOrderService
@@ -34,9 +35,11 @@ class AplOrderServiceFactory  implements FactoryInterface
         $aplDocService = $container->get(AplDocService::class);
         $orderManager = $container->get(OrderManager::class);
         $contactCarManager = $container->get(ContactCarManager::class);
+        $legalManager = $container->get(LegalManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new AplOrderService($entityManager, $adminManager, $aplService,
-                $aplDocService, $orderManager, $contactCarManager);
+                $aplDocService, $orderManager, $contactCarManager,
+                $legalManager);
     }
 }

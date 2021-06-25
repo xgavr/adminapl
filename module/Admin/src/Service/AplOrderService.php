@@ -15,6 +15,7 @@ use Laminas\Json\Encoder;
 use Company\Entity\Office;
 use Application\Entity\Supplier;
 use Company\Entity\Legal;
+use Company\Entity\BankAccount;
 use Company\Entity\Contract;
 use Application\Entity\ContactCar;
 use Stock\Entity\Ptu;
@@ -78,9 +79,16 @@ class AplOrderService {
      */
     private $contactCarManager;
 
+    /**
+     * Legal manager
+     * @var \Company\Service\LegalManager
+     */
+    private $legalManager;
+
     
     public function __construct($entityManager, $adminManager, $aplSevice,
-            $aplDocService, $orderManager, $contactCarManager)
+            $aplDocService, $orderManager, $contactCarManager,
+            $legalManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
@@ -88,6 +96,7 @@ class AplOrderService {
         $this->aplDocService = $aplDocService;
         $this->orderManager = $orderManager;
         $this->contactCarManager = $contactCarManager;
+        $this->legalManager = $legalManager;
     }
     
     private function aplApi() 
@@ -153,6 +162,115 @@ class AplOrderService {
         
         return Order::MODE_MAN;
     }
+        
+    /**
+     * Подставить банковский счет 
+     * @param Legal $legal
+     * @param array $data
+     * @return BankAccount
+     */
+    private function addBankAccount($legal, $data)
+    {
+        $rs = (empty($data['firmAccount'])) ? null:$data['firmAccount']; 
+        $bik =  (empty($data['bik'])) ? null:$data['bik'];        
+        $bankAccount = null;
+        
+        if ($rs && $bik){
+            $bankAccount = $this->entityManager->getRepository(\Company\Entity\BankAccount::class)
+                    ->findBy(['rs' => $rs, 'bik' => $bik, 'legal' => $legal->getId()]);
+            if (!$bankAccount){
+                $this->legalManager->addBankAccount($legal, [
+                    'bik' => $bik,
+                    'rs' => $rs,
+                    'name' => (empty($data['bank'])) ? null:$data['bank'],
+                    'ks' => (empty($data['firmAccount1'])) ? null:$data['firmAccount1'],
+                ]);
+            }
+        }
+        return $bankAccount;
+    }
+    
+    /**
+     * Найти юрлицо грузополучателя
+     * @param Contact $contact
+     * @param array $data
+     * @return Legal
+     */
+    private function findConsignee($contact, $data)
+    {
+        $inn = (empty($data['inn'])) ? null:$data['inn']; 
+        $kpp = (empty($data['consigneeKpp'])) ? null:$data['consigneeKpp']; 
+        
+        if (!$inn || !$kpp){
+            return;
+        }
+        
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->findOneByInnKpp($inn, $kpp);
+        if (!$legal){
+            $legal = $this->legalManager->addLegal($contact, [
+                'inn' => $inn,
+                'kpp' => $kpp,
+                'name' => (empty($data['consignee'])) ? null:$data['consignee'],
+                'ogrn' => (empty($data['ogrn'])) ? null:$data['ogrn'],
+                'okpo' => (empty($data['okpo'])) ? null:$data['okpo'],
+                'address' => (empty($data['consigneeAddress'])) ? null:$data['consigneeAddress'],
+            ]);
+        }
+        
+        return $legal;
+    }
+    
+    /**
+     * Найти юрлицо плательщика 
+     * @param Contact $contact
+     * @param array $data
+     * @return Legal
+     */
+    private function findLegal($contact, $data)
+    {
+        $legal = null;
+        $inn = (empty($data['inn'])) ? null:$data['inn']; 
+        $kpp = (empty($data['kpp'])) ? null:$data['kpp']; 
+        
+        if (!$inn){
+            return;
+        }
+        
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->findOneByInnKpp($inn, $kpp);
+        if (!$legal){
+            $legal = $this->legalManager->addLegal($contact, [
+                'inn' => $inn,
+                'kpp' => $kpp,
+                'name' => (empty($data['firmName'])) ? null:$data['firmName'],
+                'ogrn' => (empty($data['ogrn'])) ? null:$data['ogrn'],
+                'okpo' => (empty($data['okpo'])) ? null:$data['okpo'],
+                'address' => (empty($data['firmAddress'])) ? null:$data['firmAddress'],
+            ]);
+        }
+        
+        if ($legal){
+            $this->addBankAccount($legal, $data);
+        }
+        
+        return $legal;
+    }
+    
+    /**
+     * Обновить колонку цен клиента
+     * @param AplClient $client
+     * @param integer $pricecol
+     */
+    private function updateClientPricecol($client, $pricecol)
+    {
+        if (is_numeric($pricecol)){
+            $this->entityManager->getConnection()
+                    ->update('client', ['pricecol' => $pricecol], ['id' => $client->getId()]);
+        }
+        
+        return;
+    }
     
     /**
      * Загрузить заказ
@@ -166,9 +284,14 @@ class AplOrderService {
         if (!$client){
             return false;
         }
+        
         $contact = $this->getLegalContact();
         if (!$contact){
             return false;
+        }
+        
+        if (!empty($data['pricecol'])){
+            $this->updateClientPricecol($client, $data['pricecol']);
         }
         
         $office = $this->aplDocService->officeFromAplId($data['publish']);

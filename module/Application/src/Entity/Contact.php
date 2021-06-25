@@ -504,8 +504,8 @@ class Contact {
     }    
    
     /**
-     * Добавляет новый email к этому contact.
-     * @param $email
+     * Добавляет новый legal к этому contact.
+     * @param $legal
      */   
     public function addLegal($legal) 
     {

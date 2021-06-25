@@ -46,16 +46,20 @@ class LegalManager
     public function updateLegal($legal, $data)
     {                
 
-        $legal->setName($data['name']);            
-        $legal->setInn($data['inn']);            
-        $legal->setKpp($data['kpp']);            
-        $legal->setOgrn($data['ogrn']);            
-        $legal->setOkpo($data['okpo']);            
-        $legal->setHead($data['head']);            
-        $legal->setChiefAccount($data['chiefAccount']);            
-        $legal->setInfo($data['info']);            
-        $legal->setAddress($data['address']);            
-        $legal->setStatus($data['status']);  
+        $inn = (empty($data['inn'])) ? null:$data['inn']; 
+        $kpp = (empty($data['kpp'])) ? null:$data['kpp']; 
+        $name = (empty($data['name'])) ? null:$data['name']; 
+
+        $legal->setName($name);            
+        $legal->setInn($inn);            
+        $legal->setKpp($kpp);            
+        $legal->setOgrn((empty($data['ogrn'])) ? null:$data['ogrn']);            
+        $legal->setOkpo((empty($data['okpo'])) ? null:$data['okpo']);            
+        $legal->setHead((empty($data['head'])) ? null:$data['head']);            
+        $legal->setChiefAccount((empty($data['chiefAccount'])) ? null:$data['chiefAccount']);            
+        $legal->setInfo((empty($data['info'])) ? null:$data['info']);            
+        $legal->setAddress((empty($data['address'])) ? null:$data['address']);            
+        $legal->setStatus((empty($data['status'])) ? Legal::STATUS_ACTIVE:$data['status']);            
         
         $currentDate = date('Y-m-d H:i:s');
         $legal->setDateStart($currentDate);
@@ -79,13 +83,16 @@ class LegalManager
      */
     public function addLegal($contact, $data)
     {       
+        $inn = (empty($data['inn'])) ? null:$data['inn']; 
+        $kpp = (empty($data['kpp'])) ? null:$data['kpp']; 
+        $name = (empty($data['name'])) ? null:$data['name']; 
         
         $legal = $this->entityManager->getRepository(Legal::class)
-                ->findOneByInnKpp($data['inn'], $data['kpp']);
+                ->findOneByInnKpp($inn, $kpp);
         
         if (!$legal){            
             $legal = $this->entityManager->getRepository(Legal::class)
-                    ->findOneByName($data['name']);            
+                    ->findOneByName($name);            
         }
         
         if ($legal){
@@ -96,16 +103,16 @@ class LegalManager
 
         if ($legal == null){
             $legal = new Legal();            
-            $legal->setName($data['name']);            
-            $legal->setInn($data['inn']);            
-            $legal->setKpp($data['kpp']);            
-            $legal->setOgrn($data['ogrn']);            
-            $legal->setOkpo($data['okpo']);            
-            $legal->setHead($data['head']);            
-            $legal->setChiefAccount($data['chiefAccount']);            
-            $legal->setInfo($data['info']);            
-            $legal->setAddress($data['address']);            
-            $legal->setStatus($data['status']);            
+            $legal->setName($name);            
+            $legal->setInn($inn);            
+            $legal->setKpp($kpp);            
+            $legal->setOgrn((empty($data['ogrn'])) ? null:$data['ogrn']);            
+            $legal->setOkpo((empty($data['okpo'])) ? null:$data['okpo']);            
+            $legal->setHead((empty($data['head'])) ? null:$data['head']);            
+            $legal->setChiefAccount((empty($data['chiefAccount'])) ? null:$data['chiefAccount']);            
+            $legal->setInfo((empty($data['info'])) ? null:$data['info']);            
+            $legal->setAddress((empty($data['address'])) ? null:$data['address']);            
+            $legal->setStatus((empty($data['status'])) ? Legal::STATUS_ACTIVE:$data['status']);            
 
             $currentDate = date('Y-m-d H:i:s');
             $legal->setDateCreated($currentDate);
@@ -190,14 +197,14 @@ class LegalManager
     public function addBankAccount($legal, $data, $flushnow = false)
     {                
         $bankAccount = new BankAccount();            
-        $bankAccount->setName($data['name']);            
-        $bankAccount->setCity($data['city']);            
-        $bankAccount->setBik($data['bik']);            
-        $bankAccount->setKs($data['ks']);            
-        $bankAccount->setRs($data['rs']);            
-        $bankAccount->setStatus($data['status']);            
-        $bankAccount->setApi($data['api']);            
-        $bankAccount->setStatement($data['statement']);            
+        $bankAccount->setName((empty($data['name'])) ? null:$data['name']);            
+        $bankAccount->setCity((empty($data['city'])) ? null:$data['city']);            
+        $bankAccount->setBik((empty($data['bik'])) ? null:$data['bik']);            
+        $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
+        $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);            
+        $bankAccount->setStatus((empty($data['status'])) ? BankAccount::STATEMENT_ACTIVE:$data['status']);            
+        $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
+        $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
 
         $currentDate = date('Y-m-d H:i:s');
         $bankAccount->setDateCreated($currentDate);
@@ -220,14 +227,14 @@ class LegalManager
      */
     public function updateBankAccount($bankAccount, $data, $flushnow = false)
     {                
-        $bankAccount->setName($data['name']);            
-        $bankAccount->setCity($data['city']);            
-        $bankAccount->setBik($data['bik']);            
-        $bankAccount->setKs($data['ks']);            
-        $bankAccount->setRs($data['rs']);            
-        $bankAccount->setStatus($data['status']);            
-        $bankAccount->setApi($data['api']);            
-        $bankAccount->setStatement($data['statement']);            
+        $bankAccount->setName((empty($data['name'])) ? null:$data['name']);            
+        $bankAccount->setCity((empty($data['city'])) ? null:$data['city']);            
+        $bankAccount->setBik((empty($data['bik'])) ? null:$data['bik']);            
+        $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
+        $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);            
+        $bankAccount->setStatus((empty($data['status'])) ? BankAccount::STATEMENT_ACTIVE:$data['status']);            
+        $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
+        $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
 
         $this->entityManager->persist($bankAccount);
 
