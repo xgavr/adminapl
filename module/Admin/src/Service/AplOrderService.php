@@ -17,12 +17,14 @@ use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\BankAccount;
 use Company\Entity\Contract;
+use Application\Entity\Shipping;
 use Application\Entity\ContactCar;
-use Stock\Entity\Ptu;
-use Stock\Entity\Vtp;
-use Stock\Entity\Ot;
 use Application\Entity\Contact;
+use Application\Entity\Courier;
 use Application\Entity\Client as AplClient;
+use Application\Entity\Make;
+use Application\Entity\Model;
+use Application\Entity\Car;
 use Stock\Entity\St;
 use Stock\Entity\Pt;
 use User\Entity\User;
@@ -273,6 +275,140 @@ class AplOrderService {
     }
     
     /**
+     * 
+     * @param Office $office
+     * @param array $data
+     * @return Shipping
+     */
+    private function findDelivery($office, $data)
+    {
+        $shipping = null;
+        if (!empty($data['delivery'])){
+            $shipping = $this->entityManager->getRepository(Shipping::class)
+                    ->findBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
+        }
+        
+        if (!$shipping){
+            $shipping = $this->entityManager->getRepository(Shipping::class)
+                    ->findDefaultShipping($office);
+        }
+        
+        return $shipping;
+    }
+    
+    /**
+     * Конвертация apl ac в ас
+     * @param integer $ac
+     */
+    private function aplAc($ac)
+    {
+        switch ($ac){
+            case '3': return ContactCar::AC_YES;
+            case '5': return ContactCar::AC_NO;
+            default : return ContactCar::AC_UNKNOWN;    
+        }
+        
+        return;
+    }
+
+    /**
+     * Конвертация apl trans в tm
+     * @param integer $tm
+     */
+    private function aplTm($tm)
+    {
+        switch ($tm){
+            case '3': return ContactCar::TM_MECH;
+            case '4': return ContactCar::TM_AUTO;
+            default : return ContactCar::TM_UNKNOWN;    
+        }
+        
+        return;
+    }
+
+    /**
+     * Конвертация apl wheel в wheel
+     * @param integer $wheel
+     */
+    private function aplWheel($wheel)
+    {
+        switch ($wheel){
+            case '1': return ContactCar::WHEEL_LEFT;
+            case '2': return ContactCar::WHEEL_RIGHT;
+            default : return ContactCar::WHEEL_LEFT;    
+        }
+        
+        return;
+    }
+
+    /**
+     * Добавить/изменить машину в заказе
+     * @param Contact $contact
+     * @param array $data
+     * @return ContactCar
+     */
+    private function addOrderCar($contact, $data)
+    {
+        $vin = $make = $model = $car = NULL;
+        if (!empty($data['vin'])){
+            $vin = $data['vin'];
+        }
+        if (!empty($data['brand'])){
+            $make = $this->entityManager->getRepository(Make::class)
+                    ->findOneBy(['aplId' => $data['brand']]);
+        }
+        if (!empty($data['serie'])){
+            $model = $this->entityManager->getRepository(Model::class)
+                    ->findOneBy(['aplId' => $data['serie']]);
+        }
+        if (!empty($data['model'])){
+            $car = $this->entityManager->getRepository(Car::class)
+                    ->findOneBy(['aplId' => $data['model']]);
+        }
+        $contactCar = $this->entityManager->getRepository(ContactCar::class)
+                ->findContactCar($contact, [
+                    'vin' => $vin,
+                    'make' => $make,
+                    'model' => $model,
+                    'car' => $car,
+                ]);
+        if ($contactCar){
+            $this->contactCarManager->update($contactCar, [
+                'vin' => ($vin) ? $vin:$contactCar->getVin(),
+                'comment' => (!empty($data['info'])) ? $data['info']:$contactCar->getComment(),
+                'yocm' => (!empty($data['year'])) ? $data['year']:$contactCar->getYocm(),
+                'wheel' => (!empty($data['wheel'])) ? $this->aplWheel($data['wheel']):$contactCar->getWheel(),
+                'tm' => (!empty($data['trans'])) ? $this->aplTm($data['trans']):$contactCar->getTm(),
+                'ac' => (!empty($data['ac'])) ? $this->aplAc($data['ac']):$contactCar->getAc(),
+                'md' => (!empty($data['motor3'])) ? $data['motor3']:$contactCar->getMd(),
+                'ed' => (!empty($data['motor1'])) ? $data['motor1']:$contactCar->getEd(),
+                'ep' => (!empty($data['motor2'])) ? $data['motor2']:$contactCar->getEp(),
+                'make' => ($make) ? $make:$contactCar->getMake(),
+                'model' => ($model) ? $model:$contactCar->getModel(),
+                'car' => ($car) ? $car:$contactCar->getCar(),                
+            ]);
+        }
+        if (!$contactCar && ($vin || $make)){
+            $contactCar = $this->contactCarManager->add($contact, [
+                'vin' => $vin,
+                'comment' => (!empty($data['info'])) ? $data['info']:null,
+                'yocm' => (!empty($data['year'])) ? $data['year']:null,
+                'wheel' => (!empty($data['wheel'])) ? $this->aplWheel($data['wheel']):null,
+                'tm' => (!empty($data['trans'])) ? $this->aplTm($data['trans']):null,
+                'ac' => (!empty($data['ac'])) ? $this->aplAc($data['ac']):null,
+                'md' => (!empty($data['motor3'])) ? $data['motor3']:null,
+                'ed' => (!empty($data['motor1'])) ? $data['motor1']:null,
+                'ep' => (!empty($data['motor2'])) ? $data['motor2']:null,
+                'make' => $make,
+                'model' => $model,
+                'car' => $car,
+            ]);
+        }
+        
+        return $contactCar;
+    }
+    
+    /**
      * Загрузить заказ
      * 
      * @param array $data
@@ -296,13 +432,6 @@ class AplOrderService {
         
         $office = $this->aplDocService->officeFromAplId($data['publish']);
         
-        $orderData = [
-            'status' => $this->orderStatus($data),
-            'mode' => $this->orderMode($data),
-            'dateMod' => $data['lastmod'],
-            'info' => (empty($data['info21'])) ? null:$data['info21'],
-        ];
-
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
         $dateMod = $data['lastmod'];
@@ -310,48 +439,132 @@ class AplOrderService {
             $dateMod = $data['created'];
         }
         
-        $legal = $this->legalFromSupplierAplId($data['name'], $data['ds'], $data['supplier']);        
-        $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $this->getCashContract($data));
+        $dateOper = NULL;
+        if (!empty($data['type'])){
+            $dateValidator->setFormat('Y-m-d');
+            $dateOper = $data['type'];
+            if (!$dateValidator->isValid($dateOper)){
+                $dateOper = $data['type'];
+            }
+        }    
         
-        $dataPtu['office'] = $office;
-        $dataPtu['legal'] = $legal;
-        $dataPtu['contract'] = $contract; 
+        $contactCarId = null;
+        $contactCar = $this->addOrderCar($contact, $data);
+        if ($contactCar){
+            $contactCarId = $contactCar->getId();
+        }
+        
+        $courierId = NULL;
+        if (!empty($data['carrier'])){
+            $courier = $this->entityManager->getRepository(Courier::class)
+                    ->findByAplId($data['carrier']);
+            if ($courier){
+                $courierId = $courier->getId();
+            }    
+        }    
+        
+        $legalId = null;
+        $legal = $this->findLegal($contact, $data);
+        if ($legal){
+            $legalId = $legal->getId();
+        }
+        
+        $recipientId = null;
+        $recipient = $this->findConsignee($contact, $data);
+        if ($recipient){
+            $recipientId = $recipient->getId();
+        }
+        
+        $shippingId = NULL;
+        if (!empty($data['delivery'])){
+            $shipping = $this->entityManager->getRepository(Shipping::class)
+                    ->findByAplId($data['delivery']);
+            if ($shipping){
+                $shippingId = $shipping->getId();
+            }    
+        }    
 
+        $skiperId = NULL;
+        if (!empty($data['skiper'])){
+            $skiper = $this->entityManager->getRepository(User::class)
+                    ->findByAplId($data['skiper']);
+            if ($skiper){
+                $skiperId = $skiper->getId();
+            }    
+        }    
+
+        $userId = NULL;
+        if (!empty($data['user'])){
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findByAplId($data['user']);
+            if ($user){
+                $userId = $user->getId();
+            }    
+        }    
+
+        $orderData = [
+            'address' => (empty($data['address'])) ? null:$data['address'],
+            'aplId' => $data['id'],
+            'dateMod' => $dateMod,
+            'dateOper' => $dateOper,
+            'dateShipment' => $dateOper,
+            'geo' => (empty($data['geo'])) ? null:$data['geo'],
+            'info' => (empty($data['info21'])) ? null:$data['info21'],
+            'mode' => $this->orderMode($data),
+            'shipmentDistance' => (empty($data['delivery_distance'])) ? null:$data['delivery_distance'],
+            'shipmentRate' => (empty($data['delivery_rate'])) ? null:$data['delivery_rate'],
+            'shipmentAddRate' => (empty($data['delivery_rate_adv'])) ? null:$data['delivery_rate_adv'],
+            'shipmentTotal' => (empty($data['delivery_sum'])) ? null:$data['delivery_sum'],
+            'status' => $this->orderStatus($data),
+            'trackNumber' => (empty($data['tracker'])) ? null:$data['tracker'],
+            'contactCar' =>$contactCarId,
+            'courier' => $courierId,
+            'legal' => $legalId,
+            'recipient' => $recipientId,
+            'shipping' => $shippingId,
+            'skiper' => $skiperId,
+            'user' => $userId,
+        ];
+        
         $order = $this->entityManager->getRepository(Order::class)
                 ->findBy(['aplId' => $data['id']]);        
         
         if ($order){
             $this->orderManager->updateOrder($order, $orderData);
             $this->orderManager->removeOrderBids($order); 
+            $this->orderManager->removeOrderSelections($order);
         } else {        
             $order = $this->orderManager->addNewOrder($office, $contact, $orderData);
         }    
+        
+        if ($order && isset($data['selections'])){
+            foreach ($data['selections'] as $selection){
+                if (!empty($selection['q'])){
+                    $this->orderManager->addNewSelection($order, [
+                       'oem'  => $selection['q'],
+                       'comment'  => $selection['qc'],
+                    ]);
+                }
+            }    
+        }
         
         if ($order && isset($data['tp'])){
             $rowNo = 1;
             foreach ($data['tp'] as $tp){
                 if (isset($tp['good'])){
-                    $good = $this->findGood($tp['good']);   
+                    $good = $this->aplDocService->findGood($tp['good']);   
                 }    
                 if (empty($good)){
     //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
                 } else {
 
-                    $this->ptuManager->addPtuGood($ptu->getId(), [
-                        'status' => $ptu->getStatus(),
-                        'statusDoc' => $ptu->getStatusDoc(),
-                        'quantity' => $tp['sort'],                    
-                        'amount' => $tp['bag_total'],
-                        'good_id' => $good->getId(),
-                        'comment' => '',
-                        'info' => '',
-                        'countryName' => (isset($tp['country'])) ? $tp['country']:'',
-                        'countryCode' => (isset($tp['countrycode'])) ? $tp['countrycode']:'',
-                        'unitName' => (isset($tp['pack'])) ? $tp['pack']:'',
-                        'unitCode' => (isset($tp['packcode'])) ? $tp['packcode']:'',
-                        'ntd' => (isset($tp['gtd'])) ? $tp['gtd']:'',
-                    ], $rowNo);
-                    $rowNo++;
+                    $this->orderManager->addNewBid($order, [
+                        'num' => $tp['sort'],
+                        'price' => $tp['comment'],
+                        'good' => $good,
+                        'displayName' => (empty($tp['dispname'])) ? null:$tp['dispname'],
+                        'oem' => (empty(mb_substr($tp['selection'], 3))) ? null:mb_substr($tp['selection'], 3),                        
+                    ]);
                 }    
             }
         }  
@@ -433,7 +646,7 @@ class AplOrderService {
             var_dump($body);
             exit;
         }
-        var_dump($result); exit;
+//        var_dump($result); exit;
 
         if (is_array($result)){
             if ($this->getOrder($result)){ 

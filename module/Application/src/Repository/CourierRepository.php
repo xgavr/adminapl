@@ -10,6 +10,8 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Courier;
+use Company\Entity\Office;
+use Application\Entity\Shipping;
 
 /**
  * Description of CourierRepository
@@ -31,4 +33,25 @@ class CourierRepository extends EntityRepository{
 
         return $queryBuilder->getQuery();
     }        
+    
+    /**
+     * Доставка офиса по умолчанию
+     * @param Office $office
+     * @return Shipping
+     */
+    public function findDefaultShipping($office)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('s')
+            ->from(Shipping::class, 's')
+            ->where('s.office = ?1')
+            ->setParameter('1', $office->getId())    
+            ->orderBy('s.id')
+                ;
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();        
+    }
 }

@@ -20,6 +20,9 @@ use Application\Entity\Courier;
 use Company\Entity\Office;
 use Company\Entity\Legal;
 use Application\Entity\Shipping;
+use Application\Entity\Oem;
+use Application\Entity\Selection;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of OrderService
@@ -54,6 +57,7 @@ class OrderManager
         $bid = new Bid();
         $bid->setNum($data['num']);
         $bid->setPrice($data['price']);
+        $bid->setDisplayName((empty($data['displayName'])) ? null:$data['displayName']);
         $currentDate = date('Y-m-d H:i:s');        
         $bid->setDateCreated($currentDate);
         
@@ -65,9 +69,23 @@ class OrderManager
             $bid->setGood($good);
         }    
         
+        $bid->setOem(null);
+        
+        if (!empty($data['oem'])){
+            $filter = new ArticleCode();
+            $oe = $filter->filter($data['oem']);
+            if ($oe){
+                $oem = $this->entityManager->getRepository(Oem::class)
+                        ->findOneByOe($oe);
+                $bid->setOem($oem);
+            }    
+        }
+        
         $currentUser = $this->entityManager->getRepository(User::class)
                 ->findOneByEmail($this->authService->getIdentity());
-        $bid->setUser($currentUser);  
+        if ($currentUser){
+            $bid->setUser($currentUser);  
+        }    
         
         $bid->setOrder($order);
         
@@ -80,6 +98,32 @@ class OrderManager
         }    
     }
     
+    public function addNewSelection($order, $data)
+    {
+        $selection = new Selection();
+        $selection->setComment((empty($data['comment'])) ? null:$data['comment']);
+        
+        if (!empty($data['oem'])){
+            $filter = new ArticleCode();
+            $oe = $filter->filter($data['oem']);
+            if ($oe){
+                $oem = $this->entityManager->getRepository(Oem::class)
+                        ->findOneByOe($oe);
+                $selection->setOem($oem);
+            }    
+        }
+        
+        $bid->setOrder($order);
+        
+        // Добавляем сущность в менеджер сущностей.
+        $this->entityManager->persist($selection);
+        
+        // Применяем изменения к базе данных.
+        if ($flushnow){
+            $this->entityManager->flush(); 
+        }    
+    }
+
     /**
      * Новый заказ
      * @param Office $office
@@ -134,6 +178,13 @@ class OrderManager
             $order->setCourier($courier);
         }
         
+        $order->setLegal(null);
+        if (!empty($data['legal'])){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->find($data['legal']);
+            $order->setRecipient($legal);
+        }
+
         $order->setRecipient(null);
         if (!empty($data['recipient'])){
             $recipient = $this->entityManager->getRepository(Legal::class)
@@ -238,6 +289,13 @@ class OrderManager
             $order->setCourier($courier);
         }
         
+        $order->setLegal(null);
+        if (!empty($data['legal'])){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->find($data['legal']);
+            $order->setRecipient($legal);
+        }
+
         $order->setRecipient(null);
         if (!empty($data['recipient'])){
             $recipient = $this->entityManager->getRepository(Legal::class)
@@ -286,6 +344,23 @@ class OrderManager
         
         foreach ($bids as $bid){
             $this->entityManager->remove($bid);
+        }
+        
+        $this->entityManager->flush();
+        return;
+    }
+    
+    /**
+     * Удалить строки подбора
+     * @param Order $order
+     */
+    public function removeOrderSelections($order)
+    {
+        $selections = $this->entityManager->getRepository(Selection::class)
+                    ->findByOrder($order->getId());
+        
+        foreach ($selections as $selection){
+            $this->entityManager->remove($selection);
         }
         
         $this->entityManager->flush();

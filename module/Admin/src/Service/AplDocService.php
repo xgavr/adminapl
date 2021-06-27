@@ -288,7 +288,7 @@ class AplDocService {
      * @param array $data
      * @return Goods
      */
-    private function findGood($data)
+    public function findGood($data)
     {
         if (isset($data['id'])){
             $good = $this->entityManager->getRepository(Goods::class)
