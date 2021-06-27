@@ -237,6 +237,11 @@ class Order {
         return $this->id;
     }
 
+    public function getLogKey() 
+    {
+        return 'ord:'.$this->id;
+    }
+    
     public function setId($id) 
     {
         $this->id = $id;

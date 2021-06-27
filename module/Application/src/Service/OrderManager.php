@@ -23,6 +23,8 @@ use Application\Entity\Shipping;
 use Application\Entity\Oem;
 use Application\Entity\Selection;
 use Application\Filter\ArticleCode;
+use Stock\Entity\Mutual;
+use Stock\Entity\Movement;
 
 /**
  * Description of OrderService
@@ -51,6 +53,69 @@ class OrderManager
         $this->entityManager = $entityManager;
         $this->authService = $authService;
     }
+    
+    /**
+     * Обновить взаиморасчеты заказа
+     * 
+     * @param Order $order
+     */
+    public function updateOrderMutuals($order)
+    {
+        
+        $this->entityManager->getRepository(Mutual::class)
+                ->removeDocMutuals($order->getLogKey());
+        
+        $data = [
+            'doc_key' => $order->getLogKey(),
+            'date_oper' => $order->getDateOper(),
+            'status' => $order->getStatus(),
+            'revise' => Mutual::REVISE_NOT,
+            'amount' => $order->getTotal(),
+            'legal_id' => $ptu->getLegal()->getId(),
+            'contract_id' => $ptu->getContract()->getId(),
+            'office_id' => $order->getOffice()->getId(),
+            'company_id' => $order->getCompany()->getId(),
+        ];
+
+        $this->entityManager->getRepository(Mutual::class)
+                ->insertMutual($data);
+        
+        return;
+    }    
+    
+    /**
+     * Обновить движения документа
+     * 
+     * @param Ptu $ptu
+     */
+    public function updatePtuMovement($ptu)
+    {
+        
+        $this->entityManager->getRepository(Movement::class)
+                ->removeDocMovements($ptu->getLogKey());
+        
+        $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
+                ->findByPtu($ptu->getId());
+        foreach ($ptuGoods as $ptuGood){
+            $data = [
+                'doc_key' => $ptu->getLogKey(),
+                'doc_row_key' => $ptuGood->getDocRowKey(),
+                'doc_row_no' => $ptuGood->getRowNo(),
+                'date_oper' => $ptu->getDocDate(),
+                'status' => $ptu->getStatus(),
+                'quantity' => $ptuGood->getQuantity(),
+                'amount' => $ptuGood->getAmount(),
+                'good_id' => $ptuGood->getGood()->getId(),
+                'office_id' => $ptu->getOffice()->getId(),
+                'company_id' => $ptu->getContract()->getCompany()->getId(),
+            ];
+
+            $this->entityManager->getRepository(Movement::class)
+                    ->insertMovement($data);
+        }
+        
+        return;
+    }        
     
     public function addNewBid($order, $data, $flushnow=true)
     {
