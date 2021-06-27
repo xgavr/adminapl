@@ -291,7 +291,7 @@ class AplOrderService {
                     ->findDefaultShipping($office);
         }
         
-        return $shipping;
+        return $shipping->getId();
     }
     
     /**
@@ -482,17 +482,6 @@ class AplOrderService {
             $recipientId = $recipient->getId();
         }
         
-        $shippingId = NULL;
-        if (!empty($data['delivery'])){
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findOneBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
-            if (!$shipping){
-                $shipping = $this->entityManager->getRepository(Shipping::class)
-                        ->findDefaultShipping($office);
-            }   
-            $shippingId = $shipping->getId();
-        }    
-
         $skiperId = NULL;
         if (!empty($data['skiper'])){
             $skiper = $this->entityManager->getRepository(User::class)
@@ -530,7 +519,7 @@ class AplOrderService {
             'courier' => $courierId,
             'legal' => $legalId,
             'recipient' => $recipientId,
-            'shipping' => $shippingId,
+            'shipping' => $this->findDelivery($office, $data),
             'skiper' => $skiperId,
             'user' => $userId,
         ];
