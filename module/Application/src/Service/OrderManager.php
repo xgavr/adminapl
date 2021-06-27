@@ -298,8 +298,13 @@ class OrderManager
         $result = $this->entityManager->getRepository(Bid::class)
                 ->getOrderNum($order);
         
-        $order->setTotal($result[0]['total']);
-        
+        $total = 0;
+        if (count($result)){
+            $total = $result[0]['total'];
+        }
+        $order->setTotal($total);
+
+
         $this->entityManager->persist($order);
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
