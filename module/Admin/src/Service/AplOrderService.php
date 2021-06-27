@@ -151,7 +151,7 @@ class AplOrderService {
     private function orderMode($data)
     {
         if (!empty($data['mode'])){
-            switch ((int) $data['mode']){
+            switch ($data['mode']){
                 case 'vin': return Order::MODE_VIN;
                 case 'order': return Order::MODE_ORDER;
                 case 'inner': return Order::MODE_INNER;
