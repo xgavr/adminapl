@@ -353,15 +353,15 @@ class AplOrderService {
         }
         if (!empty($data['brand'])){
             $make = $this->entityManager->getRepository(Make::class)
-                    ->findOneOneBy(['aplId' => $data['brand']]);
+                    ->findOneBy(['aplId' => $data['brand']]);
         }
         if (!empty($data['serie'])){
             $model = $this->entityManager->getRepository(Model::class)
-                    ->findOneOneBy(['aplId' => $data['serie']]);
+                    ->findOneBy(['aplId' => $data['serie']]);
         }
         if (!empty($data['model'])){
             $car = $this->entityManager->getRepository(Car::class)
-                    ->findOneOneBy(['aplId' => $data['model']]);
+                    ->findOneBy(['aplId' => $data['model']]);
         }
         $contactCar = $this->entityManager->getRepository(ContactCar::class)
                 ->findContactCar($contact, [
