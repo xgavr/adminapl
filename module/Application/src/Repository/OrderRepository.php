@@ -109,6 +109,7 @@ class OrderRepository extends EntityRepository{
      */
     public function findContactCar($contact, $data)
     {
+        var_dump($data); exit;
         $entityManager = $this->getEntityManager();                
         $queryBuilder = $entityManager->createQueryBuilder();
 
