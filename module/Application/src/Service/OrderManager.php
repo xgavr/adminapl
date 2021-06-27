@@ -107,18 +107,19 @@ class OrderManager
             if ($oe){
                 $oem = $this->entityManager->getRepository(Oem::class)
                         ->findOneByOe($oe);
-                
-                $selection = new Selection();
-                $selection->setComment((empty($data['comment'])) ? null:$data['comment']);
-                $selection->setOem($oem);
+                if ($oem){
+                    $selection = new Selection();
+                    $selection->setComment((empty($data['comment'])) ? null:$data['comment']);
+                    $selection->setOem($oem);
 
-                $selection->setOrder($order);
+                    $selection->setOrder($order);
 
-                // Добавляем сущность в менеджер сущностей.
-                $this->entityManager->persist($selection);
+                    // Добавляем сущность в менеджер сущностей.
+                    $this->entityManager->persist($selection);
 
-                // Применяем изменения к базе данных.
-                $this->entityManager->flush(); 
+                    // Применяем изменения к базе данных.
+                    $this->entityManager->flush(); 
+                }    
             }    
         }
         return;
