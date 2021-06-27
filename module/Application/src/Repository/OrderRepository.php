@@ -120,10 +120,10 @@ class OrderRepository extends EntityRepository{
             ->setParameter('1', $contact->getId())    
                 ;
         
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $row){
             if (!empty($data['vin']) && $row->getVin()){
-            var_dump($row->getVin()); exit;
                 if ($row->getVin() == $data['vin']){
                     return $row;
                 }
