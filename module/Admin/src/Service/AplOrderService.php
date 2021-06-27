@@ -381,9 +381,9 @@ class AplOrderService {
                 'md' => (!empty($data['motor3'])) ? $data['motor3']:$contactCar->getMd(),
                 'ed' => (!empty($data['motor1'])) ? $data['motor1']:$contactCar->getEd(),
                 'ep' => (!empty($data['motor2'])) ? $data['motor2']:$contactCar->getEp(),
-                'make' => ($make) ? $make->getId():$contactCar->getMake()->getId(),
-                'model' => ($model) ? $model->getId():$contactCar->getModel()->getId(),
-                'car' => ($car) ? $car->getId():$contactCar->getCar()->getId(),                
+                'make' => ($make) ? $make->getId():($contactCar->getMake()) ? $contactCar->getMake()->getId():null,
+                'model' => ($model) ? $model->getId():($contactCar->getModel()) ? $contactCar->getModel()->getId():null,
+                'car' => ($car) ? $car->getId():($contactCar->getCar()) ? $contactCar->getCar()->getId():null,                
             ]);
         }
         if (!$contactCar && ($vin || $make)){
