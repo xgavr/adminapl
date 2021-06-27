@@ -648,7 +648,7 @@ class AplOrderService {
 
         if (is_array($result)){
             if ($this->getOrder($result)){ 
-                //$this->unloadedOrder($result['id']);
+                $this->unloadedOrder($result['id']);
             }    
         } else {
             return false;
