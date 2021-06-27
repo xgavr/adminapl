@@ -100,8 +100,6 @@ class OrderManager
     
     public function addNewSelection($order, $data)
     {
-        $selection = new Selection();
-        $selection->setComment((empty($data['comment'])) ? null:$data['comment']);
         
         if (!empty($data['oem'])){
             $filter = new ArticleCode();
@@ -109,17 +107,21 @@ class OrderManager
             if ($oe){
                 $oem = $this->entityManager->getRepository(Oem::class)
                         ->findOneByOe($oe);
+                
+                $selection = new Selection();
+                $selection->setComment((empty($data['comment'])) ? null:$data['comment']);
                 $selection->setOem($oem);
+
+                $selection->setOrder($order);
+
+                // Добавляем сущность в менеджер сущностей.
+                $this->entityManager->persist($selection);
+
+                // Применяем изменения к базе данных.
+                $this->entityManager->flush(); 
             }    
         }
-        
-        $selection->setOrder($order);
-        
-        // Добавляем сущность в менеджер сущностей.
-        $this->entityManager->persist($selection);
-        
-        // Применяем изменения к базе данных.
-        $this->entityManager->flush(); 
+        return;
     }
 
     /**
