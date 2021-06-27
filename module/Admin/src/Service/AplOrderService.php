@@ -371,6 +371,15 @@ class AplOrderService {
                     'car' => ($car) ? $car->getId():null,
                 ]);
         if ($contactCar){
+            if (!$make && $contactCar->getMake()){
+                $make = $contactCar->getMake();
+            }
+            if (!$model && $contactCar->getModel()){
+                $model = $contactCar->getModel();
+            }
+            if (!$car && $contactCar->getCar()){
+                $car = $contactCar->getCar();
+            }
             $this->contactCarManager->update($contactCar, [
                 'vin' => ($vin) ? $vin:$contactCar->getVin(),
                 'comment' => (!empty($data['info'])) ? $data['info']:$contactCar->getComment(),
@@ -381,9 +390,9 @@ class AplOrderService {
                 'md' => (!empty($data['motor3'])) ? $data['motor3']:$contactCar->getMd(),
                 'ed' => (!empty($data['motor1'])) ? $data['motor1']:$contactCar->getEd(),
                 'ep' => (!empty($data['motor2'])) ? $data['motor2']:$contactCar->getEp(),
-                'make' => ($make) ? $make->getId():($contactCar->getMake()) ? $contactCar->getMake()->getId():null,
-                'model' => ($model) ? $model->getId():($contactCar->getModel()) ? $contactCar->getModel()->getId():null,
-                'car' => ($car) ? $car->getId():($contactCar->getCar()) ? $contactCar->getCar()->getId():null,                
+                'make' => ($make) ? $make->getId():null,
+                'model' => ($model) ? $model->getId():null,
+                'car' => ($car) ? $car->getId():null,                
             ]);
         }
         if (!$contactCar && ($vin || $make)){
