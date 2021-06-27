@@ -407,7 +407,7 @@ class AplOrderService {
                 'ed' => (!empty($data['motor1'])) ? $data['motor1']:null,
                 'ep' => (!empty($data['motor2'])) ? $data['motor2']:null,
                 'make' => ($make) ? $make->getId():null,
-                'model' => ($mode) ? $model->getId():null,
+                'model' => ($model) ? $model->getId():null,
                 'car' => ($car) ? $car->getId():null,
             ]);
         }
