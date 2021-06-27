@@ -100,7 +100,7 @@ class Selection {
     public function setOem($oem) 
     {
         $this->oem = $oem;
-        $oem->addSelection($this);
+//        $oem->addSelection($this);
     }     
         
 }
