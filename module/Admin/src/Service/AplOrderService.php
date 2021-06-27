@@ -130,8 +130,8 @@ class AplOrderService {
         ]);
         
         $client = $this->entityManager->getRepository(AplClient::class)
-                ->find($data['client']);
-        var_dump($client->getId()); exit;
+                ->findByAplId($data['client']);
+
         return $client;
     }
 
