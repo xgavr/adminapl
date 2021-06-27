@@ -116,27 +116,21 @@ class ContactCarManager
 
         $contactCar->setMake(null);
         if (isset($data['make'])){
-            if (is_integer($data['make'])){
-                $make = $this->entityManager->getRepository(Make::class)
-                        ->find($data['make']);
-                $contactCar->setMake($make);
-            }
+            $make = $this->entityManager->getRepository(Make::class)
+                    ->find($data['make']);
+            $contactCar->setMake($make);
         }    
         $contactCar->setModel(null);
         if (isset($data['model'])){
-            if (is_integer($data['model'])){
-                $model = $this->entityManager->getRepository(Model::class)
-                        ->find($data['model']);
-                $contactCar->setModel($model);
-            }
+            $model = $this->entityManager->getRepository(Model::class)
+                    ->find($data['model']);
+            $contactCar->setModel($model);
         }    
         $contactCar->setCar(null);
         if (isset($data['car'])){
-            if (is_integer($data['car'])){
-                $car = $this->entityManager->getRepository(Car::class)
-                        ->find($data['car']);
-                $contactCar->setCar($car);
-            }
+            $car = $this->entityManager->getRepository(Car::class)
+                    ->find($data['car']);
+            $contactCar->setCar($car);
         }    
         
         $this->entityManager->persist($contactCar);
