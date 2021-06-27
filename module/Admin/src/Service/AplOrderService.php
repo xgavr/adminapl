@@ -426,7 +426,7 @@ class AplOrderService {
         if (!$client){
             return false;
         }
-        var_dump($data); exit;
+//        var_dump($data); exit;
         
         $contact = $client->getLegalContact();
         if (!$contact){
