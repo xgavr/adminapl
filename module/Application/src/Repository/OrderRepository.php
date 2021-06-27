@@ -121,7 +121,7 @@ class OrderRepository extends EntityRepository{
         
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $row){
-            if (!empty($data['vin'] && $row->getVin())){
+            if (!empty($data['vin']) && $row->getVin()){
                 if ($row->getVin() == $data['vin']){
                     return $row;
                 }
@@ -141,7 +141,7 @@ class OrderRepository extends EntityRepository{
                     }
                 }    
             }                    
-            if (!empty($data['make'] && $row->getMake())){
+            if (!empty($data['make']) && $row->getMake()){
                 if ($row->getMake() == $data['make']){
                     if (!empty($data['model']) && $row->getModel()){
                         if ($row->getModel() == $data['model']){
