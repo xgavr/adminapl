@@ -118,7 +118,7 @@ class AplOrderService {
      */
     protected function getClient($data)
     {
-        var_dump($data); exit;
+        var_dump($data['client']); exit;
         if (empty($data['client'])){
             return;
         }
