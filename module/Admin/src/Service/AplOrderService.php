@@ -485,7 +485,7 @@ class AplOrderService {
         $shippingId = NULL;
         if (!empty($data['delivery'])){
             $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findOneByAplId($data['delivery']);
+                    ->findOneBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
             if ($shipping){
                 $shippingId = $shipping->getId();
             }    
