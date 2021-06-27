@@ -118,7 +118,6 @@ class AplOrderService {
      */
     protected function getClient($data)
     {
-        var_dump($data['client']); exit;
         if (empty($data['client'])){
             return;
         }
@@ -132,6 +131,7 @@ class AplOrderService {
         
         $client = $this->entityManager->getRepository(AplClient::class)
                 ->find($data['client']);
+        var_dump($client->getId()); exit;
         return $client;
     }
 
