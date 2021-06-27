@@ -54,6 +54,10 @@ class OrderManager
     
     public function addNewBid($order, $data, $flushnow=true)
     {
+        if (empty($data['oem'])){
+            return;
+        }
+        
         $bid = new Bid();
         $bid->setNum($data['num']);
         $bid->setPrice($data['price']);
