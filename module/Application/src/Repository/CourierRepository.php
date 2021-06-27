@@ -50,6 +50,7 @@ class CourierRepository extends EntityRepository{
             ->where('s.office = ?1')
             ->setParameter('1', $office->getId())    
             ->orderBy('s.id')
+            ->setMaxResults(1)    
                 ;
 
         return $queryBuilder->getQuery()->getOneOrNullResult();        
