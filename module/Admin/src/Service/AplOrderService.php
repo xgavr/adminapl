@@ -415,7 +415,7 @@ class AplOrderService {
      */
     public function getOrder($data)
     {
-//        var_dump($data); exit;
+        var_dump($data); exit;
         $client = $this->getClient($data);
         if (!$client){
             return false;
