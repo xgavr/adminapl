@@ -123,7 +123,8 @@ class OrderRepository extends EntityRepository{
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $row){
-            var_dump($row->getVin()); exit;
+            var_dump($row->getVin());
+            var_dump($data['vin']); exit;
             if (!empty($data['vin']) && $row->getVin()){
                 if ($row->getVin() == $data['vin']){
                     return $row;
