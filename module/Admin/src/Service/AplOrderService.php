@@ -486,9 +486,11 @@ class AplOrderService {
         if (!empty($data['delivery'])){
             $shipping = $this->entityManager->getRepository(Shipping::class)
                     ->findOneBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
-            if ($shipping){
-                $shippingId = $shipping->getId();
-            }    
+            if (!$shipping){
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->findDefaultShipping($office);
+            }   
+            $shippingId = $shipping->getId();
         }    
 
         $skiperId = NULL;
