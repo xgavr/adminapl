@@ -217,7 +217,6 @@ class Bid {
     public function setOem($oem) 
     {
         $this->oem = $oem;
-        $oem->addBid($this);
     }     
         
 }
