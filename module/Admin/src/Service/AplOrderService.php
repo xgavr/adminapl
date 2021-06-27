@@ -366,9 +366,9 @@ class AplOrderService {
         $contactCar = $this->entityManager->getRepository(ContactCar::class)
                 ->findContactCar($contact, [
                     'vin' => $vin,
-                    'make' => $make,
-                    'model' => $model,
-                    'car' => $car,
+                    'make' => ($make) ? $make->getId():null,
+                    'model' => ($model) ? $model->getId():null,
+                    'car' => ($car) ? $car->getId():null,
                 ]);
         if ($contactCar){
             $this->contactCarManager->update($contactCar, [
@@ -388,7 +388,7 @@ class AplOrderService {
         }
         if (!$contactCar && ($vin || $make)){
             $contactCar = $this->contactCarManager->add($contact, [
-                'vin' => $vin,
+                'vin' => ($vin) ? $vin:null,
                 'comment' => (!empty($data['info'])) ? $data['info']:null,
                 'yocm' => (!empty($data['year'])) ? $data['year']:null,
                 'wheel' => (!empty($data['wheel'])) ? $this->aplWheel($data['wheel']):null,
@@ -397,9 +397,9 @@ class AplOrderService {
                 'md' => (!empty($data['motor3'])) ? $data['motor3']:null,
                 'ed' => (!empty($data['motor1'])) ? $data['motor1']:null,
                 'ep' => (!empty($data['motor2'])) ? $data['motor2']:null,
-                'make' => $make->getId(),
-                'model' => $model->getId(),
-                'car' => $car->getId(),
+                'make' => ($make) ? $make->getId():null,
+                'model' => ($mode) ? $model->getId():null,
+                'car' => ($car) ? $car->getId():null,
             ]);
         }
         

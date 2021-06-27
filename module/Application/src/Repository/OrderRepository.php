@@ -142,11 +142,11 @@ class OrderRepository extends EntityRepository{
                 }    
             }                    
             if (!empty($data['make']) && $row->getMake()){
-                if ($row->getMake() == $data['make']){
+                if ($row->getMake()->getId() == $data['make']){
                     if (!empty($data['model']) && $row->getModel()){
-                        if ($row->getModel() == $data['model']){
+                        if ($row->getModel()->getId() == $data['model']){
                             if (!empty($data['car']) && $row->getCar()){
-                                if ($row->getCar() == $data['car']){
+                                if ($row->getCar()->getId() == $data['car']){
                                     return $row;
                                 }                                
                             } else {
