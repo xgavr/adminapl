@@ -177,7 +177,7 @@ class AplOrderService {
         
         if ($rs && $bik){
             $bankAccount = $this->entityManager->getRepository(\Company\Entity\BankAccount::class)
-                    ->findBy(['rs' => $rs, 'bik' => $bik, 'legal' => $legal->getId()]);
+                    ->findOneBy(['rs' => $rs, 'bik' => $bik, 'legal' => $legal->getId()]);
             if (!$bankAccount){
                 $this->legalManager->addBankAccount($legal, [
                     'bik' => $bik,
@@ -283,7 +283,7 @@ class AplOrderService {
         $shipping = null;
         if (!empty($data['delivery'])){
             $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
+                    ->findOneBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
         }
         
         if (!$shipping){
@@ -353,15 +353,15 @@ class AplOrderService {
         }
         if (!empty($data['brand'])){
             $make = $this->entityManager->getRepository(Make::class)
-                    ->findOneBy(['aplId' => $data['brand']]);
+                    ->findOneOneBy(['aplId' => $data['brand']]);
         }
         if (!empty($data['serie'])){
             $model = $this->entityManager->getRepository(Model::class)
-                    ->findOneBy(['aplId' => $data['serie']]);
+                    ->findOneOneBy(['aplId' => $data['serie']]);
         }
         if (!empty($data['model'])){
             $car = $this->entityManager->getRepository(Car::class)
-                    ->findOneBy(['aplId' => $data['model']]);
+                    ->findOneOneBy(['aplId' => $data['model']]);
         }
         $contactCar = $this->entityManager->getRepository(ContactCar::class)
                 ->findContactCar($contact, [
@@ -455,7 +455,7 @@ class AplOrderService {
         $courierId = NULL;
         if (!empty($data['carrier'])){
             $courier = $this->entityManager->getRepository(Courier::class)
-                    ->findByAplId($data['carrier']);
+                    ->findOneByAplId($data['carrier']);
             if ($courier){
                 $courierId = $courier->getId();
             }    
@@ -476,7 +476,7 @@ class AplOrderService {
         $shippingId = NULL;
         if (!empty($data['delivery'])){
             $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findByAplId($data['delivery']);
+                    ->findOneByAplId($data['delivery']);
             if ($shipping){
                 $shippingId = $shipping->getId();
             }    
@@ -485,7 +485,7 @@ class AplOrderService {
         $skiperId = NULL;
         if (!empty($data['skiper'])){
             $skiper = $this->entityManager->getRepository(User::class)
-                    ->findByAplId($data['skiper']);
+                    ->findOneByAplId($data['skiper']);
             if ($skiper){
                 $skiperId = $skiper->getId();
             }    
@@ -494,7 +494,7 @@ class AplOrderService {
         $userId = NULL;
         if (!empty($data['user'])){
             $user = $this->entityManager->getRepository(User::class)
-                    ->findByAplId($data['user']);
+                    ->findOneByAplId($data['user']);
             if ($user){
                 $userId = $user->getId();
             }    
@@ -525,7 +525,7 @@ class AplOrderService {
         ];
         
         $order = $this->entityManager->getRepository(Order::class)
-                ->findBy(['aplId' => $data['id']]);        
+                ->findOneBy(['aplId' => $data['id']]);        
         
         if ($order){
             $this->orderManager->updateOrder($order, $orderData);
