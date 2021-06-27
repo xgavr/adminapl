@@ -262,19 +262,7 @@ class OrderManager
         $order->setStatus(!empty($data['status']) ? $data['status'] : Order::STATUS_NEW);
         $order->setTotal(!empty($data['total']) ? $data['total'] : 0);
         $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
-        
-        $order->setOffice($office);
-        if (empty($data['company'])){
-            $company = $this->entityManager->getRepository(Office::class)
-                    ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);
-        } else {
-            $company = $this->entityManager->getRepository(Legal::class)
-                    ->find($data['company']);
-        }
-        $order->setCompany($company);
-        
-        $order->setContact($contact);
-        
+                
         $order->setContactCar(null);
         if (!empty($data['contactCar'])){
             $contactCar = $this->entityManager->getRepository(ContactCar::class)
