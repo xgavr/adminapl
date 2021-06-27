@@ -118,6 +118,7 @@ class AplOrderService {
      */
     protected function getClient($data)
     {
+        var_dump($data); exit;
         if (empty($data['client'])){
             return;
         }
@@ -419,7 +420,7 @@ class AplOrderService {
         if (!$client){
             return false;
         }
-        var_dump($data); exit;
+//        var_dump($data); exit;
         
         $contact = $this->getLegalContact();
         if (!$contact){
