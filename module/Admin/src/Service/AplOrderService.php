@@ -422,7 +422,7 @@ class AplOrderService {
         }
 //        var_dump($data); exit;
         
-        $contact = $this->getLegalContact();
+        $contact = $client->getLegalContact();
         if (!$contact){
             return false;
         }
