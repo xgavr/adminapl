@@ -787,7 +787,7 @@ class AplService {
             $this->getClientPhone($contact);
         }    
         
-        return;
+        return $client;
     }
 
     public function uploadUsers()

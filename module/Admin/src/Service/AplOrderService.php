@@ -114,14 +114,14 @@ class AplOrderService {
     /**
      * Обновить клиента
      * @param array $data
-     * @return boolean
+     * @return AplClient
      */
     protected function getClient($data)
     {
         if (empty($data['client'])){
             return;
         }
-        $this->aplService->getClient([
+        $client = $this->aplService->getClient([
             'id' => $data['client'],
             'email' => (empty($data['email'])) ? null:$data['email'],
             'phone' => (empty($data['phone'])) ? null:$data['phone'],
@@ -129,9 +129,6 @@ class AplOrderService {
             'publish' => 1,
         ]);
         
-        $client = $this->entityManager->getRepository(AplClient::class)
-                ->findByAplId($data['client']);
-
         return $client;
     }
 
