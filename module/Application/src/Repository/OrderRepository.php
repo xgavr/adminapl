@@ -109,7 +109,7 @@ class OrderRepository extends EntityRepository{
      */
     public function findContactCar($contact, $data)
     {
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $entityManager = $this->getEntityManager();                
         $queryBuilder = $entityManager->createQueryBuilder();
 
@@ -123,6 +123,7 @@ class OrderRepository extends EntityRepository{
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $row){
             if (!empty($data['vin']) && $row->getVin()){
+            var_dump($row->getVin()); exit;
                 if ($row->getVin() == $data['vin']){
                     return $row;
                 }
