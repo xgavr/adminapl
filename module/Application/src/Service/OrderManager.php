@@ -113,7 +113,7 @@ class OrderManager
             }    
         }
         
-        $bid->setOrder($order);
+        $selection->setOrder($order);
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($selection);
