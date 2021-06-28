@@ -594,7 +594,7 @@ class AplOrderService {
             $client->setUri($url);
             $client->setMethod('POST');
             $client->setParameterPost($post);
-
+            $client->setOptions(['timeout' => 30]);
             $result = $ok = FALSE;
             try{
                 $response = $client->send();
@@ -632,7 +632,7 @@ class AplOrderService {
         $client->setUri($url);
         $client->setMethod('POST');
         $client->setParameterPost($post);
-
+        $client->setOptions(['timeout' => 30]);
         $response = $client->send();
         $body = $response->getBody();
 
