@@ -352,7 +352,7 @@ class OrderManager
         if (!empty($data['legal'])){
             $legal = $this->entityManager->getRepository(Legal::class)
                     ->find($data['legal']);
-            $order->setRecipient($legal);
+            $order->setLegal($legal);
         }
 
         $order->setRecipient(null);
