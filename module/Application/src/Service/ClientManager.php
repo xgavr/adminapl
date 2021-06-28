@@ -59,7 +59,7 @@ class ClientManager
         // Создаем новую сущность.
         $client = new Client();
         $client->setAplId($data['aplId']);
-        $client->setName($data['name']);
+        $client->setName((empty($data['name'])) ? 'NaN':$data['name']);
         $client->setStatus($data['status']);
         
         $currentDate = date('Y-m-d H:i:s');
