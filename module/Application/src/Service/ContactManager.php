@@ -151,7 +151,7 @@ class ContactManager
     {
         // Создаем новую сущность.
         $contact = new Contact();
-        $contact->setName($data['name']);
+        $contact->setName((empty($data['name'])) ? 'NaN':$data['name']);
         
         $description = "";
         if (!empty($data['description'])){
