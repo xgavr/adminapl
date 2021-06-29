@@ -753,9 +753,9 @@ class AplService {
         ];    
 
         if ($client){                    
-            $this->clientManager->updateClient($client, $client_data);                    
+            $this->clientManager->updClient($client, $client_data);                    
         } else {                            
-            $client = $this->clientManager->addNewClient($client_data);                        
+            $client = $this->clientManager->addClient($client_data);                        
         }
 
         if ($client){

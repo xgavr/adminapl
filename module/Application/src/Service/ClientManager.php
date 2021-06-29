@@ -81,6 +81,31 @@ class ClientManager
     }   
     
     /**
+     * Добавить клиента
+     * @param array $data
+     * @return Client
+     */
+    public function addClient($data) 
+    {
+        
+        $currentDate = date('Y-m-d H:i:s');
+        
+        $add = [
+            'apl_id' => $data['aplId'],
+            'name' => (empty($data['name'])) ? 'NaN':$data['name'],
+            'status' => $data['status'],
+            'date_created' => $currentDate,
+        ];
+                
+        $this->entityManager->getConnection()
+                ->insert('client', $add);
+        $client = $this->entityManager->getRepository(Client::class)
+                ->findBy([], ['id'=>'DESC'],1,0);
+        
+        return $client;
+    }   
+    
+    /**
      * Обновить клиента
      * @param Client $client
      * @param arrray $data
@@ -94,6 +119,22 @@ class ClientManager
         $this->entityManager->persist($client);
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+    }    
+    
+    /**
+     * Обновить клиента
+     * @param Client $client
+     * @param arrray $data
+     */
+    public function updClient($client, $data) 
+    {
+        $upd = [
+            'apl_id' => $data['aplId'],
+            'name' => $data['name'],
+            'status' => $data['status'],
+        ];
+        $this->entityManager->getConnection()
+                ->update('client', $upd, ['id' => $client->getId()]);
     }    
     
     /**
