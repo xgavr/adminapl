@@ -287,7 +287,7 @@ class OrderManager
         $order = new Order();
         $order->setAddress(!empty($data['address']) ? $data['address'] : null);
         $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
-        $order->setDateMod(!empty($data['dateMod']) ? $data['dateMod'] : null);
+        $order->setDateMod(!empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s'));
         $order->setDateOper(!empty($data['dateOper']) ? $data['dateOper'] : null);
         $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
         $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
@@ -388,21 +388,21 @@ class OrderManager
     {
         $upd = [
             'address' =>  (!empty($data['address'])) ? $data['address'] : null,
-            'apl_id' =>  (!empty($data['apl_id'])) ? $data['apl_id'] : null,
-            'date_mod' =>  (!empty($data['date_mod'])) ? $data['date_mod'] : null,
-            'date_oper' =>  (!empty($data['date_oper'])) ? $data['date_oper'] : null,
-            'date_shipment' =>  (!empty($data['date_shipment'])) ? $data['date_shipment'] : null,
+            'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
+            'date_mod' =>  (!empty($data['dateMod'])) ? $data['dateMod'] : null,
+            'date_oper' =>  (!empty($data['dateOper'])) ? $data['dateOper'] : null,
+            'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
             'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
             'info' =>  (!empty($data['info'])) ? $data['info'] : null,
-            'invoice_info' =>  (!empty($data['invoice_info'])) ? $data['invoice_info'] : null,
+            'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
             'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
-            'shipment_distance' =>  (!empty($data['shipment_distance'])) ? $data['shipment_distance'] : null,
-            'shipment_rate' =>  (!empty($data['shipment_rate'])) ? $data['shipment_rate'] : null,
-            'shipment_add_rate' =>  (!empty($data['shipment_add_rate'])) ? $data['shipment_add_rate'] : null,
-            'shipment_total' =>  (!empty($data['shipment_total'])) ? $data['shipment_total'] : null,
+            'shipment_distance' =>  (!empty($data['shipmentDistance'])) ? $data['shipmentDistance'] : null,
+            'shipment_rate' =>  (!empty($data['shipmentRate'])) ? $data['shipmentRate'] : null,
+            'shipment_add_rate' =>  (!empty($data['shipmentAddRate'])) ? $data['shipmentAddRate'] : null,
+            'shipment_total' =>  (!empty($data['shipmentTotal'])) ? $data['shipmentTotal'] : null,
             'status' =>  (!empty($data['status'])) ? $data['mode'] : Order::STATUS_NEW,
             'total' =>  (!empty($data['total'])) ? $data['total'] : null,
-            'track_number' =>  (!empty($data['track_number'])) ? $data['track_number'] : null,
+            'track_number' =>  (!empty($data['trackNumber'])) ? $data['trackNumber'] : null,
             'contact_car_id' => null,
             'courier_id' => null,
             'legal_id' => null,
@@ -593,21 +593,21 @@ class OrderManager
     {
         $upd = [
             'address' =>  (!empty($data['address'])) ? $data['address'] : null,
-            'apl_id' =>  (!empty($data['apl_id'])) ? $data['apl_id'] : null,
-            'date_mod' =>  (!empty($data['date_mod'])) ? $data['date_mod'] : null,
-            'date_oper' =>  (!empty($data['date_oper'])) ? $data['date_oper'] : null,
-            'date_shipment' =>  (!empty($data['date_shipment'])) ? $data['date_shipment'] : null,
+            'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
+            'date_mod' =>  (!empty($data['dateMod'])) ? $data['dateMod'] : null,
+            'date_oper' =>  (!empty($data['dateOper'])) ? $data['dateOper'] : null,
+            'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
             'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
             'info' =>  (!empty($data['info'])) ? $data['info'] : null,
-            'invoice_info' =>  (!empty($data['invoice_info'])) ? $data['invoice_info'] : null,
+            'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
             'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
-            'shipment_distance' =>  (!empty($data['shipment_distance'])) ? $data['shipment_distance'] : null,
-            'shipment_rate' =>  (!empty($data['shipment_rate'])) ? $data['shipment_rate'] : null,
-            'shipment_add_rate' =>  (!empty($data['shipment_add_rate'])) ? $data['shipment_add_rate'] : null,
-            'shipment_total' =>  (!empty($data['shipment_total'])) ? $data['shipment_total'] : null,
+            'shipment_distance' =>  (!empty($data['shipmentDistance'])) ? $data['shipmentDistance'] : null,
+            'shipment_rate' =>  (!empty($data['shipmentRate'])) ? $data['shipmentRate'] : null,
+            'shipment_add_rate' =>  (!empty($data['shipmentAddRate'])) ? $data['shipmentAddRate'] : null,
+            'shipment_total' =>  (!empty($data['shipmentTotal'])) ? $data['shipmentTotal'] : null,
             'status' =>  (!empty($data['status'])) ? $data['mode'] : Order::STATUS_NEW,
             'total' =>  (!empty($data['total'])) ? $data['total'] : null,
-            'track_number' =>  (!empty($data['track_number'])) ? $data['track_number'] : null,
+            'track_number' =>  (!empty($data['trackNumber'])) ? $data['trackNumber'] : null,
             'contact_car_id' => null,
             'courier_id' => null,
             'legal_id' => null,
