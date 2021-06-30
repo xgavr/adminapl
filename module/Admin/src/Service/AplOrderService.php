@@ -528,17 +528,19 @@ class AplOrderService {
                 ->findOneBy(['aplId' => $data['id']]);        
         
         if ($order){
-            $this->orderManager->updateOrder($order, $orderData);
-            $this->orderManager->removeOrderBids($order); 
-            $this->orderManager->removeOrderSelections($order);
+            $this->orderManager->updOrder($order, $orderData);
+            $this->entityManager->getConnection()
+                    ->delete('bid', ['order_id' => $order->getId()]);
+            $this->entityManager->getConnection()
+                    ->delete('selection', ['order_id' => $order->getId()]);
         } else {        
-            $order = $this->orderManager->addNewOrder($office, $contact, $orderData);
+            $order = $this->orderManager->insOrder($office, $contact, $orderData);
         }    
         
         if ($order && isset($data['selections'])){
             foreach ($data['selections'] as $selection){
                 if (!empty($selection['q'])){
-                    $this->orderManager->addNewSelection($order, [
+                    $this->orderManager->insSelection($order, [
                        'oem'  => $selection['q'],
                        'comment'  => $selection['qc'],
                     ]);
@@ -556,7 +558,7 @@ class AplOrderService {
     //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
                 } else {
 
-                    $this->orderManager->addNewBid($order, [
+                    $this->orderManager->insBid($order, [
                         'num' => $tp['sort'],
                         'price' => $tp['comment'],
                         'good' => $good,
@@ -568,7 +570,7 @@ class AplOrderService {
         }  
         
         if ($order){
-            $this->orderManager->updateOrderTotal($order);
+            $this->orderManager->updOrderTotal($order);
             return true;            
         }
                 
