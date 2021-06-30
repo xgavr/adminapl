@@ -380,7 +380,7 @@ class AplOrderService {
             if (!$car && $contactCar->getCar()){
                 $car = $contactCar->getCar();
             }
-            $this->contactCarManager->update($contactCar, [
+            $this->contactCarManager->upd($contactCar, [
                 'vin' => ($vin) ? $vin:$contactCar->getVin(),
                 'comment' => (!empty($data['info'])) ? $data['info']:$contactCar->getComment(),
                 'yocm' => (!empty($data['year'])) ? $data['year']:$contactCar->getYocm(),
@@ -396,7 +396,7 @@ class AplOrderService {
             ]);
         }
         if (!$contactCar && ($vin || $make)){
-            $contactCar = $this->contactCarManager->add($contact, [
+            $contactCar = $this->contactCarManager->ins($contact, [
                 'vin' => ($vin) ? $vin:null,
                 'comment' => (!empty($data['info'])) ? $data['info']:null,
                 'yocm' => (!empty($data['year'])) ? $data['year']:null,
