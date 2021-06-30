@@ -197,7 +197,9 @@ class OrderManager
             if ($oe){
                 $oem = $this->entityManager->getRepository(Oem::class)
                         ->findOneByOe($oe);
-                $upd['oem_id'] = $oem->getId();
+                if ($oem){
+                    $upd['oem_id'] = $oem->getId();
+                }
             }    
         }
         
