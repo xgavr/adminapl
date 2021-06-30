@@ -404,14 +404,14 @@ class OrderManager
             'total' =>  (!empty($data['total'])) ? $data['total'] : null,
             'track_number' =>  (!empty($data['track_number'])) ? $data['track_number'] : null,
             'contact_car_id' => null,
-            'courier' => null,
-            'legal' => null,
-            'recipient' => null,
-            'shipping' => null,
-            'skiper' => null,
-            'user' => null,
-            'office' => $office->getId(),
-            'contact' => $contact->getId(),
+            'courier_id' => null,
+            'legal_id' => null,
+            'recipient_id' => null,
+            'shipping_id' => null,
+            'skiper_id' => null,
+            'user_id' => null,
+            'office_id' => $office->getId(),
+            'contact_id' => $contact->getId(),
             'current_data' => date('Y-m-d H:i:s'),
         ];
 
@@ -422,38 +422,38 @@ class OrderManager
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($data['company']);
         }
-        $upd['company'] = $company->getId();
+        $upd['company_id'] = $company->getId();
         
         if (!empty($data['contactCar'])){
             $upd['contact_car_id'] = $data['contactCar'];
         }
         
         if (!empty($data['courier'])){
-            $upd['courier'] = $data['courier'];
+            $upd['courier_id'] = $data['courier'];
         }
         
         if (!empty($data['legal'])){
-            $upd['legal'] = $data['legal'];
+            $upd['legal_id'] = $data['legal'];
         }
 
         if (!empty($data['recipient'])){
-            $upd['recipient'] = $data['recipient'];
+            $upd['recipient_id'] = $data['recipient'];
         }
 
         if (!empty($data['shipping'])){
-            $upd['shipping'] = $data['shipping'];
+            $upd['shipping_id'] = $data['shipping'];
         } else {
             $shipping = $this->entityManager->getRepository(Shipping::class)
                     ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
-            $upd['shipping'] = $shipping->getId();
+            $upd['shipping_id'] = $shipping->getId();
         }
 
         if (!empty($data['skiper'])){
-            $upd['skiper'] = $data['skiper'];
+            $upd['skiper_id'] = $data['skiper'];
         }
 
         if (!empty($data['user'])){
-            $upd['user'] = $data['user'];
+            $upd['user_id'] = $data['user'];
         }
         
         $this->entityManager->getConnection()
@@ -609,12 +609,12 @@ class OrderManager
             'total' =>  (!empty($data['total'])) ? $data['total'] : null,
             'track_number' =>  (!empty($data['track_number'])) ? $data['track_number'] : null,
             'contact_car_id' => null,
-            'courier' => null,
-            'legal' => null,
-            'recipient' => null,
-            'shipping' => null,
-            'skiper' => null,
-            'user' => null,
+            'courier_id' => null,
+            'legal_id' => null,
+            'recipient_id' => null,
+            'shipping_id' => null,
+            'skiper_id' => null,
+            'user_id' => null,
         ];
                 
         if (!empty($data['contactCar'])){
@@ -622,31 +622,31 @@ class OrderManager
         }
         
         if (!empty($data['courier'])){
-            $upd['courier'] = $data['courier'];
+            $upd['courier_id'] = $data['courier'];
         }
         
         if (!empty($data['legal'])){
-            $upd['legal'] = $data['legal'];
+            $upd['legal_id'] = $data['legal'];
         }
 
         if (!empty($data['recipient'])){
-            $upd['recipient'] = $data['recipient'];
+            $upd['recipient_id'] = $data['recipient'];
         }
 
         if (!empty($data['shipping'])){
-            $upd['shipping'] = $data['shipping'];
+            $upd['shipping_id'] = $data['shipping'];
         } else {
             $shipping = $this->entityManager->getRepository(Shipping::class)
                     ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
-            $upd['shipping'] = $shipping->getId();
+            $upd['shipping_id'] = $shipping->getId();
         }
 
         if (!empty($data['skiper'])){
-            $upd['skiper'] = $data['skiper'];
+            $upd['skiper_id'] = $data['skiper'];
         }
 
         if (!empty($data['user'])){
-            $upd['user'] = $data['user'];
+            $upd['user_id'] = $data['user'];
         }
         
         $this->entityManager->getConnection()
