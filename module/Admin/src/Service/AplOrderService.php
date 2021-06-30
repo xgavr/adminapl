@@ -207,7 +207,7 @@ class AplOrderService {
         
         $legal = $this->entityManager->getRepository(Legal::class)
                 ->findOneByInnKpp($inn, $kpp);
-        if (!$legal){
+        if (!$legal && !empty($data['consignee'])){
             $legal = $this->legalManager->addLegal($contact, [
                 'inn' => $inn,
                 'kpp' => $kpp,
@@ -239,7 +239,7 @@ class AplOrderService {
         
         $legal = $this->entityManager->getRepository(Legal::class)
                 ->findOneByInnKpp($inn, $kpp);
-        if (!$legal){
+        if (!$legal && !empty($data['firmName'])){
             $legal = $this->legalManager->addLegal($contact, [
                 'inn' => $inn,
                 'kpp' => $kpp,
