@@ -180,7 +180,7 @@ class OrderManager
             'num' => $data['num'],
             'price' => $data['price'],
             'display_name' => (empty($data['displayName'])) ? null:$data['displayName'],
-            'current_date' => date('Y-m-d H:i:s'),
+            'date_created' => date('Y-m-d H:i:s'),
             'oem_id' => null,
             'order_id' => $order->getId(),
         ];
