@@ -22,6 +22,7 @@ use Phpml\Math\Statistic\StandardDeviation;
 use Application\Validator\Sigma3;
 use Application\Entity\Article;
 use Stock\Entity\Movement;
+use Application\Entity\Bid;
 
 /**
  * Description of GoodsService
@@ -221,7 +222,12 @@ class GoodsManager
                 if ($articleCount == 0){
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGoodId($good->getId(), ['available' => Goods::AVAILABLE_FALSE]);
-                    $this->removeGood($good);
+    
+                    $bidCount = $this->entityManager->getRepository(Bid::class)
+                            ->count(['good' => $good->getId()]);
+                    if ($bidCount == 0){
+                        $this->removeGood($good);
+                    }    
                 } else {
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGoodId($good->getId(), ['upd_week' => date('W'), 'available' => Goods::AVAILABLE_TRUE]);
