@@ -117,6 +117,12 @@ class OrderManager
         return;
     }        
     
+    /**
+     * Добавить строку заказа
+     * @param Order $order
+     * @param array $data
+     * @param bool $flushnow
+     */
     public function addNewBid($order, $data, $flushnow=true)
     {
         $bid = new Bid();
@@ -163,6 +169,54 @@ class OrderManager
         }    
     }
     
+    /**
+     * Добавить строку заказа
+     * @param Order $order
+     * @param array $data
+     */
+    public function insBid($order, $data)
+    {
+        $upd = [
+            'num' => $data['num'],
+            'price' => $data['price'],
+            'display_name' => (empty($data['displayName'])) ? null:$data['displayName'],
+            'current_date' => date('Y-m-d H:i:s'),
+            'oem_id' => null,
+            'order_id' => $order->getId(),
+        ];
+
+        if ($data['good'] instanceof Goods){
+            $upd['good_id'] = $data['good']->getId();
+        } else {
+            $upd['good_id'] = $data['good'];
+        }    
+        
+        if (!empty($data['oem'])){
+            $filter = new ArticleCode();
+            $oe = $filter->filter($data['oem']);
+            if ($oe){
+                $oem = $this->entityManager->getRepository(Oem::class)
+                        ->findOneByOe($oe);
+                $upd['oem_id'] = $oem->getId();
+            }    
+        }
+        
+        $currentUser = $this->entityManager->getRepository(User::class)
+                ->findOneByEmail($this->authService->getIdentity());
+        if ($currentUser){
+            $upd['user_id'] = $currentUser->getId();
+        }    
+        
+        $this->entityManager->getConnection()
+                ->insert('bid', $upd);        
+    }
+
+    /**
+     * Добавить выборы
+     * @param Order $order
+     * @param array $data
+     * @return type
+     */
     public function addNewSelection($order, $data)
     {
         
@@ -184,6 +238,36 @@ class OrderManager
 
                     // Применяем изменения к базе данных.
                     $this->entityManager->flush(); 
+                }    
+            }    
+        }
+        return;
+    }
+
+    /**
+     * Добавить выборы
+     * @param Order $order
+     * @param array $data
+     * @return type
+     */
+    public function insSelection($order, $data)
+    {
+        
+        if (!empty($data['oem'])){
+            $filter = new ArticleCode();
+            $oe = $filter->filter($data['oem']);
+            if ($oe){
+                $oem = $this->entityManager->getRepository(Oem::class)
+                        ->findOneByOe($oe);
+                if ($oem){
+                    $upd = [
+                        'comment' => (empty($data['comment'])) ? null:$data['comment'],
+                        'oem_id' => $oem->getId(),
+                        'order_id' => $order->getId(),
+                    ];
+                    
+                    $this->entityManager->getConnection()
+                            ->insert('selection', $upd);
                 }    
             }    
         }
@@ -293,6 +377,97 @@ class OrderManager
         return $order;
     }   
     
+    /**
+     * Новый заказ
+     * @param Office $office
+     * @param Contact $contact
+     * @param array $data
+     * @return Order
+     */
+    public function insOrder($office, $contact, $data) 
+    {
+        $upd = [
+            'address' =>  (!empty($data['address'])) ? $data['address'] : null,
+            'apl_id' =>  (!empty($data['apl_id'])) ? $data['apl_id'] : null,
+            'date_mod' =>  (!empty($data['date_mod'])) ? $data['date_mod'] : null,
+            'date_oper' =>  (!empty($data['date_oper'])) ? $data['date_oper'] : null,
+            'date_shipment' =>  (!empty($data['date_shipment'])) ? $data['date_shipment'] : null,
+            'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
+            'info' =>  (!empty($data['info'])) ? $data['info'] : null,
+            'invoice_info' =>  (!empty($data['invoice_info'])) ? $data['invoice_info'] : null,
+            'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
+            'shipment_distance' =>  (!empty($data['shipment_distance'])) ? $data['shipment_distance'] : null,
+            'shipment_rate' =>  (!empty($data['shipment_rate'])) ? $data['shipment_rate'] : null,
+            'shipment_add_rate' =>  (!empty($data['shipment_add_rate'])) ? $data['shipment_add_rate'] : null,
+            'shipment_total' =>  (!empty($data['shipment_total'])) ? $data['shipment_total'] : null,
+            'status' =>  (!empty($data['status'])) ? $data['mode'] : Order::STATUS_NEW,
+            'total' =>  (!empty($data['total'])) ? $data['total'] : null,
+            'track_number' =>  (!empty($data['track_number'])) ? $data['track_number'] : null,
+            'contact_car_id' => null,
+            'courier' => null,
+            'legal' => null,
+            'recipient' => null,
+            'shipping' => null,
+            'skiper' => null,
+            'user' => null,
+            'office' => $office->getId(),
+            'contact' => $contact->getId(),
+            'current_data' => date('Y-m-d H:i:s'),
+        ];
+
+        if (empty($data['company'])){
+            $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);
+        } else {
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($data['company']);
+        }
+        $upd['company'] = $company->getId();
+        
+        if (!empty($data['contactCar'])){
+            $upd['contact_car_id'] = $data['contactCar'];
+        }
+        
+        if (!empty($data['courier'])){
+            $upd['courier'] = $data['courier'];
+        }
+        
+        if (!empty($data['legal'])){
+            $upd['legal'] = $data['legal'];
+        }
+
+        if (!empty($data['recipient'])){
+            $upd['recipient'] = $data['recipient'];
+        }
+
+        if (!empty($data['shipping'])){
+            $upd['shipping'] = $data['shipping'];
+        } else {
+            $shipping = $this->entityManager->getRepository(Shipping::class)
+                    ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
+            $upd['shipping'] = $shipping->getId();
+        }
+
+        if (!empty($data['skiper'])){
+            $upd['skiper'] = $data['skiper'];
+        }
+
+        if (!empty($data['user'])){
+            $upd['user'] = $data['user'];
+        }
+        
+        $this->entityManager->getConnection()
+                ->insert('orders', $upd);
+        $order = $this->entityManager->getRepository(Order::class)
+                ->findOneBy([], ['id'=>'DESC'],1,0);
+        
+        return $order;
+    }   
+
+    /**
+     * Обновить итог по заказу
+     * @param Order $order
+     */
     public function updateOrderTotal($order)
     {
         $result = $this->entityManager->getRepository(Bid::class)
@@ -310,6 +485,23 @@ class OrderManager
         $this->entityManager->flush();
     }
     
+    /**
+     * Обновить итог по заказу
+     * @param Order $order
+     */
+    public function updOrderTotal($order)
+    {
+        $result = $this->entityManager->getRepository(Bid::class)
+                ->getOrderNum($order);
+        
+        $total = 0;
+        if (count($result)){
+            $total = $result[0]['total'];
+        }
+        $this->entityManager->getConnection()
+                ->update('orders', ['total' => $total], ['id' => $order->getId()]);
+    }
+
     /**
      * Обновить заказ
      * @param Order $order
@@ -390,6 +582,77 @@ class OrderManager
         $this->entityManager->flush();
         
         return;
+    }    
+    
+    /**
+     * Обновить заказ
+     * @param Order $order
+     * @param array $data
+     */
+    public function updOrder($order, $data) 
+    {
+        $upd = [
+            'address' =>  (!empty($data['address'])) ? $data['address'] : null,
+            'apl_id' =>  (!empty($data['apl_id'])) ? $data['apl_id'] : null,
+            'date_mod' =>  (!empty($data['date_mod'])) ? $data['date_mod'] : null,
+            'date_oper' =>  (!empty($data['date_oper'])) ? $data['date_oper'] : null,
+            'date_shipment' =>  (!empty($data['date_shipment'])) ? $data['date_shipment'] : null,
+            'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
+            'info' =>  (!empty($data['info'])) ? $data['info'] : null,
+            'invoice_info' =>  (!empty($data['invoice_info'])) ? $data['invoice_info'] : null,
+            'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
+            'shipment_distance' =>  (!empty($data['shipment_distance'])) ? $data['shipment_distance'] : null,
+            'shipment_rate' =>  (!empty($data['shipment_rate'])) ? $data['shipment_rate'] : null,
+            'shipment_add_rate' =>  (!empty($data['shipment_add_rate'])) ? $data['shipment_add_rate'] : null,
+            'shipment_total' =>  (!empty($data['shipment_total'])) ? $data['shipment_total'] : null,
+            'status' =>  (!empty($data['status'])) ? $data['mode'] : Order::STATUS_NEW,
+            'total' =>  (!empty($data['total'])) ? $data['total'] : null,
+            'track_number' =>  (!empty($data['track_number'])) ? $data['track_number'] : null,
+            'contact_car_id' => null,
+            'courier' => null,
+            'legal' => null,
+            'recipient' => null,
+            'shipping' => null,
+            'skiper' => null,
+            'user' => null,
+        ];
+                
+        if (!empty($data['contactCar'])){
+            $upd['contact_car_id'] = $data['contactCar'];
+        }
+        
+        if (!empty($data['courier'])){
+            $upd['courier'] = $data['courier'];
+        }
+        
+        if (!empty($data['legal'])){
+            $upd['legal'] = $data['legal'];
+        }
+
+        if (!empty($data['recipient'])){
+            $upd['recipient'] = $data['recipient'];
+        }
+
+        if (!empty($data['shipping'])){
+            $upd['shipping'] = $data['shipping'];
+        } else {
+            $shipping = $this->entityManager->getRepository(Shipping::class)
+                    ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
+            $upd['shipping'] = $shipping->getId();
+        }
+
+        if (!empty($data['skiper'])){
+            $upd['skiper'] = $data['skiper'];
+        }
+
+        if (!empty($data['user'])){
+            $upd['user'] = $data['user'];
+        }
+        
+        $this->entityManager->getConnection()
+                ->update('orders', $upd, ['id' => $order->getId()]);
+
+        return $order;
     }    
     
     /**
