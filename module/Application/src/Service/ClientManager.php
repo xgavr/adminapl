@@ -100,7 +100,7 @@ class ClientManager
         $this->entityManager->getConnection()
                 ->insert('client', $add);
         $client = $this->entityManager->getRepository(Client::class)
-                ->findBy([], ['id'=>'DESC'],1,0);
+                ->findOneBy([], ['id'=>'DESC'],1,0);
         
         return $client;
     }   
