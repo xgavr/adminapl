@@ -127,7 +127,7 @@ class ContactCarManager
 
 
         $this->entityManager->getConnection()
-                ->insert('contact_car', $add);
+                ->insert('contact_car', $upd);
         $contactCar = $this->entityManager->getRepository(ContactCar::class)
                 ->findOneBy([], ['id'=>'DESC'],1,0);
         
