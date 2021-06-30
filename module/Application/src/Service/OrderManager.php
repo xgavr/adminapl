@@ -412,7 +412,7 @@ class OrderManager
             'user_id' => null,
             'office_id' => $office->getId(),
             'contact_id' => $contact->getId(),
-            'current_data' => date('Y-m-d H:i:s'),
+            'date_created' => date('Y-m-d H:i:s'),
         ];
 
         if (empty($data['company'])){
