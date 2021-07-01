@@ -25,6 +25,11 @@ class Bid {
     protected $id;
     
     /**
+     * @ORM\Column(name="row_no")   
+     */
+    protected $rowNo;
+
+    /**
      * @ORM\Column(name="price")   
      */
     protected $price;
@@ -79,9 +84,24 @@ class Bid {
         return $this->id;
     }
 
+    public function getRowKey() 
+    {
+        return 'bid:'.$this->id;
+    }    
+    
     public function setId($id) 
     {
         $this->id = $id;
+    }     
+
+    public function getRowNo() 
+    {
+        return $this->rowNo;
+    }
+
+    public function setRowNo($rowNo) 
+    {
+        $this->rowNo = $rowNo;
     }     
 
     public function getPrice() 

@@ -71,7 +71,7 @@ class OrderManager
             'status' => $order->getStatus(),
             'revise' => Mutual::REVISE_NOT,
             'amount' => $order->getTotal(),
-            'legal_id' => $ptu->getLegal()->getId(),
+            'legal_id' => $order->getLegal()->getId(),
             'contract_id' => $ptu->getContract()->getId(),
             'office_id' => $order->getOffice()->getId(),
             'company_id' => $order->getCompany()->getId(),
@@ -84,30 +84,30 @@ class OrderManager
     }    
     
     /**
-     * Обновить движения документа
+     * Обновить движения заказа
      * 
-     * @param Ptu $ptu
+     * @param Order $order
      */
-    public function updatePtuMovement($ptu)
+    public function updateOrderMovement($order)
     {
         
         $this->entityManager->getRepository(Movement::class)
-                ->removeDocMovements($ptu->getLogKey());
+                ->removeDocMovements($order->getLogKey());
         
-        $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
-                ->findByPtu($ptu->getId());
-        foreach ($ptuGoods as $ptuGood){
+        $bids = $this->entityManager->getRepository(Bid::class)
+                ->findByOrder($order->getId());
+        foreach ($bids as $bid){
             $data = [
-                'doc_key' => $ptu->getLogKey(),
-                'doc_row_key' => $ptuGood->getDocRowKey(),
-                'doc_row_no' => $ptuGood->getRowNo(),
-                'date_oper' => $ptu->getDocDate(),
-                'status' => $ptu->getStatus(),
-                'quantity' => $ptuGood->getQuantity(),
-                'amount' => $ptuGood->getAmount(),
-                'good_id' => $ptuGood->getGood()->getId(),
-                'office_id' => $ptu->getOffice()->getId(),
-                'company_id' => $ptu->getContract()->getCompany()->getId(),
+                'doc_key' => $order->getLogKey(),
+                'doc_row_key' => $bid->getRowKey(),
+                'doc_row_no' => $bid->getRowNo(),
+                'date_oper' => $order->getDateOper(),
+                'status' => $order->getStatus(),
+                'quantity' => $bid->getNum(),
+                'amount' => $bid->getPrice()*$bid->getNum(),
+                'good_id' => $bid->getGood()->getId(),
+                'office_id' => $order->getOffice()->getId(),
+                'company_id' => $order->getCompany()->getId(),
             ];
 
             $this->entityManager->getRepository(Movement::class)
@@ -115,7 +115,7 @@ class OrderManager
         }
         
         return;
-    }        
+    }    
     
     /**
      * Добавить строку заказа
@@ -127,6 +127,7 @@ class OrderManager
     {
         $bid = new Bid();
         $bid->setNum($data['num']);
+        $bid->setRowNo($data['rowNo']);
         $bid->setPrice($data['price']);
         $bid->setDisplayName((empty($data['displayName'])) ? null:$data['displayName']);
         $currentDate = date('Y-m-d H:i:s');        
@@ -177,6 +178,7 @@ class OrderManager
     public function insBid($order, $data)
     {
         $upd = [
+            'row_no' => $data['rowNo'],
             'num' => $data['num'],
             'price' => $data['price'],
             'display_name' => (empty($data['displayName'])) ? null:$data['displayName'],
