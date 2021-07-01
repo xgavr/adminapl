@@ -559,13 +559,15 @@ class AplOrderService {
                 } else {
 
                     $this->orderManager->insBid($order, [
+                        'rowNo' => $rowNo,
                         'num' => $tp['sort'],
                         'price' => $tp['comment'],
                         'good' => $good,
                         'displayName' => (empty($tp['dispname'])) ? null:$tp['dispname'],
                         'oem' => (empty($tp['selection'])) ? null:mb_substr($tp['selection'], 3),                        
                     ]);
-                }    
+                    $rowNo++;
+                } 
             }
         }  
         
