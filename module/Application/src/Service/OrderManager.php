@@ -84,7 +84,7 @@ class OrderManager
         ];
 
         $this->entityManager->getRepository(Retail::class)
-                ->insertMutual($data);
+                ->insertRetail($data);
         
         return;
     }    
