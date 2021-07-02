@@ -229,7 +229,6 @@ class AplOrderService {
      */
     private function findLegal($contact, $data)
     {
-        $legal = null;
         $inn = (empty($data['inn'])) ? null:$data['inn']; 
         $kpp = (empty($data['kpp'])) ? null:$data['kpp']; 
         
@@ -239,6 +238,7 @@ class AplOrderService {
         
         $dateOper = NULL;
         if (!empty($data['type'])){
+            $dateValidator = new Date();
             $dateValidator->setFormat('Y-m-d');
             $dateOper = $data['type'];
             if (!$dateValidator->isValid($dateOper)){
