@@ -8,15 +8,10 @@
 
 namespace Admin\Service;
 
-use Bank\Entity\Statement;
 use Laminas\Http\Client;
-use Laminas\Json\Decoder;
-use Laminas\Json\Encoder;
 use Company\Entity\Office;
-use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\BankAccount;
-use Company\Entity\Contract;
 use Application\Entity\Shipping;
 use Application\Entity\ContactCar;
 use Application\Entity\Contact;
@@ -25,15 +20,7 @@ use Application\Entity\Client as AplClient;
 use Application\Entity\Make;
 use Application\Entity\Model;
 use Application\Entity\Car;
-use Stock\Entity\St;
-use Stock\Entity\Pt;
 use User\Entity\User;
-use Company\Entity\Cost;
-use Application\Entity\Producer;
-use Application\Filter\ProducerName;
-use Application\Entity\UnknownProducer;
-use Application\Entity\Goods;
-use Application\Filter\ArticleCode;
 use Application\Entity\Order;
 use Laminas\Validator\Date;
 

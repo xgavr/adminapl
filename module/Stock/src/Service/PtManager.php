@@ -238,6 +238,7 @@ class PtManager
         $this->entityManager->persist($pt);
         $this->entityManager->flush($pt);
         
+        $this->entityManager->refresh($pt);
         $this->repostPt($pt);
         $this->logManager->infoPt($pt, Log::STATUS_UPDATE);
         return;

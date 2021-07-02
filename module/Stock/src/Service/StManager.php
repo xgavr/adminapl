@@ -229,6 +229,7 @@ class StManager
         $this->entityManager->persist($st);
         $this->entityManager->flush($st);
         
+        $this->entityManager->refresh($st);
         $this->repostSt($st);
         $this->logManager->infoSt($st, Log::STATUS_UPDATE);
         return;

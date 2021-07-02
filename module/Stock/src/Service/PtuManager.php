@@ -394,6 +394,7 @@ class PtuManager
         $this->entityManager->persist($ptu);
         $this->entityManager->flush($ptu);
         
+        $this->entityManager->refresh($ptu);
         $this->repostPtu($ptu);
         $this->logManager->infoPtu($ptu, Log::STATUS_UPDATE);
         return;

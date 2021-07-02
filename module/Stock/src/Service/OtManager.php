@@ -236,6 +236,7 @@ class OtManager
         $this->entityManager->persist($ot);
         $this->entityManager->flush($ot);
         
+        $this->entityManager->refresh($ot);
         $this->repostOt($ot);
         $this->logManager->infoOt($ot, Log::STATUS_UPDATE);
         return;
