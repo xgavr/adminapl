@@ -56,13 +56,20 @@ class OrderManager
      */
     private $logManager;
     
+    /**
+     * Legal manager
+     * @var \Company\Service\LegalManager
+     */
+    private $legalManager;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $authService, $logManager)
+    public function __construct($entityManager, $authService, $logManager,
+            $legalManager)
     {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
         $this->logManager = $logManager;
+        $this->legalManager = $legalManager;
     }
     
     /**

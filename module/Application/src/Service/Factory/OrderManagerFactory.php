@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\OrderManager;
 use Admin\Service\LogManager;
+use Company\Service\LegalManager;
 
 /**
  * Description of OrderManagerFactory
@@ -27,8 +28,10 @@ class OrderManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
         $logManager = $container->get(LogManager::class);
+        $legalManager = $container->get(LegalManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new OrderManager($entityManager, $authService, $logManager);
+        return new OrderManager($entityManager, $authService, $logManager,
+                $legalManager);
     }
 }
