@@ -25,6 +25,8 @@ use Application\Entity\Selection;
 use Application\Filter\ArticleCode;
 use Stock\Entity\Mutual;
 use Stock\Entity\Movement;
+use Stock\Entity\Retail;
+use Admin\Entity\Log;
 
 /**
  * Description of OrderService
@@ -46,13 +48,45 @@ class OrderManager
      */
     private $authService;
         
+    /**
+     * Log manager
+     * @var \Admin\Service\LogManager
+     */
+    private $logManager;
+    
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $authService)
+    public function __construct($entityManager, $authService, $logManager)
     {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
+        $this->logManager = $logManager;
     }
+    
+    /**
+     * Обновить взаиморасчеты розничного заказа
+     * 
+     * @param Order $order
+     */
+    public function updateOrderRetails($order)
+    {
+        
+        $data = [
+            'doc_key' => $order->getLogKey(),
+            'date_oper' => $order->getDateOper(),
+            'status' => $order->getStatus(),
+            'revise' => Retail::REVISE_NOT,
+            'amount' => $order->getTotal(),
+            'contact_id' => $order->getContact()->getId(),
+            'office_id' => $order->getOffice()->getId(),
+            'company_id' => $order->getCompany()->getId(),
+        ];
+
+        $this->entityManager->getRepository(Mutual::class)
+                ->insertMutual($data);
+        
+        return;
+    }    
     
     /**
      * Обновить взаиморасчеты заказа
@@ -61,9 +95,6 @@ class OrderManager
      */
     public function updateOrderMutuals($order)
     {
-        
-        $this->entityManager->getRepository(Mutual::class)
-                ->removeDocMutuals($order->getLogKey());
         
         $data = [
             'doc_key' => $order->getLogKey(),
@@ -90,10 +121,7 @@ class OrderManager
      */
     public function updateOrderMovement($order)
     {
-        
-        $this->entityManager->getRepository(Movement::class)
-                ->removeDocMovements($order->getLogKey());
-        
+                
         $bids = $this->entityManager->getRepository(Bid::class)
                 ->findByOrder($order->getId());
         foreach ($bids as $bid){
@@ -469,11 +497,43 @@ class OrderManager
     }   
 
     /**
+     * Перепроведение заказа
+     * @param Order $order
+     */
+    public function repostOrder($order)
+    {
+        
+        $this->entityManager->getRepository(Movement::class)
+                ->removeDocMovements($order->getLogKey());        
+        $this->entityManager->getRepository(Retail::class)
+                ->removeOrderRetails($order->getLogKey());
+        $this->entityManager->getRepository(Mutual::class)
+                ->removeDocMutuals($order->getLogKey());                
+        
+        if ($order->getStatus() = Order::STATUS_SHIPPED){
+            $this->updateOrderMovement($order);            
+            $this->updateOrderRetails($order);
+            if ($order->getLegal()){
+                $this->updateOrderMutuals($order);
+            }
+        }
+        
+        return;
+    }
+    
+    
+    /**
      * Обновить итог по заказу
      * @param Order $order
      */
     public function updateOrderTotal($order)
     {
+        $preLog = $this->entityManager->getRepository(Log::class)
+                ->findOneByLogKey($order->getLogKey());
+        if (!$preLog){
+            $this->logManager->infoOrder($order, Log::STATUS_INFO);            
+        }
+
         $result = $this->entityManager->getRepository(Bid::class)
                 ->getOrderNum($order);
         
@@ -487,6 +547,9 @@ class OrderManager
         $this->entityManager->persist($order);
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+
+        $this->repostOrder($order);
+        $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
     }
     
     /**
@@ -495,6 +558,12 @@ class OrderManager
      */
     public function updOrderTotal($order)
     {
+        $preLog = $this->entityManager->getRepository(Log::class)
+                ->findOneByLogKey($order->getLogKey());
+        if (!$preLog){
+            $this->logManager->infoOrder($order, Log::STATUS_INFO);            
+        }
+
         $result = $this->entityManager->getRepository(Bid::class)
                 ->getOrderNum($order);
         
@@ -504,6 +573,9 @@ class OrderManager
         }
         $this->entityManager->getConnection()
                 ->update('orders', ['total' => $total], ['id' => $order->getId()]);
+        
+        $this->repostOrder($order);
+        $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
     }
 
     /**

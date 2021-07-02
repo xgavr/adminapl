@@ -239,4 +239,18 @@ class Bid {
         $this->oem = $oem;
     }     
         
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'price' => $this->getPrice(),
+            'good' => $this->getGood()->getId(),
+            'num' => $this->getNum(),
+            'rowNo' => $this->getRowNo(),
+        ];
+    }    
+    
 }

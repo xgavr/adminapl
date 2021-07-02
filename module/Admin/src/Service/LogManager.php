@@ -23,6 +23,8 @@ use Stock\Entity\StGood;
 use Admin\Entity\Log;
 use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
+use Application\Entity\Order;
+use Application\Entity\Bid;
 
 /**
  * Description of LogManager
@@ -283,4 +285,37 @@ class LogManager {
         return;
     }           
 
+    /**
+     * Добавить запись в лог order
+     * @param Order $order
+     * @param integer $status 
+     */
+    public function infoOrder($order, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $orderLog = $order->toLog();
+            $bids = $this->entityManager->getRepository(Bid::class)
+                    ->findByOrder($order->getId());
+            foreach ($bids as $bid){
+                $orderLog['goods'][$bid->getRowNo()] = $bid->toLog();
+            }
+            
+            $data = [
+                'log_key' => $order->getLogKey(),
+                'message' => Json::encode($orderLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }           
+    
 }

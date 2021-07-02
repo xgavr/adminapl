@@ -730,4 +730,24 @@ class Order {
     {
         $this->comments[] = $comment;
     }
+    
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'amount' => $this->getTotal(),
+            'aplId' => $this->getAplId(),
+            'contact' => $this->getContact()->getId(),
+            'operDate' => (string) $this->getDateOper(),
+            'shipmentDate' => (string) $this->getDateShipment(),
+            'aplId' => $this->getAplId(),
+            'info' => $this->getInfo(),
+            'office' => $this->getOffice()->getId(),
+            'status' => $this->getStatus(),
+            'goods' => [],
+        ];
+    }    
 }

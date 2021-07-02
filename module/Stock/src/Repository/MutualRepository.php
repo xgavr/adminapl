@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Stock\Entity\Mutual;
+use Stock\Entity\Retail;
 use Application\Entity\Supplier;
 use Company\Entity\Legal;
 
@@ -41,6 +42,30 @@ class MutualRepository extends EntityRepository{
         
         foreach ($mutuals as $mutual){
             $connection->delete('mutual', ['id' => $mutual->getId()]);
+        }
+        
+        return;
+    }
+
+    /**
+     * Удаление записей взаиморасчетов розницы
+     * 
+     * @param string $docKey
+     */
+    public function removeOrderRetails($docKey)
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('r')
+                ->from(Retail::class, 'r')
+                ->where('r.docKey = ?1')
+                ->setParameter('1', $docKey)
+                ;
+        $retails = $qb->getQuery()->getResult();
+        
+        foreach ($retails as $retail){
+            $connection->delete('retail', ['id' => $retail->getId()]);
         }
         
         return;
