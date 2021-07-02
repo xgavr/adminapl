@@ -510,7 +510,7 @@ class OrderManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($order->getLogKey());                
         
-        if ($order->getStatus() = Order::STATUS_SHIPPED){
+        if ($order->getStatus() == Order::STATUS_SHIPPED){
             $this->updateOrderMovement($order);            
             $this->updateOrderRetails($order);
             if ($order->getLegal()){
