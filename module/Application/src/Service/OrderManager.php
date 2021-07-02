@@ -586,7 +586,8 @@ class OrderManager
         $this->entityManager->persist($order);
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
-
+        
+        $this->entityManager->refresh($order);
         $this->repostOrder($order);
         $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
     }
@@ -613,6 +614,7 @@ class OrderManager
         $this->entityManager->getConnection()
                 ->update('orders', ['total' => $total], ['id' => $order->getId()]);
         
+        $this->entityManager->refresh($order);
         $this->repostOrder($order);
         $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
     }
