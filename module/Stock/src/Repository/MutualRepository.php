@@ -9,8 +9,6 @@
 namespace Stock\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Stock\Entity\Ptu;
-use Stock\Entity\PtuGood;
 use Stock\Entity\Mutual;
 use Stock\Entity\Retail;
 use Application\Entity\Supplier;

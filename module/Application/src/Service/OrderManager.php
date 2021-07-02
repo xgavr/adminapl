@@ -83,7 +83,7 @@ class OrderManager
             'company_id' => $order->getCompany()->getId(),
         ];
 
-        $this->entityManager->getRepository(Mutual::class)
+        $this->entityManager->getRepository(Retail::class)
                 ->insertMutual($data);
         
         return;
