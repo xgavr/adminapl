@@ -27,6 +27,7 @@ use Stock\Entity\Mutual;
 use Stock\Entity\Movement;
 use Stock\Entity\Retail;
 use Admin\Entity\Log;
+use Company\Entity\Contract;
 
 /**
  * Description of OrderService
@@ -89,6 +90,44 @@ class OrderManager
     }    
     
     /**
+     * Получить контракт по умолчанию
+     * 
+     * @param Office $office
+     * @param Legal $legal
+     * @param date $dateStart
+     * @param string $act
+     * @param integer $pay
+     * 
+     * @return Contract
+     */
+    private function findDefaultContract($office, $legal, $dateStart, $act, $pay = Contract::PAY_CASHLESS)
+    {
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        if (!$dateValidator->isValid($dateStart)){
+            $dateStart = '2012-05-15';
+        }
+        
+        $contract = $this->entityManager->getRepository(Office::class)
+                ->findDefaultContract($office, $legal, $dateStart, $pay);
+        
+        if (!$contract){
+            $contract = $this->legalManager->addContract($legal, 
+                    [
+                        'office' => $office->getId(),
+                        'name' => ($pay == Contract::PAY_CASH) ? 'Поставка Н':'Поставка БН',
+                        'act' => trim($act),
+                        'dateStart' => $dateStart,
+                        'status' => Contract::STATUS_ACTIVE,
+                        'kind' => Contract::KIND_CUSTOMER,
+                        'pay' => $pay,
+                    ]);
+        }
+        
+        return $contract;
+    }
+    
+    /**
      * Обновить взаиморасчеты заказа
      * 
      * @param Order $order
@@ -103,7 +142,7 @@ class OrderManager
             'revise' => Mutual::REVISE_NOT,
             'amount' => $order->getTotal(),
             'legal_id' => $order->getLegal()->getId(),
-            'contract_id' => $ptu->getContract()->getId(),
+            'contract_id' => $this->findDefaultContract($office, $order->getLegal(), $order->getDateOper(), $order->getAplId()),
             'office_id' => $order->getOffice()->getId(),
             'company_id' => $order->getCompany()->getId(),
         ];

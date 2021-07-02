@@ -237,6 +237,15 @@ class AplOrderService {
             return;
         }
         
+        $dateOper = NULL;
+        if (!empty($data['type'])){
+            $dateValidator->setFormat('Y-m-d');
+            $dateOper = $data['type'];
+            if (!$dateValidator->isValid($dateOper)){
+                $dateOper = $data['type'];
+            }
+        } 
+        
         $legal = $this->entityManager->getRepository(Legal::class)
                 ->findOneByInnKpp($inn, $kpp);
         if (!$legal && !empty($data['firmName'])){
@@ -247,6 +256,7 @@ class AplOrderService {
                 'ogrn' => (empty($data['ogrn'])) ? null:$data['ogrn'],
                 'okpo' => (empty($data['okpo'])) ? null:$data['okpo'],
                 'address' => (empty($data['firmAddress'])) ? null:$data['firmAddress'],
+                'dateStart' => $dateOper,
             ]);
         }
         
