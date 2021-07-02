@@ -83,6 +83,19 @@ class MutualRepository extends EntityRepository{
     }
     
     /**
+     * Добавление записей взаиморасчетов
+     * 
+     * @param array $data
+     */
+    public function insertRetail($data)
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $connection->insert('retail', $data);
+        return;
+    }
+    
+    /**
      * Сумма поставок юрлица
      * 
      * @param Legal $legal
