@@ -143,7 +143,7 @@ class OrderManager
             'revise' => Mutual::REVISE_NOT,
             'amount' => $order->getTotal(),
             'legal_id' => $order->getLegal()->getId(),
-            'contract_id' => $this->findDefaultContract($office, $order->getLegal(), $order->getDateOper(), $order->getAplId()),
+            'contract_id' => $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId()),
             'office_id' => $order->getOffice()->getId(),
             'company_id' => $order->getCompany()->getId(),
         ];
