@@ -142,7 +142,7 @@ class OrderManager
      */
     public function updateOrderMutuals($order)
     {
-        
+        $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId());
         $data = [
             'doc_key' => $order->getLogKey(),
             'date_oper' => $order->getDateOper(),
@@ -150,7 +150,7 @@ class OrderManager
             'revise' => Mutual::REVISE_NOT,
             'amount' => $order->getTotal(),
             'legal_id' => $order->getLegal()->getId(),
-            'contract_id' => $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId()),
+            'contract_id' => $contract->getId(),
             'office_id' => $order->getOffice()->getId(),
             'company_id' => $order->getCompany()->getId(),
         ];
