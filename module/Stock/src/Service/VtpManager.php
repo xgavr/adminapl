@@ -53,7 +53,7 @@ class VtpManager
             'date_oper' => $vtp->getDocDate(),
             'status' => $vtp->getStatus(),
             'revise' => Mutual::REVISE_NOT,
-            'amount' => -$vtp->getAmount(),
+            'amount' => $vtp->getAmount(),
             'legal_id' => $vtp->getPtu()->getLegal()->getId(),
             'contract_id' => $vtp->getPtu()->getContract()->getId(),
             'office_id' => $vtp->getPtu()->getOffice()->getId(),
@@ -115,7 +115,6 @@ class VtpManager
 
     /**
      * Перепроведение всех ВТП
-     * @param Vtp $vtp
      */
     public function repostAllVtp()
     {

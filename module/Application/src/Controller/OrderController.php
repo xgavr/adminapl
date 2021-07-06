@@ -9,6 +9,7 @@ namespace Application\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use Application\Entity\Order;
 use User\Entity\User;
 
@@ -27,7 +28,7 @@ class OrderController extends AbstractActionController
     
     /**
      * Менеджер товаров.
-     * @var Application\Service\OrderManager 
+     * @var \Application\Service\OrderManager 
      */
     private $orderManager;    
     
@@ -168,5 +169,14 @@ class OrderController extends AbstractActionController
             'bids' => $bids,
         ]);
     } 
+    
+    public function repostAllOrderAction()
+    {                
+        $this->orderManager->repostAllOrder();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }   
     
 }

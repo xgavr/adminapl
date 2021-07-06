@@ -21,7 +21,7 @@ use Application\Entity\ContactCar;
  */
 class OrderRepository extends EntityRepository{
 
-    public function findAllOrder($user=null)
+    public function findAllOrder()
     {
         $entityManager = $this->getEntityManager();
 
@@ -29,15 +29,25 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder->select('o')
             ->from(Order::class, 'o')
-            ->orderBy('o.id')
                 ;
         
-        if ($user){
-            $queryBuilder->join("o.client", 'c', 'WITH')
-                    ->where('c.manager = ?1')
-                    ->setParameter('1', $user)
-                    ;
-        }
+        return $queryBuilder->getQuery();
+    }       
+    
+    /**
+     * Запрос на все заказаы
+     * @return Query
+     * 
+     */
+    public function queryAllOrder()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('o')
+            ->from(Order::class, 'o')
+                ;
         
         return $queryBuilder->getQuery();
     }       

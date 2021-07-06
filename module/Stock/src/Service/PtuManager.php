@@ -52,7 +52,7 @@ class PtuManager
             'date_oper' => $ptu->getDocDate(),
             'status' => $ptu->getStatus(),
             'revise' => Mutual::REVISE_NOT,
-            'amount' => $ptu->getAmount(),
+            'amount' => -$ptu->getAmount(),
             'legal_id' => $ptu->getLegal()->getId(),
             'contract_id' => $ptu->getContract()->getId(),
             'office_id' => $ptu->getOffice()->getId(),

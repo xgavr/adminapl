@@ -837,40 +837,28 @@ class OrderManager
         return;
     }
     
-    /*
-     * @var Application\Entity\Clent $client
-     * @var Application\Entity\Cart $carts
-     * 
-     */
-    public function checkoutClient($client)
-    {
-        
-        $carts = $this->entityManager->getRepository(Cart::class)
-                    ->findClientCart($client)->getResult();
-        
-        $order = null;
-        if (count($carts)){         
-            $orderData = ['client' => $client];
-            $order = $this->addNewOrder($orderData);
-
-            foreach ($carts as $cart){
-                $bidData = [
-                    'num' => $cart->getNum(),
-                    'price' => $cart->getPrice(),
-                    'good' => $cart->getGood(),
-                ];
-
-                $this->addNewBid($order, $bidData, false);
-
-                $this->entityManager->remove($cart);
-            }
-
-            $this->entityManager->flush();
-            
-            $this->updateOrderTotal($order);
-        }
-        
-        return $order;
-    }
     
+    /**
+     * Перепроведение всех заказов
+     */
+    public function repostAllOrder()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        
+        $orderQuery = $this->entityManager->getRepository(Order::class)
+                ->queryAllOrder();
+        $iterable = $orderQuery->iterate();
+        
+        foreach ($iterable as $row){
+            foreach($row as $order){ 
+                $this->repostOrder($order);
+                $this->entityManager->detach($order);
+                unset($order);
+            }    
+        }    
+        
+        return;
+    }
+        
 }

@@ -11,11 +11,15 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use User\Entity\User;
+use Application\Entity\Order;
+use Application\Entity\Contact;
+use Application\Entity\ContactCar;
 
 /**
  * Description of Client
  * @ORM\Entity(repositoryClass="\Application\Repository\RingRepository")
- * @ORM\Table(name="client")
+ * @ORM\Table(name="ring")
  * @author Daddy
  */
 class Ring {
@@ -24,13 +28,16 @@ class Ring {
     const STATUS_ACTIVE       = 1; // Active user.
     const STATUS_RETIRED      = 2; // Retired user.
    
-    const PRICE_0   = 0; // Розница
-    const PRICE_1   = 1; // ВИП
-    const PRICE_2   = 2; // опт2
-    const PRICE_3   = 3; // опт3
-    const PRICE_4   = 4; // опт4
-    const PRICE_5   = 5; // опт5
-    
+    const MODE_NEW_ORDER        = 10; // Новый заказ.
+    const MODE_CHANGE_ORDER     = 20; // Изменения в заказ. Обработать заказ. Подтвердить заказ
+    const MODE_DELIVERY_ORDER   = 30; // Доставка заказа.
+    const MODE_RETURN_ORDER     = 40; // Возврат товара.
+    const MODE_OTHER_ORDER      = 50; // Прочее по заказу.
+    const MODE_OFFICE_LOCATION  = 60; // Как пройти. Как оплатить
+    const MODE_CALL_STAFF       = 70; // Переключить на сотрудника.
+    const MODE_OTHER            = 80; // Прочие звонки.
+    const MODE_UNKNOWN          = 90; // Непонятные звонки.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -38,6 +45,11 @@ class Ring {
      */
     protected $id;
         
+    /** 
+     * @ORM\Column(name="mode")  
+     */
+    protected $mode;
+
     /** 
      * @ORM\Column(name="status")  
      */
@@ -60,12 +72,17 @@ class Ring {
     protected $phone;
     
     /**
+     * @ORM\Column(name="vin")   
+     */
+    protected $vin;
+    
+    /**
      * @ORM\Column(name="info")   
      */
     protected $info;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Orders", inversedBy="rings") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="rings") 
      * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
     private $order;
@@ -75,6 +92,12 @@ class Ring {
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
      */
     private $contact;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\ContactCar", inversedBy="rings") 
+     * @ORM\JoinColumn(name="contact_car_id", referencedColumnName="id")
+     */
+    private $contactCar;
     
     /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="rings") 
@@ -113,6 +136,79 @@ class Ring {
     public function setName($name) 
     {
         $this->name = $name;
+    }     
+
+    public function getVin() 
+    {
+        return $this->vin;
+    }
+
+    public function setVin($vin) 
+    {
+        $this->vin = $vin;
+    }     
+
+    public function getPhone() 
+    {
+        return $this->phone;
+    }
+
+    public function setPhone($phone) 
+    {
+        $this->phone = $phone;
+    }     
+
+    public function getInfo() 
+    {
+        return $this->info;
+    }
+
+    public function setInfo($info) 
+    {
+        $this->info = $info;
+    }     
+
+    public function getMode() 
+    {
+        return $this->mode;
+    }
+
+    /**
+     * Returns possible modes as array.
+     * @return array
+     */
+    public static function getModeList() 
+    {
+        return [
+            self::MODE_NEW_ORDER => 'Новый заказ',
+            self::MODE_CHANGE_ORDER => 'Изменить, обработать, подтвердить заказ',
+            self::MODE_DELIVERY_ORDER => 'Доставка заказа',
+            self::MODE_RETURN_ORDER => 'Возврат товара',
+            self::MODE_OTHER_ORDER => 'Прочее по заказу',
+            self::MODE_OFFICE_LOCATION => 'Как пройти, забрать, оплатить',
+            self::MODE_CALL_STAFF => 'Соеденить с сотрудником',
+            self::MODE_OTHER => 'Прочие звонки',
+            self::MODE_UNKNOWN => 'Непонятные звонки',
+        ];
+    }    
+    
+    /**
+     * Returns user mode as string.
+     * @return string
+     */
+    public function getModeAsString()
+    {
+        $list = self::getModeList();
+        if (isset($list[$this->mode]))
+            return $list[$this->mode];
+        
+        return 'Unknown';
+    }    
+    
+
+    public function setMode($mode) 
+    {
+        $this->mode = $mode;
     }     
 
     /**
@@ -159,53 +255,6 @@ class Ring {
     }   
     
     /**
-     * Returns pricecol.
-     * @return int     
-     */
-    public function getPricecol() 
-    {
-        return $this->pricecol;
-    }
-
-    /**
-     * Returns possible pricecols as array.
-     * @return array
-     */
-    public static function getPricecilList() 
-    {
-        return [
-            self::PRICE_0 => 'Розница',
-            self::PRICE_1 => 'VIP',
-            self::PRICE_2 => 'Опт2',
-            self::PRICE_3 => 'Опт3',
-            self::PRICE_4 => 'Опт4',
-            self::PRICE_5 => 'Опт5',
-        ];
-    }    
-    
-    /**
-     * Returns pricecol as string.
-     * @return string
-     */
-    public function getPriceColAsString()
-    {
-        $list = self::getPricecolList();
-        if (isset($list[$this->pricecol]))
-            return $list[$this->pricecol];
-        
-        return 'Unknown';
-    }    
-    
-    /**
-     * Sets pricecol.
-     * @param int $pricecol 
-     */
-    public function setPricecol($pricecol) 
-    {
-        $this->pricecol = $pricecol;
-    }   
-    
-    /**
      * Returns the date of user creation.
      * @return string     
      */
@@ -225,9 +274,8 @@ class Ring {
             
     /*
      * Возвращает связанный manager.
-     * @return \User\Entity\User
+     * @return User
      */
-    
     public function getManager() 
     {
         return $this->manager;
@@ -235,11 +283,78 @@ class Ring {
 
     /**
      * Задает связанный manager.
-     * @param \User\Entity\User $user
+     * @param User $user
      */    
     public function setManager($user) 
     {
         $this->manager = $user;
-        $user->addClient($this);
+    }             
+
+    /*
+     * Возвращает связанный order.
+     * @return Order
+     */    
+    public function getOrder() 
+    {
+        return $this->order;
+    }
+
+    /**
+     * Задает связанный order.
+     * @param Order $order
+     */    
+    public function setOrder($order) 
+    {
+        $this->order = $order;
+    }             
+    /*
+     * Возвращает связанный order.
+     * @return Order
+     */    
+
+    public function getContact() 
+    {
+        return $this->contact;
+    }
+
+    /**
+     * Задает связанный contact.
+     * @param Contact $contact
+     */    
+    public function setContact($contact) 
+    {
+        $this->contact = $contact;
+    }             
+    
+    public function getContactCar() 
+    {
+        return $this->contactCar;
+    }
+
+    /**
+     * Задает связанный contactCar.
+     * @param ContactCar $contactCar
+     */    
+    public function setContactCar($contactCar) 
+    {
+        $this->contactCar = $contactCar;
+    }             
+    
+    /*
+     * Возвращает связанный user.
+     * @return User
+     */
+    public function getUser() 
+    {
+        return $this->user;
+    }
+
+    /**
+     * Задает связанный user.
+     * @param User $user
+     */    
+    public function setUser($user) 
+    {
+        $this->user = $user;
     }             
 }
