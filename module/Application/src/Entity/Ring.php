@@ -15,6 +15,7 @@ use User\Entity\User;
 use Application\Entity\Order;
 use Application\Entity\Contact;
 use Application\Entity\ContactCar;
+use Company\Entity\Office;
 
 /**
  * Description of Client
@@ -77,6 +78,12 @@ class Ring {
     protected $vin;
     
     /**
+     * Запршиваемые артикулы
+     * @ORM\Column(name="gds")   
+     */
+    protected $gds;
+    
+    /**
      * @ORM\Column(name="info")   
      */
     protected $info;
@@ -110,6 +117,12 @@ class Ring {
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="rings") 
+     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     */
+    private $office;
     
     /**
      * Constructor.
@@ -146,6 +159,16 @@ class Ring {
     public function setVin($vin) 
     {
         $this->vin = $vin;
+    }     
+
+    public function getGds() 
+    {
+        return $this->gds;
+    }
+
+    public function setGds($gds) 
+    {
+        $this->gds = $gds;
     }     
 
     public function getPhone() 
@@ -356,5 +379,23 @@ class Ring {
     public function setUser($user) 
     {
         $this->user = $user;
+    }             
+
+    /*
+     * Возвращает связанный office.
+     * @return Office
+     */
+    public function getOffice() 
+    {
+        return $this->office;
+    }
+
+    /**
+     * Задает связанный office.
+     * @param Office $office
+     */    
+    public function setOffice($office) 
+    {
+        $this->office = $office;
     }             
 }
