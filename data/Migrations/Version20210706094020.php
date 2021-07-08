@@ -27,7 +27,7 @@ final class Version20210706094020 extends AbstractMigration
         $table->addColumn('order_id', 'integer', ['notnull'=>false]);
         $table->addColumn('contact_id', 'integer', ['notnull'=>false]);
         $table->addColumn('contact_car_id', 'integer', ['notnull'=>false]);
-        $table->addColumn('manger_id', 'integer', ['notnull'=>false]);
+        $table->addColumn('manager_id', 'integer', ['notnull'=>false]);
         $table->addColumn('user_id', 'integer', ['notnull'=>true]);
         $table->addColumn('office_id', 'integer', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);

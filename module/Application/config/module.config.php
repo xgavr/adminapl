@@ -385,6 +385,20 @@ return [
                     ],
                 ],
             ],        
+            'ring' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/ring[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\RingController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'ext' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -469,6 +483,7 @@ return [
             Controller\RawController::class => Controller\Factory\RawControllerFactory::class,
             Controller\RawpriceController::class => Controller\Factory\RawpriceControllerFactory::class,
             Controller\RbController::class => Controller\Factory\RbControllerFactory::class,
+            Controller\RingController::class => Controller\Factory\RingControllerFactory::class,
             Controller\SapiController::class => Controller\Factory\SapiControllerFactory::class,
             Controller\SupplierController::class => Controller\Factory\SupplierControllerFactory::class,
             Controller\ShopController::class => Controller\Factory\ShopControllerFactory::class,
@@ -507,6 +522,7 @@ return [
             Service\RawManager::class => Service\Factory\RawManagerFactory::class,
             Service\RbacAssertionManager::class => Service\Factory\RbacAssertionManagerFactory::class,  
             Service\RbManager::class => Service\Factory\RbManagerFactory::class,
+            Service\RingManager::class => Service\Factory\RingManagerFactory::class,
             Service\ShopManager::class => Service\Factory\ShopManagerFactory::class,
             Service\SupplierApi\AutoEuroManager::class => Service\Factory\SupplierApi\AutoEuroManagerFactory::class,
             Service\SupplierManager::class => Service\Factory\SupplierManagerFactory::class,
@@ -615,6 +631,10 @@ return [
                 ['actions' => '*', 'allow' => '+raw.manage']
             ],
             Controller\RbController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\RingController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
