@@ -1,0 +1,241 @@
+<?php
+$form = $this->form;
+
+$form->get('make')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('model')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('car')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('vin')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('vin2')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('yocm')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('wheel')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('tm')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ac')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('md')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ed')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ep')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'contact-car-submit']);
+
+$form->prepare();
+
+?>
+
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title">Машина</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('vin')); ?>
+                            <?= $this->formElement($form->get('vin')); ?>
+                            <?= $this->formElementErrors($form->get('vin')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('vin2')); ?>
+                            <?= $this->formElement($form->get('vin2')); ?>
+                            <?= $this->formElementErrors($form->get('vin2')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('yocm')); ?>
+                            <?= $this->formElement($form->get('yocm')); ?>
+                            <?= $this->formElementErrors($form->get('yocm')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+                    </div>    
+                </div>    
+                <div class="row">
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('make')); ?>
+                            <?= $this->formElement($form->get('make')); ?>
+                            <?= $this->formElementErrors($form->get('make')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('model')); ?>
+                            <?= $this->formElement($form->get('model')); ?>
+                            <?= $this->formElementErrors($form->get('model')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('car')); ?>
+                            <?= $this->formElement($form->get('car')); ?>
+                            <?= $this->formElementErrors($form->get('car')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('wheel')); ?>
+                            <?= $this->formElement($form->get('wheel')); ?>
+                            <?= $this->formElementErrors($form->get('wheel')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('tm')); ?>
+                            <?= $this->formElement($form->get('tm')); ?>
+                            <?= $this->formElementErrors($form->get('tm')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ac')); ?>
+                            <?= $this->formElement($form->get('ac')); ?>
+                            <?= $this->formElementErrors($form->get('ac')); ?>                  
+                        </div>
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('md')); ?>
+                            <?= $this->formElement($form->get('md')); ?>
+                            <?= $this->formElementErrors($form->get('md')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ed')); ?>
+                            <?= $this->formElement($form->get('ed')); ?>
+                            <?= $this->formElementErrors($form->get('ed')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('ep')); ?>
+                            <?= $this->formElement($form->get('ep')); ?>
+                            <?= $this->formElementErrors($form->get('ep')); ?>                  
+                        </div>
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('comment')); ?>
+                            <?= $this->formElement($form->get('comment')); ?>
+                            <?= $this->formElementErrors($form->get('comment')); ?>                  
+                        </div>                        
+                    </div>    
+                    
+                </div>        
+                 
+            </div>
+   
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" id="contact-car-submit">Сохранить</button>
+            </div>
+           
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#contact-car-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/garage/edit-form/<?= ($contactCar) ? $contactCar->getId():'' ?>?contact=<?= $contact->getId() ?>',
+            data: $('#contact-car-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#modal-dialog').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#modal-content').html(data);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при открытии формы.");
+
+            });
+    })    
+    
+    $('#make').on('change', function(){
+        $.getJSON( '/make/models/'+$('#make').val(), function( data ) {
+            $('#model').empty();
+            $('#car').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#model').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
+    
+    $('#model').on('change', function(){
+        $.getJSON( '/make/cars/'+$('#model').val(), function( data ) {
+            $('#car').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#car').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
+    
+</script>
