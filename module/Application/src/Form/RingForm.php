@@ -74,9 +74,9 @@ class RingForm extends Form
                 
         $this->add([           
             'type'  => 'text',
-            'name' => 'phone',
+            'name' => 'phone1',
             'attributes' => [
-                'id' => 'phone'
+                'id' => 'phone1'
             ],
             'options' => [
                 'label' => 'Телефон',
