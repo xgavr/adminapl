@@ -219,7 +219,7 @@ class Ring {
      * Returns user mode as string.
      * @return string
      */
-    public function getModeAsString()
+    public static function getModeAsString()
     {
         $list = self::getModeList();
         if (isset($list[$this->mode]))

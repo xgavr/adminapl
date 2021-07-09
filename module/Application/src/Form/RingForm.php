@@ -20,28 +20,18 @@ use Application\Entity\Ring;
 class RingForm extends Form
 {
     
-    protected $objectManager;
-    
-    /**
-     * Entity manager.
-     * @var \Doctrine\ORM\EntityManager 
-     */
-    private $entityManager;    
-            
     
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager)
+    public function __construct()
     {
         // Определяем имя формы.
-        parent::__construct('contact-car-form');
+        parent::__construct('ring-form');
      
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
         
-        $this->entityManager = $entityManager;    
-                
         $this->addElements();
         $this->addInputFilter();         
     }

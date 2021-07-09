@@ -1,15 +1,19 @@
 <?php
 $form = $this->form;
 
-$form->get('make')->setAttributes([
+$form->get('mode')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('model')->setAttributes([
+$form->get('name')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('car')->setAttributes([
+$form->get('phone')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('phone2')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -17,7 +21,23 @@ $form->get('vin')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('vin2')->setAttributes([
+$form->get('make')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('gds')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('info')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('order')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('manager')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -53,10 +73,6 @@ $form->get('ep')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('status')->setAttributes([
-    'class'=>'form-control', 
-    ]);
-
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'contact-car-submit']);
 
@@ -70,7 +86,7 @@ $form->prepare();
             <?= $this->form()->openTag($form); ?>
             
             <div class="modal-header">
-                <h5 class="modal-title">Машина</h5>
+                <h5 class="modal-title">Звонок</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

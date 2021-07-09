@@ -448,7 +448,7 @@ class AplOrderService {
             $dateValidator->setFormat('Y-m-d');
             $dateOper = $data['type'];
             if (!$dateValidator->isValid($dateOper)){
-                $dateOper = $data['type'];
+                $dateOper = $data['created'];
             }
         }    
         
@@ -643,7 +643,7 @@ class AplOrderService {
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
             var_dump($ex->getMessage());
             var_dump($body);
-            exit;
+            return false;
         }
 //        var_dump($result); exit;
 
