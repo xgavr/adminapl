@@ -633,7 +633,7 @@ class AplOrderService {
         $client->setUri($url);
         $client->setMethod('POST');
         $client->setParameterPost($post);
-        $client->setOptions(['timeout' => 30]);
+        $client->setOptions(['timeout' => 120]);
         $response = $client->send();
         $body = $response->getBody();
 
@@ -644,7 +644,9 @@ class AplOrderService {
             var_dump($ex->getMessage());
             var_dump($body);
             return false;
-        }
+        } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+            return true;
+        }    
 //        var_dump($result); exit;
 
         if (is_array($result)){
