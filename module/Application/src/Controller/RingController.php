@@ -12,6 +12,9 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Ring;
 use Application\Form\RingForm;
+use User\Filter\PhoneFilter;
+use Application\Entity\Phone;
+use Application\Entity\ContactCar;
 
 
 class RingController extends AbstractActionController
@@ -120,43 +123,28 @@ class RingController extends AbstractActionController
         ]);        
     }    
     
-    public function bindAction()
+    public function findPhoneAction()
     {
-        $crossId = (int)$this->params()->fromRoute('id', -1);
+        $contactName = null;
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+            $phonePost = $data['phone'];
+            $phoneFilter = new PhoneFilter();
+            $phoneNum = $phoneFilter->filter($phonePost);
 
-        // Validate input parameter
-        if ($crossId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
+            if (strlen($phoneNum) == 10){
 
-        $cross = $this->entityManager->getRepository(Cross::class)
-                ->findOneById($crossId);
-        
-        $this->crossManager->bindCross($cross);
-        
-        return new JsonModel(
-           ['ok']
-        );                   
-    }        
-
-    public function resetAction()
-    {
-        $crossId = (int)$this->params()->fromRoute('id', -1);
-
-        // Validate input parameter
-        if ($crossId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-
-        $cross = $this->entityManager->getRepository(Cross::class)
-                ->findOneById($crossId);
-        
-        $this->crossManager->resetCross($cross);
-        
-        return new JsonModel(
-           ['ok']
-        );                   
-    }        
+                $phone = $this->entityManager->getRepository(Phone::class)
+                                ->findOneByName(['name' => $phoneNum]);
+                if ($phone){
+                    $contactName = $phone->getContact()->getName();
+                    $contactCar = $this->entityManager->getRepository(ContactCar::class)
+                            ->findByContact($phone->getContact()->getId());
+                }
+            }    
+        }    
+        return new JsonModel([
+            'name' => $contactName,
+        ]);                  
+    }
 }

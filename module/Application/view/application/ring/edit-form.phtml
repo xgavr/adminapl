@@ -6,7 +6,7 @@ $form->get('mode')->setAttributes([
     ]);
 
 $form->get('name')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control searchinput', 
     ]);
 
 $form->get('phone1')->setAttributes([
@@ -83,6 +83,8 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Ð¡Ð
 $form->prepare();
 
 ?>
+
+
     <?= $this->form()->openTag($form); ?>
             
         <div class="modal-header">
@@ -94,11 +96,11 @@ $form->prepare();
             
         <div class="modal-body">
             <div class="row">
-                <div class="col-xs-4">                        
+                <div class="col-xs-2">                        
                     <div class="form-group">
                         <?= $this->formLabel($form->get('phone1')); ?>
                         <?= $this->formElement($form->get('phone1')); ?>
-                        <?= $this->formElementErrors($form->get('phone1')); ?>                  
+                        <?= $this->formElementErrors($form->get('phone1')); ?> 
                     </div>
                     <div class="form-group">
                         <?= $this->formLabel($form->get('phone2')); ?>
@@ -106,7 +108,13 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('phone2')); ?>                  
                     </div>
                 </div>    
-                <div class="col-xs-2">                        
+                <div class="col-xs-4">       
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('name')); ?>
+                        <?= $this->formElement($form->get('name')); ?> 
+                        <span id="searchclear" class="searchclear glyphicon glyphicon-remove-circle"></span>
+                        <?= $this->formElementErrors($form->get('name')); ?>                  
+                    </div>    
                 </div>    
                 <div class="col-xs-2">                        
                 </div>    
@@ -186,23 +194,53 @@ $form->prepare();
         </div>
 
         <?= $this->form()->closeTag(); ?>
+
+<style>
+.searchclear {
+    position:absolute;
+    right:5px;
+    top:0;
+    bottom:0;
+    height:14px;
+    margin:auto;
+    font-size:14px;
+    cursor:pointer;
+    color:#ccc;
+}    
+</style>
             
 <script>
-    $('.phone').mask('+7 (000) 000-0000', {selectOnFocus: true});
+    $(document).ready(function () {
+        $(".searchinput").keyup(function () {
+            $(this).next().toggle(Boolean($(this).val()));
+        });
+        $(".searchclear").toggle(Boolean($(".searchinput").val()));
+        $(".searchclear").click(function () {
+            $(this).prev().val('').focus();
+            $(this).hide();
+        });
+    });
+    
+    $('.phone').mask('8 (000) 000-0000', {selectOnFocus: true});
     
     $('.phone').on('input', function(){
         var value = $( this ).val();
-        $.ajax({
-            type: 'POST',
-            url: '/ring/find-contact-by-phone',
-            data: {phone: value}
-        })
-            .done(function (data) {
-                console.log(data);
+        if (value.length == 16){
+            $.ajax({
+                type: 'POST',
+                url: '/ring/find-phone',
+                data: {phone: value}
             })
-            .fail(function (e) {
-                console.log(e);
-            });
+                .done(function (data) {
+                    if (data){
+                        $('#name').val(data.name);
+                        $('#name').next().toggle(Boolean($('#name').val()));
+                    }    
+                })
+                .fail(function (e) {
+                    console.log(e);
+                });
+        }        
     });
 
     $('#ring-submit').on('click', function() {
