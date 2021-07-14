@@ -31,6 +31,7 @@ class RingForm extends Form
      
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
+        $this->setAttribute('autocomplete', 'off');
         
         $this->addElements();
         $this->addInputFilter();         
@@ -62,21 +63,23 @@ class RingForm extends Form
         ]);
         
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'search',
             'name' => 'name',
             'attributes' => [
-                'id' => 'name'
+                'id' => 'name',
+                'autocomplete' => 'off',
             ],
             'options' => [
-                'label' => 'Как к Вам обращатся',
+                'label' => 'Имя клиента',
             ],
         ]);
                 
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'search',
             'name' => 'phone1',
             'attributes' => [
-                'id' => 'phone1'
+                'id' => 'phone1',
+                'autocomplete' => 'off',
             ],
             'options' => [
                 'label' => 'Телефон',
@@ -84,13 +87,14 @@ class RingForm extends Form
         ]);
                 
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'search',
             'name' => 'phone2',
             'attributes' => [
-                'id' => 'phone2'
+                'id' => 'phone2',
+                'autocomplete' => 'off',                
             ],
             'options' => [
-                'label' => 'Номер телефона для поска контакта',
+                'label' => 'Еще номер телефона',
             ],
         ]);
                 

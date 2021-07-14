@@ -100,11 +100,13 @@ $form->prepare();
                     <div class="form-group">
                         <?= $this->formLabel($form->get('phone1')); ?>
                         <?= $this->formElement($form->get('phone1')); ?>
+                        <!--<span class="searchclear glyphicon glyphicon-remove-circle"></span>-->
                         <?= $this->formElementErrors($form->get('phone1')); ?> 
                     </div>
                     <div class="form-group">
                         <?= $this->formLabel($form->get('phone2')); ?>
                         <?= $this->formElement($form->get('phone2')); ?>
+                        <!--<span class="searchclear glyphicon glyphicon-remove-circle"></span>-->
                         <?= $this->formElementErrors($form->get('phone2')); ?>                  
                     </div>
                 </div>    
@@ -112,7 +114,7 @@ $form->prepare();
                     <div class="form-group">
                         <?= $this->formLabel($form->get('name')); ?>
                         <?= $this->formElement($form->get('name')); ?> 
-                        <span id="searchclear" class="searchclear glyphicon glyphicon-remove-circle"></span>
+                        <span class="searchclear glyphicon glyphicon-remove-circle"></span>
                         <?= $this->formElementErrors($form->get('name')); ?>                  
                     </div>    
                 </div>    
@@ -198,10 +200,10 @@ $form->prepare();
 <style>
 .searchclear {
     position:absolute;
-    right:5px;
+    right:20px;
     top:0;
     bottom:0;
-    height:14px;
+    height:5px;
     margin:auto;
     font-size:14px;
     cursor:pointer;
