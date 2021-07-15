@@ -103,12 +103,6 @@ $form->prepare();
                         <!--<span class="searchclear glyphicon glyphicon-remove-circle"></span>-->
                         <?= $this->formElementErrors($form->get('phone1')); ?> 
                     </div>
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('phone2')); ?>
-                        <?= $this->formElement($form->get('phone2')); ?>
-                        <!--<span class="searchclear glyphicon glyphicon-remove-circle"></span>-->
-                        <?= $this->formElementErrors($form->get('phone2')); ?>                  
-                    </div>
                 </div>    
                 <div class="col-xs-4">       
                     <div class="form-group">
@@ -118,11 +112,32 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('name')); ?>                  
                     </div>    
                 </div>    
-                <div class="col-xs-2">                        
+                <div class="col-xs-3">       
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('mode')); ?>
+                        <?= $this->formElement($form->get('mode')); ?> 
+                        <?= $this->formElementErrors($form->get('mode')); ?>                  
+                    </div>    
                 </div>    
             </div>    
             <div class="row">
-                <div class="col-xs-4">                        
+                <div class="col-xs-2">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('phone2')); ?>
+                        <?= $this->formElement($form->get('phone2')); ?>
+                        <!--<span class="searchclear glyphicon glyphicon-remove-circle"></span>-->
+                        <?= $this->formElementErrors($form->get('phone2')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-2">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('vin')); ?>
+                        <span id="vinLength"></span>
+                        <?= $this->formElement($form->get('vin')); ?>
+                        <?= $this->formElementErrors($form->get('vin')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-2">                        
                     <div class="form-group">
                         <?= $this->formLabel($form->get('make')); ?>
                         <?= $this->formElement($form->get('make')); ?>
@@ -225,6 +240,19 @@ $form->prepare();
     
     $('.phone').mask('8 (000) 000-0000', {selectOnFocus: true});
     
+    function setTextValue(node, value, clear = false)
+    {
+        if (!$(node).val()){
+            $(node).val(value);
+            if (clear){
+                $(node).next().toggle(Boolean($(node).val()));
+            }    
+        }           
+    }
+    $('#vin').on('input', function(){
+        $("#vinLength").html($("#vin").val().length);
+    });
+    
     $('.phone').on('input', function(){
         var value = $( this ).val();
         if (value.length == 16){
@@ -235,8 +263,12 @@ $form->prepare();
             })
                 .done(function (data) {
                     if (data){
-                        $('#name').val(data.name);
-                        $('#name').next().toggle(Boolean($('#name').val()));
+                        setTextValue('#name', data.name, true);
+                        setTextValue('#vin', data.cars[0].vin, true);
+                        $("#vinLength").html($("#vin").val().length);
+                        setTextValue('#make', data.cars[0].makeName, false);
+                        $.each(data.cars, function( i, car ){
+                        });                    
                     }    
                 })
                 .fail(function (e) {

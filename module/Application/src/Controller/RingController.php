@@ -15,6 +15,7 @@ use Application\Form\RingForm;
 use User\Filter\PhoneFilter;
 use Application\Entity\Phone;
 use Application\Entity\ContactCar;
+use Application\Entity\Order;
 
 
 class RingController extends AbstractActionController
@@ -125,7 +126,7 @@ class RingController extends AbstractActionController
     
     public function findPhoneAction()
     {
-        $contactName = $cars = null;
+        $contactName = $cars = $orders = null;
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $phonePost = $data['phone'];
@@ -139,11 +140,19 @@ class RingController extends AbstractActionController
                 if ($phone){
                     $contactName = $phone->getContact()->getName();
                     $contactCars = $this->entityManager->getRepository(ContactCar::class)
-                            ->findByContact($phone->getContact()->getId(), ['id' => 'DESC']);
+                            ->findByContact($phone->getContact()->getId(), ['id' => 'DESC']);                    
                     foreach ($contactCars as $contactCar){
                         $cars[] = [
                             'makeName' => ($contactCar->getMake()) ? $contactCar->getMake()->getName():'',
                             'vin' => $contactCar->getVin(),
+                            ];
+                    }                    
+                    $orders = $this->entityManager->getRepository(Order::class)
+                            ->findBy(['contact' => $phone->getContact()->getId()], ['id' => 'DESC']);
+                    foreach ($order as $order){
+                        $orders[] = [
+                            'aplId' => $order->getAplId(),
+                            'id' => $order->getId(),
                             ];
                     }                    
                 }
@@ -152,6 +161,7 @@ class RingController extends AbstractActionController
         return new JsonModel([
             'name' => $contactName,
             'cars' => $cars,
+            'orders' => $orders,
         ]);                  
     }
 }
