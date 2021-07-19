@@ -21,6 +21,10 @@ $form->get('phone2')->setAttributes([
     'aria-describedby' => "basic-addon2",
     ]);
 
+$form->get('info')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('vin')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -146,57 +150,13 @@ $form->prepare();
                 </div>    
             </div>    
             <div class="row">
-                <div class="col-xs-4">                        
+                <div class="col-xs-6">
+                </dv>
+                <div class="col-xs-6">
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('wheel')); ?>
-                        <?= $this->formElement($form->get('wheel')); ?>
-                        <?= $this->formElementErrors($form->get('wheel')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-4">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('tm')); ?>
-                        <?= $this->formElement($form->get('tm')); ?>
-                        <?= $this->formElementErrors($form->get('tm')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-4">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('ac')); ?>
-                        <?= $this->formElement($form->get('ac')); ?>
-                        <?= $this->formElementErrors($form->get('ac')); ?>                  
-                    </div>
-                </div>    
-            </div>        
-            <div class="row">
-                <div class="col-xs-4">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('md')); ?>
-                        <?= $this->formElement($form->get('md')); ?>
-                        <?= $this->formElementErrors($form->get('md')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-4">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('ed')); ?>
-                        <?= $this->formElement($form->get('ed')); ?>
-                        <?= $this->formElementErrors($form->get('ed')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-4">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('ep')); ?>
-                        <?= $this->formElement($form->get('ep')); ?>
-                        <?= $this->formElementErrors($form->get('ep')); ?>                  
-                    </div>
-                </div>    
-            </div>        
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('comment')); ?>
-                        <?= $this->formElement($form->get('comment')); ?>
-                        <?= $this->formElementErrors($form->get('comment')); ?>                  
+                        <?= $this->formLabel($form->get('info')); ?>
+                        <?= $this->formElement($form->get('info')); ?>
+                        <?= $this->formElementErrors($form->get('info')); ?>                  
                     </div>                        
                 </div>    
 

@@ -63,6 +63,17 @@ class RingForm extends Form
         ]);
         
         $this->add([           
+            'type'  => 'textarea',
+            'name' => 'info',
+            'attributes' => [
+                'id' => 'info'
+            ],
+            'options' => [
+                'label' => 'Что хотят?',
+            ],
+        ]);
+                
+        $this->add([           
             'type'  => 'search',
             'name' => 'name',
             'attributes' => [

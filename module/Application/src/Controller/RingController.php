@@ -149,10 +149,13 @@ class RingController extends AbstractActionController
                     }                    
                     $orders = $this->entityManager->getRepository(Order::class)
                             ->findBy(['contact' => $phone->getContact()->getId()], ['id' => 'DESC']);
-                    foreach ($order as $order){
+                    foreach ($orders as $order){
                         $orders[] = [
                             'aplId' => $order->getAplId(),
                             'id' => $order->getId(),
+                            'status' => $order->getStatus(),
+                            'user' => ($order->getUser()) ? $order->getUser()->getId():null,
+                            'skiper' => ($order->getSkiper()) ? $order->getSkiper()->getId():null,
                             ];
                     }                    
                 }
