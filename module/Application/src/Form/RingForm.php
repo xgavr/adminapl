@@ -50,6 +50,7 @@ class RingForm extends Form
             'options' => [
                 'label' => 'Статус',
                 'value_options' => Ring::getStatusList(),
+                'value' => Ring::STATUS_ACTIVE,
             ],
         ]);
         
@@ -110,6 +111,22 @@ class RingForm extends Form
         ]);
                 
         $this->add([           
+            'type'  => 'hidden',
+            'name' => 'contact',
+            'attributes' => [
+                'id' => 'contact',
+            ],
+        ]);
+                
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'contactCar',
+            'attributes' => [
+                'id' => 'contactCar',
+            ],
+        ]);
+                
+        $this->add([           
             'type'  => 'text',
             'name' => 'vin',
             'attributes' => [
@@ -144,17 +161,6 @@ class RingForm extends Form
             ],
         ]);
                 
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'info',
-            'attributes' => [
-                'id' => 'info'
-            ],
-            'options' => [
-                'label' => 'Запрос',
-            ],
-        ]);                        
-        
         $this->add([           
             'type'  => 'text',
             'name' => 'order',
@@ -301,6 +307,67 @@ class RingForm extends Form
         
         $inputFilter = new InputFilter();        
         $this->setInputFilter($inputFilter);
+        
+        $inputFilter->add([
+                'name'     => 'status',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Ring::getStatusList())]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'yocm',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);                          
+        
+        $inputFilter->add([
+                'name'     => 'wheel',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(ContactCar::getWheelList())]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'tm',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(ContactCar::getTmList())]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'ac',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(ContactCar::getAcList())]]
+                ],
+            ]); 
         
     }        
 }

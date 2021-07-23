@@ -21,6 +21,14 @@ $form->get('phone2')->setAttributes([
     'aria-describedby' => "basic-addon2",
     ]);
 
+$form->get('contact')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('contactCar')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('info')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -148,10 +156,6 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('make')); ?>                  
                     </div>
                 </div>    
-            </div>    
-            <div class="row">
-                <div class="col-xs-6">
-                </dv>
                 <div class="col-xs-6">
                     <div class="form-group">
                         <?= $this->formLabel($form->get('info')); ?>
@@ -159,17 +163,23 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('info')); ?>                  
                     </div>                        
                 </div>    
+            </div>    
+            <div class="row">
+                <div class="col-xs-6">
+                </div>
 
             </div>        
 
         </div>
    
-                
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             <button type="button" class="btn btn-primary" id="ring-submit">Сохранить</button>
         </div>
 
+        <?= $this->formElement($form->get('contact')); ?>
+        <?= $this->formElement($form->get('contactCar')); ?>
+                
         <?= $this->form()->closeTag(); ?>
 
 <style>
@@ -223,12 +233,16 @@ $form->prepare();
             })
                 .done(function (data) {
                     if (data){
+                        setTextValue('#contact', data.contact);
                         setTextValue('#name', data.name, true);
-                        setTextValue('#vin', data.cars[0].vin, true);
-                        $("#vinLength").html($("#vin").val().length);
-                        setTextValue('#make', data.cars[0].makeName, false);
-                        $.each(data.cars, function( i, car ){
-                        });                    
+                        if (data.cars){
+                            setTextValue('#contactCar', data.cars[0].id);
+                            setTextValue('#vin', data.cars[0].vin, true);
+                            $("#vinLength").html($("#vin").val().length);
+                            setTextValue('#make', data.cars[0].makeName, false);
+                        }    
+//                        $.each(data.cars, function( i, car ){
+//                        });                    
                     }    
                 })
                 .fail(function (e) {

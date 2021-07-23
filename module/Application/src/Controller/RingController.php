@@ -90,7 +90,7 @@ class RingController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             
-            $data = $this->params()->fromPost();
+            $data = $this->params()->fromPost();            
             $form->setData($data);
 
             if ($form->isValid()) {
@@ -99,6 +99,8 @@ class RingController extends AbstractActionController
                 return new JsonModel(
                    ['ok']
                 );           
+            } else {
+                var_dump($form->getMessages());
             }
         } else {
             if ($ring){
@@ -126,7 +128,7 @@ class RingController extends AbstractActionController
     
     public function findPhoneAction()
     {
-        $contactName = $cars = $orders = null;
+        $contactName = $cars = $orders = $contact = null;
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $phonePost = $data['phone'];
@@ -139,16 +141,18 @@ class RingController extends AbstractActionController
                                 ->findOneByName(['name' => $phoneNum]);
                 if ($phone){
                     $contactName = $phone->getContact()->getName();
+                    $contact = $phone->getContact()->getId();
                     $contactCars = $this->entityManager->getRepository(ContactCar::class)
-                            ->findByContact($phone->getContact()->getId(), ['id' => 'DESC']);                    
+                            ->findByContact($contact, ['id' => 'DESC']);                    
                     foreach ($contactCars as $contactCar){
                         $cars[] = [
                             'makeName' => ($contactCar->getMake()) ? $contactCar->getMake()->getName():'',
                             'vin' => $contactCar->getVin(),
+                            'id' => $contactCar->getId(),
                             ];
                     }                    
                     $orders = $this->entityManager->getRepository(Order::class)
-                            ->findBy(['contact' => $phone->getContact()->getId()], ['id' => 'DESC']);
+                            ->findBy(['contact' => $contact], ['id' => 'DESC']);
                     foreach ($orders as $order){
                         $orders[] = [
                             'aplId' => $order->getAplId(),
@@ -165,6 +169,7 @@ class RingController extends AbstractActionController
             'name' => $contactName,
             'cars' => $cars,
             'orders' => $orders,
+            'contact' => $contact,
         ]);                  
     }
 }
