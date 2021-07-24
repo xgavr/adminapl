@@ -91,7 +91,7 @@ class ClientManager
         $currentDate = date('Y-m-d H:i:s');
         
         $add = [
-            'apl_id' => $data['aplId'],
+            'apl_id' => (empty($data['aplId'])) ? null:$data['aplId'],
             'name' => (empty($data['name'])) ? 'NaN':$data['name'],
             'status' => $data['status'],
             'date_created' => $currentDate,
