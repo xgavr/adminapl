@@ -5,6 +5,8 @@ namespace Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Application\Entity\Ring;
+use Application\Entity\RingHelp;
+use Application\Entity\RingHelpGroup;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -17,6 +19,7 @@ final class Version20210726085226 extends AbstractMigration
         $table = $schema->createTable('ring_help_group');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('mode', 'integer', ['notnull'=>true, 'default'=>Ring::MODE_NEW_ORDER]);
+        $table->addColumn('status', 'integer', ['notnull'=>true, 'default'=> RingHelpGroup::STATUS_ACTIVE]);
         $table->addColumn('sort', 'integer', ['notnull'=>true, 'default'=>100]);
         $table->addColumn('name', 'string', ['notnull'=>true, 'length' => 128]);
         $table->addColumn('info', 'string', ['notnull'=>false, 'length' => 512]);
@@ -27,6 +30,7 @@ final class Version20210726085226 extends AbstractMigration
         $table = $schema->createTable('ring_help');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('mode', 'integer', ['notnull'=>true, 'default'=>Ring::MODE_NEW_ORDER]);
+        $table->addColumn('status', 'integer', ['notnull'=>true, 'default'=> RingHelp::STATUS_ACTIVE]);
         $table->addColumn('sort', 'integer', ['notnull'=>true, 'default'=>100]);
         $table->addColumn('ring_help_group_id', 'integer', ['notnull'=>false]);
         $table->addColumn('name', 'string', ['notnull'=>true, 'length' => 256]);
