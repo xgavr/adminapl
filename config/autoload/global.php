@@ -20,6 +20,9 @@ use Laminas\Cache\Storage\Adapter\Memcache;
 
 return [
     // Настройка сессии.
+    'session_containers' => [
+        Laminas\Session\Container::class,
+    ],    
     'session_config' => [
         // Срок действия cookie сессии истечет через 1 час.
         'cookie_lifetime' => 60*60*1,     

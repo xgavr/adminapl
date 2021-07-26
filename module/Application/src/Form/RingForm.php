@@ -92,9 +92,10 @@ class RingForm extends Form
             'attributes' => [
                 'id' => 'phone1',
                 'autocomplete' => 'off',
+                'required' => 'required',
             ],
             'options' => [
-                'label' => 'Телефон',
+                'label' => 'Входящий номер',
             ],
         ]);
                 
@@ -162,7 +163,7 @@ class RingForm extends Form
         ]);
                 
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'number',
             'name' => 'order',
             'attributes' => [
                 'id' => 'order'

@@ -89,4 +89,16 @@ class OfficeRepository extends EntityRepository{
         
     }
 
+    /**
+     * Офис по умолчанию
+     * 
+     * @return Office
+     */
+    public function findDefaultOffice()
+    {
+        $entityManager = $this->getEntityManager();
+        $defaultOffice = $entityManager->getRepository(Office::class)
+                ->find(1);
+        return $defaultOffice;        
+    }
 }

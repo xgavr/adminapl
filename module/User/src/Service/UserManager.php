@@ -394,5 +394,16 @@ class UserManager
         return true;
     } 
     
+    /**
+     * 
+     */
+    private function currentGeo()
+    {
+        $ipApiUrl = 'http://ip-api.com/json/';
+        $remote = new \Laminas\Http\PhpEnvironment\RemoteAddress();
+        $currentIp = $remote->getIpAddress();
+        $result = file_get_contents($ipApiUrl.$currentIp.'?lang=ru');
+        return \Laminas\Json\Decoder::decode($result, \Laminas\Json\Json::TYPE_ARRAY);
+    }
 }
 

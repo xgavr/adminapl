@@ -131,6 +131,13 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('mode')); ?>                  
                     </div>    
                 </div>    
+                <div class="col-xs-2">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('order')); ?>
+                        <?= $this->formElement($form->get('order')); ?>
+                        <?= $this->formElementErrors($form->get('order')); ?> 
+                    </div>
+                </div>    
             </div>    
             <div class="row">
                 <div class="col-xs-2">                        
@@ -174,7 +181,7 @@ $form->prepare();
    
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-            <button type="button" class="btn btn-primary" id="ring-submit">Сохранить</button>
+            <button type="submit" class="btn btn-primary" id="ring-submit">Сохранить</button>
         </div>
 
         <?= $this->formElement($form->get('contact')); ?>
@@ -197,6 +204,26 @@ $form->prepare();
 </style>
             
 <script>
+    function submitForm(){
+        $.ajax({
+            type: 'POST',
+            url: '/ring/edit-form/<?= ($ring) ? $ring->getId():'' ?>',
+            data: $('#ring-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#modal-dialog').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#modal-content').html(data);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при открытии формы.");
+            });
+    }    
+    
     $(document).ready(function () {
         $(".searchinput").keyup(function () {
             $(this).next().toggle(Boolean($(this).val()));
@@ -206,6 +233,24 @@ $form->prepare();
             $(this).prev().val('').focus();
             $(this).hide();
         });
+        
+        var forms = $('#ring-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('ring-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });   
     });
     
     $('.phone').mask('8 (000) 000-0000', {selectOnFocus: true});
@@ -249,27 +294,5 @@ $form->prepare();
                     console.log(e);
                 });
         }        
-    });
-
-    $('#ring-submit').on('click', function() {
-        $.ajax({
-            type: 'POST',
-            url: '/ring/edit-form/<?= ($ring) ? $ring->getId():'' ?>',
-            data: $('#ring-form').serialize()
-        })
-            .done(function (data) {
-                if (data == 'ok'){
-                    $('#modal-dialog').modal('hide');
-                    window.location.reload();
-                } else {
-                    $('#modal-content').html(data);
-                }    
-            })
-            .fail(function (e) {
-                console.log(e);
-                alert("Ошибка при открытии формы.");
-
-            });
-    })    
-    
+    });    
 </script>

@@ -94,6 +94,8 @@ class RingController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
+                $phoneFilter = new PhoneFilter();
+                $data['phone'] = $phoneFilter->filter($data['phone1']);
                 $ring = $this->ringManager->addRing($data);
                 
                 return new JsonModel(
@@ -105,15 +107,6 @@ class RingController extends AbstractActionController
         } else {
             if ($ring){
                 $data = [
-                    'office_id' => $ptu->getContract()->getOffice()->getId(),
-                    'company' => $ptu->getContract()->getCompany()->getId(),
-                    'supplier' => $ptu->getSupplier()->getId(),
-                    'legal_id' => $ptu->getLegal()->getId(),  
-                    'contract_id' => $ptu->getContract()->getId(),  
-                    'doc_date' => $ptu->getDocDate(),  
-                    'doc_no' => $ptu->getDocNo(),
-                    'comment' => $ptu->getComment(),
-                    'status' => $ptu->getStatus(),
                 ];
                 $form->setData($data);
             }    

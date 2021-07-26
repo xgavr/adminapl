@@ -81,6 +81,11 @@ use Application\Entity\Ring;
         return params;
     }
     
+    function modeFormatter(value){
+        var modes = <?php echo json_encode(Ring::getModeList()) ?>;
+        return modes[value];
+    }
+    
     function linkFormatter(value){
         return value;
     }    

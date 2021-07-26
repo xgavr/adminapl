@@ -218,6 +218,10 @@ class RingManager
 
             return $office;
         }
+        
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findDefaultOffice();
+        
         return $office;
     }
     
