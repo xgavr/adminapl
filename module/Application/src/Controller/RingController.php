@@ -213,7 +213,7 @@ class RingController extends AbstractActionController
         
         if ($helpGroupId > 0){
             $helpGroup = $this->entityManager->getRepository(RingHelpGroup::class)
-                    ->find($ringId);
+                    ->find($helpGroupId);
         }    
 
         $form = new RingHelpGroupForm();
@@ -224,7 +224,11 @@ class RingController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-                $helpGroup = $this->ringManager->addHelpGroup($data);
+                if ($helpGroup){
+                    $this->ringManager->updateHelpGroup($helpGroup, $data);
+                } else {
+                    $helpGroup = $this->ringManager->addHelpGroup($data);
+                }    
                 
                 return new JsonModel(
                    ['ok']

@@ -40,48 +40,40 @@ $form->prepare();
             
         <div class="modal-body">
             <div class="row">
-                <div class="col-xs-2">                        
+                <div class="col-xs-9">                        
                     <div class="form-group">
                         <?= $this->formLabel($form->get('name')); ?>
                         <?= $this->formElement($form->get('name')); ?>
                         <?= $this->formElementErrors($form->get('name')); ?> 
                     </div>
-                </div>    
-                <div class="col-xs-4">       
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('status')); ?>
-                        <?= $this->formElement($form->get('status')); ?> 
-                        <?= $this->formElementErrors($form->get('status')); ?>                  
-                    </div>    
-                </div>    
-                <div class="col-xs-3">       
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('mode')); ?>
-                        <?= $this->formElement($form->get('mode')); ?> 
-                        <?= $this->formElementErrors($form->get('mode')); ?>                  
-                    </div>    
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('sort')); ?>
-                        <?= $this->formElement($form->get('sort')); ?> 
-                        <?= $this->formElementErrors($form->get('sort')); ?>                  
-                    </div>    
-                </div>    
-            </div>    
-            <div class="row">
-                <div class="col-xs-6">
                     <div class="form-group">
                         <?= $this->formLabel($form->get('info')); ?>
                         <?= $this->formElement($form->get('info')); ?>
                         <?= $this->formElementErrors($form->get('info')); ?>                  
                     </div>                        
                 </div>    
+                <div class="col-xs-3">       
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('sort')); ?>
+                        <?= $this->formElement($form->get('sort')); ?> 
+                        <?= $this->formElementErrors($form->get('sort')); ?>                  
+                    </div>    
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?> 
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                    </div>    
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('mode')); ?>
+                        <?= $this->formElement($form->get('mode')); ?> 
+                        <?= $this->formElementErrors($form->get('mode')); ?>                  
+                    </div>    
+                </div>    
             </div>    
             <div class="row">
-                <div class="col-xs-6">
-                </div>
-
-            </div>        
-
+                <div class="col-xs-9">
+                </div>    
+            </div>    
         </div>
    
         <div class="modal-footer">

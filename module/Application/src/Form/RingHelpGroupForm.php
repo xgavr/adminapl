@@ -57,7 +57,7 @@ class RingHelpGroupForm extends Form
             'type'  => 'select',
             'name' => 'mode',
             'options' => [
-                'label' => 'О чем звонят',
+                'label' => 'Тип звонка',
                 'value_options' => Ring::getModeList(),
             ],
         ]);

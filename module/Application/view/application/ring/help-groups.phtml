@@ -17,13 +17,14 @@ use Application\Entity\Ring;
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         </button>                
         <div class="form-group">
-            <select name="mode" style="width: 400px" class="form-control">
+            <!--<label for="mode">Тип звонка</label>-->            
+            <select name="mode" style="width: 400px" class="form-control" id="mode">
                 <?php foreach (Ring::getModeList() as $mode=>$value):?>
                     <option value='<?= $mode?>'><?= $value?></option>
                 <?php endforeach;?>
             </select>
         </div>
-        <button id="ok" type="submit" class="btn btn-default">OK</button>
+        <!--<button id="ok" type="submit" class="btn btn-default">OK</button>-->
     </div>
 </div>
 <table id="table" 
@@ -40,9 +41,10 @@ use Application\Entity\Ring;
     >
     <thead>
         <tr>
-             <th data-field="id" data-type="numeric">ID</th>
-             <th data-field="sort">Сортировка</th>
+             <th data-field="id" data-type="numeric" data-width="20">ID</th>
+             <th data-field="sort" data-width="20">Сортировка</th>
              <th data-field="name">Наименование</th>
+             <th data-field="id" data-type="numeric" data-width="20" data-formatter="activeFormatter"></th>
          </tr>                
     </thead>
 </table>
@@ -59,12 +61,15 @@ use Application\Entity\Ring;
         ok.click(function () {
             table.bootstrapTable('refresh');
         });
+        $(document).on('change', '#mode', function(e){
+            table.bootstrapTable('refresh');            
+        });
         $(document).on('click', '.help-group-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
                 id: 'helpGroupModal',
                 url: url,
-                width: '1440px'
+                width: '1000px'
             });
         });          
     });
@@ -81,6 +86,7 @@ use Application\Entity\Ring;
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
+        params.mode = $('#mode').val();
         
         return params;
     }
@@ -90,30 +96,11 @@ use Application\Entity\Ring;
         return modes[value];
     }
     
-    function linkFormatter(value){
-        return value;
-    }    
-
-    function linkFormatter(value, row){
-        if (!value){
-            value = '---';
-        }
-        return [
-            '<div class="pull-left">',
-            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
-            '</div>'
-        ].join(''); 
-    }    
-    
-    function amountFormatter(value){
-        return Math.round(value*100)/100;
-    }    
-    
     function activeFormatter(value, row){
-        var url = '/ptu/edit-form/'+row.id;
+        var url = '/ring/help-group-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs ptu-modal-show"';
+        btn += ' class="btn btn-default btn-xs help-group-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
