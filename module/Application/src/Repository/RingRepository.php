@@ -10,6 +10,8 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Ring;
+use Application\Entity\RingHelpGroup;
+use Application\Entity\RingHelp;
 
 /**
  * Description of RingRepository
@@ -33,4 +35,30 @@ class RingRepository extends EntityRepository{
 
         return $queryBuilder->getQuery();
     }        
+    
+    /*
+     * 
+     */
+    public function findAllRingHelpGroup($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+            ->from(RingHelpGroup::class, 'r')
+            ->orderBy('r.sort')    
+                ;
+        
+        if (is_array($params)){
+            if (is_numeric($params['mode'])){
+                $queryBuilder->andWhere('r.mode = ?1')
+                        ->setParameter('1', $params['mode'])
+                    ;
+            }    
+        }
+
+        return $queryBuilder->getQuery();
+    }        
+    
 }

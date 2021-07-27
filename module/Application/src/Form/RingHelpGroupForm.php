@@ -26,7 +26,7 @@ class RingHelpGroupForm extends Form
     public function __construct()
     {
         // Определяем имя формы.
-        parent::__construct('ring-help-group-form');
+        parent::__construct('help-group-form');
      
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -77,7 +77,8 @@ class RingHelpGroupForm extends Form
             'type'  => 'number',
             'name' => 'sort',
             'attributes' => [
-                'id' => 'sort'
+                'id' => 'sort',
+                'value' => 100,
             ],
             'options' => [
                 'label' => 'Сортировка',

@@ -14,6 +14,8 @@ use Application\Entity\ContactCar;
 use User\Entity\User;
 use Application\Entity\Order;
 use Company\Entity\Office;
+use Application\Entity\RingHelpGroup;
+use Application\Entity\RingHelp;
 
 /**
  * Description of RingManager
@@ -257,5 +259,124 @@ class RingManager
         $this->entityManager->flush($ring);
         
         return $ring;
+    }
+    
+    /**
+     * Добавить подсказку
+     * 
+     * @param RingHelpGroup $helpGroup
+     * @param array $data
+     * @return RingHelp
+     */
+    public function addHelp($helpGroup, $data)
+    {
+        $help = new RingHelp();
+        $help->setInfo($data['info'] ?? null);
+        $help->setMode($data['mode']);
+        $help->setName($data['name']);
+        $help->setSort($data['sort'] ?? 100);
+        $help->setStatus($data['status'] ?? RingHelpGroup::STATUS_ACTIVE);
+        
+        $help->setRingHelpGroup($helpGroup);
+        
+        $this->entityManager->persist($help);
+        $this->entityManager->flush($help);
+        
+        return $help;
+    }
+    
+    /**
+     * Обновить подсказку
+     * 
+     * @param RingHelp $help
+     * @param array $data
+     * @return RingHelp
+     */
+    public function updateHelp($help, $data)
+    {
+        $helpGroup->setInfo($data['info'] ?? null);
+        $helpGroup->setMode($data['mode']);
+        $helpGroup->setName($data['name']);
+        $helpGroup->setSort($data['sort']);
+        $helpGroup->setStatus($data['status']);
+        
+        $this->entityManager->persist($help);
+        $this->entityManager->flush($help);
+        
+        return $help;
+    }
+    
+    /**
+     * Удалить подсказку
+     * 
+     * @param RingHelp $help
+     * @return type
+     */
+    public function removeHelp($help)
+    {
+        
+        $this->entityManager->remove($help);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Добавить группу подсказок
+     * @param array $data
+     * @return RingHelpGroup
+     */
+    public function addHelpGroup($data)
+    {
+        $helpGroup = new RingHelpGroup();
+        $helpGroup->setInfo($data['info'] ?? null);
+        $helpGroup->setMode($data['mode']);
+        $helpGroup->setName($data['name']);
+        $helpGroup->setSort($data['sort'] ?? 100);
+        $helpGroup->setStatus($data['status'] ?? RingHelpGroup::STATUS_ACTIVE);
+        
+        $this->entityManager->persist($helpGroup);
+        $this->entityManager->flush($helpGroup);
+        
+        return $helpGroup;
+    }
+    
+    /**
+     * Обновить группу подсказок
+     * 
+     * @param RingHelpGroup $helpGroup
+     * @param array $data
+     * @return RingHelpGroup
+     */
+    public function updateHelpGroup($helpGroup, $data)
+    {
+        $helpGroup->setInfo($data['info'] ?? null);
+        $helpGroup->setMode($data['mode']);
+        $helpGroup->setName($data['name']);
+        $helpGroup->setSort($data['sort']);
+        $helpGroup->setStatus($data['status']);
+        
+        $this->entityManager->persist($helpGroup);
+        $this->entityManager->flush($helpGroup);
+        
+        return $helpGroup;
+    }
+    
+    /**
+     * Удалить группу подсказок
+     * 
+     * @param RingHelpGroup $helpGroup
+     * @return type
+     */
+    public function removeHelpGroup($helpGroup)
+    {
+        foreach ($helpGroup->getRingHelps() as $help){
+            $this->removeHelp($help);
+        }
+        
+        $this->entityManager->remove($helpGroup);
+        $this->entityManager->flush();
+        
+        return;
     }
 }

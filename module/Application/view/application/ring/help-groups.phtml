@@ -1,0 +1,127 @@
+<?php
+
+use Application\Entity\Ring;
+
+    $this->headTitle('Группы подсказок');
+    $this->mainMenu()->setActiveItemId('client');
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Звонки'=>$this->url('ring'),
+                'Группы подсказок'=>$this->url('ring', ['action' => 'help-groups']),
+                ]);
+        
+?>    
+<div id="toolbar">
+    <div class="form-inline" role="form">
+        <button class="btn btn-default help-group-modal-show" type="button" modal-url="/ring/help-group-form">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>                
+        <div class="form-group">
+            <select name="mode" style="width: 400px" class="form-control">
+                <?php foreach (Ring::getModeList() as $mode=>$value):?>
+                    <option value='<?= $mode?>'><?= $value?></option>
+                <?php endforeach;?>
+            </select>
+        </div>
+        <button id="ok" type="submit" class="btn btn-default">OK</button>
+    </div>
+</div>
+<table id="table" 
+    data-toggle="table" 
+    data-url="/ring/help-groups-content"
+    data-side-pagination="server"
+    data-pagination="true" 
+    data-page-list="[5, 10, 20, 50]"
+    data-toolbar="#toolbar"
+    data-show-refresh="true"
+    data-show-toggle="true"
+    data-query-params="queryParams"
+    data-response-handler="responseHandler"
+    >
+    <thead>
+        <tr>
+             <th data-field="id" data-type="numeric">ID</th>
+             <th data-field="sort">Сортировка</th>
+             <th data-field="name">Наименование</th>
+         </tr>                
+    </thead>
+</table>
+
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table'),
+        ok = $('#ok');
+    
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+        $(document).on('click', '.help-group-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'helpGroupModal',
+                url: url,
+                width: '1440px'
+            });
+        });          
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function modeFormatter(value){
+        var modes = <?php echo json_encode(Ring::getModeList()) ?>;
+        return modes[value];
+    }
+    
+    function linkFormatter(value){
+        return value;
+    }    
+
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function amountFormatter(value){
+        return Math.round(value*100)/100;
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/ptu/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs ptu-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

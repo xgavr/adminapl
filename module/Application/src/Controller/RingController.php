@@ -16,6 +16,10 @@ use User\Filter\PhoneFilter;
 use Application\Entity\Phone;
 use Application\Entity\ContactCar;
 use Application\Entity\Order;
+use Application\Entity\RingHelpGroup;
+use Application\Entity\RingHelp;
+use Application\Form\RingHelpGroupForm;
+use Application\Form\RingHelpForm;
 
 
 class RingController extends AbstractActionController
@@ -165,4 +169,86 @@ class RingController extends AbstractActionController
             'contact' => $contact,
         ]);                  
     }
+    
+    public function helpGroupsAction()
+    {        
+        return new ViewModel([
+        ]);  
+    }
+    
+    public function helpGroupsContentAction()
+    {
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        $limit = $this->params()->fromQuery('limit');
+        $mode = $this->params()->fromQuery('mode');
+        
+        $query = $this->entityManager->getRepository(Ring::class)
+                        ->findAllRingHelpGroup(['q' => $q, 'sort' => $sort, 'order' => $order, 'mode' => $mode]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
+    
+    public function helpGroupFormAction()
+    {
+        $helpGroupId = (int)$this->params()->fromRoute('id', -1);
+        
+        $helpGroup = null;
+        
+        if ($helpGroupId > 0){
+            $helpGroup = $this->entityManager->getRepository(RingHelpGroup::class)
+                    ->find($ringId);
+        }    
+
+        $form = new RingHelpGroupForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();            
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                $helpGroup = $this->ringManager->addHelpGroup($data);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                var_dump($form->getMessages());
+            }
+        } else {
+            if ($helpGroup){
+                $data = [
+                    'info' => $helpGroup->getInfo(),
+                    'mode' => $helpGroup->getMode(),
+                    'name' => $helpGroup->getName(),
+                    'sort' => $helpGroup->getSort(),
+                    'status' => $helpGroup->getStatus(),
+                ];
+                $form->setData($data);
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'helpGroup' => $helpGroup,
+        ]);        
+    }    
 }
