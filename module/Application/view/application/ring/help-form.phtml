@@ -5,6 +5,10 @@ $form->get('mode')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('helpGroup')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('name')->setAttributes([
     'class'=>'form-control searchinput', 
     ]);
@@ -22,7 +26,7 @@ $form->get('sort')->setAttributes([
     ]);
 
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'help-group-submit']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'help-submit']);
 
 $form->prepare();
 
@@ -32,7 +36,7 @@ $form->prepare();
     <?= $this->form()->openTag($form); ?>
             
         <div class="modal-header">
-            <h5 class="modal-title">Группа подсказок</h5>
+            <h5 class="modal-title">Подсказка</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -68,6 +72,11 @@ $form->prepare();
                         <?= $this->formElement($form->get('mode')); ?> 
                         <?= $this->formElementErrors($form->get('mode')); ?>                  
                     </div>    
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('helpGroup')); ?>
+                        <?= $this->formElement($form->get('helpGroup')); ?> 
+                        <?= $this->formElementErrors($form->get('helpGroup')); ?>                  
+                    </div>    
                 </div>    
             </div>    
             <div class="row">
@@ -78,7 +87,7 @@ $form->prepare();
    
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-            <button type="submit" class="btn btn-primary" id="help-group-submit">Сохранить</button>
+            <button type="submit" class="btn btn-primary" id="help-submit">Сохранить</button>
         </div>
 
         <?= $this->form()->closeTag(); ?>
@@ -101,13 +110,13 @@ $form->prepare();
     function submitForm(){
         $.ajax({
             type: 'POST',
-            url: '/ring/help-group-form/<?= ($helpGroup) ? $helpGroup->getId():null; ?>',
-            data: $('#help-group-form').serialize()
+            url: '/ring/help-form/<?= ($help) ? $help->getId():null; ?>',
+            data: $('#help-form').serialize()
         })
             .done(function (data) {
                 if (data == 'ok'){
                     $('#table').bootstrapTable('refresh');
-                    $('#helpGroupModal').modal('hide');
+                    $('#helpModal').modal('hide');
                 } else {
                     $('#modal-content').html(data);
                 }    
@@ -128,7 +137,9 @@ $form->prepare();
             $(this).hide();
         });
         
-        var forms = $('#help-group-form');
+        helpGroups();
+        
+        var forms = $('#help-form');
         
         forms.submit(function() {
             submitForm();
@@ -136,7 +147,7 @@ $form->prepare();
         });
         // Loop over them and prevent submission
         var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('help-group-submit', function(event) {
+            form.addEventListener('help-submit', function(event) {
                 if (form.checkValidity() === false) {
                     event.preventDefault();
                     event.stopPropagation();

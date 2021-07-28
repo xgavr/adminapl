@@ -278,9 +278,37 @@ class RingController extends AbstractActionController
         );           
     }        
     
+    public function helpGroupSelectAction()
+    {
+        $modeId = (int)$this->params()->fromQuery('mode', -1);
+
+        $result = [];
+        if ($modeId>0) {
+
+            $helpGroups = $this->entityManager->getRepository(RingHelpGroup::class)
+                    ->findBy(['mode' => $modeId, 'status' => RingHelpGroup::STATUS_ACTIVE]);
+
+            if ($helpGroups){
+                foreach ($helpGroups as $helpGroup){
+                    $result[$helpGroup->getId()] = [
+                        'id' => $helpGroup->getId(),
+                        'name' => $helpGroup->getName(),                
+                    ];
+                }
+            }    
+        }    
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
+    
     public function helpAction()
     {        
+//        $helpGroups = $this->entityManager->getRepository(RingHelpGroup::class)
+//                ->findBy(['status' => RingHelpGroup::STATUS_ACTIVE], ['sort' => 'ASC']);
         return new ViewModel([
+           // 'helpGroups' => $helpGroups,
         ]);  
     }
     
@@ -333,7 +361,7 @@ class RingController extends AbstractActionController
                     ->find($helpId);
         }    
 
-        $form = new RingHelpForm();
+        $form = new RingHelpForm($this->entityManager);
         $form->setData(['mode' => $modeId, 'helpGroup' => $helpGroupId]);
 
         if ($this->getRequest()->isPost()) {
@@ -342,12 +370,13 @@ class RingController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
+                $helpGroup = $this->entityManager->getRepository(RingHelpGroup::class)
+                        ->find($data['helpGroup']);
+                $data['helpGroup'] = $helpGroup;
                 if ($help){
                     $this->ringManager->updateHelp($help, $data);
                 } else {
-                    $helpGroup = $this->entityManager->getRepository(RingHelp::class)
-                            ->find($data['helpGroup']);
-                    $help = $this->ringManager->addHelp($helpGroup, $data);
+                    $help = $this->ringManager->addHelp($data);
                 }    
                 
                 return new JsonModel(

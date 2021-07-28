@@ -277,7 +277,7 @@ class RingManager
         $help->setSort($data['sort'] ?? 100);
         $help->setStatus($data['status'] ?? RingHelpGroup::STATUS_ACTIVE);
         
-        $help->setRingHelpGroup($helpGroup);
+        $help->setRingHelpGroup($data['helpGroup']);
         
         $this->entityManager->persist($help);
         $this->entityManager->flush($help);
@@ -294,11 +294,13 @@ class RingManager
      */
     public function updateHelp($help, $data)
     {
-        $helpGroup->setInfo($data['info'] ?? null);
-        $helpGroup->setMode($data['mode']);
-        $helpGroup->setName($data['name']);
-        $helpGroup->setSort($data['sort']);
-        $helpGroup->setStatus($data['status']);
+        $help->setInfo($data['info'] ?? null);
+        $help->setMode($data['mode']);
+        $help->setName($data['name']);
+        $help->setSort($data['sort']);
+        $help->setStatus($data['status']);
+        
+        $help->setRingHelpGroup($data['helpGroup']);
         
         $this->entityManager->persist($help);
         $this->entityManager->flush($help);

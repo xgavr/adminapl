@@ -25,8 +25,8 @@ use Application\Entity\Ring;
                 <?php endforeach;?>
             </select>
             <select name="mode" class="form-control" id="helpGroup">
-                <?php foreach (Ring::getModeList() as $mode=>$value):?>
-                    <option value='<?= $mode?>'><?= $value?></option>
+                <?php foreach ($helpGroups as $helpGroup):?>
+                    <option value='<?= $helpGroup->getId()?>'><?= $helpGroup->getName()?></option>
                 <?php endforeach;?>
             </select>
         </div>
@@ -35,7 +35,7 @@ use Application\Entity\Ring;
 </div>
 <table id="table" 
     data-toggle="table" 
-    data-url="/ring/help-groups-content"
+    data-url="/ring/help-content"
     data-side-pagination="server"
     data-pagination="true" 
     data-page-list="[5, 10, 20, 50]"
@@ -59,6 +59,20 @@ use Application\Entity\Ring;
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
+    
+    function helpGroups(){
+        //alert(11);
+        $.getJSON( '/ring/help-group-select/?mode='+$('#mode').val(), function( data ) {
+            $('#helpGroup').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#helpGroup').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+    
+    $( document ).ready(function() {
+        helpGroups();
+    });
 
     var table = $('#table'),
         ok = $('#ok');
@@ -68,13 +82,17 @@ use Application\Entity\Ring;
             table.bootstrapTable('refresh');
         });
         $(document).on('change', '#mode', function(e){
+            helpGroups();
             table.bootstrapTable('refresh');            
         });
-        $(document).on('click', '.help-group-modal-show', function (e) {
+        $(document).on('change', '#helpGroup', function(e){
+            table.bootstrapTable('refresh');            
+        });
+        $(document).on('click', '.help-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
-                id: 'helpGroupModal',
-                url: url+'?mode='+$('#mode').val(),
+                id: 'helpModal',
+                url: url+'?mode='+$('#mode').val()+'&helpGroup='+$('#helpGroup').val(),
                 width: '1000px'
             });
         });          
@@ -93,6 +111,7 @@ use Application\Entity\Ring;
             params.offset = params.limit * (offset - 1);
         }    
         params.mode = $('#mode').val();
+        params.helpGroup = $('#helpGroup').val();
         
         return params;
     }
@@ -103,10 +122,10 @@ use Application\Entity\Ring;
     }
     
     function activeFormatter(value, row){
-        var url = '/ring/help-group-form/'+row.id;
+        var url = '/ring/help-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs help-group-modal-show"';
+        btn += ' class="btn btn-default btn-xs help-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';

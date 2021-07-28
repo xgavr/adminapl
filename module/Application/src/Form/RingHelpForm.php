@@ -33,7 +33,7 @@ class RingHelpForm extends Form
     public function __construct($entityManager)
     {
         // Определяем имя формы.
-        parent::__construct('ring-help-form');
+        parent::__construct('help-form');
      
         $this->entityManager = $entityManager;
         
@@ -73,6 +73,9 @@ class RingHelpForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'status',
+            'attributes' => [
+                'id' => 'status'
+            ],
             'options' => [
                 'label' => 'Статус',
                 'value_options' => RingHelp::getStatusList(),
@@ -83,6 +86,9 @@ class RingHelpForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'mode',
+            'attributes' => [
+                'id' => 'mode'
+            ],
             'options' => [
                 'label' => 'О чем звонят',
                 'value_options' => Ring::getModeList(),
@@ -104,7 +110,8 @@ class RingHelpForm extends Form
             'type'  => 'number',
             'name' => 'sort',
             'attributes' => [
-                'id' => 'sort'
+                'id' => 'sort',
+                'value' => 100,
             ],
             'options' => [
                 'label' => 'Сортировка',
