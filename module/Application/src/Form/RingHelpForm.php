@@ -12,6 +12,8 @@ use Laminas\InputFilter\InputFilter;
 use Application\Entity\Ring;
 use Application\Entity\RingHelp;
 
+use DoctrineModule\Persistence\ObjectManagerAwareInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 /**
  * Description of RingHelpForm
  *
@@ -19,15 +21,22 @@ use Application\Entity\RingHelp;
  */
 class RingHelpForm extends Form
 {    
+
+    protected $objectManager;
+
+    protected $entityManager;
+        
     
     /**
      * Конструктор.     
      */
-    public function __construct()
+    public function __construct($entityManager)
     {
         // Определяем имя формы.
         parent::__construct('ring-help-form');
      
+        $this->entityManager = $entityManager;
+        
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
         $this->setAttribute('autocomplete', 'off');
@@ -42,6 +51,24 @@ class RingHelpForm extends Form
     protected function addElements() 
     {
                 
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'helpGroup',
+            'attributes' => [                
+                'id' => 'helpGroup',
+                'data-live-search'=> "true",
+                'class' => "selectpicker",
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Application\Entity\RingHelpGroup',
+                'label' => 'Группа подсказок',
+                'property'       => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--выберете группу--',                 
+            ],
+       ]);
+        
         // Add "status" field
         $this->add([            
             'type'  => 'select',
@@ -172,4 +199,15 @@ class RingHelpForm extends Form
                 ],
             ]);         
     }        
+
+    public function setObjectManager(ObjectManager $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
+
+    public function getObjectManager()
+    {
+        return $this->objectManager;
+    }        
+        
 }

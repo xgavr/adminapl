@@ -2,23 +2,29 @@
 
 use Application\Entity\Ring;
 
-    $this->headTitle('Группы подсказок');
+    $this->headTitle('Подсказки');
     $this->mainMenu()->setActiveItemId('client');
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
                 'Звонки'=>$this->url('ring'),
                 'Группы подсказок'=>$this->url('ring', ['action' => 'help-groups']),
+                'Подсказки'=>$this->url('ring', ['action' => 'help']),
                 ]);
         
 ?>    
 <div id="toolbar">
     <div class="form-inline" role="form">
-        <button class="btn btn-default help-group-modal-show" type="button" modal-url="/ring/help-group-form">
+        <button class="btn btn-default help-modal-show" type="button" modal-url="/ring/help-form">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         </button>                
         <div class="form-group">
             <!--<label for="mode">Тип звонка</label>-->            
             <select name="mode" class="form-control" id="mode">
+                <?php foreach (Ring::getModeList() as $mode=>$value):?>
+                    <option value='<?= $mode?>'><?= $value?></option>
+                <?php endforeach;?>
+            </select>
+            <select name="mode" class="form-control" id="helpGroup">
                 <?php foreach (Ring::getModeList() as $mode=>$value):?>
                     <option value='<?= $mode?>'><?= $value?></option>
                 <?php endforeach;?>

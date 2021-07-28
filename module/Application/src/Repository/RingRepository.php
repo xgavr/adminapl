@@ -61,4 +61,34 @@ class RingRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }        
     
+    /*
+     * 
+     */
+    public function findAllRingHelp($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+            ->from(RingHelp::class, 'r')
+            ->orderBy('r.sort')    
+                ;
+        
+        if (is_array($params)){
+            if (is_numeric($params['mode'])){
+                $queryBuilder->andWhere('r.mode = ?1')
+                        ->setParameter('1', $params['mode'])
+                    ;
+            }    
+            if (is_numeric($params['helpGroup'])){
+                $queryBuilder->andWhere('r.ringHelpGroup = ?2')
+                        ->setParameter('2', $params['helpGroup'])
+                    ;
+            }    
+        }
+
+        return $queryBuilder->getQuery();
+    }        
+    
 }

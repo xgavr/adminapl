@@ -208,6 +208,7 @@ class RingController extends AbstractActionController
     public function helpGroupFormAction()
     {
         $helpGroupId = (int)$this->params()->fromRoute('id', -1);
+        $mode = (int) $this->params()->fromQuery('mode', -1);
         
         $helpGroup = null;
         
@@ -217,6 +218,9 @@ class RingController extends AbstractActionController
         }    
 
         $form = new RingHelpGroupForm();
+        if ($mode>0){
+            $form->setData(['mode' => $mode]);
+        }
 
         if ($this->getRequest()->isPost()) {
             
@@ -236,7 +240,7 @@ class RingController extends AbstractActionController
             } else {
                 var_dump($form->getMessages());
             }
-        } else {
+        } else {            
             if ($helpGroup){
                 $data = [
                     'info' => $helpGroup->getInfo(),
@@ -255,4 +259,139 @@ class RingController extends AbstractActionController
             'helpGroup' => $helpGroup,
         ]);        
     }    
+    
+    public function deleteHelpGroupAction()
+    {
+        $helpGroupId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($helpGroupId > 0){
+            $helpGroup = $this->entityManager->getRepository(RingHelpGroup::class)
+                    ->find($helpGroupId);
+        }    
+
+        if ($helpGroup){
+            $this->ringManager->removeHelpGroup($helpGroup);
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }        
+    
+    public function helpAction()
+    {        
+        return new ViewModel([
+        ]);  
+    }
+    
+    public function helpContentAction()
+    {
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        $limit = $this->params()->fromQuery('limit');
+        $mode = $this->params()->fromQuery('mode');
+        $helpGroup = $this->params()->fromQuery('helpGroup');
+        
+        $query = $this->entityManager->getRepository(Ring::class)
+                        ->findAllRingHelp([
+                            'q' => $q, 
+                            'sort' => $sort, 
+                            'order' => $order, 
+                            'mode' => $mode,
+                            'helpGroup' => $helpGroup,
+                        ]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
+    
+    public function helpFormAction()
+    {
+        $helpId = (int)$this->params()->fromRoute('id', -1);
+        $modeId = (int) $this->params()->fromQuery('mode');
+        $helpGroupId = (int) $this->params()->fromQuery('helpGroup');
+        
+        $help = null;
+        
+        if ($helpId > 0){
+            $help = $this->entityManager->getRepository(RingHelp::class)
+                    ->find($helpId);
+        }    
+
+        $form = new RingHelpForm();
+        $form->setData(['mode' => $modeId, 'helpGroup' => $helpGroupId]);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();            
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                if ($help){
+                    $this->ringManager->updateHelp($help, $data);
+                } else {
+                    $helpGroup = $this->entityManager->getRepository(RingHelp::class)
+                            ->find($data['helpGroup']);
+                    $help = $this->ringManager->addHelp($helpGroup, $data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                var_dump($form->getMessages());
+            }
+        } else {            
+            if ($help){
+                $data = [
+                    'info' => $help->getInfo(),
+                    'mode' => $help->getMode(),
+                    'helpGroup' => $help->getRingHelpGroup()->getId(),
+                    'name' => $help->getName(),
+                    'sort' => $help->getSort(),
+                    'status' => $help->getStatus(),
+                ];
+                $form->setData($data);
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'help' => $help,
+        ]);        
+    }    
+    
+    public function deleteHelpAction()
+    {
+        $helpId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($helpId > 0){
+            $help = $this->entityManager->getRepository(RingHelp::class)
+                    ->find($helpId);
+        }    
+
+        if ($help){
+            $this->ringManager->removeHelp($help);
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }            
 }
