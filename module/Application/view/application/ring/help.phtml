@@ -50,7 +50,8 @@ use Application\Entity\Ring;
              <th data-field="id" data-type="numeric" data-width="20">ID</th>
              <th data-field="sort" data-width="20">Сортировка</th>
              <th data-field="name">Наименование</th>
-             <th data-field="id" data-type="numeric" data-width="20" data-formatter="activeFormatter"></th>
+             <th data-field="id" data-type="numeric" data-width="20" data-formatter="editFormatter"></th>
+             <th data-field="id" data-type="numeric" data-width="20" data-formatter="deleteFormatter"></th>
          </tr>                
     </thead>
 </table>
@@ -60,13 +61,19 @@ use Application\Entity\Ring;
         $('#table').bootstrapTable('refresh');
     }
     
-    function helpGroups(){
+    function helpGroups(defaultValue = null, refresh = false){
         //alert(11);
         $.getJSON( '/ring/help-group-select/?mode='+$('#mode').val(), function( data ) {
             $('#helpGroup').empty();
             $.each( data.rows, function( key, value ) {
                 $('#helpGroup').append('<option value="' + key + '">' + value.name + '</option>');
             });
+            if (defaultValue){
+                $('#helpGroup').val(defaultValue);
+            }
+            if (refresh){
+                table.bootstrapTable('refresh');
+            }
         });    
     }
     
@@ -82,8 +89,7 @@ use Application\Entity\Ring;
             table.bootstrapTable('refresh');
         });
         $(document).on('change', '#mode', function(e){
-            helpGroups();
-            table.bootstrapTable('refresh');            
+            helpGroups(null, true);
         });
         $(document).on('change', '#helpGroup', function(e){
             table.bootstrapTable('refresh');            
@@ -121,7 +127,7 @@ use Application\Entity\Ring;
         return modes[value];
     }
     
-    function activeFormatter(value, row){
+    function editFormatter(value, row){
         var url = '/ring/help-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
@@ -131,13 +137,19 @@ use Application\Entity\Ring;
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
         
-//        btn += ' <button';
-//        btn += ' type="button"';
-//        btn += ' class="btn btn-default btn-xs help-group-modal-show"';
-//        btn += ' aria-label="Left Align"'; 
-//        btn += ' modal-url="'+url+'">';
-//        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-//        btn += '</button>';
+        return btn;
+    }    
+    
+    function deleteFormatter(value, row){
+        var url = '/ring/delete-help/'+row.id;
+        btn = ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
         
         return btn;
     }    

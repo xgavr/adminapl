@@ -282,7 +282,7 @@ class RingController extends AbstractActionController
     {
         $modeId = (int)$this->params()->fromQuery('mode', -1);
 
-        $result = [];
+        $result[0] = ['id' => null, 'name' => 'все'];
         if ($modeId>0) {
 
             $helpGroups = $this->entityManager->getRepository(RingHelpGroup::class)

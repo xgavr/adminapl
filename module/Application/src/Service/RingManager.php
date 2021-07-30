@@ -264,11 +264,10 @@ class RingManager
     /**
      * Добавить подсказку
      * 
-     * @param RingHelpGroup $helpGroup
      * @param array $data
      * @return RingHelp
      */
-    public function addHelp($helpGroup, $data)
+    public function addHelp($data)
     {
         $help = new RingHelp();
         $help->setInfo($data['info'] ?? null);

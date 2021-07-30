@@ -58,6 +58,7 @@ class RingHelpForm extends Form
                 'id' => 'helpGroup',
                 'data-live-search'=> "true",
                 'class' => "selectpicker",
+                'required' => 'required',
             ],
             'options' => [
                 'object_manager' => $this->entityManager,
@@ -189,6 +190,23 @@ class RingHelpForm extends Form
                         'name'    => 'IsInt',
                         'options' => [
                             'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);                          
+        
+        $inputFilter->add([
+                'name'     => 'helpGroup',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 1,
                             'locale' => 'ru-Ru'
                         ],
                     ],

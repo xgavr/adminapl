@@ -70,9 +70,12 @@ class RingRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('r')
+        $queryBuilder->select('r, hg')
             ->from(RingHelp::class, 'r')
-            ->orderBy('r.sort')    
+            ->join('r.ringHelpGroup', 'hg')    
+            ->orderBy('hg.sort')    
+            ->addOrderBy('hg.id')    
+            ->addOrderBy('r.sort')    
                 ;
         
         if (is_array($params)){
@@ -81,7 +84,7 @@ class RingRepository extends EntityRepository{
                         ->setParameter('1', $params['mode'])
                     ;
             }    
-            if (is_numeric($params['helpGroup'])){
+            if (!empty($params['helpGroup'])){
                 $queryBuilder->andWhere('r.ringHelpGroup = ?2')
                         ->setParameter('2', $params['helpGroup'])
                     ;
