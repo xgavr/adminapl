@@ -172,7 +172,7 @@ class RingController extends AbstractActionController
     
     public function findHelpAction()
     {
-        $contactName = $cars = $orders = $contact = null;
+        $helps = [];
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $mode = $data['mode'];
@@ -181,43 +181,19 @@ class RingController extends AbstractActionController
                             ->findBy(['mode' => $mode, 'status' => RingHelpGroup::STATUS_ACTIVE]);
             if ($groups){
                 
-                foreach ($helpGroups as $helpGroup){
+                foreach ($helpGroups as $helpGroup){                    
                     $helps = $this->entityManager->getRepository(RingHelp::class)
                                 ->findBy(['mode' => $mode, 
                                     'status' => RingHelp::STATUS_ACTIVE,
-                                    'helpGroup' => $helpGroup]);
-                }
-                
-                    $contactName = $phone->getContact()->getName();
-                    $contact = $phone->getContact()->getId();
-                    $contactCars = $this->entityManager->getRepository(ContactCar::class)
-                            ->findByContact($contact, ['id' => 'DESC']);                    
-                    foreach ($contactCars as $contactCar){
-                        $cars[] = [
-                            'makeName' => ($contactCar->getMake()) ? $contactCar->getMake()->getName():'',
-                            'vin' => $contactCar->getVin(),
-                            'id' => $contactCar->getId(),
-                            ];
-                    }                    
-                    $orders = $this->entityManager->getRepository(Order::class)
-                            ->findBy(['contact' => $contact], ['id' => 'DESC']);
-                    foreach ($orders as $order){
-                        $orders[] = [
-                            'aplId' => $order->getAplId(),
-                            'id' => $order->getId(),
-                            'status' => $order->getStatus(),
-                            'user' => ($order->getUser()) ? $order->getUser()->getId():null,
-                            'skiper' => ($order->getSkiper()) ? $order->getSkiper()->getId():null,
-                            ];
-                    }                    
-                }
+                                    'helpGroup' => $helpGroup->getId()]);
+                    foreach ($helps as $help){
+                        $helps[$helpGroup->getName()][] = $help;
+                    }
+                }                
             }    
         }    
         return new JsonModel([
-            'name' => $contactName,
-            'cars' => $cars,
-            'orders' => $orders,
-            'contact' => $contact,
+            'helps' => $helps,
         ]);                  
     }
 
