@@ -108,7 +108,7 @@ class IndexController extends AbstractActionController
         $query = $this->entityManager->getRepository(Statement::class)
                         ->findStatement($q, $rs, ['date' => $date]);
         
-        $total = count($query->getResult(2));
+        $total = count($query->getResult());
         
         if ($offset) {
             $query->setFirstResult($offset);
