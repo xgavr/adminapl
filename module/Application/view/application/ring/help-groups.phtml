@@ -7,6 +7,7 @@ use Application\Entity\Ring;
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
                 'Звонки'=>$this->url('ring'),
+                'Подсказки'=>$this->url('ring', ['action' => 'help']),
                 'Группы подсказок'=>$this->url('ring', ['action' => 'help-groups']),
                 ]);
         
