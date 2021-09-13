@@ -177,17 +177,16 @@ class RingController extends AbstractActionController
             $data = $this->params()->fromPost();
             $mode = $data['mode'];
             
-            $helpGroups = $this->entityManager->getRepository(RingHelpGroup::class)
-                            ->findBy(['mode' => $mode, 'status' => RingHelpGroup::STATUS_ACTIVE]);
-            if ($groups){
-                
-                foreach ($helpGroups as $helpGroup){                    
-                    $helps = $this->entityManager->getRepository(RingHelp::class)
+            $groups = $this->entityManager->getRepository(RingHelpGroup::class)
+                            ->findBy(['mode' => $mode, 'status' => RingHelpGroup::STATUS_ACTIVE], ['sort' => 'ASC']);
+            if ($groups){                
+                foreach ($groups as $helpGroup){                    
+                    $ringHelps = $this->entityManager->getRepository(RingHelp::class)
                                 ->findBy(['mode' => $mode, 
                                     'status' => RingHelp::STATUS_ACTIVE,
-                                    'helpGroup' => $helpGroup->getId()]);
-                    foreach ($helps as $help){
-                        $helps[$helpGroup->getName()][] = $help;
+                                    'ringHelpGroup' => $helpGroup->getId()], ['sort' => 'ASC']);
+                    foreach ($ringHelps as $help){
+                        $helps[$helpGroup->getName()][$help->getId()] = (array) $help;
                     }
                 }                
             }    

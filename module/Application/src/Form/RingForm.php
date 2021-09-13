@@ -57,6 +57,9 @@ class RingForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'mode',
+            'attributes' => [
+                'id' => 'mode',
+            ],
             'options' => [
                 'label' => 'О чем звонят',
                 'value_options' => Ring::getModeList(),

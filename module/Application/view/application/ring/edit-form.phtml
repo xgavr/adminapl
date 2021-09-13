@@ -224,6 +224,24 @@ $form->prepare();
             });
     }    
     
+    function modeChange(){
+        var value = $('#mode').val();
+        $.ajax({
+            type: 'POST',
+            url: '/ring/find-help',
+            data: {mode: value}
+        })
+            .done(function (data) {
+                console.log(data);
+                if (data){
+                    
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+            });
+    }
+        
     $(document).ready(function () {
         $(".searchinput").keyup(function () {
             $(this).next().toggle(Boolean($(this).val()));
@@ -233,6 +251,8 @@ $form->prepare();
             $(this).prev().val('').focus();
             $(this).hide();
         });
+        
+        modeChange();
         
         var forms = $('#ring-form');
         
@@ -264,6 +284,7 @@ $form->prepare();
             }    
         }           
     }
+    
     $('#vin').on('input', function(){
         $("#vinLength").html($("#vin").val().length);
     });
@@ -295,4 +316,9 @@ $form->prepare();
                 });
         }        
     });    
+    
+    $('#mode').on('change', function(){
+        modeChange();
+    });    
+    
 </script>
