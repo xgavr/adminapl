@@ -76,6 +76,7 @@ class RingRepository extends EntityRepository{
             ->orderBy('hg.sort')    
             ->addOrderBy('hg.id')    
             ->addOrderBy('r.sort')    
+            ->addOrderBy('r.id')    
                 ;
         
         if (is_array($params)){
@@ -94,4 +95,16 @@ class RingRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }        
     
+    /**
+     * Подсказки для формы звонка
+     * @param integer $mode
+     * @param integer $helGroup
+     * 
+     * @return array
+     */
+    public function helpRingForm($mode, $helGroup = null)
+    {
+        $query = $this->findAllRingHelp(['mode' => $mode, 'helpGroup' => $helGroup]);
+        return $query->getResult(2);
+    }
 }
