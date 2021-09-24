@@ -292,7 +292,10 @@ $form->prepare();
                                 $('<a role="button" data-toggle="collapse" aria-expanded="true" data-parent="#accordion" href="#collapse'+i+'" aria-controls="#collapse'+i+'">'+helpGroup+'</a>').appendTo('#title'+i);
                                 $('<div id="collapse'+i+'" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading'+i+'"></div>').appendTo('#panelDefault'+i);
                             }
-                            $('<div class="panel-body">'+row.name+'</div>').appendTo('#collapse'+ci);
+                            $('<div class="panel-body" id="panelBody'+i+'"></div>').appendTo('#collapse'+ci);
+                            $('<input type="checkbox" class="form-check-input" id="help'+i+'">').appendTo('#panelBody'+i);
+                            $('<label class="form-check-label" for="help'+i+'">'+row.name+'</label>').appendTo('#panelBody'+i);
+                            $('<input type="text" id="text'+i+'">').appendTo('#panelBody'+i);
                         });    
                     });
                 }    
