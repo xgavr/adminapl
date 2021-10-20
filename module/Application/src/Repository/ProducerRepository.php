@@ -516,7 +516,11 @@ class ProducerRepository  extends EntityRepository{
     //        $query = $entityManager->createNativeQuery($sql, $rsm);
     //        $query->setParameter(1, $unknownProducer->getId());
 
-//            var_dump($sql); exit;
+            var_dump($sql);
+            var_dump($unknownProducer->getId());
+            var_dump($unknownProducer->getRawpriceCount());
+            var_dump($intersectCoef);
+            exit;
 
             $stmt = $entityManager->getConnection()->prepare($sql);
             $stmt->execute([
