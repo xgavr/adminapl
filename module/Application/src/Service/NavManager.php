@@ -76,11 +76,11 @@ class NavManager
 //                    'link'  => $url('order')
 //                ];
             
-                $clientDropdownItems[] = [
-                    'id' => 'client',
-                    'label' => 'Звонки',
-                    'link'  => $url('ring')
-                ];
+//                $clientDropdownItems[] = [
+//                    'id' => 'client',
+//                    'label' => 'Звонки',
+//                    'link'  => $url('ring')
+//                ];
                 
                 $clientDropdownItems[] = [
                     'id' => 'client',
