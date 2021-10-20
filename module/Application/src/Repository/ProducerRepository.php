@@ -510,23 +510,18 @@ class ProducerRepository  extends EntityRepository{
                     . ' where t.unknown_producer = :unknownProducer'
                     . ' and u.name != ""'
                     . ' group by t.unknown_producer, t.unknown_producer_intersect '
-                    . ' having countCode/(:rawpriceCount/:supplierCount) > :intersect_coef'
+                    . ' having countCode/:rawpriceCount > :intersect_coef'
                     . ' order by countCode DESC';
 
     //        $query = $entityManager->createNativeQuery($sql, $rsm);
     //        $query->setParameter(1, $unknownProducer->getId());
 
-//            var_dump($sql);
-//            var_dump($unknownProducer->getId());
-//            var_dump($unknownProducer->getRawpriceCount());
-//            var_dump($intersectCoef);
-//            exit;
+//            var_dump($sql); exit;
 
             $stmt = $entityManager->getConnection()->prepare($sql);
             $stmt->execute([
                     'unknownProducer' => $unknownProducer->getId(),
                     'rawpriceCount' => $unknownProducer->getRawpriceCount(),
-                    'supplierCount' => $unknownProducer->getSupplierCount(),
                     'intersect_coef' => $intersectCoef,
                 ]);
 
