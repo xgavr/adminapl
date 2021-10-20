@@ -35,6 +35,7 @@ class BankRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
+        $outCount = false;
         $queryBuilder->select('s')
             ->from(Statement::class, 's')
             ->orderBy('s.chargeDate', 'DESC')
@@ -80,10 +81,20 @@ class BankRepository extends EntityRepository
                             ;
                 }    
             }
+            if (isset($params['count'])){
+                if ($params['count']){
+                    $outCount = true;
+                    $queryBuilder->select('count(s.id)');
+                }    
+            }
         }
         
+        if ($outCount){
+            return $queryBuilder->getQuery()->getSingleScalarResult();
+        } else {
+            return $queryBuilder->getQuery();            
+        }
         
-        return $queryBuilder->getQuery();
     }    
 
     /**
