@@ -445,6 +445,7 @@ class ProducerRepository  extends EntityRepository{
     public function articleUnknownProducerIntersect()
     {
         set_time_limit(0);
+        ini_set('memory_limit', '1024M');
         
         $entityManager = $this->getEntityManager();
 
