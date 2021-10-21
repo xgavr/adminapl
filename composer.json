@@ -55,7 +55,8 @@
         "laminas/laminas-mvc-plugins": "^1.0",
         "laminas/laminas-development-mode": "^3.2",
         "laminas/laminas-dependency-plugin": "^1.0",
-        "hflabs/dadata": "^20.7"
+        "hflabs/dadata": "^20.7",
+        "bukashk0zzz/yml-generator": "dev-master"
     },
     "autoload": {
         "psr-4": {
