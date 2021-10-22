@@ -6,7 +6,6 @@ data/cache/*
 phpunit.xml
 /data/upload/oksm.xls
 /data/prices/
-/data/DoctrineORMModule/Proxy/
 /data/log/
 /data/settings/
 /data/ann/
@@ -23,3 +22,5 @@ phpunit.xml
 /data/session_09/
 /public/js/
 /data/market/
+/nbproject/
+/data/DoctrineORMModule/Proxy/
