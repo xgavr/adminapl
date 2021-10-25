@@ -112,7 +112,7 @@ class MarketManager
         
 //        $file = tempnam(sys_get_temp_dir(), 'YMLGenerator');
         $settings = (new Settings())
-            ->setOutputFile($filename)
+            ->setOutputFile($path)
             ->setEncoding('UTF-8')
         ;
 
