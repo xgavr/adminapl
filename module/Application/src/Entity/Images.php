@@ -60,6 +60,13 @@ class Images {
     */
     protected $good;
      
+    /**
+    * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="images")
+    * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")    
+    * 
+    */
+    protected $producer;
+     
     public function getId() 
     {
         return $this->id;
@@ -272,5 +279,23 @@ class Images {
     {
         $this->good = $good;
         $good->addImage($this);
+    }   
+    
+    /**
+     * Возвращает связанный производитель.
+     * @return \Application\Entity\Producer
+     */
+    public function getProducer() 
+    {
+        return $this->producer;
+    }
+    
+    /**
+     * Задает связанный производитель.
+     * @param \Application\Entity\Producer $producer
+     */
+    public function setProducer($producer) 
+    {
+        $this->producer = $producer;
     }    
 }
