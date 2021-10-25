@@ -78,10 +78,18 @@ class ImageController extends AbstractActionController
     public function uploadTmpFileAction()
     {
         $filename = $this->params()->fromQuery('file');
+        $goodId = $this->params()->fromQuery('good');
 
         if (file_exists($filename)){
-            $this->entityManager->getRepository(Images::class)
-                    ->findGoodByImageFileName($filename, Images::STATUS_SUP);
+            $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+                    ->find($goodId);
+            if ($good){
+                $this->entityManager->getRepository(Images::class)
+                        ->addImageToGood($filename, $good, Images::STATUS_SUP);
+            } else {
+                $this->entityManager->getRepository(Images::class)
+                        ->findGoodByImageFileName($filename, Images::STATUS_SUP);
+            }    
         }
         
         return new JsonModel([

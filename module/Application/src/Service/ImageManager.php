@@ -173,4 +173,16 @@ class ImageManager {
         
         return;
     }    
+    
+    /**
+     * Товары по коду из названия файла
+     * 
+     * @param string $filename
+     * @return array
+     */
+    public function goodsByFileName($filename)
+    {
+        return $this->entityManager->getRepository(Images::class)
+                ->goodsByFileName($filename);
+    }
 }

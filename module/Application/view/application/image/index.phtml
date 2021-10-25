@@ -32,14 +32,6 @@ $this->pageBreadcrumbs()->setItems([
                                 <?= mime_content_type($fileInfo->getPathname()) ?>
                             </div>
                             <div class="pull-right">
-                                <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
-                                    <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
-                                        <button value="/image/upload-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
-                                                title="Привязать картинку к товару">
-                                            <span class="glyphicon glyphicon-import" ></span>
-                                        </button>
-                                    <?php endif;?>
-                                <?php endif;?>
                                 <?php if(mime_content_type($fileInfo->getPathname()) == 'image/tiff'):?>
                                     <button value="/image/convert-to-jpg/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
                                             title="Конвертировать в jpg">
@@ -58,6 +50,22 @@ $this->pageBreadcrumbs()->setItems([
                                 </button>                             
                             </div>                                                                            
                         </div>                    
+                        <div class="caption panel-body small">
+                            <?php $data = $imageManager->goodsByFileName($fileInfo->getPathname())?>
+                            <?php if ($data):?>
+                                <?php foreach ($data as $good):?>
+                            <a href="/goods/view/<?= $good->getId()?>" target="_blank"><?= $good->getProducer()->getName()?> <?= $good->getCode()?></a>  
+                                    <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
+                                        <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
+                                            <button value="/image/upload-tmp-file/?file=<?= $fileInfo->getPathname() ?>&good=<?= $good->getId()?>" class="btn btn-default btn-xs refresh-button"
+                                                    title="Привязать картинку к товару">
+                                                <span class="glyphicon glyphicon-import" ></span>
+                                            </button>
+                                        <?php endif;?>
+                                    <?php endif;?>
+                                <?php endforeach;?>    
+                            <?php endif;?>
+                        </div>
                     </div>
                     <?php endif;?>
                 <?php endforeach; ?>

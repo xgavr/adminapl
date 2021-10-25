@@ -35,7 +35,7 @@ class ImageRepository extends EntityRepository
      */
     public function getImageFolder($good, $status)
     {
-        return self::GOOD_IMAGE_DIR.'/'.$good->getId().'/'.$status;;
+        return self::GOOD_IMAGE_DIR.'/'.$good->getId().'/'.$status;
     }
 
     /**
@@ -167,6 +167,55 @@ class ImageRepository extends EntityRepository
        return;
     }
     
+    /**
+     * Товары по коду из названия файла
+     * 
+     * @param string $filename
+     * @return array
+     */
+    public function goodsByFileName($filename)
+    {
+        if (mime_content_type($filename) == 'image/tiff'){
+            return;
+        }
+        
+        $fileInfo = pathinfo($filename);
+        $code = preg_replace("/\([^)]+\)/","", $fileInfo['filename']); // удалить круглые скобки
+        
+        $filter = new \Application\Filter\ArticleCode();
+        
+        $data = $this->getEntityManager()->getRepository(Goods::class)
+                ->findByCode($filter->filter($code));
+        
+        return $data;        
+    }
+    
+    /**
+     * Добавить картинку к товару
+     * 
+     * @param string $filename
+     * @param Goods $good
+     * @param integer $status
+     */
+    public function addImageToGood($filename, $good, $status)
+    {
+        $basename = basename($filename);
+        $this->addImageFolder($good, $status);
+        $goodFolder = $this->getImageFolder($good, $status);
+        $path = $goodFolder.'/'.$basename;
+        if (rename($filename, $path)){
+            $this->addImage([
+                'name' => $basename,
+                'path' => $path,
+                'status' => $status,
+                'similar' => Images::SIMILAR_MATCH,
+                'good_id' => $good->getId(),                        
+            ]);
+            return $good;
+        }
+        
+        return;
+    }
     
     /**
      * Поиск товара по артикулу из наименования файла картинки
@@ -182,30 +231,11 @@ class ImageRepository extends EntityRepository
             return;
         }
         
-        $fileInfo = pathinfo($filename);
-        $code = preg_replace("/\([^)]+\)/","", $fileInfo['filename']); // удалить круглые скобки
-        
-        $filter = new \Application\Filter\ArticleCode();
-        
-        $data = $this->getEntityManager()->getRepository(Goods::class)
-                ->findByCode($filter->filter($code));
+        $data = $this->goodsByFileName($filename);
         
         if (count($data) == 1){
             foreach ($data as $good){
-                $basename = basename($filename);
-                $this->addImageFolder($good, $status);
-                $goodFolder = $this->getImageFolder($good, $status);
-                $path = $goodFolder.'/'.$basename;
-                if (rename($filename, $path)){
-                    $this->addImage([
-                        'name' => $basename,
-                        'path' => $path,
-                        'status' => $status,
-                        'similar' => Images::SIMILAR_MATCH,
-                        'good_id' => $good->getId(),                        
-                    ]);
-                    return $good;
-                }
+                $this->addImageToGood($filename, $good, $status);
             }
         }
         
