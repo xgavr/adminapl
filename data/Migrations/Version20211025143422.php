@@ -64,18 +64,21 @@ final class Version20211025143422 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-//        $table = $schema->getTable('images');
-//        $table->addColumn('producer_id', 'integer', ['notnull' => false]);        
-//        $table->addForeignKeyConstraint('producer', ['producer_id'], ['id'], 
-//                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'producer_id_images_producer_id');
+        $table = $schema->createTable('price_list_setting');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('status', 'integer', ['notnull'=>true, 'default'=> RingHelpGroup::STATUS_ACTIVE]);
+        $table->addColumn('sort', 'integer', ['notnull'=>true, 'default'=>100]);
+        $table->addColumn('name', 'string', ['notnull'=>true, 'length' => 128]);
+        $table->addColumn('info', 'string', ['notnull'=>false, 'length' => 512]);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['mode'], 'mode_idx');
+        $table->addOption('engine' , 'InnoDB');
+        
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-//        $table = $schema->getTable('images');
-//        $table->removeForeignKey('producer_id_images_producer_id');
-//        $table->dropColumn('producer_id');        
 
     }
 }
