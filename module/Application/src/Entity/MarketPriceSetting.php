@@ -15,18 +15,22 @@ use Company\Entity\Region;
 /**
  * Description of Client
  * @ORM\Entity(repositoryClass="\Application\Repository\MarketRepository")
- * @ORM\Table(name="price_list_setting")
+ * @ORM\Table(name="market_price_setting")
  * @author Daddy
  */
-class PriceListSetting {
+class MarketPriceSetting {
         
      // Status constants.
     const STATUS_ACTIVE       = 1; // Active pricelist.
     const STATUS_RETIRED      = 2; // Retired pricelist.
    
-    const format_YML       = 1; // Формат YML.
-    const format_XLS      = 2; // Формат XLS.
+    const FORMAT_YML       = 1; // Формат YML.
+    const FORMAT_XLS      = 2; // Формат XLS.
    
+    const IMAGE_MATH       = 1; // Картирки точные
+    const IMAGE_SIMILAR    = 2; // Картинки точные и похожие.
+    const IMAGE_ALL        = 3; // Картинки все.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -163,6 +167,106 @@ class PriceListSetting {
         $this->name = $name;
     }     
 
+    public function getFilename() 
+    {
+        return $this->filename;
+    }
+
+    public function setFilename($filename) 
+    {
+        $this->filename = $filename;
+    }     
+
+    public function getImageCount() 
+    {
+        return $this->imageCount;
+    }
+
+    public function setImageCount($imageCount) 
+    {
+        $this->imageCount = $imageCount;
+    }     
+
+    public function getSupplierSetting() 
+    {
+        return $this->supplierSetting;
+    }
+
+    public function setSupplierSetting($supplierSetting) 
+    {
+        $this->supplierSetting = $supplierSetting;
+    }     
+
+    public function getProducerSetting() 
+    {
+        return $this->producerSetting;
+    }
+
+    public function setProducerSetting($producerSetting) 
+    {
+        $this->producerSetting = $producerSetting;
+    }     
+
+    public function getGroupSetting() 
+    {
+        return $this->groupSetting;
+    }
+
+    public function setGroupSetting($groupSetting) 
+    {
+        $this->groupSetting = $groupSetting;
+    }     
+
+    public function getTokenGroupSetting() 
+    {
+        return $this->tokenGroupSetting;
+    }
+
+    public function setTokenGroupSetting($torenGroupSetting) 
+    {
+        $this->tokenGroupSetting = $tokenGroupSetting;
+    }     
+
+    public function getMinPrice() 
+    {
+        return $this->minPrice;
+    }
+
+    public function setMinPrice($minPrice) 
+    {
+        $this->minPrice = $minPrice;
+    }     
+
+    public function getMaxPrice() 
+    {
+        return $this->maxPrice;
+    }
+
+    public function setMaxPrice($maxPrice) 
+    {
+        $this->maxPrice = $maxPrice;
+    }     
+
+    public function getMaxRowCount() 
+    {
+        return $this->maxRowCount;
+    }
+
+    public function setMaxRowCount($maxRowCount) 
+    {
+        $this->maxRowCount = $maxRowCount;
+    }     
+
+    public function getBlockRowCount() 
+    {
+        return $this->blockRowCount;
+    }
+
+    public function setBlockRowCount($blockRowCount) 
+    {
+        $this->blockRowCount = $blockRowCount;
+    }     
+
     public function getInfo() 
     {
         return $this->info;
@@ -171,6 +275,16 @@ class PriceListSetting {
     public function setInfo($info) 
     {
         $this->info = $info;
+    }     
+
+    public function getDateUnload() 
+    {
+        return $this->dateUnload;
+    }
+
+    public function setDateUnload($dateUnload) 
+    {
+        $this->dateUnload = $dateUnload;
     }     
 
     /**
@@ -216,6 +330,93 @@ class PriceListSetting {
         $this->status = $status;
     }   
  
+    /**
+     * Returns format.
+     * @return int     
+     */
+    public function getFormat() 
+    {
+        return $this->format;
+    }
+    
+    /**
+     * Returns possible formats as array.
+     * @return array
+     */
+    public static function getFormatList() 
+    {
+        return [
+            self::FORMAT_YML => 'YML',
+            self::FORMAT_XLS => 'XLS'
+        ];
+    }    
+    
+    /**
+     * Returns price format as string.
+     * @return string
+     */
+    public function getFormatAsString()
+    {
+        $list = self::getFormatList();
+        if (isset($list[$this->format]))
+            return $list[$this->format];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets format.
+     * @param int $format     
+     */
+    public function setFormat($format) 
+    {
+        $this->format = $format;
+    }   
+ 
+    /**
+     * Returns good setting.
+     * @return int     
+     */
+    public function getGoodSetting() 
+    {
+        return $this->goodSetting;
+    }
+    
+    /**
+     * Returns possible good setting as array.
+     * @return array
+     */
+    public static function getGoodSettingList() 
+    {
+        return [
+            self::IMAGE_MATH => 'Точные',
+            self::IMAGE_SIMILAR => 'Похожие',
+            self::IMAGE_ALL => 'Любые'
+        ];
+    }    
+    
+    /**
+     * Returns good setting as string.
+     * @return string
+     */
+    public function getGoodSettingAsString()
+    {
+        $list = self::getGoodSettingList();
+        if (isset($list[$this->goodSetting]))
+            return $list[$this->goodSetting];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets goodSetting.
+     * @param int $goodSetting     
+     */
+    public function setGoodSetting($goodSetting) 
+    {
+        $this->goodSetting = $goodSetting;
+    }   
+
     public function getRegion() 
     {
         return $this->region;
