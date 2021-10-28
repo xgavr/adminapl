@@ -245,6 +245,24 @@ class GroupController extends AbstractActionController
         ]);                  
                 
     }
+    
+    /**
+     * Обновить движения
+     */
+    public function updateAllMovementAction()
+    {
+        $groups = $this->entityManager->getRepository(GenericGroup::class)
+                ->findBy([]);
+        foreach ($groups as $group){
+            $this->entityManager->getRepository(Movement::class)
+                    ->groupMovementCount($group);
+        }
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+                
+    }    
  
     public function updateGroupAplAction()
     {
