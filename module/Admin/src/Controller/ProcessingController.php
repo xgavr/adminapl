@@ -788,7 +788,7 @@ class ProcessingController extends AbstractActionController
     }
 
     /**
-     * Удаление пустых производителей
+     * Обновление количества товаров и движений производителей
      */
     public function updateProducersGoodCountAction()
     {
@@ -796,6 +796,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['assembly_producer'] == 1){
             $this->producerManager->updateProducersGoodCount();
+            $this->producerManager->updateProducersMovement();
         }    
                 
         return new JsonModel(

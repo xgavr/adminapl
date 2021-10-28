@@ -13,6 +13,8 @@ use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Stock\Entity\Movement;
 use Application\Entity\Producer;
+use Application\Entity\GenericGroup;
+use Application\Entity\TokenGroup;
 
 /**
  * Description of MovementRepository
@@ -81,4 +83,53 @@ class MovementRepository extends EntityRepository{
         
         return $result['mCount'];
     }
+    
+   /**
+    * Количество движения у группы ТД
+    * @param Group $group
+    * @return integer
+    */
+    public function groupMovementCount($group)
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('count(m.id) as mCount')
+                ->from(Movement::class, 'm')
+                ->join('m.good', 'g')
+                ->where('g.genericGroup = ?1')
+                ->setParameter('1', $group->getId())
+                ;
+        
+        $result = $qb->getQuery()->getOneOrNullResult();
+        $connection->update('generic_group', ['movement' => $result['mCount']],['id' => $group->getId()]);
+        
+        return $result['mCount'];
+    }    
+    
+   /**
+    * Количество движения у группы наименований
+    * @param TokenGroup $tokenGroup
+    * @return integer
+    */
+    public function tokenGroupMovementCount($tokenGroup)
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('count(m.id) as mCount')
+                ->from(Movement::class, 'm')
+                ->join('m.good', 'g')
+                ->where('g.tokenGroup = ?1')
+                ->setParameter('1', $tokenGroup->getId())
+                ;
+        
+        $result = $qb->getQuery()->getOneOrNullResult();
+        $connection->update('token_group', ['movement' => $result['mCount']],['id' => $tokenGroup->getId()]);
+        
+        return $result['mCount'];
+    }    
+    
 }
