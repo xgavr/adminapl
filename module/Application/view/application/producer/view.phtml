@@ -126,6 +126,17 @@ if (isset($unknownProducerQuery)){
                             </button> 
                         </div>
                     </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Оборот: <?= $producer->getMovement()?>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/producer/update-producer-movement/<?= $producer->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить количество движений">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                        </div>
+                    </div>
                 </div>
                 <?php if ($this->access('rate.manage')):?>
                     <div class="panel panel-info">

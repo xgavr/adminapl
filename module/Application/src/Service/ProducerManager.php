@@ -12,6 +12,7 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Filter\ProducerName;
+use Stock\Entity\Movement;
 
 /**
  * Description of RbService
@@ -149,6 +150,43 @@ class ProducerManager
         return;
     }
     
+    /**
+     * Обновить количество движений производителя
+     * @param Producer $producer
+     * @return null
+     */
+    public function updateProducerMovement($producer)
+    {
+        $this->entityManager->getRepository(Movement::class)
+                    ->producerMovementCount($producer);
+        
+        return;
+    }
+    
+    /**
+     * Обновить движения у производителей
+     * @return null
+     */
+    public function updateProducersMovement()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);        
+        $startTime = time();
+        $finishTime = $startTime + 840;
+        
+        $producers = $this->entityManager->getRepository(Producer::class)
+                ->findBy([]);
+        foreach ($producers as $producer){
+            $this->entityManager->getRepository(Movement::class)
+                    ->producerMovementCount($producer);
+            if (time() >= $finishTime){
+                return;
+            }
+        }
+        
+        return;
+    }
+
     /**
      * Поиск и удаление производителей не привязаных к товарам и неизвестным производителям
      */

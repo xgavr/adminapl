@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Stock\Entity\Movement;
+use Application\Entity\Producer;
 
 /**
  * Description of MovementRepository
@@ -55,5 +56,29 @@ class MovementRepository extends EntityRepository{
         $connection = $entityManager->getConnection();
         $connection->insert('movement', $data);
         return;
+    }
+    
+   /**
+    * Количество движения у производителя
+    * @param Producer $producer
+    * @return integer
+    */
+    public function producerMovementCount($producer)
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('count(m.id) as mCount')
+                ->from(Movement::class, 'm')
+                ->join('m.good', 'g')
+                ->where('g.producer = ?1')
+                ->setParameter('1', $producer->getId())
+                ;
+        
+        $result = $qb->getQuery()->getOneOrNullResult();
+        $connection->update('producer', ['movement' => $result['mCount']],['id' => $producer->getId()]);
+        
+        return $result['mCount'];
     }
 }

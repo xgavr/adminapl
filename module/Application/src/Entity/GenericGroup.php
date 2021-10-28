@@ -83,6 +83,11 @@ class GenericGroup {
     protected $goodCount;    
 
     /**
+     * @ORM\Column(name="movement")  
+     */
+    protected $movement;    
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Goods", mappedBy="genericGroup")
     * @ORM\JoinColumn(name="id", referencedColumnName="generic_group_id")
      */
@@ -279,6 +284,16 @@ class GenericGroup {
     {
         $this->goodCount = $goodCount;
     }     
+    
+    public function getMovement() 
+    {
+        return $this->movement;
+    }
+
+    public function setMovement($movement) 
+    {
+        $this->movement = $movement;
+    }      
     
     // Возвращает товары, связанные с данной машиной.
     public function getGoods() 

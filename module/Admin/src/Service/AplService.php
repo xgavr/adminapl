@@ -664,11 +664,16 @@ class AplService {
                 exit;
             }
             if ($data){
-                $phone = (array) Json::decode($data);
-//                var_dump($phone);
-                $this->contactManager->addPhone($contact, ['phone' => $phone['phone']], true);
+                try{
+                    $phone = (array) Json::decode($data);
+    //                var_dump($phone);
+                    $this->contactManager->addPhone($contact, ['phone' => $phone['phone']], true);
+                } catch (Laminas\Json\Exception\RuntimeException $ex){
+                    return;
+                }    
             }
-        }    
+        }   
+        return;
     }
     
     /**

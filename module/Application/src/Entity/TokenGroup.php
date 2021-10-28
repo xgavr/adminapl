@@ -51,6 +51,10 @@ class TokenGroup {
      */
     protected $goodCount = 0;
 
+    /**
+     * @ORM\Column(name="movement")   
+     */
+    protected $movement = 0;
     
    /**
     * @ORM\OneToMany(targetEntity="\Application\Entity\Goods", mappedBy="tokenGroup")
@@ -164,6 +168,16 @@ class TokenGroup {
     {
         $this->goodCount = $goodCount;
     }  
+    
+    public function getMovement() 
+    {
+        return $this->movement;
+    }
+
+    public function setMovement($movement) 
+    {
+        $this->movement = $movement;
+    }      
     
     public function getIds() 
     {

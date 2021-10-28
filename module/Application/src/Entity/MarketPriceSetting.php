@@ -31,6 +31,18 @@ class MarketPriceSetting {
     const IMAGE_SIMILAR    = 2; // Картинки точные и похожие.
     const IMAGE_ALL        = 3; // Картинки все.
 
+    const SUPPLIER_TAGGED   = 1; // Поставщики меченные.
+    const SUPPLIER_ALL      = 2; // Поставщики все.
+
+    const PRODUCER_ACTIVE   = 1; // Производители с движением.
+    const PRODUCER_ALL      = 2; // Производители все.
+
+    const GROUP_ACTIVE   = 1; // Группы с движением.
+    const GROUP_ALL      = 2; // Группы все.
+
+    const TOKEN_GROUP_ACTIVE   = 1; // Группы с движением.
+    const TOKEN_GROUP_ALL      = 2; // Группы все.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -192,6 +204,31 @@ class MarketPriceSetting {
         return $this->supplierSetting;
     }
 
+    /**
+     * Returns possible supplier as array.
+     * @return array
+     */
+    public static function getSupplierSettingList() 
+    {
+        return [
+            self::SUPPLIER_TAGGED => 'Помеченные',
+            self::SUPPLIER_ALL => 'Все'
+        ];
+    }    
+    
+    /**
+     * Returns supplier as string.
+     * @return string
+     */
+    public function getSupplierSettingAsString()
+    {
+        $list = self::getSupplierSettingList();
+        if (isset($list[$this->supplierSetting]))
+            return $list[$this->supplierSetting];
+        
+        return 'Unknown';
+    }    
+
     public function setSupplierSetting($supplierSetting) 
     {
         $this->supplierSetting = $supplierSetting;
@@ -201,6 +238,31 @@ class MarketPriceSetting {
     {
         return $this->producerSetting;
     }
+
+    /**
+     * Returns possible producer as array.
+     * @return array
+     */
+    public static function getProducerSettingList() 
+    {
+        return [
+            self::PRODUCER_ACTIVE => 'Активные',
+            self::PRODUCER_ALL => 'Все'
+        ];
+    }    
+    
+    /**
+     * Returns producer as string.
+     * @return string
+     */
+    public function getProducerSettingAsString()
+    {
+        $list = self::getProducerSettingList();
+        if (isset($list[$this->producerSetting]))
+            return $list[$this->producerSetting];
+        
+        return 'Unknown';
+    }    
 
     public function setProducerSetting($producerSetting) 
     {
@@ -212,6 +274,31 @@ class MarketPriceSetting {
         return $this->groupSetting;
     }
 
+    /**
+     * Returns possible group as array.
+     * @return array
+     */
+    public static function getGroupSettingList() 
+    {
+        return [
+            self::GROUP_ACTIVE => 'Активные',
+            self::GROUP_ALL => 'Все'
+        ];
+    }    
+    
+    /**
+     * Returns group as string.
+     * @return string
+     */
+    public function getGroupSettingAsString()
+    {
+        $list = self::getGroupSettingList();
+        if (isset($list[$this->groupSetting]))
+            return $list[$this->groupSetting];
+        
+        return 'Unknown';
+    }    
+
     public function setGroupSetting($groupSetting) 
     {
         $this->groupSetting = $groupSetting;
@@ -221,6 +308,31 @@ class MarketPriceSetting {
     {
         return $this->tokenGroupSetting;
     }
+
+    /**
+     * Returns possible token group as array.
+     * @return array
+     */
+    public static function getTokenGroupSettingList() 
+    {
+        return [
+            self::TOKEN_GROUP_ACTIVE => 'Активные',
+            self::TOKEN_GROUP_ALL => 'Все'
+        ];
+    }    
+    
+    /**
+     * Returns token group as string.
+     * @return string
+     */
+    public function getTokenGroupSettingAsString()
+    {
+        $list = self::getTokenGroupSettingList();
+        if (isset($list[$this->tokenGroupSetting]))
+            return $list[$this->tokenGroupSetting];
+        
+        return 'Unknown';
+    }    
 
     public function setTokenGroupSetting($torenGroupSetting) 
     {

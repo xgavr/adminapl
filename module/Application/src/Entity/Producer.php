@@ -52,6 +52,11 @@ class Producer {
     protected $goodCount = 0;
 
     /**
+     * @ORM\Column(name="movement")   
+     */
+    protected $movement = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Country", inversedBy="producer") 
      * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
      */
@@ -175,6 +180,16 @@ class Producer {
     public function setGoodCount($goodCount) 
     {
         $this->goodCount = $goodCount;
+    }      
+
+    public function getMovement() 
+    {
+        return $this->movement;
+    }
+
+    public function setMovement($movement) 
+    {
+        $this->movement = $movement;
     }      
 
     /*
