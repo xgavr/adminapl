@@ -65,7 +65,7 @@ class Images {
     * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")    
     * 
     */
-    protected $producer;
+//    protected $producer;
      
     public function getId() 
     {
@@ -285,17 +285,17 @@ class Images {
      * Возвращает связанный производитель.
      * @return \Application\Entity\Producer
      */
-    public function getProducer() 
-    {
-        return $this->producer;
-    }
+//    public function getProducer() 
+//    {
+//        return $this->producer;
+//    }
     
     /**
      * Задает связанный производитель.
      * @param \Application\Entity\Producer $producer
      */
-    public function setProducer($producer) 
-    {
-        $this->producer = $producer;
-    }    
+//    public function setProducer($producer) 
+//    {
+//        $this->producer = $producer;
+//    }    
 }
