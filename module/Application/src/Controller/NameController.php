@@ -1366,7 +1366,6 @@ class NameController extends AbstractActionController
         ]);          
     }
     
-    
     public function goodCountTokenGroupAction()
     {
         $this->nameManager->updateAllTokenGroupGoodCount();
@@ -1376,7 +1375,37 @@ class NameController extends AbstractActionController
         ]);          
     }
     
-    
+    public function updateMovementTokenGroupAction()
+    {
+        $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
+        if ($tokenGroupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->findOneById($tokenGroupId);
+        
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->nameManager->updateTokenGroupMovement($tokenGroup);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+        
+    public function movementTokenGroupAction()
+    {
+        $this->nameManager->updateTokenGroupsMovement();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }    
     
     public function deleteEmptyTokenGroupAction()
     {

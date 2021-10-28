@@ -1662,7 +1662,14 @@ class ProcessingController extends AbstractActionController
 
             $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
                     ->updateGoodCount();
-            
+
+            $groups = $this->entityManager->getRepository(\Application\Entity\GenericGroup::class)
+                ->findBy([]);
+            foreach ($groups as $group){
+                $this->entityManager->getRepository(\Stock\Entity\Movement::class)
+                        ->groupMovementCount($group);
+            }
+
         }    
                 
         return new JsonModel(

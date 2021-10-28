@@ -22,6 +22,7 @@ use Application\Entity\TitleToken;
 use Application\Entity\Car;
 use Application\Entity\Oem;
 use Application\Entity\GoodAttributeValue;
+use Stock\Entity\Movement;
 
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -1447,6 +1448,41 @@ class NameManager
     }
     
     
+    /**
+     * Обновление количества движения у группы наименований
+     * 
+     * @param TokenGroup $tokenGroup
+     */
+    public function updateTokenGroupMovement($tokenGroup)
+    {
+        $this->entityManager->getRepository(Movement::class)
+                ->tokenGroupMovementCount($tokenGroup);
+        
+    }    
+    
+    /**
+     * Обновить движения у групп наименований
+     * @return null
+     */
+    public function updateTokenGroupsMovement()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);        
+        $startTime = time();
+        $finishTime = $startTime + 840;
+        
+        $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
+                ->findBy([]);
+        foreach ($tokenGroups as $tokenGroup){
+            $this->entityManager->getRepository(Movement::class)
+                    ->tokenGroupMovementCount($tokenGroup);
+            if (time() >= $finishTime){
+                return;
+            }
+        }
+        
+        return;
+    }
     
     /**
      * Удаление TokenGroup
