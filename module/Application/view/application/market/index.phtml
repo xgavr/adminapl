@@ -11,19 +11,140 @@ $this->pageBreadcrumbs()->setItems([
 
 ?>
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title">Наличие в ZZap</h3>
-                <div class="clearfix"></div>
-            </div>
-            <div class="panel-body">
-                <button class="btn btn-default refresh-button" value="/market/apl-to-zzap">
-                    <span class="glyphicon glyphicon-refresh" ></span>Выгрузить
-                </button>
-                
-            </div>
+<div id="toolbar">
+    <div class="form-inline" role="form">
+        <button class="btn btn-default ring-modal-show" type="button" modal-url="/market/edit-form">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>                
+        <div class="form-group">
+            <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
         </div>
-    </div>    
+        <button id="ok" type="submit" class="btn btn-default">OK</button>
+    </div>
 </div>
+<table id="table" 
+    data-toggle="table" 
+    data-url="/market/content"
+    data-side-pagination="server"
+    data-pagination="true" 
+    data-page-list="[5, 10, 20, 50]"
+    data-toolbar="#toolbar"
+    data-show-refresh="true"
+    data-show-toggle="true"
+    data-query-params="queryParams"
+    data-response-handler="responseHandler"
+    >
+    <thead>
+        <tr>
+             <th data-field="id" data-type="numeric">ID</th>
+             <th data-field="phone">Телефон</th>
+             <th data-field="mode" data-formatter="modeFormatter">Тип</th>
+             <th data-field="name">Имя</th>
+         </tr>                
+    </thead>
+</table>
+
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table'),
+        ok = $('#ok');
+    
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+        $(document).on('click', '.market-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'marketModal',
+                url: url,
+                width: '1440px'
+            });
+        });          
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function modeFormatter(value){
+        var modes = <?php echo json_encode(Ring::getModeList()) ?>;
+        return modes[value];
+    }
+    
+    function linkFormatter(value){
+        return value;
+    }    
+
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function amountFormatter(value){
+        return Math.round(value*100)/100;
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/ptu/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs ptu-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function vtpButtonClass(data){
+        if (data.vtpCount){
+            $('#vtpbtn'+data.id).removeClass('btn-default');
+            $('#vtpbtn'+data.id).addClass('btn-info');
+        }            
+    }
+    
+    function vtpFormatter(value, row){
+        $.get(
+            '/ptu/vtp-count/'+value,
+            null,
+            vtpButtonClass                
+        );
+
+        var url = '/vtp/ptu-form/'+row.id;
+        btn = '<button';
+        btn += ' id="vtpbtn' + value + '"';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs vtp-index-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span aria-hidden="true">В</span>';
+        btn += '</button>';
+        return btn;
+    }    
+
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
