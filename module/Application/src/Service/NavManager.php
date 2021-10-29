@@ -221,7 +221,7 @@ class NavManager
                 
                 $rbDropdownItems[] = [
                             'id' => 'group',
-                            'label' => 'Группы',
+                            'label' => 'Группы ТД',
                             'link' => $url('group')
                         ];
                 

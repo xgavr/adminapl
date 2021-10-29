@@ -78,6 +78,7 @@ $this->headScript()
                      <th data-field="lemms" data-formatter="nameFormatter" data-sortable="true">Наименование</th>
 <!--                     <th data-field="lemms" data-sortable="true">Токены</th>             -->
                      <th data-field="goodCount" data-align='right' data-sortable="true">Товаров</th>             
+                     <th data-field="movement" data-align='right' data-sortable="true">Движений</th>             
                      <th data-field="" data-formatter="activeFormatter" data-align="center"></th>
                  </tr>                
             </thead>
@@ -133,6 +134,17 @@ $this->headScript()
                         <div class="pull-right">
                             <button value="/name/good-count-token-group/" class="btn btn-warning btn-xs refresh-table-button"
                                     title="Обновить количество товара">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <span>движений</span>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/name/movement-token-group/" class="btn btn-warning btn-xs refresh-table-button"
+                                    title="Обновить количество движений">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button> 
                         </div>
