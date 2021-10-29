@@ -12,6 +12,7 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Application\Entity\MarketPriceSetting;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -48,6 +49,81 @@ class MarketManager
         $this->ftpManager = $ftpManager;
     }
     
+    
+    /**
+     * Добавить настройку прайса
+     * @param array $data
+     * @return MarketPriceSetting
+     */
+    public function addMarketSetting($data)
+    {
+        $market = new MarketPriceSetting();
+        $market->setBlockRowCount($data['blockRowCount']);
+        $market->setFilename($data['filename']);
+        $market->setFormat($data['format']);
+        $market->setGoodSetting($data['goodSetting']);
+        $market->setGroupSetting($data['groupSetting']);
+        $market->setImageCount($data['imageCount']);
+        $market->setInfo($data['info']);
+        $market->setMaxPrice($data['maxPrice']);
+        $market->setMaxRowCount($data['maxRowCount']);
+        $market->setMinPrice($data['minPrice']);
+        $market->setName($data['name']);
+        $market->setProducerSetting($data['producerSetting']);
+        $market->setRegion($data['region']);
+        $market->setStatus($data['status']);
+        $market->setSupplierSetting($data['supplierSetting']);
+        $market->setTokenGroupSetting($data['tokenGroupSetting']);
+        
+        $this->entityManager->persist($market);
+        $this->entityManager->flush($market);
+        
+        return $market;
+    }
+    
+    /**
+     * Обновить настройку прайса
+     * 
+     * @param MarketPriceSetting $market
+     * @param array $data
+     * @return MarketPriceSetting
+     */
+    public function updateMarketSetting($market, $data)
+    {
+        $market->setBlockRowCount($data['blockRowCount']);
+        $market->setFilename($data['filename']);
+        $market->setFormat($data['format']);
+        $market->setGoodSetting($data['goodSetting']);
+        $market->setGroupSetting($data['groupSetting']);
+        $market->setImageCount($data['imageCount']);
+        $market->setInfo($data['info']);
+        $market->setMaxPrice($data['maxPrice']);
+        $market->setMaxRowCount($data['maxRowCount']);
+        $market->setMinPrice($data['minPrice']);
+        $market->setName($data['name']);
+        $market->setProducerSetting($data['producerSetting']);
+        $market->setRegion($data['region']);
+        $market->setStatus($data['status']);
+        $market->setSupplierSetting($data['supplierSetting']);
+        $market->setTokenGroupSetting($data['tokenGroupSetting']);
+        
+        $this->entityManager->persist($market);
+        $this->entityManager->flush($market);
+        
+        return $market;
+    }
+    
+    /**
+     * Удалитьнастройку прайс листа
+     * 
+     * @param MarketPriceSetting $market
+     */
+    public function removeMarketPriceSetting($market)
+    {
+        $this->entityManager->remove($market);
+    }
+
+
     /**
      * Выгрузка в zzap только апл
      * 

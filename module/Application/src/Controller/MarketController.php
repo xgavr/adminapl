@@ -10,6 +10,8 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
+use Application\Entity\MarketPriceSetting;
+use Application\Form\MarketForm;
 
 class MarketController extends AbstractActionController
 {
@@ -37,6 +39,49 @@ class MarketController extends AbstractActionController
     {
         return new ViewModel();
     }
+    
+    public function editFormAction()
+    {
+        $marketId = (int)$this->params()->fromRoute('id', -1);
+        
+        $market = null;
+        
+        if ($marketId > 0){
+            $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+                    ->find($marketId);
+        }    
+
+        $form = new MarketForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();            
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                $market = $this->marketManager->addMarketSetting($data);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                var_dump($form->getMessages());
+            }
+        } else {
+            if ($market){
+                $data = [
+                ];
+                $form->setData($data);
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'market' => $market,
+        ]);        
+    }    
+    
     
     public function aplToZzapAction()
     {

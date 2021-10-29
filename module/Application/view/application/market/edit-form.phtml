@@ -1,0 +1,268 @@
+<?php
+use Application\Entity\MarketPriceSetting;
+
+$form = $this->form;
+
+$form->get('region')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('info')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('filename')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('format')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('goodSetting')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('imageCount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('supplierSetting')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('producerSetting')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('groupSetting')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('tokenGroupSetting')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('minPrice')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('maxPrice')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('maxRowCount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('blockRowCount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'market-submit']);
+
+$form->prepare();
+
+?>
+
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="otModalLabel">Настройка прайса</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('name')); ?>
+                            <?= $this->formElement($form->get('name')); ?>
+                            <?= $this->formElementErrors($form->get('name')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('region')); ?>
+                            <?= $this->formElement($form->get('region')); ?>
+                            <?= $this->formElementErrors($form->get('region')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('filename')); ?>
+                            <?= $this->formElement($form->get('filename')); ?>
+                            <?= $this->formElementErrors($form->get('filename')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('format')); ?>
+                            <?= $this->formElement($form->get('format')); ?>
+                            <?= $this->formElementErrors($form->get('format')); ?>                  
+                        </div>
+                    </div>    
+                </div>    
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('goodSetting')); ?>
+                            <?= $this->formElement($form->get('goodSetting')); ?>
+                            <?= $this->formElementErrors($form->get('goodSetting')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('imageCount')); ?>
+                            <?= $this->formElement($form->get('imageCount')); ?>
+                            <?= $this->formElementErrors($form->get('imageCount')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('supplierSetting')); ?>
+                            <?= $this->formElement($form->get('supplierSetting')); ?>
+                            <?= $this->formElementErrors($form->get('supplierSetting')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('producerSetting')); ?>
+                            <?= $this->formElement($form->get('producerSetting')); ?>
+                            <?= $this->formElementErrors($form->get('producerSetting')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('groupSetting')); ?>
+                            <?= $this->formElement($form->get('groupSetting')); ?>
+                            <?= $this->formElementErrors($form->get('groupSetting')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('tokenGroupSetting')); ?>
+                            <?= $this->formElement($form->get('tokenGroupSetting')); ?>
+                            <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
+                        </div>
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('minPrice')); ?>
+                            <?= $this->formElement($form->get('minPrice')); ?>
+                            <?= $this->formElementErrors($form->get('minPrice')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('maxPrice')); ?>
+                            <?= $this->formElement($form->get('maxPrice')); ?>
+                            <?= $this->formElementErrors($form->get('maxPrice')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('maxRowCount')); ?>
+                            <?= $this->formElement($form->get('maxRowCount')); ?>
+                            <?= $this->formElementErrors($form->get('maxRowCount')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group" id="comissGroup">
+                            <?= $this->formLabel($form->get('blockRowCount')); ?>
+                            <?= $this->formElement($form->get('blockRowCount')); ?>
+                            <?= $this->formElementErrors($form->get('blockRowCount')); ?>                  
+                        </div>
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('info')); ?>
+                            <?= $this->formElement($form->get('info')); ?>
+                            <?= $this->formElementErrors($form->get('info')); ?>                  
+                        </div>                        
+                    </div>                                            
+                </div>        
+
+
+
+
+                        <?= $this->formElement($form->get('csrf')); ?>
+                    </div>
+                </div>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" id="ot-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    function submitForm(){
+        var data = serializeForm('#market-form');
+        $.ajax({
+            type: 'POST',
+            url: '/market/edit-form/<?= ($market) ? $market->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#otModal').modal('hide');
+                    $('#table').bootstrapTable('refresh');
+                } else {
+                    $('#otModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    $( document ).ready(function() {
+        
+        var form = $('#market-form');
+        
+        form.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('market-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });            
+</script>

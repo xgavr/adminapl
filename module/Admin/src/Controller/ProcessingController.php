@@ -1547,6 +1547,7 @@ class ProcessingController extends AbstractActionController
         if ($settings['assembly_group_name'] == 1){
 
             $this->nameManager->updateAllTokenGroupGoodCount();
+            $this->nameManager->updateTokenGroupsMovement();
             
             $this->nameManager->removeEmptyTokenGroup();
         }    
