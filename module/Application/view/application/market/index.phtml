@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\MarketPriceSetting;
+
 $this->headTitle('Прайс листы для торговых площадок');
 
 $this->mainMenu()->setActiveItemId('apl');
@@ -13,7 +15,7 @@ $this->pageBreadcrumbs()->setItems([
 
 <div id="toolbar">
     <div class="form-inline" role="form">
-        <button class="btn btn-default ring-modal-show" type="button" modal-url="/market/edit-form">
+        <button class="btn btn-default market-modal-show" type="button" modal-url="/market/edit-form">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         </button>                
         <div class="form-group">
@@ -36,10 +38,11 @@ $this->pageBreadcrumbs()->setItems([
     >
     <thead>
         <tr>
-             <th data-field="id" data-type="numeric">ID</th>
-             <th data-field="phone">Телефон</th>
-             <th data-field="mode" data-formatter="modeFormatter">Тип</th>
-             <th data-field="name">Имя</th>
+             <th data-field="id" data-type="numeric">Id</th>
+             <th data-field="name">Наименование</th>
+             <th data-field="filename">Файл</th>
+             <th data-field="format">Тип</th>
+             <th data-field="id"></th>
          </tr>                
     </thead>
 </table>
@@ -80,11 +83,6 @@ $this->pageBreadcrumbs()->setItems([
         }    
         
         return params;
-    }
-    
-    function modeFormatter(value){
-        var modes = <?php echo json_encode(Ring::getModeList()) ?>;
-        return modes[value];
     }
     
     function linkFormatter(value){

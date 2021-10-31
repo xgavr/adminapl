@@ -208,13 +208,7 @@ $form->prepare();
                     </div>                                            
                 </div>        
 
-
-
-
-                        <?= $this->formElement($form->get('csrf')); ?>
-                    </div>
-                </div>
-            </div>    
+            </div>
                 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -233,10 +227,9 @@ $form->prepare();
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#otModal').modal('hide');
-                    $('#table').bootstrapTable('refresh');
+                    $('#marketModal').modal('hide');
                 } else {
-                    $('#otModal .modal-content').html(data);                    
+                    $('#marketModal .modal-content').html(data);                    
                 }    
             })
             .fail(function () {
@@ -247,9 +240,9 @@ $form->prepare();
     
     $( document ).ready(function() {
         
-        var form = $('#market-form');
+        var forms = $('#market-form');
         
-        form.submit(function() {
+        forms.submit(function() {
             submitForm();
             return false;
         });

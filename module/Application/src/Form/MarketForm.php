@@ -90,7 +90,7 @@ class MarketForm extends Form
             'type'  => 'select',
             'name' => 'status',
             'options' => [
-                'label' => 'Status',
+                'label' => 'Состояние',
                 'value_options' => MarketPriceSetting::getStatusList(),
             ],
         ]);
@@ -125,7 +125,7 @@ class MarketForm extends Form
                 'value' => MarketPriceSetting::IMAGE_MATH,
             ],    
             'options' => [
-                'label' => 'Товары',
+                'label' => 'Картинки',
                 'value_options' => MarketPriceSetting::getGoodSettingList(),
             ],
         ]);
@@ -135,11 +135,11 @@ class MarketForm extends Form
             'name' => 'imageCount',
             'attributes' => [
                 'id' => 'imageCount',
-                'value' => 0,
+                'value' => 1,
+                'min' => 0,
              ],
             'options' => [
                 'label' => 'Количество картинок',
-                'min' => 0,
             ],
         ]);
         
@@ -196,11 +196,11 @@ class MarketForm extends Form
             'name' => 'minPrice',
             'attributes' => [
                 'id' => 'minPrice',
-                'value' => 0,
+                'value' => 300,
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Цена минимальная',
-                'min' => 0,
             ],
         ]);
         
@@ -209,11 +209,11 @@ class MarketForm extends Form
             'name' => 'maxPrice',
             'attributes' => [
                 'id' => 'maxPrice',
-                'value' => 0,
+                'value' => 35000,
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Цена максимальная',
-                'min' => 0,
             ],
         ]);
         
@@ -223,10 +223,10 @@ class MarketForm extends Form
             'attributes' => [
                 'id' => 'maxRowCount',
                 'value' => 0,
+                'min' => 0,
             ],
             'options' => [
-                'label' => 'Максимальное количество строк',
-                'min' => 0,
+                'label' => 'Всего строк в прайсе',
             ],
         ]);
         
@@ -236,10 +236,10 @@ class MarketForm extends Form
             'attributes' => [
                 'id' => 'blockRowCount',
                 'value' => 0,
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Количество строк в блоке',
-                'min' => 0,
             ],
         ]);
         

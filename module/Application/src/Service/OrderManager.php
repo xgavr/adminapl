@@ -494,13 +494,16 @@ class OrderManager
             'date_created' => date('Y-m-d H:i:s'),
         ];
 
-        if (empty($data['company'])){
-            $company = $this->entityManager->getRepository(Office::class)
-                    ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);
-        } else {
+        if (!empty($data['company'])){
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($data['company']);
         }
+        
+        if ($company){
+            $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);            
+        }
+        
         $upd['company_id'] = $company->getId();
         
         if (!empty($data['contactCar'])){

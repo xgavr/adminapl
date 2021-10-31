@@ -334,7 +334,7 @@ class MarketPriceSetting {
         return 'Unknown';
     }    
 
-    public function setTokenGroupSetting($torenGroupSetting) 
+    public function setTokenGroupSetting($tokenGroupSetting) 
     {
         $this->tokenGroupSetting = $tokenGroupSetting;
     }     
@@ -415,8 +415,8 @@ class MarketPriceSetting {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_RETIRED => 'Retired'
+            self::STATUS_ACTIVE => 'Выгружать',
+            self::STATUS_RETIRED => 'Отключен'
         ];
     }    
     

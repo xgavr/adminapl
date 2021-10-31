@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\MarketPriceSetting;
 use Application\Form\MarketForm;
+use Company\Entity\Region;
 
 class MarketController extends AbstractActionController
 {
@@ -40,6 +41,35 @@ class MarketController extends AbstractActionController
         return new ViewModel();
     }
     
+    public function contentAction()
+    {
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        $limit = $this->params()->fromQuery('limit');
+//        $status = $this->params()->fromQuery('status', MarketPriceSetting::STATUS_ACTIVE);
+        
+        $query = $this->entityManager->getRepository(MarketPriceSetting::class)
+                        ->findAllMarket(['q' => $q, 'sort' => $sort, 'order' => $order]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
+    
     public function editFormAction()
     {
         $marketId = (int)$this->params()->fromRoute('id', -1);
@@ -51,7 +81,7 @@ class MarketController extends AbstractActionController
                     ->find($marketId);
         }    
 
-        $form = new MarketForm();
+        $form = new MarketForm($this->entityManager);
 
         if ($this->getRequest()->isPost()) {
             
@@ -59,13 +89,17 @@ class MarketController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
+                $region = $this->entityManager->getRepository(Region::class)
+                        ->find($data['region']);
+                
+                $data['region'] = $region;        
                 $market = $this->marketManager->addMarketSetting($data);
                 
                 return new JsonModel(
                    ['ok']
                 );           
             } else {
-                var_dump($form->getMessages());
+                //var_dump($form->getMessages());
             }
         } else {
             if ($market){

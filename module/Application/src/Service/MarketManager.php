@@ -70,10 +70,10 @@ class MarketManager
         $market->setMinPrice($data['minPrice']);
         $market->setName($data['name']);
         $market->setProducerSetting($data['producerSetting']);
-        $market->setRegion($data['region']);
         $market->setStatus($data['status']);
         $market->setSupplierSetting($data['supplierSetting']);
         $market->setTokenGroupSetting($data['tokenGroupSetting']);
+        $market->setRegion($data['region']);
         
         $this->entityManager->persist($market);
         $this->entityManager->flush($market);
