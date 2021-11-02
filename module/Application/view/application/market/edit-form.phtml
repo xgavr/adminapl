@@ -92,27 +92,27 @@ $form->prepare();
 
 
             
-            <?= $this->form()->openTag($form); ?>
+        <?= $this->form()->openTag($form); ?>
+
+        <div class="modal-header">
+            <h5 class="modal-title" id="otModalLabel">Настройка прайса</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
             
-            <div class="modal-header">
-                <h5 class="modal-title" id="otModalLabel">Настройка прайса</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-10">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-9">
                     <div class="row">
-                        <div class="col-xs-2">                        
+                        <div class="col-xs-3">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('name')); ?>
                                 <?= $this->formElement($form->get('name')); ?>
                                 <?= $this->formElementErrors($form->get('name')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-2">                        
+                        <div class="col-xs-3">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('filename')); ?>
                                 <?= $this->formElement($form->get('filename')); ?>
@@ -124,13 +124,6 @@ $form->prepare();
                                 <?= $this->formLabel($form->get('format')); ?>
                                 <?= $this->formElement($form->get('format')); ?>
                                 <?= $this->formElementErrors($form->get('format')); ?>                  
-                            </div>
-                        </div>    
-                        <div class="col-xs-2">                        
-                            <div class="form-group">
-                                <?= $this->formLabel($form->get('pricecol')); ?>
-                                <?= $this->formElement($form->get('pricecol')); ?>
-                                <?= $this->formElementErrors($form->get('pricecol')); ?>                  
                             </div>
                         </div>    
                         <div class="col-xs-2">                        
@@ -172,6 +165,13 @@ $form->prepare();
                         </div>    
                         <div class="col-xs-2">                        
                             <div class="form-group">
+                                <?= $this->formLabel($form->get('goodSetting')); ?>
+                                <?= $this->formElement($form->get('goodSetting')); ?>
+                                <?= $this->formElementErrors($form->get('goodSetting')); ?>                  
+                            </div>
+                        </div>    
+                        <div class="col-xs-2">                        
+                            <div class="form-group">
                                 <?= $this->formLabel($form->get('maxRowCount')); ?>
                                 <?= $this->formElement($form->get('maxRowCount')); ?>
                                 <?= $this->formElementErrors($form->get('maxRowCount')); ?>                  
@@ -184,27 +184,20 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('blockRowCount')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-2">                        
-                            <div class="form-group">
-                                <?= $this->formLabel($form->get('rates')); ?>
-                                <?= $this->formElement($form->get('rates')); ?>
-                                <?= $this->formElementErrors($form->get('rates')); ?>                  
-                            </div>
-                        </div>    
                     </div>        
                     <div class="row">
+                        <div class="col-xs-2">                        
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('pricecol')); ?>
+                                <?= $this->formElement($form->get('pricecol')); ?>
+                                <?= $this->formElementErrors($form->get('pricecol')); ?>                  
+                            </div>
+                        </div>    
                         <div class="col-xs-2">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('restSetting')); ?>
                                 <?= $this->formElement($form->get('restSetting')); ?>
                                 <?= $this->formElementErrors($form->get('restSetting')); ?>                  
-                            </div>
-                        </div>    
-                        <div class="col-xs-2">                        
-                            <div class="form-group">
-                                <?= $this->formLabel($form->get('goodSetting')); ?>
-                                <?= $this->formElement($form->get('goodSetting')); ?>
-                                <?= $this->formElementErrors($form->get('goodSetting')); ?>                  
                             </div>
                         </div>    
                         <div class="col-xs-2">                        
@@ -228,8 +221,6 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('producerSetting')); ?>                  
                             </div>
                         </div>    
-                    </div>        
-                    <div class="row">
                         <div class="col-xs-2">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('groupSetting')); ?>
@@ -237,14 +228,16 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('groupSetting')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-2">                        
+                    </div>        
+                    <div class="row">
+                        <div class="col-xs-3">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('tokenGroupSetting')); ?>
                                 <?= $this->formElement($form->get('tokenGroupSetting')); ?>
                                 <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-6">
+                        <div class="col-xs-9">
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('info')); ?>
                                 <?= $this->formElement($form->get('info')); ?>
@@ -253,23 +246,21 @@ $form->prepare();
                         </div>                                            
                     </div>        
                 </div>
-                <div class="col-lg-2">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('rates')); ?>
-                            <?= $this->formElement($form->get('rates')); ?>
-                            <?= $this->formElementErrors($form->get('rates')); ?>                  
-                        </div>
-                    </div>    
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('rates')); ?>
+                        <?= $this->formElement($form->get('rates')); ?>
+                        <?= $this->formElementErrors($form->get('rates')); ?>                  
+                    </div>
                 </div>
             </div>
+        </div>    
                 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="market-submit">Сохранить</button>
-            </div>
-            
-            <?= $this->form()->closeTag(); ?>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary" id="market-submit">Сохранить</button>
+        </div>
+        <?= $this->form()->closeTag(); ?>
             
 <script>
     function submitForm(){

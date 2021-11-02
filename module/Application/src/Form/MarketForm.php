@@ -74,7 +74,9 @@ class MarketForm extends Form
                 'target_class'   => 'Application\Entity\Rate',
                 'label' => 'Расценки',
                 'property'       => 'name',
-//                'value' => 1,
+                'display_empty_item' => true,
+                'empty_item_label'   => '--все--',
+                'disable_inarray_validator' => true,
             ],
        ]);        
                 
@@ -155,7 +157,7 @@ class MarketForm extends Form
                 'min' => 0,
              ],
             'options' => [
-                'label' => 'Количество картинок',
+                'label' => 'Картинок',
             ],
         ]);
         
@@ -279,7 +281,7 @@ class MarketForm extends Form
                 'min' => 0,
             ],
             'options' => [
-                'label' => 'Всего строк в прайсе',
+                'label' => 'Строк в прайсе',
             ],
         ]);
         
@@ -292,7 +294,7 @@ class MarketForm extends Form
                 'min' => 0,
             ],
             'options' => [
-                'label' => 'Количество строк в блоке',
+                'label' => 'Строк в блоке',
             ],
         ]);
         
@@ -315,6 +317,13 @@ class MarketForm extends Form
         
         $inputFilter = new InputFilter();        
         $this->setInputFilter($inputFilter);
+        
+        $inputFilter->add([
+                'name'     => 'rates',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]);
         
         $inputFilter->add([
                 'name'     => 'name',

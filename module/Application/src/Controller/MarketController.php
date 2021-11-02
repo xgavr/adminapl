@@ -91,6 +91,9 @@ class MarketController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();            
+            if (!is_array($data['rates'])){
+                $data['rates'] = [];
+            }
             $form->setData($data);
 
             if ($form->isValid()) {

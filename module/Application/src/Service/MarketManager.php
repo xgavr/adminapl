@@ -57,19 +57,21 @@ class MarketManager
      */
     private function assignRates($market, $rateIds)
     {
-        // Remove old user rate(s).
+        // Remove old rate(s).
         $market->getRates()->clear();
         
         // Assign new rate(s).
         if (is_array($rateIds)){
             foreach ($rateIds as $rateId) {
-                $rate = $this->entityManager->getRepository(Rate::class)
-                        ->find($rateId);
-                if ($rate==null) {
-                    throw new \Exception('Not found rate by ID');
-                }
+                if (is_numeric($rateId)){
+                    $rate = $this->entityManager->getRepository(Rate::class)
+                            ->find($rateId);
+                    if ($rate==null) {
+                        throw new \Exception('Not found rate by ID');
+                    }
 
-                $market->addRate($rate);
+                    $market->addRate($rate);
+                }    
             }
         }    
     }    
@@ -102,10 +104,9 @@ class MarketManager
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         
-        $this->assignRates($market, $data['rates']);
-        $this->entityManager->persist($market);
-        $this->entityManager->flush();
-        
+        $this->assignRates($market, $data['rates']);        
+        $this->entityManager->persist($market);        
+        $this->entityManager->flush();        
         return $market;
     }
     
