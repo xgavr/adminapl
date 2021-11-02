@@ -16,7 +16,7 @@ class PermissionManager
     
     /**
      * RBAC manager.
-     * @var User\Service\RbacManager
+     * @var \User\Service\RbacManager
      */
     private $rbacManager;
     

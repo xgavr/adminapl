@@ -13,6 +13,7 @@ use Application\Entity\Rawprice;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Application\Entity\MarketPriceSetting;
+use Application\Entity\Rate;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -49,6 +50,29 @@ class MarketManager
         $this->ftpManager = $ftpManager;
     }
     
+    /**
+     * A helper method which assigns new rates to the market.
+     * @param MarketPriceSetting $market
+     * @param array $rateIds
+     */
+    private function assignRates($market, $rateIds)
+    {
+        // Remove old user rate(s).
+        $market->getRates()->clear();
+        
+        // Assign new rate(s).
+        if (is_array($rateIds)){
+            foreach ($rateIds as $rateId) {
+                $rate = $this->entityManager->getRepository(Rate::class)
+                        ->find($rateId);
+                if ($rate==null) {
+                    throw new \Exception('Not found rate by ID');
+                }
+
+                $market->addRate($rate);
+            }
+        }    
+    }    
     
     /**
      * Добавить настройку прайса
@@ -74,9 +98,13 @@ class MarketManager
         $market->setSupplierSetting($data['supplierSetting']);
         $market->setTokenGroupSetting($data['tokenGroupSetting']);
         $market->setRegion($data['region']);
+        $market->setPricecol($data['pricecol']);
+        $market->setNameSetting($data['nameSetting']);
+        $market->setRestSetting($data['restSetting']);
         
+        $this->assignRates($market, $data['rates']);
         $this->entityManager->persist($market);
-        $this->entityManager->flush($market);
+        $this->entityManager->flush();
         
         return $market;
     }
@@ -106,9 +134,13 @@ class MarketManager
         $market->setStatus($data['status']);
         $market->setSupplierSetting($data['supplierSetting']);
         $market->setTokenGroupSetting($data['tokenGroupSetting']);
+        $market->setPricecol($data['pricecol']);
+        $market->setNameSetting($data['nameSetting']);
+        $market->setRestSetting($data['restSetting']);
         
+        $this->assignRates($market, $data['rates']);
         $this->entityManager->persist($market);
-        $this->entityManager->flush($market);
+        $this->entityManager->flush();
         
         return $market;
     }
@@ -120,7 +152,9 @@ class MarketManager
      */
     public function removeMarketPriceSetting($market)
     {
+        $market->getRates()->clear();
         $this->entityManager->remove($market);
+        $this->entityManager->flush();
     }
 
 

@@ -31,6 +31,12 @@ class MarketPriceSetting {
     const IMAGE_SIMILAR    = 2; // Картинки точные и похожие.
     const IMAGE_ALL        = 3; // Картинки все.
 
+    const NAME_GENERATED  = 1; // Наименования сгенерированные
+    const NAME_ALL        = 2; // Наименования любые.
+
+    const REST_AVAILABILITY  = 1; // Только наличие
+    const REST_ALL        = 2; // Все остатки.
+
     const SUPPLIER_TAGGED   = 1; // Поставщики меченные.
     const SUPPLIER_ALL      = 2; // Поставщики все.
 
@@ -78,6 +84,18 @@ class MarketPriceSetting {
      * @ORM\Column(name="good_setting")   
      */
     protected $goodSetting;
+
+    /**
+     * Фильтр по наименованиям
+     * @ORM\Column(name="name_setting")   
+     */
+    protected $nameSetting;
+
+    /**
+     * Фильтр по наличию
+     * @ORM\Column(name="rest_setting")   
+     */
+    protected $restSetting;
 
     /**
      * Количество картинок в оферте
@@ -135,6 +153,12 @@ class MarketPriceSetting {
     protected $blockRowCount;
     
     /**
+     * Колонка цен
+     * @ORM\Column(name="pricecol")   
+     */
+    protected $pricecol;
+    
+    /**
      * Описание настройки
      * @ORM\Column(name="info")   
      */
@@ -153,10 +177,20 @@ class MarketPriceSetting {
     private $region;
     
     /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Rate")
+     * @ORM\JoinTable(name="market_rate",
+     *      joinColumns={@ORM\JoinColumn(name="rate_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="market_id", referencedColumnName="id")}
+     *      )
+     */
+    private $rates;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
+        $this->rates = new ArrayCollection();
     }
     
     public function getId() 
@@ -379,6 +413,16 @@ class MarketPriceSetting {
         $this->blockRowCount = $blockRowCount;
     }     
 
+    public function getPricecol() 
+    {
+        return $this->pricecol;
+    }
+
+    public function setPricecol($pricecol) 
+    {
+        $this->pricecol = $pricecol;
+    }     
+
     public function getInfo() 
     {
         return $this->info;
@@ -529,6 +573,92 @@ class MarketPriceSetting {
         $this->goodSetting = $goodSetting;
     }   
 
+    /**
+     * Returns name setting.
+     * @return int     
+     */
+    public function getNameSetting() 
+    {
+        return $this->nameSetting;
+    }
+    
+    /**
+     * Returns possible name setting as array.
+     * @return array
+     */
+    public static function getNameSettingList() 
+    {
+        return [
+            self::NAME_GENERATED => 'Сгенерированные',
+            self::NAME_ALL => 'Любые'
+        ];
+    }    
+    
+    /**
+     * Returns name setting as string.
+     * @return string
+     */
+    public function getNameSettingAsString()
+    {
+        $list = self::getNameSettingList();
+        if (isset($list[$this->nameSetting]))
+            return $list[$this->nameSetting];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets nameSetting.
+     * @param int $nameSetting     
+     */
+    public function setNameSetting($nameSetting) 
+    {
+        $this->nameSetting = $nameSetting;
+    }   
+
+    /**
+     * Returns rest setting.
+     * @return int     
+     */
+    public function getRestSetting() 
+    {
+        return $this->restSetting;
+    }
+    
+    /**
+     * Returns possible rest setting as array.
+     * @return array
+     */
+    public static function getRestSettingList() 
+    {
+        return [
+            self::REST_AVAILABILITY => 'Наличие',
+            self::REST_ALL => 'Все'
+        ];
+    }    
+    
+    /**
+     * Returns rest setting as string.
+     * @return string
+     */
+    public function getRestSettingAsString()
+    {
+        $list = self::getRestSettingList();
+        if (isset($list[$this->restSetting]))
+            return $list[$this->restSetting];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets restSetting.
+     * @param int $restSetting     
+     */
+    public function setRestSetting($restSetting) 
+    {
+        $this->restSetting = $restSetting;
+    }   
+
     public function getRegion() 
     {
         return $this->region;
@@ -543,4 +673,77 @@ class MarketPriceSetting {
         $this->region = $region;        
     }                 
     
+    public function getRates()
+    {
+        return $this->rates;
+    }
+    
+    /**
+     * Returns the string of assigned rate names.
+     */
+    public function getRatesAsString()
+    {
+        $rateList = '';
+        
+        $count = count($this->rates);
+        $i = 0;
+        foreach ($this->rates as $rate) {
+            $rateList .= $rate->getName();
+            if ($i<$count-1)
+                $rateList .= ', ';
+            $i++;
+        }
+        
+        return $rateList;
+    }
+    
+    public function getRatesAsArray()
+    {
+        $rateList = [];
+        
+        foreach ($this->rates as $rate) {
+            $rateList[] = $rate->getId();
+        }
+        
+        return $rateList;
+    }
+
+    /**
+     * Assigns a rate to market.
+     */
+    public function addRate($rate)
+    {
+        $this->rates->add($rate);
+    }    
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'status' => $this->getStatus(),
+            'name' => $this->getName(),
+            'filename' => $this->getFilename(),
+            'format' => $this->getFormat(),
+            'goodSetting' => $this->getGoodSetting(),
+            'nameSetting' => $this->getNameSetting(),
+            'restSetting' => $this->getRestSetting(),
+            'imageCount' => $this->getImageCount(),
+            'supplierSetting' => $this->getSupplierSetting(),
+            'producerSetting' => $this->getProducerSetting(),
+            'tokenGroupSetting' => $this->getTokenGroupSetting(),
+            'groupSetting' => $this->getGroupSetting(),
+            'minPrice' => $this->getMinPrice(),
+            'maxPrice' => $this->getMaxPrice(),
+            'maxRowCount' => $this->getMaxRowCount(),
+            'blockRowCount' => $this->getBlockRowCount(),
+            'pricecol' => $this->getPricecol(),
+            'info' => $this->getInfo(),
+            'region' => $this->getRegion()->getId(),
+        ];
+        
+        return $result;
+    }
 }

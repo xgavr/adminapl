@@ -38,7 +38,12 @@ class MarketController extends AbstractActionController
     
     public function indexAction()
     {
-        return new ViewModel();
+        $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->findAll();
+        
+        return new ViewModel([
+            'markets' => $markets,
+        ]);
     }
     
     public function contentAction()
@@ -92,8 +97,12 @@ class MarketController extends AbstractActionController
                 $region = $this->entityManager->getRepository(Region::class)
                         ->find($data['region']);
                 
-                $data['region'] = $region;        
-                $market = $this->marketManager->addMarketSetting($data);
+                $data['region'] = $region; 
+                if ($market){
+                    $this->marketManager->updateMarketSetting($market, $data);
+                } else {
+                    $market = $this->marketManager->addMarketSetting($data);
+                }    
                 
                 return new JsonModel(
                    ['ok']
@@ -103,8 +112,7 @@ class MarketController extends AbstractActionController
             }
         } else {
             if ($market){
-                $data = [
-                ];
+                $data = $market->toArray();
                 $form->setData($data);
             }    
         }
@@ -114,6 +122,25 @@ class MarketController extends AbstractActionController
             'form' => $form,
             'market' => $market,
         ]);        
+    }    
+    
+    public function deleteAction()
+    {
+        $marketId = (int)$this->params()->fromRoute('id', -1);
+        
+        $market = null;
+        
+        if ($marketId > 0){
+            $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+                    ->find($marketId);
+        }    
+        
+        if ($market){
+            $this->marketManager->removeMarketPriceSetting($market);
+        }
+        
+        echo 'ok';
+        exit;
     }    
     
     

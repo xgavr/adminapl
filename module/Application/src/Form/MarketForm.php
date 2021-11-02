@@ -10,6 +10,7 @@ namespace Application\Form;
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
 use Application\Entity\MarketPriceSetting;
+use Application\Entity\ScaleTreshold;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -57,6 +58,21 @@ class MarketForm extends Form
                 'object_manager' => $this->entityManager,
                 'target_class'   => 'Company\Entity\Region',
                 'label' => 'Регион',
+                'property'       => 'name',
+            ],
+        ]);        
+
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'rates',
+            'attributes' => [                
+                'id' => 'rates',
+                'multiple' => true,
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Application\Entity\Rate',
+                'label' => 'Расценки',
                 'property'       => 'name',
 //                'value' => 1,
             ],
@@ -191,6 +207,43 @@ class MarketForm extends Form
             ],
         ]);
                                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'nameSetting',
+            'attributes' => [
+                'value' => MarketPriceSetting::NAME_ALL,
+            ],    
+            'options' => [
+                'label' => 'Наименования',
+                'value_options' => MarketPriceSetting::getNameSettingList(),
+            ],
+        ]);
+                                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'restSetting',
+            'attributes' => [
+                'value' => MarketPriceSetting::REST_ALL,
+            ],    
+            'options' => [
+                'label' => 'Остатки',
+                'value_options' => MarketPriceSetting::getRestSettingList(),
+            ],
+        ]);
+                                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'pricecol',
+            'attributes' => [
+                'value' => 0,
+            ],    
+            'options' => [
+                'label' => 'Колонка цен',
+                'value_options' => ScaleTreshold::getPricecolList(),
+            ],
+        ]);
+                                
+        
         $this->add([           
             'type'  => 'number',
             'name' => 'minPrice',

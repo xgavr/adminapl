@@ -17,7 +17,7 @@ class RoleManager
     
     /**
      * RBAC manager.
-     * @var User\Service\RbacManager
+     * @var \User\Service\RbacManager
      */
     private $rbacManager;
     

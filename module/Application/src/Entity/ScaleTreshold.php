@@ -129,7 +129,27 @@ class ScaleTreshold
         return $this->retail($this->treshold, $this->rate, $this->rounding);
     }
     
-    
+    /**
+     * Получить список колонок цен
+     * @return array 
+     */
+    public static function getPricecolList()
+    {
+        $result = [];
+        $col = 0;
+        
+        while ($col <= self::PRICE_COL_COUNT){
+            if ($col == 0){
+                $result[$col] = "Розница";                
+            } else {
+                $result[$col] = "Колонка $col";
+            }    
+            $col++;
+        }
+        
+        return $result;
+    }
+
     /**
      * Получить колонки цен
      * 

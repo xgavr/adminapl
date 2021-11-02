@@ -499,7 +499,7 @@ class OrderManager
                     ->find($data['company']);
         }
         
-        if ($company){
+        if (!$company){
             $company = $this->entityManager->getRepository(Office::class)
                     ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);            
         }
