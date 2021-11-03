@@ -45,21 +45,64 @@ $this->pageBreadcrumbs()->setItems([
             <?= $this->escapeHtml($market->getFormatAsString()); ?>
         </td>
         <td>
-            Регион: <?= $this->escapeHtml($market->getRegion()->getName()); ?>
-            <br/>Картинки: <?= $this->escapeHtml($market->getGoodSettingAsString()); ?>
-            <br/>Картинок: <?= $this->escapeHtml($market->getImageCount()); ?>
-            <br/>Наименования: <?= $this->escapeHtml($market->getNameSettingAsString()); ?>
-            <br/>Остатки: <?= $this->escapeHtml($market->getRestSettingAsString()); ?>
-            <br/>Поставщики: <?= $this->escapeHtml($market->getSupplierSettingAsString()); ?>
-            <br/>Производители: <?= $this->escapeHtml($market->getProducerSettingAsString()); ?>
-            <br/>Группы ТД: <?= $this->escapeHtml($market->getGroupSettingAsString()); ?>
-            <br/>Группы наименований: <?= $this->escapeHtml($market->getTokenGroupSettingAsString()); ?>
-            <br/>Цена минимальная: <?= $this->escapeHtml($market->getMinPrice()); ?>
-            <br/>Цена максимальная: <?= $this->escapeHtml($market->getMaxPrice()); ?>
-            <br/>Выгружать строк: <?= $this->escapeHtml($market->getMaxRowCount()); ?>
-            <br/>Делить на блоки: <?= $this->escapeHtml($market->getBlockRowCount()); ?>
-            <br/>Колонка цен: <?= $this->escapeHtml($market->getPricecolAsString()); ?>
-            <br/>Коментарий: <?= $this->escapeHtml($market->getInfo()); ?>
+            <small>
+                
+            <table>
+                <tr>
+                    <td>Регион:</td>
+                    <td> <?= $this->escapeHtml($market->getRegion()->getName());?></td>
+                    <td>|</td>
+                    <td>Наименования:</td>
+                    <td> <?= $this->escapeHtml($market->getNameSettingAsString());?></td>
+                </tr>
+                <tr>
+                    <td>Картинки:</td>
+                    <td> <?= $this->escapeHtml($market->getGoodSettingAsString());?></td>
+                    <td>|</td>
+                    <td>Картинок:</td>
+                    <td> <?= $this->escapeHtml($market->getImageCount());?></td>
+                </tr>
+                <tr>
+                    <td>Остатки:</td>
+                    <td> <?= $this->escapeHtml($market->getRestSettingAsString());?></td>
+                    <td>|</td>
+                    <td>Поставщики:</td>
+                    <td> <?= $this->escapeHtml($market->getSupplierSettingAsString());?></td>
+                </tr>
+                <tr>
+                    <td>Производители:</td>
+                    <td> <?= $this->escapeHtml($market->getProducerSettingAsString());?></td>
+                    <td>|</td>
+                    <td>Группы ТД:</td>
+                    <td> <?= $this->escapeHtml($market->getGroupSettingAsString());?></td>
+                </tr>
+                <tr>
+                    <td>Группы наименований:</td>
+                    <td> <?= $this->escapeHtml($market->getTokenGroupSettingAsString());?></td>
+                    <td>|</td>
+                    <td>Колонка цен</td>
+                    <td> <?= $this->escapeHtml($market->getPricecolAsString());?></td>
+                </tr>
+                <tr>
+                    <td>Цена минимальная:</td>
+                    <td> <?= $this->escapeHtml($market->getMinPrice());?></td>
+                    <td>|</td>
+                    <td>Цена максимальная:</td>
+                    <td> <?= $this->escapeHtml($market->getMaxPrice());?></td>
+                </tr>
+                <tr>
+                    <td>Выгружать строк:</td>
+                    <td> <?= $this->escapeHtml($market->getMaxRowCount());?></td>
+                    <td>|</td>
+                    <td>Делить на блоки:</td>
+                    <td> <?= $this->escapeHtml($market->getBlockRowCount());?></td>
+                </tr>
+                <tr>
+                    <td>Коментарий:</td>
+                    <td colspan="4"> <?= $this->escapeHtml($market->getInfo());?></td>
+                </tr>
+            </table>
+            </small>
         </td>
         <td>
             <?= $this->escapeHtml($market->getStatusAsString()); ?>

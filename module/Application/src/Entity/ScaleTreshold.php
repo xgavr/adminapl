@@ -152,13 +152,14 @@ class ScaleTreshold
     
     /**
      * Returns pricecol as string.
+     * @param integer @pricecol
      * @return string
      */
-    public static function getPricecolAsString()
+    public static function getPricecolAsString($pricecol)
     {
         $list = self::getPricecolList();
-        if (isset($list[$this->status]))
-            return $list[$this->status];
+        if (isset($list[$pricecol]))
+            return $list[$pricecol];
         
         return 'Unknown';
     }    

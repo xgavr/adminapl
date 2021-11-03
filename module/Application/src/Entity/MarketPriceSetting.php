@@ -11,6 +11,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Company\Entity\Region;
+use Application\Entity\ScaleTreshold;
 
 /**
  * Description of Client
@@ -416,6 +417,11 @@ class MarketPriceSetting {
     public function getPricecol() 
     {
         return $this->pricecol;
+    }
+
+    public function getPricecolAsString() 
+    {
+        return ScaleTreshold::getPricecolAsString($this->pricecol);
     }
 
     public function setPricecol($pricecol) 
