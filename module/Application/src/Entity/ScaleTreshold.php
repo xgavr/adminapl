@@ -149,6 +149,20 @@ class ScaleTreshold
         
         return $result;
     }
+    
+    /**
+     * Returns pricecol as string.
+     * @return string
+     */
+    public static function getPricecolAsString()
+    {
+        $list = self::getPricecolList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
 
     /**
      * Получить колонки цен

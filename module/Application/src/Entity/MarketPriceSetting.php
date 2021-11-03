@@ -465,7 +465,7 @@ class MarketPriceSetting {
     }    
     
     /**
-     * Returns user status as string.
+     * Returns status as string.
      * @return string
      */
     public function getStatusAsString()
