@@ -62,23 +62,16 @@ class MarketForm extends Form
             ],
         ]);        
 
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'rates',
-            'attributes' => [                
-                'id' => 'rates',
-                'multiple' => true,
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'ratea',
+            'attributes' => [
+                'multiple' => 'multiple',
             ],
             'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Rate',
                 'label' => 'Расценки',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--все--',
-                'disable_inarray_validator' => true,
             ],
-       ]);        
+        ]);
                 
         // Добавляем поле "name"
         $this->add([           

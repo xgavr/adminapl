@@ -85,8 +85,17 @@ class MarketController extends AbstractActionController
             $market = $this->entityManager->getRepository(MarketPriceSetting::class)
                     ->find($marketId);
         }    
-
+        
+        $allRates = $this->entityManager->getRepository(Rate::class)
+                ->findBy([]);
+        $rateList = [];
+        foreach ($allRates as $rate) {
+            $rateList[$rate->getId()] = $rate->getName();
+        }
+        
         $form = new MarketForm($this->entityManager);
+        
+        $form->get('rates')->setValueOptions($rateList);
 
         if ($this->getRequest()->isPost()) {
             

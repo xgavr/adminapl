@@ -728,6 +728,11 @@ class MarketPriceSetting {
      */
     public function toArray()
     {
+        $rateIds = [];
+        foreach ($market->getRates() as $rate) {
+            $rateIds[] = $rate->getId();
+        }
+        
         $result = [
             'status' => $this->getStatus(),
             'name' => $this->getName(),
@@ -748,6 +753,7 @@ class MarketPriceSetting {
             'pricecol' => $this->getPricecol(),
             'info' => $this->getInfo(),
             'region' => $this->getRegion()->getId(),
+            'rates' => $rateIds,
         ];
         
         return $result;
