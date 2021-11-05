@@ -10,6 +10,8 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\MarketPriceSetting;
+use Application\Entity\Goods;
+use Application\Entity\Images;
 
 /**
  * Description of MarketRepository
@@ -47,4 +49,39 @@ class MarketRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }        
     
+    /**
+     * Запрос товаров по параметрам
+     * @param MarketPriceSetting $market
+     */
+    public function marketQuery($market)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.available = ?1')
+            ->setParameter('1', Goods::AVAILABLE_TRUE)    
+                ;
+        
+        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH){
+            $queryBuilder->join('g.images', 'i')
+                    ->andWhere('i.similar = ?2')
+                    ->setParameter('2', Images::SIMILAR_MATCH)
+                    ;
+        }
+        
+        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR){
+            $queryBuilder->join('g.images', 'i')
+                    ->andWhere('i.similar = ?2')
+                    ->setParameter('2', Images::SIMILAR_MATCH)
+                    ;
+        }
+        
+        
+        $query = $queryBuilder->getQuery();
+        
+        return $query;
+    }
 }
