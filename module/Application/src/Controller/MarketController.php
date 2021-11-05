@@ -13,6 +13,7 @@ use Laminas\View\Model\JsonModel;
 use Application\Entity\MarketPriceSetting;
 use Application\Form\MarketForm;
 use Company\Entity\Region;
+use Application\Entity\Rate;
 
 class MarketController extends AbstractActionController
 {
@@ -87,8 +88,8 @@ class MarketController extends AbstractActionController
         }    
         
         $allRates = $this->entityManager->getRepository(Rate::class)
-                ->findBy([]);
-        $rateList = [];
+                ->findBy(['status' => Rate::STATUS_ACTIVE], ['id' => 'ASC']);
+        $rateList = ['0' => '--все--'];
         foreach ($allRates as $rate) {
             $rateList[$rate->getId()] = $rate->getName();
         }

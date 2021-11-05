@@ -63,7 +63,7 @@ class MarketManager
         // Assign new rate(s).
         if (is_array($rateIds)){
             foreach ($rateIds as $rateId) {
-                if (is_numeric($rateId)){
+                if (!empty($rateId)){
                     $rate = $this->entityManager->getRepository(Rate::class)
                             ->find($rateId);
                     if ($rate==null) {

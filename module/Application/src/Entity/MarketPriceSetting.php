@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Company\Entity\Region;
 use Application\Entity\ScaleTreshold;
+use Application\Entity\Rate;
 
 /**
  * Description of Client
@@ -180,8 +181,8 @@ class MarketPriceSetting {
     /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rate")
      * @ORM\JoinTable(name="market_rate",
-     *      joinColumns={@ORM\JoinColumn(name="rate_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="market_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="market_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="rate_id", referencedColumnName="id")}
      *      )
      */
     private $rates;
@@ -692,6 +693,7 @@ class MarketPriceSetting {
         $rateList = '';
         
         $count = count($this->rates);
+        if (!$count) return 'Все';
         $i = 0;
         foreach ($this->rates as $rate) {
             $rateList .= $rate->getName();
@@ -716,6 +718,7 @@ class MarketPriceSetting {
 
     /**
      * Assigns a rate to market.
+     * @param Rate $rate
      */
     public function addRate($rate)
     {
@@ -728,11 +731,6 @@ class MarketPriceSetting {
      */
     public function toArray()
     {
-        $rateIds = [];
-        foreach ($market->getRates() as $rate) {
-            $rateIds[] = $rate->getId();
-        }
-        
         $result = [
             'status' => $this->getStatus(),
             'name' => $this->getName(),
@@ -753,7 +751,7 @@ class MarketPriceSetting {
             'pricecol' => $this->getPricecol(),
             'info' => $this->getInfo(),
             'region' => $this->getRegion()->getId(),
-            'rates' => $rateIds,
+            'rates' => $this->getRatesAsArray(),
         ];
         
         return $result;

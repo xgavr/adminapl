@@ -25,7 +25,9 @@ $this->pageBreadcrumbs()->setItems([
         <th>Наименование</th>
         <th>Файл</th>        
         <th>Формат</th>
-        <th>Фильтры</th>
+        <th>Регион</th>
+        <th>Картирнок</th>
+        <th>Цены</th>
         <th>Статус</th>        
         <th>Дата выгрузки</th>        
         <th></th>        
@@ -33,96 +35,64 @@ $this->pageBreadcrumbs()->setItems([
     
     <?php foreach ($markets as $market): ?>
     
-    <tr>
-        <td><?= $this->escapeHtml($market->getId()); ?></td>
-        <td>
-            <?= $this->escapeHtml($market->getName()); ?>
-        </td>
-        <td>
-            <?= $this->escapeHtml($market->getFilename()); ?>
-        </td>
-        <td>
-            <?= $this->escapeHtml($market->getFormatAsString()); ?>
-        </td>
-        <td>
-            <small>
-                
-            <table>
-                <tr>
-                    <td>Регион:</td>
-                    <td> <?= $this->escapeHtml($market->getRegion()->getName());?></td>
-                    <td>|</td>
-                    <td>Наименования:</td>
-                    <td> <?= $this->escapeHtml($market->getNameSettingAsString());?></td>
-                </tr>
-                <tr>
-                    <td>Картинки:</td>
-                    <td> <?= $this->escapeHtml($market->getGoodSettingAsString());?></td>
-                    <td>|</td>
-                    <td>Картинок:</td>
-                    <td> <?= $this->escapeHtml($market->getImageCount());?></td>
-                </tr>
-                <tr>
-                    <td>Остатки:</td>
-                    <td> <?= $this->escapeHtml($market->getRestSettingAsString());?></td>
-                    <td>|</td>
-                    <td>Поставщики:</td>
-                    <td> <?= $this->escapeHtml($market->getSupplierSettingAsString());?></td>
-                </tr>
-                <tr>
-                    <td>Производители:</td>
-                    <td> <?= $this->escapeHtml($market->getProducerSettingAsString());?></td>
-                    <td>|</td>
-                    <td>Группы ТД:</td>
-                    <td> <?= $this->escapeHtml($market->getGroupSettingAsString());?></td>
-                </tr>
-                <tr>
-                    <td>Группы наименований:</td>
-                    <td> <?= $this->escapeHtml($market->getTokenGroupSettingAsString());?></td>
-                    <td>|</td>
-                    <td>Колонка цен</td>
-                    <td> <?= $this->escapeHtml($market->getPricecolAsString());?></td>
-                </tr>
-                <tr>
-                    <td>Цена минимальная:</td>
-                    <td> <?= $this->escapeHtml($market->getMinPrice());?></td>
-                    <td>|</td>
-                    <td>Цена максимальная:</td>
-                    <td> <?= $this->escapeHtml($market->getMaxPrice());?></td>
-                </tr>
-                <tr>
-                    <td>Выгружать строк:</td>
-                    <td> <?= $this->escapeHtml($market->getMaxRowCount());?></td>
-                    <td>|</td>
-                    <td>Делить на блоки:</td>
-                    <td> <?= $this->escapeHtml($market->getBlockRowCount());?></td>
-                </tr>
-                <tr>
-                    <td>Коментарий:</td>
-                    <td colspan="4"> <?= $this->escapeHtml($market->getInfo());?></td>
-                </tr>
-            </table>
-            </small>
-        </td>
-        <td>
-            <?= $this->escapeHtml($market->getStatusAsString()); ?>
-        </td>
-        <td>
-            <?= $this->escapeHtml($market->getDateUnload()); ?>
-        </td>
-        <td>
-            <button class="btn btn-xs btn-info market-modal-show" type="button" modal-url="/market/edit-form/<?= $market->getId()?>">
-                <span class="glyphicon glyphicon-pencil" ></span>
-            </button>
-            <button class="btn btn-xs btn-danger this-delete" value="<?= $this->url('market', 
-                    ['action'=>'delete', 'id'=>$market->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove" ></span>
-            </button>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>   
-    
+        <tr>
+            <td><?= $this->escapeHtml($market->getId()); ?></td>
+            <td>
+                <?= $this->escapeHtml($market->getName()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getFilename()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getFormatAsString()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getRegion()->getName()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getImageCount()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getPricecolAsString()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getStatusAsString()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getDateUnload()); ?>
+            </td>
+            <td>
+                <nobr>
+                    <button class="btn btn-xs btn-info market-modal-show" type="button" modal-url="/market/edit-form/<?= $market->getId()?>">
+                        <span class="glyphicon glyphicon-pencil" ></span>
+                    </button>
+                    <button class="btn btn-xs btn-danger this-delete" value="<?= $this->url('market', 
+                            ['action'=>'delete', 'id'=>$market->getId()]); ?>">
+                        <span class="glyphicon glyphicon-remove" ></span>
+                    </button>
+                </nobr>    
+            </td>    
+        </tr> 
+        <tr>
+            <td colspan="10">
+                <small>
+                    Наименования:  <?= $this->escapeHtml($market->getNameSettingAsString());?>; 
+                    Картинки:  <?= $this->escapeHtml($market->getGoodSettingAsString());?>; 
+                    Остатки:  <?= $this->escapeHtml($market->getRestSettingAsString());?>; 
+                    Поставщики:  <?= $this->escapeHtml($market->getSupplierSettingAsString());?>; 
+                    Производители:  <?= $this->escapeHtml($market->getProducerSettingAsString());?>; 
+                    Группы ТД:  <?= $this->escapeHtml($market->getGroupSettingAsString());?>; 
+                    Группы наименований:  <?= $this->escapeHtml($market->getTokenGroupSettingAsString());?>; 
+                    Расценки: <?= $this->escapeHtml($market->getRatesAsString());?>; 
+                    Цена минимальная:  <?= $this->escapeHtml($market->getMinPrice());?>; 
+                    Цена максимальная:  <?= $this->escapeHtml($market->getMaxPrice());?>; 
+                    Выгружать строк:  <?= $this->escapeHtml($market->getMaxRowCount());?>; 
+                    Делить на блоки:  <?= $this->escapeHtml($market->getBlockRowCount());?>; 
+                    Коментарий: <?= $this->escapeHtml($market->getInfo());?>
+                </small>
+            </td>
+        </tr>
+    <?php endforeach; ?>       
 </table>
 
 <script type="text/javascript">

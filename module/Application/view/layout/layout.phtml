@@ -108,9 +108,18 @@
             {
                 var formdata = $(node).serializeArray();
                 var result = {};
-                $(formdata ).each(function(index, obj){
-                    result[obj.name] = obj.value;
+                $(formdata).each(function(index, obj){
+                    if (obj.name.indexOf('[]') > 0){
+                        if (Array.isArray(result[obj.name])){
+                            result[obj.name].push(obj.value);
+                        } else {
+                            result[obj.name] = [obj.value];
+                        }    
+                    } else {
+                        result[obj.name] = obj.value;
+                    }    
                 });    
+                //alert(result);
                 return result;
             }
             

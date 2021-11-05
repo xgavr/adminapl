@@ -64,7 +64,7 @@ class MarketForm extends Form
 
         $this->add([            
             'type'  => 'select',
-            'name' => 'ratea',
+            'name' => 'rates',
             'attributes' => [
                 'multiple' => 'multiple',
             ],
