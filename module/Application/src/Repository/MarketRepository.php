@@ -65,17 +65,16 @@ class MarketRepository extends EntityRepository{
             ->setParameter('1', Goods::AVAILABLE_TRUE)    
                 ;
         
-        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH){
-            $queryBuilder->join('g.images', 'i')
-                    ->andWhere('i.similar = ?2')
-                    ->setParameter('2', Images::SIMILAR_MATCH)
+        if ($market->getNameSetting() == MarketPriceSetting::NAME_GENERATED){
+                    $queryBuilder->andWhere('i.name != i.description')
                     ;
         }
         
-        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR){
-            $queryBuilder->join('g.images', 'i')
-                    ->andWhere('i.similar = ?2')
-                    ->setParameter('2', Images::SIMILAR_MATCH)
+        if ($market->getProducerSetting() == MarketPriceSetting::PRODUCER_ACTIVE){
+                    $queryBuilder
+                            ->join('i.producer', 'p')
+                            ->andWhere('p.movement > ?2')
+                            ->setParameter('2', MarketPriceSetting::MOVEMENT_LIMIT)
                     ;
         }
         

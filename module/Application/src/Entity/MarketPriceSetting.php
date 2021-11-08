@@ -50,6 +50,8 @@ class MarketPriceSetting {
 
     const TOKEN_GROUP_ACTIVE   = 1; // Группы с движением.
     const TOKEN_GROUP_ALL      = 2; // Группы все.
+    
+    const MOVEMENT_LIMIT   = 100; //Лимит для определения активности по движению
 
     /**
      * @ORM\Id
