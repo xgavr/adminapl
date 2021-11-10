@@ -101,6 +101,7 @@ class MarketManager
         $market->setSupplierSetting($data['supplierSetting']);
         $market->setTokenGroupSetting($data['tokenGroupSetting']);
         $market->setRegion($data['region']);
+        $market->setSupplier($data['supplier']);
         $market->setPricecol($data['pricecol']);
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
@@ -134,6 +135,7 @@ class MarketManager
         $market->setName($data['name']);
         $market->setProducerSetting($data['producerSetting']);
         $market->setRegion($data['region']);
+        $market->setSupplier($data['supplier']);
         $market->setStatus($data['status']);
         $market->setSupplierSetting($data['supplierSetting']);
         $market->setTokenGroupSetting($data['tokenGroupSetting']);

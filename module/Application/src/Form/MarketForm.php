@@ -64,6 +64,14 @@ class MarketForm extends Form
 
         $this->add([            
             'type'  => 'select',
+            'name' => 'supplier',
+            'options' => [
+                'label' => 'Поставщик',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'select',
             'name' => 'rates',
             'attributes' => [
                 'multiple' => 'multiple',
@@ -155,15 +163,15 @@ class MarketForm extends Form
         ]);
         
         $this->add([            
-            'type'  => 'select',
+            'type'  => 'hidden',
             'name' => 'supplierSetting',
             'attributes' => [
                 'value' => MarketPriceSetting::SUPPLIER_ALL,
             ],    
-            'options' => [
-                'label' => 'Поставщики',
-                'value_options' => MarketPriceSetting::getSupplierSettingList(),
-            ],
+//            'options' => [
+//                'label' => 'Поставщики',
+//                'value_options' => MarketPriceSetting::getSupplierSettingList(),
+//            ],
         ]);
         
         $this->add([            
@@ -215,15 +223,15 @@ class MarketForm extends Form
         ]);
                                 
         $this->add([            
-            'type'  => 'select',
+            'type'  => 'hidden',
             'name' => 'restSetting',
             'attributes' => [
                 'value' => MarketPriceSetting::REST_ALL,
             ],    
-            'options' => [
-                'label' => 'Остатки',
-                'value_options' => MarketPriceSetting::getRestSettingList(),
-            ],
+//            'options' => [
+//                'label' => 'Остатки',
+//                'value_options' => MarketPriceSetting::getRestSettingList(),
+//            ],
         ]);
                                 
         $this->add([            

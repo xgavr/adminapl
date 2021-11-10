@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Company\Entity\Region;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\Rate;
+use Application\Entity\Supplier;
 
 /**
  * Description of Client
@@ -194,6 +195,12 @@ class MarketPriceSetting {
      * @ORM\JoinColumn(name="region_id", referencedColumnName="id")
      */
     private $region;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="pricelistsettings") 
+     * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
+     */
+    private $supplier;
     
     /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rate")
@@ -760,6 +767,24 @@ class MarketPriceSetting {
     
     /**
      * 
+     * @return Supplier
+     */
+    public function getSupplier() 
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * 
+     * @param Supplier $supplier
+     */
+    public function setSupplier($supplier) 
+    {
+        $this->supplier = $supplier;        
+    }                 
+
+    /**
+     * 
      * @return array
      */
     public function getRates()
@@ -833,6 +858,7 @@ class MarketPriceSetting {
             'pricecol' => $this->getPricecol(),
             'info' => $this->getInfo(),
             'region' => $this->getRegion()->getId(),
+            'supplier' => ($this->getSupplier()) ? $this->getSupplier()->getId():null,
             'rates' => $this->getRatesAsArray(),
             'tdSetting' => $this->getTdSetting(),
         ];

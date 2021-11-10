@@ -14,6 +14,7 @@ use Application\Entity\MarketPriceSetting;
 use Application\Form\MarketForm;
 use Company\Entity\Region;
 use Application\Entity\Rate;
+use Application\Entity\Supplier;
 
 class MarketController extends AbstractActionController
 {
@@ -93,10 +94,18 @@ class MarketController extends AbstractActionController
         foreach ($allRates as $rate) {
             $rateList[$rate->getId()] = $rate->getName();
         }
+
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+        $supplierList = ['--все--'];
+        foreach ($suppliers as $supplier) {
+            $supplierList[$supplier->getId()] = $supplier->getName();
+        }
         
         $form = new MarketForm($this->entityManager);
         
         $form->get('rates')->setValueOptions($rateList);
+        $form->get('supplier')->setValueOptions($supplierList);
 
         if ($this->getRequest()->isPost()) {
             
@@ -108,9 +117,11 @@ class MarketController extends AbstractActionController
 
             if ($form->isValid()) {
                 $region = $this->entityManager->getRepository(Region::class)
-                        ->find($data['region']);
-                
+                        ->find($data['region']);                
                 $data['region'] = $region; 
+                $supplier = $this->entityManager->getRepository(Supplier::class)
+                        ->find($data['supplier']);                
+                $data['supplier'] = $supplier; 
                 if ($market){
                     $this->marketManager->updateMarketSetting($market, $data);
                 } else {

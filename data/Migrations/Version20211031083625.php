@@ -17,9 +17,13 @@ final class Version20211031083625 extends AbstractMigration
         $table = $schema->getTable('market_price_setting');
         $table->addColumn('pricecol', 'integer', ['notnull'=>true, 'default'=> 0]);
         $table->addColumn('row_unload', 'integer', ['notnull'=>true, 'default'=> 0]);
+        $table->addColumn('supplier_id', 'integer', ['notnull'=>false]);
         $table->addColumn('name_setting', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::NAME_ALL]);
         $table->addColumn('rest_setting', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::REST_ALL]);
         $table->addColumn('td_setting', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::TD_IGNORE]);
+        $table->addForeignKeyConstraint('supplier', ['supplier_id'], ['id'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'supplier_id_mps_supplier_id_fk');
+        $table->addOption('engine' , 'InnoDB');
         
         $table = $schema->createTable('market_rate');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
@@ -49,12 +53,15 @@ final class Version20211031083625 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('market_rate');
+        $schema->dropTable('supplier_region');
 
         $table = $schema->getTable('market_price_setting');
+        $table->removeForeignKey('supplier_id_mps_supplier_id_fk');
         $table->dropColumn('pricecol');
         $table->dropColumn('row_unload');
         $table->dropColumn('name_setting');
         $table->dropColumn('rest_setting');
         $table->dropColumn('td_setting');
+        $table->dropColumn('supplier_id');
     }
 }

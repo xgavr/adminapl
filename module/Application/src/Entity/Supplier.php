@@ -167,7 +167,7 @@ class Supplier {
    private $rates;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Application\Entity\Region")
+     * @ORM\ManyToMany(targetEntity="Company\Entity\Region")
      * @ORM\JoinTable(name="supplier_region",
      *      joinColumns={@ORM\JoinColumn(name="supplier_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="region_id", referencedColumnName="id")}

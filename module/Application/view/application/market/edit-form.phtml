@@ -87,6 +87,10 @@ $form->get('rates')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('supplier')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'market-submit']);
 
 $form->prepare();
@@ -199,9 +203,9 @@ $form->prepare();
                         </div>    
                         <div class="col-xs-2">                        
                             <div class="form-group">
-                                <?= $this->formLabel($form->get('restSetting')); ?>
-                                <?= $this->formElement($form->get('restSetting')); ?>
-                                <?= $this->formElementErrors($form->get('restSetting')); ?>                  
+                                <?= $this->formLabel($form->get('tdSetting')); ?>
+                                <?= $this->formElement($form->get('tdSetting')); ?>
+                                <?= $this->formElementErrors($form->get('tdSetting')); ?>                  
                             </div>
                         </div>    
                         <div class="col-xs-2">                        
@@ -213,9 +217,9 @@ $form->prepare();
                         </div>    
                         <div class="col-xs-2">                        
                             <div class="form-group">
-                                <?= $this->formLabel($form->get('supplierSetting')); ?>
-                                <?= $this->formElement($form->get('supplierSetting')); ?>
-                                <?= $this->formElementErrors($form->get('supplierSetting')); ?>                  
+                                <?= $this->formLabel($form->get('supplier')); ?>
+                                <?= $this->formElement($form->get('supplier')); ?>
+                                <?= $this->formElementErrors($form->get('supplier')); ?>                  
                             </div>
                         </div>    
                         <div class="col-xs-2">                        
@@ -234,13 +238,6 @@ $form->prepare();
                         </div>    
                     </div>        
                     <div class="row">
-                        <div class="col-xs-2">                        
-                            <div class="form-group">
-                                <?= $this->formLabel($form->get('tdSetting')); ?>
-                                <?= $this->formElement($form->get('tdSetting')); ?>
-                                <?= $this->formElementErrors($form->get('tdSetting')); ?>                  
-                            </div>
-                        </div>    
                         <div class="col-xs-3">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('tokenGroupSetting')); ?>
@@ -248,7 +245,7 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-7">
+                        <div class="col-xs-9">
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('info')); ?>
                                 <?= $this->formElement($form->get('info')); ?>
@@ -266,6 +263,8 @@ $form->prepare();
                 </div>
             </div>
         </div>    
+        <?= $this->formElement($form->get('supplierSetting')); ?>
+        <?= $this->formElement($form->get('restSetting')); ?>
                 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
