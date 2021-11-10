@@ -31,7 +31,7 @@ class MarketPriceSetting {
    
     const IMAGE_MATH       = 1; // Картирки точные
     const IMAGE_SIMILAR    = 2; // Картинки точные и похожие.
-    const IMAGE_ALL        = 3; // Картинки все.
+    const IMAGE_ALL        = 3; // С картинками или без.
 
     const NAME_GENERATED  = 1; // Наименования сгенерированные
     const NAME_ALL        = 2; // Наименования любые.
@@ -50,6 +50,9 @@ class MarketPriceSetting {
 
     const TOKEN_GROUP_ACTIVE   = 1; // Группы с движением.
     const TOKEN_GROUP_ALL      = 2; // Группы все.
+    
+    const TD_IGNORE   = 1; // Товары все.
+    const TD_MATH      = 2; // Товары с ТД.
     
     const MOVEMENT_LIMIT   = 100; //Лимит для определения активности по движению
 
@@ -131,6 +134,12 @@ class MarketPriceSetting {
      */
     protected $tokenGroupSetting;
 
+    /**
+     * Фильтр по связи с ТД
+     * @ORM\Column(name="td_setting")   
+     */
+    protected $tdSetting;
+
     
     /**
      * Минимальная цена в прайсе
@@ -173,6 +182,12 @@ class MarketPriceSetting {
      * @ORM\Column(name="date_unload")   
      */
     protected $dateUnload;
+    
+    /**
+     * Строк выгружено
+     * @ORM\Column(name="row_unload")   
+     */
+    protected $rowUnload = 0;
     
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Region", inversedBy="pricelistsettings") 
@@ -230,6 +245,14 @@ class MarketPriceSetting {
     public function getImageCount() 
     {
         return $this->imageCount;
+    }
+
+    public function getImageCountOrNull() 
+    {
+        if ($this->imageCount){
+            return $this->imageCount;
+        }        
+        return NULL;
     }
 
     public function setImageCount($imageCount) 
@@ -452,6 +475,16 @@ class MarketPriceSetting {
         $this->dateUnload = $dateUnload;
     }     
 
+    public function getRowUnload() 
+    {
+        return $this->rowUnload;
+    }
+
+    public function setRowUnload($rowUnload) 
+    {
+        $this->rowUnload = $rowUnload;
+    }     
+
     /**
      * Returns status.
      * @return int     
@@ -556,7 +589,7 @@ class MarketPriceSetting {
         return [
             self::IMAGE_MATH => 'Точные',
             self::IMAGE_SIMILAR => 'Похожие',
-            self::IMAGE_ALL => 'Любые'
+            self::IMAGE_ALL => 'Все'
         ];
     }    
     
@@ -668,6 +701,49 @@ class MarketPriceSetting {
         $this->restSetting = $restSetting;
     }   
 
+    /**
+     * Returns td setting.
+     * @return int     
+     */
+    public function getTdSetting() 
+    {
+        return $this->tdSetting;
+    }
+    
+    /**
+     * Returns possible td setting as array.
+     * @return array
+     */
+    public static function getTdSettingList() 
+    {
+        return [
+            self::TD_IGNORE => 'Неважно',
+            self::TD_MATH => 'Есть'
+        ];
+    }    
+    
+    /**
+     * Returns td setting as string.
+     * @return string
+     */
+    public function getTdSettingAsString()
+    {
+        $list = self::getTdSettingList();
+        if (isset($list[$this->tdSetting]))
+            return $list[$this->tdSetting];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets tdSetting.
+     * @param int $tdSetting     
+     */
+    public function setTdSetting($tdSetting) 
+    {
+        $this->tdSetting = $tdSetting;
+    }   
+
     public function getRegion() 
     {
         return $this->region;
@@ -682,6 +758,10 @@ class MarketPriceSetting {
         $this->region = $region;        
     }                 
     
+    /**
+     * 
+     * @return array
+     */
     public function getRates()
     {
         return $this->rates;
@@ -754,6 +834,7 @@ class MarketPriceSetting {
             'info' => $this->getInfo(),
             'region' => $this->getRegion()->getId(),
             'rates' => $this->getRatesAsArray(),
+            'tdSetting' => $this->getTdSetting(),
         ];
         
         return $result;

@@ -11,20 +11,6 @@ $this->pageBreadcrumbs()->setItems([
             $goods->getName()=>$this->url('goods', ['action'=>'view', 'id'=>$goods->getId()])
             ]);
 
-$this->headLink()
-//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
-            ; 
-
-$priceCols = $goodsManager->priceCols($goods);
-
 ?>
 
 <style>
@@ -46,7 +32,7 @@ $priceCols = $goodsManager->priceCols($goods);
                     </button> 
                     <?php if ($goods->getName()): ?>
                         <?= $this->escapeHtml($goods->getName()); ?>
-                    <? endif;?>
+                    <?php endif;?>
                 </h3>
                 <h6>
                     <button value="/name/update-description/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
@@ -55,7 +41,7 @@ $priceCols = $goodsManager->priceCols($goods);
                     </button> 
                     <?php if ($goods->getDescription()): ?>
                         <?= $this->escapeHtml($goods->getDescription()); ?>
-                    <? endif;?>                    
+                    <?php endif;?>                    
                 </h6>
                 <table class="table table-striped">
                     <tr>
@@ -84,7 +70,7 @@ $priceCols = $goodsManager->priceCols($goods);
                     </div>                    
                 </div>-->
                 <?php foreach($images as $image):?>
-                    <? if ($image->getPublicPath()):?>
+                    <?php if ($image->getPublicPath()):?>
                         <div class="thumbnail">
                             <?php if (file_exists($image->getPath())):?>
                                 <?php if (mime_content_type($image->getPath()) == 'application/pdf'):?>
@@ -118,7 +104,7 @@ $priceCols = $goodsManager->priceCols($goods);
                                 </div>                                                                            
                             </div>
                         </div>    
-                    <? endif; ?>    
+                    <?php endif; ?>    
                 <?php endforeach;?>
             </div>
             <div class="col-md-9">
@@ -567,7 +553,7 @@ $priceCols = $goodsManager->priceCols($goods);
                                     </a>
                                 <?php else: ?>
                                     <?= $goods->getAplId()?>
-                                <? endif; ?>    
+                                <?php endif; ?>    
                             </div>
                             <div class="pull-right">
                                 <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"

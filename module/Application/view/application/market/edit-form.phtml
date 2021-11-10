@@ -79,6 +79,10 @@ $form->get('restSetting')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('tdSetting')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('rates')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -230,6 +234,13 @@ $form->prepare();
                         </div>    
                     </div>        
                     <div class="row">
+                        <div class="col-xs-2">                        
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('tdSetting')); ?>
+                                <?= $this->formElement($form->get('tdSetting')); ?>
+                                <?= $this->formElementErrors($form->get('tdSetting')); ?>                  
+                            </div>
+                        </div>    
                         <div class="col-xs-3">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('tokenGroupSetting')); ?>
@@ -237,7 +248,7 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-9">
+                        <div class="col-xs-7">
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('info')); ?>
                                 <?= $this->formElement($form->get('info')); ?>

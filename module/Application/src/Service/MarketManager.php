@@ -14,6 +14,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Application\Entity\MarketPriceSetting;
 use Application\Entity\Rate;
+use Application\Entity\Images;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -103,6 +104,7 @@ class MarketManager
         $market->setPricecol($data['pricecol']);
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
+        $market->setTdSetting($data['tdSetting']);
         
         $this->assignRates($market, $data['rates']);        
         $this->entityManager->persist($market);        
@@ -138,6 +140,7 @@ class MarketManager
         $market->setPricecol($data['pricecol']);
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
+        $market->setTdSetting($data['tdSetting']);
         
         $this->assignRates($market, $data['rates']);
         $this->entityManager->persist($market);
@@ -147,7 +150,7 @@ class MarketManager
     }
     
     /**
-     * Удалитьнастройку прайс листа
+     * Удалить настройку прайс листа
      * 
      * @param MarketPriceSetting $market
      */
@@ -158,7 +161,36 @@ class MarketManager
         $this->entityManager->flush();
     }
 
-
+    /**
+     * Данные для прайса
+     * @param MarketPriceSetting $market
+     * @return array
+     */
+    public function marketData($market)
+    {
+        $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->marketQuery($market);
+        
+        $iterable = $goodsQuery->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $images = null;
+                if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_ALL){
+                    $images = $this->entityManager->getRepository(Images::class)
+                            ->findBy(['good' => $good->getId()], null, $market->getImageCountOrNull());
+                }
+                if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH){
+                    $images = $this->entityManager->getRepository(Images::class)
+                            ->findBy(['good' => $good->getId(), 'similar' => Images::SIMILAR_MATCH], null, $market->getImageCountOrNull());
+                }
+                if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR && empty($images)){
+                    continue;
+                }
+            }    
+        }
+        
+    }
+    
     /**
      * Выгрузка в zzap только апл
      * 

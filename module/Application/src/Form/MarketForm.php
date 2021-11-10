@@ -228,6 +228,18 @@ class MarketForm extends Form
                                 
         $this->add([            
             'type'  => 'select',
+            'name' => 'tdSetting',
+            'attributes' => [
+                'value' => MarketPriceSetting::TD_IGNORE,
+            ],    
+            'options' => [
+                'label' => 'Текдок',
+                'value_options' => MarketPriceSetting::getTdSettingList(),
+            ],
+        ]);
+                                
+        $this->add([            
+            'type'  => 'select',
             'name' => 'pricecol',
             'attributes' => [
                 'value' => 0,

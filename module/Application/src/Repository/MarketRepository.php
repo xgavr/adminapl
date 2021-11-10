@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\MarketPriceSetting;
 use Application\Entity\Goods;
 use Application\Entity\Images;
+use Application\Entity\Rawprice;
 
 /**
  * Description of MarketRepository
@@ -50,6 +51,35 @@ class MarketRepository extends EntityRepository{
     }        
     
     /**
+     * Параметры расценок
+     * @param MarketPriceSetting $market
+     * @param QueryBuilder $queryBuilder
+     * @param string $alias 
+     * @return QueryBuilder
+     */
+    
+    public function rateParams($market, $queryBuilder, $alias)
+    {
+        $rates = $market->getRates();
+        
+        if (count($rates)){
+            $or = $queryBuilder->expr()->orX();            
+            foreach ($rates as $rate){
+                if ($rate->getTokenGroup()){
+                    $or->add($queryBuilder->expr()->eq($alias.'.tokenGroup', $rate->getTokenGroup()));
+                }
+                if ($rate->getGenericGroup()){
+                    $or->add($queryBuilder->expr()->eq($alias.'.genericGroup', $rate->getGenericGroup()));
+                }
+                if ($rate->getProducer()){
+                    $or->add($queryBuilder->expr()->eq($alias.'.producer', $rate->getProducer()));
+                }
+            }
+            $queryBuilder->andWhere($or);
+        }            
+    }
+    
+    /**
      * Запрос товаров по параметрам
      * @param MarketPriceSetting $market
      */
@@ -59,25 +89,75 @@ class MarketRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('g')
-            ->from(Goods::class, 'g')
-            ->where('g.available = ?1')
+        if ($market->getSupplierSetting()){
+            $queryBuilder->select('g')
+                ->distinct()    
+                ->from(Rawprice::class, 'r')
+                ->join('r.good', 'g')
+                ->join('r.raw', 'raw')
+                ->where('raw.supplier', $market->getSupplierSetting())
+                ->andWhere('r.status', Rawprice::STATUS_PARSED)    
+                    ;            
+        } else {
+            $queryBuilder->select('g')
+                ->from(Goods::class, 'g')
+                    ;
+        }    
+        
+        $queryBuilder->andWhere('g.available = ?1')
+            ->andWhere('g.statusPriceEx = ?2')    
             ->setParameter('1', Goods::AVAILABLE_TRUE)    
+            ->setParameter('2', Goods::PRICE_EX_TRANSFERRED)    
                 ;
         
+        $this->rateParams($market, $queryBuilder, 'g');
+        
         if ($market->getNameSetting() == MarketPriceSetting::NAME_GENERATED){
-                    $queryBuilder->andWhere('i.name != i.description')
+                    $queryBuilder->andWhere('g.name != g.description')
                     ;
         }
         
+        if ($market->getTdSetting() == MarketPriceSetting::TD_MATH){
+                    $queryBuilder->andWhere('g.tdDirect = ?3')
+                            ->setParameter('3', Goods::TD_DIRECT)
+                    ;
+        }
         if ($market->getProducerSetting() == MarketPriceSetting::PRODUCER_ACTIVE){
                     $queryBuilder
-                            ->join('i.producer', 'p')
-                            ->andWhere('p.movement > ?2')
-                            ->setParameter('2', MarketPriceSetting::MOVEMENT_LIMIT)
+                            ->join('g.producer', 'p')
+                            ->andWhere('p.movement > ?4')
+                            ->setParameter('4', MarketPriceSetting::MOVEMENT_LIMIT)
                     ;
         }
         
+        if ($market->getGroupSetting() == MarketPriceSetting::GROUP_ACTIVE){
+                    $queryBuilder
+                            ->join('g.genericGroup', 'gg')
+                            ->andWhere('gg.movement > ?5')
+                            ->setParameter('5', MarketPriceSetting::MOVEMENT_LIMIT)
+                    ;
+        }
+        
+        if ($market->getTokenGroupSetting() == MarketPriceSetting::TOKEN_GROUP_ACTIVE){
+                    $queryBuilder
+                            ->join('g.tokenGroup', 'tg')
+                            ->andWhere('tg.movement > ?6')
+                            ->setParameter('6', MarketPriceSetting::MOVEMENT_LIMIT)
+                    ;
+        }
+        
+        
+        if ($market->getMinPrice()){
+            $queryBuilder->andWhere('g.price > ?7')
+                        ->setParameter('7', $market->getMinPrice())
+                    ;
+        }
+
+        if ($market->getMaxPrice()){
+            $queryBuilder->andWhere('g.price < ?8')
+                        ->setParameter('8', $market->getMaxPrice())
+                    ;
+        }
         
         $query = $queryBuilder->getQuery();
         

@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Contact;
 use Application\Entity\Rate;
 use Doctrine\Common\Collections\Criteria;
+use Company\Entity\Region;
 
 /**
  * Description of Customer
@@ -165,6 +166,15 @@ class Supplier {
    */
    private $rates;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\Region")
+     * @ORM\JoinTable(name="supplier_region",
+     *      joinColumns={@ORM\JoinColumn(name="supplier_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="region_id", referencedColumnName="id")}
+     *      )
+     */
+    private $regions;
+   
    /**
      * Constructor.
      */
@@ -182,6 +192,7 @@ class Supplier {
         $this->supplySettings = new ArrayCollection();
         $this->supplierApiSettings = new ArrayCollection();
         $this->rates = new ArrayCollection();
+        $this->regions = new ArrayCollection();        
     }
     
     
@@ -719,5 +730,48 @@ class Supplier {
         $this->rates[] = $rate;
     }     
         
+    public function getRegions()
+    {
+        return $this->regions;
+    }
     
+    /**
+     * Returns the string of assigned regions names.
+     */
+    public function getRegionssAsString()
+    {
+        $regionList = '';
+        
+        $count = count($this->regions);
+        if (!$count) return 'Все';
+        $i = 0;
+        foreach ($this->regions as $region) {
+            $regionList .= $region->getName();
+            if ($i<$count-1)
+                $regionList .= ', ';
+            $i++;
+        }
+        
+        return $regionList;
+    }
+    
+    public function getRatesAsArray()
+    {
+        $regionList = [];
+        
+        foreach ($this->regions as $region) {
+            $regionList[] = $region->getId();
+        }
+        
+        return $rateList;
+    }
+
+    /**
+     * Assigns a region to supplier.
+     * @param Region $region
+     */
+    public function addRegion($region)
+    {
+        $this->regions->add($region);
+    }        
 }
