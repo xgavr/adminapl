@@ -78,8 +78,7 @@ $this->pageBreadcrumbs()->setItems([
                 <small>
                     Наименования:  <?= $this->escapeHtml($market->getNameSettingAsString());?>; 
                     Картинки:  <?= $this->escapeHtml($market->getGoodSettingAsString());?>; 
-                    Остатки:  <?= $this->escapeHtml($market->getRestSettingAsString());?>; 
-                    Поставщики:  <?= $this->escapeHtml($market->getSupplierSettingAsString());?>; 
+                    Поставщик:  <?= $this->escapeHtml(($market->getSupplier()) ? $market->getSupplier()->getName():'Все');?>;
                     Производители:  <?= $this->escapeHtml($market->getProducerSettingAsString());?>; 
                     Группы ТД:  <?= $this->escapeHtml($market->getGroupSettingAsString());?>; 
                     Группы наименований:  <?= $this->escapeHtml($market->getTokenGroupSettingAsString());?>; 
@@ -88,7 +87,8 @@ $this->pageBreadcrumbs()->setItems([
                     Цена минимальная:  <?= $this->escapeHtml($market->getMinPrice());?>; 
                     Цена максимальная:  <?= $this->escapeHtml($market->getMaxPrice());?>; 
                     Выгружать строк:  <?= $this->escapeHtml($market->getMaxRowCount());?>; 
-                    Делить на блоки:  <?= $this->escapeHtml($market->getBlockRowCount());?>; 
+                    Делить на блоки:  <?= $this->escapeHtml($market->getBlockRowCount());?>;
+                    Фильтр движений:  <?= $this->escapeHtml($market->getMovementLimit());?>;
                     Коментарий: <?= $this->escapeHtml($market->getInfo());?>
                 </small>
             </td>

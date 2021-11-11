@@ -15,6 +15,9 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Application\Entity\MarketPriceSetting;
 use Application\Entity\Rate;
 use Application\Entity\Images;
+use Application\Entity\Goods;
+use Application\Entity\Article;
+use Laminas\Filter\Compress;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -32,6 +35,8 @@ use Bukashk0zzz\YmlGenerator\Generator;
 class MarketManager
 {
     const MARKET_FOLDER       = './data/market'; // папка с прайсами
+    
+    const APL_BASE_URL = 'https://autopartslist.ru';
     
     /**
      * Doctrine entity manager.
@@ -103,6 +108,7 @@ class MarketManager
         $market->setRegion($data['region']);
         $market->setSupplier($data['supplier']);
         $market->setPricecol($data['pricecol']);
+        $market->setMovementLimit($data['movementLimit']);
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
@@ -140,6 +146,7 @@ class MarketManager
         $market->setSupplierSetting($data['supplierSetting']);
         $market->setTokenGroupSetting($data['tokenGroupSetting']);
         $market->setPricecol($data['pricecol']);
+        $market->setMovementLimit($data['movementLimit']);
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
@@ -164,33 +171,141 @@ class MarketManager
     }
 
     /**
+     * Получить картинки товара
+     * @param Goods $good
+     * @param MarkerPriceSetting $market
+     * @return array 
+     */
+    private function images($good, $market)
+    {
+        $imageList = [];
+        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_ALL && $good->getStatusImgEx() == Goods::IMG_EX_TRANSFERRED){
+            $images = $this->entityManager->getRepository(Images::class)
+                    ->findBy(['good' => $good->getId()], null, $market->getImageCountOrNull());
+        }
+        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH && $good->getStatusImgEx() == Goods::IMG_EX_TRANSFERRED){
+            $images = $this->entityManager->getRepository(Images::class)
+                    ->findBy(['good' => $good->getId(), 'similar' => Images::SIMILAR_MATCH], null, $market->getImageCountOrNull());
+        }
+        if (count($images)){
+            foreach ($images as $image){
+                if ($image->allowTransfer()){
+                    $imageList[] = $this::APL_BASE_URL.'/images/api/'.$good->getAplId().'/'.$image->getName();
+                }    
+            }
+        }
+        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR && count($imageList) == 0){
+            return false;
+        }
+        return $imageList;        
+    }
+    
+    /**
+     * Строки прайсов товара
+     * @param Goods $good
+     * @param MarketPriceSetting $market
+     */
+    private function rawprices($good, $market)
+    {
+        $rp = [
+            'realrest' => 0,
+        ];
+        
+        $articles = $this->entityManager->getRepository(Article::class)
+                ->findBy(['good' => $good->getId()]);
+        foreach ($articles as $article){
+            $rawprices = $this->entityManager->getRepository(Rawprice::class)
+                    ->findBy([
+                        'code' => $article->getId(),
+                        'status' => Rawprice::STATUS_PARSED,
+                    ]);        
+            foreach ($rawprices as $rawprice){
+                if ($market->getSupplier()){
+                    if ($market->getSupplier()->getId() != $rawprice->getRaw()->getSupplier()->getId()){
+                        continue;
+                    }
+                }
+                if ($rawprice->getRealRest()){
+                    $rp['realrest'] += $rawprice->getRealRest();
+                }    
+            }
+        }        
+        
+        return $rp;
+    }
+    
+    /**
      * Данные для прайса
      * @param MarketPriceSetting $market
      * @return array
      */
-    public function marketData($market)
+    public function marketXLS($market)
     {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue("A1", 'Артикул');
+        $sheet->setCellValue("B1", 'Производитель');
+        $sheet->setCellValue("C1", 'Наименование');
+        $sheet->setCellValue("D1", 'Описание');
+        $sheet->setCellValue("E1", 'Картинка');
+        $sheet->setCellValue("F1", 'Наличие');
+        $sheet->setCellValue("G1", 'Цена');
+        $k = 2;
+        $rows = 0;
+        
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->marketQuery($market);
         
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $good){
-                $images = null;
-                if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_ALL){
-                    $images = $this->entityManager->getRepository(Images::class)
-                            ->findBy(['good' => $good->getId()], null, $market->getImageCountOrNull());
-                }
-                if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH){
-                    $images = $this->entityManager->getRepository(Images::class)
-                            ->findBy(['good' => $good->getId(), 'similar' => Images::SIMILAR_MATCH], null, $market->getImageCountOrNull());
-                }
-                if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR && empty($images)){
+                $images = $this->images($good, $market);
+                if ($images === false){
                     continue;
                 }
+                
+                $rawprices = $this->rawprices($good, $market);
+                
+                $opts = $good->getOpts();
+                $sheet->setCellValue("A$k", $good->getCode());
+                $sheet->setCellValue("B$k", $good->getProducer()->getName());
+                $sheet->setCellValue("C$k", $good->getName());
+                $sheet->setCellValue("D$k", $good->getDescription());
+                $sheet->setCellValue("E$k", implode(';', $images));
+                $sheet->setCellValue("F$k", $rawprices['realrest']);
+                $sheet->setCellValue("G$k", $opts[$market->getPricecol()]);
+//                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
+                $k++;
+                $rows++;
             }    
         }
         
+        $filename = $market->getFilename().'.'.$market->getFormat();
+        $path = self::MARKET_FOLDER.'/'.$filename;
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($path);
+
+        $this->ftpManager->putMarketPriceToApl(['source_file' => $path, 'dest_file' => $filename]);            
+
+        $zipFilename = $filename.'.zip';
+        $zipPath = self::MARKET_FOLDER.'/'.$zipFilename;
+        $filter = new Compress([
+            'adapter' => 'Zip',
+            'options' => [
+                'archive' => $zipPath,
+            ],
+        ]);
+        $compressed = $filter->filter($path);
+        $this->ftpManager->putMarketPriceToApl(['source_file' => $zipPath, 'dest_file' => $zipFilename]);
+        
+        $market->setRowUnload($rows);
+        $market->setDateUnload(date('Y-m-d H:i:s'));
+        $this->entityManager->persist($market);
+        $this->entityManager->flush($market);
+        
+        return;
     }
     
     /**

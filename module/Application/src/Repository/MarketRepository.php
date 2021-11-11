@@ -89,18 +89,22 @@ class MarketRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        if ($market->getSupplierSetting()){
-            $queryBuilder->select('g')
+        if ($market->getSupplier()){
+            $queryBuilder->select('g, r')
                 ->distinct()    
                 ->from(Rawprice::class, 'r')
-                ->join('r.good', 'g')
+                ->join('r.code', 'a')    
+                ->join('a.good', 'g')
                 ->join('r.raw', 'raw')
-                ->where('raw.supplier', $market->getSupplierSetting())
-                ->andWhere('r.status', Rawprice::STATUS_PARSED)    
+                ->where('r.status', Rawprice::STATUS_PARSED)  
+                ->andWhere('r.coomment == ""')
+                ->andWhere('raw.supplier', $market->getSupplier())
+                ->andWhere('g.price > 0')    
                     ;            
         } else {
             $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
+                ->andWhere('g.price > 0')    
                     ;
         }    
         
@@ -126,7 +130,7 @@ class MarketRepository extends EntityRepository{
                     $queryBuilder
                             ->join('g.producer', 'p')
                             ->andWhere('p.movement > ?4')
-                            ->setParameter('4', MarketPriceSetting::MOVEMENT_LIMIT)
+                            ->setParameter('4', $market->getMovementLimit())
                     ;
         }
         
@@ -134,7 +138,7 @@ class MarketRepository extends EntityRepository{
                     $queryBuilder
                             ->join('g.genericGroup', 'gg')
                             ->andWhere('gg.movement > ?5')
-                            ->setParameter('5', MarketPriceSetting::MOVEMENT_LIMIT)
+                            ->setParameter('5', $market->getMovementLimit())
                     ;
         }
         
@@ -142,7 +146,7 @@ class MarketRepository extends EntityRepository{
                     $queryBuilder
                             ->join('g.tokenGroup', 'tg')
                             ->andWhere('tg.movement > ?6')
-                            ->setParameter('6', MarketPriceSetting::MOVEMENT_LIMIT)
+                            ->setParameter('6', $market->getMovementLimit())
                     ;
         }
         

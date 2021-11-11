@@ -28,6 +28,7 @@
            <tr>
                 <th>ID</th>
                 <th>Наименование</th>
+                <th>Товаров</th>
                 <th>Использовать</th>
                 <th>Действия</th>        
             </tr>
@@ -40,6 +41,11 @@
                     <a href="<?= $this->url('rate', ['action'=>'view', 'id'=>$rate->getId()]); ?>">
                         <?= $this->escapeHtml($rate->getName()); ?>
                     </a> 
+                </td>
+                <td>
+                    <?php if ($rate->getGenericGroup() || $rate->getTokenGroup() || $rate->getProducer()): ?>
+                        <?= $rate->getGoodCount() ?>
+                    <?php endif;?>    
                 </td>
                 <td>
                     <input type="checkbox" class="rateStatusCheckbox" value="<?= $rate->getId()?>" <?= $rate->getStatusCheckbox()?>/>

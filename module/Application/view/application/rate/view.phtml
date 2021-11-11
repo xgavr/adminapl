@@ -39,7 +39,7 @@ $col = 1;
             <label for="ck">Использовать</label>
         </div>            
     </div>
-    <div class="col-md-6">
+    <div class="col-md-2">
         <?php if ($rate->getSupplier()):?>
             <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $rate->getSupplier()->getId()])?>">
                 <?= $rate->getSupplier()->getName()?>                
@@ -61,6 +61,14 @@ $col = 1;
             </a>
         <?php endif; ?> 
     </div>
+    <div class="col-md-2">
+        <?= $rate->getMarketsAsString(); ?>
+    </div>    
+    <div class="col-md-2">
+        <?php if ($rate->getGenericGroup() || $rate->getTokenGroup() || $rate->getProducer()): ?>
+            Товаров:  <?= $rate->getGoodCount() ?>
+        <?php endif;?>    
+    </div>    
     <div class="col-md-4">
         Закупочные цены от <?= round($rate->getMinPrice())?> до <?= round($rate->getMaxPrice())?>.
     </div>    

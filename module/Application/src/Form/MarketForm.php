@@ -258,7 +258,19 @@ class MarketForm extends Form
             ],
         ]);
                                 
-        
+        $this->add([            
+            'type'  => 'number',
+            'name' => 'movementLimit',
+            'attributes' => [
+                'value' => MarketPriceSetting::MOVEMENT_LIMIT,
+                'min' => 0,
+                'step' => 100,
+            ],    
+            'options' => [
+                'label' => 'Фильтр движений',
+            ],
+        ]);
+                                        
         $this->add([           
             'type'  => 'number',
             'name' => 'minPrice',

@@ -28,7 +28,7 @@ class MarketPriceSetting {
     const STATUS_RETIRED      = 2; // Retired pricelist.
    
     const FORMAT_YML       = 1; // Формат YML.
-    const FORMAT_XLS      = 2; // Формат XLS.
+    const FORMAT_XLSX      = 2; // Формат XLSX.
    
     const IMAGE_MATH       = 1; // Картирки точные
     const IMAGE_SIMILAR    = 2; // Картинки точные и похожие.
@@ -171,6 +171,12 @@ class MarketPriceSetting {
      * @ORM\Column(name="pricecol")   
      */
     protected $pricecol;
+    
+    /**
+     * Фильтр количества движений
+     * @ORM\Column(name="movement_limit")   
+     */
+    protected $movementLimit;
     
     /**
      * Описание настройки
@@ -462,6 +468,16 @@ class MarketPriceSetting {
         $this->pricecol = $pricecol;
     }     
 
+    public function getMovementLimit() 
+    {
+        return $this->movementLimit;
+    }
+
+    public function setMovementLimit($movementLimit) 
+    {
+        $this->movementLimit = $movementLimit;
+    }     
+
     public function getInfo() 
     {
         return $this->info;
@@ -552,7 +568,7 @@ class MarketPriceSetting {
     {
         return [
             self::FORMAT_YML => 'YML',
-            self::FORMAT_XLS => 'XLS'
+            self::FORMAT_XLS => 'XLSX'
         ];
     }    
     
@@ -861,6 +877,7 @@ class MarketPriceSetting {
             'supplier' => ($this->getSupplier()) ? $this->getSupplier()->getId():null,
             'rates' => $this->getRatesAsArray(),
             'tdSetting' => $this->getTdSetting(),
+            'movementLimit' => $this->getMovementLimit(),
         ];
         
         return $result;

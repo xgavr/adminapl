@@ -17,6 +17,7 @@ final class Version20211031083625 extends AbstractMigration
         $table = $schema->getTable('market_price_setting');
         $table->addColumn('pricecol', 'integer', ['notnull'=>true, 'default'=> 0]);
         $table->addColumn('row_unload', 'integer', ['notnull'=>true, 'default'=> 0]);
+        $table->addColumn('movement_limit', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::MOVEMENT_LIMIT]);
         $table->addColumn('supplier_id', 'integer', ['notnull'=>false]);
         $table->addColumn('name_setting', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::NAME_ALL]);
         $table->addColumn('rest_setting', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::REST_ALL]);
@@ -58,6 +59,7 @@ final class Version20211031083625 extends AbstractMigration
         $table = $schema->getTable('market_price_setting');
         $table->removeForeignKey('supplier_id_mps_supplier_id_fk');
         $table->dropColumn('pricecol');
+        $table->dropColumn('movement_limit');
         $table->dropColumn('row_unload');
         $table->dropColumn('name_setting');
         $table->dropColumn('rest_setting');

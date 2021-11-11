@@ -9,12 +9,14 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\Scale;
 use Company\Entity\Office;
 use Application\Entity\Supplier;
 use Application\Entity\Producer;
 use Application\Entity\GenericGroup;
 use Application\Entity\TokenGroup;
+use Application\Entity\MarketPriceSetting;
 
 /**
  * Description of Phone
@@ -98,6 +100,22 @@ class Rate
      */
     protected $tokenGroup;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Application\Entity\MarketPriceSetting")
+     * @ORM\JoinTable(name="market_rate",
+     *      joinColumns={@ORM\JoinColumn(name="rate_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="market_id", referencedColumnName="id")}
+     *      )
+     */
+    private $markets;    
+        
+    /**
+     * Constructor.
+     */
+    public function __construct() 
+    {
+        $this->markets = new ArrayCollection();
+    }
     
     public function getId() 
     {
@@ -387,6 +405,72 @@ class Rate
         return $this->tokenGroup;
     }
 
+    /*
+     * Возвращает количество товаров.
+     * @return integer
+     */    
+    public function getGoodCount() 
+    {
+        if ($this->producer){
+            return $this->producer->getGoodCount();
+        }        
+        if ($this->genericGroup){
+            return $this->genericGroup->getGoodCount();
+        }
+        if ($this->tokenGroupGroup){
+            return $this->tokenGroupGroup->getGoodCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getMarkets()
+    {
+        return $this->markets;
+    }
+    
+    /**
+     * Returns the string of assigned rate names.
+     */
+    public function getMarketsAsString()
+    {
+        $marketList = '';
+        
+        $count = count($this->markets);
+        $i = 0;
+        foreach ($this->markets as $market) {
+            $marketList .= $market->getName();
+            if ($i<$count-1)
+                $marketList .= ', ';
+            $i++;
+        }
+        
+        return $marketList;
+    }
+    
+    public function getMarketsAsArray()
+    {
+        $marketList = [];
+        
+        foreach ($this->markets as $market) {
+            $marketList[] = $market->getId();
+        }
+        
+        return $marketList;
+    }
+    
+    /**
+     * Assigns a market to rate.
+     * @param MarketPriceSetting $market
+     */
+    public function addMarket($market)
+    {
+        $this->markets->add($market);
+    }    
+    
     /**
      * Лог
      * @return array

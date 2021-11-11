@@ -434,6 +434,7 @@ class RateManager
         $this->logManager->infoRate($rate, Log::STATUS_DELETE);
         $this->mlManager->removeModelRateScale($rate);
         $this->removeScale($rate->getScale());
+        $rate->getMarkets()->clear();
         
 //        $this->entityManager->remove($rate);
 //        $this->entityManager->flush($rate);
