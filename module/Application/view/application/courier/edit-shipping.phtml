@@ -36,6 +36,14 @@ $form->get('rateTrip')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('rateTrip1')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('rateTrip2')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('rateDistance')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -88,6 +96,16 @@ $form->prepare();
             <?= $this->formLabel($form->get('rateTrip')); ?>
             <?= $this->formElement($form->get('rateTrip')); ?>
             <?= $this->formElementErrors($form->get('rateTrip')); ?>                  
+        </div>                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rateTrip1')); ?>
+            <?= $this->formElement($form->get('rateTrip1')); ?>
+            <?= $this->formElementErrors($form->get('rateTrip1')); ?>                  
+        </div>                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('rateTrip2')); ?>
+            <?= $this->formElement($form->get('rateTrip2')); ?>
+            <?= $this->formElementErrors($form->get('rateTrip2')); ?>                  
         </div>                        
         <div class="form-group">
             <?= $this->formLabel($form->get('rateDistance')); ?>

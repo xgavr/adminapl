@@ -78,6 +78,7 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
             'attributes' => [
                 'id' => 'shippingLimit1',
                 'min' => 0,
+                'step' => 500,
                 'value' => Office::DEFAULT_SHIPPING_LIMIT_1,
             ],
             'options' => [
@@ -91,6 +92,7 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
             'attributes' => [
                 'id' => 'shippingLimit2',
                 'min' => 0,
+                'step' => 500,
                 'value' => Office::DEFAULT_SHIPPING_LIMIT_2,
             ],
             'options' => [

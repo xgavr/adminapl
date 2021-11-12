@@ -10,6 +10,7 @@ namespace Application\Form;
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
 use Application\Entity\Shipping;
+use Company\Entity\Office;
 
 /**
  * Description of Shipping
@@ -22,16 +23,23 @@ class ShippingForm extends Form
     protected $objectManager;
 
     protected $entityManager;
+    
+    protected $office;
         
     /**
-     * Конструктор.     
+     * Конструктор. 
+     * @param EntittyManager $entityManager   
+     * @param Office $office
      */
-    public function __construct($entityManager)
+    public function __construct($entityManager, $office)
     {
         // Определяем имя формы.
         parent::__construct('shipping-form');
      
         $this->entityManager = $entityManager;
+        
+        $this->office = $office;
+        
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
                 
@@ -107,7 +115,7 @@ class ShippingForm extends Form
                 'value' => 0,
             ],
             'options' => [
-                'label' => 'Стоимость за поездку 1',
+                'label' => 'Стоимость при заказе от '.$this->office->getShippingLimit1(),
             ],
         ]);
         
@@ -122,7 +130,7 @@ class ShippingForm extends Form
                 'value' => 0,
             ],
             'options' => [
-                'label' => 'Стоимость за поездку 2',
+                'label' => 'Стоимость при заказе от '.$this->office->getShippingLimit2(),
             ],
         ]);
         

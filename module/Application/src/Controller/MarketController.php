@@ -15,6 +15,7 @@ use Application\Form\MarketForm;
 use Company\Entity\Region;
 use Application\Entity\Rate;
 use Application\Entity\Supplier;
+use Application\Entity\Shipping;
 
 class MarketController extends AbstractActionController
 {
@@ -122,6 +123,10 @@ class MarketController extends AbstractActionController
                 $supplier = $this->entityManager->getRepository(Supplier::class)
                         ->find($data['supplier']);                
                 $data['supplier'] = $supplier; 
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->find($data['shipping']);                
+                $data['shipping'] = $shipping; 
+                
                 if ($market){
                     $this->marketManager->updateMarketSetting($market, $data);
                 } else {

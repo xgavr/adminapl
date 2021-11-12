@@ -178,6 +178,8 @@ class OfficeController extends AbstractActionController
                     'aplId'=>$office->getAplId(),     
                     'region'=>$office->getRegion(),     
                     'status'=>$office->getStatus(),     
+                    'shippingLimit1'=>$office->getShippingLimit1(),     
+                    'shippingLimit2'=>$office->getShippingLimit2(),     
                 ));
         }
         
@@ -236,6 +238,8 @@ class OfficeController extends AbstractActionController
                     'aplId'=>$office->getAplId(),     
                     'region'=>$office->getRegion(),     
                     'status'=>$office->getStatus(),     
+                    'shippingLimit1'=>$office->getShippingLimit1(),     
+                    'shippingLimit2'=>$office->getShippingLimit2(),     
                 ));
         }
         

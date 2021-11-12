@@ -72,6 +72,17 @@ class MarketForm extends Form
 
         $this->add([            
             'type'  => 'select',
+            'name' => 'shipping',
+            'attributes' => [                
+                'id' => 'shipping',
+            ],
+            'options' => [
+                'label' => 'Доставка',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'select',
             'name' => 'rates',
             'attributes' => [
                 'multiple' => 'multiple',
@@ -277,6 +288,7 @@ class MarketForm extends Form
             'attributes' => [
                 'id' => 'minPrice',
                 'value' => 300,
+                'step' => 50,
                 'min' => 0,
             ],
             'options' => [
@@ -290,6 +302,7 @@ class MarketForm extends Form
             'attributes' => [
                 'id' => 'maxPrice',
                 'value' => 35000,
+                'step' => 1000,
                 'min' => 0,
             ],
             'options' => [

@@ -79,6 +79,7 @@ $this->pageBreadcrumbs()->setItems([
                     Наименования:  <?= $this->escapeHtml($market->getNameSettingAsString());?>; 
                     Картинки:  <?= $this->escapeHtml($market->getGoodSettingAsString());?>; 
                     Поставщик:  <?= $this->escapeHtml(($market->getSupplier()) ? $market->getSupplier()->getName():'Все');?>;
+                    Доставка:  <?= $this->escapeHtml(($market->getShipping()) ? $market->getShipping()->getName():'Нет');?>;
                     Производители:  <?= $this->escapeHtml($market->getProducerSettingAsString());?>; 
                     Группы ТД:  <?= $this->escapeHtml($market->getGroupSettingAsString());?>; 
                     Группы наименований:  <?= $this->escapeHtml($market->getTokenGroupSettingAsString());?>; 

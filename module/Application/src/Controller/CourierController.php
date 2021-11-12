@@ -235,7 +235,7 @@ class CourierController extends AbstractActionController
             return;                        
         }      
         // Создаем форму.
-        $form = new ShippingForm($this->entityManager);
+        $form = new ShippingForm($this->entityManager, $office);
         
         
         // Проверяем, является ли пост POST-запросом.
@@ -268,8 +268,6 @@ class CourierController extends AbstractActionController
 
    public function editShippingAction()
    {
-        // Создаем форму.
-        $form = new ShippingForm($this->entityManager);
     
         // Получаем ID tax.    
         $shippingId = $this->params()->fromRoute('id', -1);
@@ -282,6 +280,9 @@ class CourierController extends AbstractActionController
             $this->getResponse()->setStatusCode(401);
             return;                        
         } 
+        
+        // Создаем форму.
+        $form = new ShippingForm($this->entityManager, $shipping->getOffice());
         
         // Проверяем, является ли пост POST-запросом.
         if ($this->getRequest()->isPost()) {
@@ -310,6 +311,8 @@ class CourierController extends AbstractActionController
                'status' => $shipping->getStatus(),
                'rate' => $shipping->getRate(),
                'rateTrip' => $shipping->getRateTrip(),
+               'rateTrip1' => $shipping->getRateTrip1(),
+               'rateTrip2' => $shipping->getRateTrip2(),
                'rateDistance' => $shipping->getRateDistance(),
                'sorting' => $shipping->getSorting(),
             ];

@@ -95,6 +95,10 @@ $form->get('supplier')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('shipping')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'market-submit']);
 
 $form->prepare();
@@ -256,7 +260,14 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-7">
+                        <div class="col-xs-2">                        
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('shipping')); ?>
+                                <?= $this->formElement($form->get('shipping')); ?>
+                                <?= $this->formElementErrors($form->get('shipping')); ?>                  
+                            </div>
+                        </div>    
+                        <div class="col-xs-5">
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('info')); ?>
                                 <?= $this->formElement($form->get('info')); ?>

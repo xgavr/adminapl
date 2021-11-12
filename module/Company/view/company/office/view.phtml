@@ -219,6 +219,8 @@ $legalContact = $office->getLegalContact();
                         <th>Апл Id</th>
                         <th>Наименование</th>
                         <th>За поездку</th>
+                        <th>Заказ от <?= $office->getShippingLimit1()?></th>
+                        <th>Заказ от <?= $office->getShippingLimit2()?></th>
                         <th>За км</th>
                         <th>Статус</th>
                         <th>Действие</th>        
@@ -239,20 +241,26 @@ $legalContact = $office->getLegalContact();
                             <?= $shipping->getRateTrip()?>
                         </td>
                         <td>
+                            <?= $shipping->getRateTrip1()?>
+                        </td>
+                        <td>
+                            <?= $shipping->getRateTrip2()?>
+                        </td>
+                        <td>
                             <?= $shipping->getRateDistance()?>
                         </td>
                         <td><?= $this->escapeHtml($shipping->getStatusAsString()); ?> 
                         </td>
                         <td>
-                            </nobr>
-                            <a class="btn btn-info" href="<?= $this->url('courier', 
-                                    ['action'=>'edit-shipping', 'id'=>$shipping->getId()]); ?>">
-                                <span class="glyphicon glyphicon-pencil" ></span>
-                            </a>
-                            <a class="btn btn-danger" href="<?= $this->url('courier',
-                                    ['action'=>'delete-shipping', 'id'=>$shipping->getId()]); ?>">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>
+                            <nobr>
+                                <a class="btn btn-xs btn-info" href="<?= $this->url('courier', 
+                                        ['action'=>'edit-shipping', 'id'=>$shipping->getId()]); ?>">
+                                    <span class="glyphicon glyphicon-pencil" ></span>
+                                </a>
+                                <a class="btn btn-xs btn-danger" href="<?= $this->url('courier',
+                                        ['action'=>'delete-shipping', 'id'=>$shipping->getId()]); ?>">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>
                             </nobr>
                         </td>    
                     </tr>

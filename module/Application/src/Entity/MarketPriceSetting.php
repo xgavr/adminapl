@@ -14,6 +14,7 @@ use Company\Entity\Region;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\Rate;
 use Application\Entity\Supplier;
+use Application\Entity\Shipping;
 
 /**
  * Description of Client
@@ -207,6 +208,12 @@ class MarketPriceSetting {
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
      */
     private $supplier;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Shipping", inversedBy="pricelistsettings") 
+     * @ORM\JoinColumn(name="shipping_id", referencedColumnName="id")
+     */
+    private $shipping;
     
     /**
      * @ORM\ManyToMany(targetEntity="Application\Entity\Rate")
@@ -568,7 +575,7 @@ class MarketPriceSetting {
     {
         return [
             self::FORMAT_YML => 'YML',
-            self::FORMAT_XLS => 'XLSX'
+            self::FORMAT_XLSX => 'XLSX'
         ];
     }    
     
@@ -801,6 +808,24 @@ class MarketPriceSetting {
 
     /**
      * 
+     * @return Shipping
+     */
+    public function getShipping() 
+    {
+        return $this->shipping;
+    }
+
+    /**
+     * 
+     * @param Shipping $shipping
+     */
+    public function setShipping($shipping) 
+    {
+        $this->shipping = $shipping;        
+    }                 
+
+    /**
+     * 
      * @return array
      */
     public function getRates()
@@ -875,6 +900,7 @@ class MarketPriceSetting {
             'info' => $this->getInfo(),
             'region' => $this->getRegion()->getId(),
             'supplier' => ($this->getSupplier()) ? $this->getSupplier()->getId():null,
+            'shipping' => ($this->getShipping()) ? $this->getShipping()->getId():null,
             'rates' => $this->getRatesAsArray(),
             'tdSetting' => $this->getTdSetting(),
             'movementLimit' => $this->getMovementLimit(),

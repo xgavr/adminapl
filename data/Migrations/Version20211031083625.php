@@ -20,11 +20,14 @@ final class Version20211031083625 extends AbstractMigration
         $table->addColumn('row_unload', 'integer', ['notnull'=>true, 'default'=> 0]);
         $table->addColumn('movement_limit', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::MOVEMENT_LIMIT]);
         $table->addColumn('supplier_id', 'integer', ['notnull'=>false]);
+        $table->addColumn('shipping_id', 'integer', ['notnull'=>false]);
         $table->addColumn('name_setting', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::NAME_ALL]);
         $table->addColumn('rest_setting', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::REST_ALL]);
         $table->addColumn('td_setting', 'integer', ['notnull'=>true, 'default'=> MarketPriceSetting::TD_IGNORE]);
         $table->addForeignKeyConstraint('supplier', ['supplier_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'supplier_id_mps_supplier_id_fk');
+        $table->addForeignKeyConstraint('shipping', ['shipping_id'], ['id'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'shipping_id_mps_shipping_id_fk');
         $table->addOption('engine' , 'InnoDB');
         
         $table = $schema->createTable('market_rate');
@@ -54,8 +57,8 @@ final class Version20211031083625 extends AbstractMigration
         $table->addColumn('shipping_limit_2', 'integer', ['notnull'=>true, 'default' => Office::DEFAULT_SHIPPING_LIMIT_2]);
 
         $table = $schema->getTable('shipping');
-        $table->addColumn('rate_trip_1', 'double', ['notnull'=>true, 'default' => 0]);
-        $table->addColumn('rate_trip_2', 'double', ['notnull'=>true, 'default' => 0]);
+        $table->addColumn('rate_trip_1', 'float', ['notnull'=>true, 'default' => 0]);
+        $table->addColumn('rate_trip_2', 'float', ['notnull'=>true, 'default' => 0]);
     }
 
     public function down(Schema $schema) : void
@@ -66,12 +69,14 @@ final class Version20211031083625 extends AbstractMigration
 
         $table = $schema->getTable('market_price_setting');
         $table->removeForeignKey('supplier_id_mps_supplier_id_fk');
+        $table->removeForeignKey('shipping_id_mps_shipping_id_fk');
         $table->dropColumn('pricecol');
         $table->dropColumn('movement_limit');
         $table->dropColumn('row_unload');
         $table->dropColumn('name_setting');
         $table->dropColumn('rest_setting');
         $table->dropColumn('td_setting');
+        $table->dropColumn('supplier_id');
         $table->dropColumn('supplier_id');
 
         $table = $schema->getTable('office');
