@@ -18,6 +18,8 @@ use Application\Entity\Images;
 use Application\Entity\Goods;
 use Application\Entity\Article;
 use Laminas\Filter\Compress;
+use Application\Entity\GenericGroup;
+use Application\Entity\SupplySetting;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -209,6 +211,8 @@ class MarketManager
     {
         $rp = [
             'realrest' => 0,
+            'speed' => 3,
+            'orderbefore' => 12,
         ];
         
         $articles = $this->entityManager->getRepository(Article::class)
@@ -220,9 +224,21 @@ class MarketManager
                         'status' => Rawprice::STATUS_PARSED,
                     ]);        
             foreach ($rawprices as $rawprice){
+                $suppier = $rawprice->getRaw()->getSupplier();
                 if ($market->getSupplier()){
-                    if ($market->getSupplier()->getId() != $rawprice->getRaw()->getSupplier()->getId()){
+                    if ($market->getSupplier()->getId() != $supplier->getId()){
                         continue;
+                    }
+                }    
+                foreach ($suppier->getSupplySettings() as $supplySetting){
+                    $supspeed = $rp['speed'];
+                    if ($market->getRegion()->getId() == $supplySetting->getOffice()->getRegion()->getId() 
+                            && $supplySetting->getStatus() == SupplySetting::STATUS_ACTIVE){
+                        $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
+                        if ($rp['speed'] > $supspeed){
+                            $rp['orderbefore'] = $supplySetting->getOrderBeforeHMax12();
+                            $rp['speed'] = $supspeed;
+                        }
                     }
                 }
                 if ($rawprice->getRealRest()){
@@ -235,11 +251,43 @@ class MarketManager
     }
     
     /**
+     * Сохранение файла прайса
+     * 
+     * @param MarketPriceSetting $market
+     * @param integer $rows
+     */
+    private function fileUnload($market, $rows)
+    {
+        $filename = $market->getFilename().'.'.$market->getFormat();
+        $path = self::MARKET_FOLDER.'/'.$filename;
+
+        $this->ftpManager->putMarketPriceToApl(['source_file' => $path, 'dest_file' => $filename]);            
+
+        $zipFilename = $filename.'.zip';
+        $zipPath = self::MARKET_FOLDER.'/'.$zipFilename;
+        $filter = new Compress([
+            'adapter' => 'Zip',
+            'options' => [
+                'archive' => $zipPath,
+            ],
+        ]);
+        $compressed = $filter->filter($path);
+        $this->ftpManager->putMarketPriceToApl(['source_file' => $zipPath, 'dest_file' => $zipFilename]);
+        
+        $market->setRowUnload($rows);
+        $market->setDateUnload(date('Y-m-d H:i:s'));
+        $this->entityManager->persist($market);
+        $this->entityManager->flush($market);
+        
+        return;
+    }
+    
+    /**
      * Данные для прайса
      * @param MarketPriceSetting $market
      * @return array
      */
-    public function marketXLS($market)
+    public function marketXLSX($market)
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -266,6 +314,9 @@ class MarketManager
                 }
                 
                 $rawprices = $this->rawprices($good, $market);
+                if ($rawprices['realrest'] == 0){
+                    continue;
+                }
                 
                 $opts = $good->getOpts();
                 $sheet->setCellValue("A$k", $good->getCode());
@@ -276,6 +327,8 @@ class MarketManager
                 $sheet->setCellValue("F$k", $rawprices['realrest']);
                 $sheet->setCellValue("G$k", $opts[$market->getPricecol()]);
 //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
+
+                $this->entityManager->detach($good);
                 $k++;
                 $rows++;
             }    
@@ -287,27 +340,123 @@ class MarketManager
         $writer = new Xlsx($spreadsheet);
         $writer->save($path);
 
-        $this->ftpManager->putMarketPriceToApl(['source_file' => $path, 'dest_file' => $filename]);            
-
-        $zipFilename = $filename.'.zip';
-        $zipPath = self::MARKET_FOLDER.'/'.$zipFilename;
-        $filter = new Compress([
-            'adapter' => 'Zip',
-            'options' => [
-                'archive' => $zipPath,
-            ],
-        ]);
-        $compressed = $filter->filter($path);
-        $this->ftpManager->putMarketPriceToApl(['source_file' => $zipPath, 'dest_file' => $zipFilename]);
-        
-        $market->setRowUnload($rows);
-        $market->setDateUnload(date('Y-m-d H:i:s'));
-        $this->entityManager->persist($market);
-        $this->entityManager->flush($market);
-        
+        $this->fileUnload($market, $rows);
         return;
     }
     
+    /**
+     * Данные для прайса
+     * @param MarketPriceSetting $market
+     * @return array
+     */
+    public function marketYML($market)
+    {
+        $filename = $market->getFilename().'.'.$market->getFormat();
+        $path = self::MARKET_FOLDER.'/'.$filename;
+
+        $settings = (new Settings())
+            ->setOutputFile($path)
+            ->setEncoding('UTF-8')
+        ;
+
+        // Creating ShopInfo object (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#shop)
+        $shopInfo = (new ShopInfo())
+            ->setName('APL')
+            ->setCompany('ООО "АПЛ Сервис"')
+            ->setUrl(self::APL_BASE_URL)
+        ;
+
+        // Creating currencies array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#currencies)
+        $currencies = [];
+        $currencies[] = (new Currency())
+            ->setId('RUR')
+            ->setRate(1)
+        ;
+        
+        // Creating categories array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#categories)
+        $groups = $this->entityManager->getRepository(GenericGroup::class)
+                ->masterGroups();        
+        $categories = [0 => 'Прочее'];
+        foreach ($groups as $key=>$value){
+            $categories[] = (new Category())
+                ->setId($value)
+                ->setName($key)
+            ;        
+        }    
+
+        // Creating offers array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#offers)
+        $offers = [];
+        $rows = 0;
+        $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->marketQuery($market);
+        $iterable = $goodsQuery->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $images = $this->images($good, $market);
+                if ($images === false){
+                    continue;
+                }
+                $rawprices = $this->rawprices($good, $market);
+                if ($rawprices['realrest'] == 0){
+                    continue;
+                }
+                
+                $opts = $good->getOpts();
+                $categoryId = 0;
+                if ($good->getGenericGroup()){
+                    $categoryId = $groups[$good->getGenericGroup()->getMasterName()];
+                }
+                
+                $delyvery = (new Delivery())
+                    ->setDays($rawprices['speed'])
+                    ->setOrderBefore($rawprices['orderbefore'])
+                    ->setCost($categoryId)
+                    ;
+
+                $offers[] = (new OfferSimple())
+                    ->setId($good->getAplId())
+                    ->setAvailable(true)
+                    ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good->getAplId().'?utm_source='.$market->getId().'&utm_term='.$good->getAplId())
+                    ->setPrice($opts[$market->getPricecol()])
+                    ->setCurrencyId('RUR')
+                    ->setCategoryId($categoryId)
+                    ->setDelivery(true)
+                    ->setName($good->getName())
+                    ->setPictures($images)
+                    ->setVendor($good->getProducer()->getName())
+                    ->setVendorCode($good->getCode())
+                    ->setDescription($good->getDescription())
+                    ->setStore(false)
+                    ->setPickup(true)
+                    ->setDelivery(true)   
+                    ->addDeliveryOption($delivery)    
+                ;
+                $this->entityManager->detach($good);
+                $rows++;
+            }    
+        }
+        
+        // Optional creating deliveries array (https://yandex.ru/support/partnermarket/elements/delivery-options.xml)
+        $deliveries = [];
+        $deliveries[] = (new Delivery())
+            ->setCost(2)
+            ->setDays(1)
+            ->setOrderBefore(12)
+        ;
+
+        (new Generator($settings))->generate(
+            $shopInfo,
+            $currencies,
+            $categories,
+            $offers,
+            $deliveries
+        );        
+        
+        $this->fileUnload($market, $rows);
+        
+        return;
+    }
+
     /**
      * Выгрузка в zzap только апл
      * 

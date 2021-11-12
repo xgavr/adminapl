@@ -98,7 +98,8 @@ class MarketRepository extends EntityRepository{
                 ->join('r.raw', 'raw')
                 ->where('r.status', Rawprice::STATUS_PARSED)  
                 ->andWhere('r.coomment == ""')
-                ->andWhere('raw.supplier', $market->getSupplier())
+                ->andWhere('raw.supplier = ?1')
+                ->setParameter('1', $market->getSupplier())    
                 ->andWhere('g.price > 0')    
                     ;            
         } else {
@@ -108,10 +109,10 @@ class MarketRepository extends EntityRepository{
                     ;
         }    
         
-        $queryBuilder->andWhere('g.available = ?1')
-            ->andWhere('g.statusPriceEx = ?2')    
-            ->setParameter('1', Goods::AVAILABLE_TRUE)    
-            ->setParameter('2', Goods::PRICE_EX_TRANSFERRED)    
+        $queryBuilder->andWhere('g.available = ?2')
+            ->andWhere('g.statusPriceEx = ?3')    
+            ->setParameter('2', Goods::AVAILABLE_TRUE)    
+            ->setParameter('3', Goods::PRICE_EX_TRANSFERRED)    
                 ;
         
         $this->rateParams($market, $queryBuilder, 'g');
@@ -122,44 +123,44 @@ class MarketRepository extends EntityRepository{
         }
         
         if ($market->getTdSetting() == MarketPriceSetting::TD_MATH){
-                    $queryBuilder->andWhere('g.tdDirect = ?3')
-                            ->setParameter('3', Goods::TD_DIRECT)
+                    $queryBuilder->andWhere('g.tdDirect = ?4')
+                            ->setParameter('4', Goods::TD_DIRECT)
                     ;
         }
         if ($market->getProducerSetting() == MarketPriceSetting::PRODUCER_ACTIVE){
                     $queryBuilder
                             ->join('g.producer', 'p')
-                            ->andWhere('p.movement > ?4')
-                            ->setParameter('4', $market->getMovementLimit())
+                            ->andWhere('p.movement > ?5')
+                            ->setParameter('5', $market->getMovementLimit())
                     ;
         }
         
         if ($market->getGroupSetting() == MarketPriceSetting::GROUP_ACTIVE){
                     $queryBuilder
                             ->join('g.genericGroup', 'gg')
-                            ->andWhere('gg.movement > ?5')
-                            ->setParameter('5', $market->getMovementLimit())
+                            ->andWhere('gg.movement > ?6')
+                            ->setParameter('6', $market->getMovementLimit())
                     ;
         }
         
         if ($market->getTokenGroupSetting() == MarketPriceSetting::TOKEN_GROUP_ACTIVE){
                     $queryBuilder
                             ->join('g.tokenGroup', 'tg')
-                            ->andWhere('tg.movement > ?6')
-                            ->setParameter('6', $market->getMovementLimit())
+                            ->andWhere('tg.movement > ?7')
+                            ->setParameter('7', $market->getMovementLimit())
                     ;
         }
         
         
         if ($market->getMinPrice()){
-            $queryBuilder->andWhere('g.price > ?7')
-                        ->setParameter('7', $market->getMinPrice())
+            $queryBuilder->andWhere('g.price > ?8')
+                        ->setParameter('8', $market->getMinPrice())
                     ;
         }
 
         if ($market->getMaxPrice()){
-            $queryBuilder->andWhere('g.price < ?8')
-                        ->setParameter('8', $market->getMaxPrice())
+            $queryBuilder->andWhere('g.price < ?9')
+                        ->setParameter('9', $market->getMaxPrice())
                     ;
         }
         

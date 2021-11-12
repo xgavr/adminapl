@@ -5,6 +5,7 @@ namespace Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Application\Entity\MarketPriceSetting;
+use Company\Entity\Office;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -48,6 +49,13 @@ final class Version20211031083625 extends AbstractMigration
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'supplier_region_id_region_id_fk');
         $table->addOption('engine' , 'InnoDB');        
 
+        $table = $schema->getTable('office');
+        $table->addColumn('shipping_limit_1', 'integer', ['notnull'=>true, 'default' => Office::DEFAULT_SHIPPING_LIMIT_1]);
+        $table->addColumn('shipping_limit_2', 'integer', ['notnull'=>true, 'default' => Office::DEFAULT_SHIPPING_LIMIT_2]);
+
+        $table = $schema->getTable('shipping');
+        $table->addColumn('rate_trip_1', 'double', ['notnull'=>true, 'default' => 0]);
+        $table->addColumn('rate_trip_2', 'double', ['notnull'=>true, 'default' => 0]);
     }
 
     public function down(Schema $schema) : void
@@ -65,5 +73,13 @@ final class Version20211031083625 extends AbstractMigration
         $table->dropColumn('rest_setting');
         $table->dropColumn('td_setting');
         $table->dropColumn('supplier_id');
+
+        $table = $schema->getTable('office');
+        $table->dropColumn('shipping_limit_1');
+        $table->dropColumn('shipping_limit_2');
+
+        $table = $schema->getTable('shipping');
+        $table->dropColumn('rate_trip_1');
+        $table->dropColumn('rate_trip_2');
     }
 }

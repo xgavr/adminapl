@@ -67,6 +67,16 @@ class Shipping {
     protected $rateTrip;
     
     /**
+     * @ORM\Column(name="rate_trip_1")  
+     */
+    protected $rateTrip1;
+    
+    /**
+     * @ORM\Column(name="rate_trip_2")  
+     */
+    protected $rateTrip2;
+    
+    /**
      * @ORM\Column(name="rate_distance")  
      */
     protected $rateDistance;
@@ -134,6 +144,26 @@ class Shipping {
     public function setRateTrip($rateTrip) 
     {
         $this->rateTrip = $rateTrip;
+    }     
+    
+    public function getRateTrip1() 
+    {
+        return $this->rateTrip1;
+    }
+
+    public function setRateTrip1($rateTrip1) 
+    {
+        $this->rateTrip1 = $rateTrip1;
+    }     
+    
+    public function getRateTrip2() 
+    {
+        return $this->rateTrip2;
+    }
+
+    public function setRateTrip2($rateTrip2) 
+    {
+        $this->rateTrip2 = $rateTrip2;
     }     
     
     public function getRateDistance() 

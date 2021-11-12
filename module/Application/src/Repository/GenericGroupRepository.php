@@ -431,4 +431,32 @@ class GenericGroupRepository extends EntityRepository{
         }
         return;
     }
+    
+    /**
+     * Мастер группы для прайсов YML
+     * @return array 
+     */
+    public function masterGroups()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g.masterName')
+                ->from(GenericGroup::class, 'g')
+                ->distinct()
+                ->where('g.status = ?1')
+                ->setParameter('1', GenericGroup::STATUS_ACTIVE)
+                ->andWhere('g.goodCount > 0')
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        $result = [];
+        $i = 1;
+        foreach ($data as $row){
+            $result[$row['masterName']] = $i;
+            $i++;
+        }
+        
+        return $result;
+    }
 }

@@ -46,6 +46,8 @@ class OfficeManager
         $office->setFullName($data['name']);
         $office->setAplId($data['aplId']);
         $office->setStatus($data['status']);
+        $office->setShippingLimit1($data['shippingLimit1']);
+        $office->setShippingLimit2($data['shippingLimit2']);
         
         $currentDate = date('Y-m-d H:i:s');        
         $office->setDateCreated($currentDate);
@@ -85,6 +87,8 @@ class OfficeManager
         $office->setFullName($data['name']);
         $office->setAplId($data['aplId']);
         $office->setStatus($data['status']);
+        $office->setShippingLimit1($data['shippingLimit1']);
+        $office->setShippingLimit2($data['shippingLimit2']);
         
         $office->setRegion($region);
         

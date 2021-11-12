@@ -96,6 +96,36 @@ class ShippingForm extends Form
             ],
         ]);
         
+        // Добавляем поле "rateTrip"
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'rateTrip1',
+            'attributes' => [
+                'id' => 'rateTrip1',
+                'min'  => '0',
+                'step' => '10', 
+                'value' => 0,
+            ],
+            'options' => [
+                'label' => 'Стоимость за поездку 1',
+            ],
+        ]);
+        
+        // Добавляем поле "rateTrip"
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'rateTrip2',
+            'attributes' => [
+                'id' => 'rateTrip2',
+                'min'  => '0',
+                'step' => '10', 
+                'value' => 0,
+            ],
+            'options' => [
+                'label' => 'Стоимость за поездку 2',
+            ],
+        ]);
+        
         // Добавляем поле "rateDistance"
         $this->add([           
             'type'  => 'number',

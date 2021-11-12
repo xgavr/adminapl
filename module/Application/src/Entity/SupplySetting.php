@@ -90,6 +90,14 @@ class SupplySetting {
         return date('H:i', strtotime($this->orderBefore));
     }
 
+    public function getOrderBeforeHMax12() 
+    {
+        if ($this->supplyTime < 24){
+            return 12;
+        }
+        return max(12, date('H', strtotime($this->orderBefore)));
+    }
+
     public function setOrderBefore($orderBefore) 
     {
         $this->orderBefore = $orderBefore;
@@ -98,6 +106,26 @@ class SupplySetting {
     public function getSupplyTime() 
     {
         return $this->supplyTime;
+    }
+
+    public function getSupplyTimeAsDay() 
+    {
+        if ($this->supplyTime){
+            return round($this->supplyTime / 24, 0);
+        }
+        return 3;
+    }
+
+    public function getSupplyTimeAsDayWithSat() 
+    {
+        $supplyTime = $this->supplyTime;
+        if (!$supplyTime){
+            $supplyTime = 72;
+        }
+        if ($this->supplySat == self::SUPPLY_SAT_NOT_POSSIBLE && date('w') === 4 && $supplyTime >= 12){
+            $supplyTime += 24;
+        }
+        return round($supplyTime / 24, 0);
     }
 
     public function getSupplyTimeColor() 

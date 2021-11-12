@@ -5,6 +5,7 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Company\Entity\Office;
 
 
 /**
@@ -68,6 +69,32 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'AplId',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'shippingLimit1',
+            'attributes' => [
+                'id' => 'shippingLimit1',
+                'min' => 0,
+                'value' => Office::DEFAULT_SHIPPING_LIMIT_1,
+            ],
+            'options' => [
+                'label' => 'Граница стоимости заказа 1',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'shippingLimit2',
+            'attributes' => [
+                'id' => 'shippingLimit2',
+                'min' => 0,
+                'value' => Office::DEFAULT_SHIPPING_LIMIT_2,
+            ],
+            'options' => [
+                'label' => 'Граница стоимости заказа 2',
             ],
         ]);
         

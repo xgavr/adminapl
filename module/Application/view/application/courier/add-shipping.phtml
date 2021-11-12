@@ -6,7 +6,8 @@ $this->mainMenu()->setActiveItemId('company');
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Офисы'=>$this->url('offices'),
-            $office->getName()=>$this->url('offices', ['action'=>'view', 'id'=>$office->getId()])
+            $office->getName()=>$this->url('offices', ['action'=>'view', 'id'=>$office->getId()]),
+            'Новый вариант доставки' => $this->url('courier', ['action'=>'add-shipping', 'id'=>$office->getId()])
             ]);
 
 $form = $this->form;

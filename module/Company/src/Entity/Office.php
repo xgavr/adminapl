@@ -25,9 +25,11 @@ use Stock\Entity\Ptu;
 class Office {
         
      // Status constants.
-    const STATUS_ACTIVE       = 1; // Active user.
-    const STATUS_RETIRED      = 2; // Retired user.
+    const STATUS_ACTIVE       = 1; // Active office.
+    const STATUS_RETIRED      = 2; // Retired office.
    
+    const DEFAULT_SHIPPING_LIMIT_1   = 3000; // По умолчанию граница 1 стоимости заказа для изменения цены доставки.
+    const DEFAULT_SHIPPING_LIMIT_2   = 12000; // По умолчанию граница 2 стоимости заказа для изменения цены доставки.
     
     /**
      * @ORM\Id
@@ -62,6 +64,17 @@ class Office {
      */
     protected $fullName;
 
+    /**
+     * Граница стоимости заказа 1
+     * @ORM\Column(name="shipping_limit_1")   
+     */
+    protected $shippingLimit1;
+
+    /**
+     * Граница стоимости заказа 2
+     * @ORM\Column(name="shipping_limit_2")   
+     */
+    protected $shippingLimit2;
     
     /**
     * @ORM\OneToMany(targetEntity="\Application\Entity\Contact", mappedBy="office")
@@ -156,7 +169,27 @@ class Office {
         $this->fullName = $fullName;
     }     
 
-        /**
+    public function getShippingLimit1() 
+    {
+        return $this->shippingLimit1;
+    }
+
+    public function setShippingLimit1($shippingLimit1) 
+    {
+        $this->shippingLimit1 = $shippingLimit1;
+    }     
+
+    public function getShippingLimit2() 
+    {
+        return $this->shippingLimit2;
+    }
+
+    public function setShippingLimit2($shippingLimit2) 
+    {
+        $this->shippingLimit2 = $shippingLimit2;
+    }     
+
+    /**
      * Returns status.
      * @return int     
      */

@@ -10,6 +10,14 @@ $form->get('aplId')->setAttributes([
     'placeholder'=>'apl ID'
     ]);
 
+$form->get('shippingLimit1')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('shippingLimit2')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('region')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'Регион'
@@ -56,6 +64,18 @@ $form->prepare();
                         <?= $this->formLabel($form->get('region')); ?>
                         <?= $this->formElement($form->get('region')); ?>
                         <?= $this->formElementErrors($form->get('region')); ?>                  
+                    </div>
+                    
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('shippingLimit1')); ?>
+                        <?= $this->formElement($form->get('shippingLimit1')); ?>
+                        <?= $this->formElementErrors($form->get('shippingLimit1')); ?>                  
+                    </div>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('shippingLimit2')); ?>
+                        <?= $this->formElement($form->get('shippingLimit2')); ?>
+                        <?= $this->formElementErrors($form->get('shippingLimit2')); ?>                  
                     </div>
 
                     <div class="form-group">

@@ -107,6 +107,8 @@ class CourierManager
         $shipping->setComment(!empty($data['comment']) ? $data['comment'] : null);
         $shipping->setRateDistance(!empty($data['rateDistance']) ? $data['rateDistance'] : null);
         $shipping->setRateTrip(!empty($data['rateTrip']) ? $data['rateTrip'] : null);
+        $shipping->setRateTrip(!empty($data['rateTrip1']) ? $data['rateTrip1'] : null);
+        $shipping->setRateTrip(!empty($data['rateTrip2']) ? $data['rateTrip2'] : null);
         $shipping->setSorting(!empty($data['sorting']) ? $data['sorting'] : 0);
         $shipping->setStatus(!empty($data['status']) ? $data['status'] : Shipping::STATUS_ACTIVE);
         $shipping->setRate(!empty($data['rate']) ? $data['rate'] : Shipping::RATE_TRIP);
@@ -132,6 +134,8 @@ class CourierManager
         $shipping->setComment(!empty($data['comment']) ? $data['comment'] : null);
         $shipping->setRateDistance(!empty($data['rateDistance']) ? $data['rateDistance'] : null);
         $shipping->setRateTrip(!empty($data['rateTrip']) ? $data['rateTrip'] : null);
+        $shipping->setRateTrip(!empty($data['rateTrip1']) ? $data['rateTrip1'] : null);
+        $shipping->setRateTrip(!empty($data['rateTrip2']) ? $data['rateTrip2'] : null);
         $shipping->setSorting(!empty($data['sorting']) ? $data['sorting'] : null);
         $shipping->setStatus(!empty($data['status']) ? $data['status'] : Shipping::STATUS_ACTIVE);
         $shipping->setRate(!empty($data['rate']) ? $data['rate'] : Shipping::RATE_TRIP);
