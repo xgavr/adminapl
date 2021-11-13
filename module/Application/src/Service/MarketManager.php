@@ -508,6 +508,9 @@ class MarketManager
      */
     public function unload($market)
     {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+
         if ($market->getFormat() == MarketPriceSetting::FORMAT_XLSX){
             $this->marketXLSX($market);
         }

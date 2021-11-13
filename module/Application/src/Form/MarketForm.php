@@ -318,6 +318,7 @@ class MarketForm extends Form
                 'id' => 'maxRowCount',
                 'value' => 0,
                 'min' => 0,
+                'step' => 100,
             ],
             'options' => [
                 'label' => 'Строк в прайсе',
