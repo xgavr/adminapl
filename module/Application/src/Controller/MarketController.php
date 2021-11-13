@@ -233,8 +233,8 @@ class MarketController extends AbstractActionController
         $this->marketManager->unload($market);
 
         return new JsonModel([
-            'result' => 'ok-reload',
-        ]);       
+            'ok'
+        ]);        
     }
     
     public function aplToZzapAction()
