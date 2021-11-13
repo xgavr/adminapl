@@ -201,30 +201,32 @@ class MarketManager
     /**
      * Получить картинки товара
      * @param Goods $good
-     * @param MarkerPriceSetting $market
+     * @param MarketPriceSetting $market
      * @return array 
      */
     private function images($good, $market)
     {
         $imageList = [];
-        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_ALL && $good->getStatusImgEx() == Goods::IMG_EX_TRANSFERRED){
-            $images = $this->entityManager->getRepository(Images::class)
-                    ->findBy(['good' => $good->getId()], null, $market->getImageCountOrNull());
-        }
-        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH && $good->getStatusImgEx() == Goods::IMG_EX_TRANSFERRED){
-            $images = $this->entityManager->getRepository(Images::class)
-                    ->findBy(['good' => $good->getId(), 'similar' => Images::SIMILAR_MATCH], null, $market->getImageCountOrNull());
-        }
-        if (count($images)){
-            foreach ($images as $image){
-                if ($image->allowTransfer()){
-                    $imageList[] = $this::APL_BASE_URL.'/images/api/'.$good->getAplId().'/'.$image->getName();
-                }    
+        if (!empty($market->getImageCount())){            
+            if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_ALL){
+                $images = $this->entityManager->getRepository(Images::class)
+                        ->findBy(['good' => $good->getId()], null, $market->getImageCountOrNull());
             }
-        }
-        if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR && count($imageList) == 0){
-            return false;
-        }
+            if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH){
+                $images = $this->entityManager->getRepository(Images::class)
+                        ->findBy(['good' => $good->getId(), 'similar' => Images::SIMILAR_MATCH], null, $market->getImageCountOrNull());
+            }
+            if (!empty($images)){
+                foreach ($images as $image){
+                    if ($image->allowTransfer()){
+                        $imageList[] = $this::APL_BASE_URL.'/images/api/'.$good->getAplId().'/'.$image->getName();
+                    }    
+                }
+            }
+            if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR && count($imageList) == 0){
+                return false;
+            }
+        }    
         return $imageList;        
     }
     
