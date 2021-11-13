@@ -441,7 +441,7 @@ class MarketManager
                     $categoryId = $groups[$good->getGenericGroup()->getMasterName()];
                 }
                 
-                $delyvery = null;
+                $delivery = null;
                 if ($market->getShipping()){
                     $delyvery = (new Delivery())
                         ->setDays($rawprices['speed'])
