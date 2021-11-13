@@ -441,17 +441,8 @@ class MarketManager
                     $categoryId = $groups[$good->getGenericGroup()->getMasterName()];
                 }
                 
-                $delivery = null;
-                if ($market->getShipping()){
-                    $delyvery = (new Delivery())
-                        ->setDays($rawprices['speed'])
-                        ->setOrderBefore($rawprices['orderbefore'])
-                        ->setCost($market->getShipping()->getOrderRateTrip($opts[$market->getPricecol()]))
-                        ;
-                }    
-
-                $offers[] = (new OfferSimple())
-                    ->setId($good->getAplId())
+                $offer = new OfferSimple();
+                $offer->setId($good->getAplId())
                     ->setAvailable(true)
                     ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good->getAplId().'?utm_source='.$market->getId().'&utm_term='.$good->getAplId())
                     ->setPrice($opts[$market->getPricecol()])
@@ -464,10 +455,20 @@ class MarketManager
                     ->setVendorCode($good->getCode())
                     ->setDescription($good->getDescription())
                     ->setStore(false)
-                    ->setPickup(true)
-                    ->setDelivery(true)   
-                    ->addDeliveryOption($delivery)    
+                    ->setPickup(true)                       
                 ;
+                if ($market->getShipping()){
+                    $delivery = (new Delivery())
+                        ->setDays($rawprices['speed'])
+                        ->setOrderBefore($rawprices['orderbefore'])
+                        ->setCost($market->getShipping()->getOrderRateTrip($opts[$market->getPricecol()]))
+                        ;
+                    $offer->setDelivery(true)
+                        ->addDeliveryOption($delivery) 
+                        ;
+                }    
+                
+                $offers[] = $offer;
                 
                 $this->entityManager->detach($good);
                 $rows++;
