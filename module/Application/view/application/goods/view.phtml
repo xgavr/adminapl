@@ -11,6 +11,7 @@ $this->pageBreadcrumbs()->setItems([
             $goods->getName()=>$this->url('goods', ['action'=>'view', 'id'=>$goods->getId()])
             ]);
 
+$priceCols = $goodsManager->priceCols($goods);
 ?>
 
 <style>
