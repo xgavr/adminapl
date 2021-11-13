@@ -260,14 +260,14 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-2">                        
+                        <div class="col-xs-3">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('shipping')); ?>
                                 <?= $this->formElement($form->get('shipping')); ?>
                                 <?= $this->formElementErrors($form->get('shipping')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-5">
+                        <div class="col-xs-4">
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('info')); ?>
                                 <?= $this->formElement($form->get('info')); ?>
@@ -294,9 +294,10 @@ $form->prepare();
         </div>
         <?= $this->form()->closeTag(); ?>
             
-<script>
+<script>         
     function submitForm(){
         var data = serializeForm('#market-form');
+         $('#market-submit').prop('disabled', true);
         //console.log(data);
         $.ajax({
             type: 'POST',
@@ -317,8 +318,20 @@ $form->prepare();
             });    
     };
     
-    $( document ).ready(function() {
+    function regionChange(){
+        $.getJSON( '/market/region-shipping/'+$('#region').val(), function( data ) {
+            $('#shipping').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#shipping').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+    
+    $('#region').on('change', function(){
+        regionChange();
+    });    
         
+    $( document ).ready(function() {
         var forms = $('#market-form');
         
         forms.submit(function() {

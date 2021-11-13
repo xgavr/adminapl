@@ -129,7 +129,8 @@ class MarketForm extends Form
             'type'  => 'text',
             'name' => 'filename',
             'attributes' => [
-                'id' => 'filename'
+                'id' => 'filename',
+                'value' => 'price',
             ],
             'options' => [
                 'label' => 'Наименование файла',
@@ -358,6 +359,13 @@ class MarketForm extends Form
         
         $inputFilter->add([
                 'name'     => 'rates',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'shipping',
                 'required' => false,
                 'filters'  => [],                
                 'validators' => [],

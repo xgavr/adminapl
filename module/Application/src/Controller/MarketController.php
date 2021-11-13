@@ -16,6 +16,7 @@ use Company\Entity\Region;
 use Application\Entity\Rate;
 use Application\Entity\Supplier;
 use Application\Entity\Shipping;
+use Company\Entity\Office;
 
 class MarketController extends AbstractActionController
 {
@@ -107,6 +108,13 @@ class MarketController extends AbstractActionController
         
         $form->get('rates')->setValueOptions($rateList);
         $form->get('supplier')->setValueOptions($supplierList);
+        if ($market){
+            $form->get('shipping')->setValueOptions($this->marketManager->regionShipping($market->getRegion()));            
+        } else {
+            $defaultOffice = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultOffice();
+            $form->get('shipping')->setValueOptions($this->marketManager->regionShipping($defaultOffice->getRegion()));            
+        }
 
         if ($this->getRequest()->isPost()) {
             
@@ -114,17 +122,22 @@ class MarketController extends AbstractActionController
             if (!is_array($data['rates'])){
                 $data['rates'] = [];
             }
+                        
+            $region = $this->entityManager->getRepository(Region::class)
+                    ->find($data['region']);                
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->find($data['supplier']);                
+            $shipping = $this->entityManager->getRepository(Shipping::class)
+                    ->find($data['shipping']);
+            if ($region){
+                $form->get('shipping')->setValueOptions($this->marketManager->regionShipping($region));                            
+            }
+
             $form->setData($data);
 
             if ($form->isValid()) {
-                $region = $this->entityManager->getRepository(Region::class)
-                        ->find($data['region']);                
                 $data['region'] = $region; 
-                $supplier = $this->entityManager->getRepository(Supplier::class)
-                        ->find($data['supplier']);                
                 $data['supplier'] = $supplier; 
-                $shipping = $this->entityManager->getRepository(Shipping::class)
-                        ->find($data['shipping']);                
                 $data['shipping'] = $shipping; 
                 
                 if ($market){
@@ -172,6 +185,57 @@ class MarketController extends AbstractActionController
         exit;
     }    
     
+    public function regionShippingAction()
+    {
+        $regionId = (int)$this->params()->fromRoute('id', -1);
+        if ($regionId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $region = $this->entityManager->getRepository(Region::class)
+                ->find($regionId);
+        
+        if ($region == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $shippings = $this->marketManager->regionShipping($region);
+        foreach ($shippings as $key=>$value){
+            $result[$key] = [
+                'id' => $key,
+                'name' => $value,                
+            ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                                  
+    }
+    
+    public function unloadMarketAction()
+    {
+        $marketId = (int)$this->params()->fromRoute('id', -1);
+        if ($marketId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->find($marketId);
+        
+        if ($market == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $this->marketManager->unload($market);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);       
+    }
     
     public function aplToZzapAction()
     {

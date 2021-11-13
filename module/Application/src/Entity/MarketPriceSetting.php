@@ -568,6 +568,31 @@ class MarketPriceSetting {
     }
     
     /**
+     * Returns format ext.
+     * @return int     
+     */
+    public function getFilenameExt($suffix = '') 
+    {
+        if ($this->format == self::FORMAT_XLSX){
+            return $this->filename.$this->id.'.xlsx';
+        }
+        if ($this->format == self::FORMAT_YML){
+            return $this->filename.$this->id.'.yml';
+        }
+        
+        return $this->filename.$this->id.'.dat';
+    }
+    
+    /**
+     * Returns format zip.
+     * @return int     
+     */
+    public function getFilenameZip() 
+    {
+        return $this->filename.$this->id.'.zip';
+    }
+    
+    /**
      * Returns possible formats as array.
      * @return array
      */

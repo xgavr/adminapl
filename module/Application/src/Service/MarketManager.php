@@ -20,6 +20,8 @@ use Application\Entity\Article;
 use Laminas\Filter\Compress;
 use Application\Entity\GenericGroup;
 use Application\Entity\SupplySetting;
+use Company\Entity\Office;
+use Application\Entity\Shipping;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -114,6 +116,7 @@ class MarketManager
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
+        $market->setShipping($data['shipping']);
         
         $this->assignRates($market, $data['rates']);        
         $this->entityManager->persist($market);        
@@ -152,6 +155,7 @@ class MarketManager
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
+        $market->setShipping($data['shipping']);
         
         $this->assignRates($market, $data['rates']);
         $this->entityManager->persist($market);
@@ -172,6 +176,28 @@ class MarketManager
         $this->entityManager->flush();
     }
 
+    /**
+     * Доставки региона
+     * 
+     * @param Region $region
+     * @param array
+     */
+    public function regionShipping($region)
+    {
+        $result = ['не указана'];
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy(['region' => $region->getId(), 'status' => Office::STATUS_ACTIVE]);
+                
+        foreach ($offices as $office){
+            $shippings = $this->entityManager->getRepository(Shipping::class)
+                    ->findBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
+            foreach ($shippings as $shipping){
+                $result[$shipping->getId()] = $shipping->getName().' ('.$office->getName().')';                
+            }    
+        }
+        return $result;
+    }
+    
     /**
      * Получить картинки товара
      * @param Goods $good
@@ -258,13 +284,14 @@ class MarketManager
      */
     private function fileUnload($market, $rows)
     {
-        $filename = $market->getFilename().'.'.$market->getFormat();
+        $filename = $market->getFilenameExt();
         $path = self::MARKET_FOLDER.'/'.$filename;
 
         $this->ftpManager->putMarketPriceToApl(['source_file' => $path, 'dest_file' => $filename]);            
 
-        $zipFilename = $filename.'.zip';
+        $zipFilename = $market->getFilenameZip();
         $zipPath = self::MARKET_FOLDER.'/'.$zipFilename;
+
         $filter = new Compress([
             'adapter' => 'Zip',
             'options' => [
@@ -334,7 +361,7 @@ class MarketManager
             }    
         }
         
-        $filename = $market->getFilename().'.'.$market->getFormat();
+        $filename = $market->getFilenameExt();
         $path = self::MARKET_FOLDER.'/'.$filename;
 
         $writer = new Xlsx($spreadsheet);
@@ -351,7 +378,7 @@ class MarketManager
      */
     public function marketYML($market)
     {
-        $filename = $market->getFilename().'.'.$market->getFormat();
+        $filename = $market->getFilenameExt();
         $path = self::MARKET_FOLDER.'/'.$filename;
 
         $settings = (new Settings())
@@ -407,11 +434,14 @@ class MarketManager
                     $categoryId = $groups[$good->getGenericGroup()->getMasterName()];
                 }
                 
-                $delyvery = (new Delivery())
-                    ->setDays($rawprices['speed'])
-                    ->setOrderBefore($rawprices['orderbefore'])
-                    ->setCost($categoryId)
-                    ;
+                $delyvery = null;
+                if ($market->getShipping()){
+                    $delyvery = (new Delivery())
+                        ->setDays($rawprices['speed'])
+                        ->setOrderBefore($rawprices['orderbefore'])
+                        ->setCost($market->getShipping()->getOrderRateTrip($opts[$market->getPricecol()]))
+                        ;
+                }    
 
                 $offers[] = (new OfferSimple())
                     ->setId($good->getAplId())
@@ -431,6 +461,7 @@ class MarketManager
                     ->setDelivery(true)   
                     ->addDeliveryOption($delivery)    
                 ;
+                
                 $this->entityManager->detach($good);
                 $rows++;
             }    
@@ -438,11 +469,13 @@ class MarketManager
         
         // Optional creating deliveries array (https://yandex.ru/support/partnermarket/elements/delivery-options.xml)
         $deliveries = [];
-        $deliveries[] = (new Delivery())
-            ->setCost(2)
-            ->setDays(1)
-            ->setOrderBefore(12)
-        ;
+        if ($market->getShipping()){
+            $deliveries[] = (new Delivery())
+                ->setCost($market->getShipping()->getRateTrip())
+                ->setDays(1)
+                ->setOrderBefore(12)
+            ;
+        }    
 
         (new Generator($settings))->generate(
             $shopInfo,
@@ -457,6 +490,21 @@ class MarketManager
         return;
     }
 
+    /**
+     * запусть выгрузку прайса
+     * @param MarketPriceSetting $market
+     */
+    public function unload($market)
+    {
+        if ($market->getFormat() == MarketPriceSetting::FORMAT_XLSX){
+            $this->marketXLSX($market);
+        }
+        if ($market->getFormat() == MarketPriceSetting::FORMAT_YML){
+            $this->marketYML($market);
+        }
+        return;
+    }
+    
     /**
      * Выгрузка в zzap только апл
      * 

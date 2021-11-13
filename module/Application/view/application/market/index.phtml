@@ -63,6 +63,10 @@ $this->pageBreadcrumbs()->setItems([
             </td>
             <td>
                 <nobr>
+                    <button value="/market/unload-market/<?= $market->getId()?>" class="btn btn-default btn-xs refresh-button"
+                            title="Выгрузить">
+                        <span class="glyphicon glyphicon-download" ></span>
+                    </button> 
                     <button class="btn btn-xs btn-info market-modal-show" type="button" modal-url="/market/edit-form/<?= $market->getId()?>">
                         <span class="glyphicon glyphicon-pencil" ></span>
                     </button>

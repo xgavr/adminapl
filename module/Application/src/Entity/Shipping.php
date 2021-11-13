@@ -141,6 +141,22 @@ class Shipping {
         return $this->rateTrip;
     }
 
+    /**
+     * Цена доставки от стоимости заказа
+     * @param float $orderTotal
+     * @return float
+     */
+    public function getOrderRateTrip($orderTotal) 
+    {
+        if ($orderTotal >= $this->office->getShippingLimit2()){
+            return $this->rateTrip2;
+        }
+        if ($orderTotal >= $this->office->getShippingLimit1()){
+            return $this->rateTrip1;
+        }
+        return $this->rateTrip;
+    }
+    
     public function setRateTrip($rateTrip) 
     {
         $this->rateTrip = $rateTrip;
