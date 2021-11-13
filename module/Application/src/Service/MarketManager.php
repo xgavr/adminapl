@@ -360,6 +360,11 @@ class MarketManager
                 $this->entityManager->detach($good);
                 $k++;
                 $rows++;
+                if ($market->getMaxRowCount()){
+                    if ($rows >= $market->getMaxRowCount()){
+                        break;
+                    }
+                }
             }    
         }
         
@@ -467,6 +472,11 @@ class MarketManager
                 $this->entityManager->detach($good);
                 $rows++;
             }    
+            if ($market->getMaxRowCount()){
+                if ($rows >= $market->getMaxRowCount()){
+                    break;
+                }
+            }
         }
         
         // Optional creating deliveries array (https://yandex.ru/support/partnermarket/elements/delivery-options.xml)

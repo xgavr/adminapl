@@ -26,9 +26,9 @@ $this->pageBreadcrumbs()->setItems([
         <th>Файл</th>        
         <th>Формат</th>
         <th>Регион</th>
-        <th>Картирнок</th>
         <th>Цены</th>
         <th>Статус</th>        
+        <th>Строк</th>
         <th>Дата выгрузки</th>        
         <th></th>        
     </tr>
@@ -50,13 +50,13 @@ $this->pageBreadcrumbs()->setItems([
                 <?= $this->escapeHtml($market->getRegion()->getName()); ?>
             </td>
             <td>
-                <?= $this->escapeHtml($market->getImageCount()); ?>
-            </td>
-            <td>
                 <?= $this->escapeHtml($market->getPricecolAsString()); ?>
             </td>
             <td>
                 <?= $this->escapeHtml($market->getStatusAsString()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getRowUnload()); ?>
             </td>
             <td>
                 <?= $this->escapeHtml($market->getDateUnload()); ?>
@@ -82,6 +82,7 @@ $this->pageBreadcrumbs()->setItems([
                 <small>
                     Наименования:  <?= $this->escapeHtml($market->getNameSettingAsString());?>; 
                     Картинки:  <?= $this->escapeHtml($market->getGoodSettingAsString());?>; 
+                    Картинок:  <?= $this->escapeHtml($market->getImageCount());?>; 
                     Поставщик:  <?= $this->escapeHtml(($market->getSupplier()) ? $market->getSupplier()->getName():'Все');?>;
                     Доставка:  <?= $this->escapeHtml(($market->getShipping()) ? $market->getShipping()->getName():'Нет');?>;
                     Производители:  <?= $this->escapeHtml($market->getProducerSettingAsString());?>; 
@@ -92,7 +93,6 @@ $this->pageBreadcrumbs()->setItems([
                     Цена минимальная:  <?= $this->escapeHtml($market->getMinPrice());?>; 
                     Цена максимальная:  <?= $this->escapeHtml($market->getMaxPrice());?>; 
                     Выгружать строк:  <?= $this->escapeHtml($market->getMaxRowCount());?>; 
-                    Делить на блоки:  <?= $this->escapeHtml($market->getBlockRowCount());?>;
                     Фильтр движений:  <?= $this->escapeHtml($market->getMovementLimit());?>;
                     Коментарий: <?= $this->escapeHtml($market->getInfo());?>
                 </small>

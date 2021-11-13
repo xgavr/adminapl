@@ -325,7 +325,7 @@ class MarketForm extends Form
         ]);
         
         $this->add([           
-            'type'  => 'number',
+            'type'  => 'hidden',
             'name' => 'blockRowCount',
             'attributes' => [
                 'id' => 'blockRowCount',
