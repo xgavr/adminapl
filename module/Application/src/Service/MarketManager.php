@@ -250,13 +250,13 @@ class MarketManager
                         'status' => Rawprice::STATUS_PARSED,
                     ]);        
             foreach ($rawprices as $rawprice){
-                $suppier = $rawprice->getRaw()->getSupplier();
+                $supplier = $rawprice->getRaw()->getSupplier();
                 if ($market->getSupplier()){
                     if ($market->getSupplier()->getId() != $supplier->getId()){
                         continue;
                     }
                 }    
-                foreach ($suppier->getSupplySettings() as $supplySetting){
+                foreach ($supplier->getSupplySettings() as $supplySetting){
                     $supspeed = $rp['speed'];
                     if ($market->getRegion()->getId() == $supplySetting->getOffice()->getRegion()->getId() 
                             && $supplySetting->getStatus() == SupplySetting::STATUS_ACTIVE){

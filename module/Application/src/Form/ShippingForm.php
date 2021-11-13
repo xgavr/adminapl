@@ -112,7 +112,7 @@ class ShippingForm extends Form
                 'id' => 'rateTrip1',
                 'min'  => '0',
                 'step' => '10', 
-                'value' => 0,
+                'value' => '0',
             ],
             'options' => [
                 'label' => 'Стоимость при заказе от '.$this->office->getShippingLimit1(),
@@ -127,7 +127,7 @@ class ShippingForm extends Form
                 'id' => 'rateTrip2',
                 'min'  => '0',
                 'step' => '10', 
-                'value' => 0,
+                'value' => '0',
             ],
             'options' => [
                 'label' => 'Стоимость при заказе от '.$this->office->getShippingLimit2(),
@@ -142,7 +142,7 @@ class ShippingForm extends Form
                 'id' => 'rateDistance',
                 'min'  => '0',
                 'step' => '10',
-                'value' => 0,
+                'value' => '0',
             ],
             'options' => [
                 'label' => 'Стоимость за км',
