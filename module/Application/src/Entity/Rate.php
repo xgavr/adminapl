@@ -417,8 +417,8 @@ class Rate
         if ($this->genericGroup){
             return $this->genericGroup->getGoodCount();
         }
-        if ($this->tokenGroupGroup){
-            return $this->tokenGroupGroup->getGoodCount();
+        if ($this->tokenGroup){
+            return $this->tokenGroup->getGoodCount();
         }
         return 0;
     }
