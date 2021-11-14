@@ -221,6 +221,7 @@ class MarketManager
                     if ($image->allowTransfer()){
                         $imageList[] = $this::APL_BASE_URL.'/images/api/'.$good->getAplId().'/'.$image->getName();
                     }    
+                    $this->entityManager->detach($image);
                 }
             }
             if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH && count($imageList) == 0){
@@ -274,8 +275,10 @@ class MarketManager
                 }
                 if ($rawprice->getRealRest()){
                     $rp['realrest'] += $rawprice->getRealRest();
-                }    
+                }
+                $this->entityManager->detach($rawprice);
             }
+            $this->entityManager->detach($article);
         }        
         
         return $rp;
