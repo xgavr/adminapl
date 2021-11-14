@@ -436,8 +436,11 @@ class MarketManager
 
                 $categoryId = 999;
                 if ($good->getGenericGroup()){
-                    $categoryId = $groups[md5($good->getGenericGroup()->getMasterName())]['id'];
-                    $priceGroups[$categoryId] = $good->getGenericGroup()->getMasterName();
+                    $key = $good->getGenericGroup()->getAssemblyGroup();
+                    if (array_key_exists(md5($key), $groups)) {
+                        $categoryId = $groups[md5($key)]['id'];
+                        $priceGroups[$categoryId] = $key;
+                    }    
                 }
                 
                 $offer = new OfferSimple();

@@ -119,7 +119,7 @@ class MarketController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();            
-            if (!is_array($data['rates'])){
+            if (empty($data['rates'])){
                 $data['rates'] = [];
             }
                         

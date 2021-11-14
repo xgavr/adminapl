@@ -441,7 +441,7 @@ class GenericGroupRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g.masterName')
+        $queryBuilder->select('g.assemblyGroup')
                 ->from(GenericGroup::class, 'g')
                 ->distinct()
                 ->where('g.status = ?1')
@@ -453,9 +453,9 @@ class GenericGroupRepository extends EntityRepository{
         $result = [];
         $i = 1;
         foreach ($data as $row){
-            $result[md5($row['masterName'])] = [
+            $result[md5($row['assemblyGroup'])] = [
                 'id' => $i,
-                'name' => $row['masterName'],
+                'name' => $row['assemblyGroup'],
             ];
             $i++;
         }
