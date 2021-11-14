@@ -33,6 +33,9 @@ class OfficeRepository extends EntityRepository{
         if (!$dateDoc){
             $dateDoc = date('Y-m-d');
         }
+        if ($dateDoc == '1970-01-01'){
+            $dateDoc = date('Y-m-d');
+        }
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
@@ -48,7 +51,7 @@ class OfficeRepository extends EntityRepository{
                 ->orderBy('l.dateStart', 'DESC')
                 ->setMaxResults(1)
                 ;
-                var_dump($queryBuilder->getParameters()); exit;
+//                var_dump($queryBuilder->getParameters()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();
         
     }
