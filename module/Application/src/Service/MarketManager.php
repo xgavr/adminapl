@@ -436,7 +436,7 @@ class MarketManager
 
                 $categoryId = 999;
                 if ($good->getGenericGroup()){
-                    $categoryId = $groups[$good->getGenericGroup()->getMasterName()];
+                    $categoryId = $groups[md5($good->getGenericGroup()->getMasterName())]['id'];
                     $priceGroups[$categoryId] = $good->getGenericGroup()->getMasterName();
                 }
                 

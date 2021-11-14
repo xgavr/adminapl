@@ -453,7 +453,10 @@ class GenericGroupRepository extends EntityRepository{
         $result = [];
         $i = 1;
         foreach ($data as $row){
-            $result[$row['masterName']] = $i;
+            $result[md5($row['masterName'])] = [
+                'id' => $i,
+                'name' => $row['masterName'],
+            ];
             $i++;
         }
         
