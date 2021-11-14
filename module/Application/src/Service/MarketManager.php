@@ -410,13 +410,7 @@ class MarketManager
         // Creating categories array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#categories)
         $groups = $this->entityManager->getRepository(GenericGroup::class)
                 ->masterGroups();        
-        $categories = [0 => 'Прочее'];
-        foreach ($groups as $key=>$value){
-            $categories[] = (new Category())
-                ->setId($value)
-                ->setName($key)
-            ;        
-        }    
+        $priceGroups = [0 => 'Прочее'];
 
         // Creating offers array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#offers)
         $offers = [];
@@ -436,9 +430,11 @@ class MarketManager
                 }
                 
                 $opts = $good->getOpts();
+
                 $categoryId = 0;
                 if ($good->getGenericGroup()){
                     $categoryId = $groups[$good->getGenericGroup()->getMasterName()];
+                    $priceGroups[$categoryId] = $good->getGenericGroup()->getMasterName();
                 }
                 
                 $offer = new OfferSimple();
@@ -479,6 +475,13 @@ class MarketManager
                 }
             }
         }
+
+        foreach ($priceGroups as $key=>$value){
+            $categories[] = (new Category())
+                ->setId($key)
+                ->setName($value)
+            ;        
+        }    
         
         // Optional creating deliveries array (https://yandex.ru/support/partnermarket/elements/delivery-options.xml)
         $deliveries = [];
