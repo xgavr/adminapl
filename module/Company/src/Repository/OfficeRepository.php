@@ -48,7 +48,7 @@ class OfficeRepository extends EntityRepository{
                 ->orderBy('l.dateStart', 'DESC')
                 ->setMaxResults(1)
                 ;
-        
+                var_dump($queryBuilder->getDQL()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();
         
     }
