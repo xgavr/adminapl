@@ -494,6 +494,7 @@ class OrderManager
             'date_created' => date('Y-m-d H:i:s'),
         ];
 
+        $company = null;
         if (!empty($data['company'])){
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($data['company']);
