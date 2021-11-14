@@ -276,6 +276,7 @@ class MarketManager
                 if ($rawprice->getRealRest()){
                     $rp['realrest'] += $rawprice->getRealRest();
                 }
+                $this->entityManager->detach($supplier);
                 $this->entityManager->detach($rawprice);
             }
             $this->entityManager->detach($article);
@@ -371,6 +372,7 @@ class MarketManager
                         break;
                     }
                 }
+                $this->entityManager->detach($good);
             }    
         }
         
@@ -584,72 +586,5 @@ class MarketManager
         }
         
         return;
-    }
-    
-    /**
-     * Выгрузка в формаt YML
-     * 
-     * @param array $params
-     */
-    public function toYml($params)
-    {
-        $filename = 'market.yml';
-        $path = self::MARKET_FOLDER.'/'.$filename;        
-        
-//        $file = tempnam(sys_get_temp_dir(), 'YMLGenerator');
-        $settings = (new Settings())
-            ->setOutputFile($path)
-            ->setEncoding('UTF-8')
-        ;
-
-        // Creating ShopInfo object (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#shop)
-        $shopInfo = (new ShopInfo())
-            ->setName('APL')
-            ->setCompany('АПЛ Сервис')
-            ->setUrl('https://autopartslist.ru/')
-        ;
-
-        // Creating currencies array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#currencies)
-        $currencies = [];
-        $currencies[] = (new Currency())
-            ->setId('RUR')
-            ->setRate(1)
-        ;
-
-        // Creating categories array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#categories)
-        $categories = [];
-        $categories[] = (new Category())
-            ->setId(1)
-            ->setName($this->faker->name)
-        ;        
-        
-        // Creating offers array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#offers)
-        $offers = [];
-        $offers[] = (new OfferSimple())
-            ->setId(12346)
-            ->setAvailable(true)
-            ->setUrl('http://www.best.seller.com/product_page.php?pid=12348')
-            ->setPrice($this->faker->numberBetween(1, 9999))
-            ->setCurrencyId('USD')
-            ->setCategoryId(1)
-            ->setDelivery(false)
-            ->setName('Best product ever')
-        ;
-
-        // Optional creating deliveries array (https://yandex.ru/support/partnermarket/elements/delivery-options.xml)
-        $deliveries = [];
-        $deliveries[] = (new Delivery())
-            ->setCost(2)
-            ->setDays(1)
-            ->setOrderBefore(14)
-        ;
-
-        (new Generator($settings))->generate(
-            $shopInfo,
-            $currencies,
-            $categories,
-            $offers,
-            $deliveries
-        );        
     }    
 }

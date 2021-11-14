@@ -100,7 +100,7 @@ class MarketForm extends Form
                 'id' => 'info'
             ],
             'options' => [
-                'label' => 'Описание',
+                'label' => 'Комментарий',
             ],
         ]);
         
