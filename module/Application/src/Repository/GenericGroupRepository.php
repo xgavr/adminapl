@@ -447,6 +447,7 @@ class GenericGroupRepository extends EntityRepository{
                 ->where('g.status = ?1')
                 ->setParameter('1', GenericGroup::STATUS_ACTIVE)
                 ->andWhere('g.goodCount > 0')
+                ->andWhere('g.assemblyGroup is not null')
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
