@@ -223,6 +223,9 @@ class MarketManager
                     }    
                 }
             }
+            if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH && count($imageList) == 0){
+                return false;
+            }
             if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR && count($imageList) == 0){
                 return false;
             }
@@ -410,7 +413,7 @@ class MarketManager
         // Creating categories array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#categories)
         $groups = $this->entityManager->getRepository(GenericGroup::class)
                 ->masterGroups();        
-        $priceGroups = [0 => 'Прочее'];
+        $priceGroups = [999 => 'Прочее'];
 
         // Creating offers array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#offers)
         $offers = [];
@@ -431,7 +434,7 @@ class MarketManager
                 
                 $opts = $good->getOpts();
 
-                $categoryId = 0;
+                $categoryId = 999;
                 if ($good->getGenericGroup()){
                     $categoryId = $groups[$good->getGenericGroup()->getMasterName()];
                     $priceGroups[$categoryId] = $good->getGenericGroup()->getMasterName();
@@ -475,7 +478,8 @@ class MarketManager
                 }
             }
         }
-
+        
+        ksort($priceGroups);
         foreach ($priceGroups as $key=>$value){
             $categories[] = (new Category())
                 ->setId($key)
