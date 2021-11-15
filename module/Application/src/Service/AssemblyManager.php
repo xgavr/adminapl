@@ -16,6 +16,7 @@ use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 use Application\Entity\GenericGroup;
 use Application\Entity\Oem;
+use Application\Entity\GoodSupplier;
 
 /**
  * Description of AssemblyManager
@@ -702,6 +703,26 @@ class AssemblyManager
     }
     
     /**
+     * Добавить зависимость товар-поставщик
+     * @param Goods $good
+     * @param Rawprice $rawprice
+     */
+    private function insertGoodSupplier($good, $rawprice)
+    {
+        $supplier = $rawprice->getRaw()->getSupplier();
+        $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
+                ->findOneBy(['good' => $good->getId(), 'supplier' => $supplier->getId()]);
+        if ($goodSupplier){
+            $this->entityManager->getConnection()
+                    ->update('good_supplier', ['rest' => $rawprice->getRealRest(), 'up_date' => date('Y-m-d H:i:s')], ['id' => $goodSupplier->getId()]);
+        } else {
+            $this->entityManager->getConnection()
+                    ->insert('good_supplier', ['good_id' => $good->getId(), 'supplier_id' => $supplier->getId(), 'rest' => $rawprice->getRealRest(), 'up_date' => date('Y-m-d H:i:s')]);
+        }        
+        return;
+    }
+    
+    /**
      * Добавление нового товара из прайса
      * 
      * @param \Application\Entity\Rawprice $rawprice
@@ -751,6 +772,8 @@ class AssemblyManager
                 $this->entityManager->getRepository(Goods::class)
                         ->updateGood($good, ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);                
             }
+            
+            $this->insertGoodSupplier($good, $rawprice);
             
             $this->entityManager->getRepository(Rawprice::class)
                     ->updateRawpriceField($rawprice->getId(), ['good_id' => $good->getId(), 'status_good' => Rawprice::GOOD_OK]);

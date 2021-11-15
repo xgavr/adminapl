@@ -191,6 +191,8 @@ class GoodsManager
                 
         $this->entityManager->getRepository(\Application\Entity\Oem::class)
                 ->removeIntersectOem($good);
+        
+        $this->entityManager->getConnection()->delete('good_supplier', ['good_id' => $good->getId()]);
                 
         $this->entityManager->remove($good);
         

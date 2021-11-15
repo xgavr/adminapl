@@ -245,5 +245,44 @@ class MarketController extends AbstractActionController
             'ok'
         ]);        
     }
-    
+ 
+    public function downloadPriceAction()
+    {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        $zip = $this->params()->fromQuery('zip', 0);
+
+        $marketId = (int)$this->params()->fromRoute('id', -1);
+        if ($marketId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->find($marketId);
+        
+        if ($market == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $file = realpath($this->marketManager->filenamePath($market, $zip));
+        
+        if (file_exists($file)){
+            if (ob_get_level()) {
+              ob_end_clean();
+            }
+            // заставляем браузер показать окно сохранения файла
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename=' . basename($file));
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            // читаем файл и отправляем его пользователю
+            readfile($file);
+        }
+        exit;          
+    }      
 }

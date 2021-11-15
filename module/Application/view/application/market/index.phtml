@@ -63,10 +63,6 @@ $this->pageBreadcrumbs()->setItems([
             </td>
             <td>
                 <nobr>
-                    <button value="/market/unload-market/<?= $market->getId()?>" class="btn btn-default btn-xs refresh-button"
-                            title="Выгрузить">
-                        <span class="glyphicon glyphicon-download" ></span>
-                    </button> 
                     <button class="btn btn-xs btn-info market-modal-show" type="button" modal-url="/market/edit-form/<?= $market->getId()?>">
                         <span class="glyphicon glyphicon-pencil" ></span>
                     </button>
@@ -78,7 +74,7 @@ $this->pageBreadcrumbs()->setItems([
             </td>    
         </tr> 
         <tr>
-            <td colspan="10">
+            <td colspan="8">
                 <small>
                     Наименования:  <?= $this->escapeHtml($market->getNameSettingAsString());?>; 
                     Картинки:  <?= $this->escapeHtml($market->getGoodSettingAsString());?>; 
@@ -97,6 +93,26 @@ $this->pageBreadcrumbs()->setItems([
                     Коментарий: <?= $this->escapeHtml($market->getInfo());?>
                 </small>
             </td>
+            <td>
+                <nobr>
+                    <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('market',
+                            ['action'=>'download-price', 'id' => $market->getId()]); ?>">
+                        <span class="glyphicon glyphicon-download"></span>
+                    </a>
+                    <a class="btn btn-default btn-xs" title="Скачать ZIP" href="<?= $this->url('market',
+                            ['action'=>'download-price', 'id' => $market->getId()], ['query' => ['zip' => 1]]); ?>">
+                        <span class="glyphicon glyphicon-compressed"></span>
+                    </a>
+                </nobr>    
+            </td>
+            <td>
+                <nobr>
+                    <button value="/market/unload-market/<?= $market->getId()?>" class="btn btn-default btn-xs refresh-button"
+                            title="Сформировать">
+                        <span class="glyphicon glyphicon-play" ></span>
+                    </button> 
+                </nobr>    
+            </td>    
         </tr>
     <?php endforeach; ?>       
 </table>

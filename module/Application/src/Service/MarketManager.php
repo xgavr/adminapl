@@ -61,6 +61,22 @@ class MarketManager
     }
     
     /**
+     * Полное имя файла
+     * @param MarketPriceSetting $market
+     * @param integer $zip
+     * @return string
+     */
+    public function filenamePath($market, $zip=0)
+    {
+        if ($zip){
+            $filename = $market->getFilenameZip();
+        } else {
+            $filename = $market->getFilenameExt();
+        }    
+        return self::MARKET_FOLDER.'/'.$filename;        
+    }
+    
+    /**
      * A helper method which assigns new rates to the market.
      * @param MarketPriceSetting $market
      * @param array $rateIds
