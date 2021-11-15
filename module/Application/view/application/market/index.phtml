@@ -94,16 +94,18 @@ $this->pageBreadcrumbs()->setItems([
                 </small>
             </td>
             <td>
-                <nobr>
-                    <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('market',
-                            ['action'=>'download-price', 'id' => $market->getId()]); ?>">
-                        <span class="glyphicon glyphicon-download"></span>
-                    </a>
-                    <a class="btn btn-default btn-xs" title="Скачать ZIP" href="<?= $this->url('market',
-                            ['action'=>'download-price', 'id' => $market->getId()], ['query' => ['zip' => 1]]); ?>">
-                        <span class="glyphicon glyphicon-compressed"></span>
-                    </a>
-                </nobr>    
+                <?php if ($market->getDateUnload()):?>
+                    <nobr>
+                        <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('market',
+                                ['action'=>'download-price', 'id' => $market->getId()]); ?>">
+                            <span class="glyphicon glyphicon-download"></span>
+                        </a>
+                        <a class="btn btn-default btn-xs" title="Скачать ZIP" href="<?= $this->url('market',
+                                ['action'=>'download-price', 'id' => $market->getId()], ['query' => ['zip' => 1]]); ?>">
+                            <span class="glyphicon glyphicon-compressed"></span>
+                        </a>
+                    </nobr>    
+                <?php endif; ?>        
             </td>
             <td>
                 <nobr>

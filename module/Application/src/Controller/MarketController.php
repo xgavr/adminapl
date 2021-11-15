@@ -92,7 +92,7 @@ class MarketController extends AbstractActionController
         
         $allRates = $this->entityManager->getRepository(Rate::class)
                 ->findBy(['status' => Rate::STATUS_ACTIVE], ['id' => 'ASC']);
-        $rateList = ['0' => '--все--'];
+        //$rateList = ['0' => '--все--'];
         foreach ($allRates as $rate) {
             $rateList[$rate->getId()] = $rate->getName();
         }

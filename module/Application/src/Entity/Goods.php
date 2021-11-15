@@ -340,6 +340,11 @@ class Goods {
         return $this->name;
     }
 
+    public function getNameProducerCode() 
+    {
+        return $this->name.' '.$this->producer->getName().' '.$this->code;
+    }
+
     public function setName($name) 
     {
         $this->name = $name;

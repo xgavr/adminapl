@@ -22,6 +22,7 @@ use Application\Entity\GenericGroup;
 use Application\Entity\SupplySetting;
 use Company\Entity\Office;
 use Application\Entity\Shipping;
+use Application\Entity\GoodAttributeValue;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -58,6 +59,10 @@ class MarketManager
     {
         $this->entityManager = $entityManager;
         $this->ftpManager = $ftpManager;
+        
+        if (!file_exists(self::MARKET_FOLDER)){
+            mkdir(self::MARKET_FOLDER);
+        }    
     }
     
     /**
@@ -72,7 +77,7 @@ class MarketManager
             $filename = $market->getFilenameZip();
         } else {
             $filename = $market->getFilenameExt();
-        }    
+        } 
         return self::MARKET_FOLDER.'/'.$filename;        
     }
     
@@ -335,6 +340,31 @@ class MarketManager
     }
     
     /**
+     * Описание товара
+     * @param MarketPriceSetting $market
+     * @param Goods $good
+     * @return string
+     */
+    private function description($market, $good)
+    {
+        $result = "<ul>"
+                . "<li>{$good->getName()}</li>"
+                . "<li>Производитель: {$good->getProducer()->getName()}</li>"
+                . "<li>Артикул: {$good->getCode()}</li>";
+                
+        $values = $this->entityManager->getRepository(GoodAttributeValue::class)
+                ->findBy(['good' => $good->getId()]);
+        if ($values){
+            foreach ($values as $value){
+                $result .= "<li>{$value->getAttribute()->getName()}: {$value->getAttributeValue()->getValue()}</li>";
+            }
+        }    
+        $result .= 
+        $result .= "</ul>";
+        return $result;        
+    }
+    
+    /**
      * Данные для прайса
      * @param MarketPriceSetting $market
      * @return array
@@ -348,7 +378,9 @@ class MarketManager
         $sheet->setCellValue("B1", 'Производитель');
         $sheet->setCellValue("C1", 'Наименование');
         $sheet->setCellValue("D1", 'Описание');
-        $sheet->setCellValue("E1", 'Картинка');
+        if (!empty($market->getImageCount())){
+            $sheet->setCellValue("E1", 'Картинка');
+        }    
         $sheet->setCellValue("F1", 'Наличие');
         $sheet->setCellValue("G1", 'Цена');
         $k = 2;
@@ -360,10 +392,12 @@ class MarketManager
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $good){
-                $images = $this->images($good, $market);
-                if ($images === false){
-                    continue;
-                }
+                if (!empty($market->getImageCount())){
+                    $images = $this->images($good, $market);
+                    if ($images === false){
+                        continue;
+                    }
+                }    
                 
                 $rawprices = $this->rawprices($good, $market);
                 if ($rawprices['realrest'] == 0){
@@ -375,7 +409,9 @@ class MarketManager
                 $sheet->setCellValue("B$k", $good->getProducer()->getName());
                 $sheet->setCellValue("C$k", $good->getName());
                 $sheet->setCellValue("D$k", $good->getDescription());
-                $sheet->setCellValue("E$k", implode(';', $images));
+                if (!empty($market->getImageCount())){
+                    $sheet->setCellValue("E$k", implode(';', $images));
+                }
                 $sheet->setCellValue("F$k", $rawprices['realrest']);
                 $sheet->setCellValue("G$k", $opts[$market->getPricecol()]);
 //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
@@ -472,7 +508,7 @@ class MarketManager
                     ->setCurrencyId('RUR')
                     ->setCategoryId($categoryId)
                     ->setDelivery(true)
-                    ->setName($good->getName())
+                    ->setName($good->getNameProducerCode())
                     ->setPictures($images)
                     ->setVendor($good->getProducer()->getName())
                     ->setVendorCode($good->getCode())
