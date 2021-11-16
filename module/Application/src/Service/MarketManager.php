@@ -24,6 +24,7 @@ use Company\Entity\Office;
 use Application\Entity\Shipping;
 use Application\Entity\GoodAttributeValue;
 use Application\Entity\Attribute;
+use Application\Entity\GoodSupplier;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -308,6 +309,66 @@ class MarketManager
     }
     
     /**
+     * Остатки и доставки
+     * @param Goods $good
+     * @param MarketPriceSetting $market
+     */
+    private function restShipping($good, $market)
+    {
+        $rp = [
+            'realrest' => 0,
+            'speed' => 3,
+            'orderbefore' => 12,
+        ];
+        
+        $goodSuppliers = $this->entityManager->getRepository(GoodSupplier::class)
+                ->goodSuppliers($good, $market);
+        foreach ($goodSuppliers as $goodSupplier){
+            $rp['realrest'] += $goodSupplier->getRest();
+
+            $supplier = $goodSupplier->getSupplier();
+            $supplySettings = $this->entityManager->getRepository(SupplySetting::class)
+                    ->supplySettings($supplier, null, $market->getRegion());
+            foreach ($supplier->getSupplySettings() as $supplySetting){
+                $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
+                if ($rp['speed'] > $supspeed){
+                    $rp['orderbefore'] = $supplySetting->getOrderBeforeHMax12();
+                    $rp['speed'] = $supspeed;
+                }
+                $this->entityManager->detach($supplySetting);
+            }            
+            $this->entityManager->detach($goodSupplier);
+        }        
+        
+        return $rp;
+    }
+
+    /**
+     * Описание товара
+     * @param MarketPriceSetting $market
+     * @param Goods $good
+     * @return string
+     */
+    private function description($market, $good)
+    {
+        $result = "<![CDATA[<ul>"
+                . "<li>{$good->getName()}</li>"
+                . "<li>Производитель: {$good->getProducer()->getName()}</li>"
+                . "<li>Артикул: {$good->getCode()}</li>";
+                
+        $values = $this->entityManager->getRepository(GoodAttributeValue::class)
+                ->findBy(['good' => $good->getId(), 'status' => Attribute::STATUS_ACTIVE]);
+        if ($values){
+            foreach ($values as $value){
+                $result .= "<li>{$value->getAttribute()->getName()}: {$value->getAttributeValue()->getValue()}</li>";
+            }
+        }    
+        $result .= 
+        $result .= "</ul>]]";
+        return $result;        
+    }
+    
+    /**
      * Сохранение файла прайса
      * 
      * @param MarketPriceSetting $market
@@ -338,31 +399,6 @@ class MarketManager
         $this->entityManager->flush($market);
         
         return;
-    }
-    
-    /**
-     * Описание товара
-     * @param MarketPriceSetting $market
-     * @param Goods $good
-     * @return string
-     */
-    private function description($market, $good)
-    {
-        $result = "<![CDATA[<ul>"
-                . "<li>{$good->getName()}</li>"
-                . "<li>Производитель: {$good->getProducer()->getName()}</li>"
-                . "<li>Артикул: {$good->getCode()}</li>";
-                
-        $values = $this->entityManager->getRepository(GoodAttributeValue::class)
-                ->findBy(['good' => $good->getId(), 'status' => Attribute::STATUS_ACTIVE]);
-        if ($values){
-            foreach ($values as $value){
-                $result .= "<li>{$value->getAttribute()->getName()}: {$value->getAttributeValue()->getValue()}</li>";
-            }
-        }    
-        $result .= 
-        $result .= "</ul>]]";
-        return $result;        
     }
     
     /**

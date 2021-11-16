@@ -1474,7 +1474,9 @@ class AplService {
                         if ($rawprice->getRealRest()){
                             $rp[] = $filter->filter($rawprice);
                         }    
+                        $this->entityManager->detach($rawprice);
                     }
+                    $this->entityManager->detach($article);
                 }
                 
                 $package[] = [
@@ -1514,7 +1516,9 @@ class AplService {
                         $upd['apl_id'] = 0;
                     }    
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), $upd);                        
+                            ->updateGoodId($good->getId(), $upd);
+                    
+                    $this->entityManager->detach($good);
                 }    
             }
 

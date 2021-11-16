@@ -12,6 +12,13 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Application\Entity\Contact;
+use Application\Entity\GoodSupplier;
+use Application\Entity\Goods;
+use Application\Entity\MarketPriceSetting;
+use Application\Entity\SupplySetting;
+use Company\Entity\Office;
+use Company\Entity\Region;
+
 /**
  * Description of SupplierRepository
  *
@@ -186,4 +193,64 @@ class SupplierRepository extends EntityRepository{
         
     }
     
+    /**
+     * Поставщики товара
+     * @param Goods $good
+     * @param MarketPriceSetting $market
+     */
+    public function goodSuppliers($good, $market = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('gs')
+                ->from(GoodSupplier::class, 'gs')
+                ->where('gs.good = ?1')
+                ->setParameter('1', $good->getId())
+                ->andWhere('gs.update >= ?2')
+                ->setParameter('2', date('Y-m-d', strtotime('-2 days')))
+                ;
+        
+        if ($market->getSupplier()){
+            $queryBuilder->andWhere('gs.supplier = ?3')
+                    ->setParameter('3', $market->getSupplier()->getId())
+                    ;
+        }
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+    
+    /**
+     * Варианты доставок
+     * @param Supplier $supplier
+     * @param Office $office
+     * @param Region $region
+     */
+    public function supplySettings($supplier, $office = null, $region = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('ss')
+                ->from(SupplySetting::class, 'ss')
+                ->where('ss.supplier = ?1')
+                ->setParameter('1', $supplier->getId())
+                ;
+        
+        if ($office){
+            $queryBuilder->andWhere('ss.office = ?2')
+                    ->setParameter('2', $office->getId())
+                    ;
+        }
+        
+        if ($region){
+            $queryBuilder
+                    ->join('ss.office', 'o')
+                    ->andWhere('g.region = ?3')
+                    ->setParameter('3', $region->getId())
+                    ;
+        }
+        
+        return $queryBuilder->getQuery()->getResult();                
+    }
 }
