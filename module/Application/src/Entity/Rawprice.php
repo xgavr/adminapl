@@ -15,6 +15,7 @@ use Application\Filter\OemDetectDelimiterFilter;
 use Doctrine\Common\Collections\Criteria;
 use Application\Entity\Token;
 use Application\Filter\ProducerName;
+use Application\Filter\ToFloat;
 
 /**
  * Description of Customer
@@ -766,7 +767,7 @@ class Rawprice {
 
     public function getRealPrice() 
     {
-        $filter = new \Application\Filter\ToFloat();
+        $filter = new ToFloat();
         return $filter->filter($this->price);
     }
 
@@ -787,7 +788,7 @@ class Rawprice {
                 return 1;
             }
             
-            $filter = new \Application\Filter\ToFloat();
+            $filter = new ToFloat();
             $rest = $filter->filter($this->rest);
             if (is_numeric($rest)){
                 return $rest;

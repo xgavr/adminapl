@@ -17,6 +17,7 @@ use Application\Entity\Goods;
 use Application\Entity\GenericGroup;
 use Application\Entity\Oem;
 use Application\Entity\GoodSupplier;
+use Application\Entity\Supplier;
 
 /**
  * Description of AssemblyManager
@@ -706,19 +707,22 @@ class AssemblyManager
      * Добавить зависимость товар-поставщик
      * @param Goods $good
      * @param Rawprice $rawprice
+     * @param Supplier $supplier 
      */
-    private function insertGoodSupplier($good, $rawprice)
+    private function insertGoodSupplier($good, $rawprice, $supplier)
     {
-        $supplier = $rawprice->getRaw()->getSupplier();
-        $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
-                ->findOneBy(['good' => $good->getId(), 'supplier' => $supplier->getId()]);
-        if ($goodSupplier){
-            $this->entityManager->getConnection()
-                    ->update('good_supplier', ['rest' => $rawprice->getRealRest(), 'up_date' => date('Y-m-d H:i:s')], ['id' => $goodSupplier->getId()]);
-        } else {
-            $this->entityManager->getConnection()
-                    ->insert('good_supplier', ['good_id' => $good->getId(), 'supplier_id' => $supplier->getId(), 'rest' => $rawprice->getRealRest(), 'up_date' => date('Y-m-d H:i:s')]);
-        }        
+        $rest = $rawprice->getRealRest();
+        if ($rest > 0){
+            $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
+                    ->findOneBy(['good' => $good->getId(), 'supplier' => $supplier->getId()]);
+            if ($goodSupplier){
+                $this->entityManager->getConnection()
+                        ->update('good_supplier', ['rest' => $rest, 'up_date' => date('Y-m-d H:i:s')], ['id' => $goodSupplier->getId()]);
+            } else {
+                $this->entityManager->getConnection()
+                        ->insert('good_supplier', ['good_id' => $good->getId(), 'supplier_id' => $supplier->getId(), 'rest' => $rest, 'up_date' => date('Y-m-d H:i:s')]);
+            }        
+        }    
         return;
     }
     
@@ -727,9 +731,10 @@ class AssemblyManager
      * 
      * @param \Application\Entity\Rawprice $rawprice
      * @param \Application\Entity\GenericGroup $zeroGroup
+     * @param Supplier $supplier
      * 
      */
-    public function addNewGoodFromRawprice($rawprice, $zeroGroup = null) 
+    public function addNewGoodFromRawprice($rawprice, $zeroGroup = null, $supplier = null) 
     {
         if (!$this->checkRawprice($rawprice)){
             return $this->missingData($rawprice);
@@ -773,7 +778,10 @@ class AssemblyManager
                         ->updateGood($good, ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);                
             }
             
-            $this->insertGoodSupplier($good, $rawprice);
+            if (!$supplier){
+                $supplier = $rawprice->getRaw()->getSupplier();
+            }
+            $this->insertGoodSupplier($good, $rawprice, $supplier);
             
             $this->entityManager->getRepository(Rawprice::class)
                     ->updateRawpriceField($rawprice->getId(), ['good_id' => $good->getId(), 'status_good' => Rawprice::GOOD_OK]);
@@ -804,7 +812,7 @@ class AssemblyManager
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
-                $this->addNewGoodFromRawprice($rawprice, $zeroGroup);
+                $this->addNewGoodFromRawprice($rawprice, $zeroGroup, $raw->getSupplier());
                 $this->entityManager->detach($rawprice);
             }    
             if (time() >= $finishTime){
