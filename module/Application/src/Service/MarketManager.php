@@ -23,6 +23,7 @@ use Application\Entity\SupplySetting;
 use Company\Entity\Office;
 use Application\Entity\Shipping;
 use Application\Entity\GoodAttributeValue;
+use Application\Entity\Attribute;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
 use Bukashk0zzz\YmlGenerator\Model\Category;
@@ -347,20 +348,20 @@ class MarketManager
      */
     private function description($market, $good)
     {
-        $result = "<ul>"
+        $result = "<![CDATA[<ul>"
                 . "<li>{$good->getName()}</li>"
                 . "<li>Производитель: {$good->getProducer()->getName()}</li>"
                 . "<li>Артикул: {$good->getCode()}</li>";
                 
         $values = $this->entityManager->getRepository(GoodAttributeValue::class)
-                ->findBy(['good' => $good->getId()]);
+                ->findBy(['good' => $good->getId(), 'status' => Attribute::STATUS_ACTIVE]);
         if ($values){
             foreach ($values as $value){
                 $result .= "<li>{$value->getAttribute()->getName()}: {$value->getAttributeValue()->getValue()}</li>";
             }
         }    
         $result .= 
-        $result .= "</ul>";
+        $result .= "</ul>]]";
         return $result;        
     }
     
@@ -512,7 +513,7 @@ class MarketManager
                     ->setPictures($images)
                     ->setVendor($good->getProducer()->getName())
                     ->setVendorCode($good->getCode())
-                    ->setDescription($good->getDescription())
+                    ->setDescription($this->description($market, $good))
                     ->setStore(false)
                     ->setPickup(true)                       
                 ;
