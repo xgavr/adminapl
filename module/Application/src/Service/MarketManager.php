@@ -357,10 +357,12 @@ class MarketManager
                 . "<li>Артикул: {$good->getCode()}</li>";
                 
         $values = $this->entityManager->getRepository(GoodAttributeValue::class)
-                ->findBy(['good' => $good->getId(), 'status' => Attribute::STATUS_ACTIVE]);
+                ->findBy(['good' => $good->getId()]);
         if ($values){
             foreach ($values as $value){
-                $result .= "<li>{$value->getAttribute()->getName()}: {$value->getAttributeValue()->getValue()}</li>";
+                if ($value->getAttribute()->getStatus() == Attribute::STATUS_ACTIVE){
+                    $result .= "<li>{$value->getAttribute()->getName()}: {$value->getAttributeValue()->getValue()}</li>";
+                }    
             }
         }    
         $result .= 
