@@ -92,7 +92,7 @@ class MarketForm extends Form
             ],
         ]);
                 
-        // Добавляем поле "name"
+        // Добавляем поле "info"
         $this->add([           
             'type'  => 'text',
             'name' => 'info',
@@ -100,7 +100,7 @@ class MarketForm extends Form
                 'id' => 'info'
             ],
             'options' => [
-                'label' => 'Комментарий',
+                'label' => 'Описание в фид',
             ],
         ]);
         
@@ -122,6 +122,7 @@ class MarketForm extends Form
             'options' => [
                 'label' => 'Состояние',
                 'value_options' => MarketPriceSetting::getStatusList(),
+                'value' => MarketPriceSetting::STATUS_RETIRED,
             ],
         ]);
         

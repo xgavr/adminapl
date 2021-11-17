@@ -574,7 +574,7 @@ class GoodsManager
      * Расчитать среднюю закупочную цену
      * 
      * @param array $prices
-     * @param float $defaultPrice;
+     * @param float $defaultPrice
      * @return float 
      */
     public function meanPrice($prices, $defaultPrice = null)

@@ -531,8 +531,8 @@ class MarketPriceSetting {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Выгружать',
-            self::STATUS_RETIRED => 'Отключен'
+            self::STATUS_ACTIVE => 'Ежедневно',
+            self::STATUS_RETIRED => 'Разово'
         ];
     }    
     

@@ -337,6 +337,7 @@ class MarketManager
                 }
                 $this->entityManager->detach($supplySetting);
             }            
+            $this->entityManager->detach($supplier);
             $this->entityManager->detach($goodSupplier);
         }        
         
@@ -360,9 +361,12 @@ class MarketManager
                 ->findBy(['good' => $good->getId()]);
         if ($values){
             foreach ($values as $value){
-                if ($value->getAttribute()->getStatus() == Attribute::STATUS_ACTIVE){
-                    $result .= "<li>{$value->getAttribute()->getName()}: {$value->getAttributeValue()->getValue()}</li>";
+                $attribute = $value->getAttribute();
+                if ($attribute->getStatus() == Attribute::STATUS_ACTIVE){
+                    $result .= "<li>{$attribute->getName()}: {$value->getAttributeValue()->getValue()}</li>";
                 }    
+                $this->entityManager->detach($attribute);
+                $this->entityManager->detach($value);
             }
         }    
         $result .= "</ul>]]";
