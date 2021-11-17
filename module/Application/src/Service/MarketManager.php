@@ -436,7 +436,8 @@ class MarketManager
                     }
                 }    
                 
-                $rawprices = $this->rawprices($good, $market);
+//                $rawprices = $this->rawprices($good, $market);
+                $rawprices = $this->restShipping($good, $market);
                 if ($rawprices['realrest'] == 0){
                     continue;
                 }
@@ -521,7 +522,8 @@ class MarketManager
                 if ($images === false){
                     continue;
                 }
-                $rawprices = $this->rawprices($good, $market);
+//                $rawprices = $this->rawprices($good, $market);
+                $rawprices = $this->restShipping($good, $market);
                 if ($rawprices['realrest'] == 0){
                     continue;
                 }
