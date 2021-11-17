@@ -377,9 +377,8 @@ class MarketManager
      * Сохранение файла прайса
      * 
      * @param MarketPriceSetting $market
-     * @param integer $rows
      */
-    private function fileUnload($market, $rows)
+    private function fileUnload($market)
     {
         $filename = $market->getFilenameExt();
         $path = self::MARKET_FOLDER.'/'.$filename;
@@ -397,21 +396,17 @@ class MarketManager
         ]);
         $compressed = $filter->filter($path);
         $this->ftpManager->putMarketPriceToApl(['source_file' => $zipPath, 'dest_file' => $zipFilename]);
-        
-        $market->setRowUnload($rows);
-        $market->setDateUnload(date('Y-m-d H:i:s'));
-        $this->entityManager->persist($market);
-        $this->entityManager->flush($market);
-        
+                
         return;
     }
     
     /**
      * Данные для прайса
      * @param MarketPriceSetting $market
+     * @param integer $offset
      * @return array
      */
-    public function marketXLSX($market)
+    public function marketXLSX($market, $offset = 0)
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -477,13 +472,15 @@ class MarketManager
         $writer = new Xlsx($spreadsheet);
         $writer->save($path);
 
-        $this->fileUnload($market, $rows);
-        return;
+        $this->fileUnload($market);
+        
+        return $rows;
     }
     
     /**
      * Данные для прайса
      * @param MarketPriceSetting $market
+     * @param integer $offset
      * @return array
      */
     public function marketYML($market)
@@ -609,9 +606,9 @@ class MarketManager
             $deliveries
         );        
         
-        $this->fileUnload($market, $rows);
+        $this->fileUnload($market);
         
-        return;
+        return $rows;
     }
 
     /**
@@ -623,12 +620,21 @@ class MarketManager
         ini_set('memory_limit', '4096M');
         set_time_limit(0);
 
-        if ($market->getFormat() == MarketPriceSetting::FORMAT_XLSX){
-            $this->marketXLSX($market);
-        }
-        if ($market->getFormat() == MarketPriceSetting::FORMAT_YML){
-            $this->marketYML($market);
-        }
+        $rows = $offset = $blocks = 0;
+        while (true){
+            $blocks++;
+            if ($market->getFormat() == MarketPriceSetting::FORMAT_XLSX){
+                $result = $this->marketXLSX($market, $offset);
+            }
+            if ($market->getFormat() == MarketPriceSetting::FORMAT_YML){
+                $result = $this->marketYML($market, $offset);
+            }
+        }    
+        
+        $market->setRowUnload($rows);
+        $market->setDateUnload(date('Y-m-d H:i:s'));
+        $this->entityManager->persist($market);
+        $this->entityManager->flush($market);
         return;
     }
     
