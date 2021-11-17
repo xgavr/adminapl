@@ -365,7 +365,6 @@ class MarketManager
                 }    
             }
         }    
-        $result .= 
         $result .= "</ul>]]";
         return $result;        
     }
