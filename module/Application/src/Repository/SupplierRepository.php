@@ -246,7 +246,7 @@ class SupplierRepository extends EntityRepository{
         if ($region){
             $queryBuilder
                     ->join('ss.office', 'o')
-                    ->andWhere('g.region = ?3')
+                    ->andWhere('o.region = ?3')
                     ->setParameter('3', $region->getId())
                     ;
         }
