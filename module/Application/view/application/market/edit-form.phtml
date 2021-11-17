@@ -196,13 +196,20 @@ $form->prepare();
                         </div>    
                         <div class="col-xs-2">                        
                             <div class="form-group">
+                                <?= $this->formLabel($form->get('blockRowCount')); ?>
+                                <?= $this->formElement($form->get('blockRowCount')); ?>
+                                <?= $this->formElementErrors($form->get('blockRowCount')); ?>                  
+                            </div>
+                        </div>    
+                    </div>        
+                    <div class="row">
+                        <div class="col-xs-2">                        
+                            <div class="form-group">
                                 <?= $this->formLabel($form->get('movementLimit')); ?>
                                 <?= $this->formElement($form->get('movementLimit')); ?>
                                 <?= $this->formElementErrors($form->get('movementLimit')); ?>                  
                             </div>
                         </div>    
-                    </div>        
-                    <div class="row">
                         <div class="col-xs-2">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('pricecol')); ?>
@@ -238,6 +245,8 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('producerSetting')); ?>                  
                             </div>
                         </div>    
+                    </div>        
+                    <div class="row">
                         <div class="col-xs-2">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('groupSetting')); ?>
@@ -245,8 +254,6 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('groupSetting')); ?>                  
                             </div>
                         </div>    
-                    </div>        
-                    <div class="row">
                         <div class="col-xs-3">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('tokenGroupSetting')); ?>
@@ -254,7 +261,7 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-9">                        
+                        <div class="col-xs-7">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('shipping')); ?>
                                 <?= $this->formElement($form->get('shipping')); ?>
@@ -283,7 +290,6 @@ $form->prepare();
         </div>    
         <?= $this->formElement($form->get('supplierSetting')); ?>
         <?= $this->formElement($form->get('restSetting')); ?>
-        <?= $this->formElement($form->get('blockRowCount')); ?>
                 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>

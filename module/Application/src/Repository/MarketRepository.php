@@ -82,8 +82,9 @@ class MarketRepository extends EntityRepository{
     /**
      * Запрос товаров по параметрам
      * @param MarketPriceSetting $market
+     * @param integer $offset
      */
-    public function marketQuery($market)
+    public function marketQuery($market, $offset = 0)
     {
         $entityManager = $this->getEntityManager();
 
@@ -163,6 +164,10 @@ class MarketRepository extends EntityRepository{
             $queryBuilder->andWhere('g.price < ?10')
                         ->setParameter('10', $market->getMaxPrice())
                     ;
+        }
+        
+        if ($offset){
+            $queryBuilder->setFirstResult($offset);
         }
         
         $query = $queryBuilder->getQuery();

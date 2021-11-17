@@ -55,9 +55,11 @@ class MarketPriceSetting {
     
     const TD_IGNORE   = 1; // Товары все.
     const TD_MATH      = 2; // Товары с ТД.
-    
+        
     const MOVEMENT_LIMIT   = 100; //Лимит для определения активности по движению
-
+    const MAX_BLOCK_ROW_COUNT = 50000; // Максимально строк в блоке прайса
+    const MAX_BLOCK_COUNT = 20; // Максимально блоков прайса
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -439,7 +441,11 @@ class MarketPriceSetting {
     {
         $this->maxPrice = $maxPrice;
     }     
-
+    
+    /**
+     * Количество строк в блоке
+     * @return integer
+     */
     public function getMaxRowCount() 
     {
         return $this->maxRowCount;
@@ -450,6 +456,10 @@ class MarketPriceSetting {
         $this->maxRowCount = $maxRowCount;
     }     
 
+    /**
+     * Количество блоков прайса по maxRowCount
+     * @return integer
+     */
     public function getBlockRowCount() 
     {
         return $this->blockRowCount;
@@ -584,12 +594,42 @@ class MarketPriceSetting {
     }
     
     /**
-     * Returns format zip.
+     * Returns format ext offset.
+     * @param integer $offset
      * @return int     
+     */
+    public function getOffsetFilenameExt($offset = 0) 
+    {
+        $block = ceil($offset/(($this->maxRowCount) ? $this->maxRowCount:self::MAX_BLOCK_ROW_COUNT));
+        
+        if ($this->format == self::FORMAT_XLSX){
+            return $this->filename.$this->id.'_'.str_pad($block, 2, '0').'.xlsx';
+        }
+        if ($this->format == self::FORMAT_YML){
+            return $this->filename.$this->id.'_'.str_pad($block, 2, '0').'.yml';
+        }
+        
+        return $this->filename.$this->id.'_'.str_pad($block, 2, '0').'.dat';
+    }
+
+    /**
+     * Returns format zip.
+     * @return string     
      */
     public function getFilenameZip() 
     {
         return $this->filename.$this->id.'.zip';
+    }
+    
+    /**
+     * Returns format zip.
+     * @param integer $offset
+     * @return string     
+     */
+    public function getOffsetFilenameZip($offset = 0) 
+    {
+        $block = ceil($offset/(($this->maxRowCount) ? $this->maxRowCount:self::MAX_BLOCK_ROW_COUNT));
+        return $this->filename.$this->id.'_'.str_pad($block, 2, '0').'.zip';
     }
     
     /**

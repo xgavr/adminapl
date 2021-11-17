@@ -120,7 +120,7 @@ class MarketForm extends Form
             'type'  => 'select',
             'name' => 'status',
             'options' => [
-                'label' => 'Состояние',
+                'label' => 'Выгружать',
                 'value_options' => MarketPriceSetting::getStatusList(),
                 'value' => MarketPriceSetting::STATUS_RETIRED,
             ],
@@ -317,25 +317,27 @@ class MarketForm extends Form
             'name' => 'maxRowCount',
             'attributes' => [
                 'id' => 'maxRowCount',
-                'value' => 0,
+                'value' => MarketPriceSetting::MAX_BLOCK_ROW_COUNT,
                 'min' => 0,
-                'step' => 100,
+                'max' => MarketPriceSetting::MAX_BLOCK_ROW_COUNT,
+                'step' => 1000,
             ],
             'options' => [
-                'label' => 'Строк в прайсе',
+                'label' => 'Строк в блоке',
             ],
         ]);
         
         $this->add([           
-            'type'  => 'hidden',
+            'type'  => 'number',
             'name' => 'blockRowCount',
             'attributes' => [
                 'id' => 'blockRowCount',
                 'value' => 0,
                 'min' => 0,
+                'max' => MarketPriceSetting::MAX_BLOCK_COUNT,
             ],
             'options' => [
-                'label' => 'Строк в блоке',
+                'label' => 'Блоков',
             ],
         ]);
         
