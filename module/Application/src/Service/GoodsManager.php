@@ -23,6 +23,7 @@ use Application\Validator\Sigma3;
 use Application\Entity\Article;
 use Stock\Entity\Movement;
 use Application\Entity\Bid;
+use Application\Entity\GoodSupplier;
 
 /**
  * Description of GoodsService
@@ -710,6 +711,86 @@ class GoodsManager
         return;
     }
     
+    /**
+     * Обновить расчетные цены товара
+     * 
+     * @param Goods $good
+     * @param object $regression
+     */
+    public function updatePricesFromGoodSupplier($good, $regression = null)
+    {
+
+        $goodSuppliers = $this->entityManager->getRepository(GoodSupplier::class)
+                ->goodSuppliers($good);
+        $prices = [];
+        $bestSupplierPrice = $bestSupplierAmount = 0;
+        foreach ($goodSuppliers as $goodSupplier){
+            $rest = $goodSupplier->getRest();
+            $supplierPrice = $goodSupplier->getPrice();
+            $supplier = $goodSupplier->getSupplier();
+            if ($rest>0 && $supplierPrice>0){
+                $rest = min(1000, $rest);
+                $prices = array_merge($prices, array_fill(0, $rest, $supplierPrice));
+
+                if ($supplier->getAmount() > $bestSupplierAmount){
+                    $bestSupplierPrice = $price;
+                    $bestSupplierAmount = $supplier->getAmount();
+                }
+            }
+            $this->entityManager->detach($supplier);
+            $this->entityManager->detach($goodSupplier);
+        }
+                
+        $meanPrice = $price = $minPrice = 0;
+        $oldMeanPrice = $good->getMeanPrice();
+        $oldPrice = $good->getPrice();
+        $fixPrice = $good->getFixPrice();
+        
+        if (count($prices)){
+
+            $minPrice = $this->minPrice($prices);
+            $meanPrice = $this->meanPrice($prices, max($minPrice, $bestSupplierPrice));
+            if ($fixPrice < $meanPrice){
+                $fixPrice = 0;
+            }
+            $price = $fixPrice;
+            if ($fixPrice == 0){
+                $price = $oldPrice;
+            }    
+            
+            if (!$regression){
+                $rate = $this->entityManager->getRepository(Rate::class)
+                        ->findGoodRate($good);
+                $regression = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
+            }    
+
+            if ($meanPrice && $regression){
+                $percent = $this->mlManager->predictRateScaleRegression($regression, $meanPrice);
+                $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
+            }    
+            unset($prices);
+        }    
+
+        if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), [
+                        'min_price' => $minPrice, 
+                        'mean_price' => $meanPrice,
+                        'fix_price' => $fixPrice,
+                        'price' => $price,
+                        'status_price_ex' => Goods::PRICE_EX_NEW,
+                        'date_price' => date('Y-m-d H:i:s'),
+                            ]);
+        } else {
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), [
+                        'date_price' => date('Y-m-d H:i:s'),
+                            ]);            
+        }   
+        
+        return;
+    }
+
     /**
      * Получить колонки цен
      * 

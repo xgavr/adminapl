@@ -713,15 +713,16 @@ class AssemblyManager
     private function insertGoodSupplier($good, $rawprice, $supplier, $priceDate)
     {
         $rest = $rawprice->getRealRest();
-        if ($rest > 0){
+        $price = $rawprice->getRealPrice();
+        if ($rest > 0 && $price > 0){
             $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
                     ->findOneBy(['good' => $good->getId(), 'supplier' => $supplier->getId()]);
             if ($goodSupplier){
                 $this->entityManager->getConnection()
-                        ->update('good_supplier', ['rest' => $rest, 'up_date' => $priceDate], ['id' => $goodSupplier->getId()]);
+                        ->update('good_supplier', ['rest' => $rest, 'price'=> $price, 'up_date' => $priceDate], ['id' => $goodSupplier->getId()]);
             } else {
                 $this->entityManager->getConnection()
-                        ->insert('good_supplier', ['good_id' => $good->getId(), 'supplier_id' => $supplier->getId(), 'rest' => $rest, 'up_date' => $priceDate]);
+                        ->insert('good_supplier', ['good_id' => $good->getId(), 'supplier_id' => $supplier->getId(), 'rest' => $rest, 'price'=> $price, 'up_date' => $priceDate]);
             }        
         }    
         return;

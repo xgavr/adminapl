@@ -593,15 +593,14 @@ class MarketPriceSetting {
         return $this->filename.$this->id.'.dat';
     }
     
+
     /**
-     * Returns format ext offset.
-     * @param integer $offset
+     * Returns format ext block.
+     * @param integer $block
      * @return int     
      */
-    public function getOffsetFilenameExt($offset = 0) 
+    public function getBlockFilenameExt($block = 0) 
     {
-        $block = ceil($offset/(($this->maxRowCount) ? $this->maxRowCount:self::MAX_BLOCK_ROW_COUNT));
-        
         if ($this->format == self::FORMAT_XLSX){
             return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.xlsx';
         }
@@ -610,6 +609,17 @@ class MarketPriceSetting {
         }
         
         return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.dat';
+    }
+    
+    /**
+     * Returns format ext offset.
+     * @param integer $offset
+     * @return int     
+     */
+    public function getOffsetFilenameExt($offset = 0) 
+    {
+        $block = ceil($offset/(($this->maxRowCount) ? $this->maxRowCount:self::MAX_BLOCK_ROW_COUNT));
+        return $this->getBlockFilenameExt($block);
     }
 
     /**
@@ -623,13 +633,23 @@ class MarketPriceSetting {
     
     /**
      * Returns format zip.
+     * @param integer $block
+     * @return string     
+     */
+    public function getBlockFilenameZip($block = 0) 
+    {
+        return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.zip';
+    }
+    
+    /**
+     * Returns format zip.
      * @param integer $offset
      * @return string     
      */
     public function getOffsetFilenameZip($offset = 0) 
     {
         $block = ceil($offset/(($this->maxRowCount) ? $this->maxRowCount:self::MAX_BLOCK_ROW_COUNT));
-        return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.zip';
+        return $this->getBlockFilenameZip($block);
     }
     
     /**

@@ -68,6 +68,20 @@ class MarketManager
     }
     
     /**
+     * Получить папку с прайсам
+     * @param integer $market
+     */
+    public function folder($market)
+    {
+        $folder = self::MARKET_FOLDER.'/'.$market->getId();
+        if (!file_exists($folder)){
+            mkdir($folder);
+        }
+        
+        return $folder;                
+    }
+    
+    /**
      * Полное имя файла
      * @param MarketPriceSetting $market
      * @param integer $zip
@@ -80,7 +94,53 @@ class MarketManager
         } else {
             $filename = $market->getFilenameExt();
         } 
+
         return self::MARKET_FOLDER.'/'.$filename;        
+    }
+    
+    /**
+     * Полное имя файла c offset
+     * @param MarketPriceSetting $market
+     * @param integer $zip
+     * @param integer $offset
+     * @return string
+     */
+    public function offsetFilenamePath($market, $zip=0, $offset=0)
+    {
+        if ($zip){
+            $filename = $market->getOffsetFilenameZip($offset);
+        } else {
+            $filename = $market->getOffsetFilenameExt($offset);
+        } 
+
+        return $this->folder($market).'/'.$filename;        
+    }
+    
+    /**
+     * Полное имя файла
+     * @param MarketPriceSetting $market
+     * @param integer $zip
+     * @return string
+     */
+    public function filenamesPath($market, $zip=0)
+    {
+        $block = 0;
+        $result = [];
+        $maxBlock = ($market->getBlockRowCount()) ? $market->getBlockRowCount():MarketPriceSetting::MAX_BLOCK_COUNT;
+        while (true){            
+            if ($zip){
+                $filename = $market->getBlockFilenameZip($block);
+            } else {
+                $filename = $market->getBlockFilenameExt($block);
+            } 
+            $result[] = realpath(self::MARKET_FOLDER.'/'.$filename);        
+            $block++;
+            if ($block > $maxBlock){
+                break;
+            }
+        }
+        
+        return $result;
     }
     
     /**
@@ -207,7 +267,7 @@ class MarketManager
      */
     public function regionShipping($region)
     {
-        $result = ['не указана'];
+        $result = ['не указан'];
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findBy(['region' => $region->getId(), 'status' => Office::STATUS_ACTIVE]);
                 
@@ -382,21 +442,9 @@ class MarketManager
     private function fileUnload($market, $offset = 0)
     {
         $filename = $market->getOffsetFilenameExt($offset);
-        $path = self::MARKET_FOLDER.'/'.$filename;
+        $path = $this->offsetFilenamePath($market, 0, $offset);
 
         $this->ftpManager->putMarketPriceToApl(['source_file' => $path, 'dest_file' => $filename]);            
-
-        $zipFilename = $market->getOffsetFilenameZip($offset);
-        $zipPath = self::MARKET_FOLDER.'/'.$zipFilename;
-
-        $filter = new Compress([
-            'adapter' => 'Zip',
-            'options' => [
-                'archive' => $zipPath,
-            ],
-        ]);
-        $compressed = $filter->filter($path);
-        $this->ftpManager->putMarketPriceToApl(['source_file' => $zipPath, 'dest_file' => $zipFilename]);
                 
         return;
     }
@@ -470,7 +518,7 @@ class MarketManager
         }
         
         $filename = $market->getOffsetFilenameExt($offset);
-        $path = self::MARKET_FOLDER.'/'.$filename;
+        $path = $this->offsetFilenamePath($market, 0, $offset);
 
         $writer = new Xlsx($spreadsheet);
         $writer->save($path);
@@ -489,7 +537,7 @@ class MarketManager
     public function marketYML($market, $offset = 0)
     {
         $filename = $market->getOffsetFilenameExt($offset);
-        $path = self::MARKET_FOLDER.'/'.$filename;
+        $path = $this->offsetFilenamePath($market, 0, $offset);
 
         $settings = (new Settings())
             ->setOutputFile($path)
@@ -624,13 +672,13 @@ class MarketManager
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(0);
+        
+        $maxRowCount = ($market->getMaxRowCount()) ? $market->getMaxRowCount():MarketPriceSetting::MAX_BLOCK_ROW_COUNT;
+        $maxBlockCount = ($market->getBlockRowCount()) ? $market->getBlockRowCount():MarketPriceSetting::MAX_BLOCK_COUNT;
 
         $outRows = $offset = $blocks = 0;
         while (true){
-            if ($market->getBlockRowCount() && $blocks >= $market->getBlockRowCount()){
-                break;
-            }
-            if ($blocks >= MarketPriceSetting::MAX_BLOCK_COUNT){
+            if ($blocks >= $maxBlockCount){
                 break;
             }
             $blocks++;
@@ -640,23 +688,37 @@ class MarketManager
             if ($market->getFormat() == MarketPriceSetting::FORMAT_YML){
                 $result = $this->marketYML($market, $offset);
             }
-            if (!$market->getBlockRowCount() && !$result['rows']){
+            if (!$market->getBlockRowCount() && $result['rows'] < $maxRowCount){
                 break;
             }
             if ($result['rows']){
                 $offset += $result['rows'];
             } else {
-                $offset += (($market->getMaxRowCount()) ? $market->getMaxRowCount():MarketPriceSetting::MAX_BLOCK_ROW_COUNT);                
+                $offset += $maxRowCount;                
             }    
             $outRows += $result['outRows'];
         }    
+
+        $zipFilename = $market->getFilenameZip();
+        $zipPath = self::MARKET_FOLDER.'/'.$zipFilename;
+
+        $filter = new Compress([
+            'adapter' => 'Zip',
+            'options' => [
+                'archive' => $zipPath,
+            ],
+        ]);
+        $filter->filter($this->folder($market));
+        //$this->ftpManager->putMarketPriceToApl(['source_file' => $zipPath, 'dest_file' => $zipFilename]);
         
         $market->setRowUnload($outRows);
         $market->setDateUnload(date('Y-m-d H:i:s'));
         $this->entityManager->persist($market);
-        $this->entityManager->flush();
+        $this->entityManager->flush($market);
+        
         return;
     }
+    
     
     /**
      * Выгрузка в zzap только апл

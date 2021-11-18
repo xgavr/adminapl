@@ -32,6 +32,11 @@ class GoodSupplier {
     protected $rest = 0;
     
     /**
+     * @ORM\Column(name="price")   
+     */
+    protected $price = 0;
+    
+    /**
      * @ORM\Column(name="up_date")   
      */
     protected $update;
@@ -67,6 +72,16 @@ class GoodSupplier {
     public function setRest($rest)
     {
         $this->rest = $rest;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    public function setPrice($price)
+    {
+        $this->price = $price;
     }
 
     public function getUpdate()

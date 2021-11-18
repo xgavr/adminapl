@@ -77,7 +77,7 @@ class MarketForm extends Form
                 'id' => 'shipping',
             ],
             'options' => [
-                'label' => 'Доставка',
+                'label' => 'Вариант доставки',
             ],
         ]);
 
@@ -119,10 +119,13 @@ class MarketForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'status',
+            'attributes' => [
+                'id' => 'status',
+                'value' => MarketPriceSetting::STATUS_RETIRED,
+            ],
             'options' => [
                 'label' => 'Выгружать',
                 'value_options' => MarketPriceSetting::getStatusList(),
-                'value' => MarketPriceSetting::STATUS_RETIRED,
             ],
         ]);
         
@@ -191,7 +194,7 @@ class MarketForm extends Form
             'type'  => 'select',
             'name' => 'producerSetting',
             'attributes' => [
-                'value' => MarketPriceSetting::PRODUCER_ALL,
+                'value' => MarketPriceSetting::PRODUCER_ACTIVE,
             ],    
             'options' => [
                 'label' => 'Производители',
@@ -203,7 +206,7 @@ class MarketForm extends Form
             'type'  => 'select',
             'name' => 'groupSetting',
             'attributes' => [
-                'value' => MarketPriceSetting::GROUP_ALL,
+                'value' => MarketPriceSetting::GROUP_ACTIVE,
             ],    
             'options' => [
                 'label' => 'Группы ТД',
@@ -215,7 +218,7 @@ class MarketForm extends Form
             'type'  => 'select',
             'name' => 'tokenGroupSetting',
             'attributes' => [
-                'value' => MarketPriceSetting::TOKEN_GROUP_ALL,
+                'value' => MarketPriceSetting::TOKEN_GROUP_ACTIVE,
             ],    
             'options' => [
                 'label' => 'Группы наименований',
@@ -332,7 +335,7 @@ class MarketForm extends Form
             'name' => 'blockRowCount',
             'attributes' => [
                 'id' => 'blockRowCount',
-                'value' => 0,
+                'value' => 1,
                 'min' => 0,
                 'max' => MarketPriceSetting::MAX_BLOCK_COUNT,
             ],
