@@ -654,7 +654,7 @@ class MarketManager
         $market->setRowUnload($outRows);
         $market->setDateUnload(date('Y-m-d H:i:s'));
         $this->entityManager->persist($market);
-        $this->entityManager->flush($market);
+        $this->entityManager->flush();
         return;
     }
     
