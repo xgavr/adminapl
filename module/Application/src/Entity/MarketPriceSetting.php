@@ -603,13 +603,13 @@ class MarketPriceSetting {
         $block = ceil($offset/(($this->maxRowCount) ? $this->maxRowCount:self::MAX_BLOCK_ROW_COUNT));
         
         if ($this->format == self::FORMAT_XLSX){
-            return $this->filename.$this->id.'_'.str_pad($block, 2, '0').'.xlsx';
+            return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.xlsx';
         }
         if ($this->format == self::FORMAT_YML){
-            return $this->filename.$this->id.'_'.str_pad($block, 2, '0').'.yml';
+            return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.yml';
         }
         
-        return $this->filename.$this->id.'_'.str_pad($block, 2, '0').'.dat';
+        return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.dat';
     }
 
     /**
@@ -629,7 +629,7 @@ class MarketPriceSetting {
     public function getOffsetFilenameZip($offset = 0) 
     {
         $block = ceil($offset/(($this->maxRowCount) ? $this->maxRowCount:self::MAX_BLOCK_ROW_COUNT));
-        return $this->filename.$this->id.'_'.str_pad($block, 2, '0').'.zip';
+        return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.zip';
     }
     
     /**
