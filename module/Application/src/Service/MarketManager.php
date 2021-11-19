@@ -99,6 +99,24 @@ class MarketManager
     }
     
     /**
+     * Полное имя файла c block
+     * @param MarketPriceSetting $market
+     * @param integer $zip
+     * @param integer $block
+     * @return string
+     */
+    public function blockFilenamePath($market, $zip=0, $block=0)
+    {
+        if ($zip){
+            $filename = $market->getBlockFilenameZip($block);
+        } else {
+            $filename = $market->getBlockFilenameExt($block);
+        } 
+
+        return $this->folder($market).'/'.$filename;        
+    }
+    
+    /**
      * Полное имя файла c offset
      * @param MarketPriceSetting $market
      * @param integer $zip
@@ -453,9 +471,10 @@ class MarketManager
      * Данные для прайса
      * @param MarketPriceSetting $market
      * @param integer $offset
+     * @param integer $block
      * @return array
      */
-    public function marketXLSX($market, $offset = 0)
+    public function marketXLSX($market, $offset = 0, $block = 0)
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -517,8 +536,8 @@ class MarketManager
             }    
         }
         
-        $filename = $market->getOffsetFilenameExt($offset);
-        $path = $this->offsetFilenamePath($market, 0, $offset);
+        $filename = $market->getBlockFilenameExt($block);
+        $path = $this->blockFilenamePath($market, 0, $block);
 
         $writer = new Xlsx($spreadsheet);
         $writer->save($path);
@@ -532,12 +551,13 @@ class MarketManager
      * Данные для прайса
      * @param MarketPriceSetting $market
      * @param integer $offset
+     * @param integer $block
      * @return array
      */
-    public function marketYML($market, $offset = 0)
+    public function marketYML($market, $offset = 0, $block=0)
     {
-        $filename = $market->getOffsetFilenameExt($offset);
-        $path = $this->offsetFilenamePath($market, 0, $offset);
+        $filename = $market->getBlockFilenameExt($block);
+        $path = $this->blockFilenamePath($market, 0, $block);
 
         $settings = (new Settings())
             ->setOutputFile($path)
@@ -570,8 +590,8 @@ class MarketManager
                 ->marketQuery($market, $offset);
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
+            $rows++;
             foreach ($row as $good){
-                $rows++;
                 $images = $this->images($good, $market);
                 if ($images === false){
                     continue;
@@ -683,10 +703,10 @@ class MarketManager
             }
             $blocks++;
             if ($market->getFormat() == MarketPriceSetting::FORMAT_XLSX){
-                $result = $this->marketXLSX($market, $offset);
+                $result = $this->marketXLSX($market, $offset, $blocks);
             }
             if ($market->getFormat() == MarketPriceSetting::FORMAT_YML){
-                $result = $this->marketYML($market, $offset);
+                $result = $this->marketYML($market, $offset, $blocks);
             }
             if (!$market->getBlockRowCount() && $result['rows'] < $maxRowCount){
                 break;
