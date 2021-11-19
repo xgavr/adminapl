@@ -710,11 +710,13 @@ class MarketManager
         ]);
         $filter->filter($this->folder($market));
         //$this->ftpManager->putMarketPriceToApl(['source_file' => $zipPath, 'dest_file' => $zipFilename]);
-        
-        $market->setRowUnload($outRows);
-        $market->setDateUnload(date('Y-m-d H:i:s'));
-        $this->entityManager->persist($market);
-        $this->entityManager->flush($market);
+
+//        $market->setRowUnload($outRows);
+//        $market->setDateUnload(date('Y-m-d H:i:s'));
+//        $this->entityManager->persist($market);
+//        $this->entityManager->flush($market);
+        $this->entityManager->getConnection()
+                ->update('market_price_setting', ['row_unload' => $outRows, 'date_unload' => date('Y-m-d H:i:s')],['id' => $market->getId()]);
         
         return;
     }
