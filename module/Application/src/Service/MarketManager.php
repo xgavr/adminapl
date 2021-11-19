@@ -455,12 +455,12 @@ class MarketManager
      * Сохранение файла прайса
      * 
      * @param MarketPriceSetting $market
-     * @param integer $offset
+     * @param integer $block
      */
-    private function fileUnload($market, $offset = 0)
+    private function fileUnload($market, $block = 0)
     {
-        $filename = $market->getOffsetFilenameExt($offset);
-        $path = $this->offsetFilenamePath($market, 0, $offset);
+        $filename = $market->getBlockFilenameExt($block);
+        $path = $this->blockFilenamePath($market, 0, $block);
 
         $this->ftpManager->putMarketPriceToApl(['source_file' => $path, 'dest_file' => $filename]);            
                 
@@ -497,7 +497,6 @@ class MarketManager
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $good){
-                $rows++;
                 if (!empty($market->getImageCount())){
                     $images = $this->images($good, $market);
                     if ($images === false){
@@ -525,15 +524,16 @@ class MarketManager
 
                 $this->entityManager->detach($good);
                 $k++;
-                if ($market->getMaxRowCount() && $outRows >= $market->getMaxRowCount()){
-                    break;
-                }
-                if ($outRows >= MarketPriceSetting::MAX_BLOCK_ROW_COUNT){
-                    break;
-                }
                 $this->entityManager->detach($good);
                 $outRows++;
             }    
+            $rows++;
+            if ($market->getMaxRowCount() && $outRows >= $market->getMaxRowCount()){
+                break;
+            }
+            if ($outRows >= MarketPriceSetting::MAX_BLOCK_ROW_COUNT){
+                break;
+            }
         }
         
         $filename = $market->getBlockFilenameExt($block);
@@ -542,7 +542,7 @@ class MarketManager
         $writer = new Xlsx($spreadsheet);
         $writer->save($path);
 
-        $this->fileUnload($market, $offset);
+        $this->fileUnload($market, $block);
         
         return ['rows' => $rows, 'outRows' => $outRows];
     }
@@ -590,7 +590,6 @@ class MarketManager
                 ->marketQuery($market, $offset);
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
-            $rows++;
             foreach ($row as $good){
                 $images = $this->images($good, $market);
                 if ($images === false){
@@ -645,6 +644,7 @@ class MarketManager
                 $this->entityManager->detach($good);
                 $outRows++;
             }    
+            $rows++;
             if ($market->getMaxRowCount() && $outRows >= $market->getMaxRowCount()){
                 break;
             }
@@ -708,7 +708,8 @@ class MarketManager
             if ($market->getFormat() == MarketPriceSetting::FORMAT_YML){
                 $result = $this->marketYML($market, $offset, $blocks);
             }
-            if (!$market->getBlockRowCount() && $result['rows'] < $maxRowCount){
+            $outRows += $result['outRows'];
+            if (!$market->getBlockRowCount() && $result['outRows'] < $maxRowCount){
                 break;
             }
             if ($result['rows']){
@@ -716,7 +717,6 @@ class MarketManager
             } else {
                 $offset += $maxRowCount;                
             }    
-            $outRows += $result['outRows'];
         }    
 
         $zipFilename = $market->getFilenameZip();
