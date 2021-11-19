@@ -389,7 +389,7 @@ class MarketManager
             $supplier = $goodSupplier->getSupplier();
             $supplySettings = $this->entityManager->getRepository(SupplySetting::class)
                     ->supplySettings($supplier, null, $market->getRegion());
-            foreach ($supplier->getSupplySettings() as $supplySetting){
+            foreach ($supplySettings as $supplySetting){
                 $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
                 if ($rp['speed'] > $supspeed){
                     $rp['orderbefore'] = $supplySetting->getOrderBeforeHMax12();
