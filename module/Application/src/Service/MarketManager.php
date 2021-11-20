@@ -524,7 +524,6 @@ class MarketManager
 
                 $this->entityManager->detach($good);
                 $k++;
-                $this->entityManager->detach($good);
                 $outRows++;
             }    
             $rows++;
