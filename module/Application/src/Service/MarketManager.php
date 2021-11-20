@@ -678,7 +678,7 @@ class MarketManager
             $deliveries
         );        
         
-        $this->fileUnload($market, $offset);
+        $this->fileUnload($market, $block);
         
         return ['rows' => $rows, 'outRows' => $outRows];
     }
