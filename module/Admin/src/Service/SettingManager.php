@@ -130,6 +130,11 @@ class SettingManager {
                 return FALSE;
             }            
         }
+        $activeCount = $this->entityManager->getRepository(Setting::class)
+                ->count(['status' => Setting::STATUS_ACTIVE]);
+        if ($activeCount > 10){
+            return false;
+        }
 
         $proc = $this->entityManager->getRepository(Setting::class)
                 ->findOneBy(['controller' => $controller, 'action' => $action]);
