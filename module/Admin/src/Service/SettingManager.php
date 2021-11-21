@@ -132,7 +132,7 @@ class SettingManager {
         }
         $activeCount = $this->entityManager->getRepository(Setting::class)
                 ->count(['status' => Setting::STATUS_ACTIVE]);
-        if ($activeCount > 15){
+        if ($activeCount > 20){
             return false;
         }
 
