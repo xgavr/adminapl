@@ -229,7 +229,7 @@ class AttributeRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('a.name, av.value')
-                ->distinct()
+                //->distinct()
                 ->from(GoodAttributeValue::class, 'gav')
                 ->join('gav.attribute', 'a')
                 ->join('gav.attributeValue', 'av')
