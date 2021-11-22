@@ -79,13 +79,13 @@ class SettingManager {
                         'last_mod' => date('Y-m-d H:i:s'),
                     ]);
         } else {
-            if ($proc->getStatus() == Setting::STATUS_RETIRED){
+            //if ($proc->getStatus() == Setting::STATUS_RETIRED){
                 $this->entityManager->getConnection()->update('setting',
                         [
                             'status' => Setting::STATUS_ACTIVE,
                             'last_mod' => date('Y-m-d H:i:s'),
                         ], ['id' => $proc->getId()]);
-            }
+            //}
         }
         return;
     }    
