@@ -518,6 +518,7 @@ class MarketManager
         $data = $goodsQuery->getResult();
         
         foreach ($data as $good){
+            $rows++;
             if (!empty($market->getImageCount())){
                 $images = $this->images($good, $market);
                 if ($images === false){
@@ -546,7 +547,6 @@ class MarketManager
             $this->entityManager->detach($good);
             $k++;
             $outRows++;
-            $rows++;
             if ($market->getMaxRowCount() && $outRows >= $market->getMaxRowCount()){
                 break;
             }
@@ -604,63 +604,61 @@ class MarketManager
         $rows = $outRows = 0;
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->marketQuery($market, $offset);
-        $iterable = $goodsQuery->iterate();
-        foreach ($iterable as $row){
-            foreach ($row as $good){
-                $images = $this->images($good, $market);
-                if ($images === false){
-                    continue;
-                }
-//                $rawprices = $this->rawprices($good, $market);
-                $rawprices = $this->restShipping($good, $market);
-                if ($rawprices['realrest'] == 0){
-                    continue;
-                }
-                
-                $opts = $good->getOpts();
-
-                $categoryId = 999;
-                if ($good->getGenericGroup()){
-                    $key = $good->getGenericGroup()->getAssemblyGroup();
-                    if (array_key_exists(md5($key), $groups)) {
-                        $categoryId = $groups[md5($key)]['id'];
-                        $priceGroups[$categoryId] = $key;
-                    }    
-                }
-                
-                $offer = new OfferSimple();
-                $offer->setId($good->getAplId())
-                    ->setAvailable(true)
-                    ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good->getAplId().'?utm_source='.$market->getId().'&utm_term='.$good->getAplId())
-                    ->setPrice($opts[$market->getPricecol()])
-                    ->setCurrencyId('RUR')
-                    ->setCategoryId($categoryId)
-                    ->setDelivery(true)
-                    ->setName($good->getNameProducerCode())
-                    ->setPictures($images)
-                    ->setVendor($good->getProducer()->getName())
-                    ->setVendorCode($good->getCode())
-                    ->setDescription($this->description($market, $good))
-                    ->setStore(false)
-                    ->setPickup(true)                       
-                ;
-                if ($market->getShipping()){
-                    $delivery = (new Delivery())
-                        ->setDays($rawprices['speed'])
-                        ->setOrderBefore($rawprices['orderbefore'])
-                        ->setCost($market->getShipping()->getOrderRateTrip($opts[$market->getPricecol()]))
-                        ;
-                    $offer->setDelivery(true)
-                        ->addDeliveryOption($delivery) 
-                        ;
-                }    
-                
-                $offers[] = $offer;
-                
-                $this->entityManager->detach($good);
-                $outRows++;
-            }    
+        $data = $goodsQuery->getResult();
+        foreach ($data as $good){
             $rows++;
+            $images = $this->images($good, $market);
+            if ($images === false){
+                continue;
+            }
+//                $rawprices = $this->rawprices($good, $market);
+            $rawprices = $this->restShipping($good, $market);
+            if ($rawprices['realrest'] == 0){
+                continue;
+            }
+
+            $opts = $good->getOpts();
+
+            $categoryId = 999;
+            if ($good->getGenericGroup()){
+                $key = $good->getGenericGroup()->getAssemblyGroup();
+                if (array_key_exists(md5($key), $groups)) {
+                    $categoryId = $groups[md5($key)]['id'];
+                    $priceGroups[$categoryId] = $key;
+                }    
+            }
+
+            $offer = new OfferSimple();
+            $offer->setId($good->getAplId())
+                ->setAvailable(true)
+                ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good->getAplId().'?utm_source='.$market->getId().'&utm_term='.$good->getAplId())
+                ->setPrice($opts[$market->getPricecol()])
+                ->setCurrencyId('RUR')
+                ->setCategoryId($categoryId)
+                ->setDelivery(true)
+                ->setName($good->getNameProducerCode())
+                ->setPictures($images)
+                ->setVendor($good->getProducer()->getName())
+                ->setVendorCode($good->getCode())
+                ->setDescription($this->description($market, $good))
+                ->setStore(false)
+                ->setPickup(true)                       
+            ;
+            if ($market->getShipping()){
+                $delivery = (new Delivery())
+                    ->setDays($rawprices['speed'])
+                    ->setOrderBefore($rawprices['orderbefore'])
+                    ->setCost($market->getShipping()->getOrderRateTrip($opts[$market->getPricecol()]))
+                    ;
+                $offer->setDelivery(true)
+                    ->addDeliveryOption($delivery) 
+                    ;
+            }    
+
+            $offers[] = $offer;
+
+            $this->entityManager->detach($good);
+            $outRows++;
             if ($market->getMaxRowCount() && $outRows >= $market->getMaxRowCount()){
                 break;
             }
