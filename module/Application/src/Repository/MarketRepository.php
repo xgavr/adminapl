@@ -103,7 +103,6 @@ class MarketRepository extends EntityRepository{
                 ->andWhere('raw.supplier = ?2')
                 ->setParameter('2', $market->getSupplier())    
                 ->andWhere('g.price > 0')    
-                ->setMaxResults($market::MAX_BLOCK_ROW_COUNT*2)    
                     ;            
         } else {
             $queryBuilder->select('g')
@@ -116,6 +115,7 @@ class MarketRepository extends EntityRepository{
             ->andWhere('g.statusPriceEx = ?4')    
             ->setParameter('3', Goods::AVAILABLE_TRUE)    
             ->setParameter('4', Goods::PRICE_EX_TRANSFERRED)    
+            ->setMaxResults($market::MAX_BLOCK_ROW_COUNT*2)    
                 ;
         
         $this->rateParams($market, $queryBuilder, 'g');
