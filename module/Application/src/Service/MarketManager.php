@@ -45,6 +45,8 @@ class MarketManager
     
     const APL_BASE_URL = 'https://autopartslist.ru';
     
+    private $supply;
+    
     /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
@@ -65,6 +67,8 @@ class MarketManager
         if (!file_exists(self::MARKET_FOLDER)){
             mkdir(self::MARKET_FOLDER);
         }    
+        
+        $this->supply = [];
     }
     
     /**
@@ -387,6 +391,27 @@ class MarketManager
     }
     
     /**
+     * Получить лучшую поставку
+     * @param GoodSupplier $goodSupplier
+     * @param Region $region
+     * @return SupplySetting
+     */
+    private function bestSupply($goodSupplier, $region)
+    {
+        $result = null;
+        $speed = 999;
+        $supplySettings = $this->entityManager->getRepository(SupplySetting::class)
+                ->supplySettings($goodSupplier->getSupplier(), null, $region);
+        foreach ($supplySettings as $supplySetting){
+            $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
+            if ($speed > $supspeed){
+                $result = $supplySetting;
+            }
+        }                    
+        return $result;
+    }
+    
+    /**
      * Остатки и доставки
      * @param Goods $good
      * @param MarketPriceSetting $market
@@ -404,18 +429,20 @@ class MarketManager
         foreach ($goodSuppliers as $goodSupplier){
             $rp['realrest'] += $goodSupplier->getRest();
 
-            $supplier = $goodSupplier->getSupplier();
-            $supplySettings = $this->entityManager->getRepository(SupplySetting::class)
-                    ->supplySettings($supplier, null, $market->getRegion());
-            foreach ($supplySettings as $supplySetting){
+            $supplyKey = $goodSupplier->getSupplier()->getId().'_'.$market->getId();
+            if (array_key_exists($supplyKey, $this->supply)){
+                $supplySetting = $this->supply[$supplyKey];
+            } else {
+                $supplySetting = $this->bestSupply($goodSupplier, $market->getRegion());
+                $this->supply[$supplyKey] = $supplySetting;
+            }
+            if ($supplySetting){
                 $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
                 if ($rp['speed'] > $supspeed){
                     $rp['orderbefore'] = $supplySetting->getOrderBeforeHMax12();
                     $rp['speed'] = $supspeed;
                 }
-                $this->entityManager->detach($supplySetting);
-            }            
-            $this->entityManager->detach($supplier);
+            }    
             $this->entityManager->detach($goodSupplier);
         }        
         
