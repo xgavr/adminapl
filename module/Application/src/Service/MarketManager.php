@@ -562,7 +562,6 @@ class MarketManager
             }
         }
         
-        $filename = $market->getBlockFilenameExt($block);
         $path = $this->blockFilenamePath($market, 0, $block);
 
         $writer = new Xlsx($spreadsheet);
@@ -582,7 +581,6 @@ class MarketManager
      */
     public function marketYML($market, $offset = 0, $block=0)
     {
-        $filename = $market->getBlockFilenameExt($block);
         $path = $this->blockFilenamePath($market, 0, $block);
 
         $settings = (new Settings())
@@ -724,7 +722,7 @@ class MarketManager
 
         $outRows = $offset = $blocks = 0;
         while (true){
-            if ($blocks >= $maxBlockCount){
+            if ($blocks > $maxBlockCount){
                 break;
             }
             $blocks++;
