@@ -722,7 +722,7 @@ class MarketManager
 
         $outRows = $offset = $blocks = 0;
         while (true){
-            if ($blocks > $maxBlockCount){
+            if ($blocks >= $maxBlockCount){
                 break;
             }
             $blocks++;
