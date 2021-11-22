@@ -216,4 +216,30 @@ class AttributeRepository  extends EntityRepository{
         
         return implode(' ', $result);
     }
+
+    /**
+     * Характеристики товара
+     * 
+     * @param Goods $good
+     */
+    public function descriptionAttribute($good)
+    {
+        $result = [];
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('a.name, av.value')
+                ->distinct()
+                ->from(GoodAttributeValue::class, 'gav')
+                ->join('gav.attribute', 'a')
+                ->join('gav.attributeValue', 'av')
+                ->where('gav.good = ?1')
+                ->andWhere('a.status = ?3')
+                ->setParameter('1', $good->getId())
+                ->setParameter('3', Attribute::STATUS_ACTIVE)                
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();                
+        return $data;
+    }
 }

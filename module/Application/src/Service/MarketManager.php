@@ -450,7 +450,7 @@ class MarketManager
     }
 
     /**
-     * Описание товара
+     * Характеристики товара
      * @param MarketPriceSetting $market
      * @param Goods $good
      * @return string
@@ -463,15 +463,10 @@ class MarketManager
                 . "<li>Артикул: {$good->getCode()}</li>";
                 
         $values = $this->entityManager->getRepository(GoodAttributeValue::class)
-                ->findBy(['good' => $good->getId()]);
+                ->descriptionAttribute($good->getId());
         if ($values){
             foreach ($values as $value){
-                $attribute = $value->getAttribute();
-                if ($attribute->getStatus() == Attribute::STATUS_ACTIVE){
-                    $result .= "<li>{$attribute->getName()}: {$value->getAttributeValue()->getValue()}</li>";
-                }    
-                $this->entityManager->detach($attribute);
-                $this->entityManager->detach($value);
+                $result .= "<li>{$value['name']}: {$value['value']}</li>";
             }
         }    
         $result .= "</ul>]]";
@@ -520,48 +515,45 @@ class MarketManager
         
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->marketQuery($market, $offset);
+        $data = $goodsQuery->getResult();
         
-        $iterable = $goodsQuery->iterate();
-        foreach ($iterable as $row){
-            foreach ($row as $good){
-                if (!empty($market->getImageCount())){
-                    $images = $this->images($good, $market);
-                    if ($images === false){
-                        continue;
-                    }
-                }    
-                
-//                $rawprices = $this->rawprices($good, $market);
-                $rawprices = $this->restShipping($good, $market);
-                if ($rawprices['realrest'] == 0){
+        foreach ($data as $good){
+            if (!empty($market->getImageCount())){
+                $images = $this->images($good, $market);
+                if ($images === false){
                     continue;
                 }
-                
-                $opts = $good->getOpts();
-                $sheet->setCellValue("A$k", $good->getCode());
-                $sheet->setCellValue("B$k", $good->getProducer()->getName());
-                $sheet->setCellValue("C$k", $good->getName());
-                $sheet->setCellValue("D$k", $good->getDescription());
-                if (!empty($market->getImageCount())){
-                    $sheet->setCellValue("E$k", implode(';', $images));
-                }
-                $sheet->setCellValue("F$k", $rawprices['realrest']);
-                $sheet->setCellValue("G$k", $opts[$market->getPricecol()]);
-//                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
-
-                $this->entityManager->detach($good);
-                $k++;
-                $outRows++;
             }    
+
+    //                $rawprices = $this->rawprices($good, $market);
+            $rawprices = $this->restShipping($good, $market);
+            if ($rawprices['realrest'] == 0){
+                continue;
+            }
+
+            $opts = $good->getOpts();
+            $sheet->setCellValue("A$k", $good->getCode());
+            $sheet->setCellValue("B$k", $good->getProducer()->getName());
+            $sheet->setCellValue("C$k", $good->getName());
+            $sheet->setCellValue("D$k", $good->getDescription());
+            if (!empty($market->getImageCount())){
+                $sheet->setCellValue("E$k", implode(';', $images));
+            }
+            $sheet->setCellValue("F$k", $rawprices['realrest']);
+            $sheet->setCellValue("G$k", $opts[$market->getPricecol()]);
+    //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
+
+            $this->entityManager->detach($good);
+            $k++;
+            $outRows++;
             $rows++;
             if ($market->getMaxRowCount() && $outRows >= $market->getMaxRowCount()){
                 break;
             }
             if ($outRows >= MarketPriceSetting::MAX_BLOCK_ROW_COUNT){
                 break;
-            }
-        }
-        
+            }        
+        }    
         $path = $this->blockFilenamePath($market, 0, $block);
 
         $writer = new Xlsx($spreadsheet);
@@ -741,6 +733,7 @@ class MarketManager
             } else {
                 $offset += $maxRowCount;                
             }    
+//            $this->entityManager->clear();
         }    
 
         $zipFilename = $market->getFilenameZip();

@@ -92,7 +92,7 @@ class MarketRepository extends EntityRepository{
         
         if ($market->getSupplier()){
             $queryBuilder->select('g')
-                ->distinct()    
+                //->distinct()    
                 ->from(Rawprice::class, 'r')
                 ->join('r.code', 'a')    
                 ->join(Goods::class, 'g', 'WITH', 'g.id = a.good')
@@ -103,6 +103,7 @@ class MarketRepository extends EntityRepository{
                 ->andWhere('raw.supplier = ?2')
                 ->setParameter('2', $market->getSupplier())    
                 ->andWhere('g.price > 0')    
+                ->setMaxResults($market::MAX_BLOCK_ROW_COUNT*2)    
                     ;            
         } else {
             $queryBuilder->select('g')
