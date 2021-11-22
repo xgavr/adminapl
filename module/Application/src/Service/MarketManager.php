@@ -463,7 +463,7 @@ class MarketManager
                 . "<li>Артикул: {$good->getCode()}</li>";
                 
         $values = $this->entityManager->getRepository(GoodAttributeValue::class)
-                ->descriptionAttribute($good->getId());
+                ->descriptionAttribute($good);
         if ($values){
             foreach ($values as $value){
                 $result .= "<li>{$value['name']}: {$value['value']}</li>";
