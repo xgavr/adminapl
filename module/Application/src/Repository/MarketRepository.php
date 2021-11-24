@@ -117,6 +117,7 @@ class MarketRepository extends EntityRepository{
             ->setParameter('4', Goods::PRICE_EX_TRANSFERRED)    
             ->setMaxResults($market::MAX_BLOCK_ROW_COUNT*2)    
             ->join('g.producer', 'p')    
+            ->join('g.genericGroup', 'gg')
                 ;
         
         $this->rateParams($market, $queryBuilder, 'g');
@@ -133,7 +134,6 @@ class MarketRepository extends EntityRepository{
         }
         if ($market->getProducerSetting() == MarketPriceSetting::PRODUCER_ACTIVE){
                     $queryBuilder
-//                            ->join('g.producer', 'p')
                             ->andWhere('p.movement > ?6')
                             ->setParameter('6', $market->getMovementLimit())
                     ;
@@ -141,7 +141,6 @@ class MarketRepository extends EntityRepository{
         
         if ($market->getGroupSetting() == MarketPriceSetting::GROUP_ACTIVE){
                     $queryBuilder
-                            ->join('g.genericGroup', 'gg')
                             ->andWhere('gg.movement > ?7')
                             ->setParameter('7', $market->getMovementLimit())
                     ;

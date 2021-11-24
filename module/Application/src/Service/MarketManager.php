@@ -47,6 +47,8 @@ class MarketManager
     
     private $supply;
     
+    private $groups;
+    
     /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
@@ -69,6 +71,7 @@ class MarketManager
         }    
         
         $this->supply = [];
+        $this->groups = [];
     }
     
     /**
@@ -399,6 +402,19 @@ class MarketManager
     }
 
     /**
+     * Наименование товара
+     * @param MarketPriceSetting $market
+     * @param array $good
+     * @return string
+     */
+    private function goodName($market, $good)
+    {
+        $result = "{$good['name']} {$good['producer']['name']} {$good['code']}";
+                
+        return $result;        
+    }
+    
+    /**
      * Характеристики товара
      * @param MarketPriceSetting $market
      * @param array $good
@@ -544,8 +560,10 @@ class MarketManager
         ;
         
         // Creating categories array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#categories)
-        $groups = $this->entityManager->getRepository(GenericGroup::class)
-                ->masterGroups();        
+        if (empty($this->groups)){
+            $this->groups = $this->entityManager->getRepository(GenericGroup::class)
+                    ->masterGroups();        
+        }    
         $priceGroups = [999 => 'Прочее'];
 
         // Creating offers array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#offers)
@@ -553,42 +571,43 @@ class MarketManager
         $rows = $outRows = 0;
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->marketQuery($market, $offset);
-        $data = $goodsQuery->getResult();
+        $data = $goodsQuery->getResult(2);
         foreach ($data as $good){
+            var_dump($good); exit;
             $rows++;
             $images = $this->images($good, $market);
             if ($images === false){
                 continue;
             }
 //                $rawprices = $this->rawprices($good, $market);
-            $rawprices = $this->restShipping($good, $market);
+            $rawprices = $this->restShipping($good['id'], $market);
             if ($rawprices['realrest'] == 0){
                 continue;
             }
 
-            $opts = $good->getOpts();
+            $opts = Goods::optPrices($good['price'], $good['meanPrice']);
 
             $categoryId = 999;
-            if ($good->getGenericGroup()){
-                $key = $good->getGenericGroup()->getAssemblyGroup();
-                if (array_key_exists(md5($key), $groups)) {
-                    $categoryId = $groups[md5($key)]['id'];
+            if (!empty($good['genericGroup'])){
+                $key = $good['genericGroup']['assemblyGroup'];
+                if (array_key_exists(md5($key), $this->groups)) {
+                    $categoryId = $this->groups[md5($key)]['id'];
                     $priceGroups[$categoryId] = $key;
                 }    
             }
 
             $offer = new OfferSimple();
-            $offer->setId($good->getAplId())
+            $offer->setId($good['aplId'])
                 ->setAvailable(true)
-                ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good->getAplId().'?utm_source='.$market->getId().'&utm_term='.$good->getAplId())
+                ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good['aplId'].'?utm_source='.$market->getId().'&utm_term='.$good['aplId'])
                 ->setPrice($opts[$market->getPricecol()])
                 ->setCurrencyId('RUR')
                 ->setCategoryId($categoryId)
                 ->setDelivery(true)
-                ->setName($good->getNameProducerCode())
+                ->setName($this->goodName($market, $good))
                 ->setPictures($images)
-                ->setVendor($good->getProducer()->getName())
-                ->setVendorCode($good->getCode())
+                ->setVendor($good['producer']['name'])
+                ->setVendorCode($good['code'])
                 ->setDescription($this->description($market, $good))
                 ->setStore(false)
                 ->setPickup(true)                       
@@ -606,7 +625,7 @@ class MarketManager
 
             $offers[] = $offer;
 
-            $this->entityManager->detach($good);
+//            $this->entityManager->detach($good);
             $outRows++;
             if ($market->getMaxRowCount() && $outRows >= $market->getMaxRowCount()){
                 break;
