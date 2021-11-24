@@ -483,7 +483,7 @@ class MarketManager
         $data = $goodsQuery->getResult(2);
         
         foreach ($data as $good){
-            var_dump($good); exit;
+//            var_dump($good); exit;
             $rows++;
             if (!empty($market->getImageCount())){
                 $images = $this->images($good, $market);
@@ -574,7 +574,7 @@ class MarketManager
                 ->marketQuery($market, $offset);
         $data = $goodsQuery->getResult(2);
         foreach ($data as $good){
-            var_dump($good); exit;
+//            var_dump($good); exit;
             $rows++;
             $images = $this->images($good, $market);
             if ($images === false){
