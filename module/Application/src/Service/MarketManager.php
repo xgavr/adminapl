@@ -515,9 +515,10 @@ class MarketManager
         
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->marketQuery($market, $offset);
-        $data = $goodsQuery->getResult();
+        $data = $goodsQuery->getResult(2);
         
         foreach ($data as $good){
+            var_dump($good); exit;
             $rows++;
             if (!empty($market->getImageCount())){
                 $images = $this->images($good, $market);
@@ -544,7 +545,7 @@ class MarketManager
             $sheet->setCellValue("G$k", $opts[$market->getPricecol()]);
     //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
 
-            $this->entityManager->detach($good);
+            //$this->entityManager->detach($good);
             $k++;
             $outRows++;
             if ($market->getMaxRowCount() && $outRows >= $market->getMaxRowCount()){
@@ -667,6 +668,8 @@ class MarketManager
             }
         }
         
+        unset($data);
+        
         ksort($priceGroups);
         foreach ($priceGroups as $key=>$value){
             $categories[] = (new Category())
@@ -744,15 +747,10 @@ class MarketManager
             ],
         ]);
         $filter->filter($this->folder($market));
-        //$this->ftpManager->putMarketPriceToApl(['source_file' => $zipPath, 'dest_file' => $zipFilename]);
 
-//        $market->setRowUnload($outRows);
-//        $market->setDateUnload(date('Y-m-d H:i:s'));
-//        $this->entityManager->persist($market);
-//        $this->entityManager->flush($market);
         $this->entityManager->getConnection()
                 ->update('market_price_setting', ['row_unload' => $outRows, 'date_unload' => date('Y-m-d H:i:s')],['id' => $market->getId()]);
-        
+
         return;
     }
     

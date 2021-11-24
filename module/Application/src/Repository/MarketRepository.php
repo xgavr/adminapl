@@ -91,7 +91,7 @@ class MarketRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         
         if ($market->getSupplier()){
-            $queryBuilder->select('g')
+            $queryBuilder->select('g, p')
                 //->distinct()    
                 ->from(Rawprice::class, 'r')
                 ->join('r.code', 'a')    
@@ -102,7 +102,7 @@ class MarketRepository extends EntityRepository{
                 ->andWhere('r.comment = \'\'')
                 ->andWhere('raw.supplier = ?2')
                 ->setParameter('2', $market->getSupplier())    
-                ->andWhere('g.price > 0')    
+                ->andWhere('g.price > 0')
                     ;            
         } else {
             $queryBuilder->select('g')
@@ -116,6 +116,7 @@ class MarketRepository extends EntityRepository{
             ->setParameter('3', Goods::AVAILABLE_TRUE)    
             ->setParameter('4', Goods::PRICE_EX_TRANSFERRED)    
             ->setMaxResults($market::MAX_BLOCK_ROW_COUNT*2)    
+            ->join('g.producer', 'p')    
                 ;
         
         $this->rateParams($market, $queryBuilder, 'g');
@@ -132,7 +133,7 @@ class MarketRepository extends EntityRepository{
         }
         if ($market->getProducerSetting() == MarketPriceSetting::PRODUCER_ACTIVE){
                     $queryBuilder
-                            ->join('g.producer', 'p')
+//                            ->join('g.producer', 'p')
                             ->andWhere('p.movement > ?6')
                             ->setParameter('6', $market->getMovementLimit())
                     ;

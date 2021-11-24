@@ -362,12 +362,15 @@ class OrderManager
      */
     public function addNewOrder($office, $contact, $data) 
     {
+        $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
+        $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+        
         // Создаем новую сущность.
         $order = new Order();
         $order->setAddress(!empty($data['address']) ? $data['address'] : null);
         $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
-        $order->setDateMod(!empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s'));
-        $order->setDateOper(!empty($data['dateOper']) ? $data['dateOper'] : null);
+        $order->setDateMod($dateMod);
+        $order->setDateOper($dateOper);
         $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
         $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
         $order->setInfo(!empty($data['info']) ? $data['info'] : null);
@@ -465,11 +468,14 @@ class OrderManager
      */
     public function insOrder($office, $contact, $data) 
     {
+        $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
+        $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+
         $upd = [
             'address' =>  (!empty($data['address'])) ? $data['address'] : null,
             'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
-            'date_mod' =>  (!empty($data['dateMod'])) ? $data['dateMod'] : null,
-            'date_oper' =>  (!empty($data['dateOper'])) ? $data['dateOper'] : null,
+            'date_mod' =>  $dateMod,
+            'date_oper' =>  $dateOper,
             'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
             'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
             'info' =>  (!empty($data['info'])) ? $data['info'] : null,
@@ -638,10 +644,13 @@ class OrderManager
      */
     public function updateOrder($order, $data) 
     {
+        $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
+        $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+
         $order->setAddress(!empty($data['address']) ? $data['address'] : null);
         $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
-        $order->setDateMod(!empty($data['dateMod']) ? $data['dateMod'] : null);
-        $order->setDateOper(!empty($data['dateOper']) ? $data['dateOper'] : null);
+        $order->setDateMod($dateMod);
+        $order->setDateOper($dateOper);
         $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
         $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
         $order->setInfo(!empty($data['info']) ? $data['info'] : null);
@@ -720,11 +729,14 @@ class OrderManager
      */
     public function updOrder($order, $data) 
     {
+        $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
+        $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+
         $upd = [
             'address' =>  (!empty($data['address'])) ? $data['address'] : null,
             'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
-            'date_mod' =>  (!empty($data['dateMod'])) ? $data['dateMod'] : null,
-            'date_oper' =>  (!empty($data['dateOper'])) ? $data['dateOper'] : null,
+            'date_mod' =>  $dateMod,
+            'date_oper' =>  $dateOper,
             'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
             'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
             'info' =>  (!empty($data['info'])) ? $data['info'] : null,
