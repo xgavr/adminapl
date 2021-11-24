@@ -230,7 +230,7 @@ class Goods {
     protected $updWeek;        
     
     /**
-     * @ORM\ManyToOne(targetEntity="\Application\Entity\Producer", inversedBy="goods") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
      * 
      */
@@ -296,7 +296,7 @@ class Goods {
     private $goodTokens;
     
      /**
-    * @ORM\OneToMany(targetEntity="\Application\Entity\GoodTitle", mappedBy="good")
+    * @ORM\OneToMany(targetEntity="Application\Entity\GoodTitle", mappedBy="good")
     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
      */
     private $goodTitles;    
