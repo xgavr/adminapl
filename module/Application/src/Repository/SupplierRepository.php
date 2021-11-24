@@ -217,16 +217,16 @@ class SupplierRepository extends EntityRepository{
                     ;
         }
         
-        return $queryBuilder->getQuery()->getResult();        
+        return $queryBuilder->getQuery()->getResult(2);        
     }
     
     /**
      * Варианты доставок
-     * @param Supplier $supplier
+     * @param integer $supplierId
      * @param Office $office
      * @param Region $region
      */
-    public function supplySettings($supplier, $office = null, $region = null)
+    public function supplySettings($supplierId, $office = null, $region = null)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -234,7 +234,8 @@ class SupplierRepository extends EntityRepository{
         $queryBuilder->select('ss')
                 ->from(SupplySetting::class, 'ss')
                 ->where('ss.supplier = ?1')
-                ->setParameter('1', $supplier->getId())
+                ->setParameter('1', $supplierId)
+                ->join('ss.supplier', 's')
                 ;
         
         if ($office){

@@ -344,7 +344,7 @@ class MarketManager
     
     /**
      * Получить лучшую поставку
-     * @param GoodSupplier $goodSupplier
+     * @param array $goodSupplier
      * @param Region $region
      * @return SupplySetting
      */
@@ -353,7 +353,7 @@ class MarketManager
         $result = null;
         $speed = 999;
         $supplySettings = $this->entityManager->getRepository(SupplySetting::class)
-                ->supplySettings($goodSupplier->getSupplier(), null, $region);
+                ->supplySettings($goodSupplier['supplier']['id'], null, $region);
         foreach ($supplySettings as $supplySetting){
             $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
             if ($speed > $supspeed){
@@ -379,9 +379,9 @@ class MarketManager
         $goodSuppliers = $this->entityManager->getRepository(GoodSupplier::class)
                 ->goodSuppliers($goodId, $market);
         foreach ($goodSuppliers as $goodSupplier){
-            $rp['realrest'] += $goodSupplier->getRest();
+            $rp['realrest'] += $goodSupplier['rest'];
 
-            $supplyKey = $goodSupplier->getSupplier()->getId().'_'.$market->getId();
+            $supplyKey = $goodSupplier['supplier']['id'].'_'.$market->getId();
             if (array_key_exists($supplyKey, $this->supply)){
                 $supplySetting = $this->supply[$supplyKey];
             } else {
@@ -395,7 +395,7 @@ class MarketManager
                     $rp['speed'] = $supspeed;
                 }
             }    
-            $this->entityManager->detach($goodSupplier);
+            //$this->entityManager->detach($goodSupplier);
         }        
         
         return $rp;
