@@ -91,6 +91,8 @@ $this->pageBreadcrumbs()->setItems([
                     Строк в блоке:  <?= $this->escapeHtml($market->getMaxRowCount());?>; 
                     Количество блоков:  <?= $this->escapeHtml($market->getBlockRowCount());?>; 
                     Фильтр движений:  <?= $this->escapeHtml($market->getMovementLimit());?>;
+                    Формат описания: <?= $this->escapeHtml($market->getDescriptionFormatAsString());?>;
+                    Состав описания: <?= $this->escapeHtml($market->getDescriptionSetAsString());?>;
                     Коментарий: <?= $this->escapeHtml($market->getInfo());?>
                 </small>
             </td>

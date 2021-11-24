@@ -87,6 +87,14 @@ $form->get('tdSetting')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('descriptionFormat')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('descriptionSet')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('rates')->setAttributes([
     'class'=>'form-control',
     'style' => 'height: 330px',
@@ -270,7 +278,21 @@ $form->prepare();
                         </div>    
                     </div>        
                     <div class="row">
-                        <div class="col-xs-12">
+                        <div class="col-xs-2">                        
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('descriptionFormat')); ?>
+                                <?= $this->formElement($form->get('descriptionFormat')); ?>
+                                <?= $this->formElementErrors($form->get('descriptionFormat')); ?>                  
+                            </div>
+                        </div>    
+                        <div class="col-xs-4">                        
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('descriptionSet')); ?>
+                                <?= $this->formElement($form->get('descriptionSet')); ?>
+                                <?= $this->formElementErrors($form->get('descriptionSet')); ?>                  
+                            </div>
+                        </div>    
+                        <div class="col-xs-6">
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('info')); ?>
                                 <?= $this->formElement($form->get('info')); ?>

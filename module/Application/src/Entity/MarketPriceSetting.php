@@ -55,7 +55,13 @@ class MarketPriceSetting {
     
     const TD_IGNORE   = 1; // Товары все.
     const TD_MATH      = 2; // Товары с ТД.
+    
+    const DESCRIPTION_FORMAT_HTML = 1; //HTML
+    const DESCRIPTION_FORMAT_TEXT = 2; //TEXT
         
+    const DESCRIPTION_SET_NAME_COMMENT     = 1; //Наименование и комментариу
+    const DESCRIPTION_SET_NAME_TD_COMMENT  = 2; //Наименование, текдок и комментарий
+
     const MOVEMENT_LIMIT   = 100; //Лимит для определения активности по движению
     const MAX_BLOCK_ROW_COUNT = 50000; // Максимально строк в блоке прайса
     const MAX_BLOCK_COUNT = 20; // Максимально блоков прайса
@@ -144,6 +150,17 @@ class MarketPriceSetting {
      */
     protected $tdSetting;
 
+    /**
+     * Формат описания
+     * @ORM\Column(name="description_format")   
+     */
+    protected $descriptionFormat;
+
+    /**
+     * Состав описания
+     * @ORM\Column(name="description_set")   
+     */
+    protected $descriptionSet;
     
     /**
      * Минимальная цена в прайсе
@@ -858,6 +875,93 @@ class MarketPriceSetting {
     {
         $this->tdSetting = $tdSetting;
     }   
+    
+    /**
+     * Returns description format.
+     * @return int     
+     */
+    public function getDescriptionFormat() 
+    {
+        return $this->descriptionFormat;
+    }
+    
+    /**
+     * Returns possible descriptionFormat as array.
+     * @return array
+     */
+    public static function getDescriptionFormatList() 
+    {
+        return [
+            self::DESCRIPTION_FORMAT_HTML => 'HTML',
+            self::DESCRIPTION_FORMAT_TEXT => 'TEXT'
+        ];
+    }    
+    
+    /**
+     * Returns descriptionFormat as string.
+     * @return string
+     */
+    public function getDescriptionFormatAsString()
+    {
+        $list = self::getDescriptionFormatList();
+        if (isset($list[$this->descriptionFormat]))
+            return $list[$this->descriptionFormat];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets descriptionFormat.
+     * @param int $descriptionFormat     
+     */
+    public function setDescriptionFormat($descriptionFormat) 
+    {
+        $this->descriptionFormat = $descriptionFormat;
+    }   
+
+    
+    /**
+     * Returns description set.
+     * @return int     
+     */
+    public function getDescriptionSet() 
+    {
+        return $this->descriptionSet;
+    }
+    
+    /**
+     * Returns possible descriptionSet as array.
+     * @return array
+     */
+    public static function getDescriptionSetList() 
+    {
+        return [
+            self::DESCRIPTION_SET_NAME_COMMENT => 'Наименование и коментарий',
+            self::DESCRIPTION_SET_NAME_TD_COMMENT => 'Наименование,текдок и комментарий'
+        ];
+    }    
+    
+    /**
+     * Returns descriptionSet as string.
+     * @return string
+     */
+    public function getDescriptionSetAsString()
+    {
+        $list = self::getDescriptionSetList();
+        if (isset($list[$this->descriptionSet]))
+            return $list[$this->descriptionSet];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets descriptionSet.
+     * @param int $descriptionSet     
+     */
+    public function setDescriptionSet($descriptionSet) 
+    {
+        $this->descriptionSet = $descriptionSet;
+    }   
 
     public function getRegion() 
     {
@@ -988,6 +1092,8 @@ class MarketPriceSetting {
             'shipping' => ($this->getShipping()) ? $this->getShipping()->getId():null,
             'rates' => $this->getRatesAsArray(),
             'tdSetting' => $this->getTdSetting(),
+            'descriptionFormat' => $this->getDescriptionFormat(),
+            'descriptionSet' => $this->getDescriptionSet(),
             'movementLimit' => $this->getMovementLimit(),
         ];
         

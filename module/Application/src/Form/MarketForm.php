@@ -100,7 +100,7 @@ class MarketForm extends Form
                 'id' => 'info'
             ],
             'options' => [
-                'label' => 'Описание в фид',
+                'label' => 'Комментарий в описание',
             ],
         ]);
         
@@ -259,6 +259,30 @@ class MarketForm extends Form
             'options' => [
                 'label' => 'Текдок',
                 'value_options' => MarketPriceSetting::getTdSettingList(),
+            ],
+        ]);
+                                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'descriptionFormat',
+            'attributes' => [
+                'value' => MarketPriceSetting::DESCRIPTION_FORMAT_HTML,
+            ],    
+            'options' => [
+                'label' => 'Формат описания',
+                'value_options' => MarketPriceSetting::getDescriptionFormatList(),
+            ],
+        ]);
+                                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'descriptionSet',
+            'attributes' => [
+                'value' => MarketPriceSetting::DESCRIPTION_SET_NAME_COMMENT,
+            ],    
+            'options' => [
+                'label' => 'Состав описания',
+                'value_options' => MarketPriceSetting::getDescriptionSetList(),
             ],
         ]);
                                 

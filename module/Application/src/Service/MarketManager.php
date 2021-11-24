@@ -224,6 +224,8 @@ class MarketManager
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
+        $market->setDescriptionFormat($data['descriptionFormat']);
+        $market->setDescriptionSet($data['descriptionSet']);
         $market->setShipping($data['shipping']);
         
         $this->assignRates($market, $data['rates']);        
@@ -263,6 +265,8 @@ class MarketManager
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
+        $market->setDescriptionFormat($data['descriptionFormat']);
+        $market->setDescriptionSet($data['descriptionSet']);
         $market->setShipping($data['shipping']);
         
         $this->assignRates($market, $data['rates']);
@@ -422,20 +426,35 @@ class MarketManager
      */
     private function description($market, $good)
     {
-        $result = "<![CDATA[<ul>"
-                . "<li>{$good['name']}</li>"
+        $resultHTML = "<![CDATA[<ul>";
+        $resultText = '';
+        if ($market->getInfo()){
+            $resultHTML .= "<li>{$market->getInfo()}</li>";
+            $resultTEXT .= $market->getInfo().PHP_EOL;
+        }
+                
+        $resultHTML .="<li>{$good['name']}</li>"
                 . "<li>Производитель: {$good['producer']['name']}</li>"
                 . "<li>Артикул: {$good['code']}</li>";
                 
-        $values = $this->entityManager->getRepository(GoodAttributeValue::class)
-                ->descriptionAttribute($good['id']);
-        if ($values){
-            foreach ($values as $value){
-                $result .= "<li>{$value['name']}: {$value['value']}</li>";
-            }
+        $resultTEXT .= "{$good['name']} {$good['producer']['name']} {$good['code']}".PHP_EOL;
+        
+        if ($market->getDescriptionSet() == MarketPriceSetting::DESCRIPTION_SET_NAME_TD_COMMENT){
+            $values = $this->entityManager->getRepository(GoodAttributeValue::class)
+                    ->descriptionAttribute($good['id']);
+            if ($values){
+                foreach ($values as $value){
+                    $resultHTML .= "<li>{$value['name']}: {$value['value']}</li>";
+                    $resultTEXT .= "{$value['name']}: {$value['value']}".PHP_EOL;
+                }
+            }    
         }    
-        $result .= "</ul>]]";
-        return $result;        
+        $resultHTML .= "</ul>]]";
+        if ($market->getDescriptionFormat() == MarketPriceSetting::DESCRIPTION_FORMAT_HTML){
+            return $resultHTML;        
+        }
+        
+        return $resultTEXT;
     }
     
     /**
