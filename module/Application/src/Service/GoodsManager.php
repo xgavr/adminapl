@@ -725,20 +725,18 @@ class GoodsManager
         $prices = [];
         $bestSupplierPrice = $bestSupplierAmount = 0;
         foreach ($goodSuppliers as $goodSupplier){
-            $rest = $goodSupplier->getRest();
-            $supplierPrice = $goodSupplier->getPrice();
-            $supplier = $goodSupplier->getSupplier();
+            $rest = $goodSupplier['rest'];
+            $supplierPrice = $goodSupplier['price'];
+            $supplier = $goodSupplier['supplier']['id'];
             if ($rest>0 && $supplierPrice>0){
                 $rest = min(1000, $rest);
                 $prices = array_merge($prices, array_fill(0, $rest, $supplierPrice));
 
-                if ($supplier->getAmount() > $bestSupplierAmount){
+                if ($supplier['amount'] > $bestSupplierAmount){
                     $bestSupplierPrice = $price;
-                    $bestSupplierAmount = $supplier->getAmount();
+                    $bestSupplierAmount = $supplier['amount'];
                 }
             }
-            $this->entityManager->detach($supplier);
-            $this->entityManager->detach($goodSupplier);
         }
                 
         $meanPrice = $price = $minPrice = 0;
