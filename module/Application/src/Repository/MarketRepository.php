@@ -91,7 +91,7 @@ class MarketRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         
         if ($market->getSupplier()){
-            $queryBuilder->select('g, p')
+            $queryBuilder->select('g, p, gg')
                 //->distinct()    
                 ->from(Rawprice::class, 'r')
                 ->join('r.code', 'a')    
