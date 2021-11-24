@@ -305,7 +305,7 @@ class MarketManager
     
     /**
      * Получить картинки товара
-     * @param Goods $good
+     * @param array $good
      * @param MarketPriceSetting $market
      * @return array 
      */
@@ -315,18 +315,18 @@ class MarketManager
         if (!empty($market->getImageCount())){            
             if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_ALL){
                 $images = $this->entityManager->getRepository(Images::class)
-                        ->findBy(['good' => $good->getId()], null, $market->getImageCountOrNull());
+                        ->arrayGoodImages($good['id'], ['limit' => $market->getImageCountOrNull()]);
             }
             if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH){
                 $images = $this->entityManager->getRepository(Images::class)
-                        ->findBy(['good' => $good->getId(), 'similar' => Images::SIMILAR_MATCH], null, $market->getImageCountOrNull());
+                        ->arrayGoodImages($good['id'], ['similar' => Images::SIMILAR_MATCH, 'limit' => $market->getImageCountOrNull()]);
             }
             if (!empty($images)){
                 foreach ($images as $image){
-                    if ($image->allowTransfer()){
-                        $imageList[] = $this::APL_BASE_URL.'/images/api/'.$good->getAplId().'/'.$image->getName();
+                    if (Images::isToTransfer($image['path'])){
+                        $imageList[] = $this::APL_BASE_URL.'/images/api/'.$good['aplId'].'/'.$image['name'];
                     }    
-                    $this->entityManager->detach($image);
+//                    $this->entityManager->detach($image);
                 }
             }
             if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH && count($imageList) == 0){
@@ -337,57 +337,6 @@ class MarketManager
             }
         }    
         return $imageList;        
-    }
-    
-    /**
-     * Строки прайсов товара
-     * @param Goods $good
-     * @param MarketPriceSetting $market
-     */
-    private function rawprices($good, $market)
-    {
-        $rp = [
-            'realrest' => 0,
-            'speed' => 3,
-            'orderbefore' => 12,
-        ];
-        
-        $articles = $this->entityManager->getRepository(Article::class)
-                ->findBy(['good' => $good->getId()]);
-        foreach ($articles as $article){
-            $rawprices = $this->entityManager->getRepository(Rawprice::class)
-                    ->findBy([
-                        'code' => $article->getId(),
-                        'status' => Rawprice::STATUS_PARSED,
-                    ]);        
-            foreach ($rawprices as $rawprice){
-                $supplier = $rawprice->getRaw()->getSupplier();
-                if ($market->getSupplier()){
-                    if ($market->getSupplier()->getId() != $supplier->getId()){
-                        continue;
-                    }
-                }    
-                foreach ($supplier->getSupplySettings() as $supplySetting){
-                    $supspeed = $rp['speed'];
-                    if ($market->getRegion()->getId() == $supplySetting->getOffice()->getRegion()->getId() 
-                            && $supplySetting->getStatus() == SupplySetting::STATUS_ACTIVE){
-                        $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
-                        if ($rp['speed'] > $supspeed){
-                            $rp['orderbefore'] = $supplySetting->getOrderBeforeHMax12();
-                            $rp['speed'] = $supspeed;
-                        }
-                    }
-                }
-                if ($rawprice->getRealRest()){
-                    $rp['realrest'] += $rawprice->getRealRest();
-                }
-                $this->entityManager->detach($supplier);
-                $this->entityManager->detach($rawprice);
-            }
-            $this->entityManager->detach($article);
-        }        
-        
-        return $rp;
     }
     
     /**
@@ -413,10 +362,10 @@ class MarketManager
     
     /**
      * Остатки и доставки
-     * @param Goods $good
+     * @param integer $goodId
      * @param MarketPriceSetting $market
      */
-    private function restShipping($good, $market)
+    private function restShipping($goodId, $market)
     {
         $rp = [
             'realrest' => 0,
@@ -425,7 +374,7 @@ class MarketManager
         ];
         
         $goodSuppliers = $this->entityManager->getRepository(GoodSupplier::class)
-                ->goodSuppliers($good, $market);
+                ->goodSuppliers($goodId, $market);
         foreach ($goodSuppliers as $goodSupplier){
             $rp['realrest'] += $goodSupplier->getRest();
 
@@ -452,18 +401,18 @@ class MarketManager
     /**
      * Характеристики товара
      * @param MarketPriceSetting $market
-     * @param Goods $good
+     * @param array $good
      * @return string
      */
     private function description($market, $good)
     {
         $result = "<![CDATA[<ul>"
-                . "<li>{$good->getName()}</li>"
-                . "<li>Производитель: {$good->getProducer()->getName()}</li>"
-                . "<li>Артикул: {$good->getCode()}</li>";
+                . "<li>{$good['name']}</li>"
+                . "<li>Производитель: {$good['producer']['name']}</li>"
+                . "<li>Артикул: {$good['code']}</li>";
                 
         $values = $this->entityManager->getRepository(GoodAttributeValue::class)
-                ->descriptionAttribute($good);
+                ->descriptionAttribute($good['id']);
         if ($values){
             foreach ($values as $value){
                 $result .= "<li>{$value['name']}: {$value['value']}</li>";
@@ -518,7 +467,6 @@ class MarketManager
         $data = $goodsQuery->getResult(2);
         
         foreach ($data as $good){
-            var_dump($good); exit;
             $rows++;
             if (!empty($market->getImageCount())){
                 $images = $this->images($good, $market);
@@ -528,16 +476,16 @@ class MarketManager
             }    
 
     //                $rawprices = $this->rawprices($good, $market);
-            $rawprices = $this->restShipping($good, $market);
+            $rawprices = $this->restShipping($good['id'], $market);
             if ($rawprices['realrest'] == 0){
                 continue;
             }
 
-            $opts = $good->getOpts();
-            $sheet->setCellValue("A$k", $good->getCode());
-            $sheet->setCellValue("B$k", $good->getProducer()->getName());
-            $sheet->setCellValue("C$k", $good->getName());
-            $sheet->setCellValue("D$k", $good->getDescription());
+            $opts = Goods::optPrices($good['price'], $good['meanPrice']);
+            $sheet->setCellValue("A$k", $good['code']);
+            $sheet->setCellValue("B$k", $good['producer']['name']);
+            $sheet->setCellValue("C$k", $good['name']);
+            $sheet->setCellValue("D$k", $good['description']);
             if (!empty($market->getImageCount())){
                 $sheet->setCellValue("E$k", implode(';', $images));
             }

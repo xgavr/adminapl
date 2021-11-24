@@ -365,10 +365,16 @@ class Goods {
         return $this->price;
     }
     
-    public function getOpts()
+    /**
+     * Получить колонки цен
+     * @param float $price
+     * @param float $meanPrice
+     * @return array
+     */
+    public static function optPrices($price, $meanPrice)
     {
         $result = [];
-        $priceCols = ScaleTreshold::retailPriceCols($this->getPrice(), $this->getMeanPrice());
+        $priceCols = ScaleTreshold::retailPriceCols($price, $meanPrice);
         if (is_array($priceCols)){
             foreach ($priceCols as $priceCol){
                 if (isset($priceCol['price'])){
@@ -377,6 +383,11 @@ class Goods {
             }
         }    
         return $result;
+    }
+
+    public function getOpts()
+    {
+        return $this->optPrices($this->price, $this->meanPrice);
     }
 
     public function setPrice($price) 

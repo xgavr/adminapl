@@ -220,9 +220,9 @@ class AttributeRepository  extends EntityRepository{
     /**
      * Характеристики товара
      * 
-     * @param Goods $good
+     * @param integer $goodId
      */
-    public function descriptionAttribute($good)
+    public function descriptionAttribute($goodId)
     {
         $result = [];
         $entityManager = $this->getEntityManager();
@@ -235,7 +235,7 @@ class AttributeRepository  extends EntityRepository{
                 ->join('gav.attributeValue', 'av')
                 ->where('gav.good = ?1')
                 ->andWhere('a.status = ?3')
-                ->setParameter('1', $good->getId())
+                ->setParameter('1', $goodId)
                 ->setParameter('3', Attribute::STATUS_ACTIVE)                
                 ;
         

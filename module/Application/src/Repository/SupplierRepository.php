@@ -195,10 +195,10 @@ class SupplierRepository extends EntityRepository{
     
     /**
      * Поставщики товара
-     * @param Goods $good
+     * @param integer $goodId
      * @param MarketPriceSetting $market
      */
-    public function goodSuppliers($good, $market = null)
+    public function goodSuppliers($goodId, $market = null)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -206,7 +206,7 @@ class SupplierRepository extends EntityRepository{
         $queryBuilder->select('gs')
                 ->from(GoodSupplier::class, 'gs')
                 ->where('gs.good = ?1')
-                ->setParameter('1', $good->getId())
+                ->setParameter('1', $goodId)
                 ->andWhere('gs.update > ?2')
                 ->setParameter('2', date('Y-m-d', strtotime('-2 days')))
                 ;

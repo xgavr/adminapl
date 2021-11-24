@@ -126,9 +126,14 @@ class Images {
         return;
     }
     
-    public function allowTransfer()
+    /**
+     * Проверка расширения
+     * @param string $filename
+     * @return boolean
+     */
+    public static function isToTransfer($filename)
     {
-        $fileInfo = pathinfo($this->name);
+        $fileInfo = pathinfo($filename);
         $ext = null;
         if (isset($fileInfo['extension'])){
             $ext = $fileInfo['extension'];
@@ -146,12 +151,17 @@ class Images {
         }
 
         $uriValidator = new \Laminas\Validator\Uri();
-        if (!$uriValidator->isValid($this->path)){
+        if (!$uriValidator->isValid($filename)){
             return FALSE;
         }
 
 //        var_dump($ext);
         return true;
+    }
+    
+    public function allowTransfer()
+    {
+        return $this->isToTransfer($this->path);
     }
 
     public function setPath($path) 

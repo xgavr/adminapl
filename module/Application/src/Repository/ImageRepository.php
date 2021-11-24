@@ -472,4 +472,34 @@ class ImageRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }   
     
+    /**
+     * Массив картинок товара
+     * @param integer $goodId
+     * @param array $params
+     * @return array 
+     */
+    public function arrayGoodImages($goodId, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('i')
+            ->from(Images::class, 'i')
+            ->where('i.good = ?1')
+            ->setParameter('1', $goodId) 
+            ;
+        if (is_array($params)){
+            if (!empty($params['similar'])){
+                $queryBuilder->andWhere('i.similar = ?2')
+                    ->setParameter('2', $params['similar'])
+                ;
+            }
+            if (!empty($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
+        }
+        
+        return $queryBuilder->getQuery()->getResult(2);
+    }
 }
