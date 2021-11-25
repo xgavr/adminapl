@@ -182,7 +182,7 @@ class RateRepository  extends EntityRepository
                 ->where('r.status = ?1')
                 ->andWhere('r.genericGroup = ?2')    
                 ->setParameter('1', Rate::STATUS_ACTIVE)
-                ->setParameter('2', $good->getGenericGroup()->getId())
+                ->setParameter('2', $genericGroupId)
                 ->setMaxResults(1)    
                 ;       
             $rate = $queryBuilder->getQuery()->getOneOrNullResult();
