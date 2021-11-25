@@ -123,9 +123,9 @@ class GoodsRepository extends EntityRepository
                 . 'g.price, '
                 . 'g.meanPrice, '
                 . 'g.fixPrice, '
-                . 'identity(g.genericGroup)as genericGroupId, '
+                . 'identity(g.genericGroup) as genericGroupId, '
                 . 'identity(g.tokenGroup) as tokenGroupId, '
-                . 'identity(g.producer as producerId)')
+                . 'identity(g.producer) as producerId)')
                 ->from(Rawprice::class, 'r')
                 ->join('r.good', 'g')
                 ->where('r.raw = ?1')
