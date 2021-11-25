@@ -725,6 +725,7 @@ class GoodsManager
         $prices = [];
         $bestSupplierPrice = $bestSupplierAmount = 0;
         foreach ($goodSuppliers as $goodSupplier){
+            var_dump($goodSupplier); exit;
             $rest = $goodSupplier['rest'];
             $supplierPrice = $goodSupplier['price'];
             $supplier = $goodSupplier['supplier'];

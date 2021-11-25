@@ -203,8 +203,9 @@ class SupplierRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('gs')
+        $queryBuilder->select('gs, s')
                 ->from(GoodSupplier::class, 'gs')
+                ->join('gs.supplier', 's')
                 ->where('gs.good = ?1')
                 ->setParameter('1', $goodId)
                 ->andWhere('gs.update > ?2')
