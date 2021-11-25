@@ -117,8 +117,17 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r')
+        $queryBuilder->select('r.id as rawpriceId, '
+                . 'g.id as goodId, '
+                . 'g.datePrice, '
+                . 'g.price, '
+                . 'g.meanPrice, '
+                . 'g.fixPrice, '
+                . 'identity(g.genericGroup)as genericGroupId, '
+                . 'identity(g.tokenGroup) as tokenGroupId, '
+                . 'identity(g.producer as producerId)')
                 ->from(Rawprice::class, 'r')
+                ->join('r.good', 'g')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusPrice = ?2')
                 ->andWhere('r.status = ?3')

@@ -149,32 +149,33 @@ class RateRepository  extends EntityRepository
     }
     
     /**
-     * Найти расценку для товара
-     * 
-     * @param Goods $good
-     * @return Rate 
+     * Найти расценку
+     * @param int $tokenGroupId
+     * @param int $genericGroupId
+     * @param int $producerId
+     * @return Rate
      */
-    public function findGoodRate($good)
+    public function getRate($tokenGroupId = null, $genericGroupId = null, $producerId = null)            
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $rate = null;
-        if ($good->getTokenGroup()){
+        if ($tokenGroupId){
             $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
                 ->where('r.status = ?1')
                 ->andWhere('r.tokenGroup = ?2')    
                 ->setParameter('1', Rate::STATUS_ACTIVE)
-                ->setParameter('2', $good->getTokenGroup()->getId())
+                ->setParameter('2', $tokenGroupId)
                 ->setMaxResults(1)    
                 ;       
             $rate = $queryBuilder->getQuery()->getOneOrNullResult();
         }    
         
-        if (!$rate && $good->getGenericGroup()){
+        if (!$rate && $genericGroupId){
             $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
@@ -187,7 +188,7 @@ class RateRepository  extends EntityRepository
             $rate = $queryBuilder->getQuery()->getOneOrNullResult();
         }    
         
-        if (!$rate && $good->getProducer()){
+        if (!$rate && $producerId){
             $queryBuilder->resetDQLParts();
             $queryBuilder->select('r')
                 ->from(Rate::class, 'r')
@@ -204,7 +205,31 @@ class RateRepository  extends EntityRepository
             $rate =  $this->findDefaultRate();
         }
         
-        return $rate;
+        return $rate;        
+    }
+    
+    /**
+     * Найти расценку для товара
+     * 
+     * @param Goods $good
+     * @return Rate 
+     */
+    public function findGoodRate($good)
+    {
+        $tokenGroupId = $genericGroupId = $producerId= null;
+        if ($good->getTokenGroup()){
+            $tokenGroupId = $good->getTokenGroup()->getId();
+        }    
+        
+        if ($good->getGenericGroup()){
+            $genericGroupId = $good->getGenericGroup()->getId();
+        }    
+        
+        if ($good->getProducer()){
+            $producerId = $good->getProducer()->getId();
+        }    
+        
+        return $this->getRate($tokenGroupId, $genericGroupId, $producerId);
     }
     
     /**

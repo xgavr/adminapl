@@ -641,8 +641,8 @@ class AplOrderService {
         try{
             $result = json_decode($body, true);
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
-            var_dump($ex->getMessage());
-            var_dump($body);
+//            var_dump($ex->getMessage());
+//            var_dump($body);
             return false;
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             return true;

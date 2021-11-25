@@ -714,14 +714,14 @@ class GoodsManager
     /**
      * Обновить расчетные цены товара
      * 
-     * @param Goods $good
+     * @param array $goodData
      * @param object $regression
      */
-    public function updatePricesFromGoodSupplier($good, $regression = null)
+    public function updatePricesFromGoodSupplier($goodData, $regression = null)
     {
 
         $goodSuppliers = $this->entityManager->getRepository(GoodSupplier::class)
-                ->goodSuppliers($good);
+                ->goodSuppliers($goodData['goodId']);
         $prices = [];
         $bestSupplierPrice = $bestSupplierAmount = 0;
         foreach ($goodSuppliers as $goodSupplier){
@@ -733,16 +733,16 @@ class GoodsManager
                 $prices = array_merge($prices, array_fill(0, $rest, $supplierPrice));
 
                 if ($supplier['amount'] > $bestSupplierAmount){
-                    $bestSupplierPrice = $price;
+                    $bestSupplierPrice = $supplierPrice;
                     $bestSupplierAmount = $supplier['amount'];
                 }
             }
         }
                 
         $meanPrice = $price = $minPrice = 0;
-        $oldMeanPrice = $good->getMeanPrice();
-        $oldPrice = $good->getPrice();
-        $fixPrice = $good->getFixPrice();
+        $oldMeanPrice = $goodData['meanPrice'];
+        $oldPrice = $goodData['price'];
+        $fixPrice = $goodData['fixPrice'];
         
         if (count($prices)){
 
@@ -758,7 +758,7 @@ class GoodsManager
             
             if (!$regression){
                 $rate = $this->entityManager->getRepository(Rate::class)
-                        ->findGoodRate($good);
+                        ->getRate($goodData['tokenGroupId'], $goodData['genericGroupId'], $goodData['producerId']);
                 $regression = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
             }    
 
@@ -771,7 +771,7 @@ class GoodsManager
 
         if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), [
+                    ->updateGoodId($goodData['goodId'], [
                         'min_price' => $minPrice, 
                         'mean_price' => $meanPrice,
                         'fix_price' => $fixPrice,
@@ -781,7 +781,7 @@ class GoodsManager
                             ]);
         } else {
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), [
+                    ->updateGoodId($goodData['goodId'], [
                         'date_price' => date('Y-m-d H:i:s'),
                             ]);            
         }   
@@ -812,34 +812,28 @@ class GoodsManager
         
         $rawpriceQuery = $this->entityManager->getRepository(Goods::class)
                 ->findRawpriceForUpdatePrice($raw);
-        $iterable = $rawpriceQuery->iterate();
+        $data = $rawpriceQuery->getResult(2);
         
         $regressions = [];
         
-        foreach ($iterable as $row){
-            foreach ($row as $rawprice){
-                $good = $rawprice->getGood();
-                
-                
-                if ($good){
-                    if ($good->getDatePrice() < date('Y-m-d') || !$good->getPrice()){
-                        $rate = $this->entityManager->getRepository(Rate::class)
-                                ->findGoodRate($good);
-                        if (!array_key_exists($rate->getId(), $regressions)){
-                            $regressions[$rate->getId()] = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
-                        }                
-                        $this->updatePrices($good, $regressions[$rate->getId()]);
-                    }    
-                    $this->entityManager->detach($good);
+        foreach ($data as $row){
+            if (!empty($row['goodId'])){
+                if ($row['datePrice'] < date('Y-m-d') || empty($row['price'])){
+                    $rate = $this->entityManager->getRepository(Rate::class)
+                            ->getRate($row['tokenGroupId'], $row['genericGroupId'], $row['producerId']);
+                    if (!array_key_exists($rate->getId(), $regressions)){
+                        $regressions[$rate->getId()] = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
+                    }                
+                    $this->updatePricesFromGoodSupplier($row, $regressions[$rate->getId()]);
                 }    
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_price' => Rawprice::PRICE_PARSED]);
-                $this->entityManager->detach($rawprice);
             }    
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($row['rawpriceId'], ['status_price' => Rawprice::PRICE_PARSED]);
+
             if (time() > $startTime + 840){
                 return;
             }
-        }
+        }    
         
         unset($regressions);
         
