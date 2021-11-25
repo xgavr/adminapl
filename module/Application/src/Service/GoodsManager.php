@@ -727,7 +727,7 @@ class GoodsManager
         foreach ($goodSuppliers as $goodSupplier){
             $rest = $goodSupplier['rest'];
             $supplierPrice = $goodSupplier['price'];
-            $supplier = $goodSupplier['supplier']['id'];
+            $supplier = $goodSupplier['supplier'];
             if ($rest>0 && $supplierPrice>0){
                 $rest = min(1000, $rest);
                 $prices = array_merge($prices, array_fill(0, $rest, $supplierPrice));
