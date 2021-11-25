@@ -725,17 +725,15 @@ class GoodsManager
         $prices = [];
         $bestSupplierPrice = $bestSupplierAmount = 0;
         foreach ($goodSuppliers as $goodSupplier){
-            var_dump($goodSupplier); exit;
             $rest = $goodSupplier['rest'];
             $supplierPrice = $goodSupplier['price'];
-            $supplier = $goodSupplier['supplier'];
             if ($rest>0 && $supplierPrice>0){
                 $rest = min(1000, $rest);
                 $prices = array_merge($prices, array_fill(0, $rest, $supplierPrice));
 
-                if ($supplier['amount'] > $bestSupplierAmount){
+                if ($goodSupplier['supplier']['amount'] > $bestSupplierAmount){
                     $bestSupplierPrice = $supplierPrice;
-                    $bestSupplierAmount = $supplier['amount'];
+                    $bestSupplierAmount = $goodSupplier['supplier']['amount'];
                 }
             }
         }
