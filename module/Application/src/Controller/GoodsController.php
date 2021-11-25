@@ -1119,7 +1119,16 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $this->goodsManager->updatePrices($good);
+        //$this->goodsManager->updatePrices($good);
+        $this->goodsManager->updatePricesFromGoodSupplier([
+            'goodId' => $good->getId(), 
+            'meanPrice' => $good->getMeanPrice(), 
+            'price' => $good->getPrice(), 
+            'fixPrice' => $good->getFixPrice(), 
+            'tokenGroupId' => $good->getTokenGroup()->getId(), 
+            'genericGroupId' => $good->getGenericGroup()->getId(), 
+            'producerId' => $good->getProducer()->getId(),
+        ]);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

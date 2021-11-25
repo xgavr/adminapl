@@ -714,7 +714,7 @@ class GoodsManager
     /**
      * Обновить расчетные цены товара
      * 
-     * @param array $goodData
+     * @param array $goodData //[goodId, meanPrice, price, fixPrice, tokenGroupId, genericGroupId, producerId]
      * @param object $regression
      */
     public function updatePricesFromGoodSupplier($goodData, $regression = null)
