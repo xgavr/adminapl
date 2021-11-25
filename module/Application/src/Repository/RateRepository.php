@@ -195,7 +195,7 @@ class RateRepository  extends EntityRepository
                 ->where('r.status = ?1')
                 ->andWhere('r.producer = ?2')    
                 ->setParameter('1', Rate::STATUS_ACTIVE)
-                ->setParameter('2', $good->getProducer()->getId())
+                ->setParameter('2', $producerId)
                 ->setMaxResults(1)    
                 ;       
             $rate = $queryBuilder->getQuery()->getOneOrNullResult();
