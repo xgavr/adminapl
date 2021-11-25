@@ -817,7 +817,6 @@ class GoodsManager
         $regressions = [];
         
         foreach ($data as $row){
-            var_dump($row); exit;
             if (!empty($row['goodId'])){
                 if ($row['datePrice'] < date('Y-m-d') || empty($row['price'])){
                     $rate = $this->entityManager->getRepository(Rate::class)
