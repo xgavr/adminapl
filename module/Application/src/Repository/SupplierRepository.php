@@ -211,7 +211,7 @@ class SupplierRepository extends EntityRepository{
                 ->setParameter('2', date('Y-m-d', strtotime('-2 days')))
                 ;
         
-        if ($market->getSupplier()){
+        if ($market instanceof MarketPriceSetting){
             $queryBuilder->andWhere('gs.supplier = ?3')
                     ->setParameter('3', $market->getSupplier()->getId())
                     ;
