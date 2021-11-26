@@ -680,7 +680,7 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r')
+        $queryBuilder->select('r.id as rawpriceId, identity(r.good) as goodId')
                 ->from(Rawprice::class, 'r')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusGood = ?2')
@@ -1232,10 +1232,10 @@ class TokenRepository  extends EntityRepository
     /**
      * Выбрать наименование для группы токенов
      * 
-     * @param Goods $good
+     * @param int $goodId
      * @return type
      */
-    public function choiceGroupTitle($good)
+    public function choiceGroupTitle($goodId)
     {
         $entityManager = $this->getEntityManager();
 
@@ -1248,7 +1248,7 @@ class TokenRepository  extends EntityRepository
 //            ->having('titleCount > 1')  
             ->orderBy('titleCount', 'DESC')    
             ->where('g.id = ?1')
-            ->setParameter('1', $good->getId())
+            ->setParameter('1', $goodId)
             ->andWhere('at.tokenGroupTitleMd5 != ?2')    
             ->setParameter('2', md5(''))
             //->setMaxResults(1)    

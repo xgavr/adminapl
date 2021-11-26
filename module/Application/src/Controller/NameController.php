@@ -700,7 +700,7 @@ class NameController extends AbstractActionController
         }        
 
         if ($rawprice->getStatusGood() == Rawprice::GOOD_OK){
-            $this->nameManager->addGroupTokenFromGood($rawprice->getGood());
+            $this->nameManager->addGroupTokenFromGood($rawprice->getGood()->getId());
         }    
                 
         return new JsonModel([
@@ -1260,7 +1260,7 @@ class NameController extends AbstractActionController
             return;                        
         }        
 
-        $this->nameManager->addGroupTokenFromGood($good);
+        $this->nameManager->addGroupTokenFromGood($good->getId());
         
         return new JsonModel([
             'result' => 'ok-reload',

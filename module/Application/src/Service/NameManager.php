@@ -1299,13 +1299,13 @@ class NameManager
     /**
      * Добавить группу наименований по токенам товара
      * 
-     * @param Goods $good
+     * @param int $goodId
      * 
      */
-    public function addGroupTokenFromGood($good)
+    public function addGroupTokenFromGood($goodId)
     {
         $groupTitles = $this->entityManager->getRepository(Token::class)
-                ->choiceGroupTitle($good);
+                ->choiceGroupTitle($goodId);
 
         $tokenGroup = null;
         
@@ -1348,9 +1348,9 @@ class NameManager
         }    
 
         $this->entityManager->getRepository(Goods::class)
-                ->updateGoodId($good->getId(), ['token_group_id' => $updGroupId]);                                
+                ->updateGoodId($goodId, ['token_group_id' => $updGroupId]);                                
         $this->entityManager->getRepository(Goods::class)
-                ->updateTokenGroupGoodArticleTitle($good, $updGroupId);
+                ->updateTokenGroupGoodArticleTitle($goodId, $updGroupId);
 
         return;
     }
@@ -1368,25 +1368,17 @@ class NameManager
         
         $rawpricesQuery = $this->entityManager->getRepository(Token::class)
                 ->findTokenGroupsForAccembly($raw);
-        $iterable = $rawpricesQuery->iterate();
+        $data = $rawpricesQuery->getQuery()->getResult();
         
-        foreach ($iterable as $row){
-            foreach ($row as $rawprice){
-                try {
-                    $good = $rawprice->getGood();           
-                } catch (\Doctrine\ORM\EntityNotFoundException $e){
-                    $good = null;
-                }
-                
-                if ($good){
-                    $this->addGroupTokenFromGood($good);
-                }    
-                
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
-                
-                $this->entityManager->detach($rawprice);
-            }
+        foreach ($data as $row){
+
+            if ($row['goodId']){
+                $this->addGroupTokenFromGood($row['goodId']);
+            }    
+
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($row['rawpriceId'], ['status_token' => Rawprice::TOKEN_GROUP_PARSED]); 
+
             if (time() > $startTime + 840){
                 return;
             }            

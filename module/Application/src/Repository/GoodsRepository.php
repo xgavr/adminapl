@@ -536,11 +536,11 @@ class GoodsRepository extends EntityRepository
     /**
      * Наименования этого товара
      * 
-     * @param Goods $good
+     * @param int $goodId
      * 
      * @return object
      */
-    public function articleTitles($good)
+    private function articleTitles($goodId)
     {
         $entityManager = $this->getEntityManager();
 
@@ -550,30 +550,30 @@ class GoodsRepository extends EntityRepository
             ->join('g.articles', 'a')
             ->join(ArticleTitle::class, 'at', 'WITH', 'at.article = a.id')    
             ->where('g.id = ?1')
-            ->setParameter('1', $good->getId()) 
+            ->setParameter('1', $goodId) 
                 ;
         
-        return $queryBuilder->getQuery()->getResult();    
+        return $queryBuilder->getQuery()->getResult(2);    
     }
     
     /**
      * Обновить группы токенов и наименований товаров
      * 
-     * @param Goods $good
+     * @param int $goodId
      * @param integer $tokenGroupId
      */
-    public function updateTokenGroupGoodArticleTitle($good, $tokenGroupId = 0)
+    public function updateTokenGroupGoodArticleTitle($goodId, $tokenGroupId = 0)
     {
-        $titles = $this->articleTitles($good);
+        $titles = $this->articleTitles($goodId);
         
-        if ($good->getTokenGroup()){
+        if ($tokenGroupId){
             foreach ($titles as $articleTitle){
                 $this->getEntityManager()->getConnection()->update('article_title', 
-                    ['token_group_id' => $tokenGroupId], ['id' => $articleTitle->getId()]);
+                    ['token_group_id' => $tokenGroupId], ['id' => $articleTitle['id']]);
                 $this->getEntityManager()->getConnection()->update('article_token', 
-                    ['token_group_id' => $tokenGroupId], ['title_id' => $articleTitle->getId()]);
+                    ['token_group_id' => $tokenGroupId], ['title_id' => $articleTitle['id']]);
                 $this->getEntityManager()->getConnection()->update('article_bigram', 
-                    ['token_group_id' => $tokenGroupId], ['title_id' => $articleTitle->getId()]);
+                    ['token_group_id' => $tokenGroupId], ['title_id' => $articleTitle['id']]);
             }
         }  
         
