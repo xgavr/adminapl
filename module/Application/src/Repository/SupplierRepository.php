@@ -213,9 +213,11 @@ class SupplierRepository extends EntityRepository{
                 ;
         
         if ($market instanceof MarketPriceSetting){
-            $queryBuilder->andWhere('gs.supplier = ?3')
-                    ->setParameter('3', $market->getSupplier()->getId())
-                    ;
+            if ($market->getSupplier()){
+                $queryBuilder->andWhere('gs.supplier = ?3')
+                        ->setParameter('3', $market->getSupplier()->getId())
+                        ;
+            }    
         }
         
         return $queryBuilder->getQuery()->getResult(2);        
