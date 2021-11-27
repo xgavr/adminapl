@@ -559,17 +559,17 @@ class NameManager
     /**
      * Обновление количества товаров у токена
      * 
-     * @param Token $token
+     * @param string $lemma
      * @param integer $goodCount
      * @param integer $goods
      * @param integer $groupTokenCount
      * @param integer $tokenGroups
      */
-    public function updateTokenArticleCount($token, $goodCount = null, $goods = null, $groupTokenCount = null, $tokenGroups = null)
+    public function updateTokenArticleCount($lemma, $goodCount = null, $goods = null, $groupTokenCount = null, $tokenGroups = null)
     {
         if ($goodCount == null){
             $goodCount = $this->entityManager->getRepository(ArticleToken::class)
-                    ->tokenGoodCount($token->getLemma());
+                    ->tokenGoodCount($lemma);
         }    
 //        if ($groupTokenCount == null){
 //            if ($token->getFrequency() > Token::MIN_DF){
@@ -594,7 +594,7 @@ class NameManager
         }    
         
         $this->entityManager->getRepository(Token::class)
-                ->updateToken($token->getLemma(), [
+                ->updateToken($lemma, [
                     'frequency' => $goodCount, 
                     'idf' => $idf,
                     'gf' => 0,
@@ -620,7 +620,7 @@ class NameManager
         $iterable = $tokensQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $token){
-                $this->updateTokenArticleCount($token, null, $goods, null, $tokenGroups);
+                $this->updateTokenArticleCount($token->getLemma(), null, $goods, null, $tokenGroups);
                 $this->entityManager->detach($token);
             }   
         }    

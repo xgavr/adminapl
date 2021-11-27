@@ -666,7 +666,7 @@ class NameController extends AbstractActionController
             return;                        
         }        
 
-        $this->nameManager->updateTokenArticleCount($token);
+        $this->nameManager->updateTokenArticleCount($token->getLemma());
         
         return new JsonModel([
             'result' => 'ok-reload',
