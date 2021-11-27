@@ -1368,7 +1368,7 @@ class NameManager
         
         $rawpricesQuery = $this->entityManager->getRepository(Token::class)
                 ->findTokenGroupsForAccembly($raw);
-        $data = $rawpricesQuery->getQuery()->getResult();
+        $data = $rawpricesQuery->getResult();
         
         foreach ($data as $row){
 

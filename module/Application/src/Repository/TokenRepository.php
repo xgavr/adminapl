@@ -673,7 +673,7 @@ class TokenRepository  extends EntityRepository
      * Выборка строк прайса для создания групп наименований
      * 
      * @param \Application\Entity\Raw $raw
-     * @return array
+     * @return QueryBuilder
      */
     public function findTokenGroupsForAccembly($raw)
     {
