@@ -242,7 +242,7 @@ class SupplierRepository extends EntityRepository{
                 ->setParameter('2', $supplierId)
                 ;
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
-        var_dump($result); exit;
+//        var_dump($result); exit;
         if ($result){
             return $result['id'];
         }
