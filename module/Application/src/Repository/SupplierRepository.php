@@ -224,6 +224,32 @@ class SupplierRepository extends EntityRepository{
     }
     
     /**
+     * Найти ид
+     * @param integer $goodId
+     * @param integer $supplierId
+     * @return int 
+     */
+    public function findGoodSupplierId($goodId, $supplierId)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('gs.id')
+                ->from(GoodSupplier::class, 'gs')
+                ->where('gs.good = ?1')
+                ->andWhere('gs.supplier = ?2')
+                ->setParameter('1', $goodId)
+                ->setParameter('2', $supplierId)
+                ;
+        $result = $queryBuilder->getQuery()->findOneOrNullResult();
+        if ($result){
+            return $result['id'];
+        }
+        return;        
+    }
+    
+
+    /**
      * Варианты доставок
      * @param integer $supplierId
      * @param Office $office

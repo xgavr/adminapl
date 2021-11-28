@@ -715,11 +715,11 @@ class AssemblyManager
         $rest = $rawprice->getRealRest();
         $price = $rawprice->getRealPrice();
         if ($rest > 0 && $price > 0){
-            $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
-                    ->findOneBy(['good' => $good->getId(), 'supplier' => $supplier->getId()]);
-            if ($goodSupplier){
+            $goodSupplierId = $this->entityManager->getRepository(GoodSupplier::class)
+                    ->findGoodSupplierId($good->getId(), $supplier->getId());
+            if ($goodSupplierId){
                 $this->entityManager->getConnection()
-                        ->update('good_supplier', ['rest' => $rest, 'price'=> $price, 'up_date' => $priceDate], ['id' => $goodSupplier->getId()]);
+                        ->update('good_supplier', ['rest' => $rest, 'price'=> $price, 'up_date' => $priceDate], ['id' => $goodSupplierId]);
             } else {
                 $this->entityManager->getConnection()
                         ->insert('good_supplier', ['good_id' => $good->getId(), 'supplier_id' => $supplier->getId(), 'rest' => $rest, 'price'=> $price, 'up_date' => $priceDate]);
