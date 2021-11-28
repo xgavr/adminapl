@@ -458,7 +458,7 @@ class ProducerManager
     /**
      * Обновление количества товара у неизвестного производителя
      * 
-     * @param Application\Entity\UnknownProducer $unknownProducer
+     * @param UnknownProducer $unknownProducer
      * @param bool $flush
      */
     public function updateUnknownProducerRawpriceCount($unknownProducer)
