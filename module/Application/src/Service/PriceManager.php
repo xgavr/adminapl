@@ -163,15 +163,16 @@ class PriceManager {
                     if (isset($mail['attachment'])){
                         foreach($mail['attachment'] as $attachment){
                             if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                                //Проверка наименования файла
-                                if (!$priceNameValidator->isValid($attachment['filename'], $priceGetting)){
-                                    unlink($attachment['temp_file']);                                    
-                                }
                                 if (file_exists($attachment['temp_file'])){ 
                                     $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
                                     if (copy($attachment['temp_file'], $target)){
-                                        
+                                        //Закинуть прайс в папку поставщика с таким же прайсом
                                         $this->putPriceFileToPriceSupplier($priceGetting->getSupplier(), $target);
+                                        //Проверка наименования файла
+                                        if (!$priceNameValidator->isValid($attachment['filename'], $priceGetting)){
+                                            unlink($attachment['temp_file']);                                    
+                                            unlink($target);                                    
+                                        }
                                         
                                         if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
                                             $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
@@ -208,6 +209,7 @@ class PriceManager {
                     ['id' => $priceGetting->getId()]);
             
         } else {
+            //обнуление для новой проверки
             $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
                     ->findBy(['status' => PriceGetting::STATUS_ACTIVE, 'mailBoxCheck' => PriceGetting::MAILBOX_CHECKED]);
             
@@ -216,7 +218,7 @@ class PriceManager {
                         ['mailbox_check' => PriceGetting::MAILBOX_TO_CHECK], 
                         ['id' => $priceGetting->getId()]);
             }
-            
+            //рекурсивно запускаем снова 
             $this->readQueyeMailBox();
         }     
         return;
