@@ -1261,7 +1261,7 @@ class NameManager
                     ->removeGoodTitles($good);
 
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGood($good, ['groupTokenUpdateFlag' => Goods::GROUP_TOKEN_UPDATE_FLAG]);
+                    ->updateGood($good->getId(), ['groupTokenUpdateFlag' => Goods::GROUP_TOKEN_UPDATE_FLAG]);
         }
         
         return;

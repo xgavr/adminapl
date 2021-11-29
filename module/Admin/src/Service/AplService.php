@@ -1102,7 +1102,7 @@ class AplService {
                 }
                 if ($response->getStatusCode() == 204) {
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['aplId' => 0]);
+                            ->updateGood($good->getId(), ['aplId' => 0]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
@@ -1111,7 +1111,7 @@ class AplService {
 
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['statusNameEx' => Goods::NAME_EX_TRANSFERRED]);
+                        ->updateGood($good->getId(), ['statusNameEx' => Goods::NAME_EX_TRANSFERRED]);
             }
         }
         
@@ -1423,7 +1423,7 @@ class AplService {
                 }
                 if ($response->getStatusCode() == 204) {
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['aplId' => 0]);
+                            ->updateGood($good->getId(), ['aplId' => 0]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
@@ -1712,7 +1712,7 @@ class AplService {
                 }
                 if ($response->getStatusCode() == 204) {
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['aplId' => 0]);
+                            ->updateGood($good->getId(), ['aplId' => 0]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
@@ -1721,7 +1721,7 @@ class AplService {
 
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
+                        ->updateGood($good->getId(), ['statusOemEx' => Goods::OEM_EX_TRANSFERRED]);
             }
 
             unset($post);
@@ -1811,7 +1811,7 @@ class AplService {
                 }
                 if ($response->getStatusCode() == 204) {
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['aplId' => 0]);
+                            ->updateGood($good->getId(), ['aplId' => 0]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
@@ -1820,7 +1820,7 @@ class AplService {
             
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['statusImgEx' => Goods::IMG_EX_TRANSFERRED]);                
+                        ->updateGood($good->getId(), ['statusImgEx' => Goods::IMG_EX_TRANSFERRED]);                
             }
 
             unset($post);
@@ -1891,7 +1891,7 @@ class AplService {
                 }
                 if ($response->getStatusCode() == 204) {
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['aplId' => 0]);
+                            ->updateGood($good->getId(), ['aplId' => 0]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
@@ -1900,7 +1900,7 @@ class AplService {
             
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);                
+                        ->updateGood($good->getId(), ['statusGroupEx' => Goods::GROUP_EX_TRANSFERRED]);                
             }
 
             unset($post);
@@ -1984,7 +1984,7 @@ class AplService {
                 }
                 if ($response->getStatusCode() == 204) {
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['aplId' => 0]);
+                            ->updateGood($good->getId(), ['aplId' => 0]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
@@ -1993,7 +1993,7 @@ class AplService {
             
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['statusCarEx' => Goods::CAR_EX_TRANSFERRED]);
+                        ->updateGood($good->getId(), ['statusCarEx' => Goods::CAR_EX_TRANSFERRED]);
             }
             
 
@@ -2215,7 +2215,7 @@ class AplService {
                 }
                 if ($response->getStatusCode() == 204) {
                     $this->entityManager->getRepository(Goods::class)
-                            ->updateGood($good, ['aplId' => 0]);
+                            ->updateGood($good->getId(), ['aplId' => 0]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
@@ -2224,7 +2224,7 @@ class AplService {
             
             if ($ok){
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good, ['statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);                
+                        ->updateGood($good->getId(), ['statusAttrEx' => Goods::ATTR_EX_TRANSFERRED]);                
             }
 
             unset($post);
@@ -2312,7 +2312,7 @@ class AplService {
                 if ($ok){
                     foreach ($goods as $good){
                         $this->entityManager->getRepository(Goods::class)
-                                ->updateGood($good, ['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
+                                ->updateGood($good->getId(), ['statusPriceEx' => Goods::PRICE_EX_TRANSFERRED]);
                     }    
                 }
             }    

@@ -51,11 +51,11 @@ class GoodsRepository extends EntityRepository
     /**
      * Быстрое обновление полей товара
      * 
-     * @param Goods $good
+     * @param int $goodId
      * @param array $data
      * @return integer
      */
-    public function updateGood($good, $data)
+    public function updateGood($goodId, $data)
     {
         if (!count($data)){
             return;
@@ -66,7 +66,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->update(Goods::class, 'g')
                 ->where('g.id = ?1')
-                ->setParameter('1', $good->getId())
+                ->setParameter('1', $goodId)
                 ;
         foreach ($data as $key => $value){
             $queryBuilder->set("g.$key", $value);
