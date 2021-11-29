@@ -123,6 +123,7 @@ class PriceManager {
      */
     public function putPriceFileToPriceSupplier($supplier, $filename)
     {
+        $priceNameValidator = new PriceNameValidator();
         if (file_exists($filename)){
             $filter = new Basename();
             $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
@@ -130,6 +131,9 @@ class PriceManager {
             foreach ($priceGettings as $priceGetting){
                 $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$filter->filter($filename);
                 if (copy($filename, $target)){
+                    if (!$priceNameValidator->isValid($target, $priceGetting)){
+                        unlink($target);                                    
+                    }
                     continue;
                 }
             }    
