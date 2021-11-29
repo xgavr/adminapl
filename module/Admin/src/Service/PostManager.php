@@ -263,39 +263,43 @@ class PostManager {
         $emailFilter = new EmailFromStr();
         $fromEmail = $emailFilter->filter($data['from']);
 
-        $postLog = new PostLog();
-        $postLog->setTo($data['to']);
-        $postLog->setFrom($fromEmail);
-        $postLog->setFromStr($data['from']);
-       
-        $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
-        $postLog->setStatus(PostLog::STATUS_ACTIVE);
-        $postLog->setAct(PostLog::ACT_NO);
-        
-        if (isset($data['subject'])){
-             $postLog->setSubject($data['subject']);
-        }
-        
-        $body = [];
-        if (isset($data['content'])){
-            if (is_array($data['content'])){
-                foreach ($data['content'] as $key => $value){
-                    $txt = strip_tags($value);
-                    if (strlen($txt) < 2048){
-                        $body[$key] = $txt;
-                    }            
-                }
+        if ($fromEmail){
+            $postLog = new PostLog();
+            $postLog->setTo($data['to']);
+            $postLog->setFrom($fromEmail);
+            $postLog->setFromStr($data['from']);
+
+            $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
+            $postLog->setStatus(PostLog::STATUS_ACTIVE);
+            $postLog->setAct(PostLog::ACT_NO);
+
+            if (isset($data['subject'])){
+                 $postLog->setSubject($data['subject']);
+            }
+
+            $body = [];
+            if (isset($data['content'])){
+                if (is_array($data['content'])){
+                    foreach ($data['content'] as $key => $value){
+                        $txt = strip_tags($value);
+                        if (strlen($txt) < 2048){
+                            $body[$key] = $txt;
+                        }            
+                    }
+                }    
+                $postLog->setBody(\Laminas\Json\Json::encode($body));
             }    
-            $postLog->setBody(\Laminas\Json\Json::encode($body));
-        }    
+
+            $fileNames = [];
+            if (isset($data['attachment'])){
+                $postLog->setAttachment(\Laminas\Json\Json::encode($data['attachment']));
+            }
+
+            $this->entityManager->persist($postLog);
+            $this->entityManager->flush($postLog);
+        }   
         
-        $fileNames = [];
-        if (isset($data['attachment'])){
-            $postLog->setAttachment(\Laminas\Json\Json::encode($data['attachment']));
-        }
-        
-        $this->entityManager->persist($postLog);
-        $this->entityManager->flush($postLog);
+        return;
     }
 
 

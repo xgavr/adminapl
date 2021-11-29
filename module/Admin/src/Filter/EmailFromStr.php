@@ -51,7 +51,9 @@ class EmailFromStr extends AbstractFilter
         if (count($this->emails)){
             return $this->emails[0];
         }    
-        
+        if (empty($value)){
+            return 'unknown';
+        }
         return $value;
     }
     
