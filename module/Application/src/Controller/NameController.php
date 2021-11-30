@@ -773,7 +773,7 @@ class NameController extends AbstractActionController
             return;                        
         }        
 
-        $this->nameManager->updateBestDescription($good);
+        $this->nameManager->updateBestDescription($good->getId(), $good->getName(), $good->getDescription());
                 
         return new JsonModel([
             'result' => 'ok-reload',

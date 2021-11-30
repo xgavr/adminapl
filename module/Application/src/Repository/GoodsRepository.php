@@ -564,9 +564,9 @@ class GoodsRepository extends EntityRepository
      */
     public function updateTokenGroupGoodArticleTitle($goodId, $tokenGroupId = 0)
     {
-        $titles = $this->articleTitles($goodId);
-        
         if ($tokenGroupId){
+            $titles = $this->articleTitles($goodId);
+        
             foreach ($titles as $articleTitle){
                 $this->getEntityManager()->getConnection()->update('article_title', 
                     ['token_group_id' => $tokenGroupId], ['id' => $articleTitle['id']]);
@@ -1601,8 +1601,9 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r')
+        $queryBuilder->select('r.id as rawpriceId, g.id as goodId, g.name as goodName, g.description as goodDescription')
                 ->from(Rawprice::class, 'r')
+                ->join('r.good', 'g')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusGood = ?2')
                 ->andWhere('r.statusToken != ?3')

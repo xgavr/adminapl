@@ -2097,15 +2097,15 @@ class NameManager
     /**
      * Машины для наименования из прайсов
      * 
-     * @param Good $good
+     * @param int $goodId
      */
-    public function priceCarStr($good)
+    public function priceCarStr($goodId)
     {
         $result = '';
-        $articles = $this->entityManager->getRepository(Article::class)
-                ->findByGood($good->getId());
-        foreach ($articles as $article){
-            $description = $article->getDescriptionAsArray();
+        $descriptions = $this->entityManager->getRepository(Article::class)
+                ->goodDescriptions($goodId);
+        foreach ($descriptions as $row){
+            $description = Article::jsonToArray($row['description']);
             if (is_array($description)){
                 if (isset($description['car'])){
                     if (trim($description['car'])){
@@ -2198,17 +2198,19 @@ class NameManager
     /**
      * Найти и установить лучшее описание
      * 
-     * @param Goods $good
+     * @param int $goodId
+     * @param string $goodName
+     * @param string $goodDescription
      */
-    public function updateBestDescription($good)
+    public function updateBestDescription($goodId, $goodName = '', $goodDescription = '')
     {
-        $articles = $this->entityManager->getRepository(Article::class)
-                ->findByGood($good->getId());
+        $articleDescriptions = $this->entityManager->getRepository(Article::class)
+                ->goodDescriptions($goodId);
         
-        $newDescription = $good->getDescription();
+        $newDescription = $goodDescription;
         $numberTitle = 0;
-        foreach ($articles as $article){
-            $description = $article->getDescriptionAsArray();
+        foreach ($articleDescriptions as $row){
+            $description = Article::jsonToArray($row['description']);
             if (is_array($description)){
                 if (isset($description['numberTitle'])){
                     if ($description['numberTitle'] > $numberTitle){
@@ -2220,20 +2222,20 @@ class NameManager
                 }    
             }    
         }
-        if ($newDescription != $good->getDescription()){
+        if ($newDescription != $goodDescription){
             $upd = ['description' => $newDescription];
-            if (!$good->getName()){
+            if (!$goodName){
                 $upd['name'] = $newDescription;
                 $upd['status_name_ex'] = Goods::NAME_EX_NEW;
             }
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), $upd);
+                    ->updateGoodId($goodId, $upd);
         }
-        if (!$good->getName() && $good->getDescription()){
-            $upd['name'] = $good->getDescription();
+        if (!$goodName && $goodDescription){
+            $upd['name'] = $goodDescription;
             $upd['status_name_ex'] = Goods::NAME_EX_NEW;
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($good->getId(), $upd);
+                    ->updateGoodId($goodId, $upd);
         }
         
         return;
@@ -2251,19 +2253,15 @@ class NameManager
         
         $rawpricesQuery = $this->entityManager->getRepository(Goods::class)
                 ->findRawpriceForDescription($raw);
-        $iterable = $rawpricesQuery->iterate();
+        $data = $rawpricesQuery->getResult();
         
-        foreach ($iterable as $row){
-            foreach ($row as $rawprice){
-                $good = $rawprice->getGood();
-                if ($good){
-                    $this->updateBestDescription($good);
-                }    
-                
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::DESCRIPTION_UPDATE]);                        
-                $this->entityManager->detach($rawprice);
+        foreach ($data as $row){
+            if ($row['goodId']){
+                $this->updateBestDescription($row['goodId'], $row['goodName'], $row['goodDescription']);
             }    
+
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($row['rawpriceId'], ['status_token' => Rawprice::DESCRIPTION_UPDATE]);                        
             
             if (time() > $startTime + 840){
                 return;
@@ -2305,7 +2303,7 @@ class NameManager
                     $result['carPartStr'] = $carPartStr;                    
                 }
                 if (!$carPartStr){
-                    $carPartStr = $this->priceCarStr($good);
+                    $carPartStr = $this->priceCarStr($good->getId());
                     $result['carPrice'] = $carPartStr;                    
                 }
                 if (!$carPartStr){

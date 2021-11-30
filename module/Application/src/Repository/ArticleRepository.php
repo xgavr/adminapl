@@ -600,5 +600,21 @@ class ArticleRepository  extends EntityRepository
         return $queryBuilder->getQuery()->getResult();            
     }
 
-    
+    /**
+     * Описания товара
+     * @param int $goodId
+     */
+    public function goodDescriptions($goodId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('a.description')
+            ->from(Article::class, 'a')
+            ->where('a.good = ?1')
+            ->setParameter('1', $goodId)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();                    
+    }
 }

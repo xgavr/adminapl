@@ -218,17 +218,26 @@ class Article {
         $this->updWeek = date('Ymd');
     }     
 
-    public function getDescriptionAsArray() 
+    /**
+     * Json to array
+     * @param string $str
+     * @return array
+     */
+    public static function jsonToArray($str)
     {
-        if ($this->description){
+        if ($str){
             try{
-                return Decoder::decode($this->description, \Laminas\Json\Json::TYPE_ARRAY);
+                return Decoder::decode($str, \Laminas\Json\Json::TYPE_ARRAY);
             } catch (\Laminas\Json\Exception\RuntimeException $err){
                 return;
-            }    
+            }
         }
-        
         return;
+    }
+    
+    public function getDescriptionAsArray() 
+    {
+        return $this->jsonToArray($this->description);
     }
 
     public function setDescription($description) 

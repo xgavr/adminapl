@@ -54,9 +54,9 @@
         "laminas/laminas-mvc-plugin-prg": "^1.2",
         "laminas/laminas-mvc-plugins": "^1.0",
         "laminas/laminas-development-mode": "^3.2",
-        "laminas/laminas-dependency-plugin": "^1.1 || ^2.0",
         "hflabs/dadata": "^20.7",
-        "bukashk0zzz/yml-generator": "dev-master"
+        "bukashk0zzz/yml-generator": "dev-master",
+        "alexmg86/laravel-goodsru": "^1.1"
     },
     "autoload": {
         "psr-4": {
