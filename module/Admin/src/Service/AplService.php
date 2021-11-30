@@ -1304,11 +1304,8 @@ class AplService {
 //                var_dump($response->getBody()); exit;
                 try {
                     if (is_numeric($response->getBody())){
-    //                        var_dump($response);
-                        $car->setAplId($response->getBody());
-                        $car->setTransferFlag(Car::TRANSFER_YES);
-                        $this->entityManager->persist($car);
-                        $this->entityManager->flush($car);
+                        $this->entityManager->getConnection()
+                                ->update('car', ['aplId' => $response->getBody(), 'transferFlag' => Car::TRANSFER_YES], ['id' => $car->getId()]);
                         return;
                     }
                 } catch (Exception $ex) {
