@@ -1305,7 +1305,7 @@ class AplService {
                 try {
                     if (is_numeric($response->getBody())){
                         $this->entityManager->getConnection()
-                                ->update('car', ['aplId' => $response->getBody(), 'transferFlag' => Car::TRANSFER_YES], ['id' => $car->getId()]);
+                                ->update('car', ['apl_id' => $response->getBody(), 'transfer_flag' => Car::TRANSFER_YES], ['id' => $car->getId()]);
                         return;
                     }
                 } catch (Exception $ex) {
