@@ -1638,7 +1638,7 @@ class GoodsRepository extends EntityRepository
                 ->andWhere('r.statusGood = ?2')
                 ->andWhere('r.statusToken != ?3')
                 ->andWhere('r.status = ?4')
-                ->andWhere('g.tokenGroupUpdateFlag != ?5')
+                ->andWhere('g.groupTokenUpdateFlag != ?5')
                 ->setParameter('1', $raw->getId())
                 ->setParameter('2', Rawprice::GOOD_OK)
                 ->setParameter('3', Rawprice::BEST_NAME_UPDATE)
