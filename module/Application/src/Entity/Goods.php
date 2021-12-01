@@ -938,6 +938,11 @@ class Goods {
         $this->groupTokenUpdateFlag;
     }
     
+    public function getBestNameUpdateFlag()
+    {
+        $this->groupTokenUpdateFlag;
+    }
+    
     public function setGroupTokenUpdateFlag($groupTokenUpdateFlag)
     {
         $this->groupTokenUpdateFlag = $groupTokenUpdateFlag;

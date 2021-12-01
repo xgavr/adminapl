@@ -636,11 +636,11 @@ class OemRepository  extends EntityRepository{
     /**
      * Выбрать наименования брендов товара
      * 
-     * @param Goods $good
+     * @param int $goodId
      * @param integer @splice
      * @return string
      */
-    public function cars($good, $splice = 5)
+    public function cars($goodId, $splice = 5)
     {
         $result = [];
         
@@ -653,7 +653,7 @@ class OemRepository  extends EntityRepository{
                 ->where('o.good = ?1')    
                 ->andWhere('o.status = ?2')
                 ->andWhere('o.source = ?3')
-                ->setParameter('1', $good->getId())
+                ->setParameter('1', $goodId)
                 ->setParameter('2', Oem::STATUS_ACTIVE)
                 ->setParameter('3', Oem::SOURCE_TD)
             ;

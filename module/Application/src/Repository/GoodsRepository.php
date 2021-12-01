@@ -1631,16 +1631,19 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r')
+        $queryBuilder->select('r.id as rawpriceId, g.id as goodId')
                 ->from(Rawprice::class, 'r')
+                ->join('r.good', 'g')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusGood = ?2')
                 ->andWhere('r.statusToken != ?3')
                 ->andWhere('r.status = ?4')
+                ->andWhere('g.tokenGroupUpdateFlag != ?5')
                 ->setParameter('1', $raw->getId())
                 ->setParameter('2', Rawprice::GOOD_OK)
                 ->setParameter('3', Rawprice::BEST_NAME_UPDATE)
                 ->setParameter('4', Rawprice::STATUS_PARSED)
+                ->setParameter('5', date('n'))
 //                ->setMaxResults(100000)
                 ;
 

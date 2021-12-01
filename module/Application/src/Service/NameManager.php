@@ -1843,13 +1843,13 @@ class NameManager
     /**
      * Марка из ОЕ
      * 
-     * @param Goods $good
+     * @param int $goodId
      * 
      */
-    protected function oeCar($good)
+    protected function oeCar($goodId)
     {
         return $this->entityManager->getRepository(Oem::class)
-                ->cars($good, 5);
+                ->cars($goodId, 5);
     }
     
     /**
@@ -2283,59 +2283,52 @@ class NameManager
      */
     public function findBestName($good, $flag = false)
     {
-        if ($good->getDescription()){
-            
-            $result['description'] = $good->getDescription();
-            $result['bestName'] = $result['description'];                
+        $result['description'] = $good->getDescription();
+        $result['bestName'] = $result['description'];
 
-            $textPart = $this->textPart($good);            
-            if ($textPart){
-                $result['textPart'] = $textPart;
-                
-                $attrPrice = $this->attrPrice($good);
-                $result['attrPrice'] = $attrPrice;
+        $textPart = $this->textPart($good);            
+        if ($textPart){
+            $result['textPart'] = $textPart;
+
+            $attrPrice = $this->attrPrice($good);
+            $result['attrPrice'] = $attrPrice;
 //                $result['attrPart'] = $this->attrPart($good);
-                
-                $carPart = $this->carPart($good);
-                $carPartStr = null;
-                if (count($carPart)){
-                    $carPartStr = $this->carPartStr($carPart);
-                    $result['carPartStr'] = $carPartStr;                    
-                }
-                if (!$carPartStr){
-                    $carPartStr = $this->priceCarStr($good->getId());
-                    $result['carPrice'] = $carPartStr;                    
-                }
-                if (!$carPartStr){
-                    $carPartStr = $this->oeCar($good);
-                    $result['oeCarPart'] = $carPartStr;
-                }
-                
-                if ($carPartStr){
-                    $result['bestName'] = trim($textPart.' '.$attrPrice).' '.$carPartStr;
-                }                
+
+            $carPart = $this->carPart($good);
+            $carPartStr = null;
+            if (count($carPart)){
+                $carPartStr = $this->carPartStr($carPart);
+                $result['carPartStr'] = $carPartStr;                    
             }
+            if (!$carPartStr){
+                $carPartStr = $this->priceCarStr($good->getId());
+                $result['carPrice'] = $carPartStr;                    
+            }
+            if (!$carPartStr){
+                $carPartStr = $this->oeCar($good->getId());
+                $result['oeCarPart'] = $carPartStr;
+            }
+
+            if ($carPartStr){
+                $result['bestName'] = trim($textPart.' '.$attrPrice).' '.$carPartStr;
+            }                
+        }    
             
 
-            if ($flag){
-                $upd = [                    
-                    'group_token_update_flag' => date('n'), //номер месяца
-                ];
-                if ($good->getName() != $result['bestName']){
-                    $upd['name'] = $result['bestName'];
-                    $upd['status_name_ex'] = Goods::NAME_EX_NEW;
-                }    
-                
-                $this->entityManager->getRepository(Goods::class)
-                        ->updateGoodId($good->getId(), $upd);
-                
-                return;
-            }
-            
-            return $result;
-        }    
-        
-        return;
+        if ($flag){
+            $upd = [                    
+                'group_token_update_flag' => date('n'), //номер месяца
+            ];
+            if ($good->getName() != $result['bestName'] && $result['bestName']){
+                $upd['name'] = $result['bestName'];
+                $upd['status_name_ex'] = Goods::NAME_EX_NEW;
+            }    
+
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), $upd);
+        }
+
+        return $result;        
     }
         
     /**
@@ -2350,24 +2343,22 @@ class NameManager
         
         $rawpricesQuery = $this->entityManager->getRepository(Goods::class)
                 ->findRawpriceForBestName($raw);
-        $iterable = $rawpricesQuery->iterate();
+        $data = $rawpricesQuery->getResult();
         
-        foreach ($iterable as $row){
-            foreach ($row as $rawprice){
-                $good = $rawprice->getGood();
-                if ($good && $good->getGroupTokenUpdateFlag() != date('n')){
-                    $this->findBestName($good, true);
-                }    
-                
-                $this->entityManager->getRepository(Rawprice::class)
-                        ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::BEST_NAME_UPDATE]);                        
-                $this->entityManager->detach($rawprice);
+        foreach ($data as $row){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($row['goodId']);
+            if ($good){
+                $this->findBestName($good, true);
             }    
-            
+
+            $this->entityManager->getRepository(Rawprice::class)
+                    ->updateRawpriceField($row['rawpriceId'], ['status_token' => Rawprice::BEST_NAME_UPDATE]);                        
             if (time() > $startTime + 840){
                 return;
             }            
-        }
+        }    
+
 
         $this->entityManager->getRepository(Raw::class)
                 ->updateRawParseStage($raw, Raw::STAGE_BEST_NAME);
