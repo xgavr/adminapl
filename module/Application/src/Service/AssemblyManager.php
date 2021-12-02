@@ -690,15 +690,18 @@ class AssemblyManager
 
     /**
      * Обработка неполных данных
-     * @param \Application\Entity\Rawprice $rawprice
+     * @param int $rawpriceId
      */
-    public function missingData($rawprice)
+    public function missingData($rawpriceId)
     {
-        $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
-        $rawprice->setCode(null);
+//        $rawprice->setStatusGood(Rawprice::GOOD_MISSING_DATA);
+//        $rawprice->setCode(null);
+//        
+//        $this->entityManager->persist($rawprice);
+//        $this->entityManager->flush($rawprice);
         
-        $this->entityManager->persist($rawprice);
-        $this->entityManager->flush($rawprice);
+        $this->entityManager->getConnection()
+                ->update('rawprice', ['article_id' => null, 'status_good' => Rawprice::GOOD_MISSING_DATA], ['id' => $rawpriceId]);
         
         return;        
     }
@@ -740,21 +743,21 @@ class AssemblyManager
     public function addNewGoodFromRawprice($rawprice, $zeroGroup = null, $supplier = null, $priceDate = null) 
     {
         if (!$this->checkRawprice($rawprice)){
-            return $this->missingData($rawprice);
+            return $this->missingData($rawprice->getId());
         }
         
         $producer = $rawprice->getUnknownProducer()->getProducer();
         
         if (!$producer){
-            return $this->missingData($rawprice);
+            return $this->missingData($rawprice->getId());
         }
         
         if ($producer->getStatus() == Producer::STATUS_RETIRED){
-            return $this->missingData($rawprice);
+            return $this->missingData($rawprice->getId());
         }
         
         if (!$this->checkRawprice($rawprice)){
-            return $this->missingData($rawprice);            
+            return $this->missingData($rawprice->getId());            
         }
         
         if ($producer){
@@ -762,7 +765,7 @@ class AssemblyManager
             $article = $rawprice->getCode();
             
             if (!$article){
-                return $this->missingData($rawprice);
+                return $this->missingData($rawprice->getId());
             }
 
             $code = $article->getCode();
