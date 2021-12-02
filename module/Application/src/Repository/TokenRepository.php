@@ -680,8 +680,9 @@ class TokenRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r.id as rawpriceId, identity(r.good) as goodId')
+        $queryBuilder->select('r.id as rawpriceId, g.good as goodId, identity(g.tokenGroup) as tokenGroupId')
                 ->from(Rawprice::class, 'r')
+                ->join('r.good', 'g')
                 ->where('r.raw = ?1')
                 ->andWhere('r.statusGood = ?2')
                 ->andWhere('r.statusToken != ?3')

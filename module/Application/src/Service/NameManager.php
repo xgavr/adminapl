@@ -1300,9 +1300,10 @@ class NameManager
      * Добавить группу наименований по токенам товара
      * 
      * @param int $goodId
+     * @param int $oldTokenGroupId
      * 
      */
-    public function addGroupTokenFromGood($goodId)
+    public function addGroupTokenFromGood($goodId, $oldTokenGroupId = null)
     {
         $groupTitles = $this->entityManager->getRepository(Token::class)
                 ->choiceGroupTitle($goodId);
@@ -1347,8 +1348,10 @@ class NameManager
             $updGroupId = $tokenGroup->getId();
         }    
 
-        $this->entityManager->getRepository(Goods::class)
-                ->updateGoodId($goodId, ['token_group_id' => $updGroupId]);                                
+        if ($updGroupId != $oldTokenGroupId){
+            $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($goodId, ['token_group_id' => $updGroupId, 'group_token_update_flag' => 0]); 
+        }    
         $this->entityManager->getRepository(Goods::class)
                 ->updateTokenGroupGoodArticleTitle($goodId, $updGroupId);
 
@@ -1373,7 +1376,7 @@ class NameManager
         foreach ($data as $row){
 
             if ($row['goodId']){
-                $this->addGroupTokenFromGood($row['goodId']);
+                $this->addGroupTokenFromGood($row['goodId'], $row['tokenGroupId']);
             }    
 
             $this->entityManager->getRepository(Rawprice::class)
