@@ -176,4 +176,24 @@ class MarketRepository extends EntityRepository{
         
         return $query;
     }
+    
+    /**
+     * Найти настройку для запуска выгрузки
+     * @return MarketPriceSetting
+     */
+    public function findNext()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('m')
+                ->from(MarketPriceSetting::class, 'm')
+                ->where('m.dateUnload < ?1')
+                ->andWhere('m.status = ?2')
+                ->setParameter('1', date('Y-m-d'))
+                ->setParameter('2', MarketPriceSetting::STATUS_ACTIVE)
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
 }

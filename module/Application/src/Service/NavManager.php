@@ -411,6 +411,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'td-exchange-settings'])                    
                 ];
 
+                $settingsDropDownItems[] = [
+                    'id' => 'apiMarketPlaces',
+                    'label' => 'Настройи АПИ ТП',
+                    'link'  => $url('admin', ['action' => 'api-market-places'])                    
+                ];
+
                 if (count($settingsDropDownItems)!=0) {
                     $items[] = [
                         'id' => 'settings',

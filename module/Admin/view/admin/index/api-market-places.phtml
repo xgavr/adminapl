@@ -1,0 +1,57 @@
+<?php
+$this->headTitle('Настройки АПИ ТП');
+
+$this->mainMenu()->setActiveItemId('settings');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Настройки АПИ ТП'=>$this->url('settings', ['action' => 'api-market-places']),
+            ]);
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<?php
+$form = $this->form;
+
+$form->get('market_unload')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Настройки АПИ торговых площадок</h1>
+
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<?= $this->form()->openTag($form); ?>
+<div class="row">
+    <div class="col-md-5">
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('market_unload')); ?>
+            <?= $this->formElement($form->get('market_unload')); ?>
+            <?= $this->formElementErrors($form->get('market_unload')); ?>                  
+        </div>
+                        
+    </div>   
+    <div class="col-md-5">
+    </div>
+    <div class="col-md-2" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active">
+                <?= $this->formElement($form->get('submit')); ?>
+            </li>
+        </ul>
+    </div>    
+    
+</div>   
+
+<?= $this->form()->closeTag(); ?>

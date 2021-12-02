@@ -793,4 +793,19 @@ class MarketManager
         
         return;
     }    
+    
+    /**
+     * Запуск выгрузки очередного прайса
+     * @return null
+     */
+    public function unloadNext()
+    {
+        $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->findNext();
+        if ($market){
+            $this->unload($market);
+        }
+        
+        return;
+    }
 }

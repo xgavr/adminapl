@@ -16,6 +16,7 @@ use Admin\Form\TelegramSettingsForm;
 use Admin\Form\AbcpSettings;
 use Admin\Form\PartsApiSettings;
 use Admin\Form\ZetasoftSettings;
+use Admin\Form\ApiMarketPlaces;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -770,6 +771,52 @@ class IndexController extends AbstractActionController
                         'Настройки сохранены.');
 
                 $this->redirect()->toRoute('admin', ['action' => 'parts-api-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        }
+        
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
+    /**
+     * Управление настройками апи тп
+     * 
+     * @return ViewModel
+     */
+    public function apiMarketPlacesAction()
+    {
+        $form = new ApiMarketPlaces();
+    
+        $settings = $this->adminManager->getApiMarketPlaces();
+        
+        if ($settings){
+            $form->setData($settings);
+        }    
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setApiMarketPlaces($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+
+                $this->redirect()->toRoute('admin', ['action' => 'api-market-places']);
             } else {
                 $this->flashMessenger()->addInfoMessage(
                         'Настройки не сохранены.');                

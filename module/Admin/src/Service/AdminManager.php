@@ -28,6 +28,7 @@ class AdminManager {
     const AVTOIT_SETTINGS_FILE                    = './data/settings/avtoit_config.php'; //файл с настройками abcp
     const ZETASOFT_SETTINGS_FILE                    = './data/settings/zetasoft_config.php'; //файл с настройками abcp
     const PARTS_API_SETTINGS_FILE      = './data/settings/parts_api_config.php'; //файл с настройками abcp
+    const API_MARKET_PLACES      = './data/settings/api_market_places.php'; //файл с настройками апи тп
     
     /**
      * Doctrine entity manager.
@@ -571,4 +572,50 @@ class AdminManager {
         
         $writer->toFile(self::ZETASOFT_SETTINGS_FILE, $config);
     }
+    
+    /**
+     * Получить настройки апи ТП
+     * 
+     * @return array
+     */
+    public function getApiMarketPlaces()
+    {
+        if (file_exists(self::API_MARKET_PLACES)){
+            $config = new Config(include self::API_MARKET_PLACES);
+        }  else {
+            $config = new Config([], true);
+            $config->api_market_places = [];
+        }   
+        
+        return $config->api_market_places;
+    }
+
+    
+    /**
+     * Настройки апи тп
+     * @param array $data
+     */
+    public function setApiMarketPlaces($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::API_MARKET_PLACES)){
+            $config = new Config(include self::API_MARKET_PLACES, true);
+        }  else {
+            $config = new Config([], true);
+            $config->api_market_places = [];
+        }
+        
+        if (!isset($config->api_market_places)){
+            $config->api_market_places = [];
+        }
+        
+        $config->api_market_places->market_unload = $data['market_unload'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::API_MARKET_PLACES, $config);
+    }
+    
 }

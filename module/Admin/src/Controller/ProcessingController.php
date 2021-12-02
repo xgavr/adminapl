@@ -1777,4 +1777,22 @@ class ProcessingController extends AbstractActionController
         return new JsonModel($result);
     }
     
+    /**
+     * Выгрузить прайсы для ТП
+     * @return JsonModel
+     */
+    public function unloadMarketPricesAction()
+    {
+        $settings = $this->adminManager->getApiMarketPlaces();
+
+        if ($settings['market_unload'] == 1){
+
+            $this->helloManager->logsToTokens();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }    
 }
