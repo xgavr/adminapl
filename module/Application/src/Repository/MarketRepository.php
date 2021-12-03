@@ -190,8 +190,9 @@ class MarketRepository extends EntityRepository{
                 ->from(MarketPriceSetting::class, 'm')
                 ->where('m.dateUnload < ?1')
                 ->andWhere('m.status = ?2')
-                ->setParameter('1', date('Y-m-d'))
+                ->setParameter('1', date('Y-m-d 00:00:00'))
                 ->setParameter('2', MarketPriceSetting::STATUS_ACTIVE)
+                ->setMaxResults(1)
                 ;
         
         return $queryBuilder->getQuery()->getOneOrNullResult();
