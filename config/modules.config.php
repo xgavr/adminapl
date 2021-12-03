@@ -40,4 +40,6 @@ return [
     'Bankapi',
     'Bank',
     'Stock',
+    'ApiMarketPlace',
+    'ApiSupplier',
 ];

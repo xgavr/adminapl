@@ -66,7 +66,9 @@
             "User\\": "module/User/src/",
             "Bankapi\\": "module/Bankapi/src/",
             "Bank\\": "module/Bank/src/",
-            "Stock\\": "module/Stock/src/"
+            "Stock\\": "module/Stock/src/",
+            "ApiMarketPlace\\": "module/ApiMarketPlace/src/",
+            "ApiSupplier\\": "module/ApiSupplier/src/"
         }
     },
     "autoload-dev": {
