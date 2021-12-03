@@ -801,6 +801,7 @@ class MarketManager
     {
         $market = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->findNext();
+        var_dump($market->getId()); exit;
         if ($market){
             $this->unload($market);
         }
