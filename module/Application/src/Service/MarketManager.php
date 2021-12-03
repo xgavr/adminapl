@@ -799,10 +799,9 @@ class MarketManager
      */
     public function unloadNext()
     {
-        $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+        $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->findNext();
-        var_dump($market->getId()); exit;
-        if ($market){
+        foreach ($markets as $market){
             $this->unload($market);
         }
         
