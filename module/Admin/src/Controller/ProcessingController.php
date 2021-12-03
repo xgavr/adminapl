@@ -164,6 +164,7 @@ class ProcessingController extends AbstractActionController
      */
     private $helloManager;    
 
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -1787,7 +1788,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['market_unload'] == 1){
 
-            $this->helloManager->logsToTokens();            
+            $this->marketManager->unloadNext();            
         }    
                 
         return new JsonModel(
