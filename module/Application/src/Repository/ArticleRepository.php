@@ -166,28 +166,23 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление номеров, свзанных с артикулом
-     * @param rticle $article 
+     * @param int $articleId 
      * @return integer
      */
-    public function deleteOemRaw($article)
+    public function deleteOemRaw($articleId)
     {
-        $deleted = $this->getEntityManager()->getConnection()->delete('oem_raw', ['article_id' => $article->getId()]);
+        $deleted = $this->getEntityManager()->getConnection()->delete('oem_raw', ['article_id' => $articleId]);
         return $deleted;
     }    
 
     /**
      * Быстрое удаление токенов, свзанных с артикулом
-     * @param Article|integer $article
+     * @param integer $articleId
      * @param ArticleTitle $articleTitle 
      * @return integer
      */
-    public function deleteArticleToken($article, $articleTitle = null)
+    public function deleteArticleToken($articleId, $articleTitle = null)
     {
-        if (is_numeric($article)){
-            $articleId = $article;
-        } else {
-            $articleId = $article->getId();
-        }
 
         if ($articleTitle){
             $deleted = $this->getEntityManager()->getConnection()->delete('article_token', 
@@ -203,18 +198,12 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление биграм, свзанных с артикулом
-     * @param Article|integer $article 
+     * @param integer $articleId 
      * @param ArticleTitle $articleTitle 
      * @return integer
      */
-    public function deleteArticleBigram($article, $articleTitle = null)
+    public function deleteArticleBigram($articleId, $articleTitle = null)
     {
-        if (is_numeric($article)){
-            $articleId = $article;
-        } else {
-            $articleId = $article->getId();
-        }
-
         if ($articleTitle){
             $deleted = $this->getEntityManager()->getConnection()->delete('article_bigram', 
                     [
@@ -229,16 +218,11 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление наименований, свзанных с артикулом
-     * @param Article|integer $article 
+     * @param integer $articleId 
      * @return integer
      */
-    public function deleteArticleTitle($article)
+    public function deleteArticleTitle($articleId)
     {
-        if (is_numeric($article)){
-            $articleId = $article;
-        } else {
-            $articleId = $article->getId();
-        }
 
         $deleted = $this->getEntityManager()->getConnection()->delete('article_title', ['article_id' => $articleId]);
         return $deleted;
@@ -246,21 +230,14 @@ class ArticleRepository  extends EntityRepository
 
     /**
      * Быстрое удаление кроссов, свзанных с артикулом
-     * @param Article|integer $article 
+     * @param integer $articleId
      * @return integer
      */
-    public function deleteArticleCross($article)
+    public function deleteArticleCross($articleId)
     {
-        if (is_numeric($article)){
-            $articleId = $article;
-        } else {
-            $articleId = $article->getId();
-        }
-
         $deleted = $this->getEntityManager()->getConnection()->delete('cross_list', ['article_id' => $articleId]);
         return $deleted;
     }    
-
     
     /**
      * Выборка не привязанных артикулов из прайса
@@ -500,7 +477,7 @@ class ArticleRepository  extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('a')
+        $queryBuilder->select('a.id as articleId')
             ->from(Article::class, 'a')
             ->where('a.updWeek < ?1')
             ->setParameter('1', date('Ymd'))

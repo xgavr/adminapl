@@ -237,27 +237,27 @@ class ArticleManager
     /**
      * Удаление артикула
      * 
-     * @param Application\Entity\Article $article
+     * @param int $articleId
      */
-    public function removeArticle($article, $flush = true) 
+    public function removeArticle($articleId) 
     {   
         
         $this->entityManager->getRepository(Article::class)
-                ->deleteOemRaw($article);
+                ->deleteOemRaw($articleId);
         
         $this->entityManager->getRepository(Article::class)
-                ->deleteArticleToken($article);
+                ->deleteArticleToken($articleId);
         
         $this->entityManager->getRepository(Article::class)
-                ->deleteArticleBigram($article);
+                ->deleteArticleBigram($articleId);
 
         $this->entityManager->getRepository(Article::class)
-                ->deleteArticleTitle($article);
+                ->deleteArticleTitle($articleId);
         
         $this->entityManager->getRepository(Article::class)
-                ->deleteArticleCross($article);
+                ->deleteArticleCross($articleId);
         
-        $this->entityManager->getConnection()->delete('article', ['id' => $article->getId()]);
+        $this->entityManager->getConnection()->delete('article', ['id' => $articleId]);
     }    
     
     /**
@@ -272,25 +272,21 @@ class ArticleManager
         
         $articleQuery = $this->entityManager->getRepository(Article::class)
                 ->findArticlesForDelete();
-        $iterable = $articleQuery->iterate();
+        $data = $articleQuery->getResult();
         
-        foreach ($iterable as $row){
-            foreach ($row as $article){
-                $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
-                        ->count(['code' => $article->getId()]);
-                if ($rawpriceCount == 0){
-                    $this->removeArticle($article);
-                } else {
-                    $this->entityManager->getRepository(Article::class)
-                            ->updateArticle($article->getId(), ['upd_week' => date('Ymd')]);
-                }    
-                $this->entityManager->detach($article);
+        foreach ($data as $row){
+            $rawpriceCount = $this->entityManager->getRepository(Rawprice::class)
+                    ->count(['code' => $row['articleId']]);
+            if ($rawpriceCount == 0){
+                $this->removeArticle($row['articleId']);
+            } else {
+                $this->entityManager->getRepository(Article::class)
+                        ->updateArticle($row['articleId'], ['upd_week' => date('Ymd')]);
             }    
             if (time() >= $finishTime){
                 return;
             }
-        }
-        
+        }    
         return;
     }    
     
