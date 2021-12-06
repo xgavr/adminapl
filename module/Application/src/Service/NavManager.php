@@ -93,7 +93,13 @@ class NavManager
                     'label' => 'Транспортные компании',
                     'link'  => $url('courier')
                 ];
-
+                
+                $clientDropdownItems[] = [
+                    'id' => 'apl',
+                    'label' => 'Прайс-листы для ТП',
+                    'link'  => $url('market')
+                ];
+                
                 if (count($clientDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'client',

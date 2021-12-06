@@ -1391,6 +1391,7 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Не используется!
      * Выгрузка прайслистов для ТП
      * 
      * @return JsonModel
