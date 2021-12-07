@@ -18,6 +18,14 @@ use ApiMarketPlace\Exception\ApiMarketPlaceException;
 class SberMarket {
     
     /**
+     * Raw request data (json) for webhook methods
+     *
+     * @var string
+     */
+    protected $input;
+    
+    
+    /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
      */
@@ -44,6 +52,33 @@ class SberMarket {
         $this->request = $request;
     }
     
+    /**
+     * Handle bot request from webhook
+     *
+     * @return bool
+     *
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function handle()
+    {
+
+        $this->input = $this->request::getInput();
+
+        if (empty($this->input)) {
+            throw new ApiMarketPlaceException('Input is empty!');
+        }
+
+        $post = json_decode($this->input, true);
+        if (empty($post)) {
+            throw new ApiMarketPlaceException('Invalid JSON!');
+        }
+
+        if ($response = $this->processUpdate(new Update($post))) {
+            return $response->isOk();
+        }
+
+        return false;
+    }
     
     public function newOrder()
     {
