@@ -43,11 +43,18 @@ class SberMarket {
      */
     private $request;
     
-    public function __construct($entityManager, $adminManager, $request)
+    /**
+     * Update.
+     * @var \ApiMarketPlace\Service\Update
+     */
+    private $updateManager;
+    
+    public function __construct($entityManager, $adminManager, $request, $updateManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->request = $request;
+        $this->updateManager = $updateManager;
     }
     
     /**
@@ -71,11 +78,9 @@ class SberMarket {
             throw new ApiMarketPlaceException('Invalid JSON!');
         }
 
-        if ($response = $this->processUpdate(new Update($post))) {
-            return $response->isOk();
-        }
-
-        return false;
+        $this->updateManager->add(['post_data' => $post]);
+        
+        return true;
     }
     
     public function newOrder()

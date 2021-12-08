@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\AdminManager;
 use ApiMarketPlace\Service\Request;
+use ApiMarketPlace\Service\Update;
 use ApiMarketPlace\Service\SberMarket;
 
 /**
@@ -28,8 +29,9 @@ class SberMarketFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class);
         $request = $container->get(Request::class);
+        $updateManager = $container->get(Update::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new SberMarket($entityManager, $adminManager, $request);
+        return new SberMarket($entityManager, $adminManager, $request, $updateManager);
     }
 }

@@ -9,10 +9,10 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 return [
     'router' => [
         'routes' => [
-            'admin' => [
+            'market-place' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/admin[/:action[/:id]]',
+                    'route'    => '/market-place[/:action[/:id]]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]*',
@@ -27,14 +27,22 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
+            Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
+            Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
+            Service\Request::class => Service\Factory\RequestFactory::class,
+            Service\Update::class => Service\Factory\UpdateFactory::class,
+            Service\SberMarket::class => Service\Factory\SberMarketFactory::class,
         ],
     ],    
     'view_manager' => [
