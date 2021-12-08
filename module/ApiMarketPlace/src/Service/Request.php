@@ -12,6 +12,12 @@ use ApiMarketPlace\Exception\ApiMarketPlaceException;
 
 class Request
 {
+    
+    /**
+     * Update manager.
+     * @var \ApiMarketPlace\Service\Update
+     */
+    private $updateManager;    
 
     /**
      * Guzzle Client object
@@ -27,7 +33,11 @@ class Request
      */
     private static $input;
 
-
+    public function __construct($updateManager)
+    {
+        $this->updateManager = $updateManager;
+    }
+    
     /**
      * Set a custom Guzzle HTTP Client object
      *
@@ -77,7 +87,7 @@ class Request
     public static function execute($action, array $data = [])
     {
 
-        $result                  = null;
+        $result = null;
 
         try {
             $response = self::$client->post(

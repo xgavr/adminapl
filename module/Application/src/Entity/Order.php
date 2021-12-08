@@ -14,6 +14,7 @@ use Application\Entity\Contact;
 use Application\Entity\ContactCar;
 use Application\Entity\Courier;
 use Application\Entity\Shipping;
+use ApiMarketPlace\Entity\MarketplaceUpdate;
 
 
 /**
@@ -223,6 +224,12 @@ class Order {
     private $comments;
     
     /**
+    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceUpdates", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+     */
+    private $marketplaceUpdates;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -230,6 +237,7 @@ class Order {
         $this->bids = new ArrayCollection();
         $this->selections = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->marketplaceUpdates = new ArrayCollection();
     }
     
     public function getId() 
@@ -730,7 +738,25 @@ class Order {
     {
         $this->comments[] = $comment;
     }
-    
+        
+    /**
+     * Returns the array of marketplaceUpdates assigned to this.
+     * @return array
+     */
+    public function getMarketplaceUpdates()
+    {
+        return $this->marketplaceUpdates;
+    }
+        
+    /**
+     * Assigns.
+     * @param MarketplaceUpdate $marketplaceupdate
+     */
+    public function addMarketplaceUpdate($marketplaceUpdate)
+    {
+        $this->marketplaceUpdates[] = $marketplaceUpdate;
+    }
+                
     /**
      * Лог
      * @return array

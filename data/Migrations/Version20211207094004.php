@@ -4,6 +4,8 @@ namespace Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use ApiMarketPlace\Entity\Marketplace;
+use ApiMarketPlace\Entity\MarketplaceUpdate;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -21,7 +23,7 @@ final class Version20211207094004 extends AbstractMigration
         $table->addColumn('password', 'string', ['notnull'=>true, 'length' => 256]);
         $table->addColumn('comment', 'string', ['notnull'=>false, 'length' => 512]);
         $table->addColumn('merchantId', 'integer', ['notnull'=>true]);
-        $table->addColumn('status', 'integer', ['notnull'=>true]);
+        $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => Marketplace::STATUS_ACTIVE]);
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
         $table->addOption('engine' , 'InnoDB');        
@@ -31,7 +33,7 @@ final class Version20211207094004 extends AbstractMigration
         $table->addColumn('marketplace_id', 'integer', ['notnull'=>false]);
         $table->addColumn('order_id', 'integer', ['notnull'=>false]);
         $table->addColumn('post_data', 'json', ['notnull'=>false]);
-        $table->addColumn('status', 'integer', ['notnull'=>true]);
+        $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => MarketplaceUpdate::STATUS_ACTIVE]);
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint('marketplace', ['marketplace_id'], ['id'], 

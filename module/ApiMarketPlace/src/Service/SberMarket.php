@@ -43,8 +43,6 @@ class SberMarket {
      */
     private $request;
     
-    
-
     public function __construct($entityManager, $adminManager, $request)
     {
         $this->entityManager = $entityManager;

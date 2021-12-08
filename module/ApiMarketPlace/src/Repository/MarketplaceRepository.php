@@ -9,6 +9,7 @@
 namespace ApiMarketPlace\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use ApiMarketPlace\Entity\MarketplaceUpdate;
 
 /**
  * Description of MarketplaceRepository
@@ -17,5 +18,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class MarketplaceRepository extends EntityRepository
 {
-
+    
 }
