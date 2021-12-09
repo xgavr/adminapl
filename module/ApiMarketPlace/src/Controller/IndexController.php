@@ -17,17 +17,23 @@ class IndexController extends AbstractActionController
     
     /**
      * Entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
         
     /**
+     * Request manager.
+     * @var \ApiMarketPlace\Service\SberMarket
+     */
+    private $sbermarketManager;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $contactManager) 
+    public function __construct($entityManager, $sbermarketManager) 
     {
        $this->entityManager = $entityManager;
-       $this->contactManager = $contactManager;
+       $this->sbermarketManager = $sbermarketManager;
     }
 
     
@@ -36,14 +42,26 @@ class IndexController extends AbstractActionController
         return new ViewModel();
     }
 
-    public function orderNewAction()
+    public function sbermarketOrderNewAction()
     {
-        
+        $this->sbermarketManager->handle();
+        //{"success":1,"meta":{"source":"merchant_name"}}
+        return new JsonModel([
+            'success' => 1,
+            'meta' => [
+                'source' => 'APL',
+            ],
+        ]);
     }
     
-    public function orderCancelAction()
+    public function sbermarketOrderCancelAction()
     {
-        
+        return new JsonModel([
+            'success' => 1,
+            'meta' => [
+                'source' => 'APL',
+            ],
+        ]);        
     }
     
 }

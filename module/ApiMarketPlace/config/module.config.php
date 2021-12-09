@@ -23,6 +23,16 @@ return [
                     ],
                 ],
             ],
+            'sbermarket-order-new' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/sbermarket-order-new',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'sbermarketOrderNew',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [

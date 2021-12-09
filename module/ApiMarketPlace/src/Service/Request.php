@@ -74,6 +74,31 @@ class Request
         return self::$input;
     }
 
+    /**
+     * Handle marketplace request from webhook
+     *
+     * @return bool
+     *
+     * @throws ApiMarketPlaceException
+     */
+    public function handle()
+    {
+
+        $this->input = $this->request::getInput();
+
+        if (empty($this->input)) {
+            throw new ApiMarketPlaceException('Input is empty!');
+        }
+
+        $post = json_decode($this->input, true);
+        if (empty($post)) {
+            throw new ApiMarketPlaceException('Invalid JSON!');
+        }
+
+        $this->updateManager->add(['post_data' => $post]);
+        
+        return true;
+    }
 
     /**
      * Execute HTTP Request

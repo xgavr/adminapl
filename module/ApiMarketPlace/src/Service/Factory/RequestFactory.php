@@ -11,6 +11,7 @@ namespace ApiMarketPlace\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use ApiMarketPlace\Service\Update;
+use ApiMarketPlace\Service\Request;
 
 /**
  * Description of RequestFactory

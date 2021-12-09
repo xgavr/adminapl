@@ -51,6 +51,6 @@ final class Version20211207094004 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('marketplace');
-        $table = $schema->createTable('marketplace_update');
+        $schema->dropTable('marketplace_update');
     }
 }

@@ -84,7 +84,7 @@ class Marketplace {
     protected $dateCreated;  
             
     /**
-    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceUpdates", mappedBy="marketplace")
+    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceUpdate", mappedBy="marketplace")
     * @ORM\JoinColumn(name="id", referencedColumnName="marketplace_id")
      */
     private $marketplaceUpdates;

@@ -224,7 +224,7 @@ class Order {
     private $comments;
     
     /**
-    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceUpdates", mappedBy="order")
+    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceUpdate", mappedBy="order")
     * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
      */
     private $marketplaceUpdates;
