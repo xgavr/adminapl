@@ -33,6 +33,16 @@ return [
                     ],
                 ],
             ],
+            'sbermarket-order-cancel' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/sbermarket-order-cancel',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'sbermarketOrderCancel',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -58,6 +68,9 @@ return [
     'view_manager' => [
         'template_path_stack' => [
             'ApiMarketPlace' => __DIR__ . '/../view',
+        ],
+        'template_map' => [
+            'api-market-place/index/index' => __DIR__ . '/../view/api-market-place/index/index.phtml',
         ],
     ],
     'doctrine' => [

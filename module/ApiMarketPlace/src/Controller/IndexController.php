@@ -56,6 +56,7 @@ class IndexController extends AbstractActionController
     
     public function sbermarketOrderCancelAction()
     {
+        $this->sbermarketManager->handle();
         return new JsonModel([
             'success' => 1,
             'meta' => [
