@@ -31,6 +31,12 @@ class MarketplaceUpdate {
     protected $id;
     
     /**
+     * Ip торговой площадки
+     * @ORM\Column(name="remote_addr")   
+     */
+    protected $remoteAddr;    
+    
+    /**
      * @ORM\Column(name="post_data")   
      */
     protected $postData;
@@ -67,6 +73,16 @@ class MarketplaceUpdate {
     {
         $this->id = $id;
     }     
+    
+    public function getRemoteAddr() 
+    {
+        return $this->remoteAddr;
+    }
+
+    public function setRemoteAddr($remoteAddr) 
+    {
+        $this->remoteAddr = $remoteAddr;
+    }         
 
     public function getPostData() 
     {

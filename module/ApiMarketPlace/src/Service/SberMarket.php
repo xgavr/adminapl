@@ -58,11 +58,11 @@ class SberMarket {
     }
     
     /**
-     * Handle bot request from webhook
+     * Handle marketplace request from webhook
      *
      * @return bool
      *
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws ApiMarketPlaceException
      */
     public function handle()
     {

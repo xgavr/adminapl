@@ -23,6 +23,8 @@ final class Version20211207094004 extends AbstractMigration
         $table->addColumn('password', 'string', ['notnull'=>true, 'length' => 256]);
         $table->addColumn('comment', 'string', ['notnull'=>false, 'length' => 512]);
         $table->addColumn('merchantId', 'integer', ['notnull'=>true]);
+        $table->addColumn('remote_addr', 'string', ['notnull'=>false, 'length' => 128]);
+        $table->addColumn('api_token', 'string', ['notnull'=>false, 'length' => 256]);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => Marketplace::STATUS_ACTIVE]);
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
@@ -32,6 +34,7 @@ final class Version20211207094004 extends AbstractMigration
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('marketplace_id', 'integer', ['notnull'=>false]);
         $table->addColumn('order_id', 'integer', ['notnull'=>false]);
+        $table->addColumn('remote_addr', 'string', ['notnull'=>false, 'length' => 32]);
         $table->addColumn('post_data', 'json', ['notnull'=>false]);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default' => MarketplaceUpdate::STATUS_ACTIVE]);
         $table->addColumn('date_created', 'datetime', ['notnull'=>true]);

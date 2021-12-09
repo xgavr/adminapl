@@ -62,6 +62,18 @@ class Marketplace {
     protected $merchantId;
 
     /**
+     * Api token в торговой площадке
+     * @ORM\Column(name="api_token")   
+     */
+    protected $apiToken;
+
+    /**
+     * Ip торговой площадки
+     * @ORM\Column(name="remote_addr")   
+     */
+    protected $remoteAddr;
+
+    /**
      * @ORM\Column(name="status")   
      */
     protected $status;
@@ -153,6 +165,26 @@ class Marketplace {
     public function setMerchantId($merchantId) 
     {
         $this->merchantId = $merchantId;
+    }     
+
+    public function getApiToken() 
+    {
+        return $this->apiToken;
+    }
+
+    public function setApiToken($apiToken) 
+    {
+        $this->apiToken = $apiToken;
+    }     
+
+    public function getRemoteAddr() 
+    {
+        return $this->remoteAddr;
+    }
+
+    public function setRemoteAddr($remoteAddr) 
+    {
+        $this->remoteAddr = $remoteAddr;
     }     
 
     /**
