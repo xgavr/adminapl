@@ -1,3 +1,158 @@
-<strong>Module:</strong>        ApiMarketPlaces &raquo;
-<strong>Controller:</strong>    Index &raquo;
-<strong>Action:</strong>        index
+<?php
+$this->headTitle('Торговые площадки');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Администрирование'=>$this->url('admin'),
+            'Торговые площадки' => $this->url('market-place')
+            ]);  
+
+?>
+<p>
+    <button class="btn btn-default marketplace-modal-show" type="button" modal-url="/market-place/edit-form">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"> Добавить</span>
+    </button>                
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>Id</th>
+        <th>Наименование</th>
+        <th>Файл</th>        
+        <th>Формат</th>
+        <th>Регион</th>
+        <th>Цены</th>
+        <th>Статус</th>        
+        <th>Строк</th>
+        <th>Дата выгрузки</th>        
+        <th></th>        
+    </tr>
+    
+    <?php foreach ($markets as $market): ?>
+    
+        <tr>
+            <td><?= $this->escapeHtml($market->getId()); ?></td>
+            <td>
+                <?= $this->escapeHtml($market->getName()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getFilename()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getFormatAsString()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getRegion()->getName()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getPricecolAsString()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getStatusAsString()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getRowUnload()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($market->getDateUnload()); ?>
+            </td>
+            <td>
+                <nobr>
+                    <button class="btn btn-xs btn-info market-modal-show" type="button" modal-url="/market/edit-form/<?= $market->getId()?>">
+                        <span class="glyphicon glyphicon-pencil" ></span>
+                    </button>
+                    <button class="btn btn-xs btn-danger this-delete" value="<?= $this->url('market', 
+                            ['action'=>'delete', 'id'=>$market->getId()]); ?>">
+                        <span class="glyphicon glyphicon-remove" ></span>
+                    </button>
+                </nobr>    
+            </td>    
+        </tr> 
+        <tr>
+            <td colspan="8">
+                <small>
+                    Наименования:  <?= $this->escapeHtml($market->getNameSettingAsString());?>; 
+                    Картинки:  <?= $this->escapeHtml($market->getGoodSettingAsString());?>; 
+                    Картинок:  <?= $this->escapeHtml($market->getImageCount());?>; 
+                    Поставщик:  <?= $this->escapeHtml(($market->getSupplier()) ? $market->getSupplier()->getName():'Все');?>;
+                    Доставка:  <?= $this->escapeHtml(($market->getShipping()) ? $market->getShipping()->getName():'Нет');?>;
+                    Производители:  <?= $this->escapeHtml($market->getProducerSettingAsString());?>; 
+                    Группы ТД:  <?= $this->escapeHtml($market->getGroupSettingAsString());?>; 
+                    Группы наименований:  <?= $this->escapeHtml($market->getTokenGroupSettingAsString());?>; 
+                    Текдок:  <?= $this->escapeHtml($market->getTdSettingAsString());?>; 
+                    Расценки: <?= $this->escapeHtml($market->getRatesAsString());?>; 
+                    Цена минимальная:  <?= $this->escapeHtml($market->getMinPrice());?>; 
+                    Цена максимальная:  <?= $this->escapeHtml($market->getMaxPrice());?>; 
+                    Строк в блоке:  <?= $this->escapeHtml($market->getMaxRowCount());?>; 
+                    Количество блоков:  <?= $this->escapeHtml($market->getBlockRowCount());?>; 
+                    Фильтр движений:  <?= $this->escapeHtml($market->getMovementLimit());?>;
+                    Формат описания: <?= $this->escapeHtml($market->getDescriptionFormatAsString());?>;
+                    Состав описания: <?= $this->escapeHtml($market->getDescriptionSetAsString());?>;
+                    Коментарий: <?= $this->escapeHtml($market->getInfo());?>
+                </small>
+            </td>
+            <td>
+                <?php if ($market->getDateUnload()):?>
+                    <nobr>
+<!--                        <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('market',
+                                ['action'=>'download-price', 'id' => $market->getId()]); ?>">
+                            <span class="glyphicon glyphicon-download"></span>
+                        </a>-->
+                        <a class="btn btn-default btn-xs" title="Скачать ZIP" href="<?= $this->url('market',
+                                ['action'=>'download-price', 'id' => $market->getId()], ['query' => ['zip' => 1]]); ?>">
+                            <span>скачать zip</span>
+                        </a>
+                    </nobr>    
+                <?php endif; ?>        
+            </td>
+            <td>
+                <nobr>
+                    <button value="/market/unload-market/<?= $market->getId()?>" class="btn btn-default btn-xs refresh-button"
+                            title="Сформировать">
+                        <span class="glyphicon glyphicon-play" ></span>
+                    </button> 
+                </nobr>    
+            </td>    
+        </tr>
+    <?php endforeach; ?>       
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $(document).on('click', '.market-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'marketModal',
+                url: url,
+                width: '1440px'
+            });
+        });          
+    });
+    
+    $('.rate-select').on('click', function(e) {
+        var url = e.currentTarget.value;
+        bootbox.prompt({
+            title: "Выбрать расценку",
+            value: ['1', '3'],
+            inputType: 'checkbox',
+            inputOptions: [{
+                text: 'Choice One',
+                value: '1',
+            },
+            {
+                text: 'Choice Two',
+                value: '2',
+            },
+            {
+                text: 'Choice Three',
+                value: '3',
+            }],
+            callback: function (result) {
+                console.log(result);
+            }
+        });
+    });    
+</script>

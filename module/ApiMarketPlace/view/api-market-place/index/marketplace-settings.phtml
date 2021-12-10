@@ -1,0 +1,121 @@
+<?php
+$this->headTitle('Настройки тоговой площадки');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Настройки'=>$this->url('settings'),
+            'Торговые площадки'=>$this->url('api-market-place', ['action' => 'index']),
+            ]);
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<?php
+$form = $this->form;
+
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('site')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('apiToken')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('merchantId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+
+<h1>Настройки ABCP</h1>
+<p>
+    Заполните форму и нажмите <i>Сохранить</i>.
+</p>
+
+<?= $this->form()->openTag($form); ?>
+<div class="row">
+    <div class="col-md-4">
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('site')); ?>
+            <?= $this->formElement($form->get('site')); ?>
+            <?= $this->formElementErrors($form->get('site')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('login')); ?>
+            <?= $this->formElement($form->get('login')); ?>
+            <?= $this->formElementErrors($form->get('login')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('password')); ?>
+            <?= $this->formElement($form->get('password')); ?>
+            <?= $this->formElementErrors($form->get('password')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('apiToken')); ?>
+            <?= $this->formElement($form->get('apiToken')); ?>
+            <?= $this->formElementErrors($form->get('apiToken')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('merchantId')); ?>
+            <?= $this->formElement($form->get('merchantId')); ?>
+            <?= $this->formElementErrors($form->get('merchantId')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('comment')); ?>
+            <?= $this->formElement($form->get('comment')); ?>
+            <?= $this->formElementErrors($form->get('comment')); ?>                  
+        </div>
+        
+        <div  class="form-group">
+            <?= $this->formElement($form->get('submit')); ?>            
+        </div>
+    </div>
+    <div class="col-sm-3" id="side-nav" >
+        <ul class="nav nav-stacked nav-list affix">
+            <li class="active">
+            </li>
+        </ul>
+    </div>    
+    
+</div>   
+
+<?= $this->form()->closeTag(); ?>
+
+<script async="false">
+</script>
