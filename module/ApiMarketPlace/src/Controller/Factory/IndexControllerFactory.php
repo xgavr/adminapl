@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use ApiMarketPlace\Controller\IndexController;
 use ApiMarketPlace\Service\SberMarket;
+use ApiMarketPlace\Service\MarketplaceService;
 
 /**
  * This is the factory for IndexController. Its purpose is to instantiate the
@@ -16,8 +17,9 @@ class IndexControllerFactory implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $sbermarketManager = $container->get(SberMarket::class);
+        $marketplaceService = $container->get(MarketplaceService::class);
         
         // Instantiate the controller and inject dependencies
-        return new IndexController($entityManager, $sbermarketManager);
+        return new IndexController($entityManager, $sbermarketManager, $marketplaceService);
     }
 }

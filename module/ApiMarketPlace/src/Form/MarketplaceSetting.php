@@ -9,6 +9,7 @@ namespace ApiMarketPlace\Form;
 
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
+use ApiMarketPlace\Entity\Marketplace;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -29,7 +30,7 @@ class MarketplaceSetting extends Form implements ObjectManagerAwareInterface
     public function __construct()
     {
         // Определяем имя формы.
-        parent::__construct('marketplace-settings');
+        parent::__construct('marketplace-form');
              
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -87,9 +88,9 @@ class MarketplaceSetting extends Form implements ObjectManagerAwareInterface
 
         $this->add([           
             'type'  => 'text',
-            'name' => '$merchantId',
+            'name' => 'merchantId',
             'attributes' => [
-                'id' => '$merchantId'
+                'id' => 'merchantId'
             ],
             'options' => [
                 'label' => 'ID Личного кабинета',
@@ -115,6 +116,20 @@ class MarketplaceSetting extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'Комментарий',
+            ],
+        ]);
+
+        // Add "status" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'status',
+            'attributes' => [
+                'id' => 'status',
+                'value' => Marketplace::STATUS_ACTIVE,
+            ],
+            'options' => [
+                'label' => 'Статус',
+                'value_options' => Marketplace::getStatusList(),
             ],
         ]);
 

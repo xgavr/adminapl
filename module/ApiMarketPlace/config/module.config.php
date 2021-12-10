@@ -60,6 +60,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Service\MarketplaceService::class => Service\Factory\MarketplaceServiceFactory::class,
             Service\Request::class => Service\Factory\RequestFactory::class,
             Service\Update::class => Service\Factory\UpdateFactory::class,
             Service\SberMarket::class => Service\Factory\SberMarketFactory::class,

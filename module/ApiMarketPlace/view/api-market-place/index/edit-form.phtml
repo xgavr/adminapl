@@ -1,0 +1,170 @@
+<?php
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('site')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('apiToken')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('merchantId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'marketplace-submit']);
+
+$form->prepare();
+
+?>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="otModalLabel">Настройка прайса</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('name')); ?>
+                        <?= $this->formElement($form->get('name')); ?>
+                        <?= $this->formElementErrors($form->get('name')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-6">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('site')); ?>
+                        <?= $this->formElement($form->get('site')); ?>
+                        <?= $this->formElementErrors($form->get('site')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?>
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('login')); ?>
+                        <?= $this->formElement($form->get('login')); ?>
+                        <?= $this->formElementErrors($form->get('login')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-6">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('password')); ?>
+                        <?= $this->formElement($form->get('password')); ?>
+                        <?= $this->formElementErrors($form->get('password')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('merchantId')); ?>
+                        <?= $this->formElement($form->get('merchantId')); ?>
+                        <?= $this->formElementErrors($form->get('merchantId')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-6">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('apiToken')); ?>
+                        <?= $this->formElement($form->get('apiToken')); ?>
+                        <?= $this->formElementErrors($form->get('apiToken')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row">
+                <div class="col-xs-9">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('comment')); ?>
+                        <?= $this->formElement($form->get('comment')); ?>
+                        <?= $this->formElementErrors($form->get('comment')); ?>                  
+                    </div>
+                </div>
+            </div>    
+        </div>    
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="market-submit">Сохранить</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+            
+<script>         
+    function submitForm(){
+        var data = serializeForm('#marketplace-form');
+         $('#marketplace-submit').prop('disabled', true);
+        //console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: '/market-place/edit-form/<?= ($marketplace) ? $marketplace->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#marketplaceModal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#marketplaceModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    $( document ).ready(function() {
+        var forms = $('#marketplace-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('marketplace-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });            
+</script>

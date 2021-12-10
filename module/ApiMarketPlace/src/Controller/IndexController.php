@@ -10,6 +10,8 @@ namespace ApiMarketPlace\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
+use ApiMarketPlace\Entity\Marketplace;
+use ApiMarketPlace\Form\MarketplaceSetting;
 
 
 class IndexController extends AbstractActionController
@@ -28,20 +30,77 @@ class IndexController extends AbstractActionController
     private $sbermarketManager;
         
     /**
+     * Request manager.
+     * @var \ApiMarketPlace\Service\MarketplaceService
+     */
+    private $marketplaceService;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $sbermarketManager) 
+    public function __construct($entityManager, $sbermarketManager, $marketplaceService) 
     {
        $this->entityManager = $entityManager;
        $this->sbermarketManager = $sbermarketManager;
+       $this->marketplaceService = $marketplaceService;
     }
 
     
     public function indexAction()
     {
-        return new ViewModel();
+        $marketplaces = $this->entityManager->getRepository(Marketplace::class)
+                ->findAll();
+        return new ViewModel([
+            'marketplaces' =>  $marketplaces,
+        ]);
     }
 
+    public function editFormAction()
+    {
+        $marketplaceId = (int)$this->params()->fromRoute('id', -1);
+        
+        $marketplace = null;
+        
+        if ($marketplaceId > 0){
+            $marketplace = $this->entityManager->getRepository(Marketplace::class)
+                    ->find($marketplaceId);
+        }    
+        
+        $form = new MarketplaceSetting($this->entityManager);
+        
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();            
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                
+                if ($marketplace){
+                    $this->marketplaceService->update($marketplace, $data);
+                } else {
+                    $marketplace = $this->marketplaceService->add($data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                //var_dump($form->getMessages());
+            }
+        } else {
+            if ($marketplace){
+                $data = $marketplace->toArray();
+                $form->setData($data);
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'marketplace' => $marketplace,
+        ]);        
+    }    
+    
     public function sbermarketOrderNewAction()
     {
         $this->sbermarketManager->handle();

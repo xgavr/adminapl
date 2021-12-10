@@ -109,7 +109,7 @@ class Marketplace {
 
     public function getName() 
     {
-        return $this->price;
+        return $this->name;
     }
 
     public function setName($name) 
@@ -120,6 +120,11 @@ class Marketplace {
     public function getSite() 
     {
         return $this->site;
+    }
+
+    public function getTagName() 
+    {
+        return '<a href="'.$this->site.'" target=_blank>'.$this->name.'</a>';
     }
 
     public function setSite($site) 
@@ -265,5 +270,25 @@ class Marketplace {
     public function addMarketplaceUpdate($marketplaceUpdate)
     {
         $this->marketplaceUpdates[] = $marketplaceUpdate;
+    }    
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'status' => $this->getStatus(),
+            'name' => $this->getName(),
+            'comment' => $this->getComment(),
+            'apiToken' => $this->getApiToken(),
+            'login' => $this->getLogin(),
+            'merchantId' => $this->getMerchantId(),
+            'password' => $this->getPassword(),
+            'site' => $this->getSite(),
+        ];
+        
+        return $result;
     }    
 }
