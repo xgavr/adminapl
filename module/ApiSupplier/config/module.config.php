@@ -9,20 +9,20 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 return [
     'router' => [
         'routes' => [
-            'admin' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/admin[/:action[/:id]]',
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]*',
-                    ],
-                    'defaults' => [
-                        'controller'    => Controller\IndexController::class,
-                        'action'        => 'index',
-                    ],
-                ],
-            ],
+//            'admin' => [
+//                'type'    => Segment::class,
+//                'options' => [
+//                    'route'    => '/admin[/:action[/:id]]',
+//                    'constraints' => [
+//                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                        'id' => '[0-9]*',
+//                    ],
+//                    'defaults' => [
+//                        'controller'    => Controller\IndexController::class,
+//                        'action'        => 'index',
+//                    ],
+//                ],
+//            ],
         ],
     ],
     'access_filter' => [
@@ -39,7 +39,7 @@ return [
     ],    
     'view_manager' => [
         'template_path_stack' => [
-            'ApiMarketPlace' => __DIR__ . '/../view',
+            'ApiSupplier' => __DIR__ . '/../view',
         ],
     ],
     'doctrine' => [
