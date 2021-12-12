@@ -168,6 +168,8 @@ class ParseManager {
 
         if ($this->blackListValidator->isValid(implode(' ', $data))){
             $rawprice->setStatus(Rawprice::STATUS_BLACK_LIST);
+        } elseif (trim($rawprice->getMarkdown())){
+            $rawprice->setStatus(Rawprice::STATUS_MARKDOWN);            
         } else {
             $rawprice->setStatus($status);            
         }    

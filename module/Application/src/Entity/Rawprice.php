@@ -29,6 +29,7 @@ class Rawprice {
     const STATUS_PARSED    = 2; // прошел разборку.
     const STATUS_RETIRED   = 3; //строка не актуальна
     const STATUS_BLACK_LIST = 4; //наименовние содержит слово из черного списка
+    const STATUS_MARKDOWN = 5; //уценка
 
     const OEM_NEW       = 1; // только что загрузили
     const OEM_PARSED    = 2; // прошел разборку.
@@ -290,7 +291,8 @@ class Rawprice {
             self::STATUS_NEW => 'Новый',
             self::STATUS_PARSED => 'Разобран',
             self::STATUS_RETIRED => 'Устарело',
-            self::STATUS_BLACK_LIST => 'Черный список'
+            self::STATUS_BLACK_LIST => 'Черный список',
+            self::STATUS_MARKDOWN => 'Уценка'
         ];
     }    
     
