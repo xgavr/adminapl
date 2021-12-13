@@ -151,7 +151,7 @@ class ParseManager {
     }
         
     /**
-     * @param \Application\Entity\Rawprice $rawprice
+     * @param Rawprice $rawprice
      * @param array $priceDescriptionFunc
      * @param bool $flushnow
      * @param integer $status
@@ -168,7 +168,7 @@ class ParseManager {
 
         if ($this->blackListValidator->isValid(implode(' ', $data))){
             $rawprice->setStatus(Rawprice::STATUS_BLACK_LIST);
-        } elseif (trim($rawprice->getMarkdown())){
+        } elseif (!empty($data['markdown'])){
             $rawprice->setStatus(Rawprice::STATUS_MARKDOWN);            
         } else {
             $rawprice->setStatus($status);            
