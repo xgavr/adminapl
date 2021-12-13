@@ -591,8 +591,10 @@ $priceCols = $goodsManager->priceCols($goods);
                                 </div>    
                             </div>
                             <div class="panel-body">
-                                <div class="pull-left" class="<?= $goods->getStyleStatusRawpriceEx()?>">
-                                    Картинки 
+                                <div class="pull-left">
+                                    <span class="<?= $goods->getStyleStatusImgEx()?>">
+                                        Картинки
+                                    </span>                                      
                                 </div>
                                 <div class="pull-right">                        
                                     <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
