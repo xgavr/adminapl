@@ -734,6 +734,7 @@ class ZetasoftManager
     {
         $articleInfo = $this->getDirectInfo($good);
         $similar = Images::SIMILAR_MATCH;
+        var_dump($articleInfo); exit;
         if (!is_array($articleInfo)){
             $articleInfo = $this->getSimilarDirectInfo($good);
             $similar = Images::SIMILAR_SIMILAR;   
@@ -767,7 +768,7 @@ class ZetasoftManager
                     foreach($articleInfo['images'] as $document){
 //                        $uri = $this->getDocImageUri($document['url800']);
                         $uri = trim($document['url400']);
-                        var_dump($uri); exit;
+//                        var_dump($uri); exit;
                         $this->entityManager->getRepository(Images::class)
                                 ->saveImageGood($good, $uri, $document['fileName'], Images::STATUS_TD, $similar);
                     }
