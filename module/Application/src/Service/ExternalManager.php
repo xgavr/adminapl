@@ -1038,7 +1038,7 @@ class ExternalManager
             try{
                 $this->zetasoftManager->getImages($good);
             } catch (\Exception $ex){
-                
+                var_dump($ex->getMessage()); exit;
             }    
 
         }    

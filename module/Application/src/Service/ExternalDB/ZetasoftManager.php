@@ -734,7 +734,6 @@ class ZetasoftManager
     {
         $articleInfo = $this->getDirectInfo($good);
         $similar = Images::SIMILAR_MATCH;
-        var_dump($articleInfo); exit;
         if (!is_array($articleInfo)){
             $articleInfo = $this->getSimilarDirectInfo($good);
             $similar = Images::SIMILAR_SIMILAR;   
