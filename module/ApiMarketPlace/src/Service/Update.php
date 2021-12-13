@@ -30,15 +30,15 @@ class Update
      */
     public function add($data)
     {
-        $this->entityManager->getConnection()
-                ->insert('marketplace_update', [
+        $conn = $this->entityManager->getConnection();
+        $conn->insert('marketplace_update', [
                     'post_data' => $data['post_data'],
                     'status' => MarketplaceUpdate::STATUS_ACTIVE,
                     'date_created' => date('Y-m-d H:i:s'),
                     'remote_addr' => $_SERVER['remote_addr'],
                 ]);
         
-        return;
+        return $conn->lastInsertId();
     }
     
 }

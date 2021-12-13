@@ -123,5 +123,18 @@ class IndexController extends AbstractActionController
             ],
         ]);        
     }
+
+    public function yandexOrderAcceptAction()
+    {
+        $updId = $this->sbermarketManager->handle();
+        return new JsonModel([
+            'order' => [
+                'accepted' => true,
+                'id' => $updId,
+                'reason' => '',
+            ],
+        ]);
+    }
+    
     
 }
