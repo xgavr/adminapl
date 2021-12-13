@@ -888,6 +888,24 @@ class Goods {
         $this->statusImgEx;
     }
     
+    public function getStyleListStatusImgEx()
+    {
+        return [
+            self::IMG_EX_NEW => '',
+            self::IMG_EX_TRANSFERRED => 'alert-success',
+        ];
+    }
+    
+    public function getStyleStatusImgEx()
+    {
+        $list = self::getStyleListStatusImgEx();
+        if (isset($list[$this->statusImgEx])) {
+            return $list[$this->statusImgEx];
+        }
+
+        return '';
+    }
+    
     public function setStatusImgEx($statusImgEx)
     {
         $this->statusImgEx = $statusImgEx;
