@@ -1030,8 +1030,8 @@ class ExternalManager
     {
     
         $mathImages = $this->entityManager->getRepository(Images::class)
-                ->count(['good' => $good->getId(), 'similar' => Images::SIMILAR_SIMILAR]);
-        var_dump($mathImages); exit;
+                ->count(['good' => $good->getId(), 'similar' => Images::SIMILAR_MATCH]);
+//        var_dump($mathImages); exit;
         
         if (!$mathImages){
             $this->entityManager->getRepository(Images::class)
