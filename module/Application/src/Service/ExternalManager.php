@@ -1031,6 +1031,7 @@ class ExternalManager
     
         $mathImages = $this->entityManager->getRepository(Images::class)
                 ->count(['good' => $good->getId(), 'similar' => Images::SIMILAR_SIMILAR]);
+        var_dump($mathImages); exit;
         
         if (!$mathImages){
             $this->entityManager->getRepository(Images::class)
@@ -1038,7 +1039,7 @@ class ExternalManager
             try{
                 $this->zetasoftManager->getImages($good);
             } catch (\Exception $ex){
-                var_dump($ex->getMessage()); exit;
+//                var_dump($ex->getMessage()); exit;
             }    
 
         }    
