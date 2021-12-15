@@ -492,7 +492,7 @@ class AplDocService {
                 ->findOneByAplId(['aplId' => $ptuAplId]);
         
         if ($ptu){        
-        var_dump($data); exit;
+//        var_dump($data); exit;
             $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->findOneByAplId($data['id']);
 
