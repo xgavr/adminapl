@@ -919,14 +919,15 @@ class AplDocService {
     
     /**
      * Загрузить документ из Апл
-     * 
+     * @param int $start
      * @return 
      */
-    public function unloadDoc()
+    public function unloadDoc($start = 0)
     {
         $url = $this->aplApi().'unload-doc?api='.$this->aplApiKey();
         
         $post = [
+            'start' => $start,
         ];
 
         $client = new Client();
@@ -994,9 +995,9 @@ class AplDocService {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
         $startTime = time();
-        
+        $start = 0;
         while (true){
-            if ($this->unloadDoc()) {
+            if ($this->unloadDoc($start)) {
                 usleep(100);
                 if (time() > $startTime + 840){
                     break;
@@ -1004,6 +1005,7 @@ class AplDocService {
             } else {
                 break;
             }    
+            $start++;
         }    
         return;
     }    
