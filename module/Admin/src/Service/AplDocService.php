@@ -933,6 +933,7 @@ class AplDocService {
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');
+        $client->setOptions(['timeout' => 30]);
         $client->setParameterPost($post);
 
         $response = $client->send();
