@@ -423,12 +423,13 @@ class AplOrderService {
         if (!$client){
             return false;
         }
-        var_dump($data); exit;
+//        var_dump($data); exit;
         
         $contact = $client->getLegalContact();
         if (!$contact){
             return false;
         }
+        var_dump($data); exit;
         
         if (!empty($data['pricecol'])){
             $this->updateClientPricecol($client, $data['pricecol']);
