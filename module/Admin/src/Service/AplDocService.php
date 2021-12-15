@@ -471,7 +471,7 @@ class AplDocService {
      */
     public function unloadVtp($data)
     {
-//        var_dump($data); exit;
+        var_dump($data); exit;
         $docDate = $data['ds'];
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
@@ -945,7 +945,7 @@ class AplDocService {
             var_dump($body);
             exit;
         }
-        var_dump($result); exit;
+//        var_dump($result); exit;
 
         if (is_array($result)){
             if (isset($result['type'])){
