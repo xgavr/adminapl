@@ -536,7 +536,7 @@ class AplOrderService {
         }    
         
         if ($order){
-            var_dump(222); exit;
+            //var_dump(222); exit;
             if (isset($data['selections'])){
                 foreach ($data['selections'] as $selection){
                     if (!empty($selection['q'])){
