@@ -423,7 +423,7 @@ class AplOrderService {
         if (!$client){
             return false;
         }
-//        var_dump($data); exit;
+        var_dump($data); exit;
         
         $contact = $client->getLegalContact();
         if (!$contact){
@@ -647,7 +647,7 @@ class AplOrderService {
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             return true;
         }    
-        var_dump($result); exit;
+//        var_dump($result); exit;
 
         if (is_array($result)){
             if ($this->getOrder($result)){ 
