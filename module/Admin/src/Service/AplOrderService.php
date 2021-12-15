@@ -429,7 +429,7 @@ class AplOrderService {
         if (!$contact){
             return false;
         }
-        var_dump($data); exit;
+//        var_dump($data); exit;
         
         if (!empty($data['pricecol'])){
             $this->updateClientPricecol($client, $data['pricecol']);
@@ -639,7 +639,7 @@ class AplOrderService {
         $response = $client->send();
         $body = $response->getBody();
 
-//        var_dump($body); exit;
+        var_dump($body); exit;
         try{
             $result = json_decode($body, true);
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
