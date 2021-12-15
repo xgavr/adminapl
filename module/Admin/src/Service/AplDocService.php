@@ -471,7 +471,7 @@ class AplDocService {
      */
     public function unloadVtp($data)
     {
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $docDate = $data['ds'];
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
@@ -492,7 +492,7 @@ class AplDocService {
                 ->findOneByAplId(['aplId' => $ptuAplId]);
         
         if ($ptu){        
-//        var_dump($data); exit;
+        var_dump($data); exit;
             $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->findOneByAplId($data['id']);
 
