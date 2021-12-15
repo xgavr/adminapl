@@ -429,7 +429,7 @@ class AplOrderService {
         if (!$contact){
             return false;
         }
-        var_dump($data); exit;
+//        var_dump($data); exit;
         
         if (!empty($data['pricecol'])){
             $this->updateClientPricecol($client, $data['pricecol']);
@@ -535,44 +535,45 @@ class AplOrderService {
             $order = $this->orderManager->insOrder($office, $contact, $orderData);
         }    
         
-        if ($order && isset($data['selections'])){
-            foreach ($data['selections'] as $selection){
-                if (!empty($selection['q'])){
-                    $this->orderManager->insSelection($order, [
-                       'oem'  => $selection['q'],
-                       'comment'  => $selection['qc'],
-                    ]);
-                }
-            }    
-        }
-        
-        if ($order && isset($data['tp'])){
-            $rowNo = 1;
-            foreach ($data['tp'] as $tp){
-                if (isset($tp['good'])){
-                    $good = $this->aplDocService->findGood($tp['good']);   
-                }    
-                if (empty($good)){
-    //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
-                } else {
-
-                    $this->orderManager->insBid($order, [
-                        'rowNo' => $rowNo,
-                        'num' => $tp['sort'],
-                        'price' => $tp['comment'],
-                        'good' => $good,
-                        'displayName' => (empty($tp['dispname'])) ? null:$tp['dispname'],
-                        'oem' => (empty($tp['selection'])) ? null:mb_substr($tp['selection'], 3),                        
-                    ]);
-                    $rowNo++;
-                } 
-            }
-        }  
-        
         if ($order){
+            var_dump(222); exit;
+            if (isset($data['selections'])){
+                foreach ($data['selections'] as $selection){
+                    if (!empty($selection['q'])){
+                        $this->orderManager->insSelection($order, [
+                           'oem'  => $selection['q'],
+                           'comment'  => $selection['qc'],
+                        ]);
+                    }
+                }    
+            }
+
+            if (isset($data['tp'])){
+                $rowNo = 1;
+                foreach ($data['tp'] as $tp){
+                    if (isset($tp['good'])){
+                        $good = $this->aplDocService->findGood($tp['good']);   
+                    }    
+                    if (empty($good)){
+        //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                    } else {
+
+                        $this->orderManager->insBid($order, [
+                            'rowNo' => $rowNo,
+                            'num' => $tp['sort'],
+                            'price' => $tp['comment'],
+                            'good' => $good,
+                            'displayName' => (empty($tp['dispname'])) ? null:$tp['dispname'],
+                            'oem' => (empty($tp['selection'])) ? null:mb_substr($tp['selection'], 3),                        
+                        ]);
+                        $rowNo++;
+                    } 
+                }
+            }  
+
             $this->orderManager->updOrderTotal($order);
             return true;            
-        }
+        }    
                 
         return false;
     }
