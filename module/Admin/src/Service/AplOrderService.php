@@ -637,7 +637,7 @@ class AplOrderService {
         $response = $client->send();
         $body = $response->getBody();
 
-        var_dump($body); exit;
+//        var_dump($body); exit;
         try{
             $result = json_decode($body, true);
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
@@ -647,7 +647,7 @@ class AplOrderService {
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             return true;
         }    
-//        var_dump($result); exit;
+        var_dump($result); exit;
 
         if (is_array($result)){
             if ($this->getOrder($result)){ 
