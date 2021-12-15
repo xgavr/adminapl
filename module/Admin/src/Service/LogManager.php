@@ -25,6 +25,8 @@ use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\Order;
 use Application\Entity\Bid;
+use Stock\Entity\Vt;
+use Stock\Entity\VtGood;
 
 /**
  * Description of LogManager
@@ -318,4 +320,36 @@ class LogManager {
         return;
     }           
     
+    /**
+     * Добавить запись в лог vt
+     * @param Vt $vt
+     * @param integer $status 
+     */
+    public function infoVt($vt, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $vtLog = $vt->toLog();
+            $vtGoods = $this->entityManager->getRepository(VtGood::class)
+                    ->findByVt($vt->getId());
+            foreach ($vtGoods as $vtGood){
+                $vtLog['goods'][$vtGood->getRowNo()] = $vtGood->toLog();
+            }
+            
+            $data = [
+                'log_key' => $vt->getLogKey(),
+                'message' => Json::encode($vtLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }               
 }

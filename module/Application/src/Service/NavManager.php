@@ -83,6 +83,12 @@ class NavManager
 //                ];
                 
                 $clientDropdownItems[] = [
+                    'id' => 'vt',
+                    'label' => 'Возврат товаров',
+                    'link'  => $url('vt')
+                ];
+
+                $clientDropdownItems[] = [
                     'id' => 'client',
                     'label' => 'Покупатели',
                     'link'  => $url('client')

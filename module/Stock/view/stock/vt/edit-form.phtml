@@ -1,0 +1,367 @@
+<?php
+$form = $this->form;
+
+$form->get('legal_id')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('office_id')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('client')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('contract_id')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('doc_date')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('doc_no')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'vt-submit']);
+
+$form->prepare();
+
+$docName = 'Новый';
+$orderDocName = '№ '.$order->getDocNo().' от  '.date('d.m.Y', strtotime($order->getDocDate()));
+if ($vt){
+    $docName = '№ '.$vt->getDocNo().' от  '.date('d.m.Y', strtotime($vt->getDocDate()));
+}
+
+?>
+
+
+
+            
+            <?= $this->form()->openTag($form); ?>
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="vtModalLabel">Возврат товаров <?= $docName?> по заказу <?= $orderDocName?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('doc_no')); ?>
+                            <?= $this->formElement($form->get('doc_no')); ?>
+                            <?= $this->formElementErrors($form->get('doc_no')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('office_id')); ?>
+                            <?= $this->formElement($form->get('office_id')); ?>
+                            <?= $this->formElementErrors($form->get('office_id')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('client')); ?>
+                            <?= $this->formElement($form->get('client')); ?>
+                            <?= $this->formElementErrors($form->get('client')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('status')); ?>
+                            <?= $this->formElement($form->get('status')); ?>
+                            <?= $this->formElementErrors($form->get('status')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2 text-right">
+                        <h1 class="display-4" id="vtQuantity"></h1>
+                    </div>    
+                    <div class="col-xs-1 text-right">
+                        <h1 class="display-4" id="vtAmount"><?= ($vt) ? round($vt->getAmount(), 2):"" ?></h1>                        
+                    </div>    
+                </div>    
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('doc_date')); ?>
+                            <?= $this->formElement($form->get('doc_date')); ?>
+                            <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('company')); ?>
+                            <?= $this->formElement($form->get('company')); ?>
+                            <?= $this->formElementErrors($form->get('company')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('legal_id')); ?>
+                            <?= $this->formElement($form->get('legal_id')); ?>
+                            <?= $this->formElementErrors($form->get('legal_id')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('contract_id')); ?>
+                            <?= $this->formElement($form->get('contract_id')); ?>
+                            <?= $this->formElementErrors($form->get('contract_id')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4 text-right">
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="vtgoodtoolbar">
+                            <div class="form-inline" role="form">
+                                <button type="button" class="btn btn-default" onclick="vtFill()">
+                                    <span aria-hidden="true">Заполнить из ПТУ</span>
+                                </button>
+                            </div>
+                        </div>
+                        <table id="vtgoodtable" 
+                            data-toggle="vtgoodtable" 
+                            data-url="/vt/good-content/<?= ($vt) ? $vt->getId():"" ?>"
+                            data-side-pagination="client"
+                            data-pagination="true"
+                            data-page-size = "5"
+                            data-page-list="[5, 10, 20, 50]"
+                            data-toolbar="vtgoodtoolbar"
+                            data-show-refresh="true"
+                            data-show-toggle="true"
+                            data-query-params="vtgoodQueryParams"
+                            data-response-handler="vtgoodResponseHandler"
+                            data-unique-id = "rowNo"
+                            >
+                            <thead>
+                                <tr>
+                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                                     <th data-field="good.code" data-type="numeric">Артикул</th>
+                                     <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                                     <th data-field="good.name" data-type="numeric">Наименование</th>
+                                     <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                                     <th data-field='quantity' data-align="right">Количество</th>
+                                     <th data-field='amount' data-align="right">Сумма</th>
+                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                                 </tr>                
+                            </thead>
+                        </table>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('comment')); ?>
+                            <?= $this->formElement($form->get('comment')); ?>
+                            <?= $this->formElementErrors($form->get('comment')); ?>                  
+                        </div>                        
+                    </div>                                            
+                </div>        
+
+
+
+
+                        <?= $this->formElement($form->get('csrf')); ?>
+                    </div>
+                </div>
+            </div>    
+                
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" id="vt-submit">Сохранить</button>
+            </div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    function vtUpdateTotal(){
+        var data = $('#vtgoodtable').bootstrapTable('getData');
+        var amount = 0; var quantity = 0;
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.amount*100)/100;
+            quantity += Math.round(value.quantity*100)/100; 
+        });
+        $('#vtAmount').html(Math.round(amount*100)/100);
+        $('#vtQuantity').html(Math.round(quantity*100)/100);
+    }
+    
+    function vtFill(){
+        $.ajax({
+            type: 'GET',
+            url: "/order/good-content/<?= ($order) ? $order->getId():"" ?>"
+        })
+            .done(function (data) {
+                $('#vtgoodtable').bootstrapTable('removeAll');
+                var rows = [];
+                $.each( data, function( index, row ) { 
+                    var good = {
+                        id: row.good.id,
+                        code: row.good.code,
+                        name: row.good.name,
+                        producer: {name: row.good.producer.name}
+                    }
+                    var row = {
+                        good: good,
+                        amount: row.amount,
+                        quantity: row.quantity,
+                        price: Math.round(row.amount*100/row.quantity)/100,
+                        rowNo: index+1
+                    };
+
+                    rows.push(row);
+                });   
+                $('#vtgoodtable').bootstrapTable('append', rows);                        
+                vtUpdateTotal();
+            })
+            .fail(function () {
+                alert("Ошибка при получении данных.");
+
+            });            
+    }
+    
+    function submitForm(){
+        var data = serializeForm('#vt-form');
+        data.vtGood = getFormatedVtGood();
+        $.ajax({
+            type: 'POST',
+            url: '/vt/edit-form/<?= ($vt) ? $vt->getId():"" ?>?order=<?= ($order) ? $order->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#vtModal').modal('hide');
+                    $('#vttable').bootstrapTable('refresh');
+                } else {
+                    $('#vtModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    function getFormatedVtGood(){
+        var data = $('#vtgoodtable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                good_id: row.good.id,
+                quantity: row.quantity,
+                amount: row.amount,
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
+        
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#vtgoodtable').bootstrapTable('removeByUniqueId', index);
+        vtUpdateTotal();
+    }
+    
+    $( document ).ready(function() {
+        
+        $('#vtgoodtable').bootstrapTable({
+            onLoadSuccess: function(res){
+                vtUpdateTotal();
+            }            
+        }); 
+        
+        var forms = $('#vt-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('vt-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });    
+    
+    function vtGoodRefreshTable(){
+        $('#vtgoodtable').bootstrapTable('refresh');
+    }
+    
+    function vtgoodQueryParams(params) {
+        $('#vtgoodtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#vtgoodtable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#vtgoodtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function pgActiveFormatter(value, row){
+        var url = '/vt/good-edit-form/';
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs vt-good-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+value+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function pgPriceFormatter(value, row){
+        return Math.round(value*100/row.quantity)/100;
+    }        
+    
+    function vtgoodResponseHandler(res) {
+        return res;
+    }     
+</script>

@@ -121,6 +121,25 @@ return [
                     // route defined above here.
                 ],
             ],    
+            'vt' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/vt[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\VtController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
         ],
     ],
     'access_filter' => [
@@ -143,6 +162,9 @@ return [
             Controller\VtpController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
+            Controller\VtController::class => [
+                ['actions' => '*', 'allow' => '@'],
+            ],
         ],
     ],    
     'controllers' => [
@@ -152,6 +174,7 @@ return [
             Controller\PtController::class => Controller\Factory\PtControllerFactory::class,
             Controller\PtuController::class => Controller\Factory\PtuControllerFactory::class,
             Controller\StController::class => Controller\Factory\StControllerFactory::class,
+            Controller\VtController::class => Controller\Factory\VtControllerFactory::class,
             Controller\VtpController::class => Controller\Factory\VtpControllerFactory::class,
         ],
     ],
@@ -161,6 +184,7 @@ return [
             Service\PtManager::class => Service\Factory\PtManagerFactory::class,
             Service\PtuManager::class => Service\Factory\PtuManagerFactory::class,
             Service\StManager::class => Service\Factory\StManagerFactory::class,
+            Service\VtManager::class => Service\Factory\VtManagerFactory::class,
             Service\VtpManager::class => Service\Factory\VtpManagerFactory::class,
         ],
     ],        

@@ -1,0 +1,105 @@
+<?php
+
+if ($order){
+    $docName = '№ '.$ptu->getDocNo().' от  '.date('d.m.Y', strtotime($order->getDocDate()));
+}
+
+?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="vtModalLabel">Возвраты по заказу <?= $docName?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="vttoolbar">
+            <div class="form-inline" role="form">
+                <button class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?ptu=<?= $ptu->getId()?>">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>                
+            </div>
+        </div>
+        <table id="vttable" 
+            data-toggle="vttable" 
+            data-url="/vt/content/<?= ($order) ? $order->getId():"" ?>"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#vttoolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="vtQueryParams"
+            data-sort-name="id"
+            data-sort-order="desc"            
+            data-response-handler="vtResponseHandler"
+            >
+            <thead>
+                <tr>
+                     <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
+                     <th data-field="docDate" data-sortable="true">Дата</th>
+                     <th data-field="id" data-sortable="false">Номер</th>
+                     <th data-field="aplId" data-type="numeric"data-align="right">AplId</th>
+                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field='ptu.legal.name' data-sortable="false">Покупатель</th>
+                     <th data-field='ptu.contract.name' data-sortable="false">Договор</th>
+                     <th data-field='ptu.office.name' data-sortable="false">Склад</th>
+                     <th data-field='comment' data-sortable="false">Примечание</th>
+                     <th data-field='status' data-sortable="false">П</th>
+                     <th data-field='statusDoc' data-sortable="false">Т</th>
+                     <th data-field='statusEx' data-sortable="false">О</th>
+                     <th data-field="" data-formatter="vtActiveFormatter"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script>
+    $( document ).ready(function() {
+        
+        $('#vttable').bootstrapTable({
+            onLoadSuccess: function(res){
+                
+            }            
+        });         
+    });
+    
+    function vtRefreshTable(){
+        $('#vttable').bootstrapTable('refresh');
+    }
+
+    function vtQueryParams(params) {
+        $('#vttoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#vttable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#vttable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+
+    function vtActiveFormatter(value, row){
+        var url = '/vt/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs vt-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
+    
+    function vtResponseHandler(res) {
+        return res;
+    }     
+</script>
