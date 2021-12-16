@@ -151,7 +151,13 @@ class VtManager
     public function repostVt($vt)
     {
         $this->updateVtMovement($vt);
-        $this->updateVtMutuals($vt);
+        $this->updateVtRetails($vt);
+        if ($vt->getOrder()->getLegal()){
+            $this->updateVtMutuals($vt);
+        } else {
+            $this->entityManager->getRepository(Mutual::class)
+                    ->removeDocMutuals($vt->getLogKey());            
+        }    
         
         return;
     }
