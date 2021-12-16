@@ -14,7 +14,7 @@ use Admin\Service\AplDocService;
 use Admin\Service\AdminManager;
 use Stock\Service\PtuManager;
 use Stock\Service\VtpManager;
-use Stock\Entity\Vt;
+use Stock\Service\VtManager;
 use Stock\Service\OtManager;
 use Stock\Service\PtManager;
 use Stock\Service\StManager;
