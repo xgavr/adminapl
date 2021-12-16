@@ -129,7 +129,7 @@ class VtManager
                 'doc_row_no' => $vtGood->getRowNo(),
                 'date_oper' => $vt->getDocDate(),
                 'status' => $vt->getStatus(),
-                'quantity' => $vtGood->getNum(),
+                'quantity' => $vtGood->getQuantity(),
                 'amount' => $vtGood->getAmount(),
                 'good_id' => $vtGood->getGood()->getId(),
                 'office_id' => $vt->getOffice()->getId(),
