@@ -108,7 +108,7 @@ class OrderManager
      * 
      * @return Contract
      */
-    private function findDefaultContract($office, $legal, $dateStart, $act, $pay = Contract::PAY_CASHLESS)
+    public function findDefaultContract($office, $legal, $dateStart, $act, $pay = Contract::PAY_CASHLESS)
     {
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
