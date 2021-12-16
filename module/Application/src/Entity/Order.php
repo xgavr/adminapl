@@ -15,6 +15,7 @@ use Application\Entity\ContactCar;
 use Application\Entity\Courier;
 use Application\Entity\Shipping;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
+use Stock\Entity\Vt;
 
 
 /**
@@ -230,6 +231,12 @@ class Order {
     private $marketplaceUpdates;
     
     /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Vt", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+     */
+    private $vt;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -238,6 +245,7 @@ class Order {
         $this->selections = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->marketplaceUpdates = new ArrayCollection();
+        $this->vt = new ArrayCollection();
     }
     
     public function getId() 
@@ -739,6 +747,24 @@ class Order {
         $this->comments[] = $comment;
     }
         
+    /**
+     * Returns the array of vt assigned to this.
+     * @return array
+     */
+    public function getVt()
+    {
+        return $this->vt;
+    }
+        
+    /**
+     * Assigns.
+     * @param Vt $vt
+     */
+    public function addVt($vt)
+    {
+        $this->vt[] = $vt;
+    }
+                
     /**
      * Returns the array of marketplaceUpdates assigned to this.
      * @return array
