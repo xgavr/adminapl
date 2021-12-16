@@ -415,7 +415,7 @@ class Vt {
             'amount' => $this->getAmount(),
             'aplId' => $this->getAplId(),
             'comment' => $this->getComment(),
-            'contract' => $this->getOrder()->getContract()->getId(),
+            'contact' => $this->getOrder()->getContact()->getId(),
             'docDate' => (string) $this->getDocDate(),
             'docNo' => $this->getDocNo(),
             'info' => $this->getInfo(),
