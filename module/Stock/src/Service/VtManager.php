@@ -31,12 +31,19 @@ class VtManager
     private $logManager;
         
     /**
+     * Order manager
+     * @var \Application\Service\OrderManager
+     */
+    private $orderManager;
+        
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager) 
+    public function __construct($entityManager, $logManager, $orderManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
+        $this->orderManager = $orderManager;
     }
     
     /**
@@ -50,7 +57,7 @@ class VtManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($vt->getLogKey());
         
-        $contract = $this->findDefaultContract($vt->getOrder()->getOffice(), 
+        $contract = $this->orderManager->findDefaultContract($vt->getOrder()->getOffice(), 
                 $vt->getOrder()->getLegal(), $vt->getOrder()->getDateOper(), 
                 $vt->getOrder()->getAplId());
         

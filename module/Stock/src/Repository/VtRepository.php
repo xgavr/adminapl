@@ -65,12 +65,10 @@ class VtRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('v, p, l, o, c')
+        $queryBuilder->select('v, p, o')
             ->from(Vt::class, 'v')
             ->join('v.order', 'p')
-            ->join('p.legal', 'l')
             ->join('p.office', 'o')    
-            ->join('p.contract', 'c')    
                 ;
         
         if (is_array($params)){
