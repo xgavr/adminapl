@@ -14,6 +14,7 @@ use Admin\Service\AplDocService;
 use Admin\Service\AdminManager;
 use Stock\Service\PtuManager;
 use Stock\Service\VtpManager;
+use Stock\Entity\Vt;
 use Stock\Service\OtManager;
 use Stock\Service\PtManager;
 use Stock\Service\StManager;
@@ -36,6 +37,7 @@ class AplDocServiceFactory  implements FactoryInterface
         $adminManager = $container->get(AdminManager::class); 
         $ptuManager = $container->get(PtuManager::class);
         $vtpManager = $container->get(VtpManager::class);
+        $vtManager = $container->get(VtManager::class);
         $otManager = $container->get(OtManager::class);
         $stManager = $container->get(StManager::class);
         $ptManager = $container->get(PtManager::class);
@@ -46,6 +48,6 @@ class AplDocServiceFactory  implements FactoryInterface
         // Инстанцируем сервис и внедряем зависимости.
         return new AplDocService($entityManager, $adminManager, $ptuManager,
                 $legalManager, $producerManager, $assemblyManager, $vtpManager, 
-                $otManager, $stManager, $ptManager);
+                $otManager, $stManager, $ptManager, $vtManager);
     }
 }

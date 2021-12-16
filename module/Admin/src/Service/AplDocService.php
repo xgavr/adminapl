@@ -18,6 +18,8 @@ use Company\Entity\Legal;
 use Company\Entity\Contract;
 use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
+use Stock\Entity\Vt;
+use Application\Entity\Order;
 use Stock\Entity\Ot;
 use Application\Entity\Contact;
 use Application\Entity\Client as AplClient;
@@ -65,6 +67,12 @@ class AplDocService {
     private $vtpManager;
 
     /**
+     * Vt manager
+     * @var \Stock\Service\VtManager
+     */
+    private $vtManager;
+
+    /**
      * Ot manager
      * @var \Stock\Service\OtManager
      */
@@ -102,12 +110,13 @@ class AplDocService {
     
     public function __construct($entityManager, $adminManager, $ptuManager, 
             $legalManager, $producerManager, $assemblyManager, $vtpManager, 
-            $otManager, $stManager, $ptManager)
+            $otManager, $stManager, $ptManager, $vtManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->ptuManager = $ptuManager;
         $this->vtpManager = $vtpManager;
+        $this->vtManager = $vtManager;
         $this->otManager = $otManager;
         $this->stManager = $stManager;
         $this->ptManager = $ptManager;
@@ -529,6 +538,95 @@ class AplDocService {
 
             if ($vtp){
                 $this->vtpManager->updateVtpAmount($vtp);
+                return true;            
+            }
+        }    
+                
+        return false;
+    }
+
+    /**
+     * Получить статус документа возврат
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getVtStatus($data)
+    {
+        $vtStatus = Vt::STATUS_ACTIVE;
+        if ($data['publish'] == 0){
+            $vtStatus = Vt::STATUS_RETIRED;            
+        }
+        
+        return $vtStatus;
+    }
+    
+    
+    /**
+     * Загрузить возврат
+     * 
+     * @param array $data
+     */
+    public function unloadVt($data)
+    {
+//        var_dump($data); exit;
+        $docDate = $data['ds'];
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        if (!$dateValidator->isValid($docDate)){
+            $docDate = $data['created'];
+        }
+        
+        $dataVt = [
+            'apl_id' => $data['id'],
+            'doc_date' => $docDate,
+            'comment' => $data['info'],
+            'status_ex' => Vt::STATUS_EX_APL,
+            'status' => $this->getVtStatus($data),
+        ];
+        
+        $orderAplId = $data['name'];
+        $order = $this->entityManager->getRepository(Order::class)
+                ->findOneByAplId(['aplId' => $orderAplId]);
+        
+        if ($order){        
+//        var_dump($data); exit;
+            $vt = $this->entityManager->getRepository(Vt::class)
+                    ->findOneByAplId($data['id']);
+
+            if ($vt){
+                $this->vtManager->updateVt($vt, $dataVt);
+                $this->vtManager->removeVtGood($vt); 
+            } else {        
+                $vt = $this->vtManager->addVt($order, $dataVt);
+            }    
+
+            if ($vt && isset($data['tp'])){
+                $rowNo = 1;
+                foreach ($data['tp'] as $tp){
+                    if (isset($tp['good'])){
+                        $good = $this->findGood($tp['good']);   
+                    }    
+                    if (empty($good)){
+        //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                    } else {
+
+                        $this->vtManager->addVtGood($vt->getId(), [
+                            'status' => $vt->getStatus(),
+                            'statusDoc' => $vt->getStatusDoc(),
+                            'quantity' => $tp['sort'],                    
+                            'amount' => $tp['bag_total'],
+                            'good_id' => $good->getId(),
+                            'comment' => '',
+                            'info' => '',
+                        ], $rowNo);
+                        $rowNo++;
+                    }    
+                }
+            }  
+
+            if ($vt){
+                $this->vtManager->updateVtAmount($vt);
                 return true;            
             }
         }    
@@ -959,6 +1057,11 @@ class AplDocService {
                         break;                        
                     case 'Resup': 
                         if ($this->unloadVtp($result)){ 
+                            $this->unloadedDoc($result['id']);
+                        }    
+                        break;                        
+                    case 'Returns': 
+                        if ($this->unloadVt($result)){ 
                             $this->unloadedDoc($result['id']);
                         }    
                         break;                        

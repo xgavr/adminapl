@@ -10,6 +10,7 @@ use Stock\Entity\VtGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
+use Stock\Entity\Retail;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -48,23 +49,57 @@ class VtManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($vt->getLogKey());
         
+        $contract = $this->findDefaultContract($vt->getOrder()->getOffice(), 
+                $vt->getOrder()->getLegal(), $vt->getOrder()->getDateOper(), 
+                $vt->getOrder()->getAplId());
+        
         $data = [
             'doc_key' => $vt->getLogKey(),
             'date_oper' => $vt->getDocDate(),
             'status' => $vt->getStatus(),
             'revise' => Mutual::REVISE_NOT,
-            'amount' => $vt->getAmount(),
-            'legal_id' => $vt->getPtu()->getLegal()->getId(),
-            'contract_id' => $vt->getOrder()->getContract()->getId(),
-            'office_id' => $vt->getOrder()->getOffice()->getId(),
-            'company_id' => $vt->getOrder()->getContract()->getCompany()->getId(),
+            'amount' => -$vt->getTotal(),
+            'legal_id' => $vt->getOrder()->getLegal()->getId(),
+            'contract_id' => $contract->getId(),
+            'office_id' => $vt->getOffice()->getId(),
+            'company_id' => $vt->getCompany()->getId(),
         ];
 
         $this->entityManager->getRepository(Mutual::class)
                 ->insertMutual($data);
+        
+        return;
          
         return;
     }    
+    
+    /**
+     * Обновить взаиморасчеты возврата розничного заказа
+     * 
+     * @param Vt $vt
+     */
+    public function updateVtRetails($vt)
+    {
+        $this->entityManager->getRepository(Retail::class)
+                ->removeOrderRetails($vt->getLogKey());        
+        
+        $data = [
+            'doc_key' => $vt->getLogKey(),
+            'date_oper' => $vt->getDocDate(),
+            'status' => $vt->getStatus(),
+            'revise' => Retail::REVISE_NOT,
+            'amount' => -$vt->getTotal(),
+            'contact_id' => $vt->getOrder()->getContact()->getId(),
+            'office_id' => $vt->getOffice()->getId(),
+            'company_id' => $vt->getCompany()->getId(),
+        ];
+
+        $this->entityManager->getRepository(Retail::class)
+                ->insertRetail($data);
+        
+        return;
+    }    
+    
     
     /**
      * Обновить движения документа
@@ -82,15 +117,15 @@ class VtManager
         foreach ($vtGoods as $vtGood){
             $data = [
                 'doc_key' => $vt->getLogKey(),
-                'doc_row_key' => $vtGood->getDocRowKey(),
+                'doc_row_key' => $vtGood->getRowKey(),
                 'doc_row_no' => $vtGood->getRowNo(),
                 'date_oper' => $vt->getDocDate(),
                 'status' => $vt->getStatus(),
-                'quantity' => $vtGood->getQuantity(),
+                'quantity' => $vtGood->getNum(),
                 'amount' => $vtGood->getAmount(),
                 'good_id' => $vtGood->getGood()->getId(),
-                'office_id' => $vt->getPtu()->getOffice()->getId(),
-                'company_id' => $vt->getPtu()->getContract()->getCompany()->getId(),
+                'office_id' => $vt->getOffice()->getId(),
+                'company_id' => $vt->getCompany()->getId(),
             ];
 
             $this->entityManager->getRepository(Movement::class)
