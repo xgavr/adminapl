@@ -37,8 +37,8 @@ class VtRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('sum(vt.amount) as total')
-                ->from(VtGood::class, 'vt')
+        $queryBuilder->select('sum(vg.amount) as total')
+                ->from(VtGood::class, 'vg')
                 ->where('vg.vt = ?1')
                 ->setParameter('1', $vt->getId())
                 ->setMaxResults(1)
