@@ -577,6 +577,8 @@ class AplDocService {
             $docDate = $data['created'];
         }
         
+        $office = $this->officeFromAplId($data['parent']);
+        
         $dataVt = [
             'apl_id' => $data['id'],
             'doc_date' => $docDate,
@@ -589,7 +591,7 @@ class AplDocService {
         $order = $this->entityManager->getRepository(Order::class)
                 ->findOneByAplId(['aplId' => $orderAplId]);
         
-        if ($order){        
+        if ($order && $office){        
 //        var_dump($data); exit;
             $vt = $this->entityManager->getRepository(Vt::class)
                     ->findOneByAplId($data['id']);
@@ -598,7 +600,7 @@ class AplDocService {
                 $this->vtManager->updateVt($vt, $dataVt);
                 $this->vtManager->removeVtGood($vt); 
             } else {        
-                $vt = $this->vtManager->addVt($order, $dataVt);
+                $vt = $this->vtManager->addVt($office, $order, $dataVt);
             }    
 
             if ($vt && isset($data['tp'])){

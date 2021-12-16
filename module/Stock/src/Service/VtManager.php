@@ -11,6 +11,7 @@ use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
 use Stock\Entity\Retail;
+use Company\Entity\Office;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -173,13 +174,15 @@ class VtManager
 
     /**
      * Adds a new vt.
+     * @param Office $office
      * @param Order $order
      * @param array $data
      * @return integer
      */
-    public function addVt($order, $data)
+    public function addVt($office, $order, $data)
     {
-        $vt = new Vt();        
+        $vt = new Vt();     
+        $vt->setOffice($office);
         $vt->setOrder($order);
         $vt->setAplId($data['apl_id']);
         //$vt->setDocNo($data['doc_no']);

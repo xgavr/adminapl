@@ -105,6 +105,12 @@ class Vt {
     private $order;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="vt") 
+     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     */
+    private $office;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Stock\Entity\VtGood", mappedBy="vt") 
      * @ORM\JoinColumn(name="id", referencedColumnName="vt_id")
      */
@@ -389,6 +395,25 @@ class Vt {
     {
         $this->order = $order;
         $order->addVt($this);
+    }    
+
+    /**
+     * Returns the office.
+     * @return Office     
+     */
+    public function getOffice() 
+    {
+        return $this->office;
+    }
+    
+    /**
+     * Sets  office.
+     * @param Office $office     
+     */
+    public function setOffice($office) 
+    {
+        $this->office = $office;
+//        $office->addVt($this);
     }    
 
     /**
