@@ -65,7 +65,7 @@ final class Version20211216062415 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('vt');
-        $table->addColumn('office_id', 'integer', ['notnull'=>true]);
+        //$table->addColumn('office_id', 'integer', ['notnull'=>true]);
         $table->addForeignKeyConstraint('office', ['office_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'office_id_vt_office_id_fk');
     }
