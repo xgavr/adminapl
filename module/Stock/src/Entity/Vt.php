@@ -100,7 +100,7 @@ class Vt {
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="vt") 
-     * @ORM\JoinColumn(name="vt_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
     private $order;
     
