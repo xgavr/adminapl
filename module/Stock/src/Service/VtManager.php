@@ -125,7 +125,7 @@ class VtManager
         foreach ($vtGoods as $vtGood){
             $data = [
                 'doc_key' => $vt->getLogKey(),
-                'doc_row_key' => $vtGood->getRowKey(),
+                'doc_row_key' => $vtGood->getDocRowKey(),
                 'doc_row_no' => $vtGood->getRowNo(),
                 'date_oper' => $vt->getDocDate(),
                 'status' => $vt->getStatus(),
@@ -222,7 +222,7 @@ class VtManager
     public function updateVt($vt, $data)            
     {
         $vt->setAplId($data['apl_id']);
-        $vt->setDocNo($data['doc_no']);
+        //$vt->setDocNo($data['doc_no']);
         $vt->setDocDate($data['doc_date']);
         $vt->setComment($data['comment']);
         $vt->setStatusEx($data['status_ex']);
