@@ -70,7 +70,7 @@ class VtManager
             'legal_id' => $vt->getOrder()->getLegal()->getId(),
             'contract_id' => $contract->getId(),
             'office_id' => $vt->getOffice()->getId(),
-            'company_id' => $vt->getCompany()->getId(),
+            'company_id' => $vt->getOffice()->getCompany()->getId(),
         ];
 
         $this->entityManager->getRepository(Mutual::class)
@@ -99,7 +99,7 @@ class VtManager
             'amount' => -$vt->getAmount(),
             'contact_id' => $vt->getOrder()->getContact()->getId(),
             'office_id' => $vt->getOffice()->getId(),
-            'company_id' => $vt->getCompany()->getId(),
+            'company_id' => $vt->getOrder()->getCompany()->getId(),
         ];
 
         $this->entityManager->getRepository(Retail::class)
@@ -133,7 +133,7 @@ class VtManager
                 'amount' => $vtGood->getAmount(),
                 'good_id' => $vtGood->getGood()->getId(),
                 'office_id' => $vt->getOffice()->getId(),
-                'company_id' => $vt->getCompany()->getId(),
+                'company_id' => $vt->getOrder()->getCompany()->getId(),
             ];
 
             $this->entityManager->getRepository(Movement::class)
