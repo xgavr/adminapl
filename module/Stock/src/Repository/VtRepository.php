@@ -80,7 +80,7 @@ class VtRepository extends EntityRepository{
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('v.'.$params['sort'], $params['order']);
             }            
-            if (!empty($params['officeId'])){
+            if (is_numeric($params['officeId'])){
                 $queryBuilder->andWhere('v.office = ?2')
                         ->setParameter('2', $params['officeId']);
             }
@@ -119,7 +119,7 @@ class VtRepository extends EntityRepository{
                 ;
         
         if (is_array($params)){
-            if (!empty($params['officeId'])){
+            if (is_numeric($params['officeId'])){
                 $queryBuilder->andWhere('v.office = ?1')
                         ->setParameter('1', $params['officeId']);
             }
@@ -162,7 +162,7 @@ class VtRepository extends EntityRepository{
                     ->setParameter('1', $params['orderId']);
                         ;
             }            
-            if (!empty($params['officeId'])){
+            if (is_numeric($params['officeId'])){
                 $queryBuilder->andWhere('v.office = ?2')
                         ->setParameter('2', $params['officeId']);
             }
