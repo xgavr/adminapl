@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace ApiMarketPlace\Entity;
+namespace Cash\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -140,16 +140,6 @@ class Cash {
     public function setComission($comission) 
     {
         $this->commission = $comission;
-    }     
-
-    public function getApiToken() 
-    {
-        return $this->apiToken;
-    }
-
-    public function setApiToken($apiToken) 
-    {
-        $this->apiToken = $apiToken;
     }     
 
     /**
@@ -401,12 +391,12 @@ class Cash {
         $result = [
             'status' => $this->getStatus(),
             'name' => $this->getName(),
-            'comment' => $this->getComment(),
-            'apiToken' => $this->getApiToken(),
-            'login' => $this->getLogin(),
-            'merchantId' => $this->getMerchantId(),
-            'password' => $this->getPassword(),
-            'site' => $this->getSite(),
+            'aplId' => $this->getAplId(),
+            'checkStatus' => $this->getCheckStatus(),
+            'commission' => $this->getCommission(),
+            'orderStatus' => $this->getOrderStatus(),
+            'restStatus' => $this->getRestStatus(),
+            'tillStatus' => $this->getTillStatus(),
         ];
         
         return $result;
