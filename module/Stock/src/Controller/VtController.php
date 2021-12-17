@@ -175,8 +175,7 @@ class VtController extends AbstractActionController
         }    
         if ($vt && $order){
             $office = $vt->getOffice();
-            $contract = $order->getContract();
-            $company = $contract->getCompany();
+            $company = $order->getCompany();
             $legal = $order->getLegal();            
         }    
         
