@@ -1,27 +1,7 @@
 <?php
 $form = $this->form;
 
-$form->get('legal_id')->setAttributes([
-    'class'=>'form-control', 
-    'disabled' => 'true',
-    ]);
-
 $form->get('office_id')->setAttributes([
-    'class'=>'form-control', 
-    'disabled' => 'true',
-    ]);
-
-$form->get('company')->setAttributes([
-    'class'=>'form-control', 
-    'disabled' => 'true',
-    ]);
-
-$form->get('client')->setAttributes([
-    'class'=>'form-control', 
-    'disabled' => 'true',
-    ]);
-
-$form->get('contract_id')->setAttributes([
     'class'=>'form-control', 
     'disabled' => 'true',
     ]);
@@ -86,13 +66,6 @@ if ($vt){
                     </div>    
                     <div class="col-xs-2">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('client')); ?>
-                            <?= $this->formElement($form->get('client')); ?>
-                            <?= $this->formElementErrors($form->get('client')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
                             <?= $this->formLabel($form->get('status')); ?>
                             <?= $this->formElement($form->get('status')); ?>
                             <?= $this->formElementErrors($form->get('status')); ?>                  
@@ -113,27 +86,6 @@ if ($vt){
                             <?= $this->formElementErrors($form->get('doc_date')); ?>                  
                         </div>
                     </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('company')); ?>
-                            <?= $this->formElement($form->get('company')); ?>
-                            <?= $this->formElementErrors($form->get('company')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('legal_id')); ?>
-                            <?= $this->formElement($form->get('legal_id')); ?>
-                            <?= $this->formElementErrors($form->get('legal_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('contract_id')); ?>
-                            <?= $this->formElement($form->get('contract_id')); ?>
-                            <?= $this->formElementErrors($form->get('contract_id')); ?>                  
-                        </div>
-                    </div>    
                     <div class="col-xs-4 text-right">
                     </div>    
                 </div>        
@@ -142,7 +94,7 @@ if ($vt){
                         <div id="vtgoodtoolbar">
                             <div class="form-inline" role="form">
                                 <button type="button" class="btn btn-default" onclick="vtFill()">
-                                    <span aria-hidden="true">Заполнить из ПТУ</span>
+                                    <span aria-hidden="true">Заполнить из заказа</span>
                                 </button>
                             </div>
                         </div>

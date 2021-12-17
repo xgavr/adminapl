@@ -53,7 +53,7 @@ class VtForm extends Form implements ObjectManagerAwareInterface
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager, $office, $client = null, $company = null, $legal = null)
+    public function __construct($entityManager, $office)
     {
         // Определяем имя формы.
         parent::__construct('vt-form');
@@ -61,9 +61,6 @@ class VtForm extends Form implements ObjectManagerAwareInterface
         $this->entityManager = $entityManager;
         
         $this->office = $office;        
-        $this->client = $client;
-        $this->company = $company;        
-        $this->legal = $legal;
         
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -92,107 +89,6 @@ class VtForm extends Form implements ObjectManagerAwareInterface
                 'property'       => 'name',
                 'display_empty_item' => true,
                 'empty_item_label'   => '--выберете офис--',
-            ],
-        ]);
-
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'company',
-            'attributes' => [                
-                'id' => 'company',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
-            ],
-            'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Company\Entity\Legal',
-                'label' => 'Компания',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете компанию--',                 
-                'is_method' => true,
-                'find_method'    => [
-                   'name'   => 'formOfficeLegals',
-                   'params' => [
-                       'params' => ['officeId' => $this->office->getId()],
-                   ],
-                ],                
-            ],
-        ]);
-
-        // Добавляем поле "supplier"
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'client',
-            'attributes' => [                
-                'id' => 'client',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
-            ],
-            'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Client',
-                'label' => 'Покупатель',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете покупателя--',                 
-            ],
-        ]);
-        
-        // Добавляем поле "legal"
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'legal_id',
-            'attributes' => [                
-                'id' => 'legal',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
-                'required' => 'required',
-            ],
-            'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Company\Entity\Legal',
-                'label' => 'Поставщик (юр. лицо)',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете покупателя--',  
-                'is_method' => true,
-                'find_method'    => [
-                   'name'   => 'formClientLegals',
-                   'params' => [
-                       'params' => ['clientId' => ($this->client) ? $this->client->getId():null],
-                   ],
-                ],                
-                
-            ],
-        ]);
-        
-        // Добавляем поле "contract"
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'contract_id',
-            'attributes' => [                
-                'id' => 'contract',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
-                'required' => 'required',
-                ],
-            'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Company\Entity\Contract',
-                'label' => 'Договор',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете договор--',    
-                'find_method'    => [
-                   'name'   => 'formOfficeLegalContracts',
-                   'params' => [
-                       'params' => [
-                           'companyId' => ($this->company) ? $this->company->getId():null,
-                           'legalId' => ($this->legal) ? $this->legal->getId():null,
-                        ],
-                   ],
-                ],                                
             ],
         ]);
 
@@ -279,74 +175,6 @@ class VtForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'office_id',
-                'required' => false,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'IsInt',
-                        'options' => [
-                            'min' => 0,
-                            'locale' => 'ru-Ru'
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'company',
-                'required' => false,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'IsInt',
-                        'options' => [
-                            'min' => 0,
-                            'locale' => 'ru-Ru'
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'client',
-                'required' => false,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'IsInt',
-                        'options' => [
-                            'min' => 0,
-                            'locale' => 'ru-Ru'
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'legal_id',
-                'required' => false,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'IsInt',
-                        'options' => [
-                            'min' => 0,
-                            'locale' => 'ru-Ru'
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'contract_id',
                 'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
