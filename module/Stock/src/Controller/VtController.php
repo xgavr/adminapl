@@ -197,7 +197,6 @@ class VtController extends AbstractActionController
                 $vtGood = $data['vtGood'];
                 unset($data['vtGood']);
                 $data['status_ex'] = Vt::STATUS_EX_NEW;
-                $data['contract'] = $contract;
                 $data['legal'] = $legal;
                 $data['office'] = $office;
                 $data['apl_id'] = 0;
@@ -222,8 +221,7 @@ class VtController extends AbstractActionController
             $data = [
                 'office_id' => $office->getId(),
                 'company' => $company->getId(),
-                'legal_id' => $legal->getId(),  
-                'contract_id' => $contract->getId(),  
+                'legal_id' => ($legal) ? $legal->getId():null,  
             ];
             if ($vt){
                 $data['doc_date'] = $vt->getDocDate();
