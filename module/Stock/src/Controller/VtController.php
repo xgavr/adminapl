@@ -222,7 +222,6 @@ class VtController extends AbstractActionController
             $data = [
                 'office_id' => $office->getId(),
                 'company' => $company->getId(),
-                'client' => $client->getId(),
                 'legal_id' => $legal->getId(),  
                 'contract_id' => $contract->getId(),  
             ];
