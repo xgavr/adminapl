@@ -29,9 +29,9 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 $form->prepare();
 
 $docName = 'Новый';
-$orderDocName = '№ '.$order->getDocNo().' от  '.date('d.m.Y', strtotime($order->getDocDate()));
+$orderDocName = '№ '.$order->getAplId().' от  '.date('d.m.Y', strtotime($order->getDateOper()));
 if ($vt){
-    $docName = '№ '.$vt->getDocNo().' от  '.date('d.m.Y', strtotime($vt->getDocDate()));
+    $docName = '№ '.$vt->getId().' от  '.date('d.m.Y', strtotime($vt->getDocDate()));
 }
 
 ?>
