@@ -173,9 +173,8 @@ class VtController extends AbstractActionController
                     ->find($vtId);
             $order = $vt->getOrder();
         }    
-        if ($order){
-            $client = $order->getClient();
-            $office = $order->getOffice();
+        if ($vt && $order){
+            $office = $vt->getOffice();
             $contract = $order->getContract();
             $company = $contract->getCompany();
             $legal = $order->getLegal();            
@@ -185,7 +184,7 @@ class VtController extends AbstractActionController
             $data = $this->params()->fromPost();
         }
                 
-        $form = new VtForm($this->entityManager, $office, $client, $company, $legal);
+        $form = new VtForm($this->entityManager, $office, $order, $company, $legal);
 
         if ($this->getRequest()->isPost()) {
             
