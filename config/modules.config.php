@@ -42,4 +42,5 @@ return [
     'Stock',
     'ApiMarketPlace',
     'ApiSupplier',
+    'Cash',
 ];

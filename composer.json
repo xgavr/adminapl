@@ -68,7 +68,8 @@
             "Bank\\": "module/Bank/src/",
             "Stock\\": "module/Stock/src/",
             "ApiMarketPlace\\": "module/ApiMarketPlace/src/",
-            "ApiSupplier\\": "module/ApiSupplier/src/"
+            "ApiSupplier\\": "module/ApiSupplier/src/",
+            "Cash\\": "module/Cash/src/"
         }
     },
     "autoload-dev": {
