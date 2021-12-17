@@ -81,12 +81,8 @@ class VtRepository extends EntityRepository{
                 $queryBuilder->orderBy('v.'.$params['sort'], $params['order']);
             }            
             if (!empty($params['officeId'])){
-                $office = $entityManager->getRepository(Office::class)
-                        ->findOneById($params['officeId']);
-                if ($office){
-                    $queryBuilder->andWhere('p.office = ?2')
-                            ->setParameter('2', $office->getId());
-                }
+                $queryBuilder->andWhere('v.office = ?2')
+                        ->setParameter('2', $params['officeId']);
             }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
@@ -120,17 +116,12 @@ class VtRepository extends EntityRepository{
 
         $queryBuilder->select('v')
             ->from(Vt::class, 'v')
-            ->join('v.order', 'p')
                 ;
         
         if (is_array($params)){
             if (!empty($params['officeId'])){
-                $office = $entityManager->getRepository(Office::class)
-                        ->findOneById($params['officeId']);
-                if ($office){
-                    $queryBuilder->andWhere('p.office = ?1')
-                            ->setParameter('1', $office->getId());
-                }
+                $queryBuilder->andWhere('v.office = ?1')
+                        ->setParameter('1', $params['officeId']);
             }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
@@ -163,7 +154,6 @@ class VtRepository extends EntityRepository{
 
         $queryBuilder->select('count(v.id) as countVt')
             ->from(Vt::class, 'v')
-            ->join('v.order', 'p')
                 ;
         
         if (is_array($params)){
@@ -173,12 +163,8 @@ class VtRepository extends EntityRepository{
                         ;
             }            
             if (!empty($params['officeId'])){
-                $office = $entityManager->getRepository(Office::class)
-                        ->findOneById($params['officeId']);
-                if ($office){
-                    $queryBuilder->andWhere('p.office = ?2')
-                            ->setParameter('2', $office->getId());
-                }
+                $queryBuilder->andWhere('v.office = ?2')
+                        ->setParameter('2', $params['officeId']);
             }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
