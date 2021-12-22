@@ -24,6 +24,7 @@ final class Version20211217143808 extends AbstractMigration
         $table->addColumn('rest_status', 'integer', ['notnull'=>true, 'default'=> Cash::REST_RETIRED]);
         $table->addColumn('till_status', 'integer', ['notnull'=>true, 'default'=> Cash::TILL_RETIRED]);
         $table->addColumn('order_status', 'integer', ['notnull'=>true, 'default'=> Cash::ORDER_RETIRED]);
+        $table->addColumn('check_status', 'integer', ['notnull'=>true, 'default'=> Cash::CHECK_IGNORE]);
         $table->addColumn('office_id', 'integer', ['notnull'=>true]);
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint('office', ['office_id'], ['id'], 

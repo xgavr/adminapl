@@ -27,14 +27,20 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
+            Controller\IndexController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '*'],
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
+            Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
+            Service\CashManager::class => Service\Factory\CashManagerFactory::class,
         ],
     ],    
     'view_manager' => [

@@ -160,10 +160,34 @@ class LegalRepository extends EntityRepository
             ->join('l.contacts', 'c')
             ->where('c.id = ?1')    
             ->setParameter('1', $contact->getId())    
-            ->orderBy('c.dateStart', 'DESC')    
+            ->orderBy('l.dateStart', 'DESC')    
                 ;
 
         return $queryBuilder->getQuery()->getResult();        
     }
+
+    /**
+     * Получить юрлицо контакта
+     * 
+     * @param Contact $contact
+     */
+    public function formContactLegal($contact)
+    {
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('l')
+            ->from(Legal::class, 'l')
+            ->join('l.contacts', 'c')
+            ->where('c.id = ?1')    
+            ->setParameter('1', $contact->getId())    
+            ->orderBy('l.dateStart', 'DESC')    
+            ->setMaxResults(1)    
+                ;
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();        
+    }
+    
     
 }

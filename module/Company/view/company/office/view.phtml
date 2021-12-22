@@ -270,6 +270,55 @@ $legalContact = $office->getLegalContact();
                 </table>
             </div>
         </div>
+        <div class="panel panel-default" id="section8">
+            <div class="panel-body">
+                <div class="pull-left">
+                    <div class="panel-title">Кассы</div>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-default cash-modal-show" type="button" modal-url="/cash/edit-cash?office=<?= $office->getId()?>">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> Добавить</span>
+                    </button>                
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+
+                   <tr>
+                        <th>ID</th>
+                        <th>Апл Id</th>
+                        <th>Наименование</th>
+                        <th>Остаток</th>
+                        <th>Статус</th>
+                        <th>Действие</th>        
+                    </tr>
+
+                    <?php foreach ($office->getCashes() as $cash): ?>
+
+                    <tr>
+                        <td><?= $this->escapeHtml($cash->getId()); ?></td>
+                        <td><?= $this->escapeHtml($cash->getAplId()); ?>
+                        </td>
+                        <td>
+                            <?= $this->escapeHtml($cash->getName()); ?>
+                        </td>
+                        <td></td>
+                        <td><?= $this->escapeHtml($cash->getStatusAsString()); ?> 
+                        </td>
+                        <td>
+                            <nobr>
+                                <button class="btn btn-default btn-xs cash-modal-show" type="button" modal-url="/cash/edit-cash/<?= $cash->getId()?>">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </button>                
+                            </nobr>
+                        </td>    
+                    </tr>
+
+                    <?php endforeach; ?>   
+
+                </table>
+            </div>
+        </div>    
     </div>
     <div class="col-sm-3" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
@@ -280,6 +329,7 @@ $legalContact = $office->getLegalContact();
             <li><a href="#section5">Адреса</a></li>
             <li><a href="#section6">Юридические лица</a></li>
             <li><a href="#section7">Варианты доставок</a></li>
+            <li><a href="#section7">Кассы</a></li>
         </ul>
     </div>
 </div>
@@ -292,21 +342,16 @@ $legalContact = $office->getLegalContact();
 </div>
 
 <script>
-//    $('#modal-dialog').on('show.bs.modal', function (e) {        
-//        var url = e.relatedTarget.value;
-//        if (url){
-//            $.ajax({
-//                type: 'GET',
-//                url: url
-//            })
-//                .done(function (data) {
-//                   $('#modal-content').html(data);
-//                })
-//                .fail(function () {
-//                    alert("Ошибка открытия формы.");
-//                }); 
-//        }
-//    })    
+    $(function () {
+        $(document).on('click', '.cash-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'cashModal',
+                url: url,
+                width: '1440px'
+            });
+        });          
+    });    
         
     $('.this-delete').on('click', function(e) {
         var url = e.currentTarget.value;

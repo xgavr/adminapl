@@ -77,8 +77,6 @@ class VtManager
                 ->insertMutual($data);
         
         return;
-         
-        return;
     }    
     
     /**

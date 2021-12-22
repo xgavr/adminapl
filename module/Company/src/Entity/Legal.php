@@ -396,7 +396,7 @@ class Legal {
     
     /*
      * Возвращает связанный contact.
-     * @return \Application\Entity\Contact
+     * @return array
      */
     
     public function getContacts() 

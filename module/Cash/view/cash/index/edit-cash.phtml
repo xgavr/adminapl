@@ -1,0 +1,171 @@
+<?php
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('commission')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('restStatus')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('tillStatus')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('orderStatus')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('checkStatus')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'cash-submit']);
+
+$form->prepare();
+
+?>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="otModalLabel">Настройка кассы</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('name')); ?>
+                        <?= $this->formElement($form->get('name')); ?>
+                        <?= $this->formElementErrors($form->get('name')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('aplId')); ?>
+                        <?= $this->formElement($form->get('aplId')); ?>
+                        <?= $this->formElementErrors($form->get('aplId')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('commission')); ?>
+                        <?= $this->formElement($form->get('commission')); ?>
+                        <?= $this->formElementErrors($form->get('commission')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?>
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('restStatus')); ?>
+                        <?= $this->formElement($form->get('restStatus')); ?>
+                        <?= $this->formElementErrors($form->get('restStatus')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('tillStatus')); ?>
+                        <?= $this->formElement($form->get('tillStatus')); ?>
+                        <?= $this->formElementErrors($form->get('tillStatus')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('orderStatus')); ?>
+                        <?= $this->formElement($form->get('orderStatus')); ?>
+                        <?= $this->formElementErrors($form->get('orderStatus')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('checkStatus')); ?>
+                        <?= $this->formElement($form->get('checkStatus')); ?>
+                        <?= $this->formElementErrors($form->get('checkStatus')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+        </div>    
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="cash-submit">Сохранить</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+            
+<script>         
+    $("#commission").on('blur', function(){
+        var value = $(this).val();
+       // $(this).val(value.replace(".",","));
+    });
+
+    function submitForm(){
+        var data = serializeForm('#cash-form');
+         $('#cash-submit').prop('disabled', true);
+        //console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: '/cash/edit-cash/<?= ($cash) ? $cash->getId():"" ?>?office=<?= $office->getId()?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#cashModal').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#cashModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    $( document ).ready(function() {
+        var forms = $('#cash-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('cash-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });            
+</script>

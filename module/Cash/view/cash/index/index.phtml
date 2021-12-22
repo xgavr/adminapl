@@ -1,0 +1,204 @@
+<?php
+    use Cash\Entity\CashDoc;
+
+    $this->headTitle('Касса');
+
+    $this->mainMenu()->setActiveItemId('company');
+
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Касса'=>$this->url('cash'),
+                ]);
+
+
+?>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <button class="btn btn-default cash-in-modal-show" type="button" modal-url="/cash/edit-cash-in">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>                
+                <button class="btn btn-default cash-out-modal-show" type="button" modal-url="/cash/edit-cash-out">
+                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                </button>                
+                <div class="form-group">
+                    <select id="officeSelect" style="width: 100px" class="form-control" name="officeId">
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="cashSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
+                        <?php foreach ($cashes as $cash):?>
+                            <option value="<?= $cash->getId()?>"><?= $cash->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <input name="dateOper" class="form-control refresh-table" type="date" value="<?= date('Y-m-d')?>">
+                </div>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/cash/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-sort-name="id"
+            data-sort-order="desc"            
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
+                     <th data-field="dateOper" data-sortable="false">Дата</th>
+                     <th data-field="cashDoc.id" data-sortable="false">Номер</th>
+                     <!--<th data-field="aplId" data-type="numeric"data-align="right">AplId</th>-->
+                     <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter">Операция</th>
+                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="inFormatter">Приход</th>
+                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="outFormatter">Расход</th>
+                     <th data-field='cashDoc.comment' data-sortable="false">Примечание</th>
+                     <!--<th data-field='status' data-sortable="false"></th>-->
+                     <th data-field="amount" data-formatter="activeFormatter"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table'),
+        ok = $('#ok');
+    
+    function officeChange(){
+        $.getJSON( '/cash/office-cashes/'+$('#officeSelect').val(), function( data ) {
+            $('#cashSelect').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#cashSelect').append('<option value="' + key + '">' + value.name + '</option>');
+            });            
+            refreshTable();
+        });    
+    }
+    
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+        $(document).on('click', '.cash-in-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'cashInModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        $(document).on('click', '.cash-out-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'cashOutModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        $(document).on('change', '.refresh-table', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#officeSelect', function (e) {
+            officeChange();
+        });
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        params.office = $('#officeSelect').val();
+        params.cash = $('#cashSelect').val();
+        return params;
+    }
+    
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function amountFormatter(value){
+        return Math.round(value*100)/100;
+    }
+    
+    function inFormatter(value){
+        if (value>0){
+            return Math.round(value*100)/100;
+        }
+        return;
+    }    
+    
+    function outFormatter(value){
+        if (value<0){
+            return -Math.round(value*100)/100;
+        }
+        return;
+    }    
+    
+    function kindFormatter(value){
+        var kinds = <?= CashDoc::getKindListAsJavascriptArray() ?>;
+        return kinds[value];
+    }    
+    
+    function activeFormatter(value, row){
+        var btn = '';
+        if (row.cashDoc.kind<10){
+            var url = '/cash/edit-cash-in/'+row.cashDoc.id;
+            btn = '<button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+            btn += '</button>';
+        }    
+        if (row.cashDoc.kind>10){
+            var url = '/cash/edit-cash-out/'+row.cashDoc.id;
+            btn = '<button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+            btn += '</button>';
+        }    
+        return btn;
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
+

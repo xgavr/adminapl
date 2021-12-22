@@ -1,0 +1,301 @@
+<?php
+use Cash\Entity\CashDoc;
+
+$form = $this->form;
+
+$form->get('dateOper')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('amount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('kind')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('cash')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('cashRefill')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('userRefill')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('order')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('vt')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('supplier')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('cost')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'cash-out-submit']);
+
+$form->prepare();
+
+?>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title">Расход</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('amount')); ?>
+                        <?= $this->formElement($form->get('amount')); ?>
+                        <?= $this->formElementErrors($form->get('amount')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('cash')); ?>
+                        <?= $this->formElement($form->get('cash')); ?>
+                        <?= $this->formElementErrors($form->get('cash')); ?>                  
+                    </div>
+                </div>
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('company')); ?>
+                        <?= $this->formElement($form->get('company')); ?>
+                        <?= $this->formElementErrors($form->get('company')); ?>                  
+                    </div>
+                </div>    
+            </div>
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('kind')); ?>
+                        <?= $this->formElement($form->get('kind')); ?>
+                        <?= $this->formElementErrors($form->get('kind')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('dateOper')); ?>
+                        <?= $this->formElement($form->get('dateOper')); ?>
+                        <?= $this->formElementErrors($form->get('dateOper')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?>
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row" id="refill">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('cashRefill')); ?>
+                        <?= $this->formElement($form->get('cashRefill')); ?>
+                        <?= $this->formElementErrors($form->get('cashRefill')); ?>                  
+                    </div>
+                </div>    
+            </div>
+            <div class="row" id="userReturn">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('userRefill')); ?>
+                        <?= $this->formElement($form->get('userRefill')); ?>
+                        <?= $this->formElementErrors($form->get('userRefill')); ?>                  
+                    </div>
+                </div>    
+            </div>
+            <div class="row" id="payment">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('order')); ?>
+                        <?= $this->formElement($form->get('order')); ?>
+                        <?= $this->formElementErrors($form->get('order')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('vt')); ?>
+                        <?= $this->formElement($form->get('vt')); ?>
+                        <?= $this->formElementErrors($form->get('vt')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row" id="supplierReturn">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('supplier')); ?>
+                        <?= $this->formElement($form->get('supplier')); ?>
+                        <?= $this->formElementErrors($form->get('supplier')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row" id="costGroup">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('cost')); ?>
+                        <?= $this->formElement($form->get('cost')); ?>
+                        <?= $this->formElementErrors($form->get('cost')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row">    
+                <div class="col-xs-12">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('comment')); ?>
+                        <?= $this->formElement($form->get('comment')); ?>
+                        <?= $this->formElementErrors($form->get('comment')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+        </div>    
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="cash-out-submit">Сохранить</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+            
+<script>         
+    function submitForm(){
+        var data = serializeForm('#cash-out-form');
+         $('#cash-out-submit').prop('disabled', true);
+        //console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: '/cash/edit-cash-out/<?= ($cashDoc) ? $cashDoc->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#cashOutModal').modal('hide');
+                    //window.location.reload();
+                    $('#table').bootstrapTable('refresh');
+                } else {
+                    $('#cashOutModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    function cashChange(){
+        $.getJSON( '/cash/legals/'+$('#cash').val(), function( data ) {
+            $('#company').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+    
+    function showKindOutGroup()
+    {
+        $('#costGroup').hide();
+        $('#cost').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_OUT_COST?>){
+            $('#costGroup').show();
+            $('#cost').attr('required', true);
+        }
+        
+        $('#userReturn').hide();
+        $('#userRefill').attr('required', false);
+        if ($.inArray($("#kind").val(), ['<?= CashDoc::KIND_OUT_COURIER?>', '<?= CashDoc::KIND_OUT_SALARY?>', '<?= CashDoc::KIND_OUT_USER?>']) != -1){ 
+            $('#userReturn').show();
+            $('#userRefill').attr('required', true);
+        }
+        
+        $('#refill').hide();
+        $('#cashRefill').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_OUT_REFILL?>){
+            $('#refill').show();
+            $('#cashRefill').attr('required', true);
+        }
+        
+        $('#payment').hide();
+        $('#order').attr('required', false);
+        $('#vt').attr('required', false);
+        $('#legal').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_OUT_RETURN_CLIENT?>){
+            $('#payment').show();
+            $('#order').attr('required', true);
+            //$('#legal').attr('required', true);
+        }
+
+        $('#supplierReturn').hide();
+        $('#supplier').attr('required', false);
+        $('#legal').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_OUT_SUPPLIER?>){
+            $('#supplierReturn').show();
+            $('#supplier').attr('required', true);
+//            $('#legal').attr('required', true);
+        }
+    }
+    
+    
+    $( document ).ready(function() {
+        
+        showKindOutGroup();
+        //cashChange();
+
+        $('#kind').on('change', function(){
+            showKindGroup();
+        });
+        $('#cash').on('change', function(){
+            cashChange()
+        });
+        
+        
+        var forms = $('#cash-out-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('cash-out-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });            
+</script>

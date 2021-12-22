@@ -27,6 +27,7 @@ use Application\Entity\Order;
 use Application\Entity\Bid;
 use Stock\Entity\Vt;
 use Stock\Entity\VtGood;
+use Cash\Entity\CashDoc;
 
 /**
  * Description of LogManager
@@ -352,4 +353,31 @@ class LogManager {
         
         return;
     }               
+    
+    /**
+     * Добавить запись в лог cash
+     * @param CashDoc $cashDoc
+     * @param integer $status 
+     */
+    public function infoCash($cashDoc, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $cashLog = $cashDoc->toLog();
+            $data = [
+                'log_key' => $cashDoc->getLogKey(),
+                'message' => Json::encode($cashLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }                   
 }

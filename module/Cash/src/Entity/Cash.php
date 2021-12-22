@@ -33,8 +33,8 @@ class Cash {
     const ORDER_RETIRED      = 2; // не доступно.
     
     const CHECK_PRINT       = 1; // чек печатать.
-    const CHECK_NO_PRINT    = 1; // не печатать.
-    const CHECK_IGNORE      = 2; // игнорировать.
+    const CHECK_NO_PRINT    = 2; // не печатать.
+    const CHECK_IGNORE      = 3; // игнорировать.
     
     /**
      * @ORM\Id
@@ -219,8 +219,8 @@ class Cash {
     public static function getRestStatusList() 
     {
         return [
-            self::REST_ACTIVE => 'Считать остаток',
-            self::REST_RETIRED => 'Не считать остаток'
+            self::REST_ACTIVE => 'Считать',
+            self::REST_RETIRED => 'Не считать'
         ];
     }    
     
@@ -262,8 +262,8 @@ class Cash {
     public static function getTillStatusList() 
     {
         return [
-            self::TILL_ACTIVE => 'Доступно в кассе',
-            self::TILL_RETIRED => 'Не доступно в кассе'
+            self::TILL_ACTIVE => 'Доступно',
+            self::TILL_RETIRED => 'Не доступно'
         ];
     }    
     
@@ -305,8 +305,8 @@ class Cash {
     public static function getOrderStatusList() 
     {
         return [
-            self::ORDER_ACTIVE => 'Доступно в заказе',
-            self::ORDER_RETIRED => 'Не доступно в заказе'
+            self::ORDER_ACTIVE => 'Доступно',
+            self::ORDER_RETIRED => 'Не доступно'
         ];
     }    
     
@@ -322,6 +322,15 @@ class Cash {
         
         return 'Unknown';
     }    
+    
+    /**
+     * Sets order status.
+     * @param int $orderStatus     
+     */
+    public function setOrderStatus($orderStatus) 
+    {
+        $this->orderStatus = $orderStatus;
+    }   
     
     /**
      * Returns check status.
