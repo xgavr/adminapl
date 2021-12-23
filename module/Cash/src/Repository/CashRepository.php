@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Cash\Entity\CashDoc;
 use Cash\Entity\Cash;
 use Cash\Entity\CashTransaction;
+use Cash\Entity\UserTransaction;
 
 /**
  * Description of CashRepository
@@ -32,9 +33,13 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ct, cd, c')
+        $queryBuilder->select('ct, cd, c, cr, ur, cost, l')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')
+            ->leftJoin('cd.cashRefill', 'cr')    
+            ->leftJoin('cd.userRefill', 'ur')    
+            ->leftJoin('cd.cost', 'cost')    
+            ->leftJoin('cd.legal', 'l')
             ->join('cd.cash', 'c')
             ->where('ct.dateOper = ?1')
             ->setParameter('1', $dateOper)    
@@ -46,6 +51,11 @@ class CashRepository extends EntityRepository
             if (isset($params['cashId'])){
                 $queryBuilder->andWhere('ct.cash = ?2')
                     ->setParameter('2', $params['cashId'])
+                        ;
+            }            
+            if (is_numeric($params['kind'])){
+                $queryBuilder->andWhere('cd.kind = ?3')
+                    ->setParameter('3', $params['kind'])
                         ;
             }            
             if (isset($params['sort'])){
@@ -79,7 +89,7 @@ class CashRepository extends EntityRepository
         if (is_array($params)){
             if (isset($params['cashId'])){
                 $queryBuilder->andWhere('ct.cash = ?2')
-                    ->setParameter('2', $params['cashId']);
+                    ->setParameter('2', $params['cashId'])
                         ;
             }            
         }
@@ -87,5 +97,131 @@ class CashRepository extends EntityRepository
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
 
         return $result['countCd'];
-    }        
+    }    
+
+    /**
+     * Остаток в кассе
+     * @param int $cashId
+     * @param date $dateEnd
+     */
+    public function cashBalance($cashId, $dateEnd)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('sum(ct.amount) as balance')
+            ->from(CashTransaction::class, 'ct')
+            ->where('ct.cash = ?1')
+            ->setParameter('1', $cashId)    
+            ->andWhere('ct.dateOper <= ?2')
+            ->setParameter('2', $dateEnd)    
+                ;
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['balance'];        
+    }
+    /**
+     * Запрос по кассовым документам
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findAllUserDoc($dateOper, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('ut, cd, c, cr, ur, cost, l')
+            ->from(UserTransaction::class, 'ut')
+            ->join('ut.cashDoc', 'cd')
+            ->leftJoin('cd.cashRefill', 'cr')    
+            ->leftJoin('cd.userRefill', 'ur')    
+            ->leftJoin('cd.cost', 'cost')    
+            ->leftJoin('cd.legal', 'l')
+            ->join('cd.cash', 'c')
+            ->where('ut.dateOper = ?1')
+            ->setParameter('1', $dateOper)    
+            ->orderBy('cd.dateOper', 'DESC')                 
+            ->addOrderBy('cd.id', 'DESC')                 
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['cashId'])){
+                $queryBuilder->andWhere('ut.cash = ?2')
+                    ->setParameter('2', $params['cashId'])
+                        ;
+            }            
+            if (is_numeric($params['kind'])){
+                $queryBuilder->andWhere('cd.kind = ?3')
+                    ->setParameter('3', $params['kind'])
+                        ;
+            }            
+            if (isset($params['sort'])){
+                $queryBuilder->addOrderBy('ut.'.$params['sort'], $params['order']);
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }      
+    
+    /**
+     * Запрос по количеству записей
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findAllUserDocTotal($dateOper, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(ut.id) as countCd')
+            ->from(UserTransaction::class, 'ut')
+            ->join('ut.cashDoc', 'cd')
+            ->join('cd.cash', 'c')
+            ->where('ut.dateOper = ?1')
+            ->setParameter('1', $dateOper)    
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['cashId'])){
+                $queryBuilder->andWhere('ut.cash = ?2')
+                    ->setParameter('2', $params['cashId'])
+                        ;
+            }            
+        }
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['countCd'];
+    }    
+
+    /**
+     * Остаток в подотчете
+     * @param int $userId
+     * @param date $dateEnd
+     */
+    public function userBalance($userId, $dateEnd)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('sum(ct.amount) as balance')
+            ->from(UserTransaction::class, 'ut')
+            ->where('ut.cash = ?1')
+            ->setParameter('1', $userId)    
+            ->andWhere('ut.dateOper <= ?2')
+            ->setParameter('2', $dateEnd)    
+                ;
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['balance'];        
+    }
+    
 }

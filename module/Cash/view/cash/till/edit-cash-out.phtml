@@ -39,6 +39,10 @@ $form->get('order')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('vt')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -47,7 +51,11 @@ $form->get('supplier')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'cash-submit']);
+$form->get('cost')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'cash-out-submit']);
 
 $form->prepare();
 
@@ -55,7 +63,7 @@ $form->prepare();
 <?= $this->form()->openTag($form); ?>
 
 <div class="modal-header">
-    <h5 class="modal-title" id="otModalLabel">Поступление</h5>
+    <h5 class="modal-title">Расход</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -136,6 +144,13 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('order')); ?>                  
                     </div>
                 </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('vt')); ?>
+                        <?= $this->formElement($form->get('vt')); ?>
+                        <?= $this->formElementErrors($form->get('vt')); ?>                  
+                    </div>
+                </div>    
             </div>    
             <div class="row" id="supplierReturn">
                 <div class="col-xs-3">                        
@@ -143,6 +158,15 @@ $form->prepare();
                         <?= $this->formLabel($form->get('supplier')); ?>
                         <?= $this->formElement($form->get('supplier')); ?>
                         <?= $this->formElementErrors($form->get('supplier')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row" id="costGroup">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('cost')); ?>
+                        <?= $this->formElement($form->get('cost')); ?>
+                        <?= $this->formElementErrors($form->get('cost')); ?>                  
                     </div>
                 </div>    
             </div>    
@@ -161,27 +185,27 @@ $form->prepare();
 
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="submit" class="btn btn-primary" id="cash-in-submit">Сохранить</button>
+    <button type="submit" class="btn btn-primary" id="cash-out-submit">Сохранить</button>
 </div>
 <?= $this->form()->closeTag(); ?>
             
 <script>         
     function submitForm(){
-        var data = serializeForm('#cash-in-form');
-         $('#cash-in-submit').prop('disabled', true);
+        var data = serializeForm('#cash-out-form');
+         $('#cash-out-submit').prop('disabled', true);
         //console.log(data);
         $.ajax({
             type: 'POST',
-            url: '/cash/edit-cash-in/<?= ($cashDoc) ? $cashDoc->getId():"" ?>',
+            url: '/till/edit-cash-out/<?= ($cashDoc) ? $cashDoc->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#cashInModal').modal('hide');
+                    $('#cashOutModal').modal('hide');
                     //window.location.reload();
                     $('#table').bootstrapTable('refresh');
                 } else {
-                    $('#cashInModal .modal-content').html(data);                    
+                    $('#cashOutModal .modal-content').html(data);                    
                 }    
             })
             .fail(function () {
@@ -191,7 +215,7 @@ $form->prepare();
     };
     
     function cashChange(){
-        $.getJSON( '/cash/legals/'+$('#cash').val(), function( data ) {
+        $.getJSON( '/till/legals/'+$('#cash').val(), function( data ) {
             $('#company').empty();
             $.each( data.rows, function( key, value ) {
                 $('#company').append('<option value="' + key + '">' + value.name + '</option>');
@@ -199,26 +223,34 @@ $form->prepare();
         });    
     }
     
-    function showKindGroup()
+    function showKindOutGroup()
     {
-        $('#refill').hide();
-        $('#cashRefill').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_IN_REFILL?>){
-            $('#refill').show();
-            $('#cashRefill').attr('required', true);
+        $('#costGroup').hide();
+        $('#cost').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_OUT_COST?>){
+            $('#costGroup').show();
+            $('#cost').attr('required', true);
         }
         
         $('#userReturn').hide();
         $('#userRefill').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_IN_RETURN_USER?>){
+        if ($.inArray($("#kind").val(), ['<?= CashDoc::KIND_OUT_COURIER?>', '<?= CashDoc::KIND_OUT_SALARY?>', '<?= CashDoc::KIND_OUT_USER?>']) != -1){ 
             $('#userReturn').show();
             $('#userRefill').attr('required', true);
         }
-
+        
+        $('#refill').hide();
+        $('#cashRefill').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_OUT_REFILL?>){
+            $('#refill').show();
+            $('#cashRefill').attr('required', true);
+        }
+        
         $('#payment').hide();
         $('#order').attr('required', false);
+        $('#vt').attr('required', false);
         $('#legal').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_IN_PAYMENT_CLIENT?>){
+        if ($("#kind").val() == <?= CashDoc::KIND_OUT_RETURN_CLIENT?>){
             $('#payment').show();
             $('#order').attr('required', true);
             //$('#legal').attr('required', true);
@@ -227,28 +259,28 @@ $form->prepare();
         $('#supplierReturn').hide();
         $('#supplier').attr('required', false);
         $('#legal').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_IN_RETURN_SUPPLIER?>){
+        if ($("#kind").val() == <?= CashDoc::KIND_OUT_SUPPLIER?>){
             $('#supplierReturn').show();
             $('#supplier').attr('required', true);
-            $('#legal').attr('required', true);
+//            $('#legal').attr('required', true);
         }
     }
     
     
     $( document ).ready(function() {
         
-        showKindGroup();
+        showKindOutGroup();
         //cashChange();
 
         $('#kind').on('change', function(){
-            showKindGroup();
+            showKindOutGroup();
         });
         $('#cash').on('change', function(){
             cashChange()
         });
         
         
-        var forms = $('#cash-in-form');
+        var forms = $('#cash-out-form');
         
         forms.submit(function() {
             submitForm();
@@ -256,7 +288,7 @@ $form->prepare();
         });
         // Loop over them and prevent submission
         var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('cash-in-submit', function(event) {
+            form.addEventListener('cash-out-submit', function(event) {
                 if (form.checkValidity() === false) {
                     event.preventDefault();
                     event.stopPropagation();

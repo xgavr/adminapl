@@ -494,4 +494,55 @@ class CashManager {
         return;
     }
         
+    /**
+     * Подготовка данных для формы
+     * @param CashForm $form
+     */
+    public function cashFormOptions($form)
+    {
+        if ($form->has('cost')){
+            $costs = $this->entityManager->getRepository(Cost::class)
+                    ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+            $costList = ['--не выбран--'];
+            foreach ($costs as $cost) {
+                $costList[$cost->getId()] = $cost->getName();
+            }
+            $form->get('cost')->setValueOptions($costList);
+        }    
+
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+        $supplierList = ['--не выбран--'];
+        foreach ($suppliers as $supplier) {
+            $supplierList[$supplier->getId()] = $supplier->getName();
+        }
+        $form->get('supplier')->setValueOptions($supplierList);
+        
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy(['status' => User::STATUS_ACTIVE], ['fullName' => 'ASC']);
+        $userList = ['--не выбран--'];
+        foreach ($users as $user) {
+            $userList[$user->getId()] = $user->getFullName();
+        }
+        $form->get('userRefill')->setValueOptions($userList);
+
+        $cashes = $this->entityManager->getRepository(Cash::class)
+                ->findBy(['status' => Cash::STATUS_ACTIVE], ['name' => 'ASC']);
+        foreach ($cashes as $cash) {
+            $cashList[$cash->getId()] = $cash->getName();
+        }
+        $form->get('cash')->setValueOptions($cashList);
+        $form->get('cashRefill')->setValueOptions($cashList);
+        
+        $officeId = 1;
+        if ($cashDoc){
+            $officeId = $cashDoc->getCash()->getOffice()->getId();
+        }
+        $legals = $this->entityManager->getRepository(Legal::class)
+                ->formOfficeLegals(['officeId' => $officeId]);        
+        foreach ($legals as $legal){
+            $companyList[$legal->getId()] = $legal->getName();
+        }            
+        $form->get('company')->setValueOptions($companyList);
+    }    
 }

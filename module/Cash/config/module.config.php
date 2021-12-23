@@ -23,6 +23,20 @@ return [
                     ],
                 ],
             ],
+            'till' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/till[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\TillController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -31,11 +45,16 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '*'],
             ],
+            Controller\TillController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '*'],
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\TillController::class => Controller\Factory\TillControllerFactory::class,
         ],
     ],
     'service_manager' => [

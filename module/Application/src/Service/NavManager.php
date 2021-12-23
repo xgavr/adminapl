@@ -324,7 +324,7 @@ class NavManager
                 $companyDropdownItems[] = [
                             'id' => 'cash',
                             'label' => 'Касса',
-                            'link' => $url('cash')
+                            'link' => $url('till')
                         ];
                 
                 if (count($companyDropdownItems)!=0) {
