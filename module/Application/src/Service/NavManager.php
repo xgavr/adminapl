@@ -327,6 +327,12 @@ class NavManager
                             'link' => $url('till')
                         ];
                 
+                $companyDropdownItems[] = [
+                            'id' => 'cash',
+                            'label' => 'Подотчет',
+                            'link' => $url('accountant')
+                        ];
+                
                 if (count($companyDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'company',

@@ -70,7 +70,8 @@ class CashOutForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'amount',
                 'required' => 'required',
                 'min' => 0,
-                'step' => 0.01
+                'step' => 0.01,
+                'autocomplete' => 'off',
             ],
             'options' => [
                 'label' => 'Сумма',

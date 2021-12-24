@@ -53,6 +53,14 @@ $legalContact = $user->getLegalContact();
                 <td><?= $this->escapeHtml($user->getStatusAsString()) ?></th>
             </tr>
             <tr>
+                <th>Основной офис</th>
+                <td>
+                    <a href="<?= $this->url('offices', ['action'=>'view', 'id'=>$user->getOffice()->getId()]); ?>">
+                        <?= $this->escapeHtml($user->getOffice()->getName()); ?>
+                    </a> 
+                </td>
+            </tr>
+            <tr>
                 <th>Roles:</th>
                 <td><?= $this->escapeHtml($user->getRolesAsString()) ?></th>
             </tr>

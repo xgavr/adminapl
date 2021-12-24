@@ -15,11 +15,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Cash\Entity\CashDoc;
 
 /**
- * Description of CashIn
+ * Description of UserIn
  *
  * @author Daddy
  */
-class CashInForm extends Form implements ObjectManagerAwareInterface
+class UserInForm extends Form implements ObjectManagerAwareInterface
 {
     
     
@@ -33,7 +33,7 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
     public function __construct($entityManager)
     {
         // Определяем имя формы.
-        parent::__construct('cash-in-form');
+        parent::__construct('user-in-form');
      
         $this->entityManager = $entityManager;
         
@@ -118,12 +118,12 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
         
         $this->add([            
             'type'  => 'select',
-            'name' => 'cash',
+            'name' => 'user',
             'attributes' => [                
-                'id' => 'cash',
+                'id' => 'user',
             ],
             'options' => [
-                'label' => 'Касса',
+                'label' => 'Сотрудник',
             ],
         ]);
         

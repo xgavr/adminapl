@@ -43,7 +43,7 @@
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="cashSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
+                    <select id="cashSelect" style="width: 200px" class="form-control" name="cashId">
                         <?php foreach ($cashes as $cash):?>
                             <option value="<?= $cash->getId()?>"><?= $cash->getName()?></option>
                         <?php endforeach;?>
@@ -101,6 +101,8 @@
     function refreshTable(){
         table.bootstrapTable('refresh');
     }
+    
+    function cash
 
     function officeChange(){
         $.getJSON( '/till/office-cashes/'+$('#officeSelect').val(), function( data ) {
@@ -138,6 +140,11 @@
         });
         $(document).on('change', '#officeSelect', function (e) {
             officeChange();
+        });
+        $(document).on('change', '#cashSelect', function (e) {
+            //table.bootstrapTable('selectPage', 1);
+            alert(1);
+            //refreshTable();
         });
     });
     

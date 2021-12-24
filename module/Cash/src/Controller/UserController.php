@@ -12,17 +12,14 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Cash\Entity\Cash;
 use Cash\Entity\CashDoc;
-use Cash\Form\CashForm;
-use Cash\Form\CashInForm;
-use Cash\Form\CashOutForm;
+use Cash\Form\UserInForm;
+use Cash\Form\UserOutForm;
 use Company\Entity\Office;
-use Application\Entity\Supplier;
-use Company\Entity\Cost;
 use User\Entity\User;
 use Company\Entity\Legal;
 
 
-class TillController extends AbstractActionController
+class UserController extends AbstractActionController
 {
     
     /**
@@ -49,12 +46,12 @@ class TillController extends AbstractActionController
     
     public function indexAction()
     {
-        $cashes = $this->entityManager->getRepository(Cash::class)
-                ->findBy(['status' => Cash::STATUS_ACTIVE]);
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy(['status' => User::STATUS_ACTIVE]);
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findBy(['status' => Office::STATUS_ACTIVE]);
         return new ViewModel([
-            'cashes' =>  $cashes,
+            'users' =>  $users,
             'offices' =>  $offices,
         ]);
     }
@@ -66,20 +63,20 @@ class TillController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
-        $cashId = $this->params()->fromQuery('cash');
+        $userId = $this->params()->fromQuery('user');
         $kind = $this->params()->fromQuery('kind');
         $dateOper = $this->params()->fromQuery('dateOper');
         
         $params = [
             'sort' => $sort, 'order' => $order, 
-            'cashId' => $cashId, 'kind' => $kind,
+            'userId' => $userId, 'kind' => $kind,
         ];
         
         $query = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDoc($dateOper, $params);
+                        ->findAllUserDoc($dateOper, $params);
         
         $total = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDocTotal($dateOper, $params);
+                        ->findAllUserDocTotal($dateOper, $params);
                 
         if ($offset) {
             $query->setFirstResult($offset);
@@ -99,22 +96,22 @@ class TillController extends AbstractActionController
     
     public function legalsAction()
     {
-        $cashId = (int)$this->params()->fromRoute('id', -1);
-        if ($cashId<1) {
+        $userId = (int)$this->params()->fromRoute('id', -1);
+        if ($userId<1) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
-        $cash = $this->entityManager->getRepository(Cash::class)
-                ->find($cashId);
+        $user = $this->entityManager->getRepository(User::class)
+                ->find($userId);
         
-        if ($cash == null) {
+        if ($user == null) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
         $legals = $this->entityManager->getRepository(Legal::class)
-                ->formOfficeLegals(['officeId' => $cash->getOffice()->getId()]);
+                ->formOfficeLegals(['officeId' => $user->getOffice()->getId()]);
         
         foreach ($legals as $legal){
             $result[$legal->getId()] = [
@@ -159,25 +156,25 @@ class TillController extends AbstractActionController
         ]);                  
     }
     
-    public function cashBalanceAction()
+    public function userBalanceAction()
     {
-        $cashId = (int)$this->params()->fromRoute('id', -1);
+        $userId = (int)$this->params()->fromRoute('id', -1);
         $dateOper = $this->params()->fromQuery('dateOper');
-        if ($cashId<1) {
+        if ($userId<1) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
-        $cash = $this->entityManager->getRepository(Cash::class)
-                ->find($cashId);
+        $user = $this->entityManager->getRepository(User::class)
+                ->find($userId);
         
-        if ($cash == null) {
+        if ($user == null) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
         
         $balance = $this->entityManager->getRepository(Cash::class)
-                ->cashBalance($cash->getId(), $dateOper);
+                ->userBalance($user->getId(), $dateOper);
         
         return new JsonModel([
             'balance' => $balance,
@@ -185,7 +182,7 @@ class TillController extends AbstractActionController
     }
     
    
-    public function editCashInAction()
+    public function editUserInAction()
     {
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
         
@@ -196,7 +193,7 @@ class TillController extends AbstractActionController
                     ->find($cashDocId);
         }    
         
-        $form = new CashInForm($this->entityManager);
+        $form = new UserInForm($this->entityManager);
         $this->cashManager->cashFormOptions($form);
         
         if ($this->getRequest()->isPost()) {
@@ -232,7 +229,7 @@ class TillController extends AbstractActionController
         ]);        
     }        
     
-    public function editCashOutAction()
+    public function editUserOutAction()
     {
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
         
@@ -243,7 +240,7 @@ class TillController extends AbstractActionController
                     ->find($cashDocId);
         }    
         
-        $form = new CashOutForm($this->entityManager);
+        $form = new UserOutForm($this->entityManager);
         $this->cashManager->cashFormOptions($form);
         
         if ($this->getRequest()->isPost()) {

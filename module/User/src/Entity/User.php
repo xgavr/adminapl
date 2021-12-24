@@ -5,6 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Application\Entity\Contact;
+use Company\Entity\Office;
 
 /**
  * This class represents a registered user.
@@ -91,6 +92,12 @@ class User
     private $clients;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="users") 
+     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     */
+    private $office;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -159,6 +166,15 @@ class User
      * @return string     
      */
     public function getFullName() 
+    {
+        return $this->fullName;
+    }       
+
+    /**
+     * Returns full name.
+     * @return string     
+     */
+    public function getName() 
     {
         return $this->fullName;
     }       
@@ -416,6 +432,24 @@ class User
         $this->clients[] = $client;
     }
         
+    /**
+     * Returns the office.
+     * @return Office     
+     */
+    public function getOffice() 
+    {
+        return $this->office;
+    }
+    
+    /**
+     * Sets  office.
+     * @param Office $office     
+     */
+    public function setOffice($office) 
+    {
+        $this->office = $office;
+        $office->addUser($this);
+    }        
 }
 
 

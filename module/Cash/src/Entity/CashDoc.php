@@ -700,7 +700,7 @@ class CashDoc {
         $result = [
             'amount' => $this->amount,
             'aplId' => $this->apl_id,
-            'cash' => $this->cash->getId(),
+            'cash' => ($this->cash) ? $this->cash->getId():null,
             'cashRefill' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
             'comment' => $this->comment,
             'company' => $this->company->getId(),
@@ -730,7 +730,7 @@ class CashDoc {
         return [
             'amount' => $this->amount,
             'aplId' => $this->apl_id,
-            'cash' => $this->cash->getId(),
+            'cash' => ($this->cash) ? $this->cash->getId():null,
             'cashRefull' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
             'comment' => $this->comment,
             'company' => $this->company->getId(),

@@ -16,6 +16,7 @@ use Application\Entity\Shipping;
 use Doctrine\Common\Collections\Criteria;
 use Stock\Entity\Ptu;
 use ApiMarketPlace\Entity\Cash;
+use User\Entity\User;
 
 /**
  * Description of Office
@@ -126,6 +127,12 @@ class Office {
    private $cashes;    
 
    /**
+    * @ORM\OneToMany(targetEntity="User\Entity\User", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+   */
+   private $users;    
+
+   /**
      * Constructor.
      */
     public function __construct() 
@@ -135,6 +142,7 @@ class Office {
         $this->rates = new ArrayCollection();      
         $this->shippings = new ArrayCollection();      
         $this->cashes = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
     
     public function getId() 
@@ -410,4 +418,23 @@ class Office {
     {
         $this->cashes[] = $cash;
     }         
+    
+    /*
+     * Возвращает связанный user.
+     * @return array
+     */    
+    public function getUsers() 
+    {
+        return $this->users;
+    }
+
+    /**
+     * Add user
+     * @param User $user
+     */
+    public function addUser($user) 
+    {
+        $this->users[] = $user;
+    }         
+    
 }

@@ -77,8 +77,8 @@ class TurboOrderFilter extends AbstractFilter
             if ($goodStr){
                 $bags[$line[0]] = [
                     'offerId' => $line[0],
-                    'count' => floatval(preg_replace('/[^0-9,]/', '', $line[2])),
-                    'price' => floatval(preg_replace('/[^0-9,]/', '', $line[3])),
+                    'count' => floatval(preg_replace('/[^0-9,]/', '', $line[3])),
+                    'price' => floatval(preg_replace('/[^0-9,]/', '', $line[4])),
                 ];
             }
 //            if ($line[0] == 'Контакты'){

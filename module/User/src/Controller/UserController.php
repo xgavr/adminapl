@@ -12,6 +12,7 @@ use User\Form\PasswordResetForm;
 use User\Form\PasswordResetPhoneForm;
 use User\Filter\PhoneFilter;
 use Laminas\View\Model\JsonModel;
+use Company\Entity\Office;
 
 /**
  * This controller is responsible for user management (adding, editing, 
@@ -27,7 +28,7 @@ class UserController extends AbstractActionController
     
     /**
      * User manager.
-     * @var User\Service\UserManager 
+     * @var \User\Service\UserManager 
      */
     private $userManager;
     
@@ -79,7 +80,15 @@ class UserController extends AbstractActionController
             $roleList[$role->getId()] = $role->getName();
         }
         
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        $officeList = [];
+        foreach ($offices as $office) {
+            $officeList[$office->getId()] = $office->getName();
+        }
+
         $form->get('roles')->setValueOptions($roleList);
+        $form->get('office')->setValueOptions($officeList);
         
         // Check if user has submitted the form
         if ($this->getRequest()->isPost()) {
@@ -163,8 +172,15 @@ class UserController extends AbstractActionController
         foreach ($allRoles as $role) {
             $roleList[$role->getId()] = $role->getName();
         }
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        $officeList = [];
+        foreach ($offices as $office) {
+            $officeList[$office->getId()] = $office->getName();
+        }
         
         $form->get('roles')->setValueOptions($roleList);
+        $form->get('office')->setValueOptions($officeList);
         
         // Check if user has submitted the form
         if ($this->getRequest()->isPost()) {

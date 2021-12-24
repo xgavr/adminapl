@@ -8,6 +8,7 @@ use Laminas\Crypt\Password\Bcrypt;
 use Laminas\Math\Rand;
 use Application\Entity\Email;
 use User\Validator\TokenNoExistsValidator;
+use Company\Entity\Office;
 
 /**
  * This service is responsible for adding/editing users
@@ -91,6 +92,10 @@ class UserManager
         $currentDate = date('Y-m-d H:i:s');
         $user->setDateCreated($currentDate);        
         
+        $office = $this->entityManager->getRepository(Office::class)
+                ->find($data['office']);
+        $user->setOffice($office);
+        
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);        
         
@@ -143,6 +148,10 @@ class UserManager
             $user->setBirthday($data['birthday']);
         }    
         
+        $office = $this->entityManager->getRepository(Office::class)
+                ->find($data['office']);
+        $user->setOffice($office);
+
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);
         

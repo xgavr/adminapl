@@ -584,6 +584,7 @@ class AplService {
                 'status' => ($row['publish'] == 1 ? 1:2),
                 'roles' => $user->getRolesAsArray(),
                 'aplId' => $row['id'],
+                'office' => $row['parent'],
             ];    
             if (!empty($desc['dob'])){
                $user_data['birthday'] = date_format(date_create($row['dob']), 'Y-m-d'); 
@@ -603,6 +604,7 @@ class AplService {
                     'roles' => $roles,
                     'aplId' => $row['id'],
                     'birthday' => date_format(date_create($row['dob']), 'Y-m-d'),
+                    'office' => $row['parent'],
                 ];    
 
                 $user = $this->userManager->addUser($user_data);                        

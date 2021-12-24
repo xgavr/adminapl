@@ -15,11 +15,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Cash\Entity\CashDoc;
 
 /**
- * Description of CashIn
+ * Description of CashOut
  *
  * @author Daddy
  */
-class CashInForm extends Form implements ObjectManagerAwareInterface
+class UserOutForm extends Form implements ObjectManagerAwareInterface
 {
     
     
@@ -33,7 +33,7 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
     public function __construct($entityManager)
     {
         // Определяем имя формы.
-        parent::__construct('cash-in-form');
+        parent::__construct('user-out-form');
      
         $this->entityManager = $entityManager;
         
@@ -112,18 +112,18 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'Операция',
-                'value_options' => CashDoc::getKindInList(),
+                'value_options' => CashDoc::getKindOutList(),
             ],
         ]);
         
         $this->add([            
             'type'  => 'select',
-            'name' => 'cash',
+            'name' => 'user',
             'attributes' => [                
-                'id' => 'cash',
+                'id' => 'user',
             ],
             'options' => [
-                'label' => 'Касса',
+                'label' => 'Сотрудник',
             ],
         ]);
         
@@ -158,6 +158,16 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
         ]);
         
         $this->add([            
+            'type'  => 'number',
+            'name' => 'vt',
+            'attributes' => [                
+            ],
+            'options' => [
+                'label' => 'Номер возврата',
+            ],
+        ]);
+        
+        $this->add([            
             'type'  => 'select',
             'name' => 'supplier',
             'attributes' => [                
@@ -178,13 +188,24 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'cost',
+            'attributes' => [
+                'id' => 'cost',
+            ],
+            'options' => [
+                'label' => 'Статьи затрат',
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Сохранить',
-                'id' => 'cash_in_submitbutton',
+                'id' => 'user_out_submitbutton',
             ],
         ]);        
 
@@ -209,6 +230,25 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
 
         $inputFilter->add([
                 'name'     => 'order',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'vt',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

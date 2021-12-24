@@ -37,6 +37,20 @@ return [
                     ],
                 ],
             ],
+            'accountant' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/accountant[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\UserController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -49,12 +63,17 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '*'],
             ],
+            Controller\UserController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '*'],
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\TillController::class => Controller\Factory\TillControllerFactory::class,
+            Controller\UserController::class => Controller\Factory\UserControllerFactory::class,
         ],
     ],
     'service_manager' => [

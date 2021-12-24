@@ -7,8 +7,8 @@
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
-                'Подотчет'=>$this->url('accountant'),
                 'Касса'=>$this->url('till'),
+                'Подотчет'=>$this->url('accountant'),
                 ]);
 
 
@@ -23,10 +23,10 @@
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default cash-in-modal-show" type="button" modal-url="/till/edit-cash-in">
+                <button class="btn btn-default user-in-modal-show" type="button" modal-url="/accountant/edit-user-in">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
-                <button class="btn btn-default cash-out-modal-show" type="button" modal-url="/till/edit-cash-out">
+                <button class="btn btn-default user-out-modal-show" type="button" modal-url="/accountant/edit-user-out">
                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                 </button>                
                 <div class="form-group">
@@ -48,18 +48,18 @@
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="cashSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
-                        <?php foreach ($cashes as $cash):?>
-                            <option value="<?= $cash->getId()?>"><?= $cash->getName()?></option>
+                    <select id="userSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
+                        <?php foreach ($users as $user):?>
+                            <option value="<?= $user->getId()?>"><?= $user->getName()?></option>
                         <?php endforeach;?>
                     </select>
-                    <label for="cashSelect" id="cashBalance">0</label>
+                    <label for="userSelect" id="userBalance">0</label>
                 </div>    
             </div>
         </div>
         <table id="table" 
             data-toggle="table" 
-            data-url="/till/content"
+            data-url="/accountant/content"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -99,8 +99,8 @@
     });
     
     function updateBalance(){
-        $.getJSON( '/till/cash-balance/'+$('#cashSelect').val()+'?dateOper='+$('#dateOper').val(), function( data ) {
-            $('#cashBalance').html((data.balance*100/100).toFixed(2));
+        $.getJSON( '/accountant/user-balance/'+$('#userSelect').val()+'?dateOper='+$('#dateOper').val(), function( data ) {
+            $('#userBalance').html((data.balance*100/100).toFixed(2));
         });    
     }
     
@@ -109,11 +109,11 @@
     }
 
     function officeChange(){
-        $.getJSON( '/till/office-cashes/'+$('#officeSelect').val(), function( data ) {
-            $('#cashSelect').empty();
-            $('#cashBalance').empty()
+        $.getJSON( '/accountant/office-cashes/'+$('#officeSelect').val(), function( data ) {
+            $('#userSelect').empty();
+            $('#userBalance').empty()
             $.each( data.rows, function( key, value ) {
-                $('#cashSelect').append('<option value="' + key + '">' + value.name + '</option>');
+                $('#userSelect').append('<option value="' + key + '">' + value.name + '</option>');
             });            
             refreshTable();
         });    
@@ -123,18 +123,18 @@
         $('#ok').click(function () {
             refreshTable()
         });
-        $(document).on('click', '.cash-in-modal-show', function (e) {
+        $(document).on('click', '.user-in-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
-                id: 'cashInModal',
+                id: 'userInModal',
                 url: url,
                 width: '1440px'
             });
         });  
-        $(document).on('click', '.cash-out-modal-show', function (e) {
+        $(document).on('click', '.user-out-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
-                id: 'cashOutModal',
+                id: 'userOutModal',
                 url: url,
                 width: '1440px'
             });
@@ -163,7 +163,7 @@
             params.offset = params.limit * (offset - 1);
         }    
         params.office = $('#officeSelect').val();
-        params.cash = $('#cashSelect').val();
+        params.user = $('#userSelect').val();
         params.kind = $('#kindSelect').val();
         return params;
     }
@@ -205,15 +205,14 @@
     function operFormatter(value, row){
         switch(value){
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
-                        var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:null;
-                        return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
+                        return (row.amount < 0) ? row.cashDoc.cash.name:row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
-                        return (row.amount > 0) ? cashName:row.cashDoc.cashRefill.name;
+                        return (row.amount > 0) ? row.cashDoc.cash.name:row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
             case '<?= CashDoc::KIND_OUT_SALARY ?>': 
             case '<?= CashDoc::KIND_OUT_USER ?>': 
-                        return row.cashDoc.userRefill.fullName;
+                        return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName:null;
             case '<?= CashDoc::KIND_OUT_COST ?>': 
                         return row.cashDoc.cost.name;
             case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
@@ -226,20 +225,20 @@
     function activeFormatter(value, row){
         var btn = '';
         if (row.cashDoc.kind<10){
-            var url = '/till/edit-cash-in/'+row.cashDoc.id;
+            var url = '/accountant/edit-user-in/'+row.cashDoc.id;
             btn = '<button';
             btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
+            btn += ' class="btn btn-default btn-xs user-in-modal-show"';
             btn += ' aria-label="Left Align"'; 
             btn += ' modal-url="'+url+'">';
             btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
             btn += '</button>';
         }    
         if (row.cashDoc.kind>10){
-            var url = '/till/edit-cash-out/'+row.cashDoc.id;
+            var url = '/accountant/edit-user-out/'+row.cashDoc.id;
             btn = '<button';
             btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
+            btn += ' class="btn btn-default btn-xs user-out-modal-show"';
             btn += ' aria-label="Left Align"'; 
             btn += ' modal-url="'+url+'">';
             btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';

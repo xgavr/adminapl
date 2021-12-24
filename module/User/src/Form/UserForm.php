@@ -130,6 +130,18 @@ class UserForm extends Form
             ],
         ]);
         
+        // Add "office" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'office',
+            'attributes' => [
+                //'multiple' => 'multiple',
+            ],
+            'options' => [
+                'label' => 'Основной офис',
+            ],
+        ]);
+        
         // Add the Submit button
         $this->add([
             'type'  => 'submit',

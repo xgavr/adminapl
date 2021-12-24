@@ -40,7 +40,7 @@ class CashRepository extends EntityRepository
             ->leftJoin('cd.userRefill', 'ur')    
             ->leftJoin('cd.cost', 'cost')    
             ->leftJoin('cd.legal', 'l')
-            ->join('cd.cash', 'c')
+            ->leftJoin('cd.cash', 'c')
             ->where('ct.dateOper = ?1')
             ->setParameter('1', $dateOper)    
             ->orderBy('cd.dateOper', 'DESC')                 
@@ -116,6 +116,8 @@ class CashRepository extends EntityRepository
             ->setParameter('1', $cashId)    
             ->andWhere('ct.dateOper <= ?2')
             ->setParameter('2', $dateEnd)    
+            ->andWhere('ct.status = ?3')
+            ->setParameter('3', CashTransaction::STATUS_ACTIVE)    
                 ;
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
@@ -134,14 +136,14 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ut, cd, c, cr, ur, cost, l')
+        $queryBuilder->select('ut, cd, u, cr, ur, cost, l')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
             ->leftJoin('cd.cashRefill', 'cr')    
             ->leftJoin('cd.userRefill', 'ur')    
             ->leftJoin('cd.cost', 'cost')    
             ->leftJoin('cd.legal', 'l')
-            ->join('cd.cash', 'c')
+            ->leftJoin('cd.user', 'u')
             ->where('ut.dateOper = ?1')
             ->setParameter('1', $dateOper)    
             ->orderBy('cd.dateOper', 'DESC')                 
@@ -149,9 +151,9 @@ class CashRepository extends EntityRepository
                 ;
         
         if (is_array($params)){
-            if (isset($params['cashId'])){
-                $queryBuilder->andWhere('ut.cash = ?2')
-                    ->setParameter('2', $params['cashId'])
+            if (isset($params['userId'])){
+                $queryBuilder->andWhere('ut.user = ?2')
+                    ->setParameter('2', $params['userId'])
                         ;
             }            
             if (is_numeric($params['kind'])){
@@ -182,7 +184,7 @@ class CashRepository extends EntityRepository
         $queryBuilder->select('count(ut.id) as countCd')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
-            ->join('cd.cash', 'c')
+            ->join('cd.user', 'c')
             ->where('ut.dateOper = ?1')
             ->setParameter('1', $dateOper)    
                 ;
@@ -211,12 +213,14 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('sum(ct.amount) as balance')
+        $queryBuilder->select('sum(ut.amount) as balance')
             ->from(UserTransaction::class, 'ut')
-            ->where('ut.cash = ?1')
+            ->where('ut.user = ?1')
             ->setParameter('1', $userId)    
             ->andWhere('ut.dateOper <= ?2')
-            ->setParameter('2', $dateEnd)    
+            ->setParameter('2', $dateEnd) 
+            ->andWhere('ut.status = ?3')
+            ->setParameter('3', UserTransaction::STATUS_ACTIVE)    
                 ;
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();

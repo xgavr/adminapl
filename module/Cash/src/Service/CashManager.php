@@ -263,7 +263,7 @@ class CashManager {
         $cashTransaction->setCashDoc($cashDoc);
         $cashTransaction->setDateCreated(date('Y-m-d H:i:s'));
         $cashTransaction->setDateOper($cashDoc->getDateOper());
-        $cashTransaction->setStatus(($cashDoc->getStatus() === CashDoc::STATUS_ACTIVE) ? CashTransaction::STATUS_ACTIVE:CashTransaction::STATUS_RETIRED);
+        $cashTransaction->setStatus(($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? CashTransaction::STATUS_ACTIVE:CashTransaction::STATUS_RETIRED);
         $cashTransaction->setCash($cash);
         
         $this->entityManager->persist($cashTransaction);        
@@ -294,7 +294,7 @@ class CashManager {
         $userTransaction->setCashDoc($cashDoc);
         $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
         $userTransaction->setDateOper($cashDoc->getDateOper());
-        $userTransaction->setStatus(($cashDoc->getStatus() === CashDoc::STATUS_ACTIVE) ? UserTransaction::STATUS_ACTIVE:UserTransaction::STATUS_RETIRED);
+        $userTransaction->setStatus(($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? UserTransaction::STATUS_ACTIVE:UserTransaction::STATUS_RETIRED);
         $userTransaction->setUser($user);
         
         $this->entityManager->persist($userTransaction);        
@@ -311,7 +311,12 @@ class CashManager {
         $this->removeTransactions($cashDoc);
         $this->removeUserTransactions($cashDoc);
         
-        $this->addTransaction($cashDoc, $cashDoc->getKindAmount(), $cashDoc->getCash());
+        if ($cashDoc->getCash()){
+            $this->addTransaction($cashDoc, $cashDoc->getKindAmount(), $cashDoc->getCash());
+        }    
+        if ($cashDoc->getUser()){
+            $this->addUserTransaction($cashDoc, $cashDoc->getKindAmount(), $cashDoc->getUser());
+        }    
         
         switch ($cashDoc->getKind()){
             case CashDoc::KIND_IN_REFILL:
@@ -335,7 +340,7 @@ class CashManager {
         
         return;
     }
-    
+        
     /**
      * Подготовить данные
      * @param array $data
@@ -524,6 +529,9 @@ class CashManager {
         foreach ($users as $user) {
             $userList[$user->getId()] = $user->getFullName();
         }
+        if ($form->has('user')){
+            $form->get('user')->setValueOptions($userList);
+        }    
         $form->get('userRefill')->setValueOptions($userList);
 
         $cashes = $this->entityManager->getRepository(Cash::class)
@@ -531,7 +539,9 @@ class CashManager {
         foreach ($cashes as $cash) {
             $cashList[$cash->getId()] = $cash->getName();
         }
-        $form->get('cash')->setValueOptions($cashList);
+        if ($form->has('cash')){
+            $form->get('cash')->setValueOptions($cashList);
+        }    
         $form->get('cashRefill')->setValueOptions($cashList);
         
         $officeId = 1;

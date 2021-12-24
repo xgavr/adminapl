@@ -9,7 +9,7 @@ $this->pageBreadcrumbs()->setItems([
             ]);
 ?>
 
-<h1>Manage Users</h1>
+<h1>Сотрудники</h1>
 
 <p>
 <a class="btn btn-default" href="
@@ -25,6 +25,7 @@ $this->pageBreadcrumbs()->setItems([
         <th>E-mail</th>
         <th>Full Name</th>
         <th>Role(s)</th>        
+        <th>Офис</th>        
         <th>Date Created</th>
         <th>Status</th>        
         <th>Actions</th>        
@@ -40,10 +41,15 @@ $this->pageBreadcrumbs()->setItems([
             </a> 
         </td>
         <td>
-            <?= $this->escapeHtml($user->getFullName()); ?></a> 
+            <?= $this->escapeHtml($user->getFullName()); ?> 
         </td>
         <td>
-            <?= $this->escapeHtml($user->getRolesAsString()); ?></a> 
+            <?= $this->escapeHtml($user->getRolesAsString()); ?> 
+        </td>
+        <td>
+            <a href="<?= $this->url('offices', ['action'=>'view', 'id'=>$user->getOffice()->getId()]); ?>">
+                <?= $this->escapeHtml($user->getOffice()->getName()); ?>
+            </a> 
         </td>
         <td><nobr><?= $this->escapeHtml($user->getDateCreated()); ?></nobr></td>        
         <td><?= $this->escapeHtml($user->getStatusAsString()); ?></td>
