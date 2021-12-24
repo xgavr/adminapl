@@ -179,7 +179,8 @@ class CashManager {
     protected function addMutuals($cashDoc)
     {
         if ($cashDoc->isMutual()){
-            $contract = $this->findDefaultContract($cashDoc->getCash()->getOffice(), 
+            $office = ($cashDoc->getCash()) ? $cashDoc->getCash()->getOffice():$cashDoc->getUser()->getOffice();
+            $contract = $this->findDefaultContract($office, 
                     $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
                     $cashDoc->getContractKind(), Contract::PAY_CASH);
 
@@ -191,7 +192,7 @@ class CashManager {
                 'amount' => $cashDoc->getMutualAmount(),
                 'legal_id' => $cashDoc->getLegal()->getId(),
                 'contract_id' => $contract->getId(),
-                'office_id' => $cashDoc->getCash()->getOffice()->getId(),
+                'office_id' => $office->getId(),
                 'company_id' => $cashDoc->getCompany()->getId(),
             ];
 

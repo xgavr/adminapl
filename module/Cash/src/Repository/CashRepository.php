@@ -33,7 +33,7 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ct, cd, c, cr, ur, cost, l')
+        $queryBuilder->select('ct, cd, c, cr, ur, cost, l, u')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')
             ->leftJoin('cd.cashRefill', 'cr')    
@@ -41,6 +41,7 @@ class CashRepository extends EntityRepository
             ->leftJoin('cd.cost', 'cost')    
             ->leftJoin('cd.legal', 'l')
             ->leftJoin('cd.cash', 'c')
+            ->leftJoin('cd.user', 'u')
             ->where('ct.dateOper = ?1')
             ->setParameter('1', $dateOper)    
             ->orderBy('cd.dateOper', 'DESC')                 
@@ -136,7 +137,7 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ut, cd, u, cr, ur, cost, l')
+        $queryBuilder->select('ut, cd, u, cr, ur, cost, l, c')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
             ->leftJoin('cd.cashRefill', 'cr')    
@@ -144,6 +145,7 @@ class CashRepository extends EntityRepository
             ->leftJoin('cd.cost', 'cost')    
             ->leftJoin('cd.legal', 'l')
             ->leftJoin('cd.user', 'u')
+            ->leftJoin('cd.cash', 'c')
             ->where('ut.dateOper = ?1')
             ->setParameter('1', $dateOper)    
             ->orderBy('cd.dateOper', 'DESC')                 

@@ -203,9 +203,9 @@
     }    
     
     function operFormatter(value, row){
+        var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
         switch(value){
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
-                        var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:null;
                         return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
                         return (row.amount > 0) ? cashName:row.cashDoc.cashRefill.name;
@@ -225,26 +225,28 @@
     
     function activeFormatter(value, row){
         var btn = '';
-        if (row.cashDoc.kind<10){
-            var url = '/till/edit-cash-in/'+row.cashDoc.id;
-            btn = '<button';
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-            btn += '</button>';
-        }    
-        if (row.cashDoc.kind>10){
-            var url = '/till/edit-cash-out/'+row.cashDoc.id;
-            btn = '<button';
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-            btn += '</button>';
-        }    
+        if (row.cashDoc.cash){
+            if (row.cashDoc.kind<10){
+                var url = '/till/edit-cash-in/'+row.cashDoc.id;
+                btn = '<button';
+                btn += ' type="button"';
+                btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
+            if (row.cashDoc.kind>10){
+                var url = '/till/edit-cash-out/'+row.cashDoc.id;
+                btn = '<button';
+                btn += ' type="button"';
+                btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
+            }    
         return btn;
     }    
     

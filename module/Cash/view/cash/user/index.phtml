@@ -203,12 +203,16 @@
     }    
     
     function operFormatter(value, row){
+        var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
         switch(value){
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
-                        return (row.amount < 0) ? row.cashDoc.cash.name:row.cashDoc.cashRefill.name;
+                        return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
-                        return (row.amount > 0) ? row.cashDoc.cash.name:row.cashDoc.cashRefill.name;
-            case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
+                        return (row.amount > 0) ? cashName:row.cashDoc.cashRefill.name;
+            case '<?= CashDoc::KIND_IN_RETURN_USER ?>':
+                    if (row.cashDoc.cash){
+                        return row.cashDoc.cash.name;
+                    }    
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
             case '<?= CashDoc::KIND_OUT_SALARY ?>': 
             case '<?= CashDoc::KIND_OUT_USER ?>': 
@@ -224,25 +228,27 @@
     
     function activeFormatter(value, row){
         var btn = '';
-        if (row.cashDoc.kind<10){
-            var url = '/accountant/edit-user-in/'+row.cashDoc.id;
-            btn = '<button';
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs user-in-modal-show"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-            btn += '</button>';
-        }    
-        if (row.cashDoc.kind>10){
-            var url = '/accountant/edit-user-out/'+row.cashDoc.id;
-            btn = '<button';
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs user-out-modal-show"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-            btn += '</button>';
+        if (row.cashDoc.user){
+            if (row.cashDoc.kind<10){
+                var url = '/accountant/edit-user-in/'+row.cashDoc.id;
+                btn = '<button';
+                btn += ' type="button"';
+                btn += ' class="btn btn-default btn-xs user-in-modal-show"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
+            if (row.cashDoc.kind>10){
+                var url = '/accountant/edit-user-out/'+row.cashDoc.id;
+                btn = '<button';
+                btn += ' type="button"';
+                btn += ' class="btn btn-default btn-xs user-out-modal-show"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
         }    
         return btn;
     }    
