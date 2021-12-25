@@ -159,6 +159,12 @@ class CashDoc {
      */
     private $company;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="cashCreatorDocs") 
+     * @ORM\JoinColumn(name="user_creator_id", referencedColumnName="id")
+     */
+    private $userCreator;    
+    
    /**
     * @ORM\OneToMany(targetEntity="Cash\Entity\CashTransaction", mappedBy="cashDoc")
     * @ORM\JoinColumn(name="id", referencedColumnName="cash_doc_id")
@@ -554,6 +560,20 @@ class CashDoc {
     public function setUserRefill($userRefill)
     {
         $this->userRefill = $userRefill;
+    }
+
+    public function getUserCreator()
+    {
+        return $this->userCreator;
+    }
+    
+    /**
+     * Add userCreator
+     * @param User $userCreator
+     */
+    public function setUserCreator($userCreator)
+    {
+        $this->userCreator = $userCreator;
     }
 
     public function getContact()

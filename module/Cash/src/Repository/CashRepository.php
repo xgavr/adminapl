@@ -33,11 +33,12 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ct, cd, c, cr, ur, cost, l, u')
+        $queryBuilder->select('ct, cd, c, cr, ur, cost, l, u, uc')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')
             ->leftJoin('cd.cashRefill', 'cr')    
             ->leftJoin('cd.userRefill', 'ur')    
+            ->leftJoin('cd.userCreator', 'uc')    
             ->leftJoin('cd.cost', 'cost')    
             ->leftJoin('cd.legal', 'l')
             ->leftJoin('cd.cash', 'c')
@@ -137,11 +138,12 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ut, cd, u, cr, ur, cost, l, c')
+        $queryBuilder->select('ut, cd, u, cr, ur, cost, l, c, uc')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
             ->leftJoin('cd.cashRefill', 'cr')    
             ->leftJoin('cd.userRefill', 'ur')    
+            ->leftJoin('cd.userCreator', 'uc')    
             ->leftJoin('cd.cost', 'cost')    
             ->leftJoin('cd.legal', 'l')
             ->leftJoin('cd.user', 'u')

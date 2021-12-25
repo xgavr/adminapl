@@ -68,7 +68,7 @@ class LogManager {
      * @return User
      * @throws \Exception
      */
-    private function currentUser($useCachedUser = true)
+    public function currentUser($useCachedUser = true)
     {
         if ($useCachedUser && $this->user!==null)
             return $this->user;

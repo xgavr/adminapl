@@ -429,6 +429,8 @@ class CashManager {
         $cashDoc->setUserRefill($data['userRefill'] ?: null);
         $cashDoc->setVt($data['vt'] ?: null);
         
+        $cashDoc->setUserCreator($this->logManager->currentUser());
+        
         $this->entityManager->persist($cashDoc);
         $this->entityManager->flush($cashDoc);
         
