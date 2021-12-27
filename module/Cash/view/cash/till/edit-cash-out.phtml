@@ -215,6 +215,13 @@ $form->prepare();
     };
     
     function cashChange(){
+        $.getJSON( '/till/out-kinds/'+$('#cash').val(), function( data ) {
+            $('#kind').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#kind').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+            showKindOutGroup();
+        });    
         $.getJSON( '/till/legals/'+$('#cash').val(), function( data ) {
             $('#company').empty();
             $.each( data.rows, function( key, value ) {

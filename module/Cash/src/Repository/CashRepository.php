@@ -13,6 +13,7 @@ use Cash\Entity\CashDoc;
 use Cash\Entity\Cash;
 use Cash\Entity\CashTransaction;
 use Cash\Entity\UserTransaction;
+use Company\Entity\Office;
 
 /**
  * Description of CashRepository
@@ -232,4 +233,31 @@ class CashRepository extends EntityRepository
         return $result['balance'];        
     }
     
+    
+    /**
+     * Касса по умолчанию
+     * @param Office $office
+     * @return cash
+     */
+    public function defaultCash($office)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Cash::class, 'c')
+            ->where('c.office = ?1')
+            ->setParameter('1', $office->getId())    
+            ->andWhere('c.status = ?2')
+            ->setParameter('2', Cash::STATUS_ACTIVE) 
+            ->andWhere('c.tillStatus = ?3')
+            ->setParameter('3', Cash::TILL_ACTIVE)    
+            ->andWhere('c.restStatus = ?4')
+            ->setParameter('4', Cash::REST_ACTIVE)
+            ->setMaxResults(1)    
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();                
+    }
 }

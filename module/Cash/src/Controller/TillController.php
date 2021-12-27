@@ -128,6 +128,65 @@ class TillController extends AbstractActionController
         ]);                  
     }
     
+    public function inKindsAction()
+    {
+        $cashId = (int)$this->params()->fromRoute('id', -1);
+        if ($cashId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $cash = $this->entityManager->getRepository(Cash::class)
+                ->find($cashId);
+        
+        if ($cash == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $kinds = $this->cashManager->inKinds($cash);
+        foreach ($kinds as $key=>$value){
+            $result[$key] = [
+                'id' => $key,
+                'name' => $value,                
+            ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
+    
+    public function outKindsAction()
+    {
+        $cashId = (int)$this->params()->fromRoute('id', -1);
+        if ($cashId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $cash = $this->entityManager->getRepository(Cash::class)
+                ->find($cashId);
+        
+        if ($cash == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $kinds = $this->cashManager->outKinds($cash);
+        
+        foreach ($kinds as $key=>$value){
+            $result[$key] = [
+                'id' => $key,
+                'name' => $value,                
+            ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
+    
     public function officeCashesAction()
     {
         $officeId = (int)$this->params()->fromRoute('id', -1);
@@ -176,8 +235,11 @@ class TillController extends AbstractActionController
             return;
         }
         
-        $balance = $this->entityManager->getRepository(Cash::class)
-                ->cashBalance($cash->getId(), $dateOper);
+        $balance = null;
+        if ($cash->getRestStatus() == Cash::REST_ACTIVE){
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->cashBalance($cash->getId(), $dateOper);
+        }    
         
         return new JsonModel([
             'balance' => $balance,
@@ -197,7 +259,7 @@ class TillController extends AbstractActionController
         }    
         
         $form = new CashInForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form);
+        $this->cashManager->cashFormOptions($form, $cashDoc);
         
         if ($this->getRequest()->isPost()) {
             
@@ -244,7 +306,7 @@ class TillController extends AbstractActionController
         }    
         
         $form = new CashOutForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form);
+        $this->cashManager->cashFormOptions($form, $cashDoc);
         
         if ($this->getRequest()->isPost()) {
             

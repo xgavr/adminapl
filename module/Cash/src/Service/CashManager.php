@@ -24,6 +24,8 @@ use Stock\Entity\Vt;
 use Application\Entity\Supplier;
 use Cash\Entity\UserTransaction;
 use Laminas\Validator\Date;
+use Cash\Form\CashInForm;
+use Cash\Form\CashOutForm;
 
 /**
  * Description of CashManager
@@ -76,6 +78,8 @@ class CashManager {
         $cash->setStatus($data['status']);
         $cash->setTillStatus($data['tillStatus']);
         $cash->setOrderStatus($data['orderStatus']);
+        $cash->setRefillStatus($data['refillStatus']);
+        $cash->setSupplierStatus($data['supplierStatus']);
         
         $cash->setOffice($office);
         $this->entityManager->persist($cash);
@@ -101,6 +105,8 @@ class CashManager {
         $cash->setStatus($data['status']);
         $cash->setTillStatus($data['tillStatus']);
         $cash->setOrderStatus($data['orderStatus']);
+        $cash->setRefillStatus($data['refillStatus']);
+        $cash->setSupplierStatus($data['supplierStatus']);
         
         $this->entityManager->persist($cash);
         $this->entityManager->flush();
@@ -503,11 +509,78 @@ class CashManager {
     }
         
     /**
+     * Оепрации доступные кассе
+     * @param Cash $cash
+     * @return array 
+     */
+    public function outKinds($cash)
+    {
+        $kinds = CashDoc::getKindOutList();
+        if ($cash->getRefillStatus() == Cash::REFILL_RETIRED){
+            unset($kinds[CashDoc::KIND_OUT_REFILL]);
+            unset($kinds[CashDoc::KIND_OUT_COST]);
+            unset($kinds[CashDoc::KIND_OUT_COURIER]);
+            unset($kinds[CashDoc::KIND_OUT_SALARY]);
+            unset($kinds[CashDoc::KIND_OUT_USER]);
+        }
+        if ($cash->getSupplierStatus() == Cash::SUPPLIER_RETIRED){
+            unset($kinds[CashDoc::KIND_OUT_SUPPLIER]);
+        }        
+        
+        return $kinds;
+    }
+    
+    /**
+     * Операции доступные кассе
+     * @param Cash $cash
+     * @return array 
+     */
+    public function inKinds($cash)
+    {
+        $kinds = CashDoc::getKindInList();
+        if ($cash->getRefillStatus() == Cash::REFILL_RETIRED){
+            unset($kinds[CashDoc::KIND_IN_REFILL]);
+            unset($kinds[CashDoc::KIND_IN_RETURN_USER]);
+        }        
+        if ($cash->getSupplierStatus() == Cash::SUPPLIER_RETIRED){
+            unset($kinds[CashDoc::KIND_IN_RETURN_SUPPLIER]);
+        }        
+        return $kinds;
+    }
+    /**
      * Подготовка данных для формы
      * @param CashForm $form
+     * @param CashDoc $cashDoc
      */
-    public function cashFormOptions($form)
+    public function cashFormOptions($form, $cashDoc = null)
     {
+        if ($form->has('cash')){
+            if ($cashDoc){
+                $cash = $cashDoc->getCash();
+            } else {
+                $cash = $this->entityManager->getRepository(Cash::class)
+                        ->defaultCash($this->logManager->currentUser()->getOffice());
+                $form->get('cash')->setValue($cash->getId());
+            }           
+
+            $kinds = $this->inKinds($cash);
+            if ($form instanceof CashOutForm){
+                $kinds = $this->outKinds($cash);
+            }    
+            $form->get('kind')->setValueOptions($kinds);
+            
+            $officeId = $cash->getOffice()->getId();            
+        }    
+        if ($form->has('user')){
+            if ($cashDoc){
+                $user = $cashDoc->getUser();
+            } else {
+                $user = $this->logManager->currentUser();
+                $form->get('user')->setValue($user->getId());
+            }           
+            $officeId = $user->getOffice()->getId();            
+        }
+        
         if ($form->has('cost')){
             $costs = $this->entityManager->getRepository(Cost::class)
                     ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
@@ -538,19 +611,20 @@ class CashManager {
         $form->get('userRefill')->setValueOptions($userList);
 
         $cashes = $this->entityManager->getRepository(Cash::class)
-                ->findBy(['status' => Cash::STATUS_ACTIVE], ['name' => 'ASC']);
+                ->findBy(['status' => Cash::STATUS_ACTIVE, 'office' => $officeId], ['name' => 'ASC']);
         foreach ($cashes as $cash) {
             $cashList[$cash->getId()] = $cash->getName();
         }
         if ($form->has('cash')){
             $form->get('cash')->setValueOptions($cashList);
         }    
-        $form->get('cashRefill')->setValueOptions($cashList);
-        
-        $officeId = 1;
-        if ($cashDoc){
-            $officeId = $cashDoc->getCash()->getOffice()->getId();
+        $refillCashes = $this->entityManager->getRepository(Cash::class)
+                ->findBy(['status' => Cash::STATUS_ACTIVE, 'office' => $officeId, 'refillStatus' => Cash::REFILL_ACTIVE], ['name' => 'ASC']);
+        foreach ($refillCashes as $cash) {
+            $refillCashList[$cash->getId()] = $cash->getName();
         }
+        $form->get('cashRefill')->setValueOptions($refillCashList);
+        
         $legals = $this->entityManager->getRepository(Legal::class)
                 ->formOfficeLegals(['officeId' => $officeId]);        
         foreach ($legals as $legal){
@@ -558,4 +632,5 @@ class CashManager {
         }            
         $form->get('company')->setValueOptions($companyList);
     }    
+    
 }

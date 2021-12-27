@@ -29,6 +29,14 @@ $form->get('orderStatus')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('refillStatus')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('supplierStatus')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('checkStatus')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -107,6 +115,22 @@ $form->prepare();
                         <?= $this->formLabel($form->get('checkStatus')); ?>
                         <?= $this->formElement($form->get('checkStatus')); ?>
                         <?= $this->formElementErrors($form->get('checkStatus')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('refillStatus')); ?>
+                        <?= $this->formElement($form->get('refillStatus')); ?>
+                        <?= $this->formElementErrors($form->get('refillStatus')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('supplierStatus')); ?>
+                        <?= $this->formElement($form->get('supplierStatus')); ?>
+                        <?= $this->formElementErrors($form->get('supplierStatus')); ?>                  
                     </div>
                 </div>    
             </div>    

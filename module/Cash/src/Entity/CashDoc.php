@@ -475,6 +475,38 @@ class CashDoc {
         return self::getKindInList() + self::getKindOutList();
     }    
     
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getOrderInList() 
+    {
+        return [
+            self::KIND_IN_PAYMENT_CLIENT => 'Оплата от покупателя',
+        ];
+    }    
+    
+    
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getOrderOutList() 
+    {
+        return [
+            self::KIND_OUT_RETURN_CLIENT => 'Возврат покупателю',
+        ];
+    }    
+    
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getOrderList() 
+    {
+        return self::getOrderInList() + self::getOrderOutList();
+    }    
+
     public static function getKindListAsJavascriptArray() 
     {
         $result = [];

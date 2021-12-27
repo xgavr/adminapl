@@ -71,7 +71,7 @@ class CashForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'commission',
                 'min' => 0,
                 'step' => 0.01,
-//                'value' => 0.00
+                'value' => 0
             ],
             'options' => [
                 'label' => 'Комиссия',
@@ -128,6 +128,32 @@ class CashForm extends Form implements ObjectManagerAwareInterface
             'options' => [
                 'label' => 'В заказе',
                 'value_options' => Cash::getOrderStatusList(),
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'refillStatus',
+            'attributes' => [
+                'id' => 'refillStatus',
+                'value' => Cash::REFILL_ACTIVE,
+            ],
+            'options' => [
+                'label' => 'Пополнение',
+                'value_options' => Cash::getRefillStatusList(),
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'supplierStatus',
+            'attributes' => [
+                'id' => 'supplierStatus',
+                'value' => Cash::SUPPLIER_ACTIVE,
+            ],
+            'options' => [
+                'label' => 'Расчеты с поставщиками',
+                'value_options' => Cash::getSupplierStatusList(),
             ],
         ]);
 

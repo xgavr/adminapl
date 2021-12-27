@@ -31,7 +31,13 @@ class Cash {
     
     const ORDER_ACTIVE       = 1; // доступно в заказе.
     const ORDER_RETIRED      = 2; // не доступно.
+
+    const SUPPLIER_ACTIVE       = 1; // доступно для расчетов.
+    const SUPPLIER_RETIRED      = 2; // не доступно.
     
+    const REFILL_ACTIVE       = 1; // пополнение доступно.
+    const REFILL_RETIRED      = 2; // поплнение не доступно.
+
     const CHECK_PRINT       = 1; // чек печатать.
     const CHECK_NO_PRINT    = 2; // не печатать.
     const CHECK_IGNORE      = 3; // игнорировать.
@@ -77,6 +83,16 @@ class Cash {
      * @ORM\Column(name="order_status")   
      */
     protected $orderStatus;
+
+    /**
+     * @ORM\Column(name="refill_status")   
+     */
+    protected $refillStatus;
+
+    /**
+     * @ORM\Column(name="supplier_status")   
+     */
+    protected $supplierStatus;
 
     /**
      * @ORM\Column(name="check_status")   
@@ -333,6 +349,91 @@ class Cash {
     }   
     
     /**
+     * Returns refill status.
+     * @return int     
+     */
+    public function getRefillStatus() 
+    {
+        return $this->refillStatus;
+    }
+    
+    /**
+     * Returns possible refill statuses as array.
+     * @return array
+     */
+    public static function getRefillStatusList() 
+    {
+        return [
+            self::REFILL_ACTIVE => 'Доступно',
+            self::REFILL_RETIRED => 'Не доступно'
+        ];
+    }    
+    
+    /**
+     * Returns refill status as string.
+     * @return string
+     */
+    public function getRefillStatusAsString()
+    {
+        $list = self::getRefillStatusList();
+        if (isset($list[$this->refillStatus]))
+            return $list[$this->refillStatus];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets refill status.
+     * @param int $refillStatus     
+     */
+    public function setRefillStatus($refillStatus) 
+    {
+        $this->refillStatus = $refillStatus;
+    }   
+    
+    /**
+     * Returns supplier status.
+     * @return int     
+     */
+    public function getSupplierStatus() 
+    {
+        return $this->supplierStatus;
+    }
+    /**
+     * Returns possible supplier statuses as array.
+     * @return array
+     */
+    public static function getSupplierStatusList() 
+    {
+        return [
+            self::SUPPLIER_ACTIVE => 'Доступно',
+            self::SUPPLIER_RETIRED => 'Не доступно'
+        ];
+    }    
+    
+    /**
+     * Returns supplier status as string.
+     * @return string
+     */
+    public function getSupplierStatusAsString()
+    {
+        $list = self::getSupplierStatusList();
+        if (isset($list[$this->supplierStatus]))
+            return $list[$this->supplierStatus];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets supplier status.
+     * @param int $supplierStatus     
+     */
+    public function setSupplierStatus($supplierStatus) 
+    {
+        $this->supplierStatus = $supplierStatus;
+    }   
+
+    /**
      * Returns check status.
      * @return int     
      */
@@ -406,6 +507,8 @@ class Cash {
             'orderStatus' => $this->getOrderStatus(),
             'restStatus' => $this->getRestStatus(),
             'tillStatus' => $this->getTillStatus(),
+            'refillStatus' => $this->getRefillStatus(),
+            'supplierStatus' => $this->getSupplierStatus(),
         ];
         
         return $result;
