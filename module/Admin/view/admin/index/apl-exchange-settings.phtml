@@ -82,6 +82,10 @@ $form->get('order')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('cash')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('market')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -200,6 +204,11 @@ $form->prepare();
             <?= $this->formLabel($form->get('ptu')); ?>
             <?= $this->formElement($form->get('ptu')); ?>
             <?= $this->formElementErrors($form->get('ptu')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('cash')); ?>
+            <?= $this->formElement($form->get('cash')); ?>
+            <?= $this->formElementErrors($form->get('cash')); ?>                  
         </div>
         <div class="form-group">
             <?= $this->formLabel($form->get('order')); ?>

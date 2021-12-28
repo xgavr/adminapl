@@ -282,6 +282,7 @@ class AdminManager {
         $config->apl_exchange->good_price = $data['good_price']; //обновлять цены
         $config->apl_exchange->ptu = $data['ptu']; //обновлять пту
         $config->apl_exchange->order = $data['order']; //обновлять заказы
+        $config->apl_exchange->cash = $data['cash']; //обновлять платежи
         $config->apl_exchange->market = $data['market']; //выгружать прайс листы в торговые площадки
         
         $writer = new PhpArray();
