@@ -120,6 +120,9 @@
     }
 
     $(function () {
+        $('#officeSelect').val("<?= $currentUser->getOffice()->getId()?>");
+        officeChange();
+        
         $('#ok').click(function () {
             refreshTable()
         });
@@ -148,6 +151,7 @@
         $(document).on('change', '#cashSelect', function (e) {
             table.bootstrapTable('selectPage', 1);
         });
+
     });
     
     function queryParams(params) {

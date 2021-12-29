@@ -60,6 +60,15 @@ class CashManager {
     }
     
     /**
+     * Текущий пользователь
+     * @return User
+     */    
+    public function currentUser()
+    {
+        return $this->logManager->currentUser();
+    }
+    
+    /**
      * Новая касса
      * 
      * @param Office $office
