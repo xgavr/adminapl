@@ -10,17 +10,17 @@ namespace Admin\Service\Factory;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Admin\Service\AplDocService;
 use Admin\Service\AdminManager;
 use Company\Service\LegalManager;
 use Cash\Service\CashManager;
+use Admin\Service\AplCashService;
 
 /**
- * Description of AplDocService
+ * Description of AplCashService
  *
  * @author Daddy
  */
-class AplDocServiceFactory  implements FactoryInterface
+class AplCashServiceFactory  implements FactoryInterface
 {
                    
     public function __invoke(ContainerInterface $container, 
@@ -33,7 +33,7 @@ class AplDocServiceFactory  implements FactoryInterface
         
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new AplDocService($entityManager, $adminManager,
+        return new AplCashService($entityManager, $adminManager,
                 $legalManager, $cashManager);
     }
 }

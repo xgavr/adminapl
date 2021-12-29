@@ -39,6 +39,12 @@ $form->get('order')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('phone')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'8 (000) 000-0000',
+    'aria-describedby' => "basic-addon2",
+    ]);
+
 $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -136,6 +142,19 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('order')); ?>                  
                     </div>
                 </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('phone')); ?>
+                        <span id="contactName"></span>
+                        <?= $this->formElement($form->get('phone')); ?>
+                        <?= $this->formElementErrors($form->get('phone')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <div></div>
+                    </div>
+                </div>    
             </div>    
             <div class="row" id="supplierReturn">
                 <div class="col-xs-3">                        
@@ -166,6 +185,8 @@ $form->prepare();
 <?= $this->form()->closeTag(); ?>
             
 <script>         
+    $('#phone').mask('8 (000) 000-0000', {selectOnFocus: false});
+    
     function submitForm(){
         var data = serializeForm('#cash-in-form');
          $('#cash-in-submit').prop('disabled', true);
@@ -225,9 +246,11 @@ $form->prepare();
         $('#payment').hide();
         $('#order').attr('required', false);
         $('#legal').attr('required', false);
+        $('#phone').attr('required', false);
         if ($("#kind").val() == <?= CashDoc::KIND_IN_PAYMENT_CLIENT?>){
             $('#payment').show();
-            $('#order').attr('required', true);
+            $('#phone').attr('required', true);
+//            $('#order').attr('required', true);
             //$('#legal').attr('required', true);
         }
 
@@ -241,6 +264,12 @@ $form->prepare();
         }
     }
     
+    function contactName(){
+        $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
+            $('#contactName').html(data.name);
+            
+        });            
+    }
     
     $( document ).ready(function() {
         
@@ -252,6 +281,9 @@ $form->prepare();
         });
         $('#cash').on('change', function(){
             cashChange()
+        });
+        $('#phone').on('change', function(){
+            contactName()
         });
         
         

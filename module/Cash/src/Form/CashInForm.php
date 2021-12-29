@@ -13,6 +13,8 @@ use Laminas\InputFilter\InputFilter;
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Cash\Entity\CashDoc;
+use User\Filter\PhoneFilter;
+use User\Validator\PhoneExistsValidator;
 
 /**
  * Description of CashIn
@@ -157,6 +159,17 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'phone',
+            'attributes' => [
+                'id' => 'phone'
+            ],
+            'options' => [
+                'label' => 'Телефон',
+            ],
+        ]);
+        
         $this->add([            
             'type'  => 'select',
             'name' => 'supplier',
@@ -226,6 +239,25 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]);          
         
+        $inputFilter->add([
+                'name'     => 'phone',
+                'required' => false,
+                'filters'  => [
+                    [
+                        'name' => PhoneFilter::class,
+                        'options' => [
+                            'format' => PhoneFilter::PHONE_FORMAT_DB,
+                        ]
+                    ],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'PhoneNumber',
+                        'options' => [
+                        ],
+                    ],
+                ],
+            ]);        
         
     }    
     

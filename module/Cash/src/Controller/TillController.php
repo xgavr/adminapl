@@ -20,6 +20,8 @@ use Application\Entity\Supplier;
 use Company\Entity\Cost;
 use User\Entity\User;
 use Company\Entity\Legal;
+use Application\Entity\Phone;
+use User\Filter\PhoneFilter;
 
 
 class TillController extends AbstractActionController
@@ -129,6 +131,27 @@ class TillController extends AbstractActionController
         ]);                  
     }
     
+    public function phoneContactAction()
+    {
+        $phoneStr = $this->params()->fromQuery('phone');
+        if (empty($phoneStr)) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        $filter = new PhoneFilter();
+        $phone = $this->entityManager->getRepository(Phone::class)
+                ->findOneByName($filter->filter($phoneStr));
+        
+        if ($phone == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        return new JsonModel([
+            'name' => $phone->getContact()->getName(),
+        ]);                  
+    }
+
     public function inKindsAction()
     {
         $cashId = (int)$this->params()->fromRoute('id', -1);

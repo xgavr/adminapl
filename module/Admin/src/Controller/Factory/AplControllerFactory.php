@@ -14,6 +14,7 @@ use Admin\Service\AplService;
 use Admin\Service\AplBankService;
 use Admin\Service\AplDocService;
 use Admin\Service\AplOrderService;
+use Admin\Service\AplCashService;
 
 
 /**
@@ -31,9 +32,10 @@ class AplControllerFactory implements FactoryInterface {
         $aplBankService = $container->get(AplBankService::class);
         $aplDocService = $container->get(AplDocService::class);
         $aplOrderService = $container->get(AplOrderService::class);
+        $aplCashService = $container->get(AplCashService::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new AplController($entityManager, $aplService, $aplBankService, 
-                $aplDocService, $aplOrderService);
+                $aplDocService, $aplOrderService, $aplCashService);
     }
 }

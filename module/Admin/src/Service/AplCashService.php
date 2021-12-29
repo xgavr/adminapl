@@ -349,7 +349,7 @@ class AplCashService {
      */
     public function unloadPayment($start = 0)
     {
-        $url = $this->aplApi().'unload-doc?api='.$this->aplApiKey();
+        $url = $this->aplApi().'unload-payment?api='.$this->aplApiKey();
         
         $post = [
             'start' => $start,
@@ -372,44 +372,12 @@ class AplCashService {
             var_dump($body);
             exit;
         }
-//        var_dump($result); exit;
+        var_dump($result); exit;
 
         if (is_array($result)){
-            if (isset($result['type'])){
-                switch ($result['type']){
-                    case 'Suppliersorders': 
-                        if ($this->unloadPtu($result)){ 
-                            $this->unloadedDoc($result['id']);
-                        }    
-                        break;                        
-                    case 'Resup': 
-                        if ($this->unloadVtp($result)){ 
-                            $this->unloadedDoc($result['id']);
-                        }    
-                        break;                        
-                    case 'Returns': 
-                        if ($this->unloadVt($result)){ 
-                            $this->unloadedDoc($result['id']);
-                        }    
-                        break;                        
-                    case 'Postings': 
-                        if ($this->unloadOt($result)){ 
-                            $this->unloadedDoc($result['id']);
-                        }    
-                        break;                        
-                    case 'Writings': 
-                        if ($this->unloadSt($result)){ 
-                            $this->unloadedDoc($result['id']);
-                        }    
-                        break;                        
-                    case 'Relocations': 
-                        if ($this->unloadPt($result)){ 
-                            $this->unloadedDoc($result['id']);
-                        }    
-                        break;                        
-                    default; break;    
-                }                
-            }
+            if ($this->updatePayment($result)){ 
+                $this->unloadedPayment($result['id']);
+            }    
         } else {
             return false;
         }
