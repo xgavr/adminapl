@@ -466,7 +466,7 @@ class AplCashService {
             } else {
                 break;
             }    
-            $start++;
+           // $start++;
         }    
         return;
     }    
