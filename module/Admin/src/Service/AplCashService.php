@@ -337,7 +337,7 @@ class AplCashService {
             $client = $this->entityManager->getRepository(AplClient::class)
                     ->findOneByAplId($data['name']);
             if ($client){
-                $dataCash['contact'] = $order->getContact()->getId();
+                $dataCash['contact'] = $client->getContact()->getId();
             }    
         }    
         $office = $this->officeFromAplId($data['off']);
