@@ -57,7 +57,7 @@ class Cash {
     /**
      * @ORM\Column(name="apl_id")   
      */
-    protected $apl_id;
+    protected $aplId;
 
     /**
      * @ORM\Column(name="commission")   
