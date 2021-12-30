@@ -375,7 +375,7 @@ class AplCashService {
             $url = $this->aplApi().'aa-payment?api='.$this->aplApiKey();
 
             $post = [
-                'docId' => $aplPaymentId,
+                'paymentId' => $aplPaymentId,
             ];
             
             $client = new Client();
@@ -438,7 +438,7 @@ class AplCashService {
 
         if (is_array($result)){
             if ($this->updatePayment($result)){ 
-                //$this->unloadedPayment($result['id']);
+                $this->unloadedPayment($result['id']);
             }    
         } else {
             return false;
