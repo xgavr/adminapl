@@ -474,7 +474,7 @@ class CashManager {
      */
     public function updateCashDoc($cashDoc, $data)
     {
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $preLog = $this->entityManager->getRepository(Log::class)
                 ->findOneByLogKey($cashDoc->getLogKey());
         if (!$preLog){
