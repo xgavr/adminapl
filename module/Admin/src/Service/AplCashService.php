@@ -335,7 +335,7 @@ class AplCashService {
         }    
         if ($data['comment'] == 'Payments'){
             $client = $this->entityManager->getRepository(AplClient::class)
-                    ->findOneByAplId($data['name']);
+                    ->findOneByAplId($data['parent']);
             if ($client){
                 $dataCash['contact'] = $client->getContact()->getId();
             }    
