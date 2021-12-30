@@ -502,7 +502,7 @@ class CashManager {
         $cashDoc->setVt($data['vt'] ?: null);
         
         $this->entityManager->persist($cashDoc);
-        $this->entityManager->flush($cashDoc);
+        $this->entityManager->flush();
         
         $this->updateCashTransaction($cashDoc);
         $this->logManager->infoCash($cashDoc, Log::STATUS_UPDATE);
