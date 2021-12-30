@@ -28,6 +28,7 @@ use Cash\Form\CashInForm;
 use Cash\Form\CashOutForm;
 use Application\Entity\Phone;
 use User\Filter\PhoneFilter;
+use Application\Entity\Contact;
 
 /**
  * Description of CashManager
@@ -406,6 +407,10 @@ class CashManager {
                     ->find($data['order']);
             $data['contact'] = $data['order']->getContact();
         }
+        if (is_numeric($data['contact'])){
+            $data['contact'] = $this->entityManager->getRepository(Contact::class)
+                    ->find($data['contact']);
+        }
         if (is_numeric($data['vt'])){
             $data['vt'] = $this->entityManager->getRepository(Vt::class)
                     ->find($data['vt']);
@@ -462,7 +467,7 @@ class CashManager {
         $this->updateCashTransaction($cashDoc);
         $this->logManager->infoCash($cashDoc, Log::STATUS_NEW);
         
-        return $cash;
+        return $cashDoc;
     }
         
     /**
@@ -502,12 +507,12 @@ class CashManager {
         $cashDoc->setVt($data['vt'] ?: null);
         
         $this->entityManager->persist($cashDoc);
-        $this->entityManager->flush();
+        $this->entityManager->flush($cashDoc);
         
         $this->updateCashTransaction($cashDoc);
         $this->logManager->infoCash($cashDoc, Log::STATUS_UPDATE);
         
-        return $cash;
+        return $cashDoc;
     }
         
     
