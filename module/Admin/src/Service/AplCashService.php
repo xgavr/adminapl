@@ -256,6 +256,10 @@ class AplCashService {
             case 'out4': return CashDoc::KIND_OUT_RETURN_CLIENT;
             case 'out5': return CashDoc::KIND_OUT_COST;
             case 'out6': return CashDoc::KIND_OUT_SALARY;
+            default:
+                if ($data['sort'] > 0 && $data['comment'] == 'Orders'){
+                    return CashDoc::KIND_IN_PAYMENT_CLIENT;
+                }
         }
         return;
     }
