@@ -268,7 +268,7 @@ class AplCashService {
     public function updatePayment($data)
     {
 //        var_dump($data); exit;
-        $docDate = $data['ds'];
+        $docDate = (!empty($data['ds'])) ? $data['ds']:'';
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
         if (!$dateValidator->isValid($docDate)){

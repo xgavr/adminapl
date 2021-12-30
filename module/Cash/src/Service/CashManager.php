@@ -370,31 +370,31 @@ class CashManager {
             $data['cash'] = $this->entityManager->getRepository(Cash::class)
                     ->find($data['cash']);
         }
-        if (is_numeric($data['cashRefill'])){
+        if (!empty($data['cashRefill'])){
             $data['cashRefill'] = $this->entityManager->getRepository(Cash::class)
                     ->find($data['cashRefill']);
         }
-        if (is_numeric($data['company'])){
+        if (!empty($data['company'])){
             $data['company'] = $this->entityManager->getRepository(Legal::class)
                     ->find($data['company']);
         }
-        if (is_numeric($data['user'])){
+        if (!empty($data['user'])){
             $data['user'] = $this->entityManager->getRepository(User::class)
                     ->find($data['user']);
         }
-        if (is_numeric($data['userRefill'])){
+        if (!empty($data['userRefill'])){
             $data['userRefill'] = $this->entityManager->getRepository(User::class)
                     ->find($data['userRefill']);
         }
-        if (is_numeric($data['legal'])){
+        if (!empty($data['legal'])){
             $data['legal'] = $this->entityManager->getRepository(Legal::class)
                     ->find($data['legal']);
         }
-        if (is_numeric($data['cost'])){
+        if (!empty($data['cost'])){
             $data['cost'] = $this->entityManager->getRepository(Cost::class)
                     ->find($data['cost']);
         }
-        if ($data['phone']){
+        if (!empty($data['phone'])){
             $phoneFilter = new PhoneFilter();
             $phone = $this->entityManager->getRepository(Phone::class)
                     ->findOneByName($phoneFilter->filter($data['phone']));
@@ -402,20 +402,20 @@ class CashManager {
                 $data['contact'] = $phone->getContact();
             }    
         }
-        if (is_numeric($data['order'])){
+        if (!empty($data['order'])){
             $data['order'] = $this->entityManager->getRepository(Order::class)
                     ->find($data['order']);
             $data['contact'] = $data['order']->getContact();
         }
-        if (is_numeric($data['contact'])){
+        if (!empty($data['contact'])){
             $data['contact'] = $this->entityManager->getRepository(Contact::class)
                     ->find($data['contact']);
         }
-        if (is_numeric($data['vt'])){
+        if (!empty($data['vt'])){
             $data['vt'] = $this->entityManager->getRepository(Vt::class)
                     ->find($data['vt']);
         }
-        if (is_numeric($data['supplier'])){
+        if (!empty($data['supplier'])){
             $supplier = $this->entityManager->getRepository(Supplier::class)
                     ->find($data['supplier']);
             if ($supplier){
@@ -441,23 +441,23 @@ class CashManager {
         $cashDoc = new CashDoc();
         $cashDoc->setAmount($data['amount']);
         $cashDoc->setAplId($data['aplId'] ?: 0);
-        $cashDoc->setCash($data['cash'] ?: null);
-        $cashDoc->setCashRefill($data['cashRefill'] ?: null);
+        $cashDoc->setCash(empty($data['cash']) ? null:$data['cash']);
+        $cashDoc->setCashRefill(empty($data['cashRefill']) ? null:$data['cashRefill']);
         $cashDoc->setCheckStatus($data['checkStatus'] ?: CashDoc::CHECK_RETIRED);
-        $cashDoc->setComment($data['comment'] ?: null);
+        $cashDoc->setComment(empty($data['comment']) ? null:$data['comment']);
         $cashDoc->setCompany($data['company']);
-        $cashDoc->setContact($data['contact'] ?: null);
-        $cashDoc->setCost($data['cost'] ?: null);
+        $cashDoc->setContact(empty($data['contact']) ? null:$data['contact']);
+        $cashDoc->setCost(empty($data['cost']) ? null:$data['cost']);
         $cashDoc->setDateCreated(date('Y-m-d H:i:s'));
         $cashDoc->setDateOper($data['dateOper']);
-        $cashDoc->setInfo($data['info'] ?: null);
+        $cashDoc->setInfo(empty($data['info']) ? null:$data['info']);
         $cashDoc->setKind($data['kind']);
-        $cashDoc->setLegal($data['legal'] ?: null);
-        $cashDoc->setOrder($data['order'] ?: null);
+        $cashDoc->setLegal(empty($data['legal']) ? null:$data['legal']);
+        $cashDoc->setOrder(empty($data['order']) ? null:$data['order']);
         $cashDoc->setStatus($data['status']);
-        $cashDoc->setUser($data['user'] ?: null);
-        $cashDoc->setUserRefill($data['userRefill'] ?: null);
-        $cashDoc->setVt($data['vt'] ?: null);
+        $cashDoc->setUser(empty($data['user']) ? null:$data['user']);
+        $cashDoc->setUserRefill(empty($data['userRefill']) ? null:$data['userRefill']);
+        $cashDoc->setVt(empty($data['vt']) ? null:$data['vt']);
         
         $cashDoc->setUserCreator($this->logManager->currentUser());
         
@@ -489,22 +489,22 @@ class CashManager {
 
         $cashDoc->setAmount($data['amount']);
         $cashDoc->setAplId($data['aplId'] ?: 0);
-        $cashDoc->setCash($data['cash'] ?: null);
-        $cashDoc->setCashRefill($data['cashRefill'] ?: null);
+        $cashDoc->setCash(empty($data['cash']) ? null:$data['cash']);
+        $cashDoc->setCashRefill(empty($data['cashRefill']) ? null:$data['cashRefill']);
         $cashDoc->setCheckStatus($data['checkStatus'] ?: CashDoc::CHECK_RETIRED);
-        $cashDoc->setComment($data['comment'] ?: null);
+        $cashDoc->setComment(empty($data['comment']) ? null:$data['comment']);
         $cashDoc->setCompany($data['company']);
-        $cashDoc->setContact($data['contact'] ?: null);
-        $cashDoc->setCost($data['cost'] ?: null);
+        $cashDoc->setContact(empty($data['contact']) ? null:$data['contact']);
+        $cashDoc->setCost(empty($data['cost']) ? null:$data['cost']);
         $cashDoc->setDateOper($data['dateOper']);
-        $cashDoc->setInfo($data['info'] ?: null);
+        $cashDoc->setInfo(empty($data['info']) ? null:$data['info']);
         $cashDoc->setKind($data['kind']);
-        $cashDoc->setLegal($data['legal'] ?: null);
-        $cashDoc->setOrder($data['order'] ?: null);
+        $cashDoc->setLegal(empty($data['legal']) ? null:$data['legal']);
+        $cashDoc->setOrder(empty($data['order']) ? null:$data['order']);
         $cashDoc->setStatus($data['status']);
-        $cashDoc->setUser($data['user'] ?: null);
-        $cashDoc->setUserRefill($data['userRefill'] ?: null);
-        $cashDoc->setVt($data['vt'] ?: null);
+        $cashDoc->setUser(empty($data['user']) ? null:$data['user']);
+        $cashDoc->setUserRefill(empty($data['userRefill']) ? null:$data['userRefill']);
+        $cashDoc->setVt(empty($data['vt']) ? null:$data['vt']);
         
         $this->entityManager->persist($cashDoc);
         $this->entityManager->flush($cashDoc);

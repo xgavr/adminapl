@@ -751,7 +751,7 @@ class CashDoc {
     {
         $result = [
             'amount' => $this->amount,
-            'aplId' => $this->apl_id,
+            'aplId' => $this->aplId,
             'cash' => ($this->cash) ? $this->cash->getId():null,
             'cashRefill' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
             'comment' => $this->comment,
@@ -782,7 +782,7 @@ class CashDoc {
     {
         return [
             'amount' => $this->amount,
-            'aplId' => $this->apl_id,
+            'aplId' => $this->aplId,
             'cash' => ($this->cash) ? $this->cash->getId():null,
             'cashRefull' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
             'comment' => $this->comment,
