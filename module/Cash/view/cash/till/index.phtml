@@ -208,6 +208,9 @@
     function operFormatter(value, row){
         var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
         switch(value){
+            case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
+            case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
+                        return row.cashDoc.contact.name;
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
                         return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
