@@ -51,14 +51,15 @@ class TillController extends AbstractActionController
     
     public function indexAction()
     {
-        $cashes = $this->entityManager->getRepository(Cash::class)
-                ->findBy(['status' => Cash::STATUS_ACTIVE]);
+        $currentUser = $this->cashManager->currentUser();
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findBy([]);
+        $cashes = $this->entityManager->getRepository(Cash::class)
+                ->findBy(['status' => Cash::STATUS_ACTIVE, 'office' => $currentUser->getOffice()->getId()]);
         return new ViewModel([
             'cashes' =>  $cashes,
             'offices' =>  $offices,
-            'currentUser' => $this->cashManager->currentUser(),
+            'currentUser' => $currentUser,
         ]);
     }
     

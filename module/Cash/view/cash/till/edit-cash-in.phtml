@@ -227,6 +227,15 @@ $form->prepare();
         });    
     }
     
+    function contactName(){
+        if ($('#phone').val()){
+            $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
+                $('#contactName').html(data.name);
+
+            });            
+        }    
+    }
+    
     function showKindGroup()
     {
         $('#refill').hide();
@@ -264,17 +273,10 @@ $form->prepare();
         }
     }
     
-    function contactName(){
-        $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
-            $('#contactName').html(data.name);
-            
-        });            
-    }
-    
     $( document ).ready(function() {
         
         showKindGroup();
-        //cashChange();
+        contactName();
 
         $('#kind').on('change', function(){
             showKindGroup();

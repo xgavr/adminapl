@@ -26,6 +26,8 @@ use Cash\Entity\UserTransaction;
 use Laminas\Validator\Date;
 use Cash\Form\CashInForm;
 use Cash\Form\CashOutForm;
+use Application\Entity\Phone;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of CashManager
@@ -390,6 +392,14 @@ class CashManager {
         if (is_numeric($data['cost'])){
             $data['cost'] = $this->entityManager->getRepository(Cost::class)
                     ->find($data['cost']);
+        }
+        if ($data['phone']){
+            $phoneFilter = new PhoneFilter();
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneByName($phoneFilter->filter($data['phone']));
+            if ($phone){        
+                $data['contact'] = $phone->getContact();
+            }    
         }
         if (is_numeric($data['order'])){
             $data['order'] = $this->entityManager->getRepository(Order::class)

@@ -95,7 +95,7 @@
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function() {
             updateBalance();
-        }, 
+        } 
     });
     
     function updateBalance(){
@@ -111,7 +111,7 @@
     function officeChange(){
         $.getJSON( '/till/office-cashes/'+$('#officeSelect').val(), function( data ) {
             $('#cashSelect').empty();
-            $('#cashBalance').empty()
+            $('#cashBalance').empty();
             $.each( data.rows, function( key, value ) {
                 $('#cashSelect').append('<option value="' + key + '">' + value.name + '</option>');
             });            
@@ -119,12 +119,11 @@
         });    
     }
 
-    $(function () {
+    $(function () {        
         $('#officeSelect').val("<?= $currentUser->getOffice()->getId()?>");
-        officeChange();
-        
+
         $('#ok').click(function () {
-            refreshTable()
+            refreshTable();
         });
         $(document).on('click', '.cash-in-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
@@ -258,13 +257,13 @@
         if (row.cashDoc.status == <?= CashDoc::STATUS_RETIRED?>) {
             return {               
                 classes: 'retired'
-            }   
+            };   
         }
         return {
           css: {
 //            color: 'blue'
           }
-        }   
+        };   
     }
     
     function responseHandler(res) {

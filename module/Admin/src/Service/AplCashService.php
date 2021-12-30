@@ -29,6 +29,7 @@ use User\Entity\User;
 use Company\Entity\Cost;
 use Laminas\Validator\Date;
 use Cash\Entity\Cash;
+use Cash\Entity\CashDoc;
 
 
 /**
@@ -211,12 +212,52 @@ class AplCashService {
      */
     private function getPaymentStatus($data)
     {
-        $vtpStatus = Cash::STATUS_ACTIVE;
+        $paymentStatus = CashDoc::STATUS_ACTIVE;
         if ($data['publish'] == 0){
-            $vtpStatus = Cash::STATUS_RETIRED;            
+            $paymentStatus = CashDoc::STATUS_RETIRED;            
         }
         
-        return $vtpStatus;
+        return $paymentStatus;
+    }
+
+    /**
+     * Получить статус чека
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getCheckStatus($data)
+    {
+        $checkStatus = CashDoc::CHECK_RETIRED;
+        if ($data['check'] == 1){
+            $checkStatus = CashDoc::CHECK_ACTIVE;            
+        }
+        
+        return $checkStatus;
+    }
+
+    /**
+     * Получить операцию платежа
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getPaymentKind($data)
+    {
+        switch($data['kind']){
+            case 'in1': return CashDoc::KIND_IN_PAYMENT_CLIENT;
+            case 'in2': return CashDoc::KIND_IN_RETURN_USER;
+            case 'in3': return CashDoc::KIND_IN_REFILL;
+            case 'in4': return CashDoc::KIND_IN_RETURN_SUPPLIER;
+            case 'out1': return CashDoc::KIND_OUT_USER;
+            case 'out2': return CashDoc::KIND_OUT_SUPPLIER;
+            case 'out8': return CashDoc::KIND_OUT_COURIER;
+            case 'out3': return CashDoc::KIND_OUT_REFILL;
+            case 'out4': return CashDoc::KIND_OUT_RETURN_CLIENT;
+            case 'out5': return CashDoc::KIND_OUT_COST;
+            case 'out6': return CashDoc::KIND_OUT_SALARY;
+        }
+        return;
     }
 
     /**
@@ -234,67 +275,87 @@ class AplCashService {
             $docDate = $data['created'];
         }
         
-        $dataPtu = [
-            'apl_id' => $data['id'],
-            'doc_no' => $data['ns'],
-            'doc_date' => $docDate,
-            'comment' => $data['comment'],
+        $dataCash = [
+            'aplId' => $data['id'],
+            'amount' => $data['sort'],
             'status_ex' => Ptu::STATUS_EX_APL,
-            'status' => $this->getPtuStatus($data),
+            'status' => $this->getPaymentStatus($data),
+            'checkStatus' => $this->getCheckStatus($data),
+            'dateOper' => $docDate,
+            'kind' => $this->getPaymentKind($data),
         ];
         
-        if (isset($data['desc'])){
-            $dataPtu['info'] = Encoder::encode($data['desc']);
-        }
-        
-        $office = $this->officeFromAplId($data['parent']);
-        $legal = $this->legalFromSupplierAplId($data['name'], $data['ds'], $data['supplier']);        
-        $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $this->getCashContract($data));
-        
-        $dataPtu['office'] = $office;
-        $dataPtu['legal'] = $legal;
-        $dataPtu['contract'] = $contract; 
-        
-        $ptu = $this->entityManager->getRepository(Ptu::class)
-                ->findOneByAplId($data['id']);
-        if ($ptu){
-            $this->ptuManager->updatePtu($ptu, $dataPtu);
-            $this->ptuManager->removePtuGood($ptu); 
-        } else {        
-            $ptu = $this->ptuManager->addPtu($dataPtu);
+        $cash = $this->entityManager->getRepository(Cash::class)
+                ->findOneByAplId($data['sf']);
+        if ($cash){
+            $dataCash['cash'] = $cash->getId();
+        }    
+        if ($data['bo']){
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneByAplId($data['sf']);
+            if ($user){
+                $dataCash['user'] = $user->getId();
+            }    
+        }    
+        if ($data['type'] == 'Suppliers'){
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->findOneByAplId($data['parent']);
+            if ($supplier){
+                $dataCash['supplier'] = $supplier->getId();
+            }    
+        }    
+        if ($data['type'] == 'Tills'){
+            $cashRefill = $this->entityManager->getRepository(Cash::class)
+                    ->findOneByAplId($data['parent']);
+            if ($cashRefill){
+                $dataCash['cashRefill'] = $cashRefill->getId();
+            }    
+        }    
+        if ($data['type'] == 'Users' || $data['type'] == 'Staffs'){
+            $userRefill = $this->entityManager->getRepository(User::class)
+                    ->findOneByAplId($data['parent']);
+            if ($userRefill){
+                $dataCash['userRefill'] = $userRefill->getId();
+            }    
+        }    
+        if ($data['type'] == 'Costs'){
+            $cost = $this->entityManager->getRepository(Cost::class)
+                    ->findOneByAplId($data['parent']);
+            if ($cost){
+                $dataCash['cost'] = $cost->getId();
+            }    
+        }    
+        if ($data['comment'] == 'Orders'){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneByAplId($data['name']);
+            if ($order){
+                $dataCash['order'] = $order->getId();
+                $dataCash['contact'] = $order->getContact()->getId();
+            }    
+        }    
+        if ($data['comment'] == 'Payments'){
+            $client = $this->entityManager->getRepository(AplClient::class)
+                    ->findOneByAplId($data['name']);
+            if ($client){
+                $dataCash['contact'] = $order->getContact()->getId();
+            }    
+        }    
+        $office = $this->officeFromAplId($data['off']);
+        if ($office){
+            $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office, $docDate);
+            $dataCash['company'] = $company->getId();
         }    
         
-        if ($ptu && isset($data['tp'])){
-            $rowNo = 1;
-            foreach ($data['tp'] as $tp){
-                if (isset($tp['good'])){
-                    $good = $this->findGood($tp['good']);   
-                }    
-                if (empty($good)){
-    //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
-                } else {
-
-                    $this->ptuManager->addPtuGood($ptu->getId(), [
-                        'status' => $ptu->getStatus(),
-                        'statusDoc' => $ptu->getStatusDoc(),
-                        'quantity' => $tp['sort'],                    
-                        'amount' => $tp['bag_total'],
-                        'good_id' => $good->getId(),
-                        'comment' => '',
-                        'info' => '',
-                        'countryName' => (isset($tp['country'])) ? $tp['country']:'',
-                        'countryCode' => (isset($tp['countrycode'])) ? $tp['countrycode']:'',
-                        'unitName' => (isset($tp['pack'])) ? $tp['pack']:'',
-                        'unitCode' => (isset($tp['packcode'])) ? $tp['packcode']:'',
-                        'ntd' => (isset($tp['gtd'])) ? $tp['gtd']:'',
-                    ], $rowNo);
-                    $rowNo++;
-                }    
-            }
-        }  
-        
-        if ($ptu){
-            $this->ptuManager->updatePtuAmount($ptu);
+        $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                ->findOneByAplId($data['id']);
+        if ($cashDoc){
+            $this->cashManager->updateCashDoc($cashDoc, $dataCash);
+        } else {        
+            $cashDoc = $this->cashManager->addCashDoc($dataCash);
+        }    
+                
+        if ($cashDoc){
             return true;            
         }
                 
@@ -302,18 +363,18 @@ class AplCashService {
     }
         
     /**
-     * Обновить статус загруженного документа
-     * @param integer $aplDocId
+     * Обновить статус загруженного платежа
+     * @param integer $aplPaymentId
      * @return boolean
      */
-    public function unloadedPayment($aplDocId)
+    public function unloadedPayment($aplPaymentId)
     {
         $result = true;
-        if (is_numeric($aplDocId)){
-            $url = $this->aplApi().'aa-doc?api='.$this->aplApiKey();
+        if (is_numeric($aplPaymentId)){
+            $url = $this->aplApi().'aa-payment?api='.$this->aplApiKey();
 
             $post = [
-                'docId' => $aplDocId,
+                'docId' => $aplPaymentId,
             ];
             
             $client = new Client();
@@ -372,11 +433,11 @@ class AplCashService {
             var_dump($body);
             exit;
         }
-        var_dump($result); exit;
+//        var_dump($result); exit;
 
         if (is_array($result)){
             if ($this->updatePayment($result)){ 
-                $this->unloadedPayment($result['id']);
+                //$this->unloadedPayment($result['id']);
             }    
         } else {
             return false;
