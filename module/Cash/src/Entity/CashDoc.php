@@ -67,7 +67,7 @@ class CashDoc {
     /**
      * @ORM\Column(name="apl_id")   
      */
-    protected $apl_id;
+    protected $aplId;
 
     /**
      * @ORM\Column(name="amount")   
@@ -223,12 +223,12 @@ class CashDoc {
 
     public function getAplId() 
     {
-        return $this->apl_id;
+        return $this->aplId;
     }
 
     public function setAplId($aplId) 
     {
-        $this->apl_id = $aplId;
+        $this->aplId = $aplId;
     }     
 
     public function getAmount() 
