@@ -130,12 +130,12 @@ class Cash {
 
     public function getAplId() 
     {
-        return $this->apl_id;
+        return $this->aplId;
     }
 
     public function setAplId($aplId) 
     {
-        $this->apl_id = $aplId;
+        $this->aplId = $aplId;
     }     
 
     public function getName() 
