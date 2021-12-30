@@ -271,7 +271,7 @@ class AplCashService {
      */
     public function updatePayment($data)
     {
-//        var_dump($data); exit;
+        var_dump($data); exit;
         $docDate = (!empty($data['ds'])) ? $data['ds']:'';
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
@@ -335,7 +335,14 @@ class AplCashService {
             if ($order){
                 $dataCash['order'] = $order->getId();
                 $dataCash['contact'] = $order->getContact()->getId();
-            }    
+            } else {
+                $client = $this->entityManager->getRepository(AplClient::class)
+                        ->findOneByAplId($data['parent']);
+                if ($client){
+                    $contacts = $client->getContacts();
+                    $dataCash['contact'] = $contacts[0]->getId();
+                }                    
+            }   
         }    
         if ($data['comment'] == 'Payments'){
             $client = $this->entityManager->getRepository(AplClient::class)
