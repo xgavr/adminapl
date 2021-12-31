@@ -244,7 +244,8 @@ class AplCashService {
      */
     private function getPaymentKind($data)
     {
-        switch($data['kind']){
+        $kind = (empty($data['kind'])) ? '':$data['kind'];
+        switch($kind){
             case 'in1': return CashDoc::KIND_IN_PAYMENT_CLIENT;
             case 'in2': return CashDoc::KIND_IN_RETURN_USER;
             case 'in3': return CashDoc::KIND_IN_REFILL;
