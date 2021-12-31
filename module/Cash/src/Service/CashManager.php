@@ -239,6 +239,7 @@ class CashManager {
     public function addRetails($cashDoc)
     {
         if ($cashDoc->isRetail()){
+            $office = ($cashDoc->getCash()) ? $cashDoc->getCash()->getOffice():$cashDoc->getUser()->getOffice();            
             $data = [
                 'doc_key' => $cashDoc->getLogKey(),
                 'date_oper' => $cashDoc->getDateOper(),
@@ -246,11 +247,10 @@ class CashManager {
                 'revise' => Retail::REVISE_NOT,
                 'amount' => $cashDoc->getMutualAmount(),
                 'contact_id' => $cashDoc->getContact()->getId(),
-                'office_id' => $cashDoc->getCash()->getId(),
+                'office_id' => $office->getId(),
                 'company_id' => $cashDoc->getCompany()->getId(),
             ];
 
-            var_dump($data); exit;
             $this->entityManager->getRepository(Retail::class)
                     ->insertRetail($data);
         }    
