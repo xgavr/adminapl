@@ -265,6 +265,34 @@ class AplCashService {
     }
 
     /**
+     * Получить операцию платежа
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getPaymentAmount($data)
+    {
+        $kind = (empty($data['kind'])) ? '':$data['kind'];
+        switch($kind){
+            case 'in1': 
+            case 'in2': 
+            case 'in3': 
+            case 'in4': 
+                return $data['sort'];
+            case 'out1': 
+            case 'out2': 
+            case 'out8':
+            case 'out3': 
+            case 'out4':
+            case 'out5': 
+            case 'out6': 
+            default:
+                return -$data['sort'];
+        }
+        return;
+    }
+
+    /**
      * Загрузить платеж
      * 
      * @param array $data
@@ -281,7 +309,7 @@ class AplCashService {
         
         $dataCash = [
             'aplId' => $data['id'],
-            'amount' => $data['sort'],
+            'amount' => $this->getPaymentAmount($data),
             //'status_ex' => Ptu::STATUS_EX_APL,
             'status' => $this->getPaymentStatus($data),
             'checkStatus' => $this->getCheckStatus($data),
