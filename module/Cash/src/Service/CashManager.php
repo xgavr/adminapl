@@ -205,7 +205,7 @@ class CashManager {
             $data = [
                 'doc_key' => $cashDoc->getLogKey(),
                 'date_oper' => $cashDoc->getDateOper(),
-                'status' => $cashDoc->getStatus(),
+                'status' => ($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
                 'revise' => Mutual::REVISE_NOT,
                 'amount' => $cashDoc->getMutualAmount(),
                 'legal_id' => $cashDoc->getLegal()->getId(),
@@ -242,7 +242,7 @@ class CashManager {
             $data = [
                 'doc_key' => $cashDoc->getLogKey(),
                 'date_oper' => $cashDoc->getDateOper(),
-                'status' => $cashDoc->getStatus(),
+                'status' => ($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? Retail::STATUS_ACTIVE: Retail::STATUS_RETIRED,
                 'revise' => Retail::REVISE_NOT,
                 'amount' => $cashDoc->getMutualAmount(),
                 'contact_id' => $cashDoc->getContact()->getId(),

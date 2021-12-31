@@ -83,7 +83,7 @@ class OrderManager
         $data = [
             'doc_key' => $order->getLogKey(),
             'date_oper' => $order->getDateOper(),
-            'status' => $order->getStatus(),
+            'status' => ($order->getStatus() == Order::STATUS_SHIPPED) ? Retail::STATUS_ACTIVE: Retail::STATUS_RETIRED,
             'revise' => Retail::REVISE_NOT,
             'amount' => $order->getTotal(),
             'contact_id' => $order->getContact()->getId(),
@@ -146,7 +146,7 @@ class OrderManager
         $data = [
             'doc_key' => $order->getLogKey(),
             'date_oper' => $order->getDateOper(),
-            'status' => $order->getStatus(),
+            'status' => ($order->getStatus() == Order::STATUS_SHIPPED) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
             'revise' => Mutual::REVISE_NOT,
             'amount' => $order->getTotal(),
             'legal_id' => $order->getLegal()->getId(),
@@ -177,7 +177,7 @@ class OrderManager
                 'doc_row_key' => $bid->getRowKey(),
                 'doc_row_no' => $bid->getRowNo(),
                 'date_oper' => $order->getDateOper(),
-                'status' => $order->getStatus(),
+                'status' => ($order->getStatus() == Order::STATUS_SHIPPED) ? Movement::STATUS_ACTIVE: Movement::STATUS_RETIRED,
                 'quantity' => -$bid->getNum(),
                 'amount' => -$bid->getPrice()*$bid->getNum(),
                 'good_id' => $bid->getGood()->getId(),
