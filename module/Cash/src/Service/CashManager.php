@@ -408,7 +408,7 @@ class CashManager {
                     ->find($data['order']);
             $data['contact'] = $data['order']->getContact();
             if ($data['order']->getLegal()){
-                $data['legal'] = $data['order']->getLegal()->getId();                
+                $data['legal'] = $data['order']->getLegal();                
             }
         }
         if (!empty($data['contact'])){
