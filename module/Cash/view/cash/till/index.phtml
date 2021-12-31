@@ -210,7 +210,7 @@
         switch(value){
             case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
             case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
-                        return row.cashDoc.contact.name;
+                        return (row.cashDoc.contact) ? row.cashDoc.contact.name:null;
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
                         return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
