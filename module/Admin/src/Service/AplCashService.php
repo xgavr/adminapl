@@ -272,7 +272,7 @@ class AplCashService {
      */
     public function updatePayment($data)
     {
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $docDate = (!empty($data['ds'])) ? $data['ds']:'';
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
@@ -283,11 +283,12 @@ class AplCashService {
         $dataCash = [
             'aplId' => $data['id'],
             'amount' => $data['sort'],
-            'status_ex' => Ptu::STATUS_EX_APL,
+            //'status_ex' => Ptu::STATUS_EX_APL,
             'status' => $this->getPaymentStatus($data),
             'checkStatus' => $this->getCheckStatus($data),
             'dateOper' => $docDate,
             'kind' => $this->getPaymentKind($data),
+            'comment' => (empty($data['info'])) ? null:$data['info'],
         ];
         
         $cash = $this->entityManager->getRepository(Cash::class)
