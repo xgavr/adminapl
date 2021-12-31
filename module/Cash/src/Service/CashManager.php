@@ -250,6 +250,7 @@ class CashManager {
                 'company_id' => $cashDoc->getCompany()->getId(),
             ];
 
+            var_dump($data); exit;
             $this->entityManager->getRepository(Retail::class)
                     ->insertRetail($data);
         }    
