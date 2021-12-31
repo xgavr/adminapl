@@ -213,10 +213,9 @@ class AplCashService {
     private function getPaymentStatus($data)
     {
         $paymentStatus = CashDoc::STATUS_ACTIVE;
-        if ($data['publish'] == 0){
+        if ($data['publish'] == 0 || $data['sort'] == 0){
             $paymentStatus = CashDoc::STATUS_RETIRED;            
         }
-        
         return $paymentStatus;
     }
 
@@ -258,7 +257,7 @@ class AplCashService {
             case 'out5': return CashDoc::KIND_OUT_COST;
             case 'out6': return CashDoc::KIND_OUT_SALARY;
             default:
-                if ($data['sort'] > 0 && $data['comment'] == 'Orders'){
+                if ($data['sort'] >= 0 && $data['comment'] == 'Orders'){
                     return CashDoc::KIND_IN_PAYMENT_CLIENT;
                 }
         }
