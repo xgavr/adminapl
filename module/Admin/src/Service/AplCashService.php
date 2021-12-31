@@ -337,6 +337,9 @@ class AplCashService {
             if ($order){
                 $dataCash['order'] = $order->getId();
                 $dataCash['contact'] = $order->getContact()->getId();
+                if ($order->getLegal()){
+                    $dataCash['legal'] = $order->getLegal()->getId();                    
+                }
             } else {
                 $client = $this->entityManager->getRepository(AplClient::class)
                         ->findOneByAplId($data['parent']);

@@ -406,6 +406,9 @@ class CashManager {
             $data['order'] = $this->entityManager->getRepository(Order::class)
                     ->find($data['order']);
             $data['contact'] = $data['order']->getContact();
+            if ($data['order']->getLegal()){
+                $data['legal'] = $data['order']->getLegal()->getId();                
+            }
         }
         if (!empty($data['contact'])){
             $data['contact'] = $this->entityManager->getRepository(Contact::class)
