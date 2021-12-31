@@ -33,6 +33,7 @@ use Application\Service\MarketManager;
 use Application\Service\CarManager;
 use Admin\Service\HelloManager;
 use Admin\Service\AplOrderService;
+use Admin\Service\AplCashService;
 
 
 /**
@@ -53,6 +54,7 @@ class ProcessingControllerFactory implements FactoryInterface {
         $aplBankService = $container->get(AplBankService::class);
         $aplDocService = $container->get(AplDocService::class);
         $aplOrderService = $container->get(AplOrderService::class);
+        $aplCashService = $container->get(AplCashService::class);
         $priceManager = $container->get(PriceManager::class);
         $rawManager = $container->get(RawManager::class);
         $supplierManager = $container->get(SupplierManager::class);
@@ -76,6 +78,6 @@ class ProcessingControllerFactory implements FactoryInterface {
                 $adminManager, $parseManager, $bankManager, $aplBankService, $producerManager,
                 $articleManager, $oemManager, $nameManager, $assemblyManager, $goodsManager,
                 $settingManager, $aplDocService, $marketManager, $carManager, $helloManager,
-                $aplOrderService);
+                $aplOrderService, $aplCashService);
     }
 }

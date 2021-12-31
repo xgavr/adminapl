@@ -69,6 +69,12 @@ class ProcessingController extends AbstractActionController
     private $aplBankService;    
 
     /**
+     * AplCashService manager.
+     * @var \Admin\Service\AplCashService
+     */
+    private $aplCashService;    
+
+    /**
      * PriceManager manager.
      * @var \Application\Service\PriceManager
      */
@@ -170,7 +176,8 @@ class ProcessingController extends AbstractActionController
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
-            $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService) 
+            $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
+            $aplCashService) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -196,6 +203,7 @@ class ProcessingController extends AbstractActionController
         $this->carManager = $carManager;
         $this->helloManager = $helloManager;
         $this->aplOrderService = $aplOrderService;
+        $this->aplCashService = $aplCashService;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -1364,6 +1372,25 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['order'] == 1){
             $this->aplOrderService->uploadOrders();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
+     * Выгрузка платежей из апл
+     * 
+     * @return JsonModel
+     */
+    public function updateAplCashAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['cash'] == 1){
+            $this->aplCashService->unloadPayments();
         }    
         
         return new JsonModel([
