@@ -248,11 +248,13 @@ class AplCashService {
             case 'in1': return CashDoc::KIND_IN_PAYMENT_CLIENT;
             case 'in2': return CashDoc::KIND_IN_RETURN_USER;
             case 'in3': return CashDoc::KIND_IN_REFILL;
+            case 'in6': return CashDoc::KIND_IN_REFILL;
             case 'in4': return CashDoc::KIND_IN_RETURN_SUPPLIER;
             case 'out1': return CashDoc::KIND_OUT_USER;
             case 'out2': return CashDoc::KIND_OUT_SUPPLIER;
             case 'out8': return CashDoc::KIND_OUT_COURIER;
             case 'out3': return CashDoc::KIND_OUT_REFILL;
+            case 'out7': return CashDoc::KIND_OUT_REFILL;
             case 'out4': return CashDoc::KIND_OUT_RETURN_CLIENT;
             case 'out5': return CashDoc::KIND_OUT_COST;
             case 'out6': return CashDoc::KIND_OUT_SALARY;
@@ -328,6 +330,15 @@ class AplCashService {
                     ->findOneByAplId($data['parent']);
             if ($cost){
                 $dataCash['cost'] = $cost->getId();
+            }    
+        }    
+        if ($data['type'] == 'Offices'){
+            $officeRefill = $this->entityManager->getRepository(Office::class)
+                    ->findOneByAplId($data['parent']);
+            if ($officeRefill){
+                $cashRefill = $this->entityManager->getRepository(Cash::class)
+                        ->defaultCash($officeRefill);
+                $dataCash['cashRefill'] = $cashRefill->getId();
             }    
         }    
         if ($data['comment'] == 'Orders'){
