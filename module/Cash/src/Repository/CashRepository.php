@@ -239,7 +239,7 @@ class CashRepository extends EntityRepository
     /**
      * Касса по умолчанию
      * @param Office $office
-     * @return cash
+     * @return Cash
      */
     public function defaultCash($office)
     {

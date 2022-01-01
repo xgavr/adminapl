@@ -589,7 +589,9 @@ class CashManager {
             } else {
                 $cash = $this->entityManager->getRepository(Cash::class)
                         ->defaultCash($user->getOffice());
-                $form->get('cash')->setValue($cash->getId());
+                if ($cash){
+                    $form->get('cash')->setValue($cash->getId());
+                }
             }           
 
             $kinds = $this->inKinds($cash);
