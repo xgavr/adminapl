@@ -210,7 +210,9 @@
         switch(value){
             case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
             case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
-                        return (row.cashDoc.contact) ? row.cashDoc.contact.name:null;
+                        var orderId = (row.cashDoc.order) ? row.cashDoc.order.aplId:null;
+                        var contactName = (row.cashDoc.contact) ? row.cashDoc.contact.name:null;
+                        return contactName+' '+orderId;
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
                         return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
