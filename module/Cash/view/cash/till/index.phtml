@@ -221,7 +221,7 @@
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
             case '<?= CashDoc::KIND_OUT_SALARY ?>': 
             case '<?= CashDoc::KIND_OUT_USER ?>': 
-                        return row.cashDoc.userRefill.fullName;
+                        return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName:null;
             case '<?= CashDoc::KIND_OUT_COST ?>': 
                         return row.cashDoc.cost.name;
             case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
