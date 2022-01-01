@@ -582,12 +582,13 @@ class CashManager {
      */
     public function cashFormOptions($form, $cashDoc = null)
     {
+        $user = $this->logManager->currentUser();
         if ($form->has('cash')){
             if ($cashDoc){
                 $cash = $cashDoc->getCash();
             } else {
                 $cash = $this->entityManager->getRepository(Cash::class)
-                        ->defaultCash($this->logManager->currentUser()->getOffice());
+                        ->defaultCash($user->getOffice());
                 $form->get('cash')->setValue($cash->getId());
             }           
 
@@ -603,7 +604,6 @@ class CashManager {
             if ($cashDoc){
                 $user = $cashDoc->getUser();
             } else {
-                $user = $this->logManager->currentUser();
                 $form->get('user')->setValue($user->getId());
             }           
             $officeId = $user->getOffice()->getId();            
