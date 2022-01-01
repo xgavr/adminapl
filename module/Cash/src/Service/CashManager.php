@@ -583,6 +583,7 @@ class CashManager {
     public function cashFormOptions($form, $cashDoc = null)
     {
         $user = $this->logManager->currentUser();
+        var_dump($user->getId());
         if ($form->has('cash')){
             if ($cashDoc){
                 $cash = $cashDoc->getCash();
