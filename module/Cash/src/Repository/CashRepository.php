@@ -243,7 +243,6 @@ class CashRepository extends EntityRepository
      */
     public function defaultCash($office)
     {
-        var_dump($office->getId()); exit;
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
