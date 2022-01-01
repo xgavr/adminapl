@@ -587,7 +587,6 @@ class CashManager {
             if ($cashDoc){
                 $cash = $cashDoc->getCash();
             } else {
-                var_dump($user->getOffice()->getId());
                 $cash = $this->entityManager->getRepository(Cash::class)
                         ->defaultCash($user->getOffice());
                 $form->get('cash')->setValue($cash->getId());
