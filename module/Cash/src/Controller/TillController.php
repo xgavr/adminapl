@@ -308,7 +308,7 @@ class TillController extends AbstractActionController
         } else {
             if ($cashDoc){
                 $data = $cashDoc->toArray();
-                var_dump($data);
+//                var_dump($data);
                 $form->setData($data);
             }    
         }

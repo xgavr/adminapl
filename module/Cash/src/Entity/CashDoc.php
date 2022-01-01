@@ -768,7 +768,7 @@ class CashDoc {
             'status' => $this->status,
             'user' => ($this->user) ? $this->user->getId():null,
             'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
-            'order' => ($this->vt) ? $this->vt->getId():null,
+            'vt' => ($this->vt) ? $this->vt->getId():null,
         ];
         
         return $result;
