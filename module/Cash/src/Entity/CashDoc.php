@@ -757,7 +757,7 @@ class CashDoc {
             'comment' => $this->comment,
             'company' => $this->company->getId(),
             'contact' => ($this->contact) ? $this->contact->getId():NULL,            
-            'phone' => ($this->contact) ? $this->contact->getPhone()->getName():NULL,            
+            'phone' => ($this->contact) ? ($this->contact->getPhone()) ? $this->contact->getPhone()->getName():NULL:NULL,            
             'cost' => ($this->cost) ? $this->cost->getId():NULL,
             'dateOper' => date('Y-m-d', strtotime($this->dateOper)),
             'info' => $this->info,
