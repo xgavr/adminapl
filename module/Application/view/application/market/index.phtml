@@ -161,7 +161,13 @@ $this->pageBreadcrumbs()->setItems([
             result += '';
             bootbox.dialog({
                 title: 'Ссылки на файлы с прайсами <textarea id=t style="width: 0px; height: 0px"></textarea>',
-                message: result
+                message: result,
+                buttons: {
+                    ok: {
+                        label: "OK",
+                        className: 'btn-info'
+                    }                    
+                }
             }); 
         });    
     }
