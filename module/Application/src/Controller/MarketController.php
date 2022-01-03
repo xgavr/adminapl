@@ -285,4 +285,70 @@ class MarketController extends AbstractActionController
         }
         exit;          
     }      
+    
+    public function downloadYmlAction()
+    {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        $block = $this->params()->fromQuery('b');
+
+        $marketId = (int)$this->params()->fromRoute('id', -1);
+        if ($marketId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->find($marketId);
+        
+        if ($market == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $file = realpath($this->marketManager->blockFilenamePath($market, null, $block));
+        
+        if (file_exists($file)){
+            if (ob_get_level()) {
+              ob_end_clean();
+            }
+            // заставляем браузер показать окно сохранения файла
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/xml');
+            header('Content-Disposition: attachment; filename=' . basename($file));
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            // читаем файл и отправляем его пользователю
+            readfile($file);
+        }
+        exit;          
+    }         
+    
+    public function ymlLinksAction()
+    {
+        $marketId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($marketId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->find($marketId);
+        
+        if ($market == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $links = $this->marketManager->downloadYmlLinks($market);
+        
+        return new JsonModel([
+            'links' => $links,
+        ]);                  
+    }
+    
+
 }

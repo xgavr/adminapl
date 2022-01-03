@@ -621,14 +621,15 @@ class AplOrderService {
     
     /**
      * Загрузить заказ из Апл
-     * 
+     * @param integer $start
      * @return 
      */
-    public function unloadOrder()
+    public function unloadOrder($start = 0)
     {
         $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
         
         $post = [
+            'start' => $start,
         ];
 
         $client = new Client();
@@ -669,16 +670,18 @@ class AplOrderService {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
         $startTime = time();
+        $start = 0;
         
         while (true){
-            if ($this->unloadOrder()) {
+            if ($this->unloadOrder($start)) {
                 usleep(100);
                 if (time() > $startTime + 840){
                     break;
                 }
             } else {
                 break;
-            }    
+            }
+            $start++;
         }    
         return;        
     }

@@ -98,16 +98,16 @@ $this->pageBreadcrumbs()->setItems([
             </td>
             <td>
                 <?php if ($market->getDateUnload()):?>
-                    <nobr>
-<!--                        <a class="btn btn-default btn-xs" title="Скачать" href="<?= $this->url('market',
-                                ['action'=>'download-price', 'id' => $market->getId()]); ?>">
-                            <span class="glyphicon glyphicon-download"></span>
-                        </a>-->
-                        <a class="btn btn-default btn-xs" title="Скачать ZIP" href="<?= $this->url('market',
-                                ['action'=>'download-price', 'id' => $market->getId()], ['query' => ['zip' => 1]]); ?>">
-                            <span>скачать zip</span>
-                        </a>
-                    </nobr>    
+                    <?php if ($market->getFormat() == MarketPriceSetting::FORMAT_YML):?>
+                        <button class="btn btn-default btn-xs links-btn" value="<?= $market->getId()?>" 
+                                title="Ссылки для скачивания YML">
+                            <span class="glyphicon glyphicon-link">Ссылки</span>
+                        </button> 
+                    <?php endif; ?>    
+                    <a class="btn btn-default btn-xs" title="Скачать ZIP" href="<?= $this->url('market',
+                            ['action'=>'download-price', 'id' => $market->getId()], ['query' => ['zip' => 1]]); ?>">
+                        <span>скачать zip</span>
+                    </a>
                 <?php endif; ?>        
             </td>
             <td>
@@ -132,7 +132,39 @@ $this->pageBreadcrumbs()->setItems([
                 width: '1440px'
             });
         });          
+        $(document).on('click', '.links-btn', function (e) {
+            ymlLinks($(e.currentTarget).val());
+        });
     });
+    
+    function copyToClipbpard(text) {
+        var t = document.getElementById('t');
+        t.innerHTML = text
+        t.select();
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successfully' : 'unsuccessfully';
+            console.log('text coppied ' + msg);
+        } catch (err) {
+            console.log('Unable to copy text');
+        }
+        t.innerHTML = '';
+    }
+
+    function ymlLinks(marketId){
+        $.getJSON( '/market/yml-links/'+marketId, function( data ) {
+            var result = '';
+            $.each( data.links, function( key, value ) {
+                result += '<p><span id=link'+key+'>'+value+'</span>';
+                result += '  <button class="btn btn-default btn-xs" onclick="copyToClipbpard(\''+value+'\')" title="Копировать в буфер"><span class="glyphicon glyphicon-copy"></span></button></p>';
+            });                    
+            result += '';
+            bootbox.dialog({
+                title: 'Ссылки на файлы с прайсами <textarea id=t style="width: 0px; height: 0px"></textarea>',
+                message: result
+            }); 
+        });    
+    }
     
     $('.rate-select').on('click', function(e) {
         var url = e.currentTarget.value;

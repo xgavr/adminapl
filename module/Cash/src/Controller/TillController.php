@@ -270,8 +270,7 @@ class TillController extends AbstractActionController
             'balance' => $balance,
         ]);                  
     }
-    
-   
+       
     public function editCashInAction()
     {
         $cashDocId = (int)$this->params()->fromRoute('id', -1);

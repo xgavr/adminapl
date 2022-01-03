@@ -807,4 +807,24 @@ class MarketManager
         
         return;
     }
+    
+    /**
+     * Ссылки для скачивания
+     * @param Market $market
+     * @return aaray
+     */
+    public function downloadYmlLinks($market)
+    {
+        $maxBlockCount = ($market->getBlockRowCount()) ? $market->getBlockRowCount():MarketPriceSetting::MAX_BLOCK_COUNT;
+        $result = [];
+        $blocks = 0;
+        while (true){
+            if ($blocks >= $maxBlockCount){
+                break;
+            }
+            $blocks++;
+            $result[] = 'https://adminapl.ru/market/download-yml/'.$market->getId().'?b='.$blocks;
+        }    
+        return $result;
+    }
 }
