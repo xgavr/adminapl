@@ -311,6 +311,8 @@ class MarketController extends AbstractActionController
             if (ob_get_level()) {
               ob_end_clean();
             }
+            $this->getResponse()->setStatusCode(200);
+            
             // заставляем браузер показать окно сохранения файла
             header('Content-Description: File Transfer');
             header('Content-Type: application/xml');
