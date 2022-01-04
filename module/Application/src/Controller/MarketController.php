@@ -308,14 +308,12 @@ class MarketController extends AbstractActionController
         $file = realpath($this->marketManager->blockFilenamePath($market, null, $block));
         
         if (file_exists($file)){
-            if (ob_get_level()) {
-              ob_end_clean();
-            }
+
             $this->getResponse()->setStatusCode(200);
             
             // заставляем браузер показать окно сохранения файла
             header('Content-Description: File Transfer');
-            header('Content-Type: application/xml');
+            header('Content-Type: application/octet-stream');
             header('Content-Disposition: attachment; filename=' . basename($file));
             header('Content-Transfer-Encoding: binary');
             header('Expires: 0');
