@@ -307,22 +307,33 @@ class MarketController extends AbstractActionController
         
         $file = realpath($this->marketManager->blockFilenamePath($market, null, $block));
         
-        if (file_exists($file)){
-
-            // заставляем браузер показать окно сохранения файла
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename=' . basename($file));
-            header('Content-Transfer-Encoding: binary');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($file));
-            // читаем файл и отправляем его пользователю
-            readfile($file);
-            http_response_code(200);
+        if (!file_exists($file)){
+            $this->getResponse()->setStatusCode(404);
+            return;
         }
-        exit;          
+
+        $response = $this->getResponse();
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine(
+                 "Content-type: application/octet-stream");
+        $headers->addHeaderLine(
+                 "Content-Disposition: attachment; filename=\"" . 
+                $file . "\"");
+        $headers->addHeaderLine("Content-length: ".filesize($file));
+        $headers->addHeaderLine("Cache-control: private"); 
+        
+        // Write file content        
+        $fileContent = file_get_contents($file);
+        if($fileContent!=false) {                
+            $response->setContent($fileContent);
+        } else {        
+            // Set 500 Server Error status code
+            $this->getResponse()->setStatusCode(500);
+            return;
+        }
+        
+        // Return Response to avoid default view rendering
+        return $this->getResponse(); 
     }         
     
     public function ymlLinksAction()
