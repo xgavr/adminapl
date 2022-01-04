@@ -318,7 +318,7 @@ class MarketController extends AbstractActionController
                  "Content-type: application/octet-stream");
         $headers->addHeaderLine(
                  "Content-Disposition: attachment; filename=\"" . 
-                $file . "\"");
+                basename($file) . "\"");
         $headers->addHeaderLine("Content-length: ".filesize($file));
         $headers->addHeaderLine("Cache-control: private"); 
         
