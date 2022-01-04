@@ -309,8 +309,6 @@ class MarketController extends AbstractActionController
         
         if (file_exists($file)){
 
-            $this->getResponse()->setStatusCode(200);
-            
             // заставляем браузер показать окно сохранения файла
             header('Content-Description: File Transfer');
             header('Content-Type: application/octet-stream');
@@ -322,6 +320,7 @@ class MarketController extends AbstractActionController
             header('Content-Length: ' . filesize($file));
             // читаем файл и отправляем его пользователю
             readfile($file);
+            http_response_code(200);
         }
         exit;          
     }         
