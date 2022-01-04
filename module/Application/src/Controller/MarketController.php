@@ -288,6 +288,7 @@ class MarketController extends AbstractActionController
     
     public function downloadYmlAction()
     {
+        ini_set('memory_limit', '512M');
         setlocale(LC_ALL,'ru_RU.UTF-8');
         $block = $this->params()->fromQuery('b');
 
