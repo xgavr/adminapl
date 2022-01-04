@@ -313,20 +313,29 @@ class MarketController extends AbstractActionController
             return;
         }
 
+        $response = $this->getResponse();
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine(
+                 "Content-type: application/octet-stream");
+        $headers->addHeaderLine(
+                 "Content-Disposition: attachment; filename=\"" . 
+                basename($file) . "\"");
+        $headers->addHeaderLine("Content-length: ".filesize($file));
+        $headers->addHeaderLine("Cache-control: private"); 
+        
         // Write file content        
         $fileContent = file_get_contents($file);
-        if($fileContent == false) {                
+        if($fileContent!=false) {                
+            $response->setContent($fileContent);
+            $this->getResponse()->setStatusCode(200);
+        } else {        
             // Set 500 Server Error status code
             $this->getResponse()->setStatusCode(500);
             return;
         }
         
-        $this->layout()->setTemplate('layout/terminal');
-        // Render the view template.
-        return new ViewModel([
-            'content' => $fileContent,
-        ]);        
-        
+        // Return Response to avoid default view rendering
+        return $this->getResponse(); 
     }         
     
     public function ymlLinksAction()
