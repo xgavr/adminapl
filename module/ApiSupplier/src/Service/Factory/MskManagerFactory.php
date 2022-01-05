@@ -10,7 +10,7 @@ namespace ApiSupplier\Service\Factory;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Admin\Service\MskManager;
+use ApiSupplier\Service\MskManager;
 use Admin\Service\AdminManager;
 
 /**

@@ -9,20 +9,20 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 return [
     'router' => [
         'routes' => [
-//            'admin' => [
-//                'type'    => Segment::class,
-//                'options' => [
-//                    'route'    => '/admin[/:action[/:id]]',
-//                    'constraints' => [
-//                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                        'id' => '[0-9]*',
-//                    ],
-//                    'defaults' => [
-//                        'controller'    => Controller\IndexController::class,
-//                        'action'        => 'index',
-//                    ],
-//                ],
-//            ],
+            'api-supplier' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/api-supplier[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\IndexController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [

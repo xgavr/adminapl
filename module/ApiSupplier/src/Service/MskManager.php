@@ -8,6 +8,9 @@
 
 namespace ApiSupplier\Service;
 
+use Application\Entity\Supplier;
+use Application\Entity\RequestSetting;
+use GuzzleHttp;
 
 /**
  * Description of MskManager
@@ -16,9 +19,13 @@ namespace ApiSupplier\Service;
  */
 class MskManager {
     
+    const MSK_ID = 9;
+
+    const REQUEST_SETTING_ID = 8;
+    
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -39,28 +46,29 @@ class MskManager {
      */
     public function login()
     {
-        $settings = $this->adminManager->getSettings();
-        $result = false;
-        if ($settings['sms_ru_url'] && $settings['sms_ru_api_id']){
-            $result=file_get_contents($settings['sms_ru_url'].'?api_id='.$settings['sms_ru_api_id'].'&to='.$options['phone'].'&text='. urlencode($options['text']).'&from=APL');
-        }    
+        $requestSetting = $this->entityManager->getRepository(RequestSetting::class)
+                ->find($this::REQUEST_SETTING_ID);
         
-        return $result;
-    }
-    
-    /*
-     * @var $options array
-     * phone string
-     * text string
-     */
-    public function wamm($options)
-    {
-        $settings = $this->adminManager->getSettings();
-        $result = false;
-        if ($settings['wamm_url'] && $settings['wamm_api_id']){
-//            var_dump($settings['wamm_url'].'/'.$settings['wamm_api_id'].'/'.$options['phone'].'/?text='. urlencode($options['text'])); exit;
-            $result=file_get_contents($settings['wamm_url'].'/'.$settings['wamm_api_id'].'/'.$options['phone'].'/?text='. urlencode($options['text']));
-        }    
+        $uri = $requestSetting->getSiteNormalize().'login.lmz';
+        $login = $requestSetting->getLogin();
+        $password = $requestSetting->getPassword();
+        
+//        var_dump($uri); exit;
+        $client = new GuzzleHttp\Client();
+        $response = $client->request('POST', $uri,
+            [
+                'verify' => false,
+                'allow_redirects' => true,
+                'form_params' => [
+                    'come_from' => '/index.lmz',
+                    'username' => $login,
+                    'password' => $password,
+                    'submit' => 'Вход',
+                ]
+            ]
+        );
+        
+        $result = $response->getBody()->read(6000);
         
         return $result;
     }

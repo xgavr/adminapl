@@ -39,93 +39,14 @@ class IndexController extends AbstractActionController
     
     public function indexAction()
     {
-        $marketplaces = $this->entityManager->getRepository(Marketplace::class)
-                ->findAll();
         return new ViewModel([
-            'marketplaces' =>  $marketplaces,
         ]);
     }
-
-    public function editFormAction()
+    
+    public function mskLoginAction()
     {
-        $marketplaceId = (int)$this->params()->fromRoute('id', -1);
-        
-        $marketplace = null;
-        
-        if ($marketplaceId > 0){
-            $marketplace = $this->entityManager->getRepository(Marketplace::class)
-                    ->find($marketplaceId);
-        }    
-        
-        $form = new MarketplaceSetting($this->entityManager);
-        
-        if ($this->getRequest()->isPost()) {
-            
-            $data = $this->params()->fromPost();            
-            $form->setData($data);
-
-            if ($form->isValid()) {
-                
-                if ($marketplace){
-                    $this->marketplaceService->update($marketplace, $data);
-                } else {
-                    $marketplace = $this->marketplaceService->add($data);
-                }    
-                
-                return new JsonModel(
-                   ['ok']
-                );           
-            } else {
-                //var_dump($form->getMessages());
-            }
-        } else {
-            if ($marketplace){
-                $data = $marketplace->toArray();
-                $form->setData($data);
-            }    
-        }
-        $this->layout()->setTemplate('layout/terminal');
-        // Render the view template.
-        return new ViewModel([
-            'form' => $form,
-            'marketplace' => $marketplace,
-        ]);        
+        $content = $this->mskManager->login();
+        echo $content;
+        exit;
     }    
-    
-    public function sbermarketOrderNewAction()
-    {
-        $this->sbermarketManager->handle();
-        //{"success":1,"meta":{"source":"merchant_name"}}
-        return new JsonModel([
-            'success' => 1,
-            'meta' => [
-                'source' => 'APL',
-            ],
-        ]);
-    }
-    
-    public function sbermarketOrderCancelAction()
-    {
-        $this->sbermarketManager->handle();
-        return new JsonModel([
-            'success' => 1,
-            'meta' => [
-                'source' => 'APL',
-            ],
-        ]);        
-    }
-
-    public function yandexOrderAcceptAction()
-    {
-        $updId = $this->sbermarketManager->handle();
-        return new JsonModel([
-            'order' => [
-                'accepted' => true,
-                'id' => $updId,
-                'reason' => '',
-            ],
-        ]);
-    }
-    
-    
 }

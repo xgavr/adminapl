@@ -1,0 +1,12 @@
+<?php
+$this->headTitle('АПИ поставщиков');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Администрирование'=>$this->url('admin'),
+            'АПИ поставщиков' => $this->url('api-supplier')
+            ]);  
+
+?>
