@@ -588,7 +588,7 @@ return [
             ],
             Controller\MarketController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@'],
+                ['actions' => '*', 'allow' => '+admin.manage'],
                 ['actions' => 'download-yml', 'allow' => '*']
             ],
             Controller\MlController::class => [

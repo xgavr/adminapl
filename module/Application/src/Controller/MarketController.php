@@ -327,7 +327,6 @@ class MarketController extends AbstractActionController
         $fileContent = file_get_contents($file);
         if($fileContent!=false) {                
             $response->setContent($fileContent);
-            $this->getResponse()->setStatusCode(200);
         } else {        
             // Set 500 Server Error status code
             $this->getResponse()->setStatusCode(500);
