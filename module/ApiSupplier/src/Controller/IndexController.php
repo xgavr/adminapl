@@ -46,7 +46,10 @@ class IndexController extends AbstractActionController
     public function mskLoginAction()
     {
         $content = $this->mskManager->login();
-        echo $content;
-        exit;
+        
+        //$this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
+            'content' => iconv('windows-1251', 'utf-8', $content),
+        ]);
     }    
 }

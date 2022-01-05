@@ -1,0 +1,14 @@
+<?php
+$this->headTitle('МСК');
+
+$this->mainMenu()->setActiveItemId('admin');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Администрирование'=>$this->url('admin'),
+            'МСК' => $this->url('api-supplier', ['action' => 'msk-login'])
+            ]);  
+
+?>
+
+<?= $content?>
