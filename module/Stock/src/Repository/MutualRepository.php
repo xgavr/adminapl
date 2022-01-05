@@ -13,6 +13,8 @@ use Stock\Entity\Mutual;
 use Stock\Entity\Retail;
 use Application\Entity\Supplier;
 use Company\Entity\Legal;
+use Stock\Entity\Ptu;
+use Stock\Entity\Vtp;
 
 /**
  * Description of MutualRepository
@@ -118,6 +120,55 @@ class MutualRepository extends EntityRepository{
     }
     
     /**
+     * Сумма поставок юрлица
+     * 
+     * @param Legal $legal
+     */
+    public function ptuAmount($legal)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(p.amount) as amountSum')
+                ->from(Ptu::class, 'p')
+                ->where('p.legal = ?1')
+                ->setParameter('1', $legal->getId())
+                ->andWhere('p.status = ?2')
+                ->setParameter('2', Ptu::STATUS_ACTIVE)
+                ;
+        $data = $qb->getQuery()->getResult();
+        foreach ($data as $row){
+            return $row['amountSum'];
+        }
+
+        return 0;
+    }
+    
+    /**
+     * Сумма возвратов юрлица
+     * 
+     * @param Legal $legal
+     */
+    public function vtpAmount($legal)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(v.amount) as amountSum')
+                ->from(Vtp::class, 'v')
+                ->join('v.ptu', 'p')
+                ->where('p.legal = ?1')
+                ->setParameter('1', $legal->getId())
+                ->andWhere('v.status = ?2')
+                ->setParameter('2', Vtp::STATUS_ACTIVE)
+                ;
+        $data = $qb->getQuery()->getResult();
+        foreach ($data as $row){
+            return $row['amountSum'];
+        }
+
+        return 0;
+    }
+    
+    /**
      * Сумма поставок поставщика
      * 
      * @param Supplier $supplier
@@ -127,7 +178,8 @@ class MutualRepository extends EntityRepository{
         $result = 0;
         $legalContact = $supplier->getLegalContact();        
         foreach($legalContact->getLegals() as $legal){
-            $result += $this->legalAmount($legal);
+            $result += $this->ptuAmount($legal);
+            $result -= $this->vtpAmount($legal);
         }
         return $result;
     }
