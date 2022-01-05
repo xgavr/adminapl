@@ -588,8 +588,11 @@ return [
             ],
             Controller\MarketController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+admin.manage'],
-                ['actions' => 'download-yml', 'allow' => '*']
+//                ['actions' => ['download-yml'], 'allow' => '*'],
+//                ['actions' => ['apl-to-zzap', 'content', 'delete', 'edit-form', 'index', 
+//                    'region-shipping', 'unload-market', 'yml-links'], 'allow' => '@'],
+                ['actions' => '*', 'allow' => '@'],
+                ['actions' => ['downloadYml'], 'allow' => '*'],
             ],
             Controller\MlController::class => [
                 // Allow access to authenticated users.
