@@ -68,7 +68,40 @@ class MskManager {
             ]
         );
         
-        $result = $response->getBody()->read(6000);
+        if ($response->getStatusCode() == 200){
+            $uri1 = $requestSetting->getSiteNormalize().'set_agr.lmz';
+//            $client->request('GET', $uri1,
+//                [
+//                    'verify' => false,
+//                    'allow_redirects' => true,
+//                    'delay' => 100,
+//                    'query' => [
+//                        'come_from' => '/index.lmz',
+//                    ]
+//                ]
+//            );
+//            $uri2 = $requestSetting->getSiteNormalize().'set_agr.lmz';
+//            $client->request('GET', $uri2,
+//                [
+//                    'verify' => false,
+//                    'allow_redirects' => true,
+//                    'delay' => 100,
+//                    'query' => [
+//                        'agr_id' => 148183,
+//                        'come_from' => '/index.lmz',
+//                    ]
+//                ]
+//            );                
+            $uri3 = $requestSetting->getSiteNormalize().'index.lmz';
+            $response = $client->request('GET', $uri3,
+                [
+                    'verify' => false,
+                    'allow_redirects' => true,
+                    'delay' => 100,
+                ]
+            );                
+            $result = $response->getBody()->read($response->getBody()->getSize());
+        }
         
         return $result;
     }

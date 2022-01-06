@@ -235,10 +235,13 @@ class ProducerRepository  extends EntityRepository{
         $queryBuilder->select('identity(r.raw)')
                 ->distinct()
                 ->from(Rawprice::class, 'r')
+                ->join('r.raw', 'w')
                 ->where('r.unknownProducer = ?1')
-                ->andWhere('r.status = ?2')
                 ->setParameter('1', $unknownProducer->getId())    
+                ->andWhere('r.status = ?2')
                 ->setParameter('2', Rawprice::STATUS_PARSED)
+                ->andWhere('w.status = ?3')
+                ->setParameter('3', Raw::STATUS_PARSED)
                 ;
         $result = count($queryBuilder->getQuery()->getResult());
         
