@@ -362,7 +362,7 @@ class ProducerRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('p.id, p.aplId, p.name, p.goodCount, p.movement, p.status, count(up.id) as unknownProducerCount, sum(up.supplierCount) as supplierCount, sum(up.rawpriceCount) as rawpriceCount')
+        $queryBuilder->select('p.id, p.aplId, p.name, p.goodCount, p.movement, p.status, count(up.id) as unknownProducerCount, max(up.supplierCount) as supplierCount, sum(up.rawpriceCount) as rawpriceCount')
             ->from(Producer::class, 'p')
             ->leftJoin('p.unknownProducer', 'up') 
             ->groupBy('p.id')    
