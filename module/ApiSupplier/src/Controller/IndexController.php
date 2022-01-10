@@ -49,7 +49,7 @@ class IndexController extends AbstractActionController
         
         //$this->layout()->setTemplate('layout/terminal');
         return new ViewModel([
-            'content' => iconv('cp-1251', 'utf-8', $content),
+            'content' => iconv('windows-1251', 'utf-8', $content),
         ]);
     }    
 }

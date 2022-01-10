@@ -163,16 +163,17 @@ class MskManager {
         $password = $requestSetting->getPassword();
         $userAgent = $this::USER_AGENT;
         $postData = [
-            'come_from' => '/index.lmz',
+            'come_from' => '%2Findex.lmz',
             'username' => $login,
             'password' => $password,
-            'submit' => iconv('utf-8', 'cp-1251', 'Вход'),
+            'submit' => '%C2%F5%EE%E4',
         ];
         
+       // var_dump($postData); exit;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
         curl_setopt($ch, CURLOPT_HEADER, 1); 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -181,7 +182,7 @@ class MskManager {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 "User-Agent: $userAgent",
-                "Accept-Language: ru"
+                "Accept-Language: ru,en-US;q=0.9,en;q=0.8"
             ));        
 //        curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
 //        curl_setopt($ch, CURLOPT_UNRESTRICTED_AUTH, 1);
@@ -192,12 +193,12 @@ class MskManager {
         if ($output === FALSE) {
             echo "cURL Error: " . curl_error($ch);
         } else {  
-            usleep(100);
-            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?come_from=/index.lmz');
-            usleep(100);
-            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?agr_id=148183;come_from=/index.lmz');
-            usleep(100);
-            $output = $this->readUrl($requestSetting->getSiteNormalize().'/index.lmz');
+//            usleep(100);
+//            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?come_from=/index.lmz');
+//            usleep(100);
+//            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?agr_id=148183;come_from=/index.lmz');
+//            usleep(100);
+//            $output = $this->readUrl($requestSetting->getSiteNormalize().'/index.lmz');
             //$output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz');
         }
         return $output;
