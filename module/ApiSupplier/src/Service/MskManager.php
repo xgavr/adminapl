@@ -144,8 +144,10 @@ class MskManager {
 
         curl_close($ch);
 
-        return $result;	   
-        
+        if ($output === FALSE) {
+            return "cURL Error: " . curl_error($ch);
+        }    
+        return $result;	           
     }
     
     /**
@@ -197,9 +199,8 @@ class MskManager {
             usleep(100);
             $output = $this->readUrl($requestSetting->getSiteNormalize().'/index.lmz');
             //$output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz');
-            echo $output;
         }
-        return;
+        return $output;
     }
     
 }
