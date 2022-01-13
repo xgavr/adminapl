@@ -11,8 +11,8 @@ namespace Stock\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Company\Entity\Legal;
 use Company\Entity\Office;
-use Application\Entity\Goods;
 use Application\Entity\Contact;
+use User\Entity\User;
 
 
 /**
@@ -25,6 +25,14 @@ class Revise {
     
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    
+    const STATUS_DOC_RECD       = 1; // Получено.
+    const STATUS_DOC_NOT_RECD  = 2; // Не получено.
+
+     // Ptu status doc constants.
+    const STATUS_EX_NEW  = 1; // Не отправлено.
+    const STATUS_EX_RECD  = 2; // Получено из АПЛ.
+    const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
     
     /**
      * @ORM\Id
@@ -112,6 +120,12 @@ class Revise {
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
      */
     private $contact;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="revises") 
+     * @ORM\JoinColumn(name="user_creator_id", referencedColumnName="id")
+     */
+    private $userCreator;        
     
     public function __construct() {
     }
@@ -480,5 +494,19 @@ class Revise {
     public function setContact($contact) 
     {
         $this->contact = $contact;
-    }                         
+    }    
+    
+    public function getUserCreator()
+    {
+        return $this->userCreator;
+    }
+    
+    /**
+     * Add userCreator
+     * @param User $userCreator
+     */
+    public function setUserCreator($userCreator)
+    {
+        $this->userCreator = $userCreator;
+    }    
 }

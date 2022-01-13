@@ -83,6 +83,25 @@ return [
                     // route defined above here.
                 ],
             ],    
+            'revise' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/revise[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ReviseController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
             'st' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -156,6 +175,9 @@ return [
             Controller\PtuController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
+            Controller\ReviseController::class => [
+                ['actions' => '*', 'allow' => '@'],
+            ],
             Controller\StController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
@@ -173,6 +195,7 @@ return [
             Controller\OtController::class => Controller\Factory\OtControllerFactory::class,
             Controller\PtController::class => Controller\Factory\PtControllerFactory::class,
             Controller\PtuController::class => Controller\Factory\PtuControllerFactory::class,
+            Controller\ReviseController::class => Controller\Factory\ReviseControllerFactory::class,
             Controller\StController::class => Controller\Factory\StControllerFactory::class,
             Controller\VtController::class => Controller\Factory\VtControllerFactory::class,
             Controller\VtpController::class => Controller\Factory\VtpControllerFactory::class,
@@ -183,6 +206,7 @@ return [
             Service\OtManager::class => Service\Factory\OtManagerFactory::class,
             Service\PtManager::class => Service\Factory\PtManagerFactory::class,
             Service\PtuManager::class => Service\Factory\PtuManagerFactory::class,
+            Service\ReviseManager::class => Service\Factory\ReviseManagerFactory::class,
             Service\StManager::class => Service\Factory\StManagerFactory::class,
             Service\VtManager::class => Service\Factory\VtManagerFactory::class,
             Service\VtpManager::class => Service\Factory\VtpManagerFactory::class,

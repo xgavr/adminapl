@@ -1,0 +1,290 @@
+<?php
+use Cash\Entity\CashDoc;
+
+$form = $this->form;
+
+$form->get('docDate')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('amount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('phone')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'8 (000) 000-0000',
+    'aria-describedby' => "basic-addon2",
+    ]);
+
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('supplier')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'cash-submit']);
+
+$form->prepare();
+
+?>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="reviseModalLabel">Корректировка долга</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('amount')); ?>
+                        <?= $this->formElement($form->get('amount')); ?>
+                        <?= $this->formElementErrors($form->get('amount')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('cash')); ?>
+                        <?= $this->formElement($form->get('cash')); ?>
+                        <?= $this->formElementErrors($form->get('cash')); ?>                  
+                    </div>
+                </div>
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('company')); ?>
+                        <?= $this->formElement($form->get('company')); ?>
+                        <?= $this->formElementErrors($form->get('company')); ?>                  
+                    </div>
+                </div>    
+            </div>
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('kind')); ?>
+                        <?= $this->formElement($form->get('kind')); ?>
+                        <?= $this->formElementErrors($form->get('kind')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('dateOper')); ?>
+                        <?= $this->formElement($form->get('dateOper')); ?>
+                        <?= $this->formElementErrors($form->get('dateOper')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?>
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row" id="refill">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('cashRefill')); ?>
+                        <?= $this->formElement($form->get('cashRefill')); ?>
+                        <?= $this->formElementErrors($form->get('cashRefill')); ?>                  
+                    </div>
+                </div>    
+            </div>
+            <div class="row" id="userReturn">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('userRefill')); ?>
+                        <?= $this->formElement($form->get('userRefill')); ?>
+                        <?= $this->formElementErrors($form->get('userRefill')); ?>                  
+                    </div>
+                </div>    
+            </div>
+            <div class="row" id="payment">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('order')); ?>
+                        <?= $this->formElement($form->get('order')); ?>
+                        <?= $this->formElementErrors($form->get('order')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('phone')); ?>
+                        <span id="contactName"></span>
+                        <?= $this->formElement($form->get('phone')); ?>
+                        <?= $this->formElementErrors($form->get('phone')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <div></div>
+                    </div>
+                </div>    
+            </div>    
+            <div class="row" id="supplierReturn">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('supplier')); ?>
+                        <?= $this->formElement($form->get('supplier')); ?>
+                        <?= $this->formElementErrors($form->get('supplier')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row">    
+                <div class="col-xs-12">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('comment')); ?>
+                        <?= $this->formElement($form->get('comment')); ?>
+                        <?= $this->formElementErrors($form->get('comment')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+        </div>    
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="cash-in-submit">Сохранить</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+            
+<script>         
+    $('#phone').mask('8 (000) 000-0000', {selectOnFocus: false});
+    
+    function submitForm(){
+        var data = serializeForm('#cash-in-form');
+         $('#cash-in-submit').prop('disabled', true);
+        //console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: '/till/edit-cash-in/<?= ($cashDoc) ? $cashDoc->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#cashInModal').modal('hide');
+                    //window.location.reload();
+                    $('#table').bootstrapTable('refresh');
+                } else {
+                    $('#cashInModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    function cashChange(){
+        $.getJSON( '/till/in-kinds/'+$('#cash').val(), function( data ) {
+            $('#kind').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#kind').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+            showKindGroup();
+        });    
+        $.getJSON( '/till/legals/'+$('#cash').val(), function( data ) {
+            $('#company').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+    
+    function contactName(){
+        if ($('#phone').val()){
+            $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
+                $('#contactName').html(data.name);
+
+            });            
+        }    
+    }
+    
+    function showKindGroup()
+    {
+        $('#refill').hide();
+        $('#cashRefill').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_IN_REFILL?>){
+            $('#refill').show();
+            $('#cashRefill').attr('required', true);
+        }
+        
+        $('#userReturn').hide();
+        $('#userRefill').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_IN_RETURN_USER?>){
+            $('#userReturn').show();
+            $('#userRefill').attr('required', true);
+        }
+
+        $('#payment').hide();
+        $('#order').attr('required', false);
+        $('#legal').attr('required', false);
+        $('#phone').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_IN_PAYMENT_CLIENT?>){
+            $('#payment').show();
+            $('#phone').attr('required', true);
+//            $('#order').attr('required', true);
+            //$('#legal').attr('required', true);
+        }
+
+        $('#supplierReturn').hide();
+        $('#supplier').attr('required', false);
+        $('#legal').attr('required', false);
+        if ($("#kind").val() == <?= CashDoc::KIND_IN_RETURN_SUPPLIER?>){
+            $('#supplierReturn').show();
+            $('#supplier').attr('required', true);
+            $('#legal').attr('required', true);
+        }
+    }
+    
+    $( document ).ready(function() {
+        
+        showKindGroup();
+        contactName();
+
+        $('#kind').on('change', function(){
+            showKindGroup();
+        });
+        $('#cash').on('change', function(){
+            cashChange()
+        });
+        $('#phone').on('change', function(){
+            contactName()
+        });
+        
+        
+        var forms = $('#cash-in-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('cash-in-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });            
+</script>

@@ -379,5 +379,33 @@ class LogManager {
         }    
         
         return;
-    }                   
+    }            
+    
+    /**
+     * Добавить запись в лог revise
+     * @param Revise $revise
+     * @param integer $status 
+     */
+    public function infoRevise($revise, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $ptuLog = $revise->toLog();
+            
+            $data = [
+                'log_key' => $revise->getLogKey(),
+                'message' => Json::encode($revise),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }               
 }
