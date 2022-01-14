@@ -53,6 +53,13 @@ $form->prepare();
             <div class="row">
                 <div class="col-xs-3">                        
                     <div class="form-group">
+                        <?= $this->formLabel($form->get('docDate')); ?>
+                        <?= $this->formElement($form->get('docDate')); ?>
+                        <?= $this->formElementErrors($form->get('docDate')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
                         <?= $this->formLabel($form->get('amount')); ?>
                         <?= $this->formElement($form->get('amount')); ?>
                         <?= $this->formElementErrors($form->get('amount')); ?>                  
@@ -60,9 +67,9 @@ $form->prepare();
                 </div>    
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('cash')); ?>
-                        <?= $this->formElement($form->get('cash')); ?>
-                        <?= $this->formElementErrors($form->get('cash')); ?>                  
+                        <?= $this->formLabel($form->get('office')); ?>
+                        <?= $this->formElement($form->get('office')); ?>
+                        <?= $this->formElementErrors($form->get('office')); ?>                  
                     </div>
                 </div>
                 <div class="col-xs-3">                        
@@ -72,22 +79,6 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('company')); ?>                  
                     </div>
                 </div>    
-            </div>
-            <div class="row">
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('kind')); ?>
-                        <?= $this->formElement($form->get('kind')); ?>
-                        <?= $this->formElementErrors($form->get('kind')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('dateOper')); ?>
-                        <?= $this->formElement($form->get('dateOper')); ?>
-                        <?= $this->formElementErrors($form->get('dateOper')); ?>                  
-                    </div>
-                </div>    
                 <div class="col-xs-3">                        
                     <div class="form-group">
                         <?= $this->formLabel($form->get('status')); ?>
@@ -95,48 +86,8 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('status')); ?>                  
                     </div>
                 </div>    
-            </div>    
-            <div class="row" id="refill">
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('cashRefill')); ?>
-                        <?= $this->formElement($form->get('cashRefill')); ?>
-                        <?= $this->formElementErrors($form->get('cashRefill')); ?>                  
-                    </div>
-                </div>    
             </div>
-            <div class="row" id="userReturn">
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('userRefill')); ?>
-                        <?= $this->formElement($form->get('userRefill')); ?>
-                        <?= $this->formElementErrors($form->get('userRefill')); ?>                  
-                    </div>
-                </div>    
-            </div>
-            <div class="row" id="payment">
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('order')); ?>
-                        <?= $this->formElement($form->get('order')); ?>
-                        <?= $this->formElementErrors($form->get('order')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('phone')); ?>
-                        <span id="contactName"></span>
-                        <?= $this->formElement($form->get('phone')); ?>
-                        <?= $this->formElementErrors($form->get('phone')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <div></div>
-                    </div>
-                </div>    
-            </div>    
-            <div class="row" id="supplierReturn">
+            <div class="row">
                 <div class="col-xs-3">                        
                     <div class="form-group">
                         <?= $this->formLabel($form->get('supplier')); ?>
@@ -144,7 +95,23 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('supplier')); ?>                  
                     </div>
                 </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('legal')); ?>
+                        <?= $this->formElement($form->get('legal')); ?>
+                        <?= $this->formElementErrors($form->get('legal')); ?>                  
+                    </div>
+                </div>    
             </div>    
+            <div class="row" id="refill">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('contract')); ?>
+                        <?= $this->formElement($form->get('contract')); ?>
+                        <?= $this->formElementErrors($form->get('contract')); ?>                  
+                    </div>
+                </div>    
+            </div>
             <div class="row">    
                 <div class="col-xs-12">                        
                     <div class="form-group">

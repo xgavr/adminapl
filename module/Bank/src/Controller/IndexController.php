@@ -148,8 +148,9 @@ class IndexController extends AbstractActionController
 
     public function tochkaStatementUpdateAction()
     {
-        	        
-        $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
+        $date = $this->params()->fromQuery('date', date('Y-m-d'));
+        
+        $result = $this->bankManager->tochkaStatement($date, $date);
 
         $message = 'ok!';
         $ok = 'ok-reload';

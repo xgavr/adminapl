@@ -509,4 +509,63 @@ class Revise {
     {
         $this->userCreator = $userCreator;
     }    
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'amount' => $this->amount,
+            'aplId' => $this->aplId,
+            'cash' => ($this->cash) ? $this->cash->getId():null,
+            'cashRefill' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
+            'comment' => $this->comment,
+            'company' => $this->company->getId(),
+            'contact' => ($this->contact) ? $this->contact->getId():NULL,            
+            'phone' => ($this->contact) ? ($this->contact->getPhone()) ? $this->contact->getPhone()->getName():NULL:NULL,            
+            'cost' => ($this->cost) ? $this->cost->getId():NULL,
+            'dateOper' => date('Y-m-d', strtotime($this->dateOper)),
+            'info' => $this->info,
+            'kind' => $this->kind,
+            'legal' => ($this->legal) ? $this->legal->getId():null,
+            'supplier' => $this->getDefaultSupplierId(),
+            'order' => ($this->order) ? $this->order->getAplId():null,
+            'status' => $this->status,
+            'user' => ($this->user) ? $this->user->getId():null,
+            'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
+            'vt' => ($this->vt) ? $this->vt->getId():null,
+        ];
+        
+        return $result;
+    }    
+        
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'amount' => $this->amount,
+            'aplId' => $this->aplId,
+            'cash' => ($this->cash) ? $this->cash->getId():null,
+            'cashRefull' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
+            'comment' => $this->comment,
+            'company' => $this->company->getId(),
+            'contact' => ($this->contact) ? $this->contact->getId():NULL,            
+            'cost' => ($this->cost) ? $this->cost->getId():NULL,
+            'dateOper' => $this->dateOper,
+            'info' => $this->info,
+            'kind' => $this->kind,
+            'legal' => ($this->legal) ? $this->legal->getId():null,
+            'supplier' => $this->getDefaultSupplierId(),
+            'order' => ($this->order) ? $this->order->getAplId():null,
+            'status' => $this->status,
+            'user' => ($this->user) ? $this->user->getId():null,
+            'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
+            'order' => ($this->vt) ? $this->vt->getId():null,
+        ];
+    }        
 }
