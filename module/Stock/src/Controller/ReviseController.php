@@ -162,7 +162,7 @@ class ReviseController extends AbstractActionController
     public function editFormAction()
     {
         $reviseId = (int)$this->params()->fromRoute('id', -1);
-        $kind = (int)$this->params()->fromQuery('kind', Revise::KIND_REVISE_SUPPLIER);
+        $kind = (int) $this->params()->fromQuery('kind', Revise::KIND_REVISE_SUPPLIER);
         
         $revise = null;
         
