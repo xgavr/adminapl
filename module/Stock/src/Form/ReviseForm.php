@@ -71,7 +71,7 @@ class ReviseForm extends Form implements ObjectManagerAwareInterface
             'attributes' => [                
                 'id' => 'amount',
                 'required' => 'required',
-                'min' => 0,
+//                'min' => 0,
                 'step' => 0.01,
                 'autocomplete' => 'off',
             ],
@@ -100,7 +100,7 @@ class ReviseForm extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'Статус',
-                'value_options' => CashDoc::getStatusList(),
+                'value_options' => Revise::getStatusList(),
             ],
         ]);
         
@@ -119,9 +119,45 @@ class ReviseForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'select',
             'name' => 'supplier',
             'attributes' => [                
+                'id' => 'supplier'
             ],
             'options' => [
                 'label' => 'Поставщик',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'legal',
+            'attributes' => [                
+                'id' => 'legal'
+            ],
+            'options' => [
+                'label' => 'Юр. лицо',
+                'disable_inarray_validator' => true,
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'contract',
+            'attributes' => [                
+                'id' => 'contract'
+            ],
+            'options' => [
+                'label' => 'Договор',
+                'disable_inarray_validator' => true,
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'office',
+            'attributes' => [
+                'id' => 'office',
+            ],
+            'options' => [
+                'label' => 'Офис',
             ],
         ]);
         

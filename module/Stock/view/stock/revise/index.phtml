@@ -18,7 +18,7 @@
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default revise-modal-show" type="button" modal-url="/revise/edit-form">
+                <button class="btn btn-default revise-modal-show" type="button" modal-url="/revise/edit-form?kind=<?= $kind?>">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
                 <div class="form-group">
@@ -84,13 +84,12 @@
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='legal.name' data-sortable="false">Поставщик</th>
                      <th data-field='contract.name' data-sortable="false">Договор</th>
-                     <th data-field='office.name' data-sortable="false">Склад</th>
+                     <th data-field='office.name' data-sortable="false">Офис</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
                      <th data-field='status' data-sortable="false">П</th>
                      <th data-field='statusDoc' data-sortable="false">Т</th>
                      <th data-field='statusEx' data-sortable="false">О</th>
                      <th data-field="" data-formatter="activeFormatter"></th>
-                     <th data-field="id" data-formatter="vtpFormatter"></th>
                  </tr>                
             </thead>
         </table>
@@ -112,7 +111,7 @@
         $(document).on('click', '.revise-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
-                id: 'ptuModal',
+                id: 'reviseModal',
                 url: url,
                 width: '1440px'
             });

@@ -98,13 +98,73 @@ class ReviseController extends AbstractActionController
         return new JsonModel([
             'result' => 'ok-reload',
         ]);
-    }        
+    }    
+
+    /**
+     * Подготовка формы
+     * 
+     * @param ReviseForm $form
+     * @param Revise $revise
+     * @return null
+     */
+    protected function prepareForm($form, $revise = null)
+    {
+        $currentUser = $this->reviseManager->currentUser();
+        if ($revise){
+            $office = $revise->getOffice();
+            
+            $supplier = $revise->getSupplier();
+            $legalContact = $supplier->getLegalContact();
+            $legals = $legalContact->getLegals();
+            $legalList = [];
+            foreach ($legals as $legal){
+                $legalList[$legal->getId()] = $legal->getName();                
+            }            
+            $form->get('legal')->setValueOptions($legalList);
+
+            $contracts = $this->entityManager->getRepository(Contract::class)
+                    ->findBy(['company' => $revise->getCompany()->getId(), 'legal' => $revise->getLegal()->getId()]);
+            $contractList = [];
+            foreach ($contracts as $contract){
+                $contractList[$contract->getId()] = $contract->getName();                
+            }            
+            $form->get('contract')->setValueOptions($contractList);            
+        } else {
+            $office = $currentUser->getOffice();
+        }
+        
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+        $supplierList = ['--не выбран--'];
+        foreach ($suppliers as $supplier) {
+            $supplierList[$supplier->getId()] = $supplier->getName();
+        }
+        $form->get('supplier')->setValueOptions($supplierList);
+        
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+        $officeList = ['--не выбран--'];
+        foreach ($offices as $bo) {
+            $officeList[$bo->getId()] = $bo->getName();
+        }
+        $form->get('office')->setValueOptions($officeList);        
+        $form->get('office')->setValue($office->getId());
+        
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->formOfficeLegals(['officeId' => $office->getId()]);
+        $companyList = [];
+        foreach ($companies as $company) {
+            $companyList[$company->getId()] = $company->getName();
+        }
+        $form->get('company')->setValueOptions($companyList);
+    }
     
     public function editFormAction()
     {
         $reviseId = (int)$this->params()->fromRoute('id', -1);
+        $kind = (int)$this->params()->fromQuery('kind', Revise::KIND_REVISE_SUPPLIER);
         
-        $revise = $supplier = $legal = $company = null;
+        $revise = null;
         
         if ($reviseId > 0){
             $revise = $this->entityManager->getRepository(Revise::class)
@@ -112,7 +172,8 @@ class ReviseController extends AbstractActionController
         }    
         
         $form = new ReviseForm($this->entityManager);
-
+        $this->prepareForm($form, $revise);
+        
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
@@ -140,6 +201,7 @@ class ReviseController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'revise' => $revise,
+            'kind' => $kind,
         ]);        
     }    
         

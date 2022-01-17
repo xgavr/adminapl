@@ -23,6 +23,7 @@ final class Version20220111060015 extends AbstractMigration
         $table->addColumn('comment', 'string', ['notnull'=>false, 'length'=>256]);
         $table->addColumn('info', 'text', ['notnull'=>false]);
         $table->addColumn('amount', 'float', ['notnull'=>true, 'default' => 0.0]);
+        $table->addColumn('kind', 'integer', ['notnull'=>true, 'default'=> Revise::KIND_REVISE_SUPPLIER]);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'default'=> Revise::STATUS_ACTIVE]);
         $table->addColumn('status_doc', 'integer', ['notnull'=>true, 'default'=> Revise::STATUS_DOC_NOT_RECD]);
         $table->addColumn('status_ex', 'integer', ['notnull'=>true, 'default'=> Revise::STATUS_EX_NEW]);

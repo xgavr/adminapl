@@ -13,6 +13,7 @@ use Company\Entity\Legal;
 use Company\Entity\Office;
 use Application\Entity\Contact;
 use User\Entity\User;
+use Laminas\Json\Encoder;
 
 
 /**
@@ -34,6 +35,9 @@ class Revise {
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
     
+    const KIND_REVISE_SUPPLIER       = 1; // Корректировка поставщика.
+    const KIND_REVISE_CLIENT         = 2; // Корректировка клиента.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -60,6 +64,11 @@ class Revise {
      * @ORM\Column(name="apl_id")   
      */
     protected $aplId;
+
+    /** 
+     * @ORM\Column(name="kind")  
+     */
+    protected $kind;
 
     /** 
      * @ORM\Column(name="status")  
@@ -180,14 +189,14 @@ class Revise {
         }
     }
 
-    public static function setJsonInfo($info)
+    public static function jsonInfo($info)
     {
         return Encoder::encode($info);
     }
     
     public function setInfo($info) 
     {
-        $this->info = $this->setJsonInfo($info);
+        $this->info = $this->jsonInfo($info);
     }     
 
     
@@ -208,6 +217,49 @@ class Revise {
     {
         return $this->amount;
     }
+    
+    /**
+     * Returns kind.
+     * @return int     
+     */
+    public function getKind() 
+    {
+        return $this->kind;
+    }
+
+    /**
+     * Returns possible kind as array.
+     * @return array
+     */
+    public static function getKindList() 
+    {
+        return [
+            self::KIND_REVISE_SUPPLIER => 'Корректировка поставщика',
+            self::KIND_REVISE_CLIENT => 'Корректировка клиента',
+        ];
+    }    
+    
+    /**
+     * Returns revise kind as string.
+     * @return string
+     */
+    public function getKindsAsString()
+    {
+        $list = self::getKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets kind.
+     * @param int $kind     
+     */
+    public function setKind($kind) 
+    {
+        $this->kind = $kind;
+    }   
     
     /**
      * Returns status.
@@ -411,6 +463,29 @@ class Revise {
         return $this->legal;
     }
     
+    public function getDefaultSupplier()
+    {
+        if ($this->legal){
+            $contacts = $this->legal->getContacts();
+            foreach ($contacts as $contact){
+                if ($contact->getSupplier()){
+                    return $contact->getSupplier();
+                }
+            }
+        }
+        
+        return;
+    }    
+    
+    public function getDefaultSupplierId()
+    {
+        $supplier = $this->getDefaultSupplier();
+        if ($supplier){
+            return $supplier->getId();
+        }
+        return;
+    }
+    
     /**
      * Returns the supplier.
      * @return Supplier     
@@ -519,23 +594,18 @@ class Revise {
         $result = [
             'amount' => $this->amount,
             'aplId' => $this->aplId,
-            'cash' => ($this->cash) ? $this->cash->getId():null,
-            'cashRefill' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
             'comment' => $this->comment,
             'company' => $this->company->getId(),
             'contact' => ($this->contact) ? $this->contact->getId():NULL,            
-            'phone' => ($this->contact) ? ($this->contact->getPhone()) ? $this->contact->getPhone()->getName():NULL:NULL,            
-            'cost' => ($this->cost) ? $this->cost->getId():NULL,
-            'dateOper' => date('Y-m-d', strtotime($this->dateOper)),
-            'info' => $this->info,
+            'contract' => ($this->contract) ? $this->contract->getId():NULL,            
             'kind' => $this->kind,
+            'phone' => ($this->contact) ? ($this->contact->getPhone()) ? $this->contact->getPhone()->getName():NULL:NULL,            
+            'docDate' => date('Y-m-d', strtotime($this->docDate)),
+            'info' => $this->info,
             'legal' => ($this->legal) ? $this->legal->getId():null,
+            'office' => $this->office->getId(),
             'supplier' => $this->getDefaultSupplierId(),
-            'order' => ($this->order) ? $this->order->getAplId():null,
             'status' => $this->status,
-            'user' => ($this->user) ? $this->user->getId():null,
-            'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
-            'vt' => ($this->vt) ? $this->vt->getId():null,
         ];
         
         return $result;
@@ -550,22 +620,18 @@ class Revise {
         return [
             'amount' => $this->amount,
             'aplId' => $this->aplId,
-            'cash' => ($this->cash) ? $this->cash->getId():null,
-            'cashRefull' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
             'comment' => $this->comment,
             'company' => $this->company->getId(),
             'contact' => ($this->contact) ? $this->contact->getId():NULL,            
-            'cost' => ($this->cost) ? $this->cost->getId():NULL,
-            'dateOper' => $this->dateOper,
-            'info' => $this->info,
+            'contract' => ($this->contract) ? $this->contract->getId():NULL, 
             'kind' => $this->kind,
+            'docDate' => $this->docDate,
+            'phone' => ($this->contact) ? ($this->contact->getPhone()) ? $this->contact->getPhone()->getName():NULL:NULL,            
+            'info' => $this->info,
             'legal' => ($this->legal) ? $this->legal->getId():null,
+            'office' => $this->office->getId(),
             'supplier' => $this->getDefaultSupplierId(),
-            'order' => ($this->order) ? $this->order->getAplId():null,
             'status' => $this->status,
-            'user' => ($this->user) ? $this->user->getId():null,
-            'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
-            'order' => ($this->vt) ? $this->vt->getId():null,
         ];
     }        
 }

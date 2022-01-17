@@ -27,6 +27,6 @@ class ReviseControllerFactory implements FactoryInterface {
         $reviseManager = $container->get(ReviseManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ReviseController($entityManager, $ptuManager);
+        return new ReviseController($entityManager, $reviseManager);
     }
 }
