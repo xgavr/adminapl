@@ -1016,9 +1016,9 @@ class AplDocService {
         }
         
         $dataRevise = [
-            'apl_id' => $data['id'],
-            'doc_no' => $data['ns'],
-            'doc_date' => $docDate,
+            'aplId' => $data['id'],
+            'docNo' => $data['ns'],
+            'docDate' => $docDate,
             'comment' => $data['info'],
             'status_ex' => Revise::STATUS_EX_APL,
             'status' => $this->getReviseStatus($data),
