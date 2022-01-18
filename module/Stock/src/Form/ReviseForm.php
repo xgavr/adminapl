@@ -93,6 +93,18 @@ class ReviseForm extends Form implements ObjectManagerAwareInterface
         
         $this->add([            
             'type'  => 'select',
+            'name' => 'kind',
+            'value' => Revise::KIND_REVISE_SUPPLIER,
+            'attributes' => [                
+            ],
+            'options' => [
+                'label' => 'Тип',
+                'value_options' => Revise::getKindList(),
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
             'name' => 'status',
             'value' => Revise::STATUS_ACTIVE,
             'attributes' => [                
@@ -178,7 +190,7 @@ class ReviseForm extends Form implements ObjectManagerAwareInterface
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Сохранить',
-                'id' => 'cash_in_submitbutton',
+                'id' => 'revise_submitbutton',
             ],
         ]);        
 
@@ -218,6 +230,33 @@ class ReviseForm extends Form implements ObjectManagerAwareInterface
                         'options' => [
                         ],
                     ],
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'supplier',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'legal',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'contract',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
                 ],
             ]);        
         

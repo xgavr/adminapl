@@ -21,6 +21,7 @@ use Stock\Service\StManager;
 use Company\Service\LegalManager;
 use Application\Service\ProducerManager;
 use Application\Service\AssemblyManager;
+use Stock\Service\ReviseManager;
 
 /**
  * Description of AplDocService
@@ -44,10 +45,11 @@ class AplDocServiceFactory  implements FactoryInterface
         $legalManager = $container->get(LegalManager::class);
         $producerManager = $container->get(ProducerManager::class);
         $assemblyManager = $container->get(AssemblyManager::class);
+        $reviseManager = $container->get(ReviseManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new AplDocService($entityManager, $adminManager, $ptuManager,
                 $legalManager, $producerManager, $assemblyManager, $vtpManager, 
-                $otManager, $stManager, $ptManager, $vtManager);
+                $otManager, $stManager, $ptManager, $vtManager, $reviseManager);
     }
 }

@@ -33,6 +33,7 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
 use Laminas\Validator\Date;
+use Stock\Entity\Revise;
 
 
 /**
@@ -91,6 +92,12 @@ class AplDocService {
     private $stManager;
 
     /**
+     * Revise manager
+     * @var \Stock\Service\ReviseManager
+     */
+    private $reviseManager;
+
+    /**
      * Legal manager.
      * @var \Company\Service\LegalManager
      */
@@ -110,7 +117,7 @@ class AplDocService {
     
     public function __construct($entityManager, $adminManager, $ptuManager, 
             $legalManager, $producerManager, $assemblyManager, $vtpManager, 
-            $otManager, $stManager, $ptManager, $vtManager)
+            $otManager, $stManager, $ptManager, $vtManager, $reviseManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
@@ -123,6 +130,7 @@ class AplDocService {
         $this->legalManager = $legalManager;
         $this->producerManager = $producerManager;
         $this->assemblyManager = $assemblyManager;
+        $this->reviseManager = $reviseManager;
     }
     
     protected function aplApi()
@@ -977,6 +985,88 @@ class AplDocService {
     }
 
     /**
+     * Получить статус документа Revise
+     * 
+     * @param array $data
+     * @return integer
+     */
+    private function getReviseStatus($data)
+    {
+        $reviseStatus = Revise::STATUS_ACTIVE;
+        if ($data['publish'] == 0){
+            $reviseStatus = Revise::STATUS_RETIRED;            
+        }
+        
+        return $reviseStatus;
+    }
+
+    /**
+     * Загрузить Revise
+     * 
+     * @param array $data
+     */
+    public function unloadRevise($data)
+    {
+//        var_dump($data); exit;
+        $docDate = $data['ds'];
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        if (!$dateValidator->isValid($docDate)){
+            $docDate = $data['created'];
+        }
+        
+        $dataRevise = [
+            'apl_id' => $data['id'],
+            'doc_no' => $data['ns'],
+            'doc_date' => $docDate,
+            'comment' => $data['info'],
+            'status_ex' => Revise::STATUS_EX_APL,
+            'status' => $this->getReviseStatus($data),
+            'amount' => $data['sort'],
+        ];
+        
+        $office = $this->officeFromAplId($data['parent']);
+        $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office);
+        $dataRevise['office'] = $office;
+        $dataRevise['company'] = $company;
+        
+
+        if ($data['comment'] == 'Users'){
+            $client = $this->entityManager->getRepository(AplClient::class)
+                    ->findOneByAplId($data['name']);
+            $contacts = $client->getContacts();
+            $dataRevise['contact'] = $contacts[0]->getId();
+        }
+        if ($data['comment'] == 'Suppliers'){
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->findOneBy(['aplId' => $data['name']]);
+
+            $legal = $this->entityManager->getRepository(Supplier::class)
+                    ->findDefaultSupplierLegal($supplier, $docDate);
+            $dataRevise['legal'] = $legal->getId();
+            $contract = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultContract($office, $legal, $docDate);
+            $dataRevise['contract'] = $contract->getId();               
+        }    
+        
+        
+        $revise = $this->entityManager->getRepository(Revise::class)
+                ->findOneByAplId($data['id']);
+        if ($revise){
+            $this->reviseManager->updateRevise($revise, $dataRevise);
+        } else {        
+            $revise = $this->reviseManager->addRevise($dataRevise);
+        }    
+                
+        if ($revise){
+            return true;            
+        }
+                
+        return false;
+    }
+
+    /**
      * Обновить статус загруженного документа
      * @param integer $aplDocId
      * @return boolean
@@ -1079,6 +1169,11 @@ class AplDocService {
                         break;                        
                     case 'Relocations': 
                         if ($this->unloadPt($result)){ 
+                            $this->unloadedDoc($result['id']);
+                        }    
+                        break;                        
+                    case 'Correct': 
+                        if ($this->unloadRevise($result)){ 
                             $this->unloadedDoc($result['id']);
                         }    
                         break;                        

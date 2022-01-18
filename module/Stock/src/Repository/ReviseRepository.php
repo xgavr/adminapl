@@ -26,22 +26,22 @@ class ReviseRepository extends EntityRepository
      * @param array $params
      * @return query
      */
-    public function findAllRevise($dateOper, $params = null)
+    public function findAllRevise($params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('r, l, o, c')
+        $queryBuilder->select('r, l, o, c, n')
             ->from(Revise::class, 'r')
-            ->join('r.legal', 'l')
-            ->join('r.office', 'o')    
-            ->join('r.contract', 'c')    
+            ->leftJoin('r.legal', 'l')
+            ->leftJoin('r.office', 'o')    
+            ->leftJoin('r.contract', 'c')    
+            ->leftJoin('r.contact', 'n')    
                 ;
-        
         if (is_array($params)){
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);
+                $queryBuilder->orderBy('r.'.$params['sort'], $params['order']);
             }            
             if (!empty($params['officeId'])){
                 $office = $entityManager->getRepository(Office::class)
@@ -56,8 +56,12 @@ class ReviseRepository extends EntityRepository
                         ->findOneById($params['supplierId']);
                 if ($supplier){
                     $orX = $queryBuilder->expr()->orX();
-                    foreach ($supplier->getLegalContact()->getLegals() as $legal){
-                        $orX->add($queryBuilder->expr()->eq('r.legal', $legal->getId()));
+                    $orX->add($queryBuilder->expr()->eq('r.legal', 0));
+                    $legalContact =  $supplier->getLegalContact();
+                    if ($legalContact){
+                        foreach ($legalContact->getLegals() as $legal){
+                            $orX->add($queryBuilder->expr()->eq('r.legal', $legal->getId()));
+                        }    
                     }    
                     $queryBuilder->andWhere($orX);
                 }    
@@ -72,6 +76,12 @@ class ReviseRepository extends EntityRepository
                 if (is_numeric($params['month'])){
                     $queryBuilder->andWhere('MONTH(r.docDate) = :month')
                             ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder->andWhere('r.kind = :kind')
+                            ->setParameter('kind', $params['kind']);
                 }    
             }
         }
@@ -85,14 +95,14 @@ class ReviseRepository extends EntityRepository
      * @param array $params
      * @return query
      */
-    public function queryAllPtu($params = null)
+    public function queryAllRevise($params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('r')
-            ->from(Revise::class, 'p')
+            ->from(Revise::class, 'r')
                 ;
         
         if (is_array($params)){
@@ -125,6 +135,12 @@ class ReviseRepository extends EntityRepository
                 if (is_numeric($params['month'])){
                     $queryBuilder->andWhere('MONTH(r.docDate) = :month')
                             ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder->andWhere('r.kind = :kind')
+                            ->setParameter('kind', $params['kind']);
                 }    
             }
         }
@@ -139,7 +155,7 @@ class ReviseRepository extends EntityRepository
      * @param array $params
      * @return query
      */
-    public function findAllReviseTotal($dateOper, $params = null)
+    public function findAllReviseTotal($params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -163,8 +179,12 @@ class ReviseRepository extends EntityRepository
                         ->findOneById($params['supplierId']);
                 if ($supplier){
                     $orX = $queryBuilder->expr()->orX();
-                    foreach ($supplier->getLegalContact()->getLegals() as $legal){
-                        $orX->add($queryBuilder->expr()->eq('r.legal', $legal->getId()));
+                    $orX->add($queryBuilder->expr()->eq('r.legal', 0));
+                    $legalContact =  $supplier->getLegalContact();
+                    if ($legalContact){
+                        foreach ($legalContact->getLegals() as $legal){
+                            $orX->add($queryBuilder->expr()->eq('r.legal', $legal->getId()));
+                        }    
                     }    
                     $queryBuilder->andWhere($orX);
                 }    
@@ -179,6 +199,12 @@ class ReviseRepository extends EntityRepository
                 if (is_numeric($params['month'])){
                     $queryBuilder->andWhere('MONTH(r.docDate) = :month')
                             ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder->andWhere('r.kind = :kind')
+                            ->setParameter('kind', $params['kind']);
                 }    
             }
         }

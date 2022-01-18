@@ -1,6 +1,5 @@
 <?php
 use Stock\Entity\Revise;
-var_dump($kind);
 
 $form = $this->form;
 
@@ -69,14 +68,14 @@ $form->prepare();
                 <?= $this->formElementErrors($form->get('docDate')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-3">                        
+        <div class="col-xs-2">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('amount')); ?>
                 <?= $this->formElement($form->get('amount')); ?>
                 <?= $this->formElementErrors($form->get('amount')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-3">                        
+        <div class="col-xs-2">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('office')); ?>
                 <?= $this->formElement($form->get('office')); ?>
@@ -84,6 +83,13 @@ $form->prepare();
             </div>
         </div>
         <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('status')); ?>
                 <?= $this->formElement($form->get('status')); ?>
@@ -108,13 +114,6 @@ $form->prepare();
         </div>    
         <div class="col-xs-3">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('company')); ?>
-                <?= $this->formElement($form->get('company')); ?>
-                <?= $this->formElementErrors($form->get('company')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-3">                        
-            <div class="form-group">
                 <?= $this->formLabel($form->get('contract')); ?>
                 <?= $this->formElement($form->get('contract')); ?>
                 <?= $this->formElementErrors($form->get('contract')); ?>                  
@@ -125,6 +124,7 @@ $form->prepare();
         <div class="col-xs-3">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('phone')); ?>
+                <span id="contactName"><?= $contactName?></span>
                 <?= $this->formElement($form->get('phone')); ?>
                 <?= $this->formElementErrors($form->get('phone')); ?>                  
             </div>
@@ -182,14 +182,29 @@ $form->prepare();
         $('#supplierRevise').hide();
         $('#clientRevise').hide();
         $('#phone').attr('required', false);
+        $('#supplier').attr('required', false);
+        $('#legal').attr('required', false);
+        $('#contract').attr('required', false);
         <?php if ($kind == Revise::KIND_REVISE_SUPPLIER): ?>
             $('#supplierRevise').show();
+            $('#supplier').attr('required', true);
+            $('#legal').attr('required', true);
+            $('#contract').attr('required', true);
         <?php endif; ?>
         <?php if ($kind == Revise::KIND_REVISE_CLIENT): ?>
             $('#clientRevise').show();
             $('#phone').attr('required', true);
         <?php endif; ?>        
     }
+    
+    function contactName(){
+        if ($('#phone').val()){
+            $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
+                $('#contactName').html(data.name);
+
+            });            
+        }    
+    }    
     
     function contractList(){
         //alert(11);
@@ -229,7 +244,11 @@ $form->prepare();
         contractList();
     });
     
-    $( document ).ready(function() {
+    $('#phone').on('change', function(){
+        contactName();
+    });
+
+$( document ).ready(function() {
                 
         showGroup();
         

@@ -1,6 +1,8 @@
 <?php
 namespace Application\Service;
 
+use Stock\Entity\Revise;
+
 /**
  * This service is responsible for determining which items should be in the main menu.
  * The items may be different depending on whether the user is authenticated or not.
@@ -105,6 +107,13 @@ class NavManager
                     'label' => 'Прайс-листы для ТП',
                     'link'  => $url('market')
                 ];
+
+                $clientDropdownItems[] = [
+                    'id' => 'revise',
+                    'label' => 'Корректировка долга',
+                    'link'  => $url('revise', ['action' => 'index'], ['query' => ['kind' => Revise::KIND_REVISE_CLIENT]]),
+                ];
+
                 
                 if (count($clientDropdownItems)!=0) {
                     $items[] = [

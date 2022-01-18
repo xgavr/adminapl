@@ -3,6 +3,7 @@ namespace Stock\Service;
 
 use Admin\Entity\Log;
 use Stock\Entity\Mutual;
+use Stock\Entity\Retail;
 use Stock\Entity\Revise;
 use Company\Entity\Legal;
 use Application\Entity\Phone;
@@ -10,6 +11,7 @@ use Application\Entity\Contact;
 use Company\Entity\Contract;
 use Application\Entity\Supplier;
 use Company\Entity\Office;
+use User\Filter\PhoneFilter;
 
 /**
  * This service is responsible for adding/editing revise.
@@ -53,32 +55,63 @@ class ReviseManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($revise->getLogKey());
         
-        $data = [
-            'doc_key' => $revise->getLogKey(),
-            'date_oper' => $revise->getDocDate(),
-            'status' => $revise->getStatus(),
-            'revise' => Mutual::REVISE_NOT,
-            'amount' => $revise->getAmount(),
-            'legal_id' => $revise->getLegal()->getId(),
-            'contract_id' => $revise->getContract()->getId(),
-            'office_id' => $revise->getOffice()->getId(),
-            'company_id' => $revise->getContract()->getCompany()->getId(),
-        ];
+        if ($revise->getKind() == Revise::KIND_REVISE_SUPPLIER){
+            $data = [
+                'doc_key' => $revise->getLogKey(),
+                'date_oper' => $revise->getDocDate(),
+                'status' => ($revise->getStatus() == Revise::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
+                'revise' => Mutual::REVISE_NOT,
+                'amount' => $revise->getAmount(),
+                'legal_id' => $revise->getLegal()->getId(),
+                'contract_id' => $revise->getContract()->getId(),
+                'office_id' => $revise->getOffice()->getId(),
+                'company_id' => $revise->getContract()->getCompany()->getId(),
+            ];
 
-        $this->entityManager->getRepository(Mutual::class)
-                ->insertMutual($data);
+            $this->entityManager->getRepository(Mutual::class)
+                    ->insertMutual($data);
+        }    
         
         return;
     }    
         
+    /**
+     * Обновить взаиморасчеты розницы
+     * 
+     * @param Revise $revise
+     */
+    public function updateReviseRetails($revise)
+    {
+        $this->entityManager->getRepository(Retail::class)
+                ->removeOrderRetails($revise->getLogKey());                
+        
+        if ($revise->getKind() == Revise::KIND_REVISE_CLIENT){
+            $data = [
+                'doc_key' => $revise->getLogKey(),
+                'date_oper' => $revise->getDocDate(),
+                'status' => ($revise->getStatus() == Revise::STATUS_ACTIVE) ? Retail::STATUS_ACTIVE: Retail::STATUS_RETIRED,
+                'revise' => Retail::REVISE_NOT,
+                'amount' => $revise->getAmount(),
+                'contact_id' => $revise->getContact()->getId(),
+                'office_id' => $revise->getOffice()->getId(),
+                'company_id' => $revise->getCompany()->getId(),
+            ];
+
+            $this->entityManager->getRepository(Retail::class)
+                    ->insertRetail($data);
+        }    
+        
+        return;
+    }    
+    
     /**
      * Перепроведение Revise
      * @param Revise $revise
      */
     public function repostRevise($revise)
     {
-        
         $this->updateReviseMutuals($revise);
+        $this->updateReviseRetails($revise);
         $this->logManager->infoRevise($revise, Log::STATUS_UPDATE);
         
         return;
@@ -133,10 +166,10 @@ class ReviseManager
                 $data['contact'] = $phone->getContact();
             }    
         }
-        if (!empty($data['contact'])){
-            $data['contact'] = $this->entityManager->getRepository(Contact::class)
-                    ->find($data['contact']);
-        }
+//        if (!empty($data['contact'])){
+//            $data['contact'] = $this->entityManager->getRepository(Contact::class)
+//                    ->find($data['contact']);
+//        }
         if (!empty($data['contract'])){
             $data['contract'] = $this->entityManager->getRepository(Contract::class)
                     ->find($data['contract']);
