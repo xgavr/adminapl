@@ -158,6 +158,10 @@ class ReviseManager
             $data['legal'] = $this->entityManager->getRepository(Legal::class)
                     ->find($data['legal']);
         }
+        if (!empty($data['contact'])){
+            $data['contact'] = $this->entityManager->getRepository(Contact::class)
+                    ->find($data['contact']);
+        }
         if (!empty($data['phone'])){
             $phoneFilter = new PhoneFilter();
             $phone = $this->entityManager->getRepository(Phone::class)
@@ -166,10 +170,6 @@ class ReviseManager
                 $data['contact'] = $phone->getContact();
             }    
         }
-//        if (!empty($data['contact'])){
-//            $data['contact'] = $this->entityManager->getRepository(Contact::class)
-//                    ->find($data['contact']);
-//        }
         if (!empty($data['contract'])){
             $data['contract'] = $this->entityManager->getRepository(Contract::class)
                     ->find($data['contract']);
