@@ -115,9 +115,16 @@ class AplDocService {
      */
     private $assemblyManager;  
     
+    /**
+     * Order manager.
+     * @var \Application\Service\OrderManager
+     */
+    private $orderManager;  
+    
     public function __construct($entityManager, $adminManager, $ptuManager, 
             $legalManager, $producerManager, $assemblyManager, $vtpManager, 
-            $otManager, $stManager, $ptManager, $vtManager, $reviseManager)
+            $otManager, $stManager, $ptManager, $vtManager, $reviseManager,
+            $orderManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
@@ -131,6 +138,7 @@ class AplDocService {
         $this->producerManager = $producerManager;
         $this->assemblyManager = $assemblyManager;
         $this->reviseManager = $reviseManager;
+        $this->orderManager = $orderManager;
     }
     
     protected function aplApi()
