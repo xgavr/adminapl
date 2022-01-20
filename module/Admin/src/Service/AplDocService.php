@@ -1075,6 +1075,85 @@ class AplDocService {
     }
 
     /**
+     * Загрузить sales
+     * 
+     * @param array $data
+     */
+    public function unloadSales($data)
+    {
+//        var_dump($data); exit;
+        $docDate = $data['ds'];
+        $dateValidator = new Date();
+        $dateValidator->setFormat('Y-m-d H:i:s');
+        if (!$dateValidator->isValid($docDate)){
+            $docDate = $data['created'];
+        }
+        
+        $dataPt = [
+            //'apl_id' => $data['id'],
+            'doc_no' => $data['id'],
+            'doc_date' => $docDate,
+            'comment' => $data['info'],
+            'status_ex' => Pt::STATUS_EX_APL,
+            'status' => $this->getPtStatus($data),
+        ];
+        
+        $office = $this->officeFromAplId($data['parent']);
+        $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office);
+        
+        $dataPt['office'] = $office;
+        $dataPt['company'] = $company;
+        
+        $office2 = $this->officeFromAplId($data['name']);
+        $company2 = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($office2);
+        
+        $dataPt['office2'] = $office2;
+        $dataPt['company2'] = $company2;
+
+        $pt = $this->entityManager->getRepository(Pt::class)
+                ->findOneByDocNo($data['id']);
+        if ($pt){
+            $this->ptManager->updatePt($pt, $dataPt);
+            $this->ptManager->removePtGood($pt); 
+        } else {        
+            $pt = $this->ptManager->addPt($dataPt);
+        }    
+        
+        if ($pt && isset($data['tp'])){
+            $rowNo = 1;
+            foreach ($data['tp'] as $tp){
+                if (isset($tp['good'])){
+                    $good = $this->findGood($tp['good']);   
+                }    
+                if (empty($good)){
+    //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                } else {
+
+                    $this->ptManager->addPtGood($pt->getId(), [
+                        'status' => $pt->getStatus(),
+                        'statusDoc' => $pt->getStatusDoc(),
+                        'quantity' => $tp['sort'],                    
+                        'amount' => $tp['bag_total'],
+                        'good_id' => $good->getId(),
+                        'comment' => '',
+                        'info' => '',
+                    ], $rowNo);
+                    $rowNo++;
+                }    
+            }
+        }  
+        
+        if ($pt){
+            $this->ptManager->updatePtAmount($pt);
+            return true;            
+        }
+                
+        return false;
+    }
+    
+    /**
      * Обновить статус загруженного документа
      * @param integer $aplDocId
      * @return boolean
@@ -1177,6 +1256,11 @@ class AplDocService {
                         break;                        
                     case 'Relocations': 
                         if ($this->unloadPt($result)){ 
+                            $this->unloadedDoc($result['id']);
+                        }    
+                        break;                        
+                    case 'Sales': 
+                        if ($this->unloadSales($result)){ 
                             $this->unloadedDoc($result['id']);
                         }    
                         break;                        

@@ -6,6 +6,7 @@ use Stock\Entity\PtGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Comiss;
+use Company\Entity\Office;
 
 /**
  * This service is responsible for adding/editing pt.
@@ -84,6 +85,57 @@ class PtManager
         return;
     }    
     
+    /**
+     * Обновить взаиморасчеты розничного заказа
+     * 
+     * @param Pt $pt
+     */
+    public function updatePtRetails($pt)
+    {
+        if ($pt->getCompany()->getInn() != $pt->getCompany2()->getInn()){
+            $data = [
+                'doc_key' => $pt->getLogKey(),
+                'date_oper' => $pt->getDocDate(),
+                'status' => ($pt->getStatus() == Pt::STATUS_ACTIVE) ? Retail::STATUS_ACTIVE: Retail::STATUS_RETIRED,
+                'revise' => Retail::REVISE_NOT,
+                'amount' => $pt->getAmount(),
+                'contact_id' => $pt->getOffice2()->getLegalContact()->getId(),
+                'office_id' => $pt->getOffice()->getId(),
+                'company_id' => $pt->getCompany()->getId(),
+            ];
+
+            $this->entityManager->getRepository(Retail::class)
+                    ->insertRetail($data);
+        }    
+        
+        return;
+    }    
+    
+    /**
+     * Обновить взаиморасчеты заказа
+     * 
+     * @param Pt $pt
+     */
+    public function updatePtMutuals($pt)
+    {
+        $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId());
+        $data = [
+            'doc_key' => $pt->getLogKey(),
+            'date_oper' => $pt->getDocDate(),
+            'status' => ($pt->getStatus() == Pt::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
+            'revise' => Mutual::REVISE_NOT,
+            'amount' => $pt->getAmount(),
+            'legal_id' => $pt->getCompany2()->getId(),
+            'contract_id' => $contract->getId(),
+            'office_id' => $pt->getOffice()->getId(),
+            'company_id' => $pt->getCompany()->getId(),
+        ];
+
+        $this->entityManager->getRepository(Mutual::class)
+                ->insertMutual($data);
+        
+        return;
+    }        
     
     /**
      * Перепроведение ПТ
