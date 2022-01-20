@@ -158,6 +158,8 @@ class PtManager
     public function repostPt($pt)
     {
         $this->updatePtMovement($pt);
+        $this->updatePtRetails($pt);
+        $this->updatePtRetails($pt);
         
         return;
     }
