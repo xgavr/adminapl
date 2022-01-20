@@ -1092,7 +1092,7 @@ class AplDocService {
         }
         
         $dataPt = [
-            //'apl_id' => $data['id'],
+            'apl_id' => 0,
             'doc_no' => $data['id'],
             'doc_date' => $docDate,
             'comment' => $data['info'],
