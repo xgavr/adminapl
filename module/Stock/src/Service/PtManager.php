@@ -159,7 +159,7 @@ class PtManager
     {
         $this->updatePtMovement($pt);
         $this->updatePtRetails($pt);
-        $this->updatePtRetails($pt);
+        $this->updatePtMutuals($pt);
         
         return;
     }
