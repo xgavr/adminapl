@@ -36,14 +36,17 @@ class OfficeRepository extends EntityRepository{
         if ($dateDoc == '1970-01-01'){
             $dateDoc = date('Y-m-d');
         }
+        
+        $legalContact = $office->getLegalContact();
+        
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('l')
                 ->from(Legal::class, 'l')
                 ->join('l.contacts', 'c')
-                ->where('c.office = ?1')
-                ->setParameter('1', $office->getId())
+                ->where('c.id = ?1')
+                ->setParameter('1', $legalContact->getId())
                 ->andWhere('c.status = ?2')
                 ->setParameter('2', Contact::STATUS_LEGAL)
                 ->andWhere('l.dateStart <= ?3')

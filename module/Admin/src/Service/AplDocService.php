@@ -1024,9 +1024,9 @@ class AplDocService {
         }
         
         $dataRevise = [
-            'apl_id' => $data['id'],
-            'doc_no' => $data['ns'],
-            'doc_date' => $docDate,
+            'aplId' => $data['id'],
+            'docNo' => $data['ns'],
+            'docDate' => $docDate,
             'comment' => $data['info'],
             'status_ex' => Revise::STATUS_EX_APL,
             'status' => $this->getReviseStatus($data),
@@ -1045,6 +1045,7 @@ class AplDocService {
                     ->findOneByAplId($data['name']);
             $contacts = $client->getContacts();
             $dataRevise['contact'] = $contacts[0]->getId();
+            $dataRevise['kind'] = Revise::KIND_REVISE_CLIENT;
         }
         if ($data['comment'] == 'Suppliers'){
             $supplier = $this->entityManager->getRepository(Supplier::class)
@@ -1056,6 +1057,7 @@ class AplDocService {
             $contract = $this->entityManager->getRepository(Office::class)
                     ->findDefaultContract($office, $legal, $docDate);
             $dataRevise['contract'] = $contract->getId();               
+            $dataRevise['kind'] = Revise::KIND_REVISE_SUPPLIER;
         }    
         
         
