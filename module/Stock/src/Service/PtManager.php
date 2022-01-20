@@ -5,6 +5,8 @@ use Stock\Entity\Pt;
 use Stock\Entity\PtGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
+use Stock\Entity\Mutual;
+use Stock\Entity\Retail;
 use Stock\Entity\Comiss;
 use Company\Entity\Office;
 
@@ -26,12 +28,19 @@ class PtManager
     private $logManager;
         
     /**
+     * Order manager
+     * @var \Application\Service\OrderManager
+     */
+    private $orderManager;
+        
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager) 
+    public function __construct($entityManager, $logManager, $orderManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
+        $this->orderManager = $orderManager;
     }
     
     /**
@@ -92,6 +101,8 @@ class PtManager
      */
     public function updatePtRetails($pt)
     {
+        $this->entityManager->getRepository(Retail::class)
+                ->removeOrderRetails($pt->getLogKey());
         if ($pt->getCompany()->getInn() != $pt->getCompany2()->getInn()){
             $data = [
                 'doc_key' => $pt->getLogKey(),
@@ -118,22 +129,25 @@ class PtManager
      */
     public function updatePtMutuals($pt)
     {
-        $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId());
-        $data = [
-            'doc_key' => $pt->getLogKey(),
-            'date_oper' => $pt->getDocDate(),
-            'status' => ($pt->getStatus() == Pt::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
-            'revise' => Mutual::REVISE_NOT,
-            'amount' => $pt->getAmount(),
-            'legal_id' => $pt->getCompany2()->getId(),
-            'contract_id' => $contract->getId(),
-            'office_id' => $pt->getOffice()->getId(),
-            'company_id' => $pt->getCompany()->getId(),
-        ];
-
         $this->entityManager->getRepository(Mutual::class)
-                ->insertMutual($data);
-        
+                ->removeDocMutuals($pt->getLogKey());                        
+        if ($pt->getCompany()->getInn() != $pt->getCompany2()->getInn()){        
+            $contract = $this->orderManager->findDefaultContract($pt->getOffice(), $pt->getCompany2(), $pt->getDocDate(), $pt->getDocNo());
+            $data = [
+                'doc_key' => $pt->getLogKey(),
+                'date_oper' => $pt->getDocDate(),
+                'status' => ($pt->getStatus() == Pt::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
+                'revise' => Mutual::REVISE_NOT,
+                'amount' => $pt->getAmount(),
+                'legal_id' => $pt->getCompany2()->getId(),
+                'contract_id' => $contract->getId(),
+                'office_id' => $pt->getOffice()->getId(),
+                'company_id' => $pt->getCompany()->getId(),
+            ];
+
+            $this->entityManager->getRepository(Mutual::class)
+                    ->insertMutual($data);
+        }
         return;
     }        
     
