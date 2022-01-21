@@ -163,17 +163,17 @@ class MskManager {
         $password = $requestSetting->getPassword();
         $userAgent = $this::USER_AGENT;
         $postData = [
-            'come_from' => '%2Findex.lmz',
+            'come_from' => '/index.lmz',
             'username' => $login,
             'password' => $password,
             'submit' => '%C2%F5%EE%E4',
         ];
         
-       // var_dump($postData); exit;
+//        var_dump($postData); exit;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_HEADER, 1); 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -183,7 +183,9 @@ class MskManager {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 "User-Agent: $userAgent",
                 "Accept-Language: ru,en-US;q=0.9,en;q=0.8"
-            ));        
+            ));     
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTREDIR, 3);
 //        curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
 //        curl_setopt($ch, CURLOPT_UNRESTRICTED_AUTH, 1);
                 
