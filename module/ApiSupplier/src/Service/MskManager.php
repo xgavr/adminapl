@@ -170,7 +170,7 @@ class MskManager {
             'submit' => '%C2%F5%EE%E4',
         ];
         
-//        var_dump($postData); exit;
+        var_dump($postData);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
 //        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
