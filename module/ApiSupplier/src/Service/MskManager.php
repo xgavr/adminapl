@@ -196,7 +196,6 @@ class MskManager {
         if ($output === FALSE) {
             echo "cURL Error: " . curl_error($ch);
         } else {  
-            echo "cURL ok";
             usleep(100);
             $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?come_from=/index.lmz');
             usleep(100);
