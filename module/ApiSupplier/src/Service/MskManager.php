@@ -134,8 +134,8 @@ class MskManager {
            curl_setopt($ch, CURLOPT_POST, 0);
         }	
 	   
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	   //отсылаем серверу COOKIE полученные от него при авторизации
 //        curl_setopt($ch, CURLOPT_COOKIEFILE, $_SERVER['DOCUMENT_ROOT'].'/cookie.txt');
         curl_setopt($ch, CURLOPT_USERAGENT, "$userAgent");
@@ -174,7 +174,7 @@ class MskManager {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
 //        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_HEADER, 1); 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
