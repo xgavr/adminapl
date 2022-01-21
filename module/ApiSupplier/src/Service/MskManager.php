@@ -196,12 +196,13 @@ class MskManager {
         if ($output === FALSE) {
             echo "cURL Error: " . curl_error($ch);
         } else {  
+            echo "cURL ok;
             usleep(100);
             $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?come_from=/index.lmz');
-//            usleep(100);
-//            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?agr_id=148183;come_from=/index.lmz');
-//            usleep(100);
-//            $output = $this->readUrl($requestSetting->getSiteNormalize().'/index.lmz');
+            usleep(100);
+            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?agr_id=148183;come_from=/index.lmz');
+            usleep(100);
+            $output = $this->readUrl($requestSetting->getSiteNormalize().'/index.lmz');
             //$output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz');
         }
         return $output;
