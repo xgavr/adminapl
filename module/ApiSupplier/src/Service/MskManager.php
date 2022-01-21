@@ -139,6 +139,7 @@ class MskManager {
 	   //отсылаем серверу COOKIE полученные от него при авторизации
 //        curl_setopt($ch, CURLOPT_COOKIEFILE, $_SERVER['DOCUMENT_ROOT'].'/cookie.txt');
         curl_setopt($ch, CURLOPT_USERAGENT, "$userAgent");
+        curl_setopt($ch, CURLOPT_POSTREDIR, 3);
 
         $result = curl_exec($ch);
 
@@ -174,11 +175,11 @@ class MskManager {
         curl_setopt($ch, CURLOPT_URL, $uri);
 //        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 //        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-//        curl_setopt($ch, CURLOPT_HEADER, 1); 
+        curl_setopt($ch, CURLOPT_HEADER, 1); 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 //        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-//        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 "User-Agent: $userAgent",
@@ -195,8 +196,8 @@ class MskManager {
         if ($output === FALSE) {
             echo "cURL Error: " . curl_error($ch);
         } else {  
-//            usleep(100);
-//            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?come_from=/index.lmz');
+            usleep(100);
+            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?come_from=/index.lmz');
 //            usleep(100);
 //            $output = $this->readUrl($requestSetting->getSiteNormalize().'set_agr.lmz?agr_id=148183;come_from=/index.lmz');
 //            usleep(100);
