@@ -181,10 +181,16 @@ class MskManager {
 //        curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "dnt: 1",
+                "Updgrade-Insecure-Requests: 1",
                 "User-Agent: $userAgent",
-                "Accept-Language: ru,en-US;q=0.9,en;q=0.8"
-            ));     
+                "Accept: text/html, application/xhtml+xml, application/xml; q=0.9, image/webp, image/apng, */*; q=0.8, application/signed-exchange;v=b3;q=0.9",
+                "Accept-Language: ru,en-US;q=0.9,en;q=0.8",
+                "Cache-Control: no-cache"
+            ]);     
+        curl_setopt($ch, CURLOPT_REFERER, 'https://adminapl.ru/');
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTREDIR, 3);
 //        curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
