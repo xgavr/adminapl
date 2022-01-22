@@ -173,8 +173,8 @@ class MskManager {
         var_dump($postData);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_HEADER, 1); 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -190,7 +190,6 @@ class MskManager {
                 "Cache-Control: no-cache"
             ]);     
         curl_setopt($ch, CURLOPT_REFERER, 'https://adminapl.ru/');
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTREDIR, 3);
 //        curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
