@@ -5,14 +5,14 @@ $this->mainMenu()->setActiveItemId('order');
 
 $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
-                'Заказы'=>$this->url('order'),
+                'Продажи'=>$this->url('order'),
                 'Заказ №'. $order->getId() => $this->url('order', ['action' => 'view', 'id' => $order->getId()]),
                 ]);
   
 ?>
 
 <h1>
-    <?= $this->escapeHtml($order->getClient()->getName()); ?>
+    <?= $this->escapeHtml($order->getContact()->getName()); ?>
     <br/>
     <?= $this->escapeHtml('Заказ №'.$order->getId().' от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated()))); ?>    
 </h1>

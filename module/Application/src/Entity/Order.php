@@ -255,7 +255,7 @@ class Order {
 
     public function getIdLink() 
     {
-        return "<a href='/order/view/id/{$this->id}' target=_blank>{$this->id}</a>";
+        return "<a href='/order/view/{$this->id}' target=_blank>{$this->id}</a>";
     }
 
     public function getLogKey() 
