@@ -291,6 +291,9 @@ class AplCashService {
             'kind' => $this->getPaymentKind($data),
             'comment' => (empty($data['info'])) ? null:$data['info'],
         ];
+        if (empty($dataCash['kind'] && empty($dataCash['amount']))){
+            return true; // пустая запись
+        }
         
         $cash = $this->entityManager->getRepository(Cash::class)
                 ->findOneByAplId($data['sf']);
@@ -379,7 +382,9 @@ class AplCashService {
         if ($cashDoc){
             $this->cashManager->updateCashDoc($cashDoc, $dataCash);
         } else {        
-            $cashDoc = $this->cashManager->addCashDoc($dataCash);
+            if (!empty($dataCash['kind'])){
+                $cashDoc = $this->cashManager->addCashDoc($dataCash);
+            }    
         }    
                 
         if ($cashDoc){

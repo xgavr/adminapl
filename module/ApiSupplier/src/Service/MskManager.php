@@ -189,7 +189,7 @@ class MskManager {
                 "Accept-Language: ru,en-US;q=0.9,en;q=0.8",
                 "Cache-Control: no-cache"
             ]);     
-        curl_setopt($ch, CURLOPT_REFERER, 'https://adminapl.ru/');
+        curl_setopt($ch, CURLOPT_REFERER, 'https://portal.moskvorechie.ru/login.lmz?come_from=/index.lmz');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTREDIR, 3);
 //        curl_setopt($ch, CURLOPT_USERPWD, "$login:$password");
