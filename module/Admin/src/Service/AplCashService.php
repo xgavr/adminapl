@@ -291,7 +291,7 @@ class AplCashService {
             'kind' => $this->getPaymentKind($data),
             'comment' => (empty($data['info'])) ? null:$data['info'],
         ];
-        if (empty($dataCash['kind'] && empty($dataCash['amount']))){
+        if (empty($dataCash['kind']) && empty($dataCash['amount'])){
             return true; // пустая запись
         }
         
