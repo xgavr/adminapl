@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Order;
 use User\Entity\User;
+use Company\Entity\Office;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -22,7 +23,7 @@ class OrderController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -32,12 +33,15 @@ class OrderController extends AbstractActionController
      */
     private $orderManager;    
     
-    
+    /**
+     *
+     * @var \Laminas\Authentication\AuthenticationService
+     */
     private $authService; 
     
     /**
      * RBAC manager.
-     * @var User\Service\RbacManager
+     * @var \User\Service\RbacManager
      */
     private $rbacManager; 
     
@@ -52,44 +56,53 @@ class OrderController extends AbstractActionController
     
     public function indexAction()
     {
-        $page = $this->params()->fromQuery('page', 1);
-        
-        if (!$this->rbacManager->isGranted(null, 'order.any.manage')) {
-            if (!$this->rbacManager->isGranted(null, 'order.own.manage')){
-                if (!$this->rbacManager->isGranted(null, 'order.client.manage')){
-                    return $this->redirect()->toRoute('not-authorized');
-                } else {
-                    $client = null;
-                    $contacts = $this->currentUser()->getContacts();
-                    foreach ($contacts as $contact){
-                        $client = $contact->getClient();
-                        if ($client) break;
-                    }
-                    if ($client){
-                        $query = $this->entityManager->getRepository(Order::class)
-                                    ->findClientOrder($client);
-                    } else {
-                        throw new \Exception('Не определен покупатель у пользователя ');
-                    }   
-                }
-            } else {
-                $query = $this->entityManager->getRepository(Order::class)
-                            ->findAllOrder($this->currentUser());                
-            }
-        } else {
-            $query = $this->entityManager->getRepository(Order::class)
-                        ->findAllOrder();
-        }    
-                        
-        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
-        $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);        
-        $paginator->setCurrentPageNumber($page);        
-        // Визуализируем шаблон представления.
+        $currentUser = $this->orderManager->currentUser();
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy(['status' => User::STATUS_ACTIVE, 'office' => $currentUser->getOffice()->getId()]);
         return new ViewModel([
-            'order' => $paginator,
-            'orderManager' => $this->orderManager
-        ]);  
+            'users' =>  $users,
+            'offices' =>  $offices,
+            'currentUser' => $currentUser,
+        ]);
+    }
+    
+    public function contentAction()
+    {       
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        $officeId = $this->params()->fromQuery('office');
+        $userId = $this->params()->fromQuery('user');
+        $status = $this->params()->fromQuery('status');
+        $dateOper = $this->params()->fromQuery('dateOper');
+        
+        $params = [
+            'sort' => $sort, 'order' => $order, 
+            'cashId' => $cashId, 'kind' => $kind,
+        ];
+        
+        $query = $this->entityManager->getRepository(CashDoc::class)
+                        ->findAllCashDoc($dateOper, $params);
+        
+        $total = $this->entityManager->getRepository(CashDoc::class)
+                        ->findAllCashDocTotal($dateOper, $params);
+                
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
     }
     
     public function addAction() 

@@ -7,66 +7,243 @@
                 ]);
 ?>    
 
-<h1>Заказы</h1>
-<p>
-    <!--
-<a class="btn btn-default" href="
-    <?= $this->url('order', ['action'=>'add']); ?>">
-    Новая заявка
-</a>
-    -->
-</p>
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <select id="officeSelect" style="width: 100px" class="form-control" name="officeId">
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="userSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
+                        <?php foreach ($users as $user):?>
+                            <option value="<?= $user->getId()?>"><?= $user->getName()?></option>
+                        <?php endforeach;?>
+                    </select>
+                    <label for="userSelect" id="userBalance">0</label>
+                </div>    
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/order/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-sort-name="id"
+            data-sort-order="desc"            
+            data-response-handler="responseHandler"
+            data-row-style="rowStyle"
+            >
+            <thead>
+                <tr>
+                     <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
+                     <th data-field="cashDoc.dateOper" data-sortable="false" data-width="150">Дата</th>
+                     <th data-field="cashDoc.id" data-sortable="false" data-width="50" data-align="right">Номер</th>
+                     <!--<th data-field="aplId" data-type="numeric"data-align="right">AplId</th>-->
+                     <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
+                     <th data-field='cashDoc.kind' data-sortable="false" data-formatter="operFormatter" data-width="200">Кому/от кого</th>
+                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Приход</th>
+                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
+                     <th data-field='cashDoc.comment' data-sortable="false">Комментарий</th>
+                     <th data-field='cashDoc.userCreator.fullName' data-sortable="false" data-width="50">Отв.</th>
+                     <th data-field="amount" data-formatter="activeFormatter" data-width="50"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>  
 
-<table class="table table-striped">
+<script type="text/javascript">
+    var table = $('#table').bootstrapTable({
+        onLoadSuccess: function() {
+            updateBalance();
+        } 
+    });
+    
+    function updateBalance(){
+        $.getJSON( '/till/cash-balance/'+$('#cashSelect').val()+'?dateOper='+$('#dateOper').val(), function( data ) {
+            $('#cashBalance').html((data.balance*100/100).toFixed(2));
+        });    
+    }
+    
+    function refreshTable(){
+        table.bootstrapTable('refresh');
+    }
 
-   <tr>
-        <th>ID</th>
-        <th>Дата</th>
-        <th>Покупатель</th>
-        <th>Сумма</th>
-        <th>Статус</th>
-        <th>Комментарий</th>
-        <th>Действие</th>
-    </tr>
+    function officeChange(){
+        $.getJSON( '/till/office-cashes/'+$('#officeSelect').val(), function( data ) {
+            $('#cashSelect').empty();
+            $('#cashBalance').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#cashSelect').append('<option value="' + key + '">' + value.name + '</option>');
+            });            
+            refreshTable();
+        });    
+    }
+
+    $(function () {        
+        $('#officeSelect').val("<?= $currentUser->getOffice()->getId()?>");
+
+        $('#ok').click(function () {
+            refreshTable();
+        });
+        $(document).on('click', '.cash-in-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'cashInModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        $(document).on('click', '.cash-out-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'cashOutModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        $(document).on('change', '.refresh-table', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#officeSelect', function (e) {
+            officeChange();
+        });
+        $(document).on('change', '#cashSelect', function (e) {
+            table.bootstrapTable('selectPage', 1);
+        });
+
+    });
     
-    <?php foreach ($order as $row): ?>
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        params.office = $('#officeSelect').val();
+        params.cash = $('#cashSelect').val();
+        params.kind = $('#kindSelect').val();
+        return params;
+    }
     
-    <tr>
-        <td><?= $this->escapeHtml($row->getId()); ?></td>
-        <td>
-            <?= $this->escapeHtml(date('d-m-Y', strtotime($row->getDateCreated()))); ?>
-        </td>
-        <td>
-            <a href="<?= $this->url('client', ['action'=>'view', 'id'=>$row->getClient()->getId()]); ?>">
-                <?= $this->escapeHtml($row->getClient()->getName()); ?>
-            </a> 
-        </td>
-        <td>
-           <?= $this->escapeHtml(round($row->getTotal(), 2)); ?>
-        </td>
-        <td>
-           <?= $this->escapeHtml($row->getStatusAsString()); ?>
-        </td>
-        <td>
-           <?= $this->escapeHtml($row->getComment()); ?>
-        </td>
-        <td>
-            <a class="btn btn-info" href="<?= $this->url('order', 
-                    ['action'=>'view', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Изменить
-            </a>
-            <a class="btn btn-danger" href="<?= $this->url('order',
-                    ['action'=>'delete', 'id'=>$row->getId()]); ?>">
-                <span class="glyphicon glyphicon-remove"></span> Удалить
-            </a>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>   
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
     
-</table>
-<?= $this->paginationControl($order,
-            'Sliding',
-            'application/partial/paginator', 
-            ['route' => array('route' => 'order')]); ?>
+    function amountFormatter(value){
+        return Math.round(value*100)/100;
+    }
+    
+    function inFormatter(value){
+        if (value>0){
+            return Math.round(value*100)/100;
+        }
+        return;
+    }    
+    
+    function outFormatter(value){
+        if (value<0){
+            return -Math.round(value*100)/100;
+        }
+        return;
+    }    
+    
+    function kindFormatter(value){
+        var kinds = <?= CashDoc::getKindListAsJavascriptArray() ?>;
+        return kinds[value];
+    }    
+    
+    function operFormatter(value, row){
+        var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
+        switch(value){
+            case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
+            case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
+                        var orderId = (row.cashDoc.order) ? row.cashDoc.order.aplId:'Пополнение ЛЦ';
+                        var contactName = (row.cashDoc.contact) ? row.cashDoc.contact.name:'NaN';
+                        return contactName+' '+orderId;
+            case '<?= CashDoc::KIND_IN_REFILL ?>': 
+                        return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
+            case '<?= CashDoc::KIND_OUT_REFILL ?>': 
+                        return (row.amount > 0) ? cashName:row.cashDoc.cashRefill.name;
+            case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
+            case '<?= CashDoc::KIND_OUT_COURIER ?>': 
+            case '<?= CashDoc::KIND_OUT_SALARY ?>': 
+            case '<?= CashDoc::KIND_OUT_USER ?>': 
+                        return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName:null;
+            case '<?= CashDoc::KIND_OUT_COST ?>': 
+                        return row.cashDoc.cost.name;
+            case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
+            case '<?= CashDoc::KIND_OUT_SUPPLIER ?>': 
+                        return row.cashDoc.legal.name;
+        }
+        return;
+    }    
+    
+    function activeFormatter(value, row){
+        var btn = '';
+        if (row.cashDoc.cash){
+            if (row.cashDoc.kind<10){
+                var url = '/till/edit-cash-in/'+row.cashDoc.id;
+                btn = '<button';
+                btn += ' type="button"';
+                btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
+            if (row.cashDoc.kind>10){
+                var url = '/till/edit-cash-out/'+row.cashDoc.id;
+                btn = '<button';
+                btn += ' type="button"';
+                btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
+            }    
+        return btn;
+    }    
+    
+    function rowStyle(row, index) {
+        if (row.cashDoc.status == <?= CashDoc::STATUS_RETIRED?>) {
+            return {               
+                classes: 'retired'
+            };   
+        }
+        return {
+          css: {
+//            color: 'blue'
+          }
+        };   
+    }
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
 

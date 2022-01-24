@@ -326,7 +326,9 @@ class AplCashService {
                     ->findOneByAplId($data['parent']);
             if ($userRefill){
                 $dataCash['userRefill'] = $userRefill->getId();
-            }    
+            } else {
+                $dataCash['userRefill'] = $dataCash['user'];
+            }   
         }    
         if ($data['type'] == 'Costs'){
             $cost = $this->entityManager->getRepository(Cost::class)

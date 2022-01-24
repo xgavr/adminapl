@@ -73,6 +73,15 @@ class OrderManager
     }
     
     /**
+     * Текущий пользователь
+     * @return User
+     */
+    public function currentUser()
+    {
+        return $this->logManager->currentUser();
+    }
+    
+    /**
      * Обновить взаиморасчеты розничного заказа
      * 
      * @param Order $order
