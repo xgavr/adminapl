@@ -214,10 +214,10 @@ $legalContact = $client->getLegalContact();
                     <?php foreach ($contact->getOrder() as $order): ?>
                         <tr>
                             <td>
-                                <?= $this->escapeHtml($order->getId()); ?>
+                                <?= $order->getIdLink(); ?>
                             </td>
                             <td>
-                                <?= $this->escapeHtml($order->getAplId()); ?>
+                                <?= $order->getAplIdLink(); ?>
                             </td>
                             <td>
                                 <?= $this->escapeHtml($order->getDateCreated()); ?>

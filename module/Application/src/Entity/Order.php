@@ -253,6 +253,11 @@ class Order {
         return $this->id;
     }
 
+    public function getIdLink() 
+    {
+        return "<a href='/order/view/id/{$this->id}' target=_blank>{$this->id}</a>";
+    }
+
     public function getLogKey() 
     {
         return 'ord:'.$this->id;
@@ -266,6 +271,11 @@ class Order {
     public function getAplId() 
     {
         return $this->aplId;
+    }
+
+    public function getAplIdLink() 
+    {
+        return "<a href='https://autopartslist.ru/admin/orders/view/id/{$this->aplId}' target=_blank>{$this->aplId}</a>";
     }
 
     public function setAplId($aplId) 
